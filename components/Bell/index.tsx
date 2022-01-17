@@ -17,7 +17,7 @@ export function Bell(): JSX.Element {
           className='w-5 h-5 text-gray-700 rounded-full' />
       </button>
       {open && (
-        <div className='absolute top-30 w-1/3 h-96'>
+        <div className='absolute top-14 w-96 h-96'>
           <NotificationCenter />
         </div>
       )}
