@@ -46,7 +46,7 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
 
   return (
     <div
-      className='z-50 overflow-y-scroll bg-white h-full shadow-md p-4 rounded-lg border border-gray-100'
+      className='overflow-y-scroll bg-th-bkg-4 h-full shadow-md p-4 rounded-lg border bg-th-bkg-5'
     >
       <div className='text-xl'>Notifications</div>
       {!webWallet ? (
@@ -61,7 +61,7 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
         <div>No dialect</div>
       ) : (
         <>
-          {dialect.dialect.messages.map((message) => (<Notification key={message.timestamp} title={'title'} message={message.text} timestamp={message.timestamp} />))}
+          {dialect.dialect.messages.map((message) => (<Notification key={message.timestamp} message={message.text} timestamp={message.timestamp} />))}
         </>
       )}
     </div>
