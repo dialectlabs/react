@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
 import NotificationCenter from '../NotificationCenter';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
@@ -6,13 +7,12 @@ import { useWallet, ApiContextProvider, WalletContextProvider } from '@dialectla
 
 type PropTypes = {
   wallet: AnchorWallet | undefined;
+  publicKey: anchor.web3.PublicKey;
 }
 
 function WrappedBell(props: PropTypes): JSX.Element {
   const [open, setOpen] = useState(false);
   const { onWebConnect, onWebDisconnect, webWallet } = useWallet();
-  console.log('wallet', props.wallet);
-  console.log('webWallet', webWallet);
   useEffect(() => {
     if (props.wallet) {
       onWebConnect(props.wallet);
@@ -31,7 +31,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
       </button>
       {open && (
         <div className='absolute top-14 w-96 h-96'>
-          <NotificationCenter wallet={props.wallet} />
+          <NotificationCenter {...props} />
         </div>
       )}
     </div>
