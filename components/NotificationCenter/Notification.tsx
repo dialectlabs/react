@@ -1,23 +1,23 @@
 import React from 'react';
 
 type Props = {
-  title: string;
   message: string;
   timestamp: number;
 }
 
 const timeFormatter = new Intl.DateTimeFormat('en-US', {
-  month: 'numeric',
+  year: 'numeric',
+  month: 'short',
   day: 'numeric',
   hour: '2-digit',
-  minute: '2-digit'
+  minute: '2-digit',
+  hour12: true
 });
 
-export const Notification = ({ title, message, timestamp }: Props) => {
+export const Notification = ({ message, timestamp }: Props) => {
   return (
-    <div className="flex flex-row border-b border-gray-500 py-2 px-4">
-      <div className="flex-1 flex-col justify-between">
-        <h4 className="font-bold text-black text-lg">{title}</h4>
+    <div className="flex flex-col border-b border-gray-500 py-2 px-4">
+      <div className="flex-1">
         <p className="text-black text-base">{message}</p>
       </div>
       <div>
