@@ -3,6 +3,7 @@ import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { useApi, useWallet, getMetadata, createMetadata, getDialectForMembers, Member } from '@dialectlabs/web3';
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
+import { Notification } from './Notification';
 
 const fetchMetadata = async (url: string, program: anchor.Program, user: string) => {
   console.log('fetching metadata', url);
@@ -27,7 +28,7 @@ const fetchDialectForMembers = async (url: string, program: anchor.Program, pubk
     publicKey: new anchor.web3.PublicKey(pubkey2),
     scopes: [true, false], //
   };
-  return await getDialectForMembers(program, [member1, member2]);
+  return await getDialectForMembers(program, [member1, member2], anchor.web3.Keypair.generate());
 };
 
 type PropTypes = {
@@ -45,7 +46,7 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
 
   return (
     <div
-      className='z-1000 bg-white h-full shadow-md p-4 rounded-lg border border-gray-100'
+      className='z-50 overflow-y-scroll bg-white h-full shadow-md p-4 rounded-lg border border-gray-100'
     >
       <div className='text-xl'>Notifications</div>
       {!webWallet ? (
@@ -60,8 +61,7 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
         <div>No dialect</div>
       ) : (
         <>
-          <div>Metadata & dialect</div>
-          {/* {dialect.dialect.messages.map(message => (<div>message.text</div>))} */}
+          {dialect.dialect.messages.map((message) => (<Notification key={message.timestamp} title={'title'} message={message.text} timestamp={message.timestamp} />))}
         </>
       )}
     </div>
