@@ -18,13 +18,15 @@ type PropTypes = {
 function WrappedBell(props: PropTypes): JSX.Element {
   const [open, setOpen] = useState(false);
   const { onWebConnect, onWebDisconnect, webWallet } = useWallet();
+
   useEffect(() => {
     if (props.wallet) {
       onWebConnect(props.wallet);
-    } else {
+    } else if (props.wallet === null || !props.wallet?.connected) {
       onWebDisconnect();
     }
-  }, [props.wallet]);
+  }, [props.wallet, props.wallet?.connected]);
+
   return (
     <div className="flex flex-col items-end">
       <button
