@@ -40,15 +40,16 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
   const { program } = useApi();
   
   const { data: metadata, error: metadataError } = 
-    useSWR(program && webWallet ? ['metadata', program, MOCK_USER_PUBKEY] : null, fetchMetadata);
+    useSWR(program && webWallet ? ['metadata', program, webWallet.publicKey.toString()] : null, fetchMetadata);
   const { data: dialect, error: dialectError } = 
-    useSWR(webWallet && metadata ? ['dialect', program, MOCK_USER_PUBKEY, props.publicKey.toString()] : null, fetchDialectForMembers);
+    useSWR(webWallet && program ? ['dialect', program, webWallet.publicKey.toString(), props.publicKey.toString()] : null, fetchDialectForMembers);
 
   return (
     <div
-      className='overflow-y-scroll bg-th-bkg-4 h-full shadow-md p-4 rounded-lg border bg-th-bkg-5'
+      className='overflow-y-scroll bg-th-bkg-1 h-full shadow-md py-4 px-6 rounded-lg border border-th-bkg-2'
     >
-      <div className='text-xl'>Notifications</div>
+      <div className='text-lg font-semibold text-center mb-2'>Notifications</div>
+      <div className='h-px bg-th-bkg-4' />
       {!webWallet ? (
         <div className='h-full flex items-center justify-center'>
           <button className='bg-gray-200 hover:bg-gray-100 border border-gray-400 px-4 py-2 rounded-full'>

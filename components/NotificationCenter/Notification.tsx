@@ -16,12 +16,12 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
 
 export const Notification = ({ message, timestamp }: Props) => {
   return (
-    <div className="flex flex-col border-b border-gray-500 py-2 px-4">
+    <div className="flex flex-col border-b border-th-bkg-3 py-2">
       <div className="flex-1">
-        <p className="text-black text-base">{message}</p>
+        <p className="text-base text-th-fgd-1 mt-3">{message}</p>
       </div>
       <div>
-        <p className="text-gray-500 text-sm">
+        <p className="text-th-fgd-4 text-xs">
           {timeFormatter.format(timestamp)}
         </p>
       </div>

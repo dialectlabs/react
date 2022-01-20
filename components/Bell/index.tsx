@@ -3,10 +3,11 @@ import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
 import NotificationCenter from '../NotificationCenter';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
+import { Wallet } from '@solana/wallet-adapter-wallets';
 import { useWallet, ApiContextProvider, WalletContextProvider } from '@dialectlabs/web3';
 
 type PropTypes = {
-  wallet: AnchorWallet | undefined;
+  wallet: AnchorWallet | Wallet | undefined;
   publicKey: anchor.web3.PublicKey;
 }
 
