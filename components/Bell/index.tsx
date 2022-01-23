@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
 import NotificationCenter from '../NotificationCenter';
-import { connected, WalletType } from '../../api/ApiContext';
-
-import { ApiContextProvider, useApi } from '../../api/ApiContext';
+import { ApiContextProvider, connected, useApi, WalletType } from '../../api/ApiContext';
 
 type PropTypes = {
   wallet: WalletType;
