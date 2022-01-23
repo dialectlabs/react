@@ -11,6 +11,7 @@ import {
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
 import { Notification } from './Notification';
+import { WalletType } from '../../api/ApiContext';
 
 const fetchMetadata = async (
   url: string,
@@ -66,7 +67,7 @@ const MESSAGES_MOCK = [
 ];
 
 type PropTypes = {
-  wallet: AnchorWallet | undefined;
+  wallet: WalletType;
   publicKey: anchor.web3.PublicKey;
 };
 export default function NotificationCenter(props: PropTypes): JSX.Element {
