@@ -4,6 +4,11 @@ import { Connection } from '@solana/web3.js';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { idl, programs } from '@dialectlabs/web3';
 
+const URLS = { // TODO: Move to protocol/web3
+  'devnet': 'https://api.devnet.solana.com',
+  'localnet': 'http://localhost:8899',
+};
+
 export const connected = (wallet: WalletType): boolean => {
   /*
     Wallets can be of type AnchorWallet or WalletContextState.
@@ -26,7 +31,11 @@ export type ProgramType = anchor.Program | null;
 type ValueType = {
     wallet: WalletType;
     setWallet: (_: WalletType) => void;
-    program: anchor.Program | null;
+    network: string | null;
+    setNetwork: (_: string | null) => void;
+    rpcUrl: string | null;
+    setRpcUrl: (_: string | null) => void;
+    program: ProgramType;
 }
 
 const ApiContext = createContext<ValueType | null>(null);
@@ -34,15 +43,25 @@ const ApiContext = createContext<ValueType | null>(null);
 export const ApiProvider = (props: PropsType): JSX.Element => {
   const [wallet, setWallet] = useState<WalletType>(null);
   const [program, setProgram] = useState<ProgramType>(null);
+  const [network, setNetwork] = useState<string | null>('devnet');
+  const [rpcUrl, setRpcUrl] = useState<string | null>('https://api.devnet.solana.com');
   const value = {
     wallet,
     setWallet,
+    network,
+    setNetwork,
+    rpcUrl,
+    setRpcUrl,
     program,
   };
   useEffect(() => {
     if (connected(wallet)) {
       console.log('CONNECTED', wallet);
-      const connection = new Connection('https://api.devnet.solana.com', 'recent'); // TODO: Set this via props?
+      const n: 'devnet' | 'localnet' = network && network in Object.keys(URLS) ? network as 'devnet' | 'localnet' : 'devnet';
+      console.log('n', n);
+      const u = rpcUrl || URLS[n]; // TODO: Move to protocol/web3
+      console.log('u', u);
+      const connection = new Connection(u, 'recent');
       const provider = new anchor.Provider(
         connection,
         wallet as anchor.Wallet, // TODO: Check that this cast is acceptable
@@ -51,14 +70,14 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
       anchor.setProvider(provider);
       const program = new anchor.Program(
         idl as anchor.Idl,
-        programs['devnet'].programAddress, // TODO: Set network via props?
+        programs[n].programAddress,
       );
       setProgram(program);
     } else {
       console.log('DISCONNECTED', wallet);
       setProgram(null);
     }
-  }, [connected(wallet)]);
+  }, [connected(wallet), network, rpcUrl]);
   return (
     <ApiContext.Provider value={value}>{props.children}</ApiContext.Provider>
   );

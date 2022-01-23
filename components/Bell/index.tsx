@@ -6,14 +6,18 @@ import { ApiProvider, connected, useApi, WalletType } from '../../api/ApiContext
 
 type PropTypes = {
   wallet: WalletType;
+  network?: string;
+  rpcUrl?: string;
   publicKey: anchor.web3.PublicKey;
 };
 
 function WrappedBell(props: PropTypes): JSX.Element {
   const [open, setOpen] = useState(false);
-  const { setWallet } = useApi();
+  const { setWallet, setNetwork, setRpcUrl } = useApi();
 
   useEffect(() => setWallet(props.wallet), [connected(props.wallet)]);
+  useEffect(() => setNetwork(props.network || null), [props.network]);
+  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl]);
 
   return (
     <div className="flex flex-col items-end">

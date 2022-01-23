@@ -1,8 +1,6 @@
 import React from 'react';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 import {
-  useApi,
-  useWallet,
   getMetadata,
   createMetadata,
   getDialectForMembers,
@@ -11,7 +9,7 @@ import {
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
 import { Notification } from './Notification';
-import { WalletType } from '../../api/ApiContext';
+import { useApi, WalletType } from '../../api/ApiContext';
 
 const fetchMetadata = async (
   url: string,
@@ -71,21 +69,20 @@ type PropTypes = {
   publicKey: anchor.web3.PublicKey;
 };
 export default function NotificationCenter(props: PropTypes): JSX.Element {
-  const { webWallet } = useWallet();
-  const { program } = useApi();
+  const { wallet, program } = useApi();
 
   const { data: metadata, error: metadataError } = useSWR(
-    program && webWallet
-      ? ['metadata', program, webWallet.publicKey.toString()]
+    program && wallet
+      ? ['metadata', program, wallet?.publicKey?.toString()]
       : null,
     fetchMetadata
   );
   const { data: dialect, error: dialectError } = useSWR(
-    webWallet && program
+    wallet && program
       ? [
           'dialect',
           program,
-          webWallet.publicKey.toString(),
+          wallet?.publicKey?.toString(),
           props.publicKey.toString(),
         ]
       : null,
@@ -98,10 +95,10 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
         Notifications
       </div>
       <div className="h-px bg-th-bkg-4" />
-      {!webWallet ? (
+      {!wallet ? (
         <div className="h-full flex items-center justify-center">
           <button className="bg-gray-200 hover:bg-gray-100 border border-gray-400 px-4 py-2 rounded-full">
-            {webWallet
+            {wallet
               ? 'Enable notifications'
               : 'Connect your wallet to enable notifications'}
           </button>
