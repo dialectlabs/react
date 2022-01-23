@@ -5,6 +5,14 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { idl, programs } from '@dialectlabs/web3';
 
 export const connected = (wallet: WalletType): boolean => {
+  /*
+    Wallets can be of type AnchorWallet or WalletContextState.
+
+    - AnchorWallet is undefined if not connected. It has no connected attribute.
+    - WalletContextState may be either null/undefined, or its attribute connected is false if it's not connected.
+
+    This function connected should accommodate both types of wallets.
+  */
   return (wallet || false) && ('connected' in wallet ? wallet?.connected : true);
 };
 
