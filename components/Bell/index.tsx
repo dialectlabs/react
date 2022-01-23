@@ -15,7 +15,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
   const [open, setOpen] = useState(false);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
 
-  useEffect(() => setWallet(props.wallet), [connected(props.wallet)]);
+  useEffect(() => setWallet(connected(props.wallet) ? props.wallet : null), [connected(props.wallet)]);
   useEffect(() => setNetwork(props.network || null), [props.network]);
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl]);
 
