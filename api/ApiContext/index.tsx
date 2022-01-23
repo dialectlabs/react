@@ -19,9 +19,9 @@ type ValueType = {
     wallet: WalletType;
     setWallet: (_: WalletType) => void;
     program: anchor.Program | null;
-} | null;
+}
 
-const ApiContext = createContext<ValueType>(null);
+const ApiContext = createContext<ValueType | null>(null);
 
 export const ApiContextProvider = (props: PropsType): JSX.Element => {
   const [wallet, setWallet] = useState<WalletType>(null);
