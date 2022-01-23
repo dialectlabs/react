@@ -23,7 +23,7 @@ type ValueType = {
 
 const ApiContext = createContext<ValueType | null>(null);
 
-export const ApiContextProvider = (props: PropsType): JSX.Element => {
+export const ApiProvider = (props: PropsType): JSX.Element => {
   const [wallet, setWallet] = useState<WalletType>(null);
   const [program, setProgram] = useState<ProgramType>(null);
   const value = {
@@ -59,7 +59,7 @@ export const ApiContextProvider = (props: PropsType): JSX.Element => {
 export function useApi(): ValueType {
   const context = useContext(ApiContext);
   if (!context) {
-    throw new Error('useCount must be used within a WalletContextProvider');
+    throw new Error('useApi must be used within an ApiProvider');
   }
   return context;
 }

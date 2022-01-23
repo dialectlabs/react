@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
 import NotificationCenter from '../NotificationCenter';
-import { ApiContextProvider, connected, useApi, WalletType } from '../../api/ApiContext';
+import { ApiProvider, connected, useApi, WalletType } from '../../api/ApiContext';
 
 type PropTypes = {
   wallet: WalletType;
@@ -34,8 +34,8 @@ function WrappedBell(props: PropTypes): JSX.Element {
 
 export function Bell(props: PropTypes): JSX.Element {
   return (
-    <ApiContextProvider>
+    <ApiProvider>
         <WrappedBell {...props} />
-    </ApiContextProvider>
+    </ApiProvider>
   );
 }
