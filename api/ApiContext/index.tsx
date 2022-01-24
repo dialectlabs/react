@@ -57,7 +57,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
   useEffect(() => {
     if (connected(wallet)) {
       console.log('CONNECTED', wallet);
-      const n: 'devnet' | 'localnet' = network && network in Object.keys(URLS) ? network as 'devnet' | 'localnet' : 'devnet';
+      const n: 'devnet' | 'localnet' = network && Object.keys(URLS).includes(network) ? network as 'devnet' | 'localnet' : 'devnet';
       console.log('n', n);
       const u = rpcUrl || URLS[n]; // TODO: Move to protocol/web3
       console.log('u', u);
