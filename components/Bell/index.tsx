@@ -22,13 +22,13 @@ function WrappedBell(props: PropTypes): JSX.Element {
   return (
     <div className="flex flex-col items-end">
       <button
-        className="bg-th-bkg-4 flex items-center justify-center rounded-full w-8 h-8 text-th-fgd-1 focus:outline-none hover:text-th-primary"
+        className="flex items-center justify-center rounded-full w-12 h-12 focus:outline-none bg-gray-200"
         onClick={() => setOpen(!open)}
       >
-        <BellIcon className="w-4 h-4 rounded-full" />
+        <BellIcon className="w-6 h-6 rounded-full" />
       </button>
       {open && (
-        <div className="z-50 absolute top-14 w-96 h-96">
+        <div className="z-50 absolute top-16 w-96 h-96">
           <NotificationCenter {...props} />
         </div>
       )}

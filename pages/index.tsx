@@ -16,7 +16,7 @@ function AuthedHome() {
       <div className='flex flex-row justify-end p-2 items-center space-x-2'>
         <Bell
           wallet={wallet}
-          network={'devnet'}
+          network={'localnet'}
           publicKey={MANGO_PUBLIC_KEY}
         />
         <Wallet />
