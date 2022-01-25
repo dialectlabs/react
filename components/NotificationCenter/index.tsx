@@ -1,93 +1,55 @@
 import React from 'react';
-import { getDialectForMembers, createDialect, Member } from '@dialectlabs/web3';
-import useSWR from 'swr';
-import * as anchor from '@project-serum/anchor';
+import useNotificationCenter from '../../api/useNotificationCenter';
+import type { NotificationCenterPropTypes } from '../../api/useNotificationCenter';
 import { Notification } from './Notification';
-import { useApi, WalletType } from '../../api/ApiContext';
 
-const fetchDialectForMembers = async (
-  url: string,
-  program: anchor.Program,
-  pubkey1: string,
-  pubkey2: string
-) => {
-  const member1: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey1),
-    scopes: [true, false], //
-  };
-  const member2: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey2),
-    scopes: [true, false], //
-  };
-  return await getDialectForMembers(
-    program,
-    [member1, member2],
-    anchor.web3.Keypair.generate()
-  );
-};
+export default function NotificationCenter(
+  props: NotificationCenterPropTypes
+): JSX.Element {
+  const {
+    isWalletConnected,
+    isDialectAvailable,
+    isEmpty,
+    createDialect,
+    isDialeactCreating,
+    messages,
+  } = useNotificationCenter(props);
 
-const mutateDialectForMembers = async (
-  _: string,
-  program: anchor.Program,
-  pubkey1: string,
-  pubkey2: string
-) => {
-  const member1: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey1),
-    scopes: [true, false], //
-  };
-  const member2: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey2),
-    scopes: [true, false], //
-  };
-  return await createDialect(program, program.provider.wallet, [
-    member1,
-    member2,
-  ]);
-};
+  let content: JSX.Element;
 
-type PropTypes = {
-  wallet: WalletType;
-  publicKey: anchor.web3.PublicKey;
-};
-export default function NotificationCenter(props: PropTypes): JSX.Element {
-  const [creating, setCreating] = React.useState(false);
-  const { wallet, program } = useApi();
-
-  const { data: dialect, mutate: mutateDialect } = useSWR(
-    wallet && program
-      ? [
-          'dialect',
-          program,
-          wallet?.publicKey?.toString(),
-          props.publicKey.toString(),
-        ]
-      : null,
-    fetchDialectForMembers
-  );
-
-  useSWR(
-    creating
-      ? [
-          'dialect',
-          program,
-          wallet?.publicKey?.toString(),
-          props.publicKey.toString(),
-        ]
-      : null,
-    mutateDialectForMembers,
-    {
-      onSuccess: (data) => {
-        console.log('created dialect', data);
-        mutateDialect(data);
-        setCreating(false);
-      },
-      onError: (error) => {
-        console.log('error creating dialect', error);
-        setCreating(false);
-      },
-    }
-  );
+  if (!isWalletConnected) {
+    content = (
+      <div className="h-full flex items-center justify-center text-gray-400">
+        <div>Connect your wallet to enable notifications</div>
+      </div>
+    );
+  } else if (!isDialectAvailable) {
+    content = (
+      <div className="h-full flex items-center justify-center">
+        <button
+          className="bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 px-4 py-2 rounded-full"
+          onClick={createDialect}
+          disabled={isDialeactCreating}
+        >
+          {isDialeactCreating ? 'Enabling...' : 'Enable notifications'}
+        </button>
+      </div>
+    );
+  } else if (isEmpty) {
+    content = <div>No notifications yet.</div>;
+  } else {
+    content = (
+      <>
+        {messages.map((message) => (
+          <Notification
+            key={message.timestamp}
+            message={message.text}
+            timestamp={message.timestamp}
+          />
+        ))}
+      </>
+    );
+  }
 
   return (
     <div className="flex flex-col overflow-y-scroll h-full shadow-md py-4 px-6 rounded-lg border bg-white">
@@ -95,33 +57,7 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
         Notifications
       </div>
       <div className="h-px bg-gray-200" />
-      {!wallet ? (
-        <div className="h-full flex items-center justify-center text-gray-400">
-          <div>Connect your wallet to enable notifications</div>
-        </div>
-      ) : !dialect ? (
-        <div className="h-full flex items-center justify-center">
-          <button
-            className="bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 px-4 py-2 rounded-full"
-            onClick={() => setCreating(true)}
-            disabled={creating}
-          >
-            {creating ? 'Enabling...' : 'Enable notifications'}
-          </button>
-        </div>
-      ) : dialect.dialect.messages.length < 1 ? (
-        <div>No notifications yet.</div>
-      ) : (
-        <>
-          {dialect.dialect.messages.map((message) => (
-            <Notification
-              key={message.timestamp}
-              message={message.text}
-              timestamp={message.timestamp}
-            />
-          ))}
-        </>
-      )}
+      {content}
     </div>
   );
 }
