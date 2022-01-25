@@ -64,10 +64,10 @@ function WrappedBell(props: PropTypes): JSX.Element {
     <div className="flex flex-col items-end">
       <button
         ref={bellRef}
-        className="flex items-center justify-center rounded-full w-12 h-12 focus:outline-none bg-gray-200"
+        className="flex items-center justify-center rounded-full w-12 h-12 focus:outline-none bg-white border border-gray-200 shadow-md"
         onClick={() => setOpen(!open)}
       >
-        <BellIcon className="w-6 h-6 rounded-full" />
+        <BellIcon className="w-6 h-6 rounded-full text-gray-500" />
       </button>
       {open && (
         <Transition

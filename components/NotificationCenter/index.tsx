@@ -100,9 +100,9 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
           <div>Connect your wallet to enable notifications</div>
         </div>
       ) : !dialect ? (
-        <div className="flex grow items-center justify-center">
+        <div className="h-full flex items-center justify-center">
           <button
-            className="bg-gray-200 hover:bg-gray-100 disabled:bg-gray-100 px-4 py-2 rounded-full"
+            className="bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 px-4 py-2 rounded-full"
             onClick={() => setCreating(true)}
             disabled={creating}
           >
