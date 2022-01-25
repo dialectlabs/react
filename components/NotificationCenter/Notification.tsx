@@ -3,7 +3,7 @@ import React from 'react';
 type Props = {
   message: string;
   timestamp: number;
-}
+};
 
 const timeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
@@ -11,7 +11,7 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
   hour: '2-digit',
   minute: '2-digit',
-  hour12: true
+  hour12: true,
 });
 
 export const Notification = ({ message, timestamp }: Props) => {
@@ -21,9 +21,7 @@ export const Notification = ({ message, timestamp }: Props) => {
         <p className="text-base mt-3">{message}</p>
       </div>
       <div>
-        <p className="text-xs">
-          {timeFormatter.format(timestamp)}
-        </p>
+        <p className="text-xs">{timeFormatter.format(timestamp)}</p>
       </div>
     </div>
   );
