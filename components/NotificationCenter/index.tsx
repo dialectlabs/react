@@ -94,9 +94,9 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
       <div className="text-lg font-semibold text-center mb-2">
         Notifications
       </div>
-      <div className="h-px" />
+      <div className="h-px bg-gray-200" />
       {!wallet ? (
-        <div className="h-full flex items-center justify-center">
+        <div className="h-full flex items-center justify-center text-gray-400">
           <div>Connect your wallet to enable notifications</div>
         </div>
       ) : !dialect ? (

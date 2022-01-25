@@ -8,6 +8,7 @@ import {
   useApi,
   WalletType,
 } from '../../api/ApiContext';
+import { Transition } from '@headlessui/react';
 
 type PropTypes = {
   wallet: WalletType;
@@ -69,9 +70,20 @@ function WrappedBell(props: PropTypes): JSX.Element {
         <BellIcon className="w-6 h-6 rounded-full" />
       </button>
       {open && (
-        <div ref={wrapperRef} className="z-50 absolute top-16 w-96 h-96">
-          <NotificationCenter {...props} />
-        </div>
+        <Transition
+          className="z-50 absolute top-16 w-96 h-96"
+          show={open}
+          enter="transition-opacity duration-500"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-500"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div ref={wrapperRef} className="w-96 h-96">
+            <NotificationCenter {...props} />
+          </div>
+        </Transition>
       )}
     </div>
   );
