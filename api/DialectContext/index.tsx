@@ -2,7 +2,7 @@ import React, { createContext, useContext } from 'react';
 import { getDialectForMembers, createDialect, Member } from '@dialectlabs/web3';
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
-import { useApi, WalletType } from '../ApiContext';
+import { useApi } from '../ApiContext';
 
 const fetchDialectForMembers = async (
   url: string,
@@ -115,13 +115,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       wallet && dialect ? dialect.dialect.messages.length === 0 : true,
   };
 
-  return <div>d</div>;
-
-  // return (
-  //   <DialectContext.Provider>
-  //     {props.children}
-  //   </DialectContext.Provider>
-  // );
+  return (
+    <DialectContext.Provider value={value}>
+      {props.children}
+    </DialectContext.Provider>
+  );
 };
 
 export function useDialect(): DialectContextType {

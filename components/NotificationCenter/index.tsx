@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDialect, MessageType } from '../../api/useDialect';
+import { useDialect, MessageType } from '../../api/DialectContext';
 import { Notification } from './Notification';
 
 export default function NotificationCenter(): JSX.Element {
