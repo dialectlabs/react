@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../packages/dialect-react-ui/tsconfig.json",
   "compilerOptions": {
     "target": "es2019",
     "lib": [
@@ -25,11 +25,11 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules",
-    "styles",
+    "styles"
   ],
   "type": "module"
 }
