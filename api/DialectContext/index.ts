@@ -1,28 +1,8 @@
-import React from 'react';
-import NotificationCenterPropTypes from '../../components/NotificationCenter';
+import React, { createContext, useContext } from 'react';
 import { getDialectForMembers, createDialect, Member } from '@dialectlabs/web3';
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
-import { useApi, WalletType } from '../../api/ApiContext';
-
-interface Message {
-  timestamp: number;
-  text: string;
-}
-
-type NotificationCenterObject = {
-  isWalletConnected: boolean;
-  isDialectAvailable: boolean;
-  isDialeactCreating: boolean;
-  createDialect: () => void;
-  isEmpty: boolean;
-  messages: Message[];
-};
-
-type NotificationCenterPropTypes = {
-  wallet: WalletType;
-  publicKey: anchor.web3.PublicKey;
-};
+import { useApi, WalletType } from '../ApiContext';
 
 const fetchDialectForMembers = async (
   url: string,
@@ -65,9 +45,28 @@ const mutateDialectForMembers = async (
   ]);
 };
 
-export default function useNotificationCenter(
-  props: NotificationCenterPropTypes
-): NotificationCenterObject {
+interface Message {
+  timestamp: number;
+  text: string;
+}
+
+type PropsType = {
+  children: JSX.Element;
+  publicKey: anchor.web3.PublicKey;
+};
+
+type DialectContextType = {
+  isWalletConnected: boolean;
+  isDialectAvailable: boolean;
+  isDialeactCreating: boolean;
+  createDialect: () => void;
+  isNoMessages: boolean;
+  messages: Message[];
+};
+
+const DialectContext = createContext<DialectContextType | null>(null);
+
+export const DialectProvider = (props: PropsType): JSX.Element => {
   const [creating, setCreating] = React.useState(false);
   const { wallet, program } = useApi();
 
@@ -106,17 +105,31 @@ export default function useNotificationCenter(
     }
   );
 
-  const isWalletConnected = Boolean(wallet);
-  const isDialectAvailable = Boolean(dialect);
-
-  return {
-    isWalletConnected,
-    isDialectAvailable,
-    isEmpty: wallet && dialect ? dialect.dialect.messages.length === 0 : true,
-    messages: wallet && dialect ? dialect.dialect.messages : [],
-    isDialeactCreating: creating,
+  const value = {
+    isWalletConnected: Boolean(wallet),
+    isDialectAvailable: Boolean(dialect),
     createDialect: () => setCreating(true),
+    isDialeactCreating: creating,
+    messages: wallet && dialect ? dialect.dialect.messages : [],
+    isNoMessages:
+      wallet && dialect ? dialect.dialect.messages.length === 0 : true,
   };
+
+  return <div>d</div>;
+
+  // return (
+  //   <DialectContext.Provider>
+  //     {props.children}
+  //   </DialectContext.Provider>
+  // );
+};
+
+export function useDialect(): DialectContextType {
+  const context = useContext(DialectContext);
+  if (!context) {
+    throw new Error('useApi must be used within an ApiProvider');
+  }
+  return context;
 }
 
-export type { NotificationCenterPropTypes };
+export type MessageType = Message;

@@ -9,6 +9,7 @@ import {
   WalletType,
 } from '../../api/ApiContext';
 import { Transition } from '@headlessui/react';
+import { DialectProvider } from '../../api/DialectContext';
 
 type PropTypes = {
   wallet: WalletType;
@@ -54,9 +55,10 @@ function WrappedBell(props: PropTypes): JSX.Element {
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
 
-  useEffect(() => setWallet(connected(props.wallet) ? props.wallet : null), [
-    connected(props.wallet),
-  ]);
+  useEffect(
+    () => setWallet(connected(props.wallet) ? props.wallet : null),
+    [connected(props.wallet)]
+  );
   useEffect(() => setNetwork(props.network || null), [props.network]);
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl]);
 
@@ -69,22 +71,20 @@ function WrappedBell(props: PropTypes): JSX.Element {
       >
         <BellIcon className="w-6 h-6 rounded-full text-gray-500" />
       </button>
-      {open && (
-        <Transition
-          className="z-50 absolute top-16 w-96 h-96"
-          show={open}
-          enter="transition-opacity duration-500"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition-opacity duration-500"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div ref={wrapperRef} className="w-96 h-96">
-            <NotificationCenter {...props} />
-          </div>
-        </Transition>
-      )}
+      <Transition
+        className="z-50 absolute top-16 w-96 h-96"
+        show={open}
+        enter="transition-opacity duration-500"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-500"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div ref={wrapperRef} className="w-96 h-96">
+          <NotificationCenter />
+        </div>
+      </Transition>
     </div>
   );
 }
@@ -92,7 +92,9 @@ function WrappedBell(props: PropTypes): JSX.Element {
 export function Bell(props: PropTypes): JSX.Element {
   return (
     <ApiProvider>
-      <WrappedBell {...props} />
+      <DialectProvider publicKey={props.publicKey}>
+        <WrappedBell {...props} />
+      </DialectProvider>
     </ApiProvider>
   );
 }

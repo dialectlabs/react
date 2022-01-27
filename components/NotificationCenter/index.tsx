@@ -1,19 +1,16 @@
 import React from 'react';
-import useNotificationCenter from '../../api/useNotificationCenter';
-import type { NotificationCenterPropTypes } from '../../api/useNotificationCenter';
+import { useDialect, MessageType } from '../../api/useDialect';
 import { Notification } from './Notification';
 
-export default function NotificationCenter(
-  props: NotificationCenterPropTypes
-): JSX.Element {
+export default function NotificationCenter(): JSX.Element {
   const {
     isWalletConnected,
     isDialectAvailable,
-    isEmpty,
+    isNoMessages,
     createDialect,
     isDialeactCreating,
     messages,
-  } = useNotificationCenter(props);
+  } = useDialect();
 
   let content: JSX.Element;
 
@@ -35,12 +32,12 @@ export default function NotificationCenter(
         </button>
       </div>
     );
-  } else if (isEmpty) {
+  } else if (isNoMessages) {
     content = <div>No notifications yet.</div>;
   } else {
     content = (
       <>
-        {messages.map((message) => (
+        {messages.map((message: MessageType) => (
           <Notification
             key={message.timestamp}
             message={message.text}
