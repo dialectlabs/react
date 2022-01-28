@@ -6,7 +6,7 @@ import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 import { Centered, Divider, Footer, TEXT_STYLES, ValueRow } from '../common';
 
-function Header(props: { right: JSX.Element }) {
+function Header(props: { right: JSX.Element | null }) {
   return (
     <div className="px-4 py-3 flex flex-row justify-between">
       <span className={TEXT_STYLES.medium15}>Notifications</span>
