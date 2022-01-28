@@ -26,7 +26,7 @@ function AuthedHome() {
         <Wallet />
       </div>
       <div className="h-full text-4xl flex flex-col justify-center">
-        <div className="text-center">ngmi.biz</div>
+        <div className="text-center">Pretty sophisticated service</div>
       </div>
     </div>
   );

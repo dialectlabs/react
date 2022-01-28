@@ -82,7 +82,13 @@ function WrappedBell(props: PropTypes): JSX.Element {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div ref={wrapperRef} className="w-full h-full">
+        <div
+          ref={wrapperRef}
+          className="w-full h-full bg-white"
+          // TODO: investigate blur
+          // className="w-full h-full bg-white/10"
+          // style={{ backdropFilter: 'blur(132px)' }}
+        >
           <NotificationCenter />
         </div>
       </Transition>

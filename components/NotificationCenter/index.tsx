@@ -120,7 +120,7 @@ export default function NotificationCenter(): JSX.Element {
   }
 
   return (
-    <div className="flex flex-col h-full shadow-md rounded-lg border bg-white">
+    <div className="flex flex-col h-full shadow-md rounded-lg border">
       <Header
         right={
           isWalletConnected && isDialectAvailable ? (
