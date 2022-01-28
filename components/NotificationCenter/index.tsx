@@ -1,54 +1,16 @@
 import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '../../api/DialectContext';
 import { IconButton } from '../Button';
-import {
-  DialectLogo,
-  GearIcon,
-  NoNotificationsIcon,
-  NotConnectedIcon,
-} from '../Icon';
+import { GearIcon, NoNotificationsIcon, NotConnectedIcon } from '../Icon';
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
+import { Centered, Divider, Footer, TEXT_STYLES, ValueRow } from '../common';
 
-const TEXT_STYLES = {
-  regular13: 'text-sm font-normal',
-  medium13: 'text-sm font-medium',
-  medium15: 'text-base font-medium',
-  bold30: 'text-3xl font-bold',
-};
-
-function Divider(): JSX.Element {
-  return <div className="h-px bg-gray-200" />;
-}
-
-function ValueRow(props: {
-  label: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
+function Header(props: { right: JSX.Element }) {
   return (
-    <p className={cs('flex flex-row justify-between', props.className)}>
-      <span className={cs(TEXT_STYLES.regular13)}>{props.label}:</span>
-      <span className={cs(TEXT_STYLES.medium13)}>{props.children}</span>
-    </p>
-  );
-}
-
-function Footer(): JSX.Element {
-  return (
-    <div
-      className="w-40 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase"
-      style={{ fontSize: '10px' }}
-    >
-      Powered by <DialectLogo className="ml-px" />
-    </div>
-  );
-}
-
-function Centered(props: { children: React.ReactNode }): JSX.Element {
-  return (
-    <div className="h-full flex flex-col items-center justify-center">
-      {props.children}
+    <div className="px-4 py-3 flex flex-row justify-between">
+      <span className={TEXT_STYLES.medium15}>Notifications</span>
+      {props.right ? props.right : null}
     </div>
   );
 }
@@ -158,16 +120,17 @@ export default function NotificationCenter(): JSX.Element {
   }
 
   return (
-    <div className="flex flex-col overflow-y-scroll h-full shadow-md rounded-lg border bg-white">
-      <div className="px-4 py-3 flex flex-row justify-between">
-        <span className={TEXT_STYLES.medium15}>Notifications</span>
-        {isWalletConnected && isDialectAvailable ? (
-          <IconButton icon={<GearIcon />} onClick={toggleSettings} />
-        ) : null}
-      </div>
+    <div className="flex flex-col h-full shadow-md rounded-lg border bg-white">
+      <Header
+        right={
+          isWalletConnected && isDialectAvailable ? (
+            <IconButton icon={<GearIcon />} onClick={toggleSettings} />
+          ) : null
+        }
+      />
       <Divider />
-      <div className="h-full py-2 px-4">{content}</div>
-      <Footer />
+      <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+      <Footer showBackground={messages.length > 4} />
     </div>
   );
 }
