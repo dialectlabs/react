@@ -3,6 +3,7 @@ import { getDialectForMembers, createDialect, Member } from '@dialectlabs/web3';
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
 import { useApi } from '../ApiContext';
+import { messages as mockedMessages } from './mock';
 
 const fetchDialectForMembers = async (
   url: string,
@@ -46,8 +47,8 @@ const mutateDialectForMembers = async (
 };
 
 interface Message {
-  timestamp: number;
   text: string;
+  timestamp: number;
 }
 
 type PropsType = {
@@ -58,7 +59,7 @@ type PropsType = {
 type DialectContextType = {
   isWalletConnected: boolean;
   isDialectAvailable: boolean;
-  isDialeactCreating: boolean;
+  isDialectCreating: boolean;
   createDialect: () => void;
   isNoMessages: boolean;
   messages: Message[];
@@ -105,14 +106,20 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   );
 
+  const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
+  const isWalletConnected = Boolean(wallet);
+  const isDialectAvailable = Boolean(dialect);
+
+  // const isDialectAvailable = false;
+  // const messages = mockedMessages;
+
   const value = {
-    isWalletConnected: Boolean(wallet),
-    isDialectAvailable: Boolean(dialect),
+    isWalletConnected,
+    isDialectAvailable,
     createDialect: () => setCreating(true),
-    isDialeactCreating: creating,
-    messages: wallet && dialect ? dialect.dialect.messages : [],
-    isNoMessages:
-      wallet && dialect ? dialect.dialect.messages.length === 0 : true,
+    isDialectCreating: creating,
+    messages,
+    isNoMessages: messages?.length === 0,
   };
 
   return (

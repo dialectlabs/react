@@ -16,7 +16,7 @@ function Header(props: { right: JSX.Element | null }) {
 }
 
 function CreateThread() {
-  const { createDialect, isDialeactCreating } = useDialect();
+  const { createDialect, isDialectCreating } = useDialect();
 
   return (
     <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
@@ -36,9 +36,9 @@ function CreateThread() {
       <button
         className="hover:bg-black hover:text-white px-4 py-2 rounded-lg border border-black"
         onClick={createDialect}
-        disabled={isDialeactCreating}
+        disabled={isDialectCreating}
       >
-        {isDialeactCreating ? 'Enabling...' : 'Enable notifications'}
+        {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
       </button>
     </div>
   );
