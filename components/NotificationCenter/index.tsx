@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '../../api/DialectContext';
 import { IconButton } from '../Button';
-import { GearIcon } from '../Icon';
+import { DialectLogo, GearIcon, NotConnectedIcon } from '../Icon';
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 
@@ -32,7 +32,7 @@ function Settings() {
   return (
     <>
       <div className="mb-3">
-        <p className={cs(TEXT_STYLES.regular13, 'mb-2')}>
+        <p className={cs(TEXT_STYLES.regular13, 'mb-1')}>
           Included event types
         </p>
         <ul className={cs(TEXT_STYLES.medium15, 'list-disc pl-6')}>
@@ -46,7 +46,7 @@ function Settings() {
         </ul>
       </div>
       <div>
-        <ValueRow label="Included event types" className="mb-1">
+        <ValueRow label="Deposited Rent" className="mb-1">
           0.001 SOL
         </ValueRow>
         <Divider />
@@ -55,6 +55,17 @@ function Settings() {
         </ValueRow>
       </div>
     </>
+  );
+}
+
+function Footer(): JSX.Element {
+  return (
+    <div
+      className="w-40 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase"
+      style={{ fontSize: '10px' }}
+    >
+      Powered by <DialectLogo className="ml-px" />
+    </div>
   );
 }
 
@@ -79,8 +90,9 @@ export default function NotificationCenter(): JSX.Element {
 
   if (!isWalletConnected) {
     content = (
-      <div className="h-full flex items-center justify-center text-gray-400">
-        <div>Connect your wallet to enable notifications</div>
+      <div className="h-full flex flex-col items-center justify-center text-black">
+        <NotConnectedIcon className="mb-6" />
+        <span className="opacity-60">Wallet not connected</span>
       </div>
     );
   } else if (!isDialectAvailable) {
@@ -117,10 +129,13 @@ export default function NotificationCenter(): JSX.Element {
     <div className="flex flex-col overflow-y-scroll h-full shadow-md rounded-lg border bg-white">
       <div className="px-4 py-3 flex flex-row justify-between">
         <span className={TEXT_STYLES.medium15}>Notifications</span>
-        <IconButton icon={<GearIcon />} onClick={toggleSettings} />
+        {isWalletConnected && isDialectAvailable ? (
+          <IconButton icon={<GearIcon />} onClick={toggleSettings} />
+        ) : null}
       </div>
       <Divider />
-      <div className="py-4 px-6">{content}</div>
+      <div className="h-full py-2 px-4">{content}</div>
+      <Footer />
     </div>
   );
 }
