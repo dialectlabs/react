@@ -73,6 +73,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
       </button>
       <Transition
         className="z-50 absolute top-16 w-96 h-96"
+        style={{ width: '29rem', height: '29rem' }}
         show={open}
         enter="transition-opacity duration-500"
         enterFrom="opacity-0"
@@ -81,7 +82,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div ref={wrapperRef} className="w-96 h-96">
+        <div ref={wrapperRef} className="w-full h-full">
           <NotificationCenter />
         </div>
       </Transition>

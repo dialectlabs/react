@@ -1,6 +1,62 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '../../api/DialectContext';
+import { IconButton } from '../Button';
+import { GearIcon } from '../Icon';
 import { Notification } from './Notification';
+import cs from '../../utils/classNames';
+
+const TEXT_STYLES = {
+  regular13: 'text-sm font-normal',
+  medium13: 'text-sm font-medium',
+  medium15: 'text-base font-medium',
+};
+
+function Divider(): JSX.Element {
+  return <div className="h-px bg-gray-200" />;
+}
+
+function ValueRow(props: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p className={cs('flex flex-row justify-between', props.className)}>
+      <span className={cs(TEXT_STYLES.regular13)}>{props.label}:</span>
+      <span className={cs(TEXT_STYLES.medium13)}>{props.children}</span>
+    </p>
+  );
+}
+
+function Settings() {
+  return (
+    <>
+      <div className="mb-3">
+        <p className={cs(TEXT_STYLES.regular13, 'mb-2')}>
+          Included event types
+        </p>
+        <ul className={cs(TEXT_STYLES.medium15, 'list-disc pl-6')}>
+          <li>Deposit Confirmations</li>
+          <li>Liquidation Alerts</li>
+          <li>Top Up Requests</li>
+          <li>Cross-App Notifications</li>
+          <li>Price Alerts</li>
+          <li>New markets</li>
+          <li>Custom announcements</li>
+        </ul>
+      </div>
+      <div>
+        <ValueRow label="Included event types" className="mb-1">
+          0.001 SOL
+        </ValueRow>
+        <Divider />
+        <ValueRow label="Notifications thread account" className="mt-1">
+          0x21...1dX9↗
+        </ValueRow>
+      </div>
+    </>
+  );
+}
 
 export default function NotificationCenter(): JSX.Element {
   const {
@@ -11,6 +67,13 @@ export default function NotificationCenter(): JSX.Element {
     isDialeactCreating,
     messages,
   } = useDialect();
+
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
+
+  const toggleSettings = useCallback(
+    () => setSettingsOpen(!isSettingsOpen),
+    [isSettingsOpen, setSettingsOpen]
+  );
 
   let content: JSX.Element;
 
@@ -32,6 +95,8 @@ export default function NotificationCenter(): JSX.Element {
         </button>
       </div>
     );
+  } else if (isSettingsOpen) {
+    content = <Settings />;
   } else if (isNoMessages) {
     content = <div>No notifications yet.</div>;
   } else {
@@ -49,12 +114,13 @@ export default function NotificationCenter(): JSX.Element {
   }
 
   return (
-    <div className="flex flex-col overflow-y-scroll h-full shadow-md py-4 px-6 rounded-lg border bg-white">
-      <div className="text-lg font-semibold text-center mb-2">
-        Notifications
+    <div className="flex flex-col overflow-y-scroll h-full shadow-md rounded-lg border bg-white">
+      <div className="px-4 py-3 flex flex-row justify-between">
+        <span className={TEXT_STYLES.medium15}>Notifications</span>
+        <IconButton icon={<GearIcon />} onClick={toggleSettings} />
       </div>
-      <div className="h-px bg-gray-200" />
-      {content}
+      <Divider />
+      <div className="py-4 px-6">{content}</div>
     </div>
   );
 }
