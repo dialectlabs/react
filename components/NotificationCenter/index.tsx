@@ -1,7 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '../../api/DialectContext';
 import { IconButton } from '../Button';
-import { DialectLogo, GearIcon, NotConnectedIcon } from '../Icon';
+import {
+  DialectLogo,
+  GearIcon,
+  NoNotificationsIcon,
+  NotConnectedIcon,
+} from '../Icon';
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 
@@ -9,6 +14,7 @@ const TEXT_STYLES = {
   regular13: 'text-sm font-normal',
   medium13: 'text-sm font-medium',
   medium15: 'text-base font-medium',
+  bold30: 'text-3xl font-bold',
 };
 
 function Divider(): JSX.Element {
@@ -25,6 +31,54 @@ function ValueRow(props: {
       <span className={cs(TEXT_STYLES.regular13)}>{props.label}:</span>
       <span className={cs(TEXT_STYLES.medium13)}>{props.children}</span>
     </p>
+  );
+}
+
+function Footer(): JSX.Element {
+  return (
+    <div
+      className="w-40 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase"
+      style={{ fontSize: '10px' }}
+    >
+      Powered by <DialectLogo className="ml-px" />
+    </div>
+  );
+}
+
+function Centered(props: { children: React.ReactNode }): JSX.Element {
+  return (
+    <div className="h-full flex flex-col items-center justify-center">
+      {props.children}
+    </div>
+  );
+}
+
+function CreateThread() {
+  const { createDialect, isDialeactCreating } = useDialect();
+
+  return (
+    <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
+      <h1 className={cs(TEXT_STYLES.bold30, 'mb-3')}>
+        Create notifications thread
+      </h1>
+      <ValueRow
+        label="Rent Deposit (recoverable)"
+        className="w-full bg-black/5 px-4 py-3 rounded-lg mb-3"
+      >
+        0.0002 SOL
+      </ValueRow>
+      <p className={cs(TEXT_STYLES.regular13, 'text-center mb-3')}>
+        To start this message thread, you'll need to deposit a small amount of
+        rent, since messages are stored on-chain.
+      </p>
+      <button
+        className="hover:bg-black hover:text-white px-4 py-2 rounded-lg border border-black"
+        onClick={createDialect}
+        disabled={isDialeactCreating}
+      >
+        {isDialeactCreating ? 'Enabling...' : 'Enable notifications'}
+      </button>
+    </div>
   );
 }
 
@@ -58,26 +112,9 @@ function Settings() {
   );
 }
 
-function Footer(): JSX.Element {
-  return (
-    <div
-      className="w-40 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase"
-      style={{ fontSize: '10px' }}
-    >
-      Powered by <DialectLogo className="ml-px" />
-    </div>
-  );
-}
-
 export default function NotificationCenter(): JSX.Element {
-  const {
-    isWalletConnected,
-    isDialectAvailable,
-    isNoMessages,
-    createDialect,
-    isDialeactCreating,
-    messages,
-  } = useDialect();
+  const { isWalletConnected, isDialectAvailable, isNoMessages, messages } =
+    useDialect();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
@@ -90,27 +127,22 @@ export default function NotificationCenter(): JSX.Element {
 
   if (!isWalletConnected) {
     content = (
-      <div className="h-full flex flex-col items-center justify-center text-black">
+      <Centered>
         <NotConnectedIcon className="mb-6" />
-        <span className="opacity-60">Wallet not connected</span>
-      </div>
+        <span className="text-black opacity-60">Wallet not connected</span>
+      </Centered>
     );
   } else if (!isDialectAvailable) {
-    content = (
-      <div className="h-full flex items-center justify-center">
-        <button
-          className="bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 px-4 py-2 rounded-full"
-          onClick={createDialect}
-          disabled={isDialeactCreating}
-        >
-          {isDialeactCreating ? 'Enabling...' : 'Enable notifications'}
-        </button>
-      </div>
-    );
+    content = <CreateThread />;
   } else if (isSettingsOpen) {
     content = <Settings />;
   } else if (isNoMessages) {
-    content = <div>No notifications yet.</div>;
+    content = (
+      <Centered>
+        <NoNotificationsIcon className="mb-6" />
+        <span className="text-black opacity-60">No notifications yet</span>
+      </Centered>
+    );
   } else {
     content = (
       <>
