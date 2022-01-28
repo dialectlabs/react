@@ -3,10 +3,10 @@ import { DialectLogo } from '../Icon';
 import cs from '../../utils/classNames';
 
 export const TEXT_STYLES = {
-  regular13: 'text-sm font-normal',
-  medium13: 'text-sm font-medium',
-  medium15: 'text-base font-medium',
-  bold30: 'text-3xl font-bold',
+  regular13: 'font-inter text-sm font-normal',
+  medium13: 'font-inter text-sm font-medium',
+  medium15: 'font-inter text-base font-medium',
+  bold30: 'font-inter text-3xl font-bold',
 };
 
 export function Divider(): JSX.Element {

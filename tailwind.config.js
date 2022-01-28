@@ -5,8 +5,8 @@ module.exports = {
     fontFamily: {
       display: ['Lato, sans-serif'],
       body: ['Lato, sans-serif'],
+      inter: ['Inter, sans-serif'],
     },
-    
   },
   variants: {
     extend: {
