@@ -1,6 +1,3 @@
-const path = require('path');
-//next.config.js
-
 /* eslint-disable @typescript-eslint/no-var-requires */
 const withTM = require('next-transpile-modules')([
   '@solana/wallet-adapter-base',
