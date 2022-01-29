@@ -13,6 +13,6 @@
     "noEmit": false
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "examples"],
+  "exclude": ["node_modules"],
   "type": "module"
 }

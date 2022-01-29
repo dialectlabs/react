@@ -6,18 +6,9 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2020,
-    "parser": "babel-eslint",
-    "project": "./tsconfig.json",
-    "sourceType": "module"
-  },
   "plugins": [
     "@typescript-eslint",
     "prettier"
@@ -32,6 +23,17 @@
     "quotes": [2, "single", { "avoidEscape": true }],
     "prettier/prettier": ["error"]
   },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "parserOptions": {
+        "project": ["./tsconfig.json"]
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"
