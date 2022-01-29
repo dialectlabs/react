@@ -55,6 +55,16 @@ const fetchDialectForMembers = async (
   );
 };
 
+const MESSAGES_MOCK = [
+  {
+    owner: new anchor.web3.PublicKey(
+      '92esmqcgpA7CRCYtefHw2J6h7kQHi8q7pP3QmeTCQp8q'
+    ),
+    text: 'Hey, your Collateralization Ratio is quite hight',
+    timestamp: 1642703782810,
+  },
+];
+
 type PropTypes = {
   wallet: AnchorWallet | undefined;
   publicKey: anchor.web3.PublicKey;
@@ -101,7 +111,7 @@ export default function NotificationCenter(props: PropTypes): JSX.Element {
         <div>No dialect</div>
       ) : (
         <>
-          {dialect.dialect.messages.map((message) => (
+          {MESSAGES_MOCK.map((message) => (
             <Notification
               key={message.timestamp}
               message={message.text}
