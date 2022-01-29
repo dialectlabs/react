@@ -1,14 +1,8 @@
 {
-  "extends": "../../packages/dialect-react-ui/tsconfig.json",
   "compilerOptions": {
     "target": "es2019",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "declaration": true,
-    "outDir": "lib/es",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,

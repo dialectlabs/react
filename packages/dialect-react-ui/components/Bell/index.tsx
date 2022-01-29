@@ -24,7 +24,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
     } else {
       onWebDisconnect();
     }
-  }, [props.wallet]);
+  }, [onWebConnect, onWebDisconnect, props.wallet]);
   return (
     <div className="flex flex-col items-end">
       <button
