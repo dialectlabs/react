@@ -11,7 +11,7 @@
   "types": "./lib/es/index.d.ts",
   "scripts": {
     "dev": "next dev",
-    "build": "rm -rf lib && tsc && npx tailwindcss -o lib/index.css",
+    "build:react-ui": "yarn workspace @dialectlabs/react-ui run build",
     "lint": "eslint --ext .js --ext .ts --ext .tsx .",
     "lint:fix": "yarn lint --fix"
   },

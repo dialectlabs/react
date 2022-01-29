@@ -3,7 +3,7 @@
     "target": "es2019",
     "lib": ["dom", "dom.iterable", "esnext"],
     "declaration": true,
-    "outDir": "lib/es",
+    "outDir": "lib",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,

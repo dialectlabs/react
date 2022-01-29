@@ -16,7 +16,7 @@ const withTM = require('next-transpile-modules')([
   '@solana/wallet-adapter-torus',
   '@solana/wallet-adapter-wallets',
   '@project-serum/sol-wallet-adapter',
-  '@dialectlabs/react',
+  '@dialectlabs/react-ui',
 ]);
 
 module.exports = withTM({
