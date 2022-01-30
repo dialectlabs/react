@@ -15,6 +15,7 @@ const withTM = require('next-transpile-modules')([
   '@solana/wallet-adapter-torus',
   '@solana/wallet-adapter-wallets',
   '@project-serum/sol-wallet-adapter',
+  '../protocol',
 ]);
 
 module.exports = withTM({
