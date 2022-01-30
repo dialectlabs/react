@@ -2,30 +2,30 @@ import React, { useEffect, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
 import NotificationCenter from '../NotificationCenter';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { Wallet } from '@solana/wallet-adapter-wallets';
 import {
-  useWallet,
-  ApiContextProvider,
-  WalletContextProvider,
-} from '@dialectlabs/web3';
+  ApiProvider,
+  connected,
+  useApi,
+  WalletType,
+} from '../../api/ApiContext';
 
 type PropTypes = {
-  wallet: AnchorWallet | Wallet | undefined;
+  wallet: WalletType;
+  network?: string;
+  rpcUrl?: string;
   publicKey: anchor.web3.PublicKey;
 };
 
 function WrappedBell(props: PropTypes): JSX.Element {
   const [open, setOpen] = useState(false);
-  const { onWebConnect, onWebDisconnect, webWallet } = useWallet();
+  const { setWallet, setNetwork, setRpcUrl } = useApi();
 
-  useEffect(() => {
-    if (props.wallet) {
-      onWebConnect(props.wallet);
-    } else if (props.wallet === null || !props.wallet?.connected) {
-      onWebDisconnect();
-    }
-  }, [props.wallet, props.wallet?.connected]);
+  useEffect(() => setWallet(connected(props.wallet) ? props.wallet : null), [
+    props.wallet,
+    connected(props.wallet),
+  ]);
+  useEffect(() => setNetwork(props.network || null), [props.network]);
+  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl]);
 
   return (
     <div className="flex flex-col items-end">
@@ -46,10 +46,8 @@ function WrappedBell(props: PropTypes): JSX.Element {
 
 export function Bell(props: PropTypes): JSX.Element {
   return (
-    <WalletContextProvider>
-      <ApiContextProvider>
-        <WrappedBell {...props} />
-      </ApiContextProvider>
-    </WalletContextProvider>
+    <ApiProvider>
+      <WrappedBell {...props} />
+    </ApiProvider>
   );
 }
