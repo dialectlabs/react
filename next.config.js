@@ -15,6 +15,7 @@ const withTM = require('next-transpile-modules')([
   '@solana/wallet-adapter-torus',
   '@solana/wallet-adapter-wallets',
   '@project-serum/sol-wallet-adapter',
+  '../protocol',
 ]);
 
 module.exports = withTM({
@@ -29,6 +30,11 @@ module.exports = withTM({
       os: false,
       crypto: false,
     };
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ['@svgr/webpack'],
+    });
     return config;
   },
 });

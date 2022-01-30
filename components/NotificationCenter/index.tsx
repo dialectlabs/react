@@ -1,123 +1,136 @@
-import React from 'react';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
-import {
-  getMetadata,
-  createMetadata,
-  getDialectForMembers,
-  Member,
-} from '@dialectlabs/web3';
-import useSWR from 'swr';
-import * as anchor from '@project-serum/anchor';
+import React, { useCallback, useState } from 'react';
+import { useDialect, MessageType } from '../../api/DialectContext';
+import { IconButton } from '../Button';
+import { GearIcon, NoNotificationsIcon, NotConnectedIcon } from '../Icon';
 import { Notification } from './Notification';
-import { useApi, WalletType } from '../../api/ApiContext';
+import cs from '../../utils/classNames';
+import { Centered, Divider, Footer, TEXT_STYLES, ValueRow } from '../common';
 
-const fetchMetadata = async (
-  url: string,
-  program: anchor.Program,
-  user: string
-) => {
-  console.log('fetching metadata', url);
-  const metadata = await getMetadata(program, new anchor.web3.PublicKey(user));
-  return metadata;
-};
-
-const mutateMetadata = async (
-  url: string,
-  program: anchor.Program,
-  user: anchor.web3.PublicKey
-) => {
-  const metadata = await createMetadata(program, wallet); // 0.13 vs 0.18 for anchor dep might be the issue with linting here
-};
-
-const MOCK_USER_PUBKEY = '92esmqcgpA7CRCYtefHw2J6h7kQHi8q7pP3QmeTCQp8q'; // id-1.json?
-// const MOCK_USER_PUBKEY = '6C74KHp9KXDBUMGmoRbedt8xaafyDG8CKqw7qxPXDuEt';
-// const MOCK_USER_PUBKEY = 'DRNXnYa12YKy7Bwts9qZ5pR8HTCw7gXcPFtdfHBCZWsS';
-
-const fetchDialectForMembers = async (
-  url: string,
-  program: anchor.Program,
-  pubkey1: string,
-  pubkey2: string
-) => {
-  const member1: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey1),
-    scopes: [true, false], //
-  };
-  const member2: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey2),
-    scopes: [true, false], //
-  };
-  return await getDialectForMembers(
-    program,
-    [member1, member2],
-    anchor.web3.Keypair.generate()
+function Header(props: { right: JSX.Element | null }) {
+  return (
+    <div className="px-4 py-3 flex flex-row justify-between">
+      <span className={TEXT_STYLES.medium15}>Notifications</span>
+      {props.right ? props.right : null}
+    </div>
   );
-};
+}
 
-const MESSAGES_MOCK = [
-  {
-    owner: new anchor.web3.PublicKey(
-      '92esmqcgpA7CRCYtefHw2J6h7kQHi8q7pP3QmeTCQp8q'
-    ),
-    text: 'Hey, your Collateralization Ratio is quite hight',
-    timestamp: 1642703782810,
-  },
-];
-
-type PropTypes = {
-  wallet: WalletType;
-  publicKey: anchor.web3.PublicKey;
-};
-export default function NotificationCenter(props: PropTypes): JSX.Element {
-  const { wallet, program } = useApi();
-
-  const { data: metadata, error: metadataError } = useSWR(
-    program && wallet
-      ? ['metadata', program, wallet?.publicKey?.toString()]
-      : null,
-    fetchMetadata
-  );
-  const { data: dialect, error: dialectError } = useSWR(
-    wallet && program
-      ? [
-          'dialect',
-          program,
-          wallet?.publicKey?.toString(),
-          props.publicKey.toString(),
-        ]
-      : null,
-    fetchDialectForMembers
-  );
+function CreateThread() {
+  const { createDialect, isDialectCreating } = useDialect();
 
   return (
-    <div className="overflow-y-scroll bg-th-bkg-1 h-full shadow-md py-4 px-6 rounded-lg border border-th-bkg-2">
-      <div className="text-lg font-semibold text-center mb-2">
-        Notifications
+    <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
+      <h1 className={cs(TEXT_STYLES.bold30, 'mb-3')}>
+        Create notifications thread
+      </h1>
+      <ValueRow
+        label="Rent Deposit (recoverable)"
+        className="w-full bg-black/5 px-4 py-3 rounded-lg mb-3"
+      >
+        0.0002 SOL
+      </ValueRow>
+      <p className={cs(TEXT_STYLES.regular13, 'text-center mb-3')}>
+        To start this message thread, you'll need to deposit a small amount of
+        rent, since messages are stored on-chain.
+      </p>
+      <button
+        className="hover:bg-black hover:text-white px-4 py-2 rounded-lg border border-black"
+        onClick={createDialect}
+        disabled={isDialectCreating}
+      >
+        {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
+      </button>
+    </div>
+  );
+}
+
+function Settings() {
+  return (
+    <>
+      <div className="mb-3">
+        <p className={cs(TEXT_STYLES.regular13, 'mb-1')}>
+          Included event types
+        </p>
+        <ul className={cs(TEXT_STYLES.medium15, 'list-disc pl-6')}>
+          <li>Deposit Confirmations</li>
+          <li>Liquidation Alerts</li>
+          <li>Top Up Requests</li>
+          <li>Cross-App Notifications</li>
+          <li>Price Alerts</li>
+          <li>New markets</li>
+          <li>Custom announcements</li>
+        </ul>
       </div>
-      <div className="h-px bg-th-bkg-4" />
-      {!wallet ? (
-        <div className="h-full flex items-center justify-center">
-          <button className="bg-gray-200 hover:bg-gray-100 border border-gray-400 px-4 py-2 rounded-full">
-            {wallet
-              ? 'Enable notifications'
-              : 'Connect your wallet to enable notifications'}
-          </button>
-        </div>
-      ) : !metadata ? (
-        <div>No metadata</div>
-      ) : !dialect ? (
-        <div>No dialect</div>
-      ) : (
-        <>
-          {MESSAGES_MOCK.map((message) => (
-            <Notification
-              key={message.timestamp}
-              message={message.text}
-              timestamp={message.timestamp}
-            />
-          ))}
-        </>
-      )}
+      <div>
+        <ValueRow label="Deposited Rent" className="mb-1">
+          0.001 SOL
+        </ValueRow>
+        <Divider />
+        <ValueRow label="Notifications thread account" className="mt-1">
+          0x21...1dX9↗
+        </ValueRow>
+      </div>
+    </>
+  );
+}
+
+export default function NotificationCenter(): JSX.Element {
+  const { isWalletConnected, isDialectAvailable, isNoMessages, messages } =
+    useDialect();
+
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
+
+  const toggleSettings = useCallback(
+    () => setSettingsOpen(!isSettingsOpen),
+    [isSettingsOpen, setSettingsOpen]
+  );
+
+  let content: JSX.Element;
+
+  if (!isWalletConnected) {
+    content = (
+      <Centered>
+        <NotConnectedIcon className="mb-6" />
+        <span className="text-black opacity-60">Wallet not connected</span>
+      </Centered>
+    );
+  } else if (!isDialectAvailable) {
+    content = <CreateThread />;
+  } else if (isSettingsOpen) {
+    content = <Settings />;
+  } else if (isNoMessages) {
+    content = (
+      <Centered>
+        <NoNotificationsIcon className="mb-6" />
+        <span className="text-black opacity-60">No notifications yet</span>
+      </Centered>
+    );
+  } else {
+    content = (
+      <>
+        {messages.map((message: MessageType) => (
+          <Notification
+            key={message.timestamp}
+            message={message.text}
+            timestamp={message.timestamp}
+          />
+        ))}
+      </>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-full shadow-md rounded-lg border">
+      <Header
+        right={
+          isWalletConnected && isDialectAvailable ? (
+            <IconButton icon={<GearIcon />} onClick={toggleSettings} />
+          ) : null
+        }
+      />
+      <Divider />
+      <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+      <Footer showBackground={messages.length > 4} />
     </div>
   );
 }
