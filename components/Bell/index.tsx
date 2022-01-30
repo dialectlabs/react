@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
 import NotificationCenter from '../NotificationCenter';
-import { ApiProvider, connected, useApi, WalletType } from '../../api/ApiContext';
+import {
+  ApiProvider,
+  connected,
+  useApi,
+  WalletType,
+} from '../../api/ApiContext';
 
 type PropTypes = {
   wallet: WalletType;
@@ -15,7 +20,10 @@ function WrappedBell(props: PropTypes): JSX.Element {
   const [open, setOpen] = useState(false);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
 
-  useEffect(() => setWallet(connected(props.wallet) ? props.wallet : null), [connected(props.wallet)]);
+  useEffect(() => setWallet(connected(props.wallet) ? props.wallet : null), [
+    props.wallet,
+    connected(props.wallet),
+  ]);
   useEffect(() => setNetwork(props.network || null), [props.network]);
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl]);
 
@@ -39,7 +47,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
 export function Bell(props: PropTypes): JSX.Element {
   return (
     <ApiProvider>
-        <WrappedBell {...props} />
+      <WrappedBell {...props} />
     </ApiProvider>
   );
 }
