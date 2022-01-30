@@ -85,7 +85,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
       console.log('DISCONNECTED', wallet);
       setProgram(null);
     }
-  }, [connected(wallet), network, rpcUrl]);
+  }, [wallet, connected(wallet), network, rpcUrl]);
   return (
     <ApiContext.Provider value={value}>{props.children}</ApiContext.Provider>
   );

@@ -56,10 +56,10 @@ function WrappedBell(props: PropTypes): JSX.Element {
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
 
-  useEffect(
-    () => setWallet(connected(props.wallet) ? props.wallet : null),
-    [connected(props.wallet)]
-  );
+  useEffect(() => setWallet(connected(props.wallet) ? props.wallet : null), [
+    props.wallet,
+    connected(props.wallet),
+  ]);
   useEffect(() => setNetwork(props.network || null), [props.network]);
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl]);
 
