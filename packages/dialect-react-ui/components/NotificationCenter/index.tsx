@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { useDialect, MessageType } from '../../api/DialectContext';
+import {
+  useDialect,
+  MessageType,
+} from '../../../dialect-react/components/DialectContext';
 import { IconButton } from '../Button';
 import { GearIcon, NoNotificationsIcon, NotConnectedIcon } from '../Icon';
 import { Notification } from './Notification';

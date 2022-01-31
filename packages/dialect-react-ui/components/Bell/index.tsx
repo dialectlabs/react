@@ -8,9 +8,9 @@ import {
   connected,
   useApi,
   WalletType,
-} from '../../api/ApiContext';
+} from '../../../dialect-react/components/ApiContext';
 import { Transition } from '@headlessui/react';
-import { DialectProvider } from '../../api/DialectContext';
+import { DialectProvider } from '../../../dialect-react/components/DialectContext';
 
 type PropTypes = {
   wallet: WalletType;
@@ -72,7 +72,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
       <Head>
         {/* TODO: replace with importing the fonts right isolated way  */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
           rel="stylesheet"

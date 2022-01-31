@@ -2,7 +2,9 @@
  * Combines CSS class names into `class` attribute string
  * @param  {...any} classNames
  */
-export default (...classNames) => {
+export default (
+  ...classNames: Array<string | boolean | null | undefined>
+): string => {
   return classNames
     .filter(Boolean)
     .map((item) => (Array.isArray(item) ? item.join(' ') : item))
