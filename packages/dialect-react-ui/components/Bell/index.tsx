@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
+// TODO: remove this import, fonts need to be added by the parent
 import Head from 'next/head';
 import NotificationCenter from '../NotificationCenter';
 import {
@@ -71,6 +72,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
     <>
       <Head>
         {/* TODO: replace with importing the fonts right isolated way  */}
+        {/* TODO: remove next/head from this module completely and place it under "Prerequisites" for this package */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -116,7 +118,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
   );
 }
 
-export function Bell(props: PropTypes): JSX.Element {
+export default function Bell(props: PropTypes): JSX.Element {
   return (
     <ApiProvider>
       <DialectProvider publicKey={props.publicKey}>

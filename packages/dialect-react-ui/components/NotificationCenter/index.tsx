@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
-import { IconButton } from '../Button';
 import { GearIcon, NoNotificationsIcon, NotConnectedIcon } from '../Icon';
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 import { Centered, Divider, Footer, TEXT_STYLES, ValueRow } from '../common';
+import IconButton from '../IconButton';
 
 function Header(props: { right: JSX.Element | null }) {
   return (
