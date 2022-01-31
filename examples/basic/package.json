@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.16.7",
+    "@dialectlabs/react": "0.0.1",
     "@dialectlabs/react-ui": "0.0.1",
     "@dialectlabs/web3": "0.1.2",
     "@headlessui/react": "^1.2.0",

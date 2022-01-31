@@ -15,6 +15,9 @@ const withTM = require('next-transpile-modules')([
   '@project-serum/sol-wallet-adapter',
   '@dialectlabs/react-ui',
   '@dialectlabs/react',
+  // TODO: Ideally this should be @dialectlabs/web3 to reduce the amount of relative imports
+  // Even more ideal case - this shouldn't be here at all, this repo should target a published version of @dialectlabs/web3
+  // and changed to a `yarn link`ed version in testing/dev cases
   '../../../protocol/',
 ]);
 
@@ -38,7 +41,3 @@ module.exports = withTM({
     return config;
   },
 });
-
-// module.exports = {
-//   reactStrictMode: true,
-// }
