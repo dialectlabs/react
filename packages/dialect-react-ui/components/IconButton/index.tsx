@@ -5,7 +5,7 @@ type IconButtonPropsType = {
   onClick: () => void;
 };
 
-export function IconButton(props: IconButtonPropsType): JSX.Element {
+export default function IconButton(props: IconButtonPropsType): JSX.Element {
   return (
     <button
       className="hover:opacity-60"

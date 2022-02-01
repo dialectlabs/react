@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { useDialect, MessageType } from '../../api/DialectContext';
-import { IconButton } from '../Button';
+import { useDialect, MessageType } from '@dialectlabs/react';
 import { GearIcon, NoNotificationsIcon, NotConnectedIcon } from '../Icon';
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 import { Centered, Divider, Footer, TEXT_STYLES, ValueRow } from '../common';
+import IconButton from '../IconButton';
 
 function Header(props: { right: JSX.Element | null }) {
   return (
@@ -30,8 +30,8 @@ function CreateThread() {
         0.0002 SOL
       </ValueRow>
       <p className={cs(TEXT_STYLES.regular13, 'text-center mb-3')}>
-        To start this message thread, you'll need to deposit a small amount of
-        rent, since messages are stored on-chain.
+        To start this message thread, you&apos;ll need to deposit a small amount
+        of rent, since messages are stored on-chain.
       </p>
       <button
         className="hover:bg-black hover:text-white px-4 py-2 rounded-lg border border-black"

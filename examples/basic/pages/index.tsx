@@ -1,7 +1,7 @@
 import React from 'react';
 import * as anchor from '@project-serum/anchor';
 
-import { Bell } from '../components/Bell';
+import { Bell } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet } from '../components/Wallet';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 

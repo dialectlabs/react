@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
+// TODO: remove this import, fonts need to be added by the parent
 import Head from 'next/head';
 import NotificationCenter from '../NotificationCenter';
 import {
@@ -8,9 +9,9 @@ import {
   connected,
   useApi,
   WalletType,
-} from '../../api/ApiContext';
+  DialectProvider,
+} from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
-import { DialectProvider } from '../../api/DialectContext';
 
 type PropTypes = {
   wallet: WalletType;
@@ -55,20 +56,29 @@ function WrappedBell(props: PropTypes): JSX.Element {
   const [open, setOpen] = useState(false);
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
+  const isWalletConnected = connected(props.wallet);
 
-  useEffect(() => setWallet(connected(props.wallet) ? props.wallet : null), [
-    props.wallet,
-    connected(props.wallet),
-  ]);
-  useEffect(() => setNetwork(props.network || null), [props.network]);
-  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl]);
+  useEffect(
+    () => setWallet(connected(props.wallet) ? props.wallet : null),
+    [props.wallet, isWalletConnected, setWallet]
+  );
+  useEffect(
+    () => setNetwork(props.network || null),
+    [props.network, setNetwork]
+  );
+  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
   return (
     <>
       <Head>
         {/* TODO: replace with importing the fonts right isolated way  */}
+        {/* TODO: remove next/head from this module completely and place it under "Prerequisites" for this package */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
           rel="stylesheet"
@@ -108,7 +118,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
   );
 }
 
-export function Bell(props: PropTypes): JSX.Element {
+export default function Bell(props: PropTypes): JSX.Element {
   return (
     <ApiProvider>
       <DialectProvider publicKey={props.publicKey}>
