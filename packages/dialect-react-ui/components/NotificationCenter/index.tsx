@@ -1,6 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
-import { GearIcon, NoNotificationsIcon, NotConnectedIcon } from '../Icon';
+import {
+  BackArrowIcon,
+  GearIcon,
+  NoNotificationsIcon,
+  NotConnectedIcon,
+} from '../Icon';
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 import { Centered, Divider, Footer, TEXT_STYLES, ValueRow } from '../common';
@@ -124,7 +129,10 @@ export default function NotificationCenter(): JSX.Element {
       <Header
         right={
           isWalletConnected && isDialectAvailable ? (
-            <IconButton icon={<GearIcon />} onClick={toggleSettings} />
+            <IconButton
+              icon={isSettingsOpen ? <BackArrowIcon /> : <GearIcon />}
+              onClick={toggleSettings}
+            />
           ) : null
         }
       />
