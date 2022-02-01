@@ -4,5 +4,23 @@
   "description": "React wrappers for Dialect's web3 notifications",
   "main": "index.js",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "scripts": {
+    "build": "rm -rf lib && tsc"
+  },
+  "dependencies": {
+    "@dialectlabs/web3": "link:../../../protocol",
+    "@project-serum/anchor": "^0.13.2",
+    "@solana/wallet-adapter-base": "^0.7.0",
+    "@solana/wallet-adapter-react": "^0.13.1",
+    "@solana/wallet-adapter-wallets": "^0.11.3",
+    "@solana/web3.js": "^1.22.0",
+    "swr": "^0.5.6"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.34"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0"
+  }
 }

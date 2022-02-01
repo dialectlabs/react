@@ -1,54 +1,129 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
+// TODO: remove this import, fonts need to be added by the parent
+import Head from 'next/head';
 import NotificationCenter from '../NotificationCenter';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { Wallet } from '@solana/wallet-adapter-wallets';
 import {
-  useWallet,
-  ApiContextProvider,
-  WalletContextProvider,
-} from '@dialectlabs/web3';
+  ApiProvider,
+  connected,
+  useApi,
+  WalletType,
+  DialectProvider,
+} from '@dialectlabs/react';
+import { Transition } from '@headlessui/react';
 
 type PropTypes = {
-  wallet: AnchorWallet | Wallet | undefined;
+  wallet: WalletType;
+  network?: string;
+  rpcUrl?: string;
   publicKey: anchor.web3.PublicKey;
 };
 
-function WrappedBell(props: PropTypes): JSX.Element {
-  const [open, setOpen] = useState(false);
-  const { onWebConnect, onWebDisconnect, webWallet } = useWallet();
-
+function useOutsideAlerter(
+  ref: React.MutableRefObject<null>,
+  bellRef: React.MutableRefObject<null>,
+  setOpen: CallableFunction
+) {
   useEffect(() => {
-    if (props.wallet) {
-      onWebConnect(props.wallet);
-    } else if (props.wallet === null || !props.wallet?.connected) {
-      onWebDisconnect();
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        ref.current &&
+        !ref.current.contains(event.target) &&
+        bellRef.current &&
+        !bellRef.current.contains(event.target)
+      ) {
+        console.log('You clicked outside of me!');
+        setOpen(false);
+      }
     }
-  }, [onWebConnect, onWebDisconnect, props.wallet, props.wallet?.connected]);
+
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [ref]);
+}
+
+function WrappedBell(props: PropTypes): JSX.Element {
+  const wrapperRef = useRef(null);
+  const bellRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  useOutsideAlerter(wrapperRef, bellRef, setOpen);
+  const { setWallet, setNetwork, setRpcUrl } = useApi();
+  const isWalletConnected = connected(props.wallet);
+
+  useEffect(
+    () => setWallet(connected(props.wallet) ? props.wallet : null),
+    [props.wallet, isWalletConnected, setWallet]
+  );
+  useEffect(
+    () => setNetwork(props.network || null),
+    [props.network, setNetwork]
+  );
+  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
+
   return (
-    <div className="flex flex-col items-end">
-      <button
-        className="bg-th-bkg-4 flex items-center justify-center rounded-full w-8 h-8 text-th-fgd-1 focus:outline-none hover:text-th-primary"
-        onClick={() => setOpen(!open)}
-      >
-        <BellIcon className="w-4 h-4 rounded-full" />
-      </button>
-      {open && (
-        <div className="z-50 absolute top-14 w-96 h-96">
-          <NotificationCenter {...props} />
-        </div>
-      )}
-    </div>
+    <>
+      <Head>
+        {/* TODO: replace with importing the fonts right isolated way  */}
+        {/* TODO: remove next/head from this module completely and place it under "Prerequisites" for this package */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+      <div className="flex flex-col items-end">
+        <button
+          ref={bellRef}
+          className="flex items-center justify-center rounded-full w-12 h-12 focus:outline-none bg-white border border-gray-200 shadow-md"
+          onClick={() => setOpen(!open)}
+        >
+          <BellIcon className="w-6 h-6 rounded-full text-gray-500" />
+        </button>
+        <Transition
+          className="z-50 absolute top-16 w-96 h-96"
+          style={{ width: '29rem', height: '29rem' }}
+          show={open}
+          enter="transition-opacity duration-500"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-500"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div
+            ref={wrapperRef}
+            className="w-full h-full bg-white"
+            // TODO: investigate blur
+            // className="w-full h-full bg-white/10"
+            // style={{ backdropFilter: 'blur(132px)' }}
+          >
+            <NotificationCenter />
+          </div>
+        </Transition>
+      </div>
+    </>
   );
 }
 
-export function Bell(props: PropTypes): JSX.Element {
+export default function Bell(props: PropTypes): JSX.Element {
   return (
-    <WalletContextProvider>
-      <ApiContextProvider>
+    <ApiProvider>
+      <DialectProvider publicKey={props.publicKey}>
         <WrappedBell {...props} />
-      </ApiContextProvider>
-    </WalletContextProvider>
+      </DialectProvider>
+    </ApiProvider>
   );
 }

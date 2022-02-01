@@ -22,7 +22,7 @@ yarn add @dialectlabs/react @dialectlabs/react-ui
 - Nodejs (>=15.10 <17)
 
 ### Get Started
-This repo utilized [Yarn Workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/). Publishable packages are located under `packages` directory. `examples` directory contains projects to demonstrate how can Dialect be used. 
+This repo utilizes [Yarn Workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/). Publishable packages are located under `packages` directory. `examples` directory contains projects to demonstrate how can Dialect be used. 
 
 For development, you implement necessary component inside the packages and use them in examples to visualize them.
 
