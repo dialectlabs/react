@@ -10,12 +10,31 @@ import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 import { Centered, Divider, Footer, TEXT_STYLES, ValueRow } from '../common';
 import IconButton from '../IconButton';
+import { display } from '@dialectlabs/web3';
 
-function Header(props: { right: JSX.Element | null }) {
+function Header(props: {
+  isReady: boolean;
+  isSettingsOpen: boolean;
+  toggleSettings: () => void;
+}) {
+  if (props.isSettingsOpen) {
+    return (
+      <div className="px-4 py-3 flex flex-row items-center">
+        <IconButton
+          icon={<BackArrowIcon />}
+          onClick={props.toggleSettings}
+          className="mr-2"
+        />
+        <span className={TEXT_STYLES.medium15}>Settings</span>
+      </div>
+    );
+  }
   return (
-    <div className="px-4 py-3 flex flex-row justify-between">
+    <div className="px-4 py-3 flex flex-row justify-between items-center">
       <span className={TEXT_STYLES.medium15}>Notifications</span>
-      {props.right ? props.right : null}
+      {props.isReady ? (
+        <IconButton icon={<GearIcon />} onClick={props.toggleSettings} />
+      ) : null}
     </div>
   );
 }
@@ -50,6 +69,7 @@ function CreateThread() {
 }
 
 function Settings() {
+  const { notificationsThreadAddress } = useDialect();
   return (
     <>
       <div className="mb-3">
@@ -72,7 +92,7 @@ function Settings() {
         </ValueRow>
         <Divider />
         <ValueRow label="Notifications thread account" className="mt-1">
-          0x21...1dX9↗
+          {display(notificationsThreadAddress)}↗
         </ValueRow>
       </div>
     </>
@@ -127,14 +147,9 @@ export default function NotificationCenter(): JSX.Element {
   return (
     <div className="flex flex-col h-full shadow-md rounded-lg border">
       <Header
-        right={
-          isWalletConnected && isDialectAvailable ? (
-            <IconButton
-              icon={isSettingsOpen ? <BackArrowIcon /> : <GearIcon />}
-              onClick={toggleSettings}
-            />
-          ) : null
-        }
+        isReady={isWalletConnected && isDialectAvailable}
+        isSettingsOpen={isSettingsOpen}
+        toggleSettings={toggleSettings}
       />
       <Divider />
       <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>

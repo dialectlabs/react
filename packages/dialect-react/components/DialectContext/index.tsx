@@ -63,6 +63,7 @@ type DialectContextType = {
   createDialect: () => void;
   isNoMessages: boolean;
   messages: Message[];
+  notificationsThreadAddress: string | null;
 };
 
 const DialectContext = createContext<DialectContextType | null>(null);
@@ -109,6 +110,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
   const isWalletConnected = Boolean(wallet);
   const isDialectAvailable = Boolean(dialect);
+  const notificationsThreadAddress =
+    wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;
 
   // const isDialectAvailable = false;
   // const messages = mockedMessages;
@@ -120,6 +123,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     isDialectCreating: creating,
     messages,
     isNoMessages: messages?.length === 0,
+    notificationsThreadAddress,
   };
 
   return (
