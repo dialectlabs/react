@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialectLogo } from '../Icon';
+import { DialectLogo, SpinnerIcon } from '../Icon';
 import cs from '../../utils/classNames';
 
 export const TEXT_STYLES = {
@@ -49,8 +49,7 @@ export function Centered(props: { children: React.ReactNode }): JSX.Element {
 }
 
 export function Loader() {
-  // TODO: use actual animated circle loader
-  return <>Loading...</>;
+  return <SpinnerIcon className="animate-spin" />;
 }
 
 export function Button(props: {
@@ -63,7 +62,7 @@ export function Button(props: {
   return (
     <button
       className={cs(
-        'px-4 py-2 rounded-lg transition-all border border-black',
+        'min-w-120 px-4 py-2 rounded-lg transition-all border border-black flex flex-row justify-center',
         !props.loading && 'bg-black text-white hover:opacity-60',
         props.loading && 'opacity-20 bg-transparent text-black',
         props.className
