@@ -1,14 +1,20 @@
-export interface ParsedError {
-  type: string;
+export const ParsedErrorType = {
+  InsufficientFunds: 'INSUFFICIENT_FUNDS',
+  DisconnectedFromChain: 'DISCONNECTED_FROM_CHAIN',
+  UnknownError: 'UNKNOWN_ERROR',
+} as const;
+type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
+
+export interface ParsedErrorData {
+  type: typeof ParsedErrorType[ParsedErrorTypeKeys];
   title: string;
   message: string;
   matchers?: Array<string | RegExp>;
 }
 
-// TODO: Probably matcher could be anchor error code, instead of a message
 // TODO: Implement Error instances?
-const insufficientFunds = {
-  type: 'INSUFFICIENT_FUNDS',
+const insufficientFunds: ParsedErrorData = {
+  type: ParsedErrorType.InsufficientFunds,
   title: 'Insufficient Funds',
   message:
     'You do not have enough funds to complete this transaction. Please deposit more funds and try again.',
@@ -18,17 +24,23 @@ const insufficientFunds = {
   ],
 };
 
-const unknownError = {
-  type: 'UNKNOWN_ERROR',
+const disconnectedFromChain: ParsedErrorData = {
+  type: ParsedErrorType.DisconnectedFromChain,
+  title: 'Lost connection to Solana blockchain',
+  message:
+    'Having problems reaching Solana blockchain. Please try again later.',
+  matchers: ['Network request failed'],
+};
+
+const unknownError: ParsedErrorData = {
+  type: ParsedErrorType.UnknownError,
   title: 'Error',
   message: 'Something went wrong. Please try again later.',
 };
 
-const errors: ParsedError[] = [insufficientFunds, unknownError];
+const errors: ParsedErrorData[] = [insufficientFunds, disconnectedFromChain];
 
 const parseError = (error: Error) => {
-  console.log('parsing error...', error);
-
   return (
     errors.find((err) =>
       err.matchers?.find((matcher) => error.message.match(matcher))

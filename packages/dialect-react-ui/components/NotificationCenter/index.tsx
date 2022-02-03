@@ -5,6 +5,7 @@ import {
   GearIcon,
   NoNotificationsIcon,
   NotConnectedIcon,
+  OfflineIcon,
   TrashIcon,
 } from '../Icon';
 import { Notification } from './Notification';
@@ -20,6 +21,9 @@ import {
 } from '../common';
 import IconButton from '../IconButton';
 import { display } from '@dialectlabs/web3';
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = () => {};
 
 function Header(props: {
   isReady: boolean;
@@ -70,7 +74,7 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
       </p>
       <Button
         forTheme={props.forTheme}
-        onClick={createDialect}
+        onClick={() => createDialect().catch(noop)}
         loading={isDialectCreating}
       >
         {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
@@ -145,8 +149,13 @@ export default function NotificationCenter(
     theme?: 'dark' | 'light';
   } = { theme: 'dark' }
 ): JSX.Element {
-  const { isWalletConnected, isDialectAvailable, isNoMessages, messages } =
-    useDialect();
+  const {
+    isWalletConnected,
+    isDialectAvailable,
+    isNoMessages,
+    messages,
+    disconnectedFromChain,
+  } = useDialect();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
@@ -160,10 +169,17 @@ export default function NotificationCenter(
 
   let content: JSX.Element;
 
-  if (!isWalletConnected) {
+  if (disconnectedFromChain) {
     content = (
       <Centered>
-        <NotConnectedIcon className="mb-6" />
+        <OfflineIcon className="w-10 mb-6 opacity-60" />
+        <span className="opacity-60">Lost connection to Solana blockchain</span>
+      </Centered>
+    );
+  } else if (!isWalletConnected) {
+    content = (
+      <Centered>
+        <NotConnectedIcon className="mb-6 opacity-60" />
         <span className="opacity-60">Wallet not connected</span>
       </Centered>
     );

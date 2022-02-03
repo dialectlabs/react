@@ -6,6 +6,7 @@ import Dialect from './assets/dialect-logo.svg';
 import BackArrow from './assets/back-arrow.svg';
 import Trash from './assets/trash.svg';
 import Spinner from './assets/spinner.svg';
+import Offline from './assets/cloud-offline-outline.svg';
 
 // function Icon(params:type) {
 //     return
@@ -41,4 +42,8 @@ export function DialectLogo(props: IconPropsType): JSX.Element {
 
 export function SpinnerIcon(props: IconPropsType): JSX.Element {
   return <Spinner {...props} />;
+}
+
+export function OfflineIcon(props: IconPropsType): JSX.Element {
+  return <Offline {...props} />;
 }
