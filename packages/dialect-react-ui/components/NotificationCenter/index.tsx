@@ -49,7 +49,7 @@ function Header(props: {
 }
 
 function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
-  const { createDialect, isDialectCreating } = useDialect();
+  const { createDialect, isDialectCreating, creationError } = useDialect();
 
   return (
     <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
@@ -75,6 +75,13 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
       >
         {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
       </Button>
+      {creationError && (
+        <p
+          className={cs(TEXT_STYLES.regular11, 'text-red-500 text-center mt-2')}
+        >
+          {creationError.message}
+        </p>
+      )}
     </div>
   );
 }

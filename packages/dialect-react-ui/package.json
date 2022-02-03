@@ -16,7 +16,7 @@
     "@dialectlabs/web3": "link:../../../protocol",
     "@headlessui/react": "^1.2.0",
     "@heroicons/react": "^1.0.0",
-    "@project-serum/anchor": "^0.13.2",
+    "@project-serum/anchor": "^0.18.2",
     "swr": "^0.5.6"
   },
   "devDependencies": {
