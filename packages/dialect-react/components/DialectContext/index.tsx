@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
 import { useApi } from '../ApiContext';
 import { messages as mockedMessages } from './mock';
+import type { DialectAccount } from '@dialectlabs/web3';
 
 const fetchDialectForMembers = async (
   url: string,
@@ -49,6 +50,19 @@ const mutateDialectForMembers = async (
     member1,
     member2,
   ]);
+};
+
+const mutateDeleteDialect = async (
+  _: string,
+  program: anchor.Program,
+  dialect: DialectAccount,
+  ownerPKString: string
+) => {
+  const owner: Member = {
+    publicKey: new anchor.web3.PublicKey(ownerPKString),
+    scopes: [true, false], //
+  };
+  return await deleteDialect(program, dialect, owner);
 };
 
 interface Message {
@@ -112,6 +126,24 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       onError: (error) => {
         console.log('error creating dialect', error);
         setCreating(false);
+      },
+    }
+  );
+
+  useSWR(
+    deleting
+      ? ['dialect', program, dialect, wallet?.publicKey?.toString()]
+      : null,
+    mutateDeleteDialect,
+    {
+      onSuccess: (data) => {
+        console.log('deleted dialect', data);
+        mutateDialect(null);
+        setDeleting(false);
+      },
+      onError: (error) => {
+        console.log('error deleting dialect', error);
+        setDeleting(false);
       },
     }
   );
