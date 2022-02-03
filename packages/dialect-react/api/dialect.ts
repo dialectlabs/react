@@ -9,7 +9,7 @@ import {
 import { withErrorParsing } from '../utils/errors';
 
 /**
- * Create a readonly thread (or dialect) between 2 users
+ * Create a readonly thread (a.k.a. dialect) between 2 users
  *
  * @param program {anchor.Program}
  * @param pubkey1 {string}
@@ -32,6 +32,13 @@ export const createDialectForMembers = withErrorParsing(
   }
 );
 
+/**
+ * Get a thread (a.k.a. dialect) for two users
+ *
+ * @param program {anchor.Program}
+ * @param pubkey1 {string}
+ * @param pubkey2 {string}
+ */
 export const fetchDialectForMembers = withErrorParsing(
   async (program: anchor.Program, pubkey1: string, pubkey2: string) => {
     const member1: Member = {
@@ -50,6 +57,13 @@ export const fetchDialectForMembers = withErrorParsing(
   }
 );
 
+/**
+ * Delete existing thread (a.k.a. dialect)
+ *
+ * @param program {anchor.Program}
+ * @param dialect {DialectAccount}
+ * @param ownerPKString {string}
+ */
 export const deleteDialect = withErrorParsing(
   async (
     program: anchor.Program,

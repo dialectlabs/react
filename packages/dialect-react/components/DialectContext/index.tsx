@@ -67,7 +67,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     data: dialect,
     mutate: mutateDialect,
     error: fetchError,
-  } = useSWR<DialectAccount, ParsedErrorData>(
+  } = useSWR<DialectAccount | null, ParsedErrorData>(
     wallet && program
       ? [
           'dialect',
@@ -124,9 +124,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     setDeleting(true);
 
     try {
-      await deleteDialect(program, dialect, props.publicKey.toString());
+      await deleteDialect(program, dialect, wallet?.publicKey?.toString());
 
-      await mutateDialect();
+      await mutateDialect(null);
       setDeletionError(null);
     } catch (e) {
       // TODO: implement safer error handling
@@ -137,7 +137,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     } finally {
       setDeleting(false);
     }
-  }, [dialect, mutateDialect, program, props.publicKey, wallet?.publicKey]);
+  }, [dialect, mutateDialect, program, wallet?.publicKey]);
 
   const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
   const isWalletConnected = Boolean(wallet);

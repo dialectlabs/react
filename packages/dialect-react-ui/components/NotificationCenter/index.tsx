@@ -79,7 +79,8 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
       >
         {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
       </Button>
-      {creationError && (
+      {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
+      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
         <p
           className={cs(TEXT_STYLES.regular11, 'text-red-500 text-center mt-2')}
         >
@@ -94,8 +95,12 @@ function Settings(props: {
   forTheme?: 'dark' | 'light';
   toggleSettings: () => void;
 }) {
-  const { notificationsThreadAddress, deleteDialect, isDialectDeleting } =
-    useDialect();
+  const {
+    notificationsThreadAddress,
+    deleteDialect,
+    isDialectDeleting,
+    deletionError,
+  } = useDialect();
 
   return (
     <>
@@ -128,7 +133,7 @@ function Settings(props: {
             </ValueRow>
             <BigButton
               onClick={async () => {
-                await deleteDialect();
+                await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
                 props.toggleSettings();
               }}
@@ -137,6 +142,17 @@ function Settings(props: {
               icon={<TrashIcon />}
               loading={isDialectDeleting}
             />
+            {deletionError &&
+              deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+                <p
+                  className={cs(
+                    TEXT_STYLES.regular11,
+                    'text-red-500 text-center mt-2'
+                  )}
+                >
+                  {deletionError.message}
+                </p>
+              )}
           </>
         ) : null}
       </div>
