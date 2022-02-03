@@ -1,5 +1,10 @@
 import React, { createContext, useContext } from 'react';
-import { getDialectForMembers, createDialect, Member } from '@dialectlabs/web3';
+import {
+  getDialectForMembers,
+  createDialect,
+  deleteDialect,
+  Member,
+} from '@dialectlabs/web3';
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
 import { useApi } from '../ApiContext';
@@ -59,8 +64,10 @@ type PropsType = {
 type DialectContextType = {
   isWalletConnected: boolean;
   isDialectAvailable: boolean;
-  isDialectCreating: boolean;
   createDialect: () => void;
+  isDialectCreating: boolean;
+  deleteDialect: () => void;
+  isDialectDeleting: boolean;
   isNoMessages: boolean;
   messages: Message[];
   notificationsThreadAddress: string | null;
@@ -70,6 +77,8 @@ const DialectContext = createContext<DialectContextType | null>(null);
 
 export const DialectProvider = (props: PropsType): JSX.Element => {
   const [creating, setCreating] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(false);
+
   const { wallet, program } = useApi();
 
   const { data: dialect, mutate: mutateDialect } = useSWR(
@@ -107,6 +116,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   );
 
+  // TODO: useSWR to delete Dialect
+
   const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
   const isWalletConnected = Boolean(wallet);
   const isDialectAvailable = Boolean(dialect);
@@ -121,6 +132,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     isDialectAvailable,
     createDialect: () => setCreating(true),
     isDialectCreating: creating,
+    deleteDialect: () => setDeleting(true),
+    isDialectDeleting: deleting,
     messages,
     isNoMessages: messages?.length === 0,
     notificationsThreadAddress,
