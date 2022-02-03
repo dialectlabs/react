@@ -48,7 +48,7 @@ function Header(props: {
   );
 }
 
-function CreateThread() {
+function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
   const { createDialect, isDialectCreating } = useDialect();
 
   return (
@@ -57,8 +57,10 @@ function CreateThread() {
         Create notifications thread
       </h1>
       <ValueRow
+        highlighted
         label="Rent Deposit (recoverable)"
-        className="w-full bg-black/5 px-4 py-3 rounded-lg mb-3"
+        forTheme={props.forTheme}
+        className={cs('w-full mb-3')}
       >
         0.0002 SOL
       </ValueRow>
@@ -66,14 +68,21 @@ function CreateThread() {
         To start this message thread, you&apos;ll need to deposit a small amount
         of rent, since messages are stored on-chain.
       </p>
-      <Button onClick={createDialect} loading={isDialectCreating}>
+      <Button
+        forTheme={props.forTheme}
+        onClick={createDialect}
+        loading={isDialectCreating}
+      >
         {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
       </Button>
     </div>
   );
 }
 
-function Settings() {
+function Settings(props: {
+  forTheme?: 'dark' | 'light';
+  toggleSettings: () => void;
+}) {
   const { notificationsThreadAddress, deleteDialect, isDialectDeleting } =
     useDialect();
 
@@ -94,7 +103,7 @@ function Settings() {
         </ul>
       </div>
       <div>
-        <ValueRow label="Deposited Rent" className="mb-1">
+        <ValueRow label="Deposited Rent" className={cs('mb-1')}>
           0.001 SOL
         </ValueRow>
         <Divider />
@@ -107,7 +116,11 @@ function Settings() {
               {display(notificationsThreadAddress)}↗
             </ValueRow>
             <BigButton
-              onClick={deleteDialect}
+              onClick={async () => {
+                await deleteDialect();
+                // TODO: properly wait for the deletion
+                props.toggleSettings();
+              }}
               heading="Withdraw rent & delete history"
               description="Events history will be lost forever"
               icon={<TrashIcon />}
@@ -148,9 +161,11 @@ export default function NotificationCenter(
       </Centered>
     );
   } else if (!isDialectAvailable) {
-    content = <CreateThread />;
+    content = <CreateThread forTheme={props.theme} />;
   } else if (isSettingsOpen) {
-    content = <Settings />;
+    content = (
+      <Settings toggleSettings={toggleSettings} forTheme={props.theme} />
+    );
   } else if (isNoMessages) {
     content = (
       <Centered>
