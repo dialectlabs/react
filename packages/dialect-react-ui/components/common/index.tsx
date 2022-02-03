@@ -9,17 +9,34 @@ export const TEXT_STYLES = {
   bold30: 'font-inter text-3xl font-bold',
 };
 
-export function Divider(): JSX.Element {
-  return <div className="h-px bg-gray-200" />;
+export function Divider(props: { className?: string }): JSX.Element {
+  return (
+    <div
+      className={cs('h-px opacity-10', props.className)}
+      style={{ backgroundColor: 'currentColor' }}
+    />
+  );
 }
 
 export function ValueRow(props: {
   label: string;
   children: React.ReactNode;
+  forTheme?: 'dark' | 'light';
+  highlighted?: boolean;
   className?: string;
 }) {
+  const bgColor = props.forTheme === 'dark' ? 'bg-white/5' : 'bg-night/5';
+
   return (
-    <p className={cs('flex flex-row justify-between', props.className)}>
+    <p
+      className={cs(
+        'flex flex-row justify-between',
+        props.highlighted && bgColor,
+        props.highlighted && 'px-4 py-3 rounded-lg',
+
+        props.className
+      )}
+    >
       <span className={cs(TEXT_STYLES.regular13)}>{props.label}:</span>
       <span className={cs(TEXT_STYLES.medium13)}>{props.children}</span>
     </p>
@@ -57,14 +74,21 @@ export function Button(props: {
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
+  forTheme?: 'dark' | 'light';
   children: React.ReactNode;
 }): JSX.Element {
   return (
     <button
       className={cs(
-        'min-w-120 px-4 py-2 rounded-lg transition-all border border-black flex flex-row justify-center',
-        !props.loading && 'bg-black text-white hover:opacity-60',
-        props.loading && 'opacity-20 bg-transparent text-black',
+        'min-w-120 px-4 py-2 rounded-lg transition-all border flex flex-row justify-center',
+        !props.loading && 'hover:opacity-60',
+        props.loading && 'opacity-20 bg-transparent',
+        props.forTheme === 'dark' &&
+          !props.loading &&
+          'bg-white text-black border-white',
+        props.forTheme === 'light' &&
+          !props.loading &&
+          'bg-black text-white border-black',
         props.className
       )}
       onClick={props.onClick}
@@ -87,11 +111,12 @@ export function BigButton(props: {
   return (
     <button
       className={cs(
-        'w-full px-4 py-2 rounded-lg border border-black transition-all',
+        'w-full px-4 py-2 rounded-lg border transition-all',
         !props.loading && 'hover:opacity-60',
         props.loading && 'opacity-20',
         props.className
       )}
+      style={{ borderColor: 'currentColor' }}
       onClick={props.onClick}
       disabled={props.loading || props.disabled}
     >
