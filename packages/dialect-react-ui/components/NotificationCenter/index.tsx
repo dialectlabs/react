@@ -5,17 +5,45 @@ import {
   GearIcon,
   NoNotificationsIcon,
   NotConnectedIcon,
+  TrashIcon,
 } from '../Icon';
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
-import { Centered, Divider, Footer, TEXT_STYLES, ValueRow } from '../common';
+import {
+  BigButton,
+  Button,
+  Centered,
+  Divider,
+  Footer,
+  TEXT_STYLES,
+  ValueRow,
+} from '../common';
 import IconButton from '../IconButton';
+import { display } from '@dialectlabs/web3';
 
-function Header(props: { right: JSX.Element | null }) {
+function Header(props: {
+  isReady: boolean;
+  isSettingsOpen: boolean;
+  toggleSettings: () => void;
+}) {
+  if (props.isSettingsOpen) {
+    return (
+      <div className="px-4 py-3 flex flex-row items-center">
+        <IconButton
+          icon={<BackArrowIcon />}
+          onClick={props.toggleSettings}
+          className="mr-2"
+        />
+        <span className={TEXT_STYLES.medium15}>Settings</span>
+      </div>
+    );
+  }
   return (
-    <div className="px-4 py-3 flex flex-row justify-between">
+    <div className="px-4 py-3 flex flex-row justify-between items-center">
       <span className={TEXT_STYLES.medium15}>Notifications</span>
-      {props.right ? props.right : null}
+      {props.isReady ? (
+        <IconButton icon={<GearIcon />} onClick={props.toggleSettings} />
+      ) : null}
     </div>
   );
 }
@@ -25,7 +53,7 @@ function CreateThread() {
 
   return (
     <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1 className={cs(TEXT_STYLES.bold30, 'mb-3')}>
+      <h1 className={cs(TEXT_STYLES.bold30, 'mb-3 text-center')}>
         Create notifications thread
       </h1>
       <ValueRow
@@ -38,18 +66,17 @@ function CreateThread() {
         To start this message thread, you&apos;ll need to deposit a small amount
         of rent, since messages are stored on-chain.
       </p>
-      <button
-        className="hover:bg-black hover:text-white px-4 py-2 rounded-lg border border-black"
-        onClick={createDialect}
-        disabled={isDialectCreating}
-      >
+      <Button onClick={createDialect} loading={isDialectCreating}>
         {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
-      </button>
+      </Button>
     </div>
   );
 }
 
 function Settings() {
+  const { notificationsThreadAddress, deleteDialect, isDialectDeleting } =
+    useDialect();
+
   return (
     <>
       <div className="mb-3">
@@ -71,9 +98,23 @@ function Settings() {
           0.001 SOL
         </ValueRow>
         <Divider />
-        <ValueRow label="Notifications thread account" className="mt-1">
-          0x21...1dX9↗
-        </ValueRow>
+        {notificationsThreadAddress ? (
+          <>
+            <ValueRow
+              label="Notifications thread account"
+              className="mt-1 mb-4"
+            >
+              {display(notificationsThreadAddress)}↗
+            </ValueRow>
+            <BigButton
+              onClick={deleteDialect}
+              heading="Withdraw rent & delete history"
+              description="Events history will be lost forever"
+              icon={<TrashIcon />}
+              loading={isDialectDeleting}
+            />
+          </>
+        ) : null}
       </div>
     </>
   );
@@ -127,14 +168,9 @@ export default function NotificationCenter(): JSX.Element {
   return (
     <div className="flex flex-col h-full shadow-md rounded-lg border">
       <Header
-        right={
-          isWalletConnected && isDialectAvailable ? (
-            <IconButton
-              icon={isSettingsOpen ? <BackArrowIcon /> : <GearIcon />}
-              onClick={toggleSettings}
-            />
-          ) : null
-        }
+        isReady={isWalletConnected && isDialectAvailable}
+        isSettingsOpen={isSettingsOpen}
+        toggleSettings={toggleSettings}
       />
       <Divider />
       <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
