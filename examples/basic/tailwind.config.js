@@ -18,6 +18,10 @@ module.exports = {
       full: '100%',
       120: '120px',
     },
+    backgroundColor: (theme) => ({
+      ...theme('colors'),
+      night: '#252525',
+    }),
   },
   variants: {
     extend: {

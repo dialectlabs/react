@@ -22,6 +22,7 @@ function AuthedHome() {
           wallet={wallet}
           network={'localnet'}
           publicKey={MANGO_PUBLIC_KEY}
+          theme="dark"
         />
         <Wallet />
       </div>

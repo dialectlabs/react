@@ -120,7 +120,11 @@ function Settings() {
   );
 }
 
-export default function NotificationCenter(): JSX.Element {
+export default function NotificationCenter(
+  props: {
+    theme?: 'dark' | 'light';
+  } = { theme: 'dark' }
+): JSX.Element {
   const { isWalletConnected, isDialectAvailable, isNoMessages, messages } =
     useDialect();
 
@@ -131,13 +135,16 @@ export default function NotificationCenter(): JSX.Element {
     [isSettingsOpen, setSettingsOpen]
   );
 
+  const bgColor = props.theme === 'dark' ? 'bg-night' : 'bg-white';
+  const textColor = props.theme === 'dark' ? 'text-white' : 'text-black';
+
   let content: JSX.Element;
 
   if (!isWalletConnected) {
     content = (
       <Centered>
         <NotConnectedIcon className="mb-6" />
-        <span className="text-black opacity-60">Wallet not connected</span>
+        <span className="opacity-60">Wallet not connected</span>
       </Centered>
     );
   } else if (!isDialectAvailable) {
@@ -148,7 +155,7 @@ export default function NotificationCenter(): JSX.Element {
     content = (
       <Centered>
         <NoNotificationsIcon className="mb-6" />
-        <span className="text-black opacity-60">No notifications yet</span>
+        <span className="opacity-60">No notifications yet</span>
       </Centered>
     );
   } else {
@@ -166,7 +173,13 @@ export default function NotificationCenter(): JSX.Element {
   }
 
   return (
-    <div className="flex flex-col h-full shadow-md rounded-lg border">
+    <div
+      className={cs(
+        'flex flex-col h-full shadow-md rounded-lg overflow-hidden border',
+        textColor,
+        bgColor
+      )}
+    >
       <Header
         isReady={isWalletConnected && isDialectAvailable}
         isSettingsOpen={isSettingsOpen}

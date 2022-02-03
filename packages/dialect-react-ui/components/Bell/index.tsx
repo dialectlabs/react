@@ -3,7 +3,6 @@ import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
 // TODO: remove this import, fonts need to be added by the parent
 import Head from 'next/head';
-import NotificationCenter from '../NotificationCenter';
 import {
   ApiProvider,
   connected,
@@ -12,12 +11,15 @@ import {
   DialectProvider,
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
+import cs from '../../utils/classNames';
+import NotificationCenter from '../NotificationCenter';
 
 type PropTypes = {
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
   publicKey: anchor.web3.PublicKey;
+  theme?: 'dark' | 'light';
 };
 
 function useOutsideAlerter(
@@ -68,6 +70,8 @@ function WrappedBell(props: PropTypes): JSX.Element {
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
+  const bgColor = props.theme === 'dark' ? 'bg-night' : 'bg-white';
+
   return (
     <>
       <Head>
@@ -87,10 +91,18 @@ function WrappedBell(props: PropTypes): JSX.Element {
       <div className="flex flex-col items-end">
         <button
           ref={bellRef}
-          className="flex items-center justify-center rounded-full w-12 h-12 focus:outline-none bg-white border border-gray-200 shadow-md"
+          className={cs(
+            'flex items-center justify-center rounded-full w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
+            bgColor
+          )}
           onClick={() => setOpen(!open)}
         >
-          <BellIcon className="w-6 h-6 rounded-full text-gray-500" />
+          <BellIcon
+            className={cs(
+              'w-6 h-6 rounded-full',
+              props.theme === 'dark' ? 'text-white' : 'text-gray-500'
+            )}
+          />
         </button>
         <Transition
           className="z-50 absolute top-16 w-96 h-96"
@@ -105,12 +117,12 @@ function WrappedBell(props: PropTypes): JSX.Element {
         >
           <div
             ref={wrapperRef}
-            className="w-full h-full bg-white"
+            className="w-full h-full"
             // TODO: investigate blur
             // className="w-full h-full bg-white/10"
             // style={{ backdropFilter: 'blur(132px)' }}
           >
-            <NotificationCenter />
+            <NotificationCenter theme={props.theme} />
           </div>
         </Transition>
       </div>

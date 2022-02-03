@@ -9,8 +9,13 @@ export const TEXT_STYLES = {
   bold30: 'font-inter text-3xl font-bold',
 };
 
-export function Divider(): JSX.Element {
-  return <div className="h-px bg-gray-200" />;
+export function Divider(props: { className?: string }): JSX.Element {
+  return (
+    <div
+      className={cs('h-px opacity-10', props.className)}
+      style={{ backgroundColor: 'currentColor' }}
+    />
+  );
 }
 
 export function ValueRow(props: {
@@ -87,11 +92,12 @@ export function BigButton(props: {
   return (
     <button
       className={cs(
-        'w-full px-4 py-2 rounded-lg border border-black transition-all',
+        'w-full px-4 py-2 rounded-lg border transition-all',
         !props.loading && 'hover:opacity-60',
         props.loading && 'opacity-20',
         props.className
       )}
+      style={{ borderColor: 'currentColor' }}
       onClick={props.onClick}
       disabled={props.loading || props.disabled}
     >
