@@ -9,7 +9,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html className="bg-black">
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
