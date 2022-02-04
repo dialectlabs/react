@@ -88,7 +88,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
           rel="stylesheet"
         />
       </Head>
-      <div className="flex flex-col items-end">
+      <div className="flex flex-col items-end relative">
         <button
           ref={bellRef}
           className={cs(
