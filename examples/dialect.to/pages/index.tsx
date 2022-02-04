@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import * as anchor from '@project-serum/anchor';
-
+import Image from 'next/image';
 import { Bell } from '@dialectlabs/react-ui';
+import * as anchor from '@project-serum/anchor';
+import { useWallet } from '@solana/wallet-adapter-react';
+
 import { WalletContext, Wallet } from '../components/Wallet';
 import Button from '../components/Button';
-import { useWallet } from '@solana/wallet-adapter-react';
+
+import Notifs from './assets/notifs.png';
+import Pattern from './assets/pttrn@2x.png';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
@@ -36,27 +40,31 @@ function AuthedHome() {
 
   return (
     <div
-      className="flex bg-black justify-center bg-gradient-radial"
-      style={{ backgroundImage: `url(${'/images/pttrn2x.png'})` }}
+      className="h-screen min-h-[796px] flex bg-black justify-center"
+      style={{
+        backgroundImage: `url(${Pattern.src})`,
+        backgroundSize: '282px',
+      }}
     >
-      <div className="container flex-col h-screen">
+      <div className="bg-gradient-radial absolute left-0 right-0 top-0 bottom-0 w-full h-full"></div>
+      <div className="container flex flex-col relative z-10">
         {/* navbar */}
         <div className="flex justify-between items-center my-6">
-          <div className="text-3xl font-medium text-white tracking-wider">
-            DIALECT
+          <div className="text-3xl font-medium text-white tracking-wider uppercase">
+            Dialect
           </div>
           <div className="flex flex-row justify-end p-2 space-x-4 items-center space-x-2">
             <Bell
               wallet={wallet}
               network={'localnet'}
               publicKey={DIALECT_PUBLIC_KEY}
-              theme={theme}
+              theme={'dark'}
             />
             <Wallet />
           </div>
         </div>
         {/* body */}
-        <div className="flex flex-col h-full mt-32">
+        <div className="flex flex-col h-full self-center mt-16">
           <div className="grid grid-cols-1 gap-48 lg:grid-cols-2 items-center">
             <div className="flex flex-col justify-center">
               <div className="text-white text-8xl">
@@ -79,7 +87,10 @@ function AuthedHome() {
             </div>
 
             <div className="flex justify-end text-white text-6xl">
-              <img src={'/images/notifs.png'} />
+              <Image
+                alt="Notification centers in different dapps"
+                src={Notifs}
+              />
             </div>
           </div>
         </div>
