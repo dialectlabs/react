@@ -10,6 +10,9 @@ import Button from '../components/Button';
 import Notifs from './assets/notifs.png';
 import Pattern from './assets/pttrn@2x.png';
 
+import PhantomIcon from './assets/phantom.svg';
+import TwitterIcon from './assets/twitter.svg';
+
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
 );
@@ -81,8 +84,14 @@ function AuthedHome() {
                 &amp; infrastructure.
               </div>
               <div className="flex space-x-4 mt-8">
-                <Button>connect wallet &amp; try</Button>
-                <Button>integrate us</Button>
+                <Button>
+                  <PhantomIcon className="mr-2" />
+                  connect wallet &amp; try
+                </Button>
+                <Button>
+                  <TwitterIcon className="mr-2" />
+                  integrate us
+                </Button>
               </div>
             </div>
 
