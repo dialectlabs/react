@@ -24,7 +24,7 @@
     "typescript": "^4.5.5"
   },
   "keywords": [],
-  "author": "c. b. osborn",
+  "author": "@dialectlabs",
   "license": "MIT",
   "browser": {
     "fs": false,

@@ -28,6 +28,7 @@ For development, you implement necessary component inside the packages and use t
 
 To get started, launch example's next dev server:
 ```shell
+yarn # in root dir
 cd examples/basic
 yarn dev
 ```
