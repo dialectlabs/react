@@ -57,13 +57,13 @@ function AuthedHome() {
             Dialect
           </div>
           <div className="flex flex-row justify-end p-2 space-x-4 items-center space-x-2">
+            <Wallet />
             <Bell
               wallet={wallet}
               network={'localnet'}
               publicKey={DIALECT_PUBLIC_KEY}
-              theme={'dark'}
+              theme={theme}
             />
-            <Wallet />
           </div>
         </div>
         {/* body */}
