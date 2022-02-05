@@ -4,7 +4,7 @@ import { Bell } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { Wallet } from '../components/Wallet';
+import { ConnectWalletButton } from '../components/Wallet';
 import { WalletContext } from '../components/Wallet/WalletContext';
 import Button from '../components/Button';
 
@@ -57,7 +57,7 @@ function AuthedHome() {
             Dialect
           </div>
           <div className="flex flex-row justify-end p-2 space-x-4 items-center space-x-2">
-            <Wallet />
+            <ConnectWalletButton>Connect wallet</ConnectWalletButton>
             <Bell
               wallet={wallet}
               network={'localnet'}
@@ -84,10 +84,10 @@ function AuthedHome() {
                 &amp; infrastructure.
               </div>
               <div className="flex space-x-4 mt-8">
-                <Button>
-                  <PhantomIcon className="mr-2" />
-                  connect wallet &amp; try
-                </Button>
+                <ConnectWalletButton>
+                  Connect wallet &amp; try
+                </ConnectWalletButton>
+
                 <Button>
                   <TwitterIcon className="mr-2" />
                   integrate us
