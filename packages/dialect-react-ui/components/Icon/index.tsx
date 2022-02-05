@@ -7,7 +7,7 @@ import {
   BackArrow,
   Trash,
   Spinner,
-  Offline
+  Offline,
 } from './icons/';
 
 type IconPropsType = {
