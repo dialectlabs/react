@@ -45,7 +45,7 @@ Now you have a hot reload of the packages in the workspace.
 Store original svgs in `<ComponentName>/source/`, run to convert:
 
 ```
-  npx @svgr/cli --out-dir icons -- source
+  npx @svgr/cli --typescript --out-dir icons -- source
 ```
 
 Than import Icon as a React Component from `<ComponentName>/icons/`, e.g. (`./icons/BackArrow`). See [SVGR Command Line guide](https://react-svgr.com/docs/cli/) for more details.

@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { SVGProps } from 'react';
 
-const SvgSpinner = (props) => (
+const SvgSpinner = (props: SVGProps<SVGSVGElement>) => (
   <svg
     width={16}
     height={16}

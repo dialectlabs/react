@@ -9,14 +9,11 @@ import {
   Spinner,
 } from './icons/';
 
-// function Icon(params:type) {
-//     return
-// }
-
 type IconPropsType = {
   className?: string;
 };
 
+// TODO: do we need this, since we already have svgr generated icons
 export function GearIcon(props: IconPropsType): JSX.Element {
   return <Gear {...props} />;
 }

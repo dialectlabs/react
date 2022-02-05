@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { SVGProps } from 'react';
 
-const SvgNoNotifications = (props) => (
+const SvgNoNotifications = (props: SVGProps<SVGSVGElement>) => (
   <svg
     width={38}
     height={39}
