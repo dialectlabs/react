@@ -1,45 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { Bell } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { ConnectWalletButton } from '../components/Wallet';
-import { WalletContext } from '../components/Wallet/WalletContext';
+import { WalletButton, WalletContext } from '../components/Wallet';
 import Button from '../components/Button';
 
 import Notifs from './assets/notifs.png';
 import Pattern from './assets/pttrn@2x.png';
 
-import { PhantomIcon, TwitterIcon } from '../components/Icon';
+import { TwitterIcon } from '../components/Icon';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
 );
 
-type ThemeType = 'light' | 'dark' | undefined;
-
 function AuthedHome() {
   // const wallet = useAnchorWallet();
   const wallet = useWallet();
-  const [theme, setTheme] = useState<ThemeType>('dark');
-
-  useEffect(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
-    window
-      .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', (event) => {
-        const newColorScheme = event.matches ? 'dark' : 'light';
-        setTheme(newColorScheme);
-      });
-  }, []);
 
   return (
     <div
@@ -57,12 +36,16 @@ function AuthedHome() {
             Dialect
           </div>
           <div className="flex flex-row justify-end p-2 space-x-4 items-center space-x-2">
-            <ConnectWalletButton>Connect wallet</ConnectWalletButton>
+            <WalletButton>Connect wallet</WalletButton>
             <Bell
               wallet={wallet}
               network={'localnet'}
               publicKey={DIALECT_PUBLIC_KEY}
-              theme={theme}
+              theme="dark"
+              bellStyle={{
+                backgroundColor: 'white',
+                color: 'black',
+              }}
             />
           </div>
         </div>
@@ -84,9 +67,7 @@ function AuthedHome() {
                 &amp; infrastructure.
               </div>
               <div className="flex space-x-4 mt-8">
-                <ConnectWalletButton>
-                  Connect wallet &amp; try
-                </ConnectWalletButton>
+                <WalletButton>Connect wallet &amp; try</WalletButton>
 
                 <Button>
                   <TwitterIcon className="mr-2" />

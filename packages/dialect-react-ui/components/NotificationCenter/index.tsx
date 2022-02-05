@@ -10,11 +10,13 @@ import {
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 import {
+  BG_COLOR_MAPPING,
   BigButton,
   Button,
   Centered,
   Divider,
   Footer,
+  TEXT_COLOR_MAPPING,
   TEXT_STYLES,
   ValueRow,
 } from '../common';
@@ -135,7 +137,7 @@ function Settings(props: {
 
 export default function NotificationCenter(
   props: {
-    theme?: 'dark' | 'light';
+    theme?: ThemeType;
   } = { theme: 'dark' }
 ): JSX.Element {
   const { isWalletConnected, isDialectAvailable, isNoMessages, messages } =
@@ -148,8 +150,8 @@ export default function NotificationCenter(
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const bgColor = props.theme === 'dark' ? 'bg-night' : 'bg-white';
-  const textColor = props.theme === 'dark' ? 'text-white' : 'text-black';
+  const bgColor = props.theme && BG_COLOR_MAPPING[props.theme];
+  const textColor = props.theme && TEXT_COLOR_MAPPING[props.theme];
 
   let content: JSX.Element;
 
