@@ -5,6 +5,7 @@ import {
   GearIcon,
   NoNotificationsIcon,
   NotConnectedIcon,
+  OfflineIcon,
   TrashIcon,
 } from '../Icon';
 import { Notification } from './Notification';
@@ -22,6 +23,9 @@ import {
 } from '../common';
 import IconButton from '../IconButton';
 import { display } from '@dialectlabs/web3';
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = () => {};
 
 function Header(props: {
   isReady: boolean;
@@ -51,7 +55,7 @@ function Header(props: {
 }
 
 function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
-  const { createDialect, isDialectCreating } = useDialect();
+  const { createDialect, isDialectCreating, creationError } = useDialect();
 
   return (
     <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
@@ -72,11 +76,19 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
       </p>
       <Button
         forTheme={props.forTheme}
-        onClick={createDialect}
+        onClick={() => createDialect().catch(noop)}
         loading={isDialectCreating}
       >
         {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
       </Button>
+      {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
+      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+        <p
+          className={cs(TEXT_STYLES.regular11, 'text-red-500 text-center mt-2')}
+        >
+          {creationError.message}
+        </p>
+      )}
     </div>
   );
 }
@@ -85,8 +97,12 @@ function Settings(props: {
   forTheme?: 'dark' | 'light';
   toggleSettings: () => void;
 }) {
-  const { notificationsThreadAddress, deleteDialect, isDialectDeleting } =
-    useDialect();
+  const {
+    notificationsThreadAddress,
+    deleteDialect,
+    isDialectDeleting,
+    deletionError,
+  } = useDialect();
 
   return (
     <>
@@ -119,7 +135,7 @@ function Settings(props: {
             </ValueRow>
             <BigButton
               onClick={async () => {
-                await deleteDialect();
+                await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
                 props.toggleSettings();
               }}
@@ -128,6 +144,17 @@ function Settings(props: {
               icon={<TrashIcon />}
               loading={isDialectDeleting}
             />
+            {deletionError &&
+              deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+                <p
+                  className={cs(
+                    TEXT_STYLES.regular11,
+                    'text-red-500 text-center mt-2'
+                  )}
+                >
+                  {deletionError.message}
+                </p>
+              )}
           </>
         ) : null}
       </div>
@@ -140,8 +167,13 @@ export default function NotificationCenter(
     theme?: ThemeType;
   } = { theme: 'dark' }
 ): JSX.Element {
-  const { isWalletConnected, isDialectAvailable, isNoMessages, messages } =
-    useDialect();
+  const {
+    isWalletConnected,
+    isDialectAvailable,
+    isNoMessages,
+    messages,
+    disconnectedFromChain,
+  } = useDialect();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
@@ -155,10 +187,17 @@ export default function NotificationCenter(
 
   let content: JSX.Element;
 
-  if (!isWalletConnected) {
+  if (disconnectedFromChain) {
     content = (
       <Centered>
-        <NotConnectedIcon className="mb-6" />
+        <OfflineIcon className="w-10 mb-6 opacity-60" />
+        <span className="opacity-60">Lost connection to Solana blockchain</span>
+      </Centered>
+    );
+  } else if (!isWalletConnected) {
+    content = (
+      <Centered>
+        <NotConnectedIcon className="mb-6 opacity-60" />
         <span className="opacity-60">Wallet not connected</span>
       </Centered>
     );

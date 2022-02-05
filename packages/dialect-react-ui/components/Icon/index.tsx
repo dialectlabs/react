@@ -7,6 +7,7 @@ import {
   BackArrow,
   Trash,
   Spinner,
+  Offline
 } from './icons/';
 
 type IconPropsType = {
@@ -40,4 +41,8 @@ export function DialectLogo(props: IconPropsType): JSX.Element {
 
 export function SpinnerIcon(props: IconPropsType): JSX.Element {
   return <Spinner {...props} />;
+}
+
+export function OfflineIcon(props: IconPropsType): JSX.Element {
+  return <Offline {...props} />;
 }

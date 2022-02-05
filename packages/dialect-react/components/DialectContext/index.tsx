@@ -1,69 +1,24 @@
-import React, { createContext, useContext } from 'react';
-import {
-  getDialectForMembers,
-  createDialect,
-  deleteDialect,
-  Member,
-} from '@dialectlabs/web3';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+} from 'react';
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
-import { useApi } from '../ApiContext';
-import { messages as mockedMessages } from './mock';
+import { connected, useApi } from '../ApiContext';
 import type { DialectAccount } from '@dialectlabs/web3';
+import {
+  createDialectForMembers,
+  fetchDialectForMembers,
+  deleteDialect,
+} from '../../api';
+import { ParsedErrorData, ParsedErrorType } from '../../utils/errors';
 
-const fetchDialectForMembers = async (
-  url: string,
-  program: anchor.Program,
-  pubkey1: string,
-  pubkey2: string
-) => {
-  const member1: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey1),
-    scopes: [true, false], //
-  };
-  const member2: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey2),
-    scopes: [true, false], //
-  };
-  return await getDialectForMembers(
-    program,
-    [member1, member2],
-    anchor.web3.Keypair.generate()
-  );
-};
-
-const mutateDialectForMembers = async (
+const swrFetchDialect = (
   _: string,
-  program: anchor.Program,
-  pubkey1: string,
-  pubkey2: string
-) => {
-  const member1: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey1),
-    scopes: [true, false], //
-  };
-  const member2: Member = {
-    publicKey: new anchor.web3.PublicKey(pubkey2),
-    scopes: [true, false], //
-  };
-  return await createDialect(program, program.provider.wallet, [
-    member1,
-    member2,
-  ]);
-};
-
-const mutateDeleteDialect = async (
-  _: string,
-  program: anchor.Program,
-  dialect: DialectAccount,
-  ownerPKString: string
-) => {
-  const owner: Member = {
-    publicKey: new anchor.web3.PublicKey(ownerPKString),
-    scopes: [true, false], //
-  };
-  return await deleteDialect(program, dialect, owner);
-};
+  ...args: Parameters<typeof fetchDialectForMembers>
+) => fetchDialectForMembers(...args);
 
 interface Message {
   text: string;
@@ -75,13 +30,17 @@ type PropsType = {
   publicKey: anchor.web3.PublicKey;
 };
 
+// TODO: revisit api functions and errors to be moved out from context
 type DialectContextType = {
+  disconnectedFromChain: boolean;
   isWalletConnected: boolean;
   isDialectAvailable: boolean;
-  createDialect: () => void;
+  createDialect: () => Promise<void>;
   isDialectCreating: boolean;
-  deleteDialect: () => void;
+  creationError: ParsedErrorData | null;
+  deleteDialect: () => Promise<void>;
   isDialectDeleting: boolean;
+  deletionError: ParsedErrorData | null;
   isNoMessages: boolean;
   messages: Message[];
   notificationsThreadAddress: string | null;
@@ -89,13 +48,27 @@ type DialectContextType = {
 
 const DialectContext = createContext<DialectContextType | null>(null);
 
+const POLLING_INTERVAL_MS = 1000;
+
 export const DialectProvider = (props: PropsType): JSX.Element => {
   const [creating, setCreating] = React.useState(false);
+  const [creationError, setCreationError] =
+    React.useState<ParsedErrorData | null>(null);
+
   const [deleting, setDeleting] = React.useState(false);
+  const [deletionError, setDeletionError] =
+    React.useState<ParsedErrorData | null>(null);
+
+  const [disconnectedFromChain, setDisconnected] = React.useState(false);
 
   const { wallet, program } = useApi();
+  const isWalletConnected = connected(wallet);
 
-  const { data: dialect, mutate: mutateDialect } = useSWR(
+  const {
+    data: dialect,
+    mutate: mutateDialect,
+    error: fetchError,
+  } = useSWR<DialectAccount | null, ParsedErrorData>(
     wallet && program
       ? [
           'dialect',
@@ -104,68 +77,90 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
           props.publicKey.toString(),
         ]
       : null,
-    fetchDialectForMembers
+    swrFetchDialect,
+    { refreshInterval: POLLING_INTERVAL_MS }
   );
 
-  useSWR(
-    creating
-      ? [
-          'dialect',
-          program,
-          wallet?.publicKey?.toString(),
-          props.publicKey.toString(),
-        ]
-      : null,
-    mutateDialectForMembers,
-    {
-      onSuccess: (data) => {
-        console.log('created dialect', data);
-        mutateDialect(data);
-        setCreating(false);
-      },
-      onError: (error) => {
-        console.log('error creating dialect', error);
-        setCreating(false);
-      },
+  useEffect(() => {
+    const existingErrorType =
+      fetchError?.type ?? creationError?.type ?? deletionError?.type;
+
+    setDisconnected(
+      existingErrorType === ParsedErrorType.DisconnectedFromChain
+    );
+  }, [creationError?.type, deletionError?.type, fetchError?.type]);
+
+  const createDialectWrapper = useCallback(async () => {
+    if (!program || !isWalletConnected || !wallet?.publicKey) {
+      return;
     }
-  );
 
-  useSWR(
-    deleting
-      ? ['dialect', program, dialect, wallet?.publicKey?.toString()]
-      : null,
-    mutateDeleteDialect,
-    {
-      onSuccess: (data) => {
-        console.log('deleted dialect', data);
-        mutateDialect(null);
-        setDeleting(false);
-      },
-      onError: (error) => {
-        console.log('error deleting dialect', error);
-        setDeleting(false);
-      },
+    setCreating(true);
+
+    try {
+      const data = await createDialectForMembers(
+        program,
+        wallet.publicKey?.toString(),
+        props.publicKey.toString()
+      );
+
+      await mutateDialect(data, false);
+      setCreationError(null);
+    } catch (e) {
+      // TODO: implement safer error handling
+      setCreationError(e as ParsedErrorData);
+
+      // Passing through the error, in case for additional UI error handling
+      throw e;
+    } finally {
+      setCreating(false);
     }
-  );
+  }, [
+    mutateDialect,
+    program,
+    props.publicKey,
+    wallet?.publicKey,
+    isWalletConnected,
+  ]);
 
-  // TODO: useSWR to delete Dialect
+  const deleteDialectWrapper = useCallback(async () => {
+    if (!program || !isWalletConnected || !dialect || !wallet?.publicKey) {
+      return;
+    }
+
+    setDeleting(true);
+
+    try {
+      await deleteDialect(program, dialect, wallet.publicKey?.toString());
+
+      await mutateDialect(null);
+      setDeletionError(null);
+    } catch (e) {
+      // TODO: implement safer error handling
+      setDeletionError(e as ParsedErrorData);
+
+      // Passing through the error, in case for additional UI error handling
+      throw e;
+    } finally {
+      setDeleting(false);
+    }
+  }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
   const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
-  const isWalletConnected = Boolean(wallet);
   const isDialectAvailable = Boolean(dialect);
   const notificationsThreadAddress =
     wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;
 
-  // const isDialectAvailable = false;
-  // const messages = mockedMessages;
-
   const value = {
+    disconnectedFromChain,
     isWalletConnected,
     isDialectAvailable,
-    createDialect: () => setCreating(true),
+    createDialect: createDialectWrapper,
     isDialectCreating: creating,
-    deleteDialect: () => setDeleting(true),
+    creationError,
+    deleteDialect: deleteDialectWrapper,
     isDialectDeleting: deleting,
+    deletionError,
     messages,
     isNoMessages: messages?.length === 0,
     notificationsThreadAddress,
@@ -181,7 +176,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 export function useDialect(): DialectContextType {
   const context = useContext(DialectContext);
   if (!context) {
-    throw new Error('useApi must be used within an ApiProvider');
+    throw new Error('useDialect must be used within an DialectProvider');
   }
   return context;
 }
