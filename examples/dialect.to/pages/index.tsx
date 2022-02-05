@@ -4,14 +4,14 @@ import { Bell } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { WalletContext, Wallet } from '../components/Wallet';
+import { Wallet } from '../components/Wallet';
+import { WalletContext } from '../components/Wallet/WalletContext';
 import Button from '../components/Button';
 
 import Notifs from './assets/notifs.png';
 import Pattern from './assets/pttrn@2x.png';
 
-import PhantomIcon from './assets/phantom.svg';
-import TwitterIcon from './assets/twitter.svg';
+import { PhantomIcon, TwitterIcon } from '../components/Icon';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
