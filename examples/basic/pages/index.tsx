@@ -42,7 +42,7 @@ function AuthedHome() {
           publicKey={DIALECT_PUBLIC_KEY}
           theme={theme}
         />
-        <Wallet />
+        <WalletButton />
       </div>
       <div className="h-full text-4xl flex flex-col justify-center">
         <div className="text-center">Pretty sophisticated service</div>
