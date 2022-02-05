@@ -10,7 +10,9 @@ const URLS: Record<'devnet' | 'localnet', string> = {
   localnet: 'http://localhost:8899',
 };
 
-export const connected = (wallet: WalletType): boolean => {
+export const connected = (
+  wallet: WalletType
+): wallet is WalletContextState | AnchorWallet => {
   /*
     Wallets can be of type AnchorWallet or WalletContextState.
 

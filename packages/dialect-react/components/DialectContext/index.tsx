@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import useSWR from 'swr';
 import * as anchor from '@project-serum/anchor';
-import { useApi } from '../ApiContext';
+import { connected, useApi } from '../ApiContext';
 import type { DialectAccount } from '@dialectlabs/web3';
 import {
   createDialectForMembers,
@@ -62,6 +62,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [disconnectedFromChain, setDisconnected] = React.useState(false);
 
   const { wallet, program } = useApi();
+  const isWalletConnected = connected(wallet);
 
   const {
     data: dialect,
@@ -90,7 +91,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   }, [creationError?.type, deletionError?.type, fetchError?.type]);
 
   const createDialectWrapper = useCallback(async () => {
-    if (!program || !wallet?.publicKey) {
+    if (!program || !isWalletConnected || !wallet?.publicKey) {
       return;
     }
 
@@ -114,17 +115,23 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     } finally {
       setCreating(false);
     }
-  }, [mutateDialect, program, props.publicKey, wallet?.publicKey]);
+  }, [
+    mutateDialect,
+    program,
+    props.publicKey,
+    wallet?.publicKey,
+    isWalletConnected,
+  ]);
 
   const deleteDialectWrapper = useCallback(async () => {
-    if (!program || !dialect || !wallet?.publicKey) {
+    if (!program || !isWalletConnected || !dialect || !wallet?.publicKey) {
       return;
     }
 
     setDeleting(true);
 
     try {
-      await deleteDialect(program, dialect, wallet?.publicKey?.toString());
+      await deleteDialect(program, dialect, wallet.publicKey?.toString());
 
       await mutateDialect(null);
       setDeletionError(null);
@@ -137,10 +144,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     } finally {
       setDeleting(false);
     }
-  }, [dialect, mutateDialect, program, wallet?.publicKey]);
+  }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
   const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
-  const isWalletConnected = Boolean(wallet);
   const isDialectAvailable = Boolean(dialect);
   const notificationsThreadAddress =
     wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;
