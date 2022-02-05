@@ -4,13 +4,15 @@ import { Connection } from '@solana/web3.js';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { idl, programs } from '@dialectlabs/web3';
 
-const URLS = {
+const URLS: Record<'devnet' | 'localnet', string> = {
   // TODO: Move to protocol/web3
   devnet: 'https://api.devnet.solana.com',
   localnet: 'http://localhost:8899',
 };
 
-export const connected = (wallet: WalletType): boolean => {
+export const connected = (
+  wallet: WalletType
+): wallet is WalletContextState | AnchorWallet => {
   /*
     Wallets can be of type AnchorWallet or WalletContextState.
 
@@ -47,9 +49,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
   const [wallet, setWallet] = useState<WalletType>(null);
   const [program, setProgram] = useState<ProgramType>(null);
   const [network, setNetwork] = useState<string | null>('devnet');
-  const [rpcUrl, setRpcUrl] = useState<string | null>(
-    'https://api.devnet.solana.com'
-  );
+  const [rpcUrl, setRpcUrl] = useState<string | null>(URLS.devnet);
   const value = {
     wallet,
     setWallet,
@@ -59,8 +59,11 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     setRpcUrl,
     program,
   };
+
+  const isWalletConnected = connected(wallet);
+
   useEffect(() => {
-    if (connected(wallet)) {
+    if (isWalletConnected) {
       console.log('CONNECTED', wallet);
       const n: 'devnet' | 'localnet' =
         network && Object.keys(URLS).includes(network)
@@ -85,7 +88,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
       console.log('DISCONNECTED', wallet);
       setProgram(null);
     }
-  }, [wallet, connected(wallet), network, rpcUrl]);
+  }, [wallet, isWalletConnected, network, rpcUrl]);
   return (
     <ApiContext.Provider value={value}>{props.children}</ApiContext.Provider>
   );
