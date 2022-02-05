@@ -19,6 +19,7 @@ import {
   Footer,
   TEXT_COLOR_MAPPING,
   TEXT_STYLES,
+  ThemeType,
   ValueRow,
 } from '../common';
 import IconButton from '../IconButton';
@@ -202,10 +203,10 @@ export default function NotificationCenter(
       </Centered>
     );
   } else if (!isDialectAvailable) {
-    content = <CreateThread forTheme={props.theme} />;
+    content = <CreateThread forTheme={props.theme as any} />;
   } else if (isSettingsOpen) {
     content = (
-      <Settings toggleSettings={toggleSettings} forTheme={props.theme} />
+      <Settings toggleSettings={toggleSettings} forTheme={props.theme as any} />
     );
   } else if (isNoMessages) {
     content = (
