@@ -1,11 +1,13 @@
 import React from 'react';
-import Gear from './assets/gear.svg';
-import NotConnected from './assets/not-connected.svg';
-import NoNotifications from './assets/no-notifications.svg';
-import Dialect from './assets/dialect-logo.svg';
-import BackArrow from './assets/back-arrow.svg';
-import Trash from './assets/trash.svg';
-import Spinner from './assets/spinner.svg';
+import {
+  Gear,
+  NotConnected,
+  NoNotifications,
+  DialectLogo as Dialect,
+  BackArrow,
+  Trash,
+  Spinner,
+} from './icons/';
 
 // function Icon(params:type) {
 //     return
