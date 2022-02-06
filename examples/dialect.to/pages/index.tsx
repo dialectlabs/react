@@ -46,7 +46,7 @@ function AuthedHome() {
               <WalletButton>Connect wallet</WalletButton>
               <Bell
                 wallet={wallet}
-                network={'devnet'}
+                network={'localnet'}
                 publicKey={DIALECT_PUBLIC_KEY}
                 theme="dark"
                 bellStyle={{

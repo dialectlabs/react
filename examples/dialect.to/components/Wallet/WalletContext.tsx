@@ -1,7 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import {
   ConnectionProvider,
-  useAnchorWallet,
   WalletProvider,
 } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
