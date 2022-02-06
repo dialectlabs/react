@@ -1013,10 +1013,6 @@
     js-sha256 "^0.9.0"
     tweetnacl "1.0.3"
 
-"@dialectlabs/web3@link:../protocol":
-  version "0.0.0"
-  uid ""
-
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.npmjs.org/@eslint/eslintrc/-/eslintrc-0.4.3.tgz"

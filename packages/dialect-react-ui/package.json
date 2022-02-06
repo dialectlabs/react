@@ -14,7 +14,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@dialectlabs/web3": "link:../../../protocol",
+    "@dialectlabs/web3": "0.1.2",
     "@headlessui/react": "^1.2.0",
     "@heroicons/react": "^1.0.0",
     "@project-serum/anchor": "^0.18.2",

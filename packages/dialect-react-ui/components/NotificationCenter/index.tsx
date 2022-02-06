@@ -174,6 +174,7 @@ export default function NotificationCenter(
     isNoMessages,
     messages,
     disconnectedFromChain,
+    cannotDecryptDialect,
   } = useDialect();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
@@ -193,6 +194,13 @@ export default function NotificationCenter(
       <Centered>
         <OfflineIcon className="w-10 mb-6 opacity-60" />
         <span className="opacity-60">Lost connection to Solana blockchain</span>
+      </Centered>
+    );
+  } else if (cannotDecryptDialect) {
+    content = (
+      <Centered>
+        <OfflineIcon className="w-10 mb-6 opacity-60" />
+        <span className="opacity-60">Cannot decrypt messages</span>
       </Centered>
     );
   } else if (!isWalletConnected) {

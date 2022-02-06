@@ -19,16 +19,18 @@ export const createDialectForMembers = withErrorParsing(
   async (program: anchor.Program, pubkey1: string, pubkey2: string) => {
     const member1: Member = {
       publicKey: new anchor.web3.PublicKey(pubkey1),
-      scopes: [true, false], //
+      scopes: [true, false], // recipient of notifications, is admin but does not have write privileges
     };
     const member2: Member = {
       publicKey: new anchor.web3.PublicKey(pubkey2),
-      scopes: [true, false], //
+      scopes: [false, true], // monitoring service that sends notifications, is not admin but does have write privilages
     };
-    return await createDialect(program, program.provider.wallet, [
-      member1,
-      member2,
-    ]);
+    return await createDialect(
+      program,
+      program.provider.wallet,
+      [member1, member2],
+      false // unencrypted
+    );
   }
 );
 
@@ -47,7 +49,7 @@ export const fetchDialectForMembers = withErrorParsing(
     };
     const member2: Member = {
       publicKey: new anchor.web3.PublicKey(pubkey2),
-      scopes: [true, false], //
+      scopes: [false, true], //
     };
     return await getDialectForMembers(
       program,

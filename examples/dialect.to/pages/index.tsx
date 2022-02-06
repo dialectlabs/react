@@ -14,7 +14,7 @@ import { TwitterIcon } from '../components/Icon';
 import Head from 'next/head';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
+  'D2pyBevYb6dit1oCx6e8vCxFK9mBeYCRe8TTntk2Tm98'
 );
 
 function AuthedHome() {
@@ -46,7 +46,7 @@ function AuthedHome() {
               <WalletButton>Connect wallet</WalletButton>
               <Bell
                 wallet={wallet}
-                network={'localnet'}
+                network={'devnet'}
                 publicKey={DIALECT_PUBLIC_KEY}
                 theme="dark"
                 bellStyle={{
@@ -57,7 +57,7 @@ function AuthedHome() {
             </div>
           </div>
           {/* body */}
-          <div className="flex flex-col h-full self-center mt-16">
+          <div className="flex flex-col h-full self-center mt-64">
             <div className="grid grid-cols-1 gap-48 lg:grid-cols-2 items-center">
               <div className="flex flex-col justify-center">
                 <div className="text-white text-8xl">
@@ -83,9 +83,9 @@ function AuthedHome() {
                 </div>
               </div>
 
-              <div className="flex justify-end text-white text-6xl">
+              <div className="flex justify-end text-white text-6xl w-3/4">
                 <Image
-                  alt="Notification centers in different dapps"
+                  alt="Notifications"
                   src={Notifs}
                 />
               </div>

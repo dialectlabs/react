@@ -1,6 +1,7 @@
 export const ParsedErrorType = {
   InsufficientFunds: 'INSUFFICIENT_FUNDS',
   DisconnectedFromChain: 'DISCONNECTED_FROM_CHAIN',
+  CannotDecrypt: 'CANNOT_DECRYPT',
   UnknownError: 'UNKNOWN_ERROR',
 } as const;
 type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
@@ -32,15 +33,28 @@ const disconnectedFromChain: ParsedErrorData = {
   matchers: ['Network request failed'],
 };
 
+const cannotDecryptDialect: ParsedErrorData = {
+  type: ParsedErrorType.CannotDecrypt,
+  title: 'Cannot decrypt messages',
+  message:
+    "This dialect's messages are encrypted and because you do not have access to the private key in this context.",
+  matchers: ['Authentication failed during decryption attempt'],
+};
+
 const unknownError: ParsedErrorData = {
   type: ParsedErrorType.UnknownError,
   title: 'Error',
   message: 'Something went wrong. Please try again later.',
 };
 
-const errors: ParsedErrorData[] = [insufficientFunds, disconnectedFromChain];
+const errors: ParsedErrorData[] = [
+  insufficientFunds,
+  disconnectedFromChain,
+  cannotDecryptDialect,
+];
 
 const parseError = (error: Error) => {
+  console.log('error', error);
   return (
     errors.find((err) =>
       err.matchers?.find((matcher) => error.message.match(matcher))

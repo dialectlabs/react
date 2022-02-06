@@ -18,7 +18,7 @@ const withTM = require('next-transpile-modules')([
   // TODO: Ideally this should be @dialectlabs/web3 to reduce the amount of relative imports
   // Even more ideal case - this shouldn't be here at all, this repo should target a published version of @dialectlabs/web3
   // and changed to a `yarn link`ed version in testing/dev cases
-  '../../../protocol/',
+  '@dialectlabs/web3',
 ]);
 
 module.exports = withTM({
