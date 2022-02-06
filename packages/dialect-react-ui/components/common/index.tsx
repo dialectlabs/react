@@ -2,6 +2,20 @@ import React from 'react';
 import { DialectLogo, SpinnerIcon } from '../Icon';
 import cs from '../../utils/classNames';
 
+export type ThemeType = 'dark' | 'night' | 'light' | undefined;
+
+export const BG_COLOR_MAPPING = {
+  dark: 'bg-black',
+  night: 'bg-night',
+  light: 'bg-white',
+};
+
+export const TEXT_COLOR_MAPPING = {
+  dark: 'text-white',
+  night: 'text-white',
+  light: 'text-black',
+};
+
 export const TEXT_STYLES = {
   regular11: 'font-inter text-xs font-normal',
   regular13: 'font-inter text-sm font-normal',

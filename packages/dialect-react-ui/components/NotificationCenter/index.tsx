@@ -11,12 +11,15 @@ import {
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
 import {
+  BG_COLOR_MAPPING,
   BigButton,
   Button,
   Centered,
   Divider,
   Footer,
+  TEXT_COLOR_MAPPING,
   TEXT_STYLES,
+  ThemeType,
   ValueRow,
 } from '../common';
 import IconButton from '../IconButton';
@@ -162,7 +165,7 @@ function Settings(props: {
 
 export default function NotificationCenter(
   props: {
-    theme?: 'dark' | 'light';
+    theme?: ThemeType;
   } = { theme: 'dark' }
 ): JSX.Element {
   const {
@@ -171,6 +174,7 @@ export default function NotificationCenter(
     isNoMessages,
     messages,
     disconnectedFromChain,
+    cannotDecryptDialect,
   } = useDialect();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
@@ -180,8 +184,8 @@ export default function NotificationCenter(
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const bgColor = props.theme === 'dark' ? 'bg-night' : 'bg-white';
-  const textColor = props.theme === 'dark' ? 'text-white' : 'text-black';
+  const bgColor = props.theme && BG_COLOR_MAPPING[props.theme];
+  const textColor = props.theme && TEXT_COLOR_MAPPING[props.theme];
 
   let content: JSX.Element;
 
@@ -192,6 +196,13 @@ export default function NotificationCenter(
         <span className="opacity-60">Lost connection to Solana blockchain</span>
       </Centered>
     );
+  } else if (cannotDecryptDialect) {
+    content = (
+      <Centered>
+        <OfflineIcon className="w-10 mb-6 opacity-60" />
+        <span className="opacity-60">Cannot decrypt messages</span>
+      </Centered>
+    );
   } else if (!isWalletConnected) {
     content = (
       <Centered>
@@ -200,10 +211,10 @@ export default function NotificationCenter(
       </Centered>
     );
   } else if (!isDialectAvailable) {
-    content = <CreateThread forTheme={props.theme} />;
+    content = <CreateThread forTheme={props.theme as any} />;
   } else if (isSettingsOpen) {
     content = (
-      <Settings toggleSettings={toggleSettings} forTheme={props.theme} />
+      <Settings toggleSettings={toggleSettings} forTheme={props.theme as any} />
     );
   } else if (isNoMessages) {
     content = (

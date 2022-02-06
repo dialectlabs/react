@@ -1,5 +1,5 @@
 {
-  "name": "@dialectlabs/react-examples-basic",
+  "name": "@dialectlabs/react-examples-dialect-to",
   "version": "0.1.0",
   "description": "",
   "private": true,
@@ -32,10 +32,10 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^6.2.0",
-    "@types/react": "^17.0.34",
     "@types/bs58": "^4.0.1",
     "@types/chai": "^4.2.21",
     "@types/chai-as-promised": "^7.1.4",
+    "@types/react": "^17.0.34",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.5",
     "postcss-cli": "^8.3.1",

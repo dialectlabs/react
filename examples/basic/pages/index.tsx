@@ -5,17 +5,16 @@ import { Bell } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet } from '../components/Wallet';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 
-const JET_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'HGuoH5EgezVA9M6kh5ie15xrLPuJBo9SDWfMjr778CHE'
-);
-const MANGO_PUBLIC_KEY = new anchor.web3.PublicKey(
+const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
 );
+
+type ThemeType = 'light' | 'dark' | undefined;
 
 function AuthedHome() {
   // const wallet = useAnchorWallet();
   const wallet = useWallet();
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState<ThemeType>('dark');
 
   useEffect(() => {
     if (
@@ -40,10 +39,10 @@ function AuthedHome() {
         <Bell
           wallet={wallet}
           network={'localnet'}
-          publicKey={MANGO_PUBLIC_KEY}
+          publicKey={DIALECT_PUBLIC_KEY}
           theme={theme}
         />
-        <Wallet />
+        <WalletButton />
       </div>
       <div className="h-full text-4xl flex flex-col justify-center">
         <div className="text-center">Pretty sophisticated service</div>

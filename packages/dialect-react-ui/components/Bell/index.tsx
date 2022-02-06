@@ -12,6 +12,7 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
+import { BG_COLOR_MAPPING, TEXT_COLOR_MAPPING, ThemeType } from '../common';
 import NotificationCenter from '../NotificationCenter';
 
 type PropTypes = {
@@ -19,7 +20,9 @@ type PropTypes = {
   network?: string;
   rpcUrl?: string;
   publicKey: anchor.web3.PublicKey;
-  theme?: 'dark' | 'light';
+  theme?: ThemeType;
+  bellClassName?: string;
+  bellStyle?: object;
 };
 
 function useOutsideAlerter(
@@ -70,7 +73,8 @@ function WrappedBell(props: PropTypes): JSX.Element {
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const bgColor = props.theme === 'dark' ? 'bg-night' : 'bg-white';
+  const bgColor = props.theme && BG_COLOR_MAPPING[props.theme];
+  const textColor = props.theme && TEXT_COLOR_MAPPING[props.theme];
 
   return (
     <>
@@ -88,21 +92,17 @@ function WrappedBell(props: PropTypes): JSX.Element {
           rel="stylesheet"
         />
       </Head>
-      <div className="flex flex-col items-end">
+      <div className={cs('flex flex-col items-end relative', textColor)}>
         <button
           ref={bellRef}
           className={cs(
             'flex items-center justify-center rounded-full w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
             bgColor
           )}
+          style={props?.bellStyle}
           onClick={() => setOpen(!open)}
         >
-          <BellIcon
-            className={cs(
-              'w-6 h-6 rounded-full',
-              props.theme === 'dark' ? 'text-white' : 'text-gray-500'
-            )}
-          />
+          <BellIcon className={cs('w-6 h-6 rounded-full')} />
         </button>
         <Transition
           className="z-50 absolute top-16 w-96 h-96"

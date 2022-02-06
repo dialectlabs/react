@@ -5,6 +5,12 @@ module.exports = {
     '../../packages/dialect-react-ui/**/*.{js,ts,jsx,tsx}', // In development taking into account workspace files too
   ],
   theme: {
+    extend: {
+      backgroundImage: {
+        'gradient-radial':
+          'radial-gradient(69.46% 69.46% at 50% 46.67%, rgba(0, 0, 0, 0.26) 0%, rgba(0, 0, 0, 0) 42.71%, rgba(0, 0, 0, 0.373832) 71.35%, #000000 100%)',
+      },
+    },
     fontFamily: {
       display: ['Lato, sans-serif'],
       body: ['Lato, sans-serif'],

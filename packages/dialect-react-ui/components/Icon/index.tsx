@@ -1,21 +1,20 @@
 import React from 'react';
-import Gear from './assets/gear.svg';
-import NotConnected from './assets/not-connected.svg';
-import NoNotifications from './assets/no-notifications.svg';
-import Dialect from './assets/dialect-logo.svg';
-import BackArrow from './assets/back-arrow.svg';
-import Trash from './assets/trash.svg';
-import Spinner from './assets/spinner.svg';
-import Offline from './assets/cloud-offline-outline.svg';
-
-// function Icon(params:type) {
-//     return
-// }
+import {
+  Gear,
+  NotConnected,
+  NoNotifications,
+  DialectLogo as Dialect,
+  BackArrow,
+  Trash,
+  Spinner,
+  Offline,
+} from './icons/';
 
 type IconPropsType = {
   className?: string;
 };
 
+// TODO: do we need this, since we already have svgr generated icons
 export function GearIcon(props: IconPropsType): JSX.Element {
   return <Gear {...props} />;
 }
