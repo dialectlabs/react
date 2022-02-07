@@ -84,10 +84,7 @@ function AuthedHome() {
               </div>
 
               <div className="flex justify-end text-white text-6xl w-3/4">
-                <Image
-                  alt="Notifications"
-                  src={Notifs}
-                />
+                <img alt="Notifications" src={Notifs.src} />
               </div>
             </div>
           </div>
