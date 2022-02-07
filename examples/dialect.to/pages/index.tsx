@@ -57,7 +57,7 @@ function AuthedHome() {
             </div>
           </div>
           {/* body */}
-          <div className="flex flex-col h-full self-center mt-64">
+          <div className="flex flex-col justify-center h-full my-24">
             <div className="grid grid-cols-1 gap-48 lg:grid-cols-2 items-center">
               <div className="flex flex-col justify-center">
                 <div className="text-white text-8xl">
