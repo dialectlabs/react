@@ -90,3 +90,7 @@ a {
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
 }
+
+.bg-gradient {
+  background-image: var(--gradient) !important;
+}

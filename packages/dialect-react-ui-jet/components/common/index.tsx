@@ -25,6 +25,7 @@ export const TEXT_STYLES = {
   medium13: 'font-inter text-sm font-medium',
   medium15: 'font-inter text-base font-medium',
   bold30: 'font-inter text-3xl font-bold',
+  smallButton: 'text-xs uppercase tracking-[1.5px]',
 };
 
 export function Divider(props: { className?: string }): JSX.Element {
@@ -98,7 +99,7 @@ export function Button(props: {
   return (
     <button
       className={cs(
-        'min-w-120 px-4 py-2 rounded-lg transition-all border flex flex-row justify-center',
+        'min-w-120 px-4 py-2 rounded-lg transition-all flex flex-row justify-center bg-gradient',
         !props.loading && 'hover:opacity-60',
         props.loading && 'opacity-20 bg-transparent',
         props.forTheme === 'dark' &&
@@ -107,7 +108,8 @@ export function Button(props: {
         props.forTheme === 'light' &&
           !props.loading &&
           'bg-black text-white border-black',
-        props.className
+        props.className,
+        TEXT_STYLES.smallButton
       )}
       onClick={props.onClick}
       disabled={props.loading || props.disabled}

@@ -28,6 +28,7 @@ function AuthedHome() {
             wallet={wallet}
             network={'localnet'}
             publicKey={DIALECT_PUBLIC_KEY}
+            theme={'light'}
           />
           <WalletButton />
         </div>
