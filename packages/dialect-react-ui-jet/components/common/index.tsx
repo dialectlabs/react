@@ -21,6 +21,7 @@ export const TEXT_COLOR_MAPPING = {
 export const TEXT_STYLES = {
   regular11: 'font-inter text-xs font-normal',
   regular13: 'font-inter text-sm font-normal',
+  regular24: 'font-poppins text-2xl font-normal',
   medium13: 'font-inter text-sm font-medium',
   medium15: 'font-inter text-base font-medium',
   bold30: 'font-inter text-3xl font-bold',

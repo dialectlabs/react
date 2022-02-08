@@ -49,7 +49,7 @@ function Header(props: {
   }
   return (
     <div className="px-4 py-3 flex flex-row justify-between items-center">
-      <span className={cs(TEXT_STYLES.medium15, "font-['Poppins']")}>
+      <span className={cs(TEXT_STYLES.medium15, 'font-poppins')}>
         Notifications
       </span>
       {props.isReady ? (
@@ -64,7 +64,9 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
 
   return (
     <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1 className={cs(TEXT_STYLES.bold30, 'mb-3 text-center')}>
+      <h1
+        className={cs(TEXT_STYLES.regular24, 'mb-3 text-center text-gradient')}
+      >
         Create notifications thread
       </h1>
       <ValueRow
