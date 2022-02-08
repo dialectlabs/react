@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { BellIcon } from '@heroicons/react/outline';
-// TODO: remove this import, fonts need to be added by the parent
-import Head from 'next/head';
 import {
   ApiProvider,
   connected,
@@ -77,56 +75,40 @@ function WrappedBell(props: PropTypes): JSX.Element {
   const textColor = props.theme && TEXT_COLOR_MAPPING[props.theme];
 
   return (
-    <>
-      <Head>
-        {/* TODO: replace with importing the fonts right isolated way  */}
-        {/* TODO: remove next/head from this module completely and place it under "Prerequisites" for this package */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="true"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <div className={cs('flex flex-col items-end relative', textColor)}>
-        <button
-          ref={bellRef}
-          className={cs(
-            'flex items-center justify-center rounded-full w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
-            bgColor
-          )}
-          style={props?.bellStyle}
-          onClick={() => setOpen(!open)}
+    <div className={cs('flex flex-col items-end relative', textColor)}>
+      <button
+        ref={bellRef}
+        className={cs(
+          'flex items-center justify-center rounded-full w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
+          bgColor
+        )}
+        style={props?.bellStyle}
+        onClick={() => setOpen(!open)}
+      >
+        <BellIcon className={cs('w-6 h-6 rounded-full')} />
+      </button>
+      <Transition
+        className="z-50 absolute top-16 w-96 h-96"
+        style={{ width: '29rem', height: '29rem' }}
+        show={open}
+        enter="transition-opacity duration-500"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-500"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div
+          ref={wrapperRef}
+          className="w-full h-full"
+          // TODO: investigate blur
+          // className="w-full h-full bg-white/10"
+          // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <BellIcon className={cs('w-6 h-6 rounded-full')} />
-        </button>
-        <Transition
-          className="z-50 absolute top-16 w-96 h-96"
-          style={{ width: '29rem', height: '29rem' }}
-          show={open}
-          enter="transition-opacity duration-500"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition-opacity duration-500"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div
-            ref={wrapperRef}
-            className="w-full h-full"
-            // TODO: investigate blur
-            // className="w-full h-full bg-white/10"
-            // style={{ backdropFilter: 'blur(132px)' }}
-          >
-            <NotificationCenter theme={props.theme} />
-          </div>
-        </Transition>
-      </div>
-    </>
+          <NotificationCenter theme={props.theme} />
+        </div>
+      </Transition>
+    </div>
   );
 }
 

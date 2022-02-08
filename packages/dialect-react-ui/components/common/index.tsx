@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialectLogo, SpinnerIcon } from '../Icon';
+import { DialectLogo, Spinner as SpinnerIcon } from '../Icon';
 import cs from '../../utils/classNames';
 
 export type ThemeType = 'dark' | 'night' | 'light' | undefined;

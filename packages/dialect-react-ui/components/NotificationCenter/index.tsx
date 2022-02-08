@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
 import {
-  BackArrowIcon,
-  GearIcon,
-  NoNotificationsIcon,
-  NotConnectedIcon,
-  OfflineIcon,
-  TrashIcon,
+  BackArrow as BackArrowIcon,
+  Gear as GearIcon,
+  NoNotifications as NoNotificationsIcon,
+  NotConnected as NotConnectedIcon,
+  Offline as OfflineIcon,
+  Trash as TrashIcon,
 } from '../Icon';
 import { Notification } from './Notification';
 import cs from '../../utils/classNames';
