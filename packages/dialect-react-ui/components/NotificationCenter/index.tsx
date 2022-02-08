@@ -1,15 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
-import {
-  BackArrow as BackArrowIcon,
-  Gear as GearIcon,
-  NoNotifications as NoNotificationsIcon,
-  NotConnected as NotConnectedIcon,
-  Offline as OfflineIcon,
-  Trash as TrashIcon,
-} from '../Icon';
-import { Notification } from './Notification';
-import cs from '../../utils/classNames';
+import { display } from '@dialectlabs/web3';
 import {
   BG_COLOR_MAPPING,
   BigButton,
@@ -22,8 +13,18 @@ import {
   ThemeType,
   ValueRow,
 } from '../common';
+import {
+  BackArrow as BackArrowIcon,
+  Gear as GearIcon,
+  NoNotifications as NoNotificationsIcon,
+  NotConnected as NotConnectedIcon,
+  Offline as OfflineIcon,
+  Trash as TrashIcon,
+} from '../Icon';
+import cs from '../../utils/classNames';
+import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
-import { display } from '@dialectlabs/web3';
+import { Notification } from './Notification';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -132,7 +133,12 @@ function Settings(props: {
               label="Notifications thread account"
               className="mt-1 mb-4"
             >
-              {display(notificationsThreadAddress)}↗
+              <a
+                target="_blank"
+                href={getExplorerAddress(notificationsThreadAddress)}
+              >
+                {display(notificationsThreadAddress)}↗
+              </a>
             </ValueRow>
             <BigButton
               onClick={async () => {
