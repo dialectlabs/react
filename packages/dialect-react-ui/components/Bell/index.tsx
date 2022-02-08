@@ -12,6 +12,7 @@ import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
 import { BG_COLOR_MAPPING, TEXT_COLOR_MAPPING, ThemeType } from '../common';
 import NotificationCenter from '../NotificationCenter';
+import IconButton from '../IconButton';
 
 type PropTypes = {
   wallet: WalletType;
@@ -76,7 +77,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
 
   return (
     <div className={cs('flex flex-col items-end relative', textColor)}>
-      <button
+      <IconButton
         ref={bellRef}
         className={cs(
           'flex items-center justify-center rounded-full w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
@@ -84,9 +85,8 @@ function WrappedBell(props: PropTypes): JSX.Element {
         )}
         style={props?.bellStyle}
         onClick={() => setOpen(!open)}
-      >
-        <BellIcon className={cs('w-6 h-6 rounded-full')} />
-      </button>
+        icon={<BellIcon className={cs('w-6 h-6 rounded-full')} />}
+      ></IconButton>
       <Transition
         className="z-50 absolute top-16 w-96 h-96"
         style={{ width: '29rem', height: '29rem' }}
