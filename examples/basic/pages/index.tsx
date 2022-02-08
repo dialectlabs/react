@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 
 import { Bell } from '@dialectlabs/react-ui';
-import { WalletContext, Wallet } from '../components/Wallet';
+import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
