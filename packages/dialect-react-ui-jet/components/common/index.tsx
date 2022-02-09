@@ -6,7 +6,7 @@ import { useTheme } from './ThemeProvider';
 export function Divider(props: { className?: string }): JSX.Element {
   const { divider } = useTheme();
 
-  return <div className={cs('h-[4px] rounded-lg', divider, props.className)} />;
+  return <div className={cs(divider, props.className)} />;
 }
 
 export function ValueRow(props: {

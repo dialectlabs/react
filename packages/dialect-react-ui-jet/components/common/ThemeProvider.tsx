@@ -25,7 +25,7 @@ export const THEMES = {
     bellButton: 'jet-shadow-light',
     popup: 'jet-shadow',
     button: 'text-[#E6EBF3]',
-    divider: 'bg-gradient-to-b from-[#C3CADE] to-[#F8F9FB]',
+    divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#C3CADE] to-[#F8F9FB]',
     highlighted: 'bg-white/30',
   },
   dark: {
@@ -50,7 +50,7 @@ export const THEMES = {
     bellButton: 'jet-shadow-dark',
     popup: 'jet-shadow',
     button: 'text-[#E6EBF3]',
-    divider: 'bg-gradient-to-b from-[#3C3C3C] to-[#505050]',
+    divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#3C3C3C] to-[#505050]',
     highlighted: 'bg-[#ABABAB]/10',
   },
 };
