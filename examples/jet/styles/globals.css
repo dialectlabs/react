@@ -9,7 +9,6 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: #e5ebf4;
 }
 
 a {
@@ -93,4 +92,20 @@ a {
 
 .bg-gradient {
   background-image: var(--gradient) !important;
+}
+
+.bg-light {
+  background-color: #e5ebf4;
+}
+
+.bg-dark {
+  background-color: #444444;
+}
+
+.jet-shadow-light {
+  box-shadow: -2px -2px 2px #ffffff, 2px 2px 4px #c2cbe1;
+}
+
+.jet-shadow-dark {
+  box-shadow: -2px -2px 2px rgba(123, 123, 123, 0.4), 2px 2px 4px #343434;
 }

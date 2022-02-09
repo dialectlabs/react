@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import * as anchor from '@project-serum/anchor';
 import { Bell } from '@dialectlabs/react-ui-jet';
@@ -11,6 +11,11 @@ const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
 
 function AuthedHome() {
   const wallet = useWallet();
+  const [theme, setTheme] = useState('light');
+
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme]);
 
   return (
     <>
@@ -22,19 +27,24 @@ function AuthedHome() {
           rel="stylesheet"
         />
       </Head>
-      <div className="flex flex-col h-screen">
+      <div className={`flex flex-col h-screen bg-${theme}`}>
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <Bell
             wallet={wallet}
             network={'devnet'}
             publicKey={DIALECT_PUBLIC_KEY}
-            theme={'light'}
+            theme={theme}
           />
           <WalletButton />
         </div>
-        <div className="h-full text-4xl flex flex-col justify-center">
-          <div className="text-center font-poppins text-gradient">
-            Jet Protocol
+        <div className="h-full flex flex-col justify-center">
+          <div className="text-center font-poppins">
+            <h1 className="text-4xl text-gradient">Jet Protocol</h1>
+            <div>
+              <button onClick={toggleTheme}>
+                Toggle theme (current: {theme})
+              </button>
+            </div>
           </div>
         </div>
       </div>

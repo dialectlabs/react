@@ -10,14 +10,9 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
-import {
-  BG_COLOR_MAPPING,
-  JET_BOX_SHADOW,
-  TEXT_COLOR_MAPPING,
-  ThemeType,
-} from '../common';
 import NotificationCenter from '../NotificationCenter';
 import IconButton from '../IconButton';
+import { ThemeProvider, ThemeType, useTheme } from '../common/ThemeProvider';
 
 type PropTypes = {
   wallet: WalletType;
@@ -77,20 +72,17 @@ function WrappedBell(props: PropTypes): JSX.Element {
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const bgColor = props.theme && BG_COLOR_MAPPING[props.theme];
-  const textColor = props.theme && TEXT_COLOR_MAPPING[props.theme];
+  const { colors, bellButton } = useTheme();
 
   return (
-    <div className={cs('flex flex-col items-end relative', textColor)}>
+    <div className={cs('flex flex-col items-end relative', colors.primary)}>
       <IconButton
         ref={bellRef}
         className={cs(
           'flex items-center justify-center rounded-full w-10 h-10 focus:outline-none shadow-md',
-          bgColor
+          colors.bg,
+          bellButton
         )}
-        style={{
-          boxShadow: JET_BOX_SHADOW,
-        }}
         onClick={() => setOpen(!open)}
         icon={<BellIcon />}
       ></IconButton>
@@ -123,7 +115,9 @@ export default function Bell(props: PropTypes): JSX.Element {
   return (
     <ApiProvider>
       <DialectProvider publicKey={props.publicKey}>
-        <WrappedBell {...props} />
+        <ThemeProvider theme={props.theme}>
+          <WrappedBell {...props} />
+        </ThemeProvider>
       </DialectProvider>
     </ApiProvider>
   );

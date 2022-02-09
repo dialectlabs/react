@@ -2,18 +2,14 @@ import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
-  BG_COLOR_MAPPING,
   BigButton,
   Button,
   Centered,
   Divider,
   Footer,
-  JET_BOX_SHADOW,
-  TEXT_COLOR_MAPPING,
-  TEXT_STYLES,
-  ThemeType,
   ValueRow,
 } from '../common';
+import { useTheme } from '../common/ThemeProvider';
 import {
   BackArrow as BackArrowIcon,
   Gear as GearIcon,
@@ -35,6 +31,8 @@ function Header(props: {
   isSettingsOpen: boolean;
   toggleSettings: () => void;
 }) {
+  const { colors, textStyles } = useTheme();
+
   if (props.isSettingsOpen) {
     return (
       <div className="px-6 py-4 flex flex-row items-center">
@@ -43,13 +41,15 @@ function Header(props: {
           onClick={props.toggleSettings}
           className="mr-2"
         />
-        <span className={TEXT_STYLES.header}>Settings</span>
+        <span className={cs(textStyles.header, colors.accent)}>Settings</span>
       </div>
     );
   }
   return (
     <div className="px-6 py-4 flex flex-row justify-between items-center">
-      <span className={cs(TEXT_STYLES.header)}>Notifications</span>
+      <span className={cs(textStyles.header, colors.accent)}>
+        Notifications
+      </span>
       {props.isReady ? (
         <IconButton icon={<GearIcon />} onClick={props.toggleSettings} />
       ) : null}
@@ -57,28 +57,33 @@ function Header(props: {
   );
 }
 
-function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
+function CreateThread() {
   const { createDialect, isDialectCreating, creationError } = useDialect();
+  const { colors, textStyles } = useTheme();
 
   return (
     <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1 className={cs(TEXT_STYLES.h1, 'mb-4 text-center text-gradient')}>
+      <h1
+        className={cs(
+          textStyles.h1,
+          colors.accent,
+          'mb-4 text-center text-gradient'
+        )}
+      >
         Create notifications thread
       </h1>
       <ValueRow
         highlighted
         label="Rent Deposit (recoverable)"
-        forTheme={props.forTheme}
         className={cs('w-full mb-4')}
       >
         0.0002 SOL
       </ValueRow>
-      <p className={cs(TEXT_STYLES.body, 'text-center mb-3')}>
+      <p className={cs(textStyles.body, 'text-center mb-3')}>
         To start this message thread, you&apos;ll need to deposit a small amount
         of rent, since messages are stored on-chain.
       </p>
       <Button
-        forTheme={props.forTheme}
         onClick={() => createDialect().catch(noop)}
         loading={isDialectCreating}
       >
@@ -86,9 +91,7 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <p
-          className={cs(TEXT_STYLES.regular11, 'text-red-500 text-center mt-2')}
-        >
+        <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
           {creationError.message}
         </p>
       )}
@@ -96,22 +99,20 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
   );
 }
 
-function Settings(props: {
-  forTheme?: 'dark' | 'light';
-  toggleSettings: () => void;
-}) {
+function Settings(props: { toggleSettings: () => void }) {
   const {
     notificationsThreadAddress,
     deleteDialect,
     isDialectDeleting,
     deletionError,
   } = useDialect();
+  const { colors, textStyles } = useTheme();
 
   return (
     <>
       <div className="mb-3">
-        <p className={cs(TEXT_STYLES.body, 'mb-1')}>Included event types</p>
-        <ul className={cs(TEXT_STYLES.bigText, 'list-disc pl-6')}>
+        <p className={cs(textStyles.body, 'mb-1')}>Included event types</p>
+        <ul className={cs(textStyles.bigText, 'list-disc pl-6')}>
           <li>Deposit Confirmations</li>
           <li>Liquidation Alerts</li>
           <li>Top Up Requests</li>
@@ -140,7 +141,7 @@ function Settings(props: {
               </a>
             </ValueRow>
             <BigButton
-              className="bg-[#DC726D]"
+              className={colors.errorBg}
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
@@ -153,12 +154,7 @@ function Settings(props: {
             />
             {deletionError &&
               deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-                <p
-                  className={cs(
-                    TEXT_STYLES.regular11,
-                    'text-red-500 text-center mt-2'
-                  )}
-                >
+                <p className={cs(text.small, 'text-red-500 text-center mt-2')}>
                   {deletionError.message}
                 </p>
               )}
@@ -190,8 +186,7 @@ export default function NotificationCenter(
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const bgColor = props.theme && BG_COLOR_MAPPING[props.theme];
-  const textColor = props.theme && TEXT_COLOR_MAPPING[props.theme];
+  const { colors, popup } = useTheme();
 
   let content: JSX.Element;
 
@@ -217,11 +212,9 @@ export default function NotificationCenter(
       </Centered>
     );
   } else if (!isDialectAvailable) {
-    content = <CreateThread forTheme={props.theme as any} />;
+    content = <CreateThread />;
   } else if (isSettingsOpen) {
-    content = (
-      <Settings toggleSettings={toggleSettings} forTheme={props.theme as any} />
-    );
+    content = <Settings toggleSettings={toggleSettings} />;
   } else if (isNoMessages) {
     content = (
       <Centered>
@@ -250,12 +243,10 @@ export default function NotificationCenter(
     <div
       className={cs(
         'flex flex-col h-full shadow-md rounded-3xl overflow-hidden',
-        textColor,
-        bgColor
+        colors.primary,
+        colors.bg,
+        popup
       )}
-      style={{
-        boxShadow: JET_BOX_SHADOW,
-      }}
     >
       <Header
         isReady={isWalletConnected && isDialectAvailable}
