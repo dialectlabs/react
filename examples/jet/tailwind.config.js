@@ -8,6 +8,7 @@ module.exports = {
     fontFamily: {
       display: ['Lato, sans-serif'],
       body: ['Lato, sans-serif'],
+      sans: ['Helvetica Neue, sans-serif'],
       poppins: ['Poppins, sans-serif'],
     },
     minWidth: {
@@ -21,9 +22,6 @@ module.exports = {
     backgroundColor: (theme) => ({
       ...theme('colors'),
       night: '#252525',
-      // TODO: remove after update to tailwind v3
-      'white/5': 'rgba(255,255,255,.05)',
-      'night/5': 'rgba(37,37,37,.05)',
     }),
   },
   variants: {

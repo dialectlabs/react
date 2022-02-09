@@ -14,6 +14,7 @@ import {
   deleteDialect,
 } from '../../api';
 import { ParsedErrorData, ParsedErrorType } from '../../utils/errors';
+import { messages as mockMessages } from './mock';
 
 const swrFetchDialect = (
   _: string,
@@ -53,20 +54,14 @@ const POLLING_INTERVAL_MS = 1000;
 
 export const DialectProvider = (props: PropsType): JSX.Element => {
   const [creating, setCreating] = React.useState(false);
-  const [
-    fetchingError,
-    setFetchingError,
-  ] = React.useState<ParsedErrorData | null>(null);
-  const [
-    creationError,
-    setCreationError,
-  ] = React.useState<ParsedErrorData | null>(null);
+  const [fetchingError, setFetchingError] =
+    React.useState<ParsedErrorData | null>(null);
+  const [creationError, setCreationError] =
+    React.useState<ParsedErrorData | null>(null);
 
   const [deleting, setDeleting] = React.useState(false);
-  const [
-    deletionError,
-    setDeletionError,
-  ] = React.useState<ParsedErrorData | null>(null);
+  const [deletionError, setDeletionError] =
+    React.useState<ParsedErrorData | null>(null);
 
   const [disconnectedFromChain, setDisconnected] = React.useState(false);
   const [cannotDecryptDialect, setCannotDecryptDialect] = React.useState(false);
@@ -74,10 +69,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const { wallet, program } = useApi();
   const isWalletConnected = connected(wallet);
 
-  const { data: dialect, mutate: mutateDialect, error: fetchError } = useSWR<
-    DialectAccount | null,
-    ParsedErrorData
-  >(
+  const {
+    data: dialect,
+    mutate: mutateDialect,
+    error: fetchError,
+  } = useSWR<DialectAccount | null, ParsedErrorData>(
     wallet && program
       ? [
           'dialect',
@@ -98,7 +94,10 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
   useEffect(() => {
     const existingErrorType =
-      fetchingError?.type ?? fetchError?.type ?? creationError?.type ?? deletionError?.type;
+      fetchingError?.type ??
+      fetchError?.type ??
+      creationError?.type ??
+      deletionError?.type;
 
     setCannotDecryptDialect(
       existingErrorType === ParsedErrorType.CannotDecrypt
@@ -106,7 +105,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     setDisconnected(
       existingErrorType === ParsedErrorType.DisconnectedFromChain
     );
-  }, [fetchingError?.type, creationError?.type, deletionError?.type, fetchError?.type]);
+  }, [
+    fetchingError?.type,
+    creationError?.type,
+    deletionError?.type,
+    fetchError?.type,
+  ]);
 
   const createDialectWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !wallet?.publicKey) {
@@ -164,7 +168,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
-  const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
+  // const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
+  const messages = mockMessages;
   const isDialectAvailable = Boolean(dialect);
   const notificationsThreadAddress =
     wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;

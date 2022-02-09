@@ -37,21 +37,19 @@ function Header(props: {
 }) {
   if (props.isSettingsOpen) {
     return (
-      <div className="px-4 py-3 flex flex-row items-center">
+      <div className="px-6 py-4 flex flex-row items-center">
         <IconButton
           icon={<BackArrowIcon />}
           onClick={props.toggleSettings}
           className="mr-2"
         />
-        <span className={TEXT_STYLES.medium15}>Settings</span>
+        <span className={TEXT_STYLES.header}>Settings</span>
       </div>
     );
   }
   return (
-    <div className="px-4 py-3 flex flex-row justify-between items-center">
-      <span className={cs(TEXT_STYLES.medium15, 'font-poppins')}>
-        Notifications
-      </span>
+    <div className="px-6 py-4 flex flex-row justify-between items-center">
+      <span className={cs(TEXT_STYLES.header)}>Notifications</span>
       {props.isReady ? (
         <IconButton icon={<GearIcon />} onClick={props.toggleSettings} />
       ) : null}
@@ -63,21 +61,19 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
   const { createDialect, isDialectCreating, creationError } = useDialect();
 
   return (
-    <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1
-        className={cs(TEXT_STYLES.regular24, 'mb-3 text-center text-gradient')}
-      >
+    <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
+      <h1 className={cs(TEXT_STYLES.h1, 'mb-4 text-center text-gradient')}>
         Create notifications thread
       </h1>
       <ValueRow
         highlighted
         label="Rent Deposit (recoverable)"
         forTheme={props.forTheme}
-        className={cs('w-full mb-3')}
+        className={cs('w-full mb-4')}
       >
         0.0002 SOL
       </ValueRow>
-      <p className={cs(TEXT_STYLES.regular13, 'text-center mb-3')}>
+      <p className={cs(TEXT_STYLES.body, 'text-center mb-3')}>
         To start this message thread, you&apos;ll need to deposit a small amount
         of rent, since messages are stored on-chain.
       </p>
@@ -114,10 +110,8 @@ function Settings(props: {
   return (
     <>
       <div className="mb-3">
-        <p className={cs(TEXT_STYLES.regular13, 'mb-1')}>
-          Included event types
-        </p>
-        <ul className={cs(TEXT_STYLES.medium15, 'list-disc pl-6')}>
+        <p className={cs(TEXT_STYLES.body, 'mb-1')}>Included event types</p>
+        <ul className={cs(TEXT_STYLES.bigText, 'list-disc pl-6')}>
           <li>Deposit Confirmations</li>
           <li>Liquidation Alerts</li>
           <li>Top Up Requests</li>
@@ -146,6 +140,7 @@ function Settings(props: {
               </a>
             </ValueRow>
             <BigButton
+              className="bg-[#DC726D]"
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
@@ -238,11 +233,14 @@ export default function NotificationCenter(
     content = (
       <>
         {messages.map((message: MessageType) => (
-          <Notification
-            key={message.timestamp}
-            message={message.text}
-            timestamp={message.timestamp}
-          />
+          <>
+            <Notification
+              key={message.timestamp}
+              message={message.text}
+              timestamp={message.timestamp}
+            />
+            <Divider />
+          </>
         ))}
       </>
     );
@@ -251,7 +249,7 @@ export default function NotificationCenter(
   return (
     <div
       className={cs(
-        'flex flex-col h-full shadow-md rounded-3xl overflow-hidden border',
+        'flex flex-col h-full shadow-md rounded-3xl overflow-hidden',
         textColor,
         bgColor
       )}
@@ -264,7 +262,7 @@ export default function NotificationCenter(
         isSettingsOpen={isSettingsOpen}
         toggleSettings={toggleSettings}
       />
-      <Divider />
+      <Divider className="mx-2" />
       <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
       <Footer showBackground={messages.length > 4} />
     </div>

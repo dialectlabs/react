@@ -9,7 +9,7 @@ export const JET_BOX_SHADOW = '-2px -2px 2px #FFFFFF, 2px 2px 4px #C2CBE1';
 export const BG_COLOR_MAPPING = {
   dark: 'bg-black',
   night: 'bg-night',
-  light: 'bg-white',
+  light: 'bg-[#E5EBF4]',
 };
 
 export const TEXT_COLOR_MAPPING = {
@@ -25,14 +25,23 @@ export const TEXT_STYLES = {
   medium13: 'font-inter text-sm font-medium',
   medium15: 'font-inter text-base font-medium',
   bold30: 'font-inter text-3xl font-bold',
-  smallButton: 'text-xs uppercase tracking-[1.5px]',
+
+  h1: 'font-poppins text-xl font-normal',
+  body: 'font-sans text-sm leading-snug text-[#444444]',
+  small: 'font-sans text-[13px] leading-snug text-[#444444]',
+  bigText: 'text-base font-medium leading-snug text-[#444444]',
+  header: 'font-poppins text-lg text-[#5895B9]',
+  button: 'text-[#E6EBF3]',
+  buttonText: 'text-xs uppercase tracking-[1.5px] text-[#E6EBF3]',
 };
 
 export function Divider(props: { className?: string }): JSX.Element {
   return (
     <div
-      className={cs('h-px opacity-10', props.className)}
-      style={{ backgroundColor: 'currentColor' }}
+      className={cs('h-[4px] rounded-lg', props.className)}
+      style={{
+        backgroundImage: 'linear-gradient(180deg, #C3CADE 0%, #F8F9FB 100%)',
+      }}
     />
   );
 }
@@ -44,20 +53,20 @@ export function ValueRow(props: {
   highlighted?: boolean;
   className?: string;
 }) {
-  const bgColor = props.forTheme === 'dark' ? 'bg-white/5' : 'bg-night/5';
+  const bgColor = props.forTheme === 'dark' ? 'bg-white/5' : 'bg-white/30';
 
   return (
     <p
       className={cs(
         'flex flex-row justify-between',
         props.highlighted && bgColor,
-        props.highlighted && 'px-4 py-3 rounded-lg',
+        props.highlighted && 'px-2 py-1 rounded-lg',
 
         props.className
       )}
     >
-      <span className={cs(TEXT_STYLES.regular13)}>{props.label}:</span>
-      <span className={cs(TEXT_STYLES.medium13)}>{props.children}</span>
+      <span className={cs(TEXT_STYLES.body)}>{props.label}:</span>
+      <span className={cs(TEXT_STYLES.body)}>{props.children}</span>
     </p>
   );
 }
@@ -71,14 +80,19 @@ export function Footer(props: { showBackground: boolean }): JSX.Element {
       )}
       style={{ fontSize: '10px' }}
     >
-      Powered by <DialectLogo className="ml-px -mr-1" />
+      Powered by <DialectLogo className="-mr-1 -mt-px" />
     </div>
   );
 }
 
 export function Centered(props: { children: React.ReactNode }): JSX.Element {
   return (
-    <div className="h-full flex flex-col items-center justify-center">
+    <div
+      className={cs(
+        'h-full flex flex-col items-center justify-center',
+        TEXT_STYLES.body
+      )}
+    >
       {props.children}
     </div>
   );
@@ -108,8 +122,8 @@ export function Button(props: {
         props.forTheme === 'light' &&
           !props.loading &&
           'bg-black text-white border-black',
-        props.className,
-        TEXT_STYLES.smallButton
+        TEXT_STYLES.buttonText,
+        props.className
       )}
       onClick={props.onClick}
       disabled={props.loading || props.disabled}
@@ -131,9 +145,10 @@ export function BigButton(props: {
   return (
     <button
       className={cs(
-        'w-full px-4 py-2 rounded-lg border transition-all',
+        'w-full px-4 py-3 rounded-lg transition-all',
         !props.loading && 'hover:opacity-60',
         props.loading && 'opacity-20',
+        TEXT_STYLES.button,
         props.className
       )}
       style={{ borderColor: 'currentColor' }}
@@ -142,8 +157,8 @@ export function BigButton(props: {
     >
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col items-start">
-          <p className={TEXT_STYLES.medium15}>{props.heading}</p>
-          <p className={TEXT_STYLES.medium13}>{props.description}</p>
+          <p className={TEXT_STYLES.buttonText}>{props.heading}</p>
+          <p className={TEXT_STYLES.buttonText}>{props.description}</p>
         </div>
         <div>{!props.loading ? props.icon : <Loader />}</div>
       </div>

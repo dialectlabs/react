@@ -26,14 +26,16 @@ function AuthedHome() {
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <Bell
             wallet={wallet}
-            network={'localnet'}
+            network={'devnet'}
             publicKey={DIALECT_PUBLIC_KEY}
             theme={'light'}
           />
           <WalletButton />
         </div>
         <div className="h-full text-4xl flex flex-col justify-center">
-          <div className="text-center">Jet Protocol</div>
+          <div className="text-center font-poppins text-gradient">
+            Jet Protocol
+          </div>
         </div>
       </div>
     </>

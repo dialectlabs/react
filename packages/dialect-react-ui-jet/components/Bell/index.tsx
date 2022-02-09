@@ -85,7 +85,7 @@ function WrappedBell(props: PropTypes): JSX.Element {
       <IconButton
         ref={bellRef}
         className={cs(
-          'flex items-center justify-center rounded-full w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
+          'flex items-center justify-center rounded-full w-12 h-12 focus:outline-none shadow-md',
           bgColor
         )}
         style={{
