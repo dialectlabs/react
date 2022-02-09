@@ -76,7 +76,7 @@ export function Footer(props: { showBackground: boolean }): JSX.Element {
     <div
       className={cs(
         'w-40 py-1 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase rounded-full',
-        props.showBackground && 'bg-black/5'
+        props.showBackground && BG_COLOR_MAPPING.light
       )}
       style={{ fontSize: '10px' }}
     >
