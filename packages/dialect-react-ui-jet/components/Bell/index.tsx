@@ -12,7 +12,12 @@ import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
 import NotificationCenter from '../NotificationCenter';
 import IconButton from '../IconButton';
-import { ThemeProvider, ThemeType, useTheme } from '../common/ThemeProvider';
+import {
+  ThemeProvider,
+  ThemeType,
+  ThemeVariables,
+  useTheme,
+} from '../common/ThemeProvider';
 
 type PropTypes = {
   wallet: WalletType;
@@ -20,6 +25,7 @@ type PropTypes = {
   rpcUrl?: string;
   publicKey: anchor.web3.PublicKey;
   theme?: ThemeType;
+  variables: ThemeVariables;
   bellClassName?: string;
   bellStyle?: object;
 };
@@ -54,7 +60,9 @@ function useOutsideAlerter(
   }, [ref]);
 }
 
-function WrappedBell(props: PropTypes): JSX.Element {
+function WrappedBell(
+  props: Omit<PropTypes, 'theme' | 'variables'>
+): JSX.Element {
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -104,18 +112,22 @@ function WrappedBell(props: PropTypes): JSX.Element {
           // className="w-full h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <NotificationCenter theme={props.theme} />
+          <NotificationCenter />
         </div>
       </Transition>
     </div>
   );
 }
 
-export default function Bell(props: PropTypes): JSX.Element {
+export default function Bell({
+  theme = 'dark',
+  variables,
+  ...props
+}: PropTypes): JSX.Element {
   return (
     <ApiProvider>
       <DialectProvider publicKey={props.publicKey}>
-        <ThemeProvider theme={props.theme}>
+        <ThemeProvider theme={theme} variables={variables}>
           <WrappedBell {...props} />
         </ThemeProvider>
       </DialectProvider>

@@ -136,6 +136,7 @@ function Settings(props: { toggleSettings: () => void }) {
               <a
                 target="_blank"
                 href={getExplorerAddress(notificationsThreadAddress)}
+                rel="noreferrer"
               >
                 {display(notificationsThreadAddress)}↗
               </a>
@@ -154,7 +155,12 @@ function Settings(props: { toggleSettings: () => void }) {
             />
             {deletionError &&
               deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-                <p className={cs(text.small, 'text-red-500 text-center mt-2')}>
+                <p
+                  className={cs(
+                    textStyles.small,
+                    'text-red-500 text-center mt-2'
+                  )}
+                >
                   {deletionError.message}
                 </p>
               )}
@@ -165,11 +171,7 @@ function Settings(props: { toggleSettings: () => void }) {
   );
 }
 
-export default function NotificationCenter(
-  props: {
-    theme?: ThemeType;
-  } = { theme: 'dark' }
-): JSX.Element {
+export default function NotificationCenter(): JSX.Element {
   const {
     isWalletConnected,
     isDialectAvailable,

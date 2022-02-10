@@ -9,9 +9,62 @@ const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
 );
 
+export const themeVariables = {
+  light: {
+    colors: {
+      bg: 'bg-[#E5EBF4]',
+      errorBg: 'bg-[#DC726D]',
+      primary: 'text-[#444444]',
+      secondary: 'text-[#E6EBF3]',
+      accent: 'text-gradient',
+      accentSolid: 'text-[#5895B9]',
+      brand: 'text-[#E5EBF4]',
+    },
+    textStyles: {
+      h1: 'font-poppins text-xl font-normal',
+      body: 'font-sans text-sm leading-snug ',
+      small: 'font-sans text-[13px] leading-snug',
+      bigText: 'text-base font-medium leading-snug',
+      header: 'font-poppins text-lg',
+      buttonText: 'text-xs uppercase tracking-[1.5px] text-[#E6EBF3]',
+      bigButtonText: 'text-xs uppercase tracking-[1.5px] text-white',
+    },
+    bellButton: 'jet-shadow-light',
+    popup: 'jet-shadow',
+    button: 'text-[#E6EBF3]',
+    divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#C3CADE] to-[#F8F9FB]',
+    highlighted: 'bg-white/30',
+  },
+  dark: {
+    colors: {
+      bg: 'bg-[#444444]',
+      errorBg: 'bg-[#DC726D]',
+      primary: 'text-white',
+      secondary: 'text-[#E6EBF3]',
+      accent: 'text-gradient',
+      accentSolid: 'text-[#5895B9]',
+      brand: 'text-[#E5EBF4]',
+    },
+    textStyles: {
+      h1: 'font-poppins text-xl font-normal',
+      body: 'font-sans text-sm leading-snug ',
+      small: 'font-sans text-[13px] leading-snug',
+      bigText: 'text-base font-medium leading-snug',
+      header: 'font-poppins text-lg',
+      buttonText: 'text-xs uppercase tracking-[1.5px] text-[#444]',
+      bigButtonText: 'text-xs uppercase tracking-[1.5px] text-white',
+    },
+    bellButton: 'jet-shadow-dark',
+    popup: 'jet-shadow',
+    button: 'text-[#E6EBF3]',
+    divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#3C3C3C] to-[#505050]',
+    highlighted: 'bg-[#ABABAB]/10',
+  },
+};
+
 function AuthedHome() {
   const wallet = useWallet();
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
 
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -21,7 +74,11 @@ function AuthedHome() {
     <>
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
           rel="stylesheet"
@@ -34,6 +91,7 @@ function AuthedHome() {
             network={'devnet'}
             publicKey={DIALECT_PUBLIC_KEY}
             theme={theme}
+            variables={themeVariables}
           />
           <WalletButton />
         </div>

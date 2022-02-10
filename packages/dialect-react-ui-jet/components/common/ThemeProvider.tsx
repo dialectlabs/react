@@ -1,83 +1,70 @@
 import React, { useEffect, useContext, useState } from 'react';
 
-export type ThemeType = 'dark' | 'light' | undefined;
+export type ThemeType = 'dark' | 'light';
 
-export const THEMES = {
-  light: {
-    colors: {
-      bg: 'bg-[#E5EBF4]',
-      errorBg: 'bg-[#DC726D]',
-      primary: 'text-[#444444]',
-      secondary: 'text-[#E6EBF3]',
-      accent: 'text-gradient',
-      accentSolid: 'text-[#5895B9]',
-      brand: 'text-[#E5EBF4]',
-    },
-    textStyles: {
-      h1: 'font-poppins text-xl font-normal',
-      body: 'font-sans text-sm leading-snug ',
-      small: 'font-sans text-[13px] leading-snug',
-      bigText: 'text-base font-medium leading-snug',
-      header: 'font-poppins text-lg',
-      buttonText: 'text-xs uppercase tracking-[1.5px] text-[#E6EBF3]',
-      bigButtonText: 'text-xs uppercase tracking-[1.5px] text-white',
-    },
-    bellButton: 'jet-shadow-light',
-    popup: 'jet-shadow',
-    button: 'text-[#E6EBF3]',
-    divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#C3CADE] to-[#F8F9FB]',
-    highlighted: 'bg-white/30',
-  },
-  dark: {
-    colors: {
-      bg: 'bg-[#444444]',
-      errorBg: 'bg-[#DC726D]',
-      primary: 'text-white',
-      secondary: 'text-[#E6EBF3]',
-      accent: 'text-gradient',
-      accentSolid: 'text-[#5895B9]',
-      brand: 'text-[#E5EBF4]',
-    },
-    textStyles: {
-      h1: 'font-poppins text-xl font-normal',
-      body: 'font-sans text-sm leading-snug ',
-      small: 'font-sans text-[13px] leading-snug',
-      bigText: 'text-base font-medium leading-snug',
-      header: 'font-poppins text-lg',
-      buttonText: 'text-xs uppercase tracking-[1.5px] text-[#444]',
-      bigButtonText: 'text-xs uppercase tracking-[1.5px] text-white',
-    },
-    bellButton: 'jet-shadow-dark',
-    popup: 'jet-shadow',
-    button: 'text-[#E6EBF3]',
-    divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#3C3C3C] to-[#505050]',
-    highlighted: 'bg-[#ABABAB]/10',
-  },
+export type ThemeColors =
+  | 'bg'
+  | 'errorBg'
+  | 'primary'
+  | 'secondary'
+  | 'accent'
+  | 'accentSolid'
+  | 'brand';
+
+export type ThemeTextStyles =
+  | 'h1'
+  | 'body'
+  | 'small'
+  | 'bigText'
+  | 'header'
+  | 'buttonText'
+  | 'bigButtonText';
+
+export type ThemeValues = {
+  colors: Record<ThemeColors, string>;
+  textStyles: Record<ThemeTextStyles, string>;
+  bellButton: string;
+  popup: string;
+  button: string;
+  divider: string;
+  highlighted: string;
 };
 
-export const ThemeContext = React.createContext(THEMES.dark);
+export type ThemeVariables = Record<ThemeType, ThemeValues>;
+
+export const ThemeContext = React.createContext<
+  | (ThemeValues & {
+      theme: ThemeType;
+      setTheme: (theme: ThemeType) => void;
+    })
+  | null
+>(null);
 
 type PropsType = {
   theme: ThemeType;
+  variables: ThemeVariables;
   children: JSX.Element;
 };
 
 export const ThemeProvider = ({
   theme = 'light',
+  variables,
   children,
 }: PropsType): JSX.Element => {
   const [themeSetting, setTheme] = useState<ThemeType>(theme);
-  const [variables, setVariables] = useState<ThemeType>(THEMES[themeSetting]);
+  const [selectedVariables, setVariables] = useState<ThemeValues>(
+    variables[themeSetting]
+  );
 
   useEffect(() => {
     setTheme(theme);
-    setVariables(THEMES[theme]);
-  }, [theme]);
+    setVariables(variables[theme]);
+  }, [theme, variables]);
 
   const value = {
     theme,
     setTheme,
-    ...variables,
+    ...selectedVariables,
   };
 
   return (
