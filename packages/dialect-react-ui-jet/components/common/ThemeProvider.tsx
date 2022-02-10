@@ -20,55 +20,71 @@ export type ThemeTextStyles =
   | 'buttonText'
   | 'bigButtonText';
 
-export type ThemeValues = {
-  colors: Record<ThemeColors, string>;
-  textStyles: Record<ThemeTextStyles, string>;
-  bellButton: string;
-  popup: string;
-  button: string;
-  divider: string;
-  highlighted: string;
+export type IncomingThemeValues = {
+  colors?: {
+    [key in ThemeColors]?: string;
+  };
+  textStyles?: {
+    [key in ThemeTextStyles]?: string;
+  };
+  bellButton?: string;
+  popup?: string;
+  button?: string;
+  divider?: string;
+  highlighted?: string;
 };
 
-export type ThemeVariables = Record<ThemeType, ThemeValues>;
+export type IncomingThemeVariables = Partial<
+  Record<ThemeType, IncomingThemeValues>
+>;
+
+export type ThemeValues = Required<
+  Omit<IncomingThemeValues, 'colors' | 'textStyles'> & {
+    colors: Record<ThemeColors, string>;
+    textStyles: Record<ThemeTextStyles, string>;
+  }
+>;
+
+function mergeWithDefault(values?: IncomingThemeValues): ThemeValues {
+  // TODO: implement the merge with default theme
+  return (values ?? {}) as ThemeValues;
+}
 
 export const ThemeContext = React.createContext<
   | (ThemeValues & {
       theme: ThemeType;
-      setTheme: (theme: ThemeType) => void;
     })
   | null
 >(null);
 
 type PropsType = {
-  theme: ThemeType;
-  variables: ThemeVariables;
+  theme?: ThemeType;
+  variables?: IncomingThemeVariables;
   children: JSX.Element;
 };
 
 export const ThemeProvider = ({
   theme = 'light',
-  variables,
+  variables = {},
   children,
 }: PropsType): JSX.Element => {
-  const [themeSetting, setTheme] = useState<ThemeType>(theme);
-  const [selectedVariables, setVariables] = useState<ThemeValues>(
-    variables[themeSetting]
+  const [selectedVariables, setVariables] = useState(
+    mergeWithDefault(variables[theme])
   );
 
   useEffect(() => {
-    setTheme(theme);
-    setVariables(variables[theme]);
+    setVariables(mergeWithDefault(variables[theme]));
   }, [theme, variables]);
 
-  const value = {
-    theme,
-    setTheme,
-    ...selectedVariables,
-  };
-
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        ...selectedVariables,
+      }}
+    >
+      {children}
+    </ThemeContext.Provider>
   );
 };
 

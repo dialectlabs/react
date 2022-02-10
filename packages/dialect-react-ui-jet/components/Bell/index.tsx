@@ -15,7 +15,7 @@ import IconButton from '../IconButton';
 import {
   ThemeProvider,
   ThemeType,
-  ThemeVariables,
+  IncomingThemeVariables,
   useTheme,
 } from '../common/ThemeProvider';
 
@@ -25,7 +25,7 @@ type PropTypes = {
   rpcUrl?: string;
   publicKey: anchor.web3.PublicKey;
   theme?: ThemeType;
-  variables: ThemeVariables;
+  variables?: IncomingThemeVariables;
   bellClassName?: string;
   bellStyle?: object;
 };
