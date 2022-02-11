@@ -2,25 +2,14 @@ import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
-  BG_COLOR_MAPPING,
   BigButton,
   Button,
   Centered,
   Divider,
   Footer,
-  TEXT_COLOR_MAPPING,
-  TEXT_STYLES,
-  ThemeType,
   ValueRow,
 } from '../common';
-import {
-  BackArrow as BackArrowIcon,
-  Gear as GearIcon,
-  NoNotifications as NoNotificationsIcon,
-  NotConnected as NotConnectedIcon,
-  Offline as OfflineIcon,
-  Trash as TrashIcon,
-} from '../Icon';
+import { useTheme } from '../common/ThemeProvider';
 import cs from '../../utils/classNames';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
@@ -34,50 +23,53 @@ function Header(props: {
   isSettingsOpen: boolean;
   toggleSettings: () => void;
 }) {
+  const { colors, textStyles, header, icons } = useTheme();
+
   if (props.isSettingsOpen) {
     return (
-      <div className="px-4 py-3 flex flex-row items-center">
+      <div className={cs('flex flex-row items-center', header)}>
         <IconButton
-          icon={<BackArrowIcon />}
+          icon={<icons.back />}
           onClick={props.toggleSettings}
           className="mr-2"
         />
-        <span className={TEXT_STYLES.medium15}>Settings</span>
+        <span className={cs(textStyles.header, colors.accent)}>Settings</span>
       </div>
     );
   }
   return (
-    <div className="px-4 py-3 flex flex-row justify-between items-center">
-      <span className={TEXT_STYLES.medium15}>Notifications</span>
+    <div className={cs('flex flex-row items-center justify-between', header)}>
+      <span className={cs(textStyles.header, colors.accent)}>
+        Notifications
+      </span>
       {props.isReady ? (
-        <IconButton icon={<GearIcon />} onClick={props.toggleSettings} />
+        <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
       ) : null}
     </div>
   );
 }
 
-function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
+function CreateThread() {
   const { createDialect, isDialectCreating, creationError } = useDialect();
+  const { colors, textStyles } = useTheme();
 
   return (
-    <div className="h-full max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1 className={cs(TEXT_STYLES.bold30, 'mb-3 text-center')}>
+    <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
+      <h1 className={cs(textStyles.h1, colors.accent, 'mb-4 text-center')}>
         Create notifications thread
       </h1>
       <ValueRow
         highlighted
         label="Rent Deposit (recoverable)"
-        forTheme={props.forTheme}
-        className={cs('w-full mb-3')}
+        className={cs('w-full mb-4')}
       >
         0.0002 SOL
       </ValueRow>
-      <p className={cs(TEXT_STYLES.regular13, 'text-center mb-3')}>
+      <p className={cs(textStyles.body, 'text-center mb-3')}>
         To start this message thread, you&apos;ll need to deposit a small amount
         of rent, since messages are stored on-chain.
       </p>
       <Button
-        forTheme={props.forTheme}
         onClick={() => createDialect().catch(noop)}
         loading={isDialectCreating}
       >
@@ -85,9 +77,7 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <p
-          className={cs(TEXT_STYLES.regular11, 'text-red-500 text-center mt-2')}
-        >
+        <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
           {creationError.message}
         </p>
       )}
@@ -95,24 +85,20 @@ function CreateThread(props: { forTheme?: 'dark' | 'light' }) {
   );
 }
 
-function Settings(props: {
-  forTheme?: 'dark' | 'light';
-  toggleSettings: () => void;
-}) {
+function Settings(props: { toggleSettings: () => void }) {
   const {
     notificationsThreadAddress,
     deleteDialect,
     isDialectDeleting,
     deletionError,
   } = useDialect();
+  const { colors, textStyles, icons } = useTheme();
 
   return (
     <>
       <div className="mb-3">
-        <p className={cs(TEXT_STYLES.regular13, 'mb-1')}>
-          Included event types
-        </p>
-        <ul className={cs(TEXT_STYLES.medium15, 'list-disc pl-6')}>
+        <p className={cs(textStyles.body, 'mb-1')}>Included event types</p>
+        <ul className={cs(textStyles.bigText, 'list-disc pl-6')}>
           <li>Deposit Confirmations</li>
           <li>Liquidation Alerts</li>
           <li>Top Up Requests</li>
@@ -136,11 +122,13 @@ function Settings(props: {
               <a
                 target="_blank"
                 href={getExplorerAddress(notificationsThreadAddress)}
+                rel="noreferrer"
               >
                 {display(notificationsThreadAddress)}↗
               </a>
             </ValueRow>
             <BigButton
+              className={colors.errorBg}
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
@@ -148,14 +136,14 @@ function Settings(props: {
               }}
               heading="Withdraw rent & delete history"
               description="Events history will be lost forever"
-              icon={<TrashIcon />}
+              icon={<icons.trash />}
               loading={isDialectDeleting}
             />
             {deletionError &&
               deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
                 <p
                   className={cs(
-                    TEXT_STYLES.regular11,
+                    textStyles.small,
                     'text-red-500 text-center mt-2'
                   )}
                 >
@@ -169,11 +157,7 @@ function Settings(props: {
   );
 }
 
-export default function NotificationCenter(
-  props: {
-    theme?: ThemeType;
-  } = { theme: 'dark' }
-): JSX.Element {
+export default function NotificationCenter(): JSX.Element {
   const {
     isWalletConnected,
     isDialectAvailable,
@@ -190,42 +174,39 @@ export default function NotificationCenter(
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const bgColor = props.theme && BG_COLOR_MAPPING[props.theme];
-  const textColor = props.theme && TEXT_COLOR_MAPPING[props.theme];
+  const { colors, popup, icons } = useTheme();
 
   let content: JSX.Element;
 
   if (disconnectedFromChain) {
     content = (
       <Centered>
-        <OfflineIcon className="w-10 mb-6 opacity-60" />
+        <icons.offline className="w-10 mb-6 opacity-60" />
         <span className="opacity-60">Lost connection to Solana blockchain</span>
       </Centered>
     );
   } else if (cannotDecryptDialect) {
     content = (
       <Centered>
-        <OfflineIcon className="w-10 mb-6 opacity-60" />
+        <icons.offline className="w-10 mb-6 opacity-60" />
         <span className="opacity-60">Cannot decrypt messages</span>
       </Centered>
     );
   } else if (!isWalletConnected) {
     content = (
       <Centered>
-        <NotConnectedIcon className="mb-6 opacity-60" />
+        <icons.notConnected className="mb-6 opacity-60" />
         <span className="opacity-60">Wallet not connected</span>
       </Centered>
     );
   } else if (!isDialectAvailable) {
-    content = <CreateThread forTheme={props.theme as any} />;
+    content = <CreateThread />;
   } else if (isSettingsOpen) {
-    content = (
-      <Settings toggleSettings={toggleSettings} forTheme={props.theme as any} />
-    );
+    content = <Settings toggleSettings={toggleSettings} />;
   } else if (isNoMessages) {
     content = (
       <Centered>
-        <NoNotificationsIcon className="mb-6" />
+        <icons.noNotifications className="mb-6" />
         <span className="opacity-60">No notifications yet</span>
       </Centered>
     );
@@ -233,11 +214,14 @@ export default function NotificationCenter(
     content = (
       <>
         {messages.map((message: MessageType) => (
-          <Notification
-            key={message.timestamp}
-            message={message.text}
-            timestamp={message.timestamp}
-          />
+          <>
+            <Notification
+              key={message.timestamp}
+              message={message.text}
+              timestamp={message.timestamp}
+            />
+            <Divider />
+          </>
         ))}
       </>
     );
@@ -246,9 +230,10 @@ export default function NotificationCenter(
   return (
     <div
       className={cs(
-        'flex flex-col h-full shadow-md rounded-lg overflow-hidden border',
-        textColor,
-        bgColor
+        'flex flex-col h-full shadow-md overflow-hidden',
+        colors.primary,
+        colors.bg,
+        popup
       )}
     >
       <Header
@@ -256,7 +241,7 @@ export default function NotificationCenter(
         isSettingsOpen={isSettingsOpen}
         toggleSettings={toggleSettings}
       />
-      <Divider />
+      <Divider className="mx-2" />
       <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
       <Footer showBackground={messages.length > 4} />
     </div>

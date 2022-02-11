@@ -1,87 +1,70 @@
 import React from 'react';
 import { DialectLogo, Spinner as SpinnerIcon } from '../Icon';
 import cs from '../../utils/classNames';
-
-export type ThemeType = 'dark' | 'night' | 'light' | undefined;
-
-export const BG_COLOR_MAPPING = {
-  dark: 'bg-black',
-  night: 'bg-night',
-  light: 'bg-white',
-};
-
-export const TEXT_COLOR_MAPPING = {
-  dark: 'text-white',
-  night: 'text-white',
-  light: 'text-black',
-};
-
-export const TEXT_STYLES = {
-  regular11: 'font-inter text-xs font-normal',
-  regular13: 'font-inter text-sm font-normal',
-  medium13: 'font-inter text-sm font-medium',
-  medium15: 'font-inter text-base font-medium',
-  bold30: 'font-inter text-3xl font-bold',
-};
+import { useTheme } from './ThemeProvider';
 
 export function Divider(props: { className?: string }): JSX.Element {
-  return (
-    <div
-      className={cs('h-px opacity-10', props.className)}
-      style={{ backgroundColor: 'currentColor' }}
-    />
-  );
+  const { divider } = useTheme();
+
+  return <div className={cs(divider, props.className)} />;
 }
 
 export function ValueRow(props: {
   label: string;
   children: React.ReactNode;
-  forTheme?: 'dark' | 'light';
   highlighted?: boolean;
   className?: string;
 }) {
-  const bgColor = props.forTheme === 'dark' ? 'bg-white/5' : 'bg-night/5';
+  const { textStyles, highlighted } = useTheme();
 
   return (
     <p
       className={cs(
         'flex flex-row justify-between',
-        props.highlighted && bgColor,
-        props.highlighted && 'px-4 py-3 rounded-lg',
-
+        props.highlighted && highlighted,
         props.className
       )}
     >
-      <span className={cs(TEXT_STYLES.regular13)}>{props.label}:</span>
-      <span className={cs(TEXT_STYLES.medium13)}>{props.children}</span>
+      <span className={cs(textStyles.body)}>{props.label}:</span>
+      <span className={cs(textStyles.body)}>{props.children}</span>
     </p>
   );
 }
 
 export function Footer(props: { showBackground: boolean }): JSX.Element {
+  const { colors } = useTheme();
+
   return (
     <div
       className={cs(
         'w-40 py-1 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase rounded-full',
-        props.showBackground && 'bg-black/5'
+        props.showBackground && colors.bg
       )}
       style={{ fontSize: '10px' }}
     >
-      Powered by <DialectLogo className="ml-px -mr-1" />
+      Powered by <DialectLogo className="-mr-1 -mt-px" />
     </div>
   );
 }
 
 export function Centered(props: { children: React.ReactNode }): JSX.Element {
+  const { textStyles } = useTheme();
+
   return (
-    <div className="h-full flex flex-col items-center justify-center">
+    <div
+      className={cs(
+        'h-full flex flex-col items-center justify-center',
+        textStyles.body
+      )}
+    >
       {props.children}
     </div>
   );
 }
 
 export function Loader() {
-  return <SpinnerIcon className="animate-spin" />;
+  const { icons } = useTheme();
+  return <icons.spinner className="animate-spin" />;
 }
 
 export function Button(props: {
@@ -89,21 +72,16 @@ export function Button(props: {
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
-  forTheme?: 'dark' | 'light';
   children: React.ReactNode;
 }): JSX.Element {
+  const { button, buttonLoading, textStyles } = useTheme();
+
   return (
     <button
       className={cs(
-        'min-w-120 px-4 py-2 rounded-lg transition-all border flex flex-row justify-center',
-        !props.loading && 'hover:opacity-60',
-        props.loading && 'opacity-20 bg-transparent',
-        props.forTheme === 'dark' &&
-          !props.loading &&
-          'bg-white text-black border-white',
-        props.forTheme === 'light' &&
-          !props.loading &&
-          'bg-black text-white border-black',
+        'min-w-120 px-4 py-2 rounded-lg transition-all flex flex-row items-center justify-center',
+        textStyles.buttonText,
+        !props.loading ? button : buttonLoading,
         props.className
       )}
       onClick={props.onClick}
@@ -123,12 +101,13 @@ export function BigButton(props: {
   heading: React.ReactNode;
   description: React.ReactNode;
 }): JSX.Element {
+  const { bigButton, buttonLoading, textStyles } = useTheme();
+
   return (
     <button
       className={cs(
-        'w-full px-4 py-2 rounded-lg border transition-all',
-        !props.loading && 'hover:opacity-60',
-        props.loading && 'opacity-20',
+        'w-full px-4 py-3 rounded-lg transition-all',
+        !props.loading ? bigButton : buttonLoading,
         props.className
       )}
       style={{ borderColor: 'currentColor' }}
@@ -137,8 +116,8 @@ export function BigButton(props: {
     >
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col items-start">
-          <p className={TEXT_STYLES.medium15}>{props.heading}</p>
-          <p className={TEXT_STYLES.medium13}>{props.description}</p>
+          <p className={textStyles.bigButtonText}>{props.heading}</p>
+          <p className={textStyles.bigButtonSubtle}>{props.description}</p>
         </div>
         <div>{!props.loading ? props.icon : <Loader />}</div>
       </div>

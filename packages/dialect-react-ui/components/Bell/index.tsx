@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
-import { BellIcon } from '@heroicons/react/outline';
 import {
   ApiProvider,
   connected,
@@ -10,9 +9,14 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
-import { BG_COLOR_MAPPING, TEXT_COLOR_MAPPING, ThemeType } from '../common';
 import NotificationCenter from '../NotificationCenter';
 import IconButton from '../IconButton';
+import {
+  ThemeProvider,
+  ThemeType,
+  IncomingThemeVariables,
+  useTheme,
+} from '../common/ThemeProvider';
 
 type PropTypes = {
   wallet: WalletType;
@@ -20,6 +24,7 @@ type PropTypes = {
   rpcUrl?: string;
   publicKey: anchor.web3.PublicKey;
   theme?: ThemeType;
+  variables?: IncomingThemeVariables;
   bellClassName?: string;
   bellStyle?: object;
 };
@@ -54,7 +59,9 @@ function useOutsideAlerter(
   }, [ref]);
 }
 
-function WrappedBell(props: PropTypes): JSX.Element {
+function WrappedBell(
+  props: Omit<PropTypes, 'theme' | 'variables'>
+): JSX.Element {
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -72,20 +79,19 @@ function WrappedBell(props: PropTypes): JSX.Element {
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const bgColor = props.theme && BG_COLOR_MAPPING[props.theme];
-  const textColor = props.theme && TEXT_COLOR_MAPPING[props.theme];
+  const { colors, bellButton, icons } = useTheme();
 
   return (
-    <div className={cs('flex flex-col items-end relative', textColor)}>
+    <div className={cs('flex flex-col items-end relative', colors.primary)}>
       <IconButton
         ref={bellRef}
         className={cs(
-          'flex items-center justify-center rounded-full w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
-          bgColor
+          'flex items-center justify-center rounded-full focus:outline-none shadow-md',
+          colors.bg,
+          bellButton
         )}
-        style={props?.bellStyle}
+        icon={<icons.bell className={cs('w-6 h-6 rounded-full')} />}
         onClick={() => setOpen(!open)}
-        icon={<BellIcon className={cs('w-6 h-6 rounded-full')} />}
       ></IconButton>
       <Transition
         className="z-50 absolute top-16 w-96 h-96"
@@ -105,18 +111,24 @@ function WrappedBell(props: PropTypes): JSX.Element {
           // className="w-full h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <NotificationCenter theme={props.theme} />
+          <NotificationCenter />
         </div>
       </Transition>
     </div>
   );
 }
 
-export default function Bell(props: PropTypes): JSX.Element {
+export default function Bell({
+  theme = 'dark',
+  variables,
+  ...props
+}: PropTypes): JSX.Element {
   return (
     <ApiProvider>
       <DialectProvider publicKey={props.publicKey}>
-        <WrappedBell {...props} />
+        <ThemeProvider theme={theme} variables={variables}>
+          <WrappedBell {...props} />
+        </ThemeProvider>
       </DialectProvider>
     </ApiProvider>
   );

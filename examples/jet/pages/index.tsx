@@ -1,9 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Head from 'next/head';
 import * as anchor from '@project-serum/anchor';
-import { Bell } from '@dialectlabs/react-ui-jet';
+import { Bell } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
+import BellIcon from './icons/Bell';
+import SettingsIcon from './icons/Gear';
+import BackIcon from './icons/BackArrow';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
@@ -28,12 +31,20 @@ export const themeVariables = {
       header: 'font-poppins text-lg',
       buttonText: 'text-xs uppercase tracking-[1.5px] text-[#E6EBF3]',
       bigButtonText: 'text-xs uppercase tracking-[1.5px] text-white',
+      bigButtonSubtle: 'text-xs uppercase tracking-[1.5px] text-white',
     },
-    bellButton: 'jet-shadow-light',
-    popup: 'jet-shadow',
-    button: 'text-[#E6EBF3]',
+    icons: {
+      bell: BellIcon,
+      back: BackIcon,
+      settings: SettingsIcon,
+    },
+    bellButton: 'w-10 h-10 jet-shadow-light',
+    header: 'px-6 py-4',
+    popup: 'rounded-3xl jet-shadow',
+    button: 'bg-gradient text-[#E6EBF3] hover:opacity-60',
+    buttonLoading: 'opacity-20',
     divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#C3CADE] to-[#F8F9FB]',
-    highlighted: 'bg-white/30',
+    highlighted: 'px-2 py-1 rounded-lg bg-white/30',
   },
   dark: {
     colors: {
@@ -53,12 +64,20 @@ export const themeVariables = {
       header: 'font-poppins text-lg',
       buttonText: 'text-xs uppercase tracking-[1.5px] text-[#444]',
       bigButtonText: 'text-xs uppercase tracking-[1.5px] text-white',
+      bigButtonSubtle: 'text-xs uppercase tracking-[1.5px] text-white',
     },
-    bellButton: 'jet-shadow-dark',
-    popup: 'jet-shadow',
-    button: 'text-[#E6EBF3]',
+    icons: {
+      bell: BellIcon,
+      back: BackIcon,
+      settings: SettingsIcon,
+    },
+    bellButton: 'w-10 h-10 jet-shadow-dark',
+    header: 'px-6 py-4',
+    popup: 'rounded-3xl jet-shadow',
+    button: 'bg-gradient text-[#E6EBF3] hover:opacity-60',
+    buttonLoading: 'opacity-20',
     divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#3C3C3C] to-[#505050]',
-    highlighted: 'bg-[#ABABAB]/10',
+    highlighted: 'px-2 py-1 rounded-lg bg-[#ABABAB]/10',
   },
 };
 

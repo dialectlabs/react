@@ -1,4 +1,5 @@
 import React from 'react';
+import cs from '../../utils/classNames';
 
 type IconButtonPropsType = {
   icon: JSX.Element;
@@ -14,10 +15,12 @@ export default React.forwardRef(function IconButton(
   ref: React.RefObject<HTMLInputElement> | null
 ): JSX.Element {
   return (
-    <div className={props.className}>
+    <div className={cs(' relative', props.className)} style={props.style}>
       <button
         ref={ref}
-        className="w-9 w-9 -m-2 flex items-center justify-center transition-all hover:opacity-60"
+        className={
+          'w-9 h-9 -m-2 flex items-center justify-center transition-all hover:opacity-60'
+        }
         onClick={(event) => {
           event.preventDefault();
           props?.onClick();
