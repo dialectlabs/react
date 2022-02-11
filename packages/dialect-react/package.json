@@ -1,10 +1,11 @@
 {
   "name": "@dialectlabs/react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React wrappers for Dialect's web3 notifications",
-  "main": "index.js",
   "license": "MIT",
   "private": false,
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "rm -rf lib && tsc"
   },
@@ -28,6 +29,6 @@
     "@types/react": "^17.0.34"
   },
   "peerDependencies": {
-    "react": "^17.0.0"
+    "react": ">=17"
   }
 }

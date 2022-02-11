@@ -168,8 +168,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
-  // const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
-  const messages = mockMessages;
+  const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
+  // const messages = mockMessages;
   const isDialectAvailable = Boolean(dialect);
   const notificationsThreadAddress =
     wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;

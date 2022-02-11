@@ -63,7 +63,7 @@ function CreateThread() {
         label="Rent Deposit (recoverable)"
         className={cs('w-full mb-4')}
       >
-        0.0002 SOL
+        0.058 SOL
       </ValueRow>
       <p className={cs(textStyles.body, 'text-center mb-3')}>
         To start this message thread, you&apos;ll need to deposit a small amount
@@ -110,7 +110,7 @@ function Settings(props: { toggleSettings: () => void }) {
       </div>
       <div>
         <ValueRow label="Deposited Rent" className={cs('mb-1')}>
-          0.001 SOL
+          0.058 SOL
         </ValueRow>
         <Divider />
         {notificationsThreadAddress ? (

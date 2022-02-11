@@ -1,11 +1,10 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Dialect's react UI components",
-  "main": "index.ts",
   "license": "MIT",
   "private": false,
-  "module": "./lib/index.js",
+  "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "rm -rf lib && tsc && yarn build:styles",
@@ -30,7 +29,7 @@
   },
   "peerDependencies": {
     "@dialectlabs/react": "^0.0.1",
-    "react": "^17.0.0"
+    "react": ">=17"
   },
   "publicConfig": {
     "registry": "https://npm.pkg.github.com/dialectlabs"
