@@ -31,5 +31,12 @@
   "peerDependencies": {
     "@dialectlabs/react": "^0.0.1",
     "react": "^17.0.0"
+  },
+  "publicConfig": {
+    "registry": "https://npm.pkg.github.com/dialectlabs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dialectlabs/react"
   }
 }
