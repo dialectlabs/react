@@ -14,7 +14,10 @@ export function isObject(item: unknown) {
  * @param target
  * @param ...sources
  */
-export default function deepMerge(target: object, ...sources: object[]) {
+export default function deepMerge(
+  target: object,
+  ...sources: object[]
+): object {
   if (!sources.length) return target;
   const source = sources.shift();
 

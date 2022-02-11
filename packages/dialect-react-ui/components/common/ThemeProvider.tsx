@@ -32,7 +32,15 @@ export type ThemeTextStyles =
   | 'bigButtonText'
   | 'bigButtonSubtle';
 
-export type ThemeIcons = React.ReactNode;
+export type ThemeIcons =
+  | 'bell'
+  | 'back'
+  | 'settings'
+  | 'notConnected'
+  | 'noNotifications'
+  | 'spinner'
+  | 'trash'
+  | 'offline';
 
 export type IncomingThemeValues = {
   colors?: {
@@ -42,7 +50,7 @@ export type IncomingThemeValues = {
     [key in ThemeTextStyles]?: string;
   };
   icons?: {
-    [key in ThemeIcons]?: string;
+    [key in ThemeIcons]?: React.ReactNode;
   };
   header?: string;
   bellButton?: string;
@@ -59,16 +67,19 @@ export type IncomingThemeVariables = Partial<
 >;
 
 export type ThemeValues = Required<
-  Omit<IncomingThemeValues, 'colors' | 'textStyles'> & {
+  Omit<IncomingThemeValues, 'colors' | 'textStyles' | 'icons'> & {
     colors: Record<ThemeColors, string>;
     textStyles: Record<ThemeTextStyles, string>;
+    icons: Record<ThemeIcons, React.ReactNode>;
   }
 >;
 
-export const defaultVariables = {
+export const defaultVariables: Record<ThemeType, ThemeValues> = {
   light: {
     colors: {
       bg: 'bg-white',
+      secondary: '',
+      brand: '',
       errorBg: 'bg-transparent',
       primary: 'text-black',
       accent: 'text-black',
@@ -106,6 +117,8 @@ export const defaultVariables = {
   dark: {
     colors: {
       bg: 'bg-black',
+      secondary: '',
+      brand: '',
       errorBg: 'bg-transparent',
       primary: 'text-white',
       accent: 'text-white',
@@ -142,11 +155,12 @@ export const defaultVariables = {
   },
 };
 
-function mergeWithDefault(values: ThemeValues, theme: ThemeType): ThemeValues {
-  // TODO: implement the merge with default theme
-
+function mergeWithDefault(
+  values: IncomingThemeVariables,
+  theme: ThemeType
+): ThemeValues {
   const defaultThemeValues: IncomingThemeValues = defaultVariables[theme];
-  const currentThemeValues: IncomingThemeValues = values[theme];
+  const currentThemeValues: IncomingThemeValues = values[theme] ?? {};
 
   const result = deepMerge(defaultThemeValues, currentThemeValues);
 
