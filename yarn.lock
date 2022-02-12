@@ -1054,11 +1054,6 @@
   resolved "https://registry.npmjs.org/@headlessui/react/-/react-1.4.3.tgz"
   integrity sha512-n2IQkaaw0aAAlQS5MEXsM4uRK+w18CrM72EqnGRl/UBOQeQajad8oiKXR9Nk15jOzTFQjpxzrZMf1NxHidFBiw==
 
-"@heroicons/react@^1.0.0":
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/@heroicons/react/-/react-1.0.5.tgz"
-  integrity sha512-UDMyLM2KavIu2vlWfMspapw9yii7aoLwzI2Hudx4fyoPwfKfxU8r3cL8dEBXOjcLG0/oOONZzbT14M1HoNtEcg==
-
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.5.0.tgz"

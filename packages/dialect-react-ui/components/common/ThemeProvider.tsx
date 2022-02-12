@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import deepMerge from '../../utils/deepMerge';
-import { BellIcon } from '@heroicons/react/outline';
 import {
+  Bell as BellIcon,
   BackArrow,
   Gear,
   NotConnected,
@@ -147,7 +147,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       trash: Trash,
       offline: Offline,
     },
-    bellButton: 'w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
+    bellButton: 'w-12 h-12 focus:outline-none shadow-md',
     header: 'px-6 py-4',
     popup: 'rounded-lg',
     button: 'bg-white text-black border border-white hover:opacity-60',
