@@ -101,13 +101,13 @@ export function BigButton(props: {
   heading: React.ReactNode;
   description: React.ReactNode;
 }): JSX.Element {
-  const { bigButton, buttonLoading, textStyles } = useTheme();
+  const { bigButton, bigButtonLoading, textStyles } = useTheme();
 
   return (
     <button
       className={cs(
         'w-full px-4 py-3 rounded-lg transition-all',
-        !props.loading ? bigButton : buttonLoading,
+        !props.loading ? bigButton : bigButtonLoading,
         props.className
       )}
       style={{ borderColor: 'currentColor' }}

@@ -58,6 +58,7 @@ export type IncomingThemeValues = {
   button?: string;
   buttonLoading?: string;
   bigButton?: string;
+  bigButtonLoading?: string;
   divider?: string;
   highlighted?: string;
 };
@@ -109,8 +110,10 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     header: 'px-4 py-3',
     popup: 'rounded-lg',
     button: 'bg-black text-white border border-black hover:opacity-60',
-    bigButton: 'text-black border border-black hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-black opacity-20 bg-transparent',
+    bigButton: 'text-black border border-black hover:opacity-60',
+    bigButtonLoading:
+      'min-h-[42px] border border-black opacity-20 bg-transparent',
     divider: 'h-px opacity-10 bg-current',
     highlighted: 'px-4 py-3 rounded-lg bg-black/5',
   },
@@ -150,6 +153,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     button: 'bg-white text-black border border-white hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-white opacity-20 bg-transparent',
     bigButton: 'text-white border border-white hover:opacity-60',
+    bigButtonLoading:
+      'min-h-[42px] border border-white opacity-20 bg-transparent',
     divider: 'h-px opacity-10 bg-current',
     highlighted: 'px-4 py-3 rounded-lg bg-white/10',
   },
