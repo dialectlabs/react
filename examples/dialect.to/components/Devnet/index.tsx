@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image';
-import { Bell } from '@dialectlabs/react-ui';
+import { NotificationCenterButton } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
 import { useWallet } from '@solana/wallet-adapter-react';
 
@@ -42,7 +42,7 @@ export default function Mainnet() {
             </div>
             <div className="flex flex-row justify-end p-2 space-x-4 items-center space-x-2">
               <WalletButton>Connect wallet</WalletButton>
-              <Bell
+              <NotificationCenterButton
                 wallet={wallet}
                 network={'devnet'}
                 publicKey={DIALECT_PUBLIC_KEY}

@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "React wrappers for Dialect's web3 notifications",
   "license": "MIT",
   "private": false,
@@ -8,9 +8,6 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "rm -rf lib && tsc"
-  },
-  "publicConfig": {
-    "registry": "https://npm.pkg.github.com/dialectlabs"
   },
   "repository": {
     "type": "git",

@@ -3,6 +3,7 @@ import * as anchor from '@project-serum/anchor';
 import {
   DialectProvider,
   NotificationCenterButton,
+  IncomingThemeVariables,
 } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
@@ -14,7 +15,7 @@ const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
 );
 
-export const themeVariables = {
+export const themeVariables: IncomingThemeVariables = {
   light: {
     colors: {
       bg: 'bg-[#E5EBF4]',
