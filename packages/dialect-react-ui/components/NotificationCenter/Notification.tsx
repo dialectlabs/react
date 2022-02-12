@@ -1,6 +1,6 @@
 import React from 'react';
 import cs from '../../utils/classNames';
-import { TEXT_STYLES } from '../common';
+import { useTheme } from '../common/ThemeProvider';
 
 type Props = {
   message: string;
@@ -17,13 +17,16 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 export const Notification = ({ message, timestamp }: Props) => {
+  const { textStyles } = useTheme();
   return (
-    <div className="flex flex-col border-b py-2">
-      <div className="flex-1 mb-1">
-        <p className={cs(TEXT_STYLES.medium13, 'text-base')}>{message}</p>
+    <div className="flex flex-col py-2">
+      <div className="flex-1 mb-2">
+        <p className={cs(textStyles.body, 'font-medium text-base')}>
+          {message}
+        </p>
       </div>
       <div>
-        <p className={cs(TEXT_STYLES.regular13, 'opacity-60')}>
+        <p className={cs(textStyles.small, 'opacity-60')}>
           {timeFormatter.format(timestamp)}
         </p>
       </div>

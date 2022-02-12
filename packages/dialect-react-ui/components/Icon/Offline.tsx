@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { SVGProps } from 'react';
 
-const SvgCloudOfflineOutline = (props: SVGProps<SVGSVGElement>) => (
+const SvgOffline = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className="cloud-offline-outline_svg__ionicon"
+    className="offline_svg__ionicon"
     viewBox="0 0 512 512"
     {...props}
   >
@@ -27,4 +27,4 @@ const SvgCloudOfflineOutline = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export default SvgCloudOfflineOutline;
+export default SvgOffline;

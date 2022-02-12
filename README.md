@@ -42,13 +42,13 @@ Now you have a hot reload of the packages in the workspace.
 
 #### Convert svg icons to React Components (via svgr)
 
-Store original svgs in `<ComponentName>/source/`, run to convert:
+Store original svgs in `Icon/source/`, then run inside `Icon` directory to convert:
 
 ```
-  npx @svgr/cli --typescript --out-dir icons -- source
+  npx @svgr/cli --typescript --out-dir . -- source
 ```
 
-Than import Icon as a React Component from `<ComponentName>/icons/`, e.g. (`./icons/BackArrow`). See [SVGR Command Line guide](https://react-svgr.com/docs/cli/) for more details.
+Import Icon as a React Component from `Icon`, e.g. (`import {BackArrow} from '/Icon/'`). See [SVGR Command Line guide](https://react-svgr.com/docs/cli/) for more details.
 
 ## Publishing
 

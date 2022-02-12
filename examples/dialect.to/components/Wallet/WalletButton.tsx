@@ -9,7 +9,7 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 import { PhantomIcon } from '../Icon';
 import { display } from '@dialectlabs/web3';
 
-export const WalletButton = ({ children }: any) => {
+export const WalletButton = ({ children }: { children: React.ReactNode }) => {
   const wallet = useWallet();
 
   return (

@@ -1054,11 +1054,6 @@
   resolved "https://registry.npmjs.org/@headlessui/react/-/react-1.4.3.tgz"
   integrity sha512-n2IQkaaw0aAAlQS5MEXsM4uRK+w18CrM72EqnGRl/UBOQeQajad8oiKXR9Nk15jOzTFQjpxzrZMf1NxHidFBiw==
 
-"@heroicons/react@^1.0.0":
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/@heroicons/react/-/react-1.0.5.tgz"
-  integrity sha512-UDMyLM2KavIu2vlWfMspapw9yii7aoLwzI2Hudx4fyoPwfKfxU8r3cL8dEBXOjcLG0/oOONZzbT14M1HoNtEcg==
-
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.5.0.tgz"
@@ -1674,6 +1669,14 @@
   dependencies:
     base-x "^3.0.6"
 
+"@types/bytebuffer@^5.0.43":
+  version "5.0.43"
+  resolved "https://registry.yarnpkg.com/@types/bytebuffer/-/bytebuffer-5.0.43.tgz#b5259fca1412106bcee0cabfbf7c104846d06738"
+  integrity sha512-vQnTYvy4LpSojHjKdmg4nXFI1BAiYPvZ/k3ouczZAQnbDprk1xqxJiFmFHyy8y6MuUq3slz5erNMtn6n87uVKw==
+  dependencies:
+    "@types/long" "*"
+    "@types/node" "*"
+
 "@types/chai-as-promised@^7.1.4":
   version "7.1.4"
   resolved "https://registry.npmjs.org/@types/chai-as-promised/-/chai-as-promised-7.1.4.tgz"
@@ -1692,6 +1695,13 @@
   integrity sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==
   dependencies:
     "@types/node" "*"
+
+"@types/ed2curve@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@types/ed2curve/-/ed2curve-0.2.2.tgz#8f8bc7e2c9a5895a941c63a4f7acd7a6a62a5b15"
+  integrity sha512-G1sTX5xo91ydevQPINbL2nfgVAj/s1ZiqZxC8OCWduwu+edoNGUm5JXtTkg9F3LsBZbRI46/0HES4CPUE2wc9g==
+  dependencies:
+    tweetnacl "^1.0.0"
 
 "@types/express-serve-static-core@^4.17.9":
   version "4.17.28"
@@ -1718,6 +1728,11 @@
   version "4.14.178"
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.178.tgz"
   integrity sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==
+
+"@types/long@*":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
+  integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
 
 "@types/node@*":
   version "17.0.10"
