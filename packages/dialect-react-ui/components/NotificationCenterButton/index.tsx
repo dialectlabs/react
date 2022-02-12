@@ -97,10 +97,10 @@ function WrappedNotificationCenterButton(
         className="z-50 absolute top-16 w-96 h-96"
         style={{ width: '29rem', height: '29rem' }}
         show={open}
-        enter="transition-opacity duration-500"
+        enter="transition-opacity duration-300"
         enterFrom="opacity-0"
         enterTo="opacity-100"
-        leave="transition-opacity duration-500"
+        leave="transition-opacity duration-100"
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
