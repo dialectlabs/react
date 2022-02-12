@@ -157,7 +157,11 @@ function Settings(props: { toggleSettings: () => void }) {
   );
 }
 
-export default function NotificationCenter(): JSX.Element {
+export default function NotificationCenter({
+  className,
+}: {
+  className?: string;
+}): JSX.Element {
   const {
     isWalletConnected,
     isDialectAvailable,
@@ -174,7 +178,7 @@ export default function NotificationCenter(): JSX.Element {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, popup, icons } = useTheme();
+  const { colors, icons } = useTheme();
 
   let content: JSX.Element;
 
@@ -230,10 +234,10 @@ export default function NotificationCenter(): JSX.Element {
   return (
     <div
       className={cs(
-        'flex flex-col h-full shadow-md overflow-hidden',
+        'relative flex flex-col h-full overflow-hidden min-h-[400px]',
         colors.primary,
         colors.bg,
-        popup
+        className
       )}
     >
       <Header

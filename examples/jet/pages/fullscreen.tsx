@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
-import {
-  DialectProvider,
-  NotificationCenterButton,
-} from '@dialectlabs/react-ui';
+import { DialectProvider, NotificationCenter } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import BellIcon from './icons/Bell';
@@ -41,7 +38,7 @@ export const themeVariables = {
       settings: SettingsIcon,
     },
     bellButton: 'w-10 h-10 jet-shadow-light',
-    header: 'px-6 py-4',
+    header: 'px-2 py-4',
     popup: 'rounded-3xl jet-shadow',
     button: 'bg-gradient text-[#E6EBF3] hover:opacity-60',
     buttonLoading: 'bg-gradient min-h-[32px] opacity-20',
@@ -76,7 +73,7 @@ export const themeVariables = {
       settings: SettingsIcon,
     },
     bellButton: 'w-10 h-10 jet-shadow-dark',
-    header: 'px-6 py-4',
+    header: 'px-2 py-4',
     popup: 'rounded-3xl jet-shadow',
     button: 'bg-gradient text-[#E6EBF3] hover:opacity-60',
     buttonLoading: 'bg-gradient min-h-[32px] opacity-20',
@@ -97,30 +94,31 @@ function HomeWithWallet() {
 
   return (
     <>
-      <div className={`flex flex-col h-screen bg-${theme}`}>
-        <DialectProvider
-          wallet={wallet}
-          network={'devnet'}
-          publicKey={DIALECT_PUBLIC_KEY}
-          theme={theme}
-          variables={themeVariables}
-        >
-          <div className="flex flex-row justify-end p-2 items-center space-x-2">
-            <NotificationCenterButton />
-            <WalletButton />
-          </div>
-        </DialectProvider>
-        <div className="h-full flex flex-col justify-center">
-          <div className="text-center font-poppins">
-            <h1 className="text-4xl text-gradient">Jet Protocol</h1>
+      <DialectProvider
+        wallet={wallet}
+        network={'devnet'}
+        publicKey={DIALECT_PUBLIC_KEY}
+        theme={theme}
+        variables={themeVariables}
+      >
+        <div className={`flex flex-col h-screen bg-${theme}`}>
+          <div className="flex flex-row justify-between p-2 items-center space-x-2">
+            <h1 className="text-2xl text-gradient">Jet Protocol</h1>
             <div>
               <button onClick={toggleTheme}>
                 Toggle theme (current: {theme})
               </button>
             </div>
+            <WalletButton />
+          </div>
+          <div className="flex flex-col justify-center">
+            <div className="text-center font-poppins"></div>
+          </div>
+          <div className="h-full">
+            <NotificationCenter className="h-full" />
           </div>
         </div>
-      </div>
+      </DialectProvider>
     </>
   );
 }

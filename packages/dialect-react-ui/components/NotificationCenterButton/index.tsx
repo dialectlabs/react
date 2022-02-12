@@ -1,33 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as anchor from '@project-serum/anchor';
-import {
-  ApiProvider,
-  connected,
-  useApi,
-  WalletType,
-  DialectProvider,
-} from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
 import NotificationCenter from '../NotificationCenter';
 import IconButton from '../IconButton';
-import {
-  ThemeProvider,
-  ThemeType,
-  IncomingThemeVariables,
-  useTheme,
-} from '../common/ThemeProvider';
-
-type PropTypes = {
-  wallet: WalletType;
-  network?: string;
-  rpcUrl?: string;
-  publicKey: anchor.web3.PublicKey;
-  theme?: ThemeType;
-  variables?: IncomingThemeVariables;
-  bellClassName?: string;
-  bellStyle?: object;
-};
+import { useTheme } from '../common/ThemeProvider';
 
 function useOutsideAlerter(
   ref: React.MutableRefObject<null>,
@@ -59,27 +35,16 @@ function useOutsideAlerter(
   }, [ref]);
 }
 
-function WrappedBell(
+export default function NotificationCenterButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
   const [open, setOpen] = useState(false);
+
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
-  const { setWallet, setNetwork, setRpcUrl } = useApi();
-  const isWalletConnected = connected(props.wallet);
 
-  useEffect(
-    () => setWallet(connected(props.wallet) ? props.wallet : null),
-    [props.wallet, isWalletConnected, setWallet]
-  );
-  useEffect(
-    () => setNetwork(props.network || null),
-    [props.network, setNetwork]
-  );
-  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
-
-  const { colors, bellButton, icons } = useTheme();
+  const { colors, bellButton, icons, popup } = useTheme();
 
   return (
     <div className={cs('flex flex-col items-end relative', colors.primary)}>
@@ -111,25 +76,9 @@ function WrappedBell(
           // className="w-full h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <NotificationCenter />
+          <NotificationCenter className={popup} />
         </div>
       </Transition>
     </div>
-  );
-}
-
-export default function Bell({
-  theme = 'dark',
-  variables,
-  ...props
-}: PropTypes): JSX.Element {
-  return (
-    <ApiProvider>
-      <DialectProvider publicKey={props.publicKey}>
-        <ThemeProvider theme={theme} variables={variables}>
-          <WrappedBell {...props} />
-        </ThemeProvider>
-      </DialectProvider>
-    </ApiProvider>
   );
 }
