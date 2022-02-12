@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Dialect's react UI components",
   "license": "MIT",
   "private": false,
@@ -27,11 +27,8 @@
     "tailwindcss": "^3.0.18"
   },
   "peerDependencies": {
-    "@dialectlabs/react": "^0.0.1",
+    "@dialectlabs/react": "^0.1.0",
     "react": ">=17"
-  },
-  "publicConfig": {
-    "registry": "https://npm.pkg.github.com/dialectlabs"
   },
   "repository": {
     "type": "git",

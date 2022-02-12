@@ -1,5 +1,6 @@
 import 'tailwindcss/tailwind.css';
 import '../styles/globals.css';
+import '@dialectlabs/react-ui/lib/index.css';
 import React from 'react';
 import type { AppProps } from 'next/app';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 
-import { Bell } from '@dialectlabs/react-ui';
+import { NotificationCenterButton } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 
@@ -36,7 +36,7 @@ function AuthedHome() {
   return (
     <div className="flex flex-col h-screen">
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <Bell
+        <NotificationCenterButton
           wallet={wallet}
           network={'localnet'}
           publicKey={DIALECT_PUBLIC_KEY}
