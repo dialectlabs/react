@@ -32,6 +32,10 @@ The simplest way to develop on dialect's component library and headless react co
 
 Once set up, you'll have live, hot-reloading on changes. Some manual configuration is required to enable this.
 
+#### Enable hot-reloading from an `examples/` app
+
+Choose one of the examples/ apps you'd like to do development from and then make the following changes in its source. For illustration purposes we choose `examples/basic/`.
+
 Ensure no packages have been built to the `lib/` folder:
 
 ```shell
@@ -77,7 +81,11 @@ yarn dev
 
 Now you have a hot reload of the packages in the workspace.
 
-#### Convert svg icons to React Components (via svgr)
+### Etc.
+
+#### Convert svg icons to React Components (via `svgr`)
+
+We use `svgr` to manage a minimal set of svg icons for Dialect's `dialect-react-ui` component library.
 
 Store original svgs in `Icon/source/`, then run inside `Icon` directory to convert:
 
@@ -89,7 +97,7 @@ Import Icon as a React Component from `Icon`, e.g. (`import {BackArrow} from '/I
 
 ## Publishing
 
-TBD
+To add.
 
 ## Know-hows
 
