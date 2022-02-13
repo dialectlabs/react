@@ -6,7 +6,7 @@ import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
+  'D2pyBevYb6dit1oCx6e8vCxFK9mBeYCRe8TTntk2Tm98'
 );
 
 type ThemeType = 'light' | 'dark' | undefined;
