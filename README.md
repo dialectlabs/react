@@ -28,7 +28,44 @@ yarn add @dialectlabs/react @dialectlabs/react-ui
 
 This repo utilizes [Yarn Workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/). Publishable packages are located under `packages` directory. `examples` directory contains projects to demonstrate how can Dialect be used.
 
-For development, you implement necessary component inside the packages and use them in examples to visualize them.
+The simplest way to develop on dialect's component library and headless react contexts locally is to run one of the demo apps in the `examples/` directory, and ensure you are targeting the local instances of `packages/dialect-react/` & `packages/dialect-react-ui/`.
+
+Once set up, you'll have live, hot-reloading on changes. Some manual configuration is required to enable this.
+
+Ensure no packages have been built to the `lib/` folder:
+
+```shell
+rm -rf lib
+```
+
+Enable module transpilation in whichever `examples/` app you're building in. For example, if you're working from `examples/basic/`, uncomment both react packages in the next-transpile-modules section of `examples/basic/next.config.js`.
+
+```javascript
+// Uncomment these if you haven't built @dialectlabs/react and @dialectlabs/react-ui packages
+// and targeting the sources
+'@dialectlabs/react-ui',
+'@dialectlabs/react',
+```
+
+Dialect uses tailwind for styling. Uncomment the following lines from `examples/basic/tailwind.config.js` to ensure tailwind styles are correctly applied:
+
+```javascript
+// For local development uncomment next two lines for tailwind to take into account workspace files too
+'../../node_modules/@dialectlabs/react-ui/**/*.{js,ts,jsx,tsx}',
+'../../packages/dialect-react-ui-jet/**/*.{js,ts,jsx,tsx}',
+```
+
+And lastly, comment out the styles import in `examples/basic/pages/_app.tsx`, which is only used when importing compiled versions of dialect's react packages:
+
+```typescript
+// import '@dialectlabs/react-ui/lib/index.css';
+```
+
+All of the above changes require restarting the next server, if you've already started it.
+
+You can now run the example by following the instructions in the next section.
+
+#### Start the examples
 
 To get started, launch example's next dev server:
 
