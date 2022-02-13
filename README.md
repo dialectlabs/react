@@ -47,7 +47,7 @@ Enable module transpilation in whichever `examples/` app you're building in. For
 '@dialectlabs/react',
 ```
 
-Dialect uses tailwind for styling. Uncomment the following lines from `examples/basic/tailwind.config.js` to ensure tailwind styles are correctly applied:
+Dialect uses tailwind for styling. Uncomment the following lines from `examples/basic/tailwind.config.js` to ensure tailwind styles are correctly applied live:
 
 ```javascript
 // For local development uncomment next two lines for tailwind to take into account workspace files too
