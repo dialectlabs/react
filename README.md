@@ -34,15 +34,15 @@ Once set up, you'll have live, hot-reloading on changes. Some manual configurati
 
 #### Enable hot-reloading from an `examples/` app
 
-Choose one of the examples/ apps you'd like to do development from and then make the following changes in its source. For illustration purposes we choose `examples/basic/`.
+Choose one of the `examples/` apps you'd like to do development from and then make the following changes in its source. For illustration purposes we choose `examples/basic/`.
 
-Ensure no packages have been built to the `lib/` folder:
+1. Ensure no packages have been built to the `lib/` folder:
 
 ```shell
 rm -rf lib
 ```
 
-Enable module transpilation in whichever `examples/` app you're building in. For example, if you're working from `examples/basic/`, uncomment both react packages in the next-transpile-modules section of `examples/basic/next.config.js`.
+2. Enable module transpilation in whichever `examples/` app you're building in. For example, if you're working from `examples/basic/`, uncomment both react packages in the next-transpile-modules section of `examples/basic/next.config.js`.
 
 ```javascript
 // Uncomment these if you haven't built @dialectlabs/react and @dialectlabs/react-ui packages
@@ -51,7 +51,7 @@ Enable module transpilation in whichever `examples/` app you're building in. For
 '@dialectlabs/react',
 ```
 
-Dialect uses tailwind for styling. Uncomment the following lines from `examples/basic/tailwind.config.js` to ensure tailwind styles are correctly applied live:
+3. Dialect uses tailwind for styling. Uncomment the following lines from `examples/basic/tailwind.config.js` to ensure tailwind styles are correctly applied live:
 
 ```javascript
 // For local development uncomment next two lines for tailwind to take into account workspace files too
@@ -59,7 +59,7 @@ Dialect uses tailwind for styling. Uncomment the following lines from `examples/
 '../../packages/dialect-react-ui-jet/**/*.{js,ts,jsx,tsx}',
 ```
 
-And lastly, comment out the styles import in `examples/basic/pages/_app.tsx`, which is only used when importing compiled versions of dialect's react packages:
+4. And lastly, comment out the styles import in `examples/basic/pages/_app.tsx`, which is only used when importing compiled versions of dialect's react packages:
 
 ```typescript
 // import '@dialectlabs/react-ui/lib/index.css';
