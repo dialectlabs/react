@@ -99,13 +99,7 @@ function Settings(props: { toggleSettings: () => void }) {
       <div className="mb-3">
         <p className={cs(textStyles.body, 'mb-1')}>Included event types</p>
         <ul className={cs(textStyles.bigText, 'list-disc pl-6')}>
-          <li>Deposit Confirmations</li>
-          <li>Liquidation Alerts</li>
-          <li>Top Up Requests</li>
-          <li>Cross-App Notifications</li>
-          <li>Price Alerts</li>
-          <li>New markets</li>
-          <li>Custom announcements</li>
+          <li>Welcome message on thread creation</li>
         </ul>
       </div>
       <div>

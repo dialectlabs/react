@@ -18,3 +18,14 @@ a {
 * {
   box-sizing: border-box;
 }
+
+@layer components {
+  .wallet-adapter-button.dialect-wallet-button {
+    border: 1px solid white;
+    @apply flex items-center transition ease-in-out duration-300 text-white border border-neutral-600 rounded-md py-2 px-6 bg-transparent shadow-md shadow-neutral-800;
+  }
+  .wallet-adapter-button.dialect-wallet-button:hover,
+  .wallet-adapter-button.dialect-wallet-button:not([disabled]):hover {
+    @apply bg-none shadow-lg shadow-neutral-700;
+  }
+}

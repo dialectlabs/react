@@ -1,7 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import {
   ConnectionProvider,
-  useAnchorWallet,
   WalletProvider,
 } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
@@ -10,6 +9,7 @@ import {
   WalletModalProvider,
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui';
+import { PhantomIcon } from '../../../dialect.to/components/Icon';
 import { clusterApiUrl } from '@solana/web3.js';
 
 // Default styles that can be overridden by your app
@@ -19,7 +19,10 @@ export const Wallet = () => {
   return (
     <>
       <WalletModalProvider>
-        <WalletMultiButton />
+        <WalletMultiButton
+          className="dialect-wallet-button"
+          startIcon={<PhantomIcon />}
+        />
       </WalletModalProvider>
     </>
   );

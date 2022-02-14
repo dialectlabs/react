@@ -11,7 +11,7 @@ import BellIcon from './icons/Bell';
 import SettingsIcon from './icons/Gear';
 import BackIcon from './icons/BackArrow';
 
-const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
+const JET_PUBLIC_KEY = new anchor.web3.PublicKey(
   'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
 );
 
@@ -115,7 +115,7 @@ function AuthedHome() {
           <NotificationCenterButton
             wallet={wallet}
             network={'devnet'}
-            publicKey={DIALECT_PUBLIC_KEY}
+            publicKey={JET_PUBLIC_KEY}
             theme={theme}
             variables={themeVariables}
           />
