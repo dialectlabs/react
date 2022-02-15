@@ -16,10 +16,7 @@ import { withErrorParsing } from '../utils/errors';
  */
 export const createMetadata = withErrorParsing(
   async (program: anchor.Program) => {
-    return await originalCreateMetadata(
-      program,
-      program.provider.wallet,
-    );
+    return await originalCreateMetadata(program, program.provider.wallet);
   }
 );
 
@@ -32,10 +29,7 @@ export const createMetadata = withErrorParsing(
  */
 export const fetchMetadata = withErrorParsing(
   async (program: anchor.Program) => {
-    return await getMetadata(
-      program,
-      program.provider.wallet,
-    );
+    return await getMetadata(program, program.provider.wallet.publicKey);
   }
 );
 
@@ -47,10 +41,7 @@ export const fetchMetadata = withErrorParsing(
  * @param ownerPKString {string}
  */
 export const deleteMetadata = withErrorParsing(
-  async (
-    program: anchor.Program,
-  ) => {
-
+  async (program: anchor.Program) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - we need to address this, since it needs a Keypair or Wallet as third param
     return await originalDeleteMetadata(program, program.provider.wallet);
