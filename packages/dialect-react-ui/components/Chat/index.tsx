@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
@@ -20,20 +20,22 @@ const noop = () => {};
 
 function Header(props: {
   isReady: boolean;
-  isSettingsOpen: boolean;
-  toggleSettings: () => void;
+  isComposeOpen: boolean;
+  toggleCompose: () => void;
 }) {
   const { colors, textStyles, header, icons } = useTheme();
 
-  if (props.isSettingsOpen) {
+  if (props.isComposeOpen) {
     return (
       <div className={cs('flex flex-row items-center', header)}>
         <IconButton
           icon={<icons.back />}
-          onClick={props.toggleSettings}
+          onClick={props.toggleCompose}
           className="mr-2"
         />
-        <span className={cs(textStyles.header, colors.accent)}>Settings</span>
+        <span className={cs(textStyles.header, colors.accent)}>
+          New message
+        </span>
       </div>
     );
   }
@@ -41,14 +43,15 @@ function Header(props: {
     <div className={cs('flex flex-row items-center justify-between', header)}>
       <span className={cs(textStyles.header, colors.accent)}>Messages</span>
       {props.isReady ? (
-        <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
+        <IconButton icon={<icons.compose />} onClick={props.toggleCompose} />
       ) : null}
     </div>
   );
 }
 
-function CreateThread() {
-  const { createDialect, isDialectCreating, creationError } = useDialect();
+function CreateMetadata() {
+  const { createMetadata, isMetadataCreating, metadataCreationError } =
+    useDialect();
   const { colors, textStyles } = useTheme();
 
   return (
@@ -68,22 +71,23 @@ function CreateThread() {
         in an account to keep track of the threads you create with other users.
       </p>
       <Button
-        onClick={() => createDialect().catch(noop)}
-        loading={isDialectCreating}
+        onClick={() => createMetadata().catch(noop)}
+        loading={isMetadataCreating}
       >
-        {isDialectCreating ? 'Creating...' : 'Create messages account'}
+        {isMetadataCreating ? 'Creating...' : 'Create messages account'}
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
-      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
-          {creationError.message}
-        </p>
-      )}
+      {metadataCreationError &&
+        metadataCreationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+          <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
+            {metadataCreationError.message}
+          </p>
+        )}
     </div>
   );
 }
 
-function Settings(props: { toggleSettings: () => void }) {
+function Compose(props: { toggleCompose: () => void }) {
   const {
     notificationsThreadAddress,
     deleteDialect,
@@ -124,7 +128,7 @@ function Settings(props: { toggleSettings: () => void }) {
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
-                props.toggleSettings();
+                props.toggleCompose();
               }}
               heading="Withdraw rent & delete history"
               description="Events history will be lost forever"
@@ -149,22 +153,30 @@ function Settings(props: { toggleSettings: () => void }) {
   );
 }
 
-export default function NotificationCenter(): JSX.Element {
+export default function MessagesCenter(): JSX.Element {
   const {
-    isWalletConnected,
-    isDialectAvailable,
-    isNoMessages,
-    messages,
     disconnectedFromChain,
-    cannotDecryptDialect,
+    isWalletConnected,
+    isMetadataAvailable,
+    metadata,
   } = useDialect();
 
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isComposeOpen, setComposeOpen] = useState(false);
+  const [subscriptions, setSubscriptions] = useState<any[]>([]);
+  const [isNoSubscriptions, setIsNoSubscriptions] = useState(false);
 
-  const toggleSettings = useCallback(() => setSettingsOpen(!isSettingsOpen), [
-    isSettingsOpen,
-    setSettingsOpen,
-  ]);
+  useEffect(() => {
+    setSubscriptions(metadata?.subscriptions || []);
+    setIsNoSubscriptions(
+      metadata?.subscriptions?.length !== undefined &&
+        metadata?.subscriptions?.length < 1
+    );
+  }, [metadata]);
+
+  const toggleCompose = useCallback(
+    () => setComposeOpen(!isComposeOpen),
+    [isComposeOpen, setComposeOpen]
+  );
 
   const { colors, popup, icons } = useTheme();
 
@@ -177,13 +189,6 @@ export default function NotificationCenter(): JSX.Element {
         <span className="opacity-60">Lost connection to Solana blockchain</span>
       </Centered>
     );
-  } else if (cannotDecryptDialect) {
-    content = (
-      <Centered>
-        <icons.offline className="w-10 mb-6 opacity-60" />
-        <span className="opacity-60">Cannot decrypt messages</span>
-      </Centered>
-    );
   } else if (!isWalletConnected) {
     content = (
       <Centered>
@@ -191,30 +196,22 @@ export default function NotificationCenter(): JSX.Element {
         <span className="opacity-60">Wallet not connected</span>
       </Centered>
     );
-  } else if (!isDialectAvailable) {
-    content = <CreateThread />;
-  } else if (isSettingsOpen) {
-    content = <Settings toggleSettings={toggleSettings} />;
-  } else if (isNoMessages) {
+  } else if (!isMetadataAvailable) {
+    content = <CreateMetadata />;
+  } else if (isComposeOpen) {
+    content = <Compose toggleCompose={toggleCompose} />;
+  } else if (isNoSubscriptions) {
+    console.log('no subs yet');
     content = (
       <Centered>
         <icons.noNotifications className="mb-6" />
-        <span className="opacity-60">No notifications yet</span>
+        <span className="opacity-60">No messages yet</span>
       </Centered>
     );
   } else {
     content = (
       <>
-        {messages.map((message: MessageType) => (
-          <>
-            <Notification
-              key={message.timestamp}
-              message={message.text}
-              timestamp={message.timestamp}
-            />
-            <Divider />
-          </>
-        ))}
+        {subscriptions.map((subscription: any) => JSON.stringify(subscription))}
       </>
     );
   }
@@ -229,13 +226,17 @@ export default function NotificationCenter(): JSX.Element {
       )}
     >
       <Header
-        isReady={isWalletConnected && isDialectAvailable}
-        isSettingsOpen={isSettingsOpen}
-        toggleSettings={toggleSettings}
+        isReady={isWalletConnected && isMetadataAvailable}
+        isComposeOpen={isComposeOpen}
+        toggleCompose={toggleCompose}
       />
       <Divider className="mx-2" />
       <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
-      <Footer showBackground={messages.length > 4} />
+      <Footer
+        showBackground={Boolean(
+          metadata?.subscriptions?.length && metadata?.subscriptions?.length > 4
+        )}
+      />
     </div>
   );
 }

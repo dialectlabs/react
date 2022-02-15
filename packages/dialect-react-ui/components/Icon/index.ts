@@ -1,6 +1,7 @@
 export { default as BackArrow } from './BackArrow';
 export { default as Bell } from './Bell';
 export { default as ChatBubble } from './ChatBubble';
+export { default as Compose } from './Compose';
 export { default as DialectLogo } from './DialectLogo';
 export { default as Gear } from './Gear';
 export { default as NoNotifications } from './NoNotifications';

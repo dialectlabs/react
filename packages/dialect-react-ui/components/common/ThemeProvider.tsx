@@ -4,6 +4,7 @@ import {
   Bell as BellIcon,
   BackArrow,
   ChatBubble,
+  Compose,
   Gear,
   NotConnected,
   NoNotifications,
@@ -37,6 +38,7 @@ export type ThemeIcons =
   | 'bell'
   | 'back'
   | 'chat'
+  | 'compose'
   | 'settings'
   | 'notConnected'
   | 'noNotifications'
@@ -102,6 +104,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
+      compose: Compose,
       settings: Gear,
       notConnected: NotConnected,
       noNotifications: NoNotifications,
@@ -144,6 +147,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
+      compose: Compose,
       settings: Gear,
       notConnected: NotConnected,
       noNotifications: NoNotifications,
