@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 
 import {
-  NotificationCenterButton,
+  ChatButton,
   IncomingThemeVariables,
 } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
@@ -47,7 +47,7 @@ function AuthedHome() {
   return (
     <div className="flex flex-col h-screen bg-black">
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <NotificationCenterButton
+        <ChatButton
           wallet={wallet}
           network={'localnet'}
           publicKey={DIALECT_PUBLIC_KEY}
@@ -58,7 +58,7 @@ function AuthedHome() {
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">
         <code className="text-center text-neutral-600">
-          examples/<code className="text-neutral-100">basic</code>
+          examples/<code className="text-neutral-100">chat</code>
         </code>
       </div>
     </div>

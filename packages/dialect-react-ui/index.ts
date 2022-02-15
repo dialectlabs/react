@@ -1,3 +1,5 @@
+import Chat from './components/Chat';
+import ChatButton from './components/ChatButton';
 import NotificationCenter from './components/NotificationCenter';
 import NotificationCenterButton from './components/NotificationCenterButton';
 
@@ -10,7 +12,7 @@ import type {
   IncomingThemeValues,
 } from './components/common/ThemeProvider';
 
-export { NotificationCenterButton, NotificationCenter };
+export { Chat, ChatButton, NotificationCenterButton, NotificationCenter };
 
 export type {
   ThemeType,

@@ -3,6 +3,7 @@ import deepMerge from '../../utils/deepMerge';
 import {
   Bell as BellIcon,
   BackArrow,
+  ChatBubble,
   Gear,
   NotConnected,
   NoNotifications,
@@ -35,6 +36,7 @@ export type ThemeTextStyles =
 export type ThemeIcons =
   | 'bell'
   | 'back'
+  | 'chat'
   | 'settings'
   | 'notConnected'
   | 'noNotifications'
@@ -99,6 +101,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     icons: {
       bell: BellIcon,
       back: BackArrow,
+      chat: ChatBubble,
       settings: Gear,
       notConnected: NotConnected,
       noNotifications: NoNotifications,
@@ -140,6 +143,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     icons: {
       bell: BellIcon,
       back: BackArrow,
+      chat: ChatBubble,
       settings: Gear,
       notConnected: NotConnected,
       noNotifications: NoNotifications,
