@@ -71,29 +71,19 @@ const POLLING_INTERVAL_MS = 1000;
 export const DialectProvider = (props: PropsType): JSX.Element => {
   const [metadataCreating, setMetadataCreating] = React.useState(false);
   const [creating, setCreating] = React.useState(false);
-  const [
-    fetchingError,
-    setFetchingError,
-  ] = React.useState<ParsedErrorData | null>(null);
-  const [
-    metadataCreationError,
-    setMetadataCreationError,
-  ] = React.useState<ParsedErrorData | null>(null);
-  const [
-    creationError,
-    setCreationError,
-  ] = React.useState<ParsedErrorData | null>(null);
+  const [fetchingError, setFetchingError] =
+    React.useState<ParsedErrorData | null>(null);
+  const [metadataCreationError, setMetadataCreationError] =
+    React.useState<ParsedErrorData | null>(null);
+  const [creationError, setCreationError] =
+    React.useState<ParsedErrorData | null>(null);
 
   const [metadataDeleting, setMetadataDeleting] = React.useState(false);
   const [deleting, setDeleting] = React.useState(false);
-  const [
-    deletionError,
-    setDeletionError,
-  ] = React.useState<ParsedErrorData | null>(null);
-  const [
-    metadataDeletionError,
-    setMetadataDeletionError,
-  ] = React.useState<ParsedErrorData | null>(null);
+  const [deletionError, setDeletionError] =
+    React.useState<ParsedErrorData | null>(null);
+  const [metadataDeletionError, setMetadataDeletionError] =
+    React.useState<ParsedErrorData | null>(null);
 
   const [disconnectedFromChain, setDisconnected] = React.useState(false);
   const [cannotDecryptDialect, setCannotDecryptDialect] = React.useState(false);
@@ -117,10 +107,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   );
 
-  const { data: dialect, mutate: mutateDialect, error: fetchError } = useSWR<
-    DialectAccount | null,
-    ParsedErrorData
-  >(
+  const {
+    data: dialect,
+    mutate: mutateDialect,
+    error: fetchError,
+  } = useSWR<DialectAccount | null, ParsedErrorData>(
     wallet && program
       ? [
           'dialect',
