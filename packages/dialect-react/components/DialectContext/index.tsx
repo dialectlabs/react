@@ -180,7 +180,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     } finally {
       setMetadataCreating(false);
     }
-  }, [mutateMetadata, program, wallet?.publicKey, isWalletConnected]);
+  }, [mutateMetadata, program, wallet, isWalletConnected]);
 
   const createDialectWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !wallet?.publicKey) {
