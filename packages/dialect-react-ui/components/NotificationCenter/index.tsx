@@ -87,7 +87,7 @@ function CreateThread() {
 
 function Settings(props: { toggleSettings: () => void }) {
   const {
-    notificationsThreadAddress,
+    dialectAddress,
     deleteDialect,
     isDialectDeleting,
     deletionError,
@@ -107,7 +107,7 @@ function Settings(props: { toggleSettings: () => void }) {
           0.058 SOL
         </ValueRow>
         <Divider />
-        {notificationsThreadAddress ? (
+        {dialectAddress ? (
           <>
             <ValueRow
               label="Notifications thread account"
@@ -115,10 +115,10 @@ function Settings(props: { toggleSettings: () => void }) {
             >
               <a
                 target="_blank"
-                href={getExplorerAddress(notificationsThreadAddress)}
+                href={getExplorerAddress(dialectAddress)}
                 rel="noreferrer"
               >
-                {display(notificationsThreadAddress)}↗
+                {display(dialectAddress)}↗
               </a>
             </ValueRow>
             <BigButton

@@ -11,6 +11,7 @@ import {
   Spinner,
   Trash,
   Offline,
+  X,
 } from '../Icon';
 
 export type ThemeType = 'dark' | 'light';
@@ -44,7 +45,8 @@ export type ThemeIcons =
   | 'noNotifications'
   | 'spinner'
   | 'trash'
-  | 'offline';
+  | 'offline'
+  | 'x';
 
 export type IncomingThemeValues = {
   colors?: {
@@ -111,6 +113,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       spinner: Spinner,
       trash: Trash,
       offline: Offline,
+      x: X,
     },
     bellButton: 'w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
     header: 'px-4 py-3',
@@ -154,6 +157,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       spinner: Spinner,
       trash: Trash,
       offline: Offline,
+      x: X,
     },
     bellButton: 'w-12 h-12 focus:outline-none shadow-md',
     header: 'px-6 py-4',

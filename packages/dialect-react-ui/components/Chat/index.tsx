@@ -29,7 +29,7 @@ function Header(props: {
     return (
       <div className={cs('flex flex-row items-center', header)}>
         <IconButton
-          icon={<icons.back />}
+          icon={<icons.x />}
           onClick={props.toggleCompose}
           className="mr-2"
         />
@@ -89,7 +89,7 @@ function CreateMetadata() {
 
 function Compose(props: { toggleCompose: () => void }) {
   const {
-    notificationsThreadAddress,
+    dialectAddress,
     deleteDialect,
     isDialectDeleting,
     deletionError,
@@ -109,7 +109,7 @@ function Compose(props: { toggleCompose: () => void }) {
           0.058 SOL
         </ValueRow>
         <Divider />
-        {notificationsThreadAddress ? (
+        {dialectAddress ? (
           <>
             <ValueRow
               label="Notifications thread account"
@@ -117,10 +117,10 @@ function Compose(props: { toggleCompose: () => void }) {
             >
               <a
                 target="_blank"
-                href={getExplorerAddress(notificationsThreadAddress)}
+                href={getExplorerAddress(dialectAddress)}
                 rel="noreferrer"
               >
-                {display(notificationsThreadAddress)}↗
+                {display(dialectAddress)}↗
               </a>
             </ValueRow>
             <BigButton
@@ -201,7 +201,6 @@ export default function MessagesCenter(): JSX.Element {
   } else if (isComposeOpen) {
     content = <Compose toggleCompose={toggleCompose} />;
   } else if (isNoSubscriptions) {
-    console.log('no subs yet');
     content = (
       <Centered>
         <icons.noNotifications className="mb-6" />

@@ -61,7 +61,7 @@ type DialectContextType = {
   deletionError: ParsedErrorData | null;
   isNoMessages: boolean;
   messages: Message[];
-  notificationsThreadAddress: string | null;
+  dialectAddress: string | null;
 };
 
 const DialectContext = createContext<DialectContextType | null>(null);
@@ -258,7 +258,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   // const messages = mockMessages;
   const isDialectAvailable = Boolean(dialect);
   const isMetadataAvailable = Boolean(metadata);
-  const notificationsThreadAddress =
+  const dialectAddress =
     wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;
 
   const value = {
@@ -282,7 +282,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     deletionError,
     messages,
     isNoMessages: messages?.length === 0,
-    notificationsThreadAddress,
+    dialectAddress,
   };
 
   return (
