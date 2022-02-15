@@ -44,14 +44,14 @@ type DialectContextType = {
   disconnectedFromChain: boolean;
   cannotDecryptDialect: boolean;
   isWalletConnected: boolean;
-  isMetadataAvailable: boolean; // done
+  isMetadataAvailable: boolean;
   createMetadata: () => Promise<void>;
   isMetadataCreating: boolean;
   metadataCreationError: ParsedErrorData | null;
   deleteMetadata: () => Promise<void>;
   isMetadataDeleting: boolean;
   metadataDeletionError: ParsedErrorData | null;
-  metadata: Metadata | null; // done
+  metadata: Metadata | null;
   isDialectAvailable: boolean;
   createDialect: () => Promise<void>;
   isDialectCreating: boolean;
@@ -112,12 +112,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     mutate: mutateDialect,
     error: fetchError,
   } = useSWR<DialectAccount | null, ParsedErrorData>(
-    wallet && program
+    wallet && program && props.publicKey?.toString()
       ? [
           'dialect',
           program,
           wallet?.publicKey?.toString(),
-          props.publicKey.toString(),
+          props.publicKey?.toString(),
         ]
       : null,
     swrFetchDialect,
@@ -134,6 +134,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     const existingErrorType =
       fetchingError?.type ??
       fetchError?.type ??
+      fetchMetadataError?.type ??
       creationError?.type ??
       deletionError?.type;
 
@@ -145,6 +146,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     );
   }, [
     fetchingError?.type,
+    fetchMetadataError?.type,
     creationError?.type,
     deletionError?.type,
     fetchError?.type,

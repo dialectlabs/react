@@ -2,8 +2,8 @@ import * as anchor from '@project-serum/anchor';
 import {
   createMetadata as originalCreateMetadata,
   deleteMetadata as originalDeleteMetadata,
-  Metadata, // TOOD: Use this
   getMetadata,
+  Metadata, // TOOD: Use this
 } from '@dialectlabs/web3';
 import { withErrorParsing } from '../utils/errors';
 
