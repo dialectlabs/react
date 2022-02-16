@@ -1,6 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react';
 import deepMerge from '../../utils/deepMerge';
 import {
+  ArrowNarrowRight,
+  ArrowSmRight,
   Bell as BellIcon,
   BackArrow,
   ChatBubble,
@@ -36,6 +38,8 @@ export type ThemeTextStyles =
   | 'bigButtonSubtle';
 
 export type ThemeIcons =
+  | 'arrownarrowright'
+  | 'arrowsmright'
   | 'bell'
   | 'back'
   | 'chat'
@@ -103,6 +107,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       bigButtonSubtle: 'font-inter font-medium text-sm text-black',
     },
     icons: {
+      arrownarrowright: ArrowNarrowRight,
+      arrowsmright: ArrowSmRight,
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
@@ -147,6 +153,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       bigButtonSubtle: 'font-inter font-medium text-sm text-white',
     },
     icons: {
+      arrownarrowright: ArrowNarrowRight,
+      arrowsmright: ArrowSmRight,
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
@@ -160,7 +168,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       x: X,
     },
     bellButton: 'w-12 h-12 focus:outline-none shadow-md',
-    header: 'px-6 py-4',
+    header: 'px-4 py-4',
     popup: 'rounded-lg',
     button: 'bg-white text-black border border-white hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-white opacity-20 bg-transparent',

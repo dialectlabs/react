@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  KeyboardEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
@@ -14,27 +20,28 @@ import cs from '../../utils/classNames';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
+import MessageInput from './MessageInput';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
 function Header(props: {
   isReady: boolean;
-  isComposeOpen: boolean;
-  toggleCompose: () => void;
+  isCreateOpen: boolean;
+  toggleCreate: () => void;
 }) {
   const { colors, textStyles, header, icons } = useTheme();
 
-  if (props.isComposeOpen) {
+  if (props.isCreateOpen) {
     return (
       <div className={cs('flex flex-row items-center', header)}>
         <IconButton
           icon={<icons.x />}
-          onClick={props.toggleCompose}
+          onClick={props.toggleCreate}
           className="mr-2"
         />
         <span className={cs(textStyles.header, colors.accent)}>
-          New message
+          New thread
         </span>
       </div>
     );
@@ -43,7 +50,7 @@ function Header(props: {
     <div className={cs('flex flex-row items-center justify-between', header)}>
       <span className={cs(textStyles.header, colors.accent)}>Messages</span>
       {props.isReady ? (
-        <IconButton icon={<icons.compose />} onClick={props.toggleCompose} />
+        <IconButton icon={<icons.compose />} onClick={props.toggleCreate} />
       ) : null}
     </div>
   );
@@ -87,69 +94,86 @@ function CreateMetadata() {
   );
 }
 
-function Compose(props: { toggleCompose: () => void }) {
+function CreateThread() {
+  const { createDialect, isDialectCreating, creationError } = useDialect();
+  const { colors, textStyles } = useTheme();
+
+  return (
+    <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
+      <h1 className={cs(textStyles.h1, colors.accent, 'mb-4 text-center')}>
+        Create thread
+      </h1>
+      <ValueRow
+        highlighted
+        label="Rent Deposit (recoverable)"
+        className={cs('w-full mb-4')}
+      >
+        0.058 SOL
+      </ValueRow>
+      <p className={cs(textStyles.body, 'text-center mb-3')}>
+        All messages are stored on chain, so to start this message thread, you&apos;ll need to deposit a small amount of rent. This rent is recoverable.
+      </p>
+      <Button
+        onClick={() => createDialect().catch(noop)}
+        loading={isDialectCreating}
+      >
+        {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
+      </Button>
+      {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
+      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+        <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
+          {creationError.message}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function Compose(props: { toggleCreate: () => void }) {
   const {
     dialectAddress,
     deleteDialect,
-    isDialectDeleting,
-    deletionError,
+    isDialectCreating,
+    creationError,
+    isDialectAvailable,
   } = useDialect();
   const { colors, textStyles, icons } = useTheme();
 
+  const [text, setText] = useState<string>('');
+
+  const onMessageSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // setCreating(true);
+  };
+
+  const onEnterPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.keyCode == 13 && e.shiftKey == false) {
+      e.preventDefault();
+      // setCreating(true);
+    }
+  };
+
+  const disabled =
+    text.length <= 0 ||
+    text.length > 280 ||
+    isDialectCreating ||
+    isDialectAvailable;
+
   return (
-    <>
+    <div className="flex flex-col justify-between">
       <div className="mb-3">
-        <p className={cs(textStyles.body, 'mb-1')}>Included event types</p>
-        <ul className={cs(textStyles.bigText, 'list-disc pl-6')}>
-          <li>Welcome message on thread creation</li>
-        </ul>
+        <p className={cs(textStyles.body, 'mb-1')}>Recipient address:</p>
       </div>
       <div>
-        <ValueRow label="Deposited Rent" className={cs('mb-1')}>
-          0.058 SOL
-        </ValueRow>
-        <Divider />
-        {dialectAddress ? (
-          <>
-            <ValueRow
-              label="Notifications thread account"
-              className="mt-1 mb-4"
-            >
-              <a
-                target="_blank"
-                href={getExplorerAddress(dialectAddress)}
-                rel="noreferrer"
-              >
-                {display(dialectAddress)}↗
-              </a>
-            </ValueRow>
-            <BigButton
-              className={colors.errorBg}
-              onClick={async () => {
-                await deleteDialect().catch(noop);
-                // TODO: properly wait for the deletion
-                props.toggleCompose();
-              }}
-              heading="Withdraw rent & delete history"
-              description="Events history will be lost forever"
-              icon={<icons.trash />}
-              loading={isDialectDeleting}
-            />
-            {deletionError &&
-              deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-                <p
-                  className={cs(
-                    textStyles.small,
-                    'text-red-500 text-center mt-2'
-                  )}
-                >
-                  {deletionError.message}
-                </p>
-              )}
-          </>
-        ) : null}
+        <MessageInput
+          text={text}
+          setText={setText}
+          onSubmit={onMessageSubmit}
+          onEnterPress={onEnterPress}
+          disabled={disabled}
+        />
       </div>
-    </>
+    </div>
   );
 }
 
@@ -161,7 +185,7 @@ export default function MessagesCenter(): JSX.Element {
     metadata,
   } = useDialect();
 
-  const [isComposeOpen, setComposeOpen] = useState(false);
+  const [isCreateOpen, setCreateOpen] = useState(false);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [isNoSubscriptions, setIsNoSubscriptions] = useState(false);
 
@@ -173,9 +197,9 @@ export default function MessagesCenter(): JSX.Element {
     );
   }, [metadata]);
 
-  const toggleCompose = useCallback(
-    () => setComposeOpen(!isComposeOpen),
-    [isComposeOpen, setComposeOpen]
+  const toggleCreate = useCallback(
+    () => setCreateOpen(!isCreateOpen),
+    [isCreateOpen, setCreateOpen]
   );
 
   const { colors, popup, icons } = useTheme();
@@ -198,8 +222,8 @@ export default function MessagesCenter(): JSX.Element {
     );
   } else if (!isMetadataAvailable) {
     content = <CreateMetadata />;
-  } else if (isComposeOpen) {
-    content = <Compose toggleCompose={toggleCompose} />;
+  } else if (isCreateOpen) {
+    content = <Compose toggleCreate={toggleCreate} />;
   } else if (isNoSubscriptions) {
     content = (
       <Centered>
@@ -226,8 +250,8 @@ export default function MessagesCenter(): JSX.Element {
     >
       <Header
         isReady={isWalletConnected && isMetadataAvailable}
-        isComposeOpen={isComposeOpen}
-        toggleCompose={toggleCompose}
+        isCreateOpen={isCreateOpen}
+        toggleCreate={toggleCreate}
       />
       <Divider className="mx-2" />
       <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>

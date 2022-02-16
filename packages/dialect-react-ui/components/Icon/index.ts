@@ -1,3 +1,5 @@
+export { default as ArrowNarrowRight } from './ArrowNarrowRight';
+export { default as ArrowSmRight } from './ArrowSmRight';
 export { default as BackArrow } from './BackArrow';
 export { default as Bell } from './Bell';
 export { default as ChatBubble } from './ChatBubble';
