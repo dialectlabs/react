@@ -3,10 +3,53 @@ import {
   createDialect,
   deleteDialect as originalDeleteDialect,
   DialectAccount,
+  FindDialectQuery,
+  findDialects,
+  getDialect,
   getDialectForMembers,
+  getDialectProgramAddress,
   Member,
 } from '@dialectlabs/web3';
 import { withErrorParsing } from '../utils/errors';
+
+const todayFormatter = new Intl.DateTimeFormat('en-US', {
+  hour12: true,
+  hour: 'numeric',
+  minute: '2-digit',
+});
+
+const nonTodayFormatter = new Intl.DateTimeFormat('en-US', {
+  hour12: true,
+  hour: 'numeric',
+  minute: '2-digit',
+  month: 'numeric',
+  day: 'numeric',
+});
+
+export const formatTimestamp = (timestamp: number) => {
+  /*
+  If today, show time only, e.g. 4:28 PM
+  If yesterday, show date & time, e.g. 1/10 7:58 PM
+  If last year: We've got time not to implement this.
+  */
+  const dayStart = new Date().setHours(0, 0, 0, 0);
+  const messageDayStart = new Date(timestamp).setHours(0, 0, 0, 0);
+  const isToday = messageDayStart === dayStart;
+  const formatter = isToday ? todayFormatter : nonTodayFormatter;
+  return formatter.format(timestamp);
+};
+
+// TODO: Move to
+export const getDialectAddressForMemberPubkeys = async (
+  program: anchor.Program,
+  pubkey1: anchor.web3.PublicKey,
+  pubkey2: anchor.web3.PublicKey
+) => {
+  return await getDialectProgramAddress(program, [
+    { publicKey: pubkey1, scopes: [true, true] },
+    { publicKey: pubkey2, scopes: [true, true] },
+  ]);
+};
 
 /**
  * Create a readonly thread (a.k.a. dialect) between 2 users
@@ -59,6 +102,20 @@ export const fetchDialectForMembers = withErrorParsing(
   }
 );
 
+export const fetchDialect = withErrorParsing(
+  async (program: anchor.Program, address: string) => {
+    return await getDialect(program, new anchor.web3.PublicKey(address));
+  }
+);
+
+export const fetchDialects = withErrorParsing(
+  async (program: anchor.Program, user: string) => {
+    return await findDialects(program, {
+      userPk: new anchor.web3.PublicKey(user),
+    });
+  }
+);
+
 /**
  * Delete existing thread (a.k.a. dialect)
  *
@@ -80,5 +137,11 @@ export const deleteDialect = withErrorParsing(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - we need to address this, since it needs a Keypair or Wallet as third param
     return await originalDeleteDialect(program, dialect, owner);
+  }
+);
+
+export const sendMessage = withErrorParsing(
+  async (program: anchor.Program, dialect: DialectAccount) => {
+    return;
   }
 );

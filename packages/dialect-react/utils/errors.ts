@@ -73,6 +73,7 @@ export const withErrorParsing =
       const result: ReturnType<F> = await fn(...args);
       return result;
     } catch (e) {
+      console.log('ERRRR', e);
       throw parseError(e as Error); // TODO: it's unlikely that something else is going to be passed here, but we should think about that later on
     }
   };

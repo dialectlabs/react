@@ -25,7 +25,7 @@ export default function MessageInput({
   //   ? data.lamports / 1e9
   //   : undefined;
   return (
-    <div className="flex flex-col pb-2">
+    <div className="flex flex-col pb-2 mb-2">
       <form onSubmit={onSubmit}>
         <div className="relative">
           <div className="text-sm break-words py-1 pl-2 pr-11">
@@ -37,10 +37,10 @@ export default function MessageInput({
               onChange={(e) => setText(e.target.value)}
               onKeyDown={onEnterPress}
               placeholder="Write something"
-              className="resize-none h-full w-full text-sm text-gray-800 dark:text-gray-200 bg-black border rounded-md px-2 py-1 border-gray-600 placeholder-gray-600 pr-10"
+              className="resize-none h-full w-full text-sm text-neutral-800 dark:text-neutral-200 bg-black border rounded-2xl px-2 py-1 border-neutral-600 placeholder-neutral-600 pr-10 focus:outline-none"
             />
             <button
-              className="absolute inset-y-0 right-0 flex items-center pr-3 disabled:cursor-not-allowed"
+              className="absolute inset-y-0 -right-2 flex items-center pr-3 disabled:cursor-not-allowed"
               disabled={disabled}
             >
               <icons.arrowsmright

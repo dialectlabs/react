@@ -13,16 +13,28 @@ import {
   createDialectForMembers,
   deleteDialect,
   deleteMetadata,
+  fetchDialect,
   fetchDialectForMembers,
+  fetchDialects,
   fetchMetadata,
+  getDialectAddressForMemberPubkeys,
+  sendMessage,
 } from '../../api';
 import { ParsedErrorData, ParsedErrorType } from '../../utils/errors';
 import { messages as mockMessages } from './mock';
 
-const swrFetchDialect = (
+const swrFetchDialectForMembers = (
   _: string,
   ...args: Parameters<typeof fetchDialectForMembers>
 ) => fetchDialectForMembers(...args);
+
+const swrFetchDialect = (_: string, ...args: Parameters<typeof fetchDialect>) =>
+  fetchDialect(...args);
+
+const swrFetchDialects = (
+  _: string,
+  ...args: Parameters<typeof fetchDialects>
+) => fetchDialects(...args);
 
 const swrFetchMetadata = (
   _: string,
@@ -53,7 +65,7 @@ type DialectContextType = {
   metadataDeletionError: ParsedErrorData | null;
   metadata: Metadata | null;
   isDialectAvailable: boolean;
-  createDialect: () => Promise<void>;
+  createDialect: (publicKey?: string) => Promise<void>;
   isDialectCreating: boolean;
   creationError: ParsedErrorData | null;
   deleteDialect: () => Promise<void>;
@@ -61,6 +73,9 @@ type DialectContextType = {
   deletionError: ParsedErrorData | null;
   isNoMessages: boolean;
   messages: Message[];
+  dialect: DialectAccount | undefined | null;
+  dialects: DialectAccount[];
+  setDialectAddress: (dialectAddress: string) => void;
   dialectAddress: string | null;
 };
 
@@ -71,6 +86,8 @@ const POLLING_INTERVAL_MS = 1000;
 export const DialectProvider = (props: PropsType): JSX.Element => {
   const [metadataCreating, setMetadataCreating] = React.useState(false);
   const [creating, setCreating] = React.useState(false);
+  const [dialectAddress, setDialectAddress] = React.useState('');
+
   const [fetchingError, setFetchingError] =
     React.useState<ParsedErrorData | null>(null);
   const [metadataCreationError, setMetadataCreationError] =
@@ -107,18 +124,35 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   );
 
+  console.log('metadata', metadata);
+
+  const {
+    data: dialects,
+    mutate: mutateDialects,
+    error: fetchDialectsError,
+  } = useSWR<DialectAccount[], ParsedErrorData>(
+    wallet && program && !props.publicKey?.toString()
+      ? ['dialects', program, wallet?.publicKey?.toString()]
+      : null,
+    swrFetchDialects,
+    {
+      refreshInterval: POLLING_INTERVAL_MS,
+      onError: (err) => {
+        console.log('error fetching', err);
+        setFetchingError(err as ParsedErrorData);
+      },
+    }
+  );
+
+  console.log('dialects', dialects);
+
   const {
     data: dialect,
     mutate: mutateDialect,
     error: fetchError,
   } = useSWR<DialectAccount | null, ParsedErrorData>(
-    wallet && program && props.publicKey?.toString()
-      ? [
-          'dialect',
-          program,
-          wallet?.publicKey?.toString(),
-          props.publicKey?.toString(),
-        ]
+    wallet && program && dialectAddress
+      ? ['dialect', program, dialectAddress]
       : null,
     swrFetchDialect,
     {
@@ -129,6 +163,15 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       },
     }
   );
+
+  console.log('selected dialect', dialect?.publicKey.toBase58());
+
+  useEffect(() => {
+    if (props.publicKey) {
+      setDialectAddress(props.publicKey.toString());
+    }
+    return;
+  }, [props.publicKey]);
 
   useEffect(() => {
     const existingErrorType =
@@ -175,38 +218,47 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   }, [mutateMetadata, program, wallet, isWalletConnected]);
 
-  const createDialectWrapper = useCallback(async () => {
-    if (!program || !isWalletConnected || !wallet?.publicKey) {
-      return;
-    }
+  const createDialectWrapper = useCallback(
+    async (publicKey?: string) => {
+      console.log('creating dialect...');
+      if (
+        !program ||
+        !isWalletConnected ||
+        !wallet?.publicKey ||
+        (!props.publicKey && !publicKey)
+      ) {
+        return;
+      }
 
-    setCreating(true);
+      setCreating(true);
 
-    try {
-      const data = await createDialectForMembers(
-        program,
-        wallet.publicKey?.toString(),
-        props.publicKey.toString()
-      );
+      try {
+        const data = await createDialectForMembers(
+          program,
+          wallet.publicKey?.toString(),
+          props.publicKey?.toString() || publicKey
+        );
 
-      await mutateDialect(data, false);
-      setCreationError(null);
-    } catch (e) {
-      // TODO: implement safer error handling
-      setCreationError(e as ParsedErrorData);
+        await mutateDialect(data, false);
+        setCreationError(null);
+      } catch (e) {
+        // TODO: implement safer error handling
+        setCreationError(e as ParsedErrorData);
 
-      // Passing through the error, in case for additional UI error handling
-      throw e;
-    } finally {
-      setCreating(false);
-    }
-  }, [
-    mutateDialect,
-    program,
-    props.publicKey,
-    wallet?.publicKey,
-    isWalletConnected,
-  ]);
+        // Passing through the error, in case for additional UI error handling
+        throw e;
+      } finally {
+        setCreating(false);
+      }
+    },
+    [
+      mutateDialect,
+      program,
+      props.publicKey,
+      wallet?.publicKey,
+      isWalletConnected,
+    ]
+  );
 
   const deleteMetadataWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !metadata) {
@@ -258,8 +310,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   // const messages = mockMessages;
   const isDialectAvailable = Boolean(dialect);
   const isMetadataAvailable = Boolean(metadata);
-  const dialectAddress =
-    wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;
+  // const dialectAddress =
+  //   wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;
 
   const value = {
     disconnectedFromChain,
@@ -280,9 +332,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     deleteDialect: deleteDialectWrapper,
     isDialectDeleting: deleting,
     deletionError,
-    messages,
+    messages: mockMessages,
+    dialect,
+    dialects: dialects || [],
     isNoMessages: messages?.length === 0,
     dialectAddress,
+    setDialectAddress,
   };
 
   return (
@@ -301,3 +356,4 @@ export function useDialect(): DialectContextType {
 }
 
 export type MessageType = Message;
+export type DialectAccount = DialectAccount;

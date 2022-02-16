@@ -4,6 +4,7 @@ import { SVGProps } from 'react';
 const SvgArrowSmRight = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
+    className="arrow-sm-right_svg__h-6 arrow-sm-right_svg__w-6"
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"

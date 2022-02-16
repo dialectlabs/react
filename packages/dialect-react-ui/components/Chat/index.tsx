@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useDialect, MessageType } from '@dialectlabs/react';
+import { useApi } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
   BigButton,
@@ -21,6 +22,9 @@ import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import MessageInput from './MessageInput';
+import MessagePreview from './MessagePreview';
+import Avatar from '../Avatar';
+import { formatTimestamp } from '@dialectlabs/react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -31,6 +35,8 @@ function Header(props: {
   toggleCreate: () => void;
 }) {
   const { colors, textStyles, header, icons } = useTheme();
+  const { dialect, dialectAddress, setDialectAddress } = useDialect();
+  const { wallet } = useApi();
 
   if (props.isCreateOpen) {
     return (
@@ -40,8 +46,28 @@ function Header(props: {
           onClick={props.toggleCreate}
           className="mr-2"
         />
+        <span className={cs(textStyles.header, colors.accent)}></span>
+      </div>
+    );
+  } else if (dialectAddress) {
+    const otherMembers =
+      dialect?.dialect.members.filter(
+        (member) =>
+          member.publicKey.toString() !== wallet?.publicKey?.toString()
+      ) || [];
+    const otherMembersStrs = otherMembers.map((member) =>
+      display(member.publicKey)
+    );
+    const otherMemberStr = otherMembers ? otherMembersStrs[0] : '';
+    return (
+      <div className={cs('relative flex flex-row items-center', header)}>
+        <IconButton
+          icon={<icons.back />}
+          onClick={() => setDialectAddress('')}
+          className="mr-2 absolute"
+        />
         <span className={cs(textStyles.header, colors.accent)}>
-          New thread
+          {otherMemberStr}
         </span>
       </div>
     );
@@ -97,12 +123,21 @@ function CreateMetadata() {
 function CreateThread() {
   const { createDialect, isDialectCreating, creationError } = useDialect();
   const { colors, textStyles } = useTheme();
+  const [address, setAddress] = useState('');
 
   return (
     <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
       <h1 className={cs(textStyles.h1, colors.accent, 'mb-4 text-center')}>
         Create thread
       </h1>
+      <input
+        className="w-full text-xs text-neutral-400 dark:text-white bg-black rounded-md px-2 py-2 border-b border-neutral-600 focus:outline-none focus:ring focus:ring-white"
+        placeholder="Recipient address"
+        type="text"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+      />
+      <div className="h-4" />
       <ValueRow
         highlighted
         label="Rent Deposit (recoverable)"
@@ -111,13 +146,18 @@ function CreateThread() {
         0.058 SOL
       </ValueRow>
       <p className={cs(textStyles.body, 'text-center mb-3')}>
-        All messages are stored on chain, so to start this message thread, you&apos;ll need to deposit a small amount of rent. This rent is recoverable.
+        All messages are stored on chain, so to start this message thread,
+        you&apos;ll need to deposit a small amount of rent. This rent is
+        recoverable.
       </p>
       <Button
-        onClick={() => createDialect().catch(noop)}
+        onClick={() => {
+          console.log('on click');
+          createDialect(address).catch(noop);
+        }}
         loading={isDialectCreating}
       >
-        {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
+        {isDialectCreating ? 'Creating...' : 'Create thread'}
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
@@ -129,14 +169,16 @@ function CreateThread() {
   );
 }
 
-function Compose(props: { toggleCreate: () => void }) {
+function Thread() {
   const {
     dialectAddress,
     deleteDialect,
     isDialectCreating,
     creationError,
     isDialectAvailable,
+    messages,
   } = useDialect();
+  const { wallet } = useApi();
   const { colors, textStyles, icons } = useTheme();
 
   const [text, setText] = useState<string>('');
@@ -152,17 +194,81 @@ function Compose(props: { toggleCreate: () => void }) {
       // setCreating(true);
     }
   };
-
   const disabled =
     text.length <= 0 ||
     text.length > 280 ||
     isDialectCreating ||
-    isDialectAvailable;
+    !isDialectAvailable;
 
   return (
-    <div className="flex flex-col justify-between">
-      <div className="mb-3">
-        <p className={cs(textStyles.body, 'mb-1')}>Recipient address:</p>
+    <div className="flex flex-col h-full justify-between">
+      <div className="py-2 flex-grow overflow-y-auto flex flex-col flex-col-reverse space-y-2 space-y-reverse justify-start flex-col-reverse">
+        {messages.map((message) => {
+          console.log('message', message);
+
+          const isYou =
+            message.owner.toString() === wallet?.publicKey.toString();
+
+          if (isYou) {
+            return (
+              <div
+                key={message.timestamp}
+                className={'flex-row items-center mb-2 justify-end'}
+              >
+                <div
+                  className={
+                    'max-w-full flex-row px-4 py-2 rounded-2xl bg-black border border-neutral-800'
+                  }
+                >
+                  <div className={'items-end'}>
+                    <div className={'text-white text-sm text-right'}>
+                      {message.text}
+                    </div>
+                    <div className={'border-l-8'}>
+                      <div className={'text-neutral-600 text-xs'}>
+                        {formatTimestamp(message.timestamp)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div key={message.timestamp} className={'flex flex-row mb-2 max-w-full'}>
+              <div className={''}>
+                <Avatar size="small" publicKey={message.owner} />
+              </div>
+              <div
+                className={
+                  'flex-row px-4 py-2 rounded-2xl border border-neutral-900 bg-neutral-900 flex-shrink'
+                }
+              >
+                <div className={'text-left'}>
+                  <div className={'text-white text-sm'}>{message.text}</div>
+                  <div className={'items-end border-l-8 border-neutral-900'}>
+                    <div className={'text-neutral-600 text-xs text-right'}>
+                      {formatTimestamp(message.timestamp)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+
+          //     return (
+          //     <div key={message.timestamp} className={`flex items-start space-x-3 ${message.owner.toString() === wallet?.publicKey.toString() && 'flex-row-reverse space-x-reverse'}`}>
+          //     {/* <UserIcon className='w-7 h-7 bg-neutral-200 dark:bg-neutral-700 p-2 rounded-full'/> */}
+          //     <div className={`flex flex-col ${message.owner.toString() === wallet?.publicKey.toString() && 'items-end'}`}>
+          //       <div className='text-xs opacity-50'>{message.owner.toString() === wallet?.publicKey.toString() ? 'You' : display(message.owner)}</div>
+          //       <div className={`flex break-word space-x-2 items-center text-sm text-neutral-800 dark:text-neutral-200 ${message.owner.toString() === wallet?.publicKey.toString() ? 'text-right ml-8' : 'mr-8'}`}>
+          //         {message.text}
+          //       </div>
+          //     </div>
+          //   </div>
+          //   );
+        })}
       </div>
       <div>
         <MessageInput
@@ -182,7 +288,11 @@ export default function MessagesCenter(): JSX.Element {
     disconnectedFromChain,
     isWalletConnected,
     isMetadataAvailable,
+    messages,
     metadata,
+    dialectAddress,
+    dialects,
+    setDialectAddress,
   } = useDialect();
 
   const [isCreateOpen, setCreateOpen] = useState(false);
@@ -190,12 +300,9 @@ export default function MessagesCenter(): JSX.Element {
   const [isNoSubscriptions, setIsNoSubscriptions] = useState(false);
 
   useEffect(() => {
-    setSubscriptions(metadata?.subscriptions || []);
-    setIsNoSubscriptions(
-      metadata?.subscriptions?.length !== undefined &&
-        metadata?.subscriptions?.length < 1
-    );
-  }, [metadata]);
+    setSubscriptions(dialects || []);
+    setIsNoSubscriptions(dialects.length < 1);
+  }, [dialects]);
 
   const toggleCreate = useCallback(
     () => setCreateOpen(!isCreateOpen),
@@ -220,10 +327,8 @@ export default function MessagesCenter(): JSX.Element {
         <span className="opacity-60">Wallet not connected</span>
       </Centered>
     );
-  } else if (!isMetadataAvailable) {
-    content = <CreateMetadata />;
   } else if (isCreateOpen) {
-    content = <Compose toggleCreate={toggleCreate} />;
+    content = <CreateThread toggleCreate={toggleCreate} />;
   } else if (isNoSubscriptions) {
     content = (
       <Centered>
@@ -231,11 +336,27 @@ export default function MessagesCenter(): JSX.Element {
         <span className="opacity-60">No messages yet</span>
       </Centered>
     );
+  } else if (dialectAddress) {
+    console.log('dialect address', dialectAddress);
+    console.log('messages', messages);
+    content = <Thread />;
   } else {
     content = (
-      <>
-        {subscriptions.map((subscription: any) => JSON.stringify(subscription))}
-      </>
+      <div className="flex flex-col space-y-2">
+        {subscriptions.map((subscription: any) => (
+          <MessagePreview
+            key={subscription.publicKey.toBase58()}
+            dialect={subscription}
+            onClick={() => {
+              console.log(
+                'setting dialect address',
+                subscription.publicKey.toBase58()
+              );
+              setDialectAddress(subscription.publicKey.toBase58());
+            }}
+          />
+        ))}
+      </div>
     );
   }
 
