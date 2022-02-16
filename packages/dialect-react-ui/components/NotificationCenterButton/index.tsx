@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import {
   ApiProvider,
@@ -9,6 +9,7 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
+import debounce from '../../utils/debounce';
 import NotificationCenter from '../NotificationCenter';
 import IconButton from '../IconButton';
 import {
@@ -68,6 +69,7 @@ function WrappedNotificationCenterButton(
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
+  const [bellRect, setBellRect] = useState(null);
 
   useEffect(
     () => setWallet(connected(props.wallet) ? props.wallet : null),
@@ -79,10 +81,31 @@ function WrappedNotificationCenterButton(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
+  const updateRect = useCallback(
+    function () {
+      console.log('resize');
+      if (!bellRef.current) {
+        return;
+      }
+      setBellRect(bellRef.current.getBoundingClientRect());
+    },
+    [bellRef]
+  );
+
+  useEffect(() => {
+    updateRect();
+    const updateRectDebounced = debounce(updateRect, 2000);
+    window.addEventListener('resize', updateRectDebounced, true);
+    return () =>
+      window.removeEventListener('resize', updateRectDebounced, true);
+  }, [bellRef]);
+
+  console.log({ bellRect });
+
   const { colors, bellButton, icons } = useTheme();
 
   return (
-    <div className={cs('flex flex-col items-end relative', colors.primary)}>
+    <div className={cs('flex flex-col items-end', colors.primary)}>
       <IconButton
         ref={bellRef}
         className={cs(
@@ -94,8 +117,10 @@ function WrappedNotificationCenterButton(
         onClick={() => setOpen(!open)}
       ></IconButton>
       <Transition
-        className="z-50 absolute top-16 w-96 h-96"
-        style={{ width: '29rem', height: '29rem' }}
+        className="z-50 absolute top-16 w-screen right-0 sm:right-[unset] h-screen sm:w-[30rem] sm:h-[30rem]"
+        style={{
+          top: bellRect ? `${bellRect.bottom + 24}px` : '',
+        }}
         show={open}
         enter="transition-opacity duration-300"
         enterFrom="opacity-0"
