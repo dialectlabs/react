@@ -24,7 +24,8 @@ import { Notification } from './Notification';
 import MessageInput from './MessageInput';
 import MessagePreview from './MessagePreview';
 import Avatar from '../Avatar';
-import { formatTimestamp } from '@dialectlabs/react';
+import * as anchor from '@project-serum/anchor';
+import { formatTimestamp, getDialectAddressWithOtherMember } from '@dialectlabs/react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -72,6 +73,7 @@ function Header(props: {
       </div>
     );
   }
+
   return (
     <div className={cs('flex flex-row items-center justify-between', header)}>
       <span className={cs(textStyles.header, colors.accent)}>Messages</span>
@@ -120,8 +122,10 @@ function CreateMetadata() {
   );
 }
 
-function CreateThread() {
-  const { createDialect, isDialectCreating, creationError } = useDialect();
+function CreateThread({toggleCreate}: {toggleCreate: () => void}) {
+  const { createDialect, isDialectCreating, creationError, setDialectAddress } =
+    useDialect();
+  const { program } = useApi();
   const { colors, textStyles } = useTheme();
   const [address, setAddress] = useState('');
 
@@ -151,9 +155,17 @@ function CreateThread() {
         recoverable.
       </p>
       <Button
-        onClick={() => {
-          console.log('on click');
-          createDialect(address).catch(noop);
+        onClick={async () => {
+          createDialect(address, [true, true], [false, true])
+            .then(async () => {
+              const [da, _] = await getDialectAddressWithOtherMember(program, new anchor.web3.PublicKey(address));
+              setDialectAddress(da.toBase58());
+              toggleCreate();
+            })
+            .catch((err) => {
+              console.log('error creating dialect', err);
+              noop();
+            });
         }}
         loading={isDialectCreating}
       >
@@ -176,7 +188,10 @@ function Thread() {
     isDialectCreating,
     creationError,
     isDialectAvailable,
+    dialect,
     messages,
+    sendMessage,
+    sendingMessage,
   } = useDialect();
   const { wallet } = useApi();
   const { colors, textStyles, icons } = useTheme();
@@ -185,35 +200,37 @@ function Thread() {
 
   const onMessageSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // setCreating(true);
+    await sendMessage(text).then(() => setText('')).catch(noop);
   };
 
-  const onEnterPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+  const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.keyCode == 13 && e.shiftKey == false) {
       e.preventDefault();
-      // setCreating(true);
+      await sendMessage(text).then(() => setText('')).catch(noop);
     }
   };
+  const youCanWrite = dialect?.dialect.members.some(
+    (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1]
+  );
   const disabled =
     text.length <= 0 ||
     text.length > 280 ||
     isDialectCreating ||
-    !isDialectAvailable;
+    sendingMessage;
 
   return (
     <div className="flex flex-col h-full justify-between">
-      <div className="py-2 flex-grow overflow-y-auto flex flex-col flex-col-reverse space-y-2 space-y-reverse justify-start flex-col-reverse">
+      <div className="py-2 overflow-y-auto flex flex-col flex-col-reverse space-y-2 space-y-reverse justify-start flex-col-reverse">
         {messages.map((message) => {
-          console.log('message', message);
 
           const isYou =
-            message.owner.toString() === wallet?.publicKey.toString();
+            message.owner.toString() === wallet?.publicKey?.toString();
 
           if (isYou) {
             return (
               <div
                 key={message.timestamp}
-                className={'flex-row items-center mb-2 justify-end'}
+                className={'ml-10 flex flex-row items-center mb-2 justify-end'}
               >
                 <div
                   className={
@@ -221,10 +238,10 @@ function Thread() {
                   }
                 >
                   <div className={'items-end'}>
-                    <div className={'text-white text-sm text-right'}>
+                    <div className={'break-words text-white text-sm text-right'}>
                       {message.text}
                     </div>
-                    <div className={'border-l-8'}>
+                    <div className={''}>
                       <div className={'text-neutral-600 text-xs'}>
                         {formatTimestamp(message.timestamp)}
                       </div>
@@ -236,18 +253,21 @@ function Thread() {
           }
 
           return (
-            <div key={message.timestamp} className={'flex flex-row mb-2 max-w-full'}>
+            <div
+              key={message.timestamp}
+              className={'flex flex-row mb-2'}
+            >
               <div className={''}>
                 <Avatar size="small" publicKey={message.owner} />
               </div>
               <div
                 className={
-                  'flex-row px-4 py-2 rounded-2xl border border-neutral-900 bg-neutral-900 flex-shrink'
+                  'max-w-xs flex-row px-4 py-2 rounded-2xl border border-neutral-900 bg-neutral-900 flex-shrink'
                 }
               >
                 <div className={'text-left'}>
-                  <div className={'text-white text-sm'}>{message.text}</div>
-                  <div className={'items-end border-l-8 border-neutral-900'}>
+                  <div className={'text-white text-sm break-words'}>{message.text}</div>
+                  <div className={'items-end border-neutral-900'}>
                     <div className={'text-neutral-600 text-xs text-right'}>
                       {formatTimestamp(message.timestamp)}
                     </div>
@@ -270,7 +290,7 @@ function Thread() {
           //   );
         })}
       </div>
-      <div>
+      {youCanWrite && (
         <MessageInput
           text={text}
           setText={setText}
@@ -278,7 +298,7 @@ function Thread() {
           onEnterPress={onEnterPress}
           disabled={disabled}
         />
-      </div>
+      )}
     </div>
   );
 }
@@ -332,13 +352,11 @@ export default function MessagesCenter(): JSX.Element {
   } else if (isNoSubscriptions) {
     content = (
       <Centered>
-        <icons.noNotifications className="mb-6" />
+        {/* <icons.noNotifications className="mb-6" /> */}
         <span className="opacity-60">No messages yet</span>
       </Centered>
     );
   } else if (dialectAddress) {
-    console.log('dialect address', dialectAddress);
-    console.log('messages', messages);
     content = <Thread />;
   } else {
     content = (
@@ -370,7 +388,7 @@ export default function MessagesCenter(): JSX.Element {
       )}
     >
       <Header
-        isReady={isWalletConnected && isMetadataAvailable}
+        isReady={isWalletConnected}
         isCreateOpen={isCreateOpen}
         toggleCreate={toggleCreate}
       />

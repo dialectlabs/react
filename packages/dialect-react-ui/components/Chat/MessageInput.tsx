@@ -55,7 +55,7 @@ export default function MessageInput({
       <div className="flex justify-between">
         <div className="flex space-x-3">
           <div className="text-xs pl-1">{text.length}/280</div>
-          <div className="text-xs">⊙ {0 || '–'}</div>
+          {/* <div className="text-xs">⊙ {0 || '–'}</div> */}
         </div>
         {!disabled && (
           <div className="flex text-xs items-center pr-1">

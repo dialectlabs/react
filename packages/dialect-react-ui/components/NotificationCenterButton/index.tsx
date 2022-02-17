@@ -45,7 +45,6 @@ function useOutsideAlerter(
         bellRef.current &&
         !bellRef.current.contains(event.target)
       ) {
-        console.log('You clicked outside of me!');
         setOpen(false);
       }
     }

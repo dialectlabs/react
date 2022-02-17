@@ -9,6 +9,7 @@ import {
   getDialectForMembers,
   getDialectProgramAddress,
   Member,
+  sendMessage as originalSendMessage,
 } from '@dialectlabs/web3';
 import { withErrorParsing } from '../utils/errors';
 
@@ -39,7 +40,14 @@ export const formatTimestamp = (timestamp: number) => {
   return formatter.format(timestamp);
 };
 
-// TODO: Move to
+export const getDialectAddressWithOtherMember = async (
+  program: anchor.Program,
+  publicKey: anchor.web3.PublicKey,
+) => {
+  return await getDialectAddressForMemberPubkeys(program, program.provider.wallet.publicKey, publicKey);
+};
+
+// TODO: Move to protocol
 export const getDialectAddressForMemberPubkeys = async (
   program: anchor.Program,
   pubkey1: anchor.web3.PublicKey,
@@ -57,16 +65,24 @@ export const getDialectAddressForMemberPubkeys = async (
  * @param program {anchor.Program}
  * @param pubkey1 {string}
  * @param pubkey2 {string}
+ * @param scopes1 {boolean[]}
+ * @param scopes2 {boolean[]}
  */
 export const createDialectForMembers = withErrorParsing(
-  async (program: anchor.Program, pubkey1: string, pubkey2: string) => {
+  async (
+    program: anchor.Program,
+    pubkey1: string,
+    pubkey2: string,
+    scopes1,
+    scopes2
+  ) => {
     const member1: Member = {
       publicKey: new anchor.web3.PublicKey(pubkey1),
-      scopes: [true, false], // recipient of notifications, is admin but does not have write privileges
+      scopes: scopes1, // recipient of notifications, is admin but does not have write privileges
     };
     const member2: Member = {
       publicKey: new anchor.web3.PublicKey(pubkey2),
-      scopes: [false, true], // monitoring service that sends notifications, is not admin but does have write privilages
+      scopes: scopes2, // monitoring service that sends notifications, is not admin but does have write privilages
     };
     return await createDialect(
       program,
@@ -141,7 +157,12 @@ export const deleteDialect = withErrorParsing(
 );
 
 export const sendMessage = withErrorParsing(
-  async (program: anchor.Program, dialect: DialectAccount) => {
-    return;
+  async (program: anchor.Program, dialect: DialectAccount, text: string) => {
+    return await originalSendMessage(
+      program,
+      dialect,
+      program.provider.wallet,
+      text
+    );
   }
 );

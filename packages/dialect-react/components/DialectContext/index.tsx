@@ -56,16 +56,16 @@ type DialectContextType = {
   disconnectedFromChain: boolean;
   cannotDecryptDialect: boolean;
   isWalletConnected: boolean;
-  isMetadataAvailable: boolean;
-  createMetadata: () => Promise<void>;
-  isMetadataCreating: boolean;
-  metadataCreationError: ParsedErrorData | null;
-  deleteMetadata: () => Promise<void>;
-  isMetadataDeleting: boolean;
-  metadataDeletionError: ParsedErrorData | null;
-  metadata: Metadata | null;
+  // isMetadataAvailable: boolean;
+  // createMetadata: () => Promise<void>;
+  // isMetadataCreating: boolean;
+  // metadataCreationError: ParsedErrorData | null;
+  // deleteMetadata: () => Promise<void>;
+  // isMetadataDeleting: boolean;
+  // metadataDeletionError: ParsedErrorData | null;
+  // metadata: Metadata | null;
   isDialectAvailable: boolean;
-  createDialect: (publicKey?: string) => Promise<void>;
+  createDialect: (publicKey?: string, scopes1?: [boolean, boolean], scopes2?: [boolean, boolean]) => Promise<void>;
   isDialectCreating: boolean;
   creationError: ParsedErrorData | null;
   deleteDialect: () => Promise<void>;
@@ -77,6 +77,9 @@ type DialectContextType = {
   dialects: DialectAccount[];
   setDialectAddress: (dialectAddress: string) => void;
   dialectAddress: string | null;
+  sendMessage: (text: string) => Promise<void>;
+  sendingMessage: boolean;
+  sendMessageError: ParsedErrorData | null;
 };
 
 const DialectContext = createContext<DialectContextType | null>(null);
@@ -105,6 +108,10 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [disconnectedFromChain, setDisconnected] = React.useState(false);
   const [cannotDecryptDialect, setCannotDecryptDialect] = React.useState(false);
 
+  const [sendingMessage, setSendingMessage] = React.useState(false);
+  const [sendMessageError, setSendMessageError] =
+    React.useState<ParsedErrorData | null>(null);
+
   const { wallet, program } = useApi();
   const isWalletConnected = connected(wallet);
 
@@ -113,18 +120,15 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     mutate: mutateMetadata,
     error: fetchMetadataError,
   } = useSWR<Metadata | null, ParsedErrorData>(
-    wallet && program ? ['metadata', program] : null,
+    false && wallet && program ? ['metadata', program] : null,
     swrFetchMetadata,
     {
       refreshInterval: POLLING_INTERVAL_MS,
       onError: (err) => {
-        console.log('error fetching metadata', err);
         setFetchingError(err as ParsedErrorData);
       },
     }
   );
-
-  console.log('metadata', metadata);
 
   const {
     data: dialects,
@@ -144,8 +148,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   );
 
-  console.log('dialects', dialects);
-
   const {
     data: dialect,
     mutate: mutateDialect,
@@ -163,8 +165,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       },
     }
   );
-
-  console.log('selected dialect', dialect?.publicKey.toBase58());
 
   useEffect(() => {
     if (props.publicKey) {
@@ -219,8 +219,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   }, [mutateMetadata, program, wallet, isWalletConnected]);
 
   const createDialectWrapper = useCallback(
-    async (publicKey?: string) => {
-      console.log('creating dialect...');
+    async (
+      publicKey?: string,
+      scopes1 = [true, false],
+      scopes2 = [false, true]
+    ) => {
       if (
         !program ||
         !isWalletConnected ||
@@ -236,7 +239,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         const data = await createDialectForMembers(
           program,
           wallet.publicKey?.toString(),
-          props.publicKey?.toString() || publicKey
+          props.publicKey?.toString() || publicKey,
+          scopes1,
+          scopes2
         );
 
         await mutateDialect(data, false);
@@ -306,12 +311,33 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
+  const sendMessageWrapper = useCallback(
+    async (text: string) => {
+      if (!program || !isWalletConnected || !dialect) return;
+
+      setSendingMessage(true);
+
+      try {
+        await sendMessage(program, dialect, text);
+
+        await mutateDialect(null);
+      } catch (e) {
+        // TODO: implement safer error handling
+        setSendMessageError(e as ParsedErrorData);
+
+        // Passing through the error, in case for additional UI error handling
+        throw e;
+      } finally {
+        setSendingMessage(false);
+      }
+    },
+    [isWalletConnected, program, dialect, mutateDialect]
+  );
+
   const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
   // const messages = mockMessages;
   const isDialectAvailable = Boolean(dialect);
   const isMetadataAvailable = Boolean(metadata);
-  // const dialectAddress =
-  //   wallet && dialect?.publicKey ? dialect?.publicKey.toString() : null;
 
   const value = {
     disconnectedFromChain,
@@ -332,12 +358,15 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     deleteDialect: deleteDialectWrapper,
     isDialectDeleting: deleting,
     deletionError,
-    messages: mockMessages,
+    messages,
     dialect,
     dialects: dialects || [],
     isNoMessages: messages?.length === 0,
     dialectAddress,
     setDialectAddress,
+    sendMessage: sendMessageWrapper,
+    sendingMessage,
+    sendMessageError,
   };
 
   return (
