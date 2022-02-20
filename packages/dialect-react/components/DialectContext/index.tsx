@@ -65,7 +65,11 @@ type DialectContextType = {
   // metadataDeletionError: ParsedErrorData | null;
   // metadata: Metadata | null;
   isDialectAvailable: boolean;
-  createDialect: (publicKey?: string, scopes1?: [boolean, boolean], scopes2?: [boolean, boolean]) => Promise<void>;
+  createDialect: (
+    publicKey?: string,
+    scopes1?: [boolean, boolean],
+    scopes2?: [boolean, boolean]
+  ) => Promise<void>;
   isDialectCreating: boolean;
   creationError: ParsedErrorData | null;
   deleteDialect: () => Promise<void>;

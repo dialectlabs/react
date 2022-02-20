@@ -86,12 +86,8 @@ function CreateThread() {
 }
 
 function Settings(props: { toggleSettings: () => void }) {
-  const {
-    dialectAddress,
-    deleteDialect,
-    isDialectDeleting,
-    deletionError,
-  } = useDialect();
+  const { dialectAddress, deleteDialect, isDialectDeleting, deletionError } =
+    useDialect();
   const { colors, textStyles, icons } = useTheme();
 
   return (

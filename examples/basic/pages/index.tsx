@@ -34,7 +34,7 @@ function AuthedHome() {
     ) {
       setTheme('dark');
     } else {
-      setTheme('dark');
+      setTheme('light');
     }
     window
       .matchMedia('(prefers-color-scheme: dark)')
@@ -45,7 +45,7 @@ function AuthedHome() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-black">
+    <div className="flex flex-col h-screen bg-white dark:bg-black">
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <NotificationCenterButton
           wallet={wallet}
@@ -57,8 +57,12 @@ function AuthedHome() {
         <WalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">
-        <code className="text-center text-neutral-600">
-          examples/<code className="text-neutral-100">basic</code>
+        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
+          @dialectlabs/react
+        </code>
+        <code className="text-center text-neutral-400 dark:text-neutral-600">
+          examples/
+          <code className="text-neutral-900 dark:text-neutral-100">basic</code>
         </code>
       </div>
     </div>

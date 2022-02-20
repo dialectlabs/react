@@ -46,7 +46,9 @@ export default function MessagePreview({
               {messages[0].text}
             </div>
           ) : (
-            <div className="text-sm opacity-30 italic mb-2">No messages yet</div>
+            <div className="text-sm opacity-30 italic mb-2">
+              No messages yet
+            </div>
           )}
         </div>
         <div className="text-xs opacity-30">

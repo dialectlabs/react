@@ -64,14 +64,11 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
 
   useEffect(() => {
     if (isWalletConnected) {
-      console.log('CONNECTED', wallet);
       const n: 'devnet' | 'localnet' =
         network && Object.keys(URLS).includes(network)
           ? (network as 'devnet' | 'localnet')
           : 'devnet';
-      console.log('n', n);
       const u = rpcUrl || URLS[n]; // TODO: Move to protocol/web3
-      console.log('u', u);
       const connection = new Connection(u, 'recent');
       const provider = new anchor.Provider(
         connection,
@@ -85,7 +82,6 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
       );
       setProgram(program);
     } else {
-      console.log('DISCONNECTED', wallet);
       setProgram(null);
     }
   }, [wallet, isWalletConnected, network, rpcUrl]);

@@ -1,5 +1,6 @@
 import React, { KeyboardEvent, FormEvent } from 'react';
 import { useTheme } from '../common/ThemeProvider';
+import cs from '../../utils/classNames';
 
 type PropsType = {
   text: string;
@@ -16,7 +17,7 @@ export default function MessageInput({
   onEnterPress,
   disabled,
 }: PropsType): JSX.Element {
-  const { icons } = useTheme();
+  const { icons, textArea, sendButton } = useTheme();
   // const { data } = useSWR(
   //   connection && wallet ? ['/owner', wallet, connection] : null,
   //   ownerFetcher
@@ -37,16 +38,14 @@ export default function MessageInput({
               onChange={(e) => setText(e.target.value)}
               onKeyDown={onEnterPress}
               placeholder="Write something"
-              className="resize-none h-full w-full text-sm text-neutral-800 dark:text-neutral-200 bg-black border rounded-2xl px-2 py-1 border-neutral-600 placeholder-neutral-600 pr-10 focus:outline-none"
+              className={cs(textArea, 'resize-none h-full w-full')}
             />
             <button
               className="absolute inset-y-0 -right-2 flex items-center pr-3 disabled:cursor-not-allowed"
               disabled={disabled}
             >
               <icons.arrowsmright
-                className={`opacity-100 h-5 w-5 text-black rounded-full bg-white ${
-                  disabled ? 'opacity-70' : ''
-                }`}
+                className={cs(sendButton, disabled ? 'opacity-50' : '')}
               />
             </button>
           </div>
