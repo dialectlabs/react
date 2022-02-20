@@ -3,6 +3,7 @@ import { useApi } from '../../../dialect-react/components/ApiContext';
 import { DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import Avatar from '../Avatar';
+import { useTheme } from '../common/ThemeProvider';
 
 type PropsType = {
   dialect: DialectAccount;
@@ -13,6 +14,7 @@ export default function MessagePreview({
   dialect,
   onClick,
 }: PropsType): JSX.Element {
+  const { divider } = useTheme();
   const { wallet } = useApi();
   const otherMembers = dialect?.dialect.members.filter(
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
@@ -39,9 +41,7 @@ export default function MessagePreview({
             <div className="max-w-full text-sm opacity-50 mb-2 truncate">
               <span className="opacity-50">
                 {messages[0].owner.toString() === wallet?.publicKey?.toString()
-                  ? 'You'
-                  : display(messages[0].owner)}
-                :
+                  && 'You:'}
               </span>{' '}
               {messages[0].text}
             </div>

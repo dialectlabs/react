@@ -42,9 +42,13 @@ export const formatTimestamp = (timestamp: number) => {
 
 export const getDialectAddressWithOtherMember = async (
   program: anchor.Program,
-  publicKey: anchor.web3.PublicKey,
+  publicKey: anchor.web3.PublicKey
 ) => {
-  return await getDialectAddressForMemberPubkeys(program, program.provider.wallet.publicKey, publicKey);
+  return await getDialectAddressForMemberPubkeys(
+    program,
+    program.provider.wallet.publicKey,
+    publicKey
+  );
 };
 
 // TODO: Move to protocol
