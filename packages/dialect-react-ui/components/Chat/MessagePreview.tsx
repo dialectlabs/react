@@ -40,8 +40,8 @@ export default function MessagePreview({
           {messages && messages?.length > 0 ? (
             <div className="max-w-full text-sm opacity-50 mb-2 truncate">
               <span className="opacity-50">
-                {messages[0].owner.toString() === wallet?.publicKey?.toString()
-                  && 'You:'}
+                {messages[0].owner.toString() ===
+                  wallet?.publicKey?.toString() && 'You:'}
               </span>{' '}
               {messages[0].text}
             </div>
