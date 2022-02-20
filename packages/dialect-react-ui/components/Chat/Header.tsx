@@ -10,6 +10,8 @@ export default function Header(props: {
   isReady: boolean;
   isCreateOpen: boolean;
   toggleCreate: () => void;
+  isSettingsOpen: boolean;
+  toggleSettings: () => void;
 }) {
   const { colors, textStyles, header, icons } = useTheme();
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
@@ -26,6 +28,17 @@ export default function Header(props: {
         <span className={cs(textStyles.header, colors.accent)}></span>
       </div>
     );
+  } else if (props.isSettingsOpen) {
+    return (
+      <div className={cs('flex flex-row items-center', header)}>
+        <IconButton
+          icon={<icons.back />}
+          onClick={props.toggleSettings}
+          className="mr-2"
+        />
+        <span className={cs(textStyles.header, colors.accent)}>Settings</span>
+      </div>
+    );
   } else if (dialectAddress) {
     const otherMembers =
       dialect?.dialect.members.filter(
@@ -37,7 +50,7 @@ export default function Header(props: {
     );
     const otherMemberStr = otherMembers ? otherMembersStrs[0] : '';
     return (
-      <div className={cs('relative flex flex-row items-center', header)}>
+      <div className={cs('relative flex flex-row items-center justify-between', header)}>
         <IconButton
           icon={<icons.back />}
           onClick={() => setDialectAddress('')}
@@ -46,6 +59,9 @@ export default function Header(props: {
         <span className={cs(textStyles.header, colors.accent)}>
           {otherMemberStr}
         </span>
+        {props.isReady ? (
+          <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
+        ) : null}
       </div>
     );
   }

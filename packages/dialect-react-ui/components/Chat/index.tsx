@@ -7,6 +7,7 @@ import MessagePreview from './MessagePreview';
 import CreateThread from './CreateThread';
 import Header from './Header';
 import Thread from './Thread';
+import ThreadSettings from './ThreadSettings';
 
 export default function Chat(): JSX.Element {
   const {
@@ -18,6 +19,7 @@ export default function Chat(): JSX.Element {
   } = useDialect();
 
   const [isCreateOpen, setCreateOpen] = useState(false);
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [isNoSubscriptions, setIsNoSubscriptions] = useState(false);
 
@@ -29,6 +31,11 @@ export default function Chat(): JSX.Element {
   const toggleCreate = useCallback(
     () => setCreateOpen(!isCreateOpen),
     [isCreateOpen, setCreateOpen]
+  );
+
+  const toggleSettings = useCallback(
+    () => setSettingsOpen(!isSettingsOpen),
+    [isSettingsOpen, setSettingsOpen]
   );
 
   const { colors, popup, icons } = useTheme();
@@ -51,6 +58,8 @@ export default function Chat(): JSX.Element {
     );
   } else if (isCreateOpen) {
     content = <CreateThread toggleCreate={toggleCreate} />;
+  } else if (isSettingsOpen) {
+    content = <ThreadSettings toggleSettings={toggleSettings} />;
   } else if (isNoSubscriptions) {
     content = (
       <Centered>
@@ -92,6 +101,8 @@ export default function Chat(): JSX.Element {
         isReady={isWalletConnected}
         isCreateOpen={isCreateOpen}
         toggleCreate={toggleCreate}
+        isSettingsOpen={isSettingsOpen}
+        toggleSettings={toggleSettings}
       />
       <Divider className="mx-2" />
       <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
