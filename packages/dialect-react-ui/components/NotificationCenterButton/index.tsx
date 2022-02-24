@@ -58,7 +58,7 @@ function useOutsideAlerter(
   }, [ref]);
 }
 
-function WrappedNotificationCenterButton(
+function WrappedNotificationsButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
   const wrapperRef = useRef(null);
@@ -117,7 +117,7 @@ function WrappedNotificationCenterButton(
   );
 }
 
-export default function NotificationCenterButton({
+export default function NotificationsButton({
   theme = 'dark',
   variables,
   ...props
@@ -126,7 +126,7 @@ export default function NotificationCenterButton({
     <ApiProvider>
       <DialectProvider publicKey={props.publicKey}>
         <ThemeProvider theme={theme} variables={variables}>
-          <WrappedNotificationCenterButton {...props} />
+          <WrappedNotificationsButton {...props} />
         </ThemeProvider>
       </DialectProvider>
     </ApiProvider>

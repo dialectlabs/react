@@ -1,2 +1,3 @@
 # Dialect React
-React abstractions for Dialect's protocol. 
+
+React abstractions for Dialect's protocol.

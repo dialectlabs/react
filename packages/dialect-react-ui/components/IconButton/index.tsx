@@ -20,9 +20,7 @@ export default React.forwardRef(function IconButton(
     <div className={cs(' relative', props.className)} style={props.style}>
       <button
         ref={ref}
-        className={
-          iconButton
-        }
+        className={iconButton}
         onClick={(event) => {
           event.preventDefault();
           props?.onClick();

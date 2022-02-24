@@ -14,7 +14,8 @@ export default function Header(props: {
   toggleSettings: () => void;
 }) {
   const { colors, textStyles, header, icons } = useTheme();
-  const { dialect, dialectAddress, setDialectAddress, disconnectedFromChain } = useDialect();
+  const { dialect, dialectAddress, setDialectAddress, disconnectedFromChain } =
+    useDialect();
   const { wallet } = useApi();
 
   if (props.isCreateOpen) {
@@ -50,7 +51,12 @@ export default function Header(props: {
     );
     const otherMemberStr = otherMembers ? otherMembersStrs[0] : '';
     return (
-      <div className={cs('relative flex flex-row items-center justify-between', header)}>
+      <div
+        className={cs(
+          'relative flex flex-row items-center justify-between',
+          header
+        )}
+      >
         <IconButton
           icon={<icons.back />}
           onClick={() => setDialectAddress('')}
@@ -60,7 +66,10 @@ export default function Header(props: {
           {otherMemberStr}
         </span>
         {props.isReady ? (
-          <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
+          <IconButton
+            icon={<icons.settings />}
+            onClick={props.toggleSettings}
+          />
         ) : null}
       </div>
     );
