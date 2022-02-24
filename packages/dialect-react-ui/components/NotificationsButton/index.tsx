@@ -9,7 +9,7 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
-import NotificationCenter from '../NotificationCenter';
+import Notifications from '../Notifications';
 import IconButton from '../IconButton';
 import {
   ThemeProvider,
@@ -110,7 +110,7 @@ function WrappedNotificationsButton(
           // className="w-full h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <NotificationCenter />
+          <Notifications />
         </div>
       </Transition>
     </div>

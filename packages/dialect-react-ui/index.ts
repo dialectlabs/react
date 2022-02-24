@@ -1,6 +1,6 @@
 import Chat from './components/Chat';
 import ChatButton from './components/ChatButton';
-import NotificationCenter from './components/NotificationCenter';
+import Notifications from './components/Notifications';
 import NotificationsButton from './components/NotificationsButton';
 import MessageInput from './components/Chat/MessageInput';
 
@@ -18,7 +18,7 @@ export {
   ChatButton,
   MessageInput,
   NotificationsButton,
-  NotificationCenter,
+  Notifications,
 };
 
 export type {

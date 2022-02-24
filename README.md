@@ -75,7 +75,7 @@ To get started, launch example's next dev server:
 
 ```shell
 yarn # in root dir
-cd examples/basic
+cd examples/chat
 yarn dev
 ```
 
