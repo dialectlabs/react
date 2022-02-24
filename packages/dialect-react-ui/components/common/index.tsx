@@ -74,7 +74,7 @@ export function Button(props: {
   loading?: boolean;
   children: React.ReactNode;
 }): JSX.Element {
-  const { button, buttonLoading, textStyles } = useTheme();
+  const { button, buttonLoading, textStyles, colors } = useTheme();
 
   return (
     <button

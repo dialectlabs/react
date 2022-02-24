@@ -61,7 +61,7 @@ export default function Thread() {
                       {message.text}
                     </div>
                     <div className={''}>
-                      <div className={'text-neutral-500 text-xs'}>
+                      <div className={'opacity-50 text-xs'}>
                         {formatTimestamp(message.timestamp)}
                       </div>
                     </div>
@@ -85,7 +85,7 @@ export default function Thread() {
                 <div className={'text-left'}>
                   <div className={'text-sm break-words'}>{message.text}</div>
                   <div className={'items-end'}>
-                    <div className={'text-neutral-500 text-xs text-right'}>
+                    <div className={'opacity-50 text-xs text-right'}>
                       {formatTimestamp(message.timestamp)}
                     </div>
                   </div>

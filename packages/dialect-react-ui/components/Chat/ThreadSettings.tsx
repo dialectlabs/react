@@ -24,7 +24,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
         {dialectAddress ? (
           <>
             <ValueRow
-              label="Notifications thread account"
+              label="Thread account"
               className="mt-1 mb-4"
             >
               <a

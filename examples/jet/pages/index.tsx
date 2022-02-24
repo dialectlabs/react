@@ -12,7 +12,7 @@ import SettingsIcon from './icons/Gear';
 import BackIcon from './icons/BackArrow';
 
 const JET_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
+  'HGuoH5EgezVA9M6kh5ie15xrLPuJBo9SDWfMjr778CHE'
 );
 
 export const themeVariables: IncomingThemeVariables = {

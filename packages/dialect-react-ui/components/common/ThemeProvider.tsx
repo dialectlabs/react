@@ -72,6 +72,7 @@ export type IncomingThemeValues = {
   messageBubble?: string;
   otherMessageBubble?: string;
   bellButton?: string;
+  iconButton?: string;
   sendButton?: string;
   popup?: string;
   button?: string;
@@ -136,6 +137,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     avatar:
       'rounded-full items-center justify-center text-neutral-900 bg-neutral-100',
     bellButton: 'w-12 h-12 focus:outline-none border border-gray-200 shadow-md',
+    iconButton: 'w-9 h-9 -m-2 flex items-center justify-center transition-all hover:opacity-60',
     sendButton: 'h-5 w-5 text-white rounded-full bg-black',
     header: 'px-4 py-3',
     input:
@@ -194,6 +196,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     },
     avatar: 'rounded-full items-center justify-center bg-neutral-900',
     bellButton: 'w-12 h-12 focus:outline-none shadow-md',
+    iconButton: 'w-9 h-9 -m-2 flex items-center justify-center transition-all hover:opacity-60',
     sendButton: 'h-5 w-5 text-black rounded-full bg-white',
     header: 'px-4 py-4',
     input:

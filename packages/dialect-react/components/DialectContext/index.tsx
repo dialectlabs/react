@@ -171,7 +171,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   );
 
   useEffect(() => {
-    if (props.publicKey) {
+    if (program && props.publicKey) {
       getDialectAddressWithOtherMember(
         program as anchor.Program,
         props.publicKey
@@ -180,7 +180,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       );
     }
     return;
-  }, [props.publicKey]);
+  }, [program, props.publicKey]);
 
   useEffect(() => {
     const existingErrorType =

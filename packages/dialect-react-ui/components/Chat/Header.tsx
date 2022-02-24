@@ -14,7 +14,7 @@ export default function Header(props: {
   toggleSettings: () => void;
 }) {
   const { colors, textStyles, header, icons } = useTheme();
-  const { dialect, dialectAddress, setDialectAddress } = useDialect();
+  const { dialect, dialectAddress, setDialectAddress, disconnectedFromChain } = useDialect();
   const { wallet } = useApi();
 
   if (props.isCreateOpen) {
@@ -68,8 +68,8 @@ export default function Header(props: {
 
   return (
     <div className={cs('flex flex-row items-center justify-between', header)}>
-      <span className={cs(textStyles.header, colors.accent)}>Messages</span>
-      {props.isReady ? (
+      <span className={cs(textStyles.header, colors.primary)}>Messages</span>
+      {props.isReady && !disconnectedFromChain ? (
         <IconButton icon={<icons.compose />} onClick={props.toggleCreate} />
       ) : null}
     </div>
