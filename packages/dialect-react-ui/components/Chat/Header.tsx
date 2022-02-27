@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApi } from '@dialectlabs/react';
-import { display } from '@dialectlabs/web3';
+import { display, isDialectAdmin } from '@dialectlabs/web3';
 import { useDialect } from '@dialectlabs/react';
 import IconButton from '../IconButton';
 import { useTheme } from '../common/ThemeProvider';
@@ -14,8 +14,12 @@ export default function Header(props: {
   toggleSettings: () => void;
 }) {
   const { colors, textStyles, header, icons } = useTheme();
-  const { dialect, dialectAddress, setDialectAddress, disconnectedFromChain } = useDialect();
+  const { dialect, dialectAddress, setDialectAddress, disconnectedFromChain } =
+    useDialect();
   const { wallet } = useApi();
+
+  const isAdmin =
+    dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet?.publicKey);
 
   if (props.isCreateOpen) {
     return (
@@ -50,17 +54,33 @@ export default function Header(props: {
     );
     const otherMemberStr = otherMembers ? otherMembersStrs[0] : '';
     return (
-      <div className={cs('relative flex flex-row items-center justify-between', header)}>
+      <div
+        className={cs(
+          'relative flex flex-row items-center justify-between',
+          header
+        )}
+      >
         <IconButton
           icon={<icons.back />}
           onClick={() => setDialectAddress('')}
           className="mr-2 absolute"
         />
-        <span className={cs(textStyles.header, colors.accent)}>
-          {otherMemberStr}
-        </span>
+        <div className="flex flex-col items-center">
+          <span className={cs(textStyles.header, colors.accent)}>
+            {otherMemberStr}
+          </span>
+          {dialect?.dialect.encrypted ? (
+            <span className="text-xs opacity-50">encrypted</span>
+          ) : (
+            <span className="text-xs opacity-50">unencrypted</span>
+          )}
+        </div>
         {props.isReady ? (
-          <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
+          <IconButton
+            className={isAdmin ? '' : 'invisible'}
+            icon={<icons.settings />}
+            onClick={props.toggleSettings}
+          />
         ) : null}
       </div>
     );

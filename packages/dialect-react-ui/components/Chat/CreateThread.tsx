@@ -23,9 +23,10 @@ export default function CreateThread({
 
   return (
     <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1 className={cs(textStyles.h1, colors.primary, 'mb-4 text-center')}>
+      <h1 className={cs(textStyles.h1, colors.primary, 'text-center')}>
         Create thread
       </h1>
+      <span className="text-xs mb-4 opacity-50">unencrypted</span>
       <input
         className={cs(input, 'w-full')}
         placeholder="Recipient address"

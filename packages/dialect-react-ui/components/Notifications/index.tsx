@@ -147,7 +147,7 @@ function Settings(props: { toggleSettings: () => void }) {
   );
 }
 
-export default function NotificationCenter(): JSX.Element {
+export default function Notifications(): JSX.Element {
   const {
     isWalletConnected,
     isDialectAvailable,

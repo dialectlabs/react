@@ -1,3 +1,8 @@
+import PhantomIcon from './assets/phantom.svg';
+import TwitterIcon from './assets/twitter.svg';
+
+export { PhantomIcon, TwitterIcon };
+
 export { default as ArrowNarrowRight } from './ArrowNarrowRight';
 export { default as ArrowSmRight } from './ArrowSmRight';
 export { default as BackArrow } from './BackArrow';

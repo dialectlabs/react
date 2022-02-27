@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Head from 'next/head';
 import * as anchor from '@project-serum/anchor';
 import {
-  NotificationCenterButton,
+  NotificationsButton,
   IncomingThemeVariables,
 } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -112,9 +112,9 @@ function AuthedHome() {
       </Head>
       <div className={`flex flex-col h-screen bg-${theme}`}>
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <NotificationCenterButton
+          <NotificationsButton
             wallet={wallet}
-            network={'devnet'}
+            network={'localnet'}
             publicKey={JET_PUBLIC_KEY}
             theme={theme}
             variables={themeVariables}

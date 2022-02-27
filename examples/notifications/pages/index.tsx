@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 
 import {
-  NotificationCenterButton,
+  NotificationsButton,
   IncomingThemeVariables,
 } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
@@ -47,7 +47,7 @@ function AuthedHome() {
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-black">
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <NotificationCenterButton
+        <NotificationsButton
           wallet={wallet}
           network={'localnet'}
           publicKey={DIALECT_PUBLIC_KEY}

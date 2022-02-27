@@ -10,8 +10,13 @@ import cs from '../../utils/classNames';
 const noop = () => {};
 
 export default function Settings(props: { toggleSettings: () => void }) {
-  const { dialectAddress, deleteDialect, isDialectDeleting, deletionError, setDialectAddress } =
-    useDialect();
+  const {
+    dialectAddress,
+    deleteDialect,
+    isDialectDeleting,
+    deletionError,
+    setDialectAddress,
+  } = useDialect();
   const { colors, textStyles, icons } = useTheme();
 
   return (
@@ -23,10 +28,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
         <Divider />
         {dialectAddress ? (
           <>
-            <ValueRow
-              label="Thread account"
-              className="mt-1 mb-4"
-            >
+            <ValueRow label="Thread account" className="mt-1 mb-4">
               <a
                 target="_blank"
                 href={getExplorerAddress(dialectAddress)}

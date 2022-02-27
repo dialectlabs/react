@@ -9,7 +9,7 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
-import NotificationCenter from '../NotificationCenter';
+import Notifications from '../Notifications';
 import IconButton from '../IconButton';
 import {
   ThemeProvider,
@@ -58,7 +58,7 @@ function useOutsideAlerter(
   }, [ref]);
 }
 
-function WrappedNotificationCenterButton(
+function WrappedNotificationsButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
   const wrapperRef = useRef(null);
@@ -110,14 +110,14 @@ function WrappedNotificationCenterButton(
           // className="w-full h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <NotificationCenter />
+          <Notifications />
         </div>
       </Transition>
     </div>
   );
 }
 
-export default function NotificationCenterButton({
+export default function NotificationsButton({
   theme = 'dark',
   variables,
   ...props
@@ -126,7 +126,7 @@ export default function NotificationCenterButton({
     <ApiProvider>
       <DialectProvider publicKey={props.publicKey}>
         <ThemeProvider theme={theme} variables={variables}>
-          <WrappedNotificationCenterButton {...props} />
+          <WrappedNotificationsButton {...props} />
         </ThemeProvider>
       </DialectProvider>
     </ApiProvider>
