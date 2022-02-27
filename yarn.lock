@@ -999,12 +999,12 @@
     eip1193-provider "^1.0.1"
     js-sha3 "^0.8.0"
 
-"@dialectlabs/web3@0.1.3":
-  version "0.1.3"
-  resolved "https://npm.pkg.github.com/download/@dialectlabs/web3/0.1.3/9ba731edf95d107b22e1cd8a587ffcdb80047d1f286b6ca62044bd1e31f3bb8f#442be20e3d9be34df60f626919f507e2ec4c99ed"
-  integrity sha512-hEY1F1vJaENHM/Tmuw10vzthwnlHqBdoaXpKu37GEtGB58ycZ7IJY6usWcEQb4MPnxw5HdUv0Q6vesveq4FdIA==
+"@dialectlabs/web3@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/web3/-/web3-0.1.5.tgz#7f97068a8a33425cc1e1562c8f120d801f55aeaa"
+  integrity sha512-Tu7EzBPMoBh7BproVYFmbDYZhljBo5rflZ4+nVwYK9aIodWSlm+6qe5ox3VWiVlBW++tzDF/eSwesuQlbYMlSQ==
   dependencies:
-    "@project-serum/anchor" "^0.18.2"
+    "@project-serum/anchor" "0.18.2"
     "@solana/spl-token" "^0.1.8"
     "@solana/web3.js" "^1.22.0"
     bytebuffer "^5.0.1"
@@ -1218,7 +1218,7 @@
   resolved "https://registry.npmjs.org/@pedrouid/environment/-/environment-1.0.1.tgz"
   integrity sha512-HaW78NszGzRZd9SeoI3JD11JqY+lubnaOx7Pewj5pfjqWXOEATpeKIFb9Z4t2WBUK2iryiXX3lzWwmYWgUL0Ug==
 
-"@project-serum/anchor@^0.18.2":
+"@project-serum/anchor@0.18.2", "@project-serum/anchor@^0.18.2":
   version "0.18.2"
   resolved "https://registry.npmjs.org/@project-serum/anchor/-/anchor-0.18.2.tgz"
   integrity sha512-uyjiN/3Ipp+4hrZRm/hG18HzGLZyvP790LXrCsGO3IWxSl28YRhiGEpKnZycfMW94R7nxdUoE3wY67V+ZHSQBQ==
@@ -1669,14 +1669,6 @@
   dependencies:
     base-x "^3.0.6"
 
-"@types/bytebuffer@^5.0.43":
-  version "5.0.43"
-  resolved "https://registry.yarnpkg.com/@types/bytebuffer/-/bytebuffer-5.0.43.tgz#b5259fca1412106bcee0cabfbf7c104846d06738"
-  integrity sha512-vQnTYvy4LpSojHjKdmg4nXFI1BAiYPvZ/k3ouczZAQnbDprk1xqxJiFmFHyy8y6MuUq3slz5erNMtn6n87uVKw==
-  dependencies:
-    "@types/long" "*"
-    "@types/node" "*"
-
 "@types/chai-as-promised@^7.1.4":
   version "7.1.4"
   resolved "https://registry.npmjs.org/@types/chai-as-promised/-/chai-as-promised-7.1.4.tgz"
@@ -1695,13 +1687,6 @@
   integrity sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==
   dependencies:
     "@types/node" "*"
-
-"@types/ed2curve@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@types/ed2curve/-/ed2curve-0.2.2.tgz#8f8bc7e2c9a5895a941c63a4f7acd7a6a62a5b15"
-  integrity sha512-G1sTX5xo91ydevQPINbL2nfgVAj/s1ZiqZxC8OCWduwu+edoNGUm5JXtTkg9F3LsBZbRI46/0HES4CPUE2wc9g==
-  dependencies:
-    tweetnacl "^1.0.0"
 
 "@types/express-serve-static-core@^4.17.9":
   version "4.17.28"
@@ -1728,11 +1713,6 @@
   version "4.14.178"
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.178.tgz"
   integrity sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==
-
-"@types/long@*":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
-  integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
 
 "@types/node@*":
   version "17.0.10"
