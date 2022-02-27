@@ -31,11 +31,7 @@ export const themeVariables: IncomingThemeVariables = {
     iconButton: `${defaultVariables.light.iconButton} hover:text-[#59C29D] hover:opacity-100`,
     avatar: `${defaultVariables.light.avatar} bg-[#F6F6F6]`,
     messageBubble: `${defaultVariables.light.messageBubble} border-none bg-[#448EF7] text-white`,
-    // textArea: `${defaultVariables.light.textArea} border-[#59C29D]`,
     sendButton: `${defaultVariables.light.sendButton} bg-[#59C29D]`,
-    bigButton: `${defaultVariables.light.bigButton} text-white bg-[#B852DC]`,
-    bigButtonLoading: `${defaultVariables.light.bigButtonLoading} bg-[#B852DC] text-white`,
-    // divider: `${defaultVariables.light.divider} bg-[#59C29D]`,
   },
 };
 
