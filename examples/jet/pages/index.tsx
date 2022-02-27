@@ -1,7 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import Head from 'next/head';
 import * as anchor from '@project-serum/anchor';
-import { NotificationsButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
+import {
+  NotificationsButton,
+  IncomingThemeVariables,
+} from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import BellIcon from './icons/Bell';

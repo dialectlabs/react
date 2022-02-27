@@ -13,13 +13,7 @@ import type {
   IncomingThemeValues,
 } from './components/common/ThemeProvider';
 
-export {
-  Chat,
-  ChatButton,
-  MessageInput,
-  NotificationsButton,
-  Notifications,
-};
+export { Chat, ChatButton, MessageInput, NotificationsButton, Notifications };
 
 export type {
   ThemeType,

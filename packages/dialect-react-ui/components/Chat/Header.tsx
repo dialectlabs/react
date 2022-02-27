@@ -18,7 +18,8 @@ export default function Header(props: {
     useDialect();
   const { wallet } = useApi();
 
-  const isAdmin = dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet?.publicKey);
+  const isAdmin =
+    dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet?.publicKey);
 
   if (props.isCreateOpen) {
     return (
