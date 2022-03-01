@@ -1,5 +1,5 @@
 import React from 'react';
-import { useApi } from '../../../dialect-react/components/ApiContext';
+import { useApi } from '@dialectlabs/react/components/ApiContext';
 import { DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import Avatar from '../Avatar';
