@@ -179,7 +179,18 @@ Import Icon as a React Component from `Icon`, e.g. (`import {BackArrow} from '/I
 
 ## Publishing
 
-To add.
+```bash
+pushd packages/dialect-react/
+yarn build
+popd
+
+pushd packages/dialect-react-ui/
+yarn build
+yarn build:styles
+popd
+
+npm publish --access public
+```
 
 ## Know-hows
 
