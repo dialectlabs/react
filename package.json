@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/workspaces",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "private": true,
   "repository": {
@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build:react-ui": "yarn workspace @dialectlabs/react-ui run build",
+    "build:react": "yarn workspace @dialectlabs/react run build",
     "lint": "eslint --ext .js --ext .ts --ext .tsx .",
     "lint:fix": "yarn lint --fix"
   },
