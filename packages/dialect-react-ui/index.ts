@@ -1,5 +1,8 @@
-import NotificationCenter from './components/NotificationCenter';
-import NotificationCenterButton from './components/NotificationCenterButton';
+import Chat from './components/Chat';
+import ChatButton from './components/ChatButton';
+import Notifications from './components/Notifications';
+import NotificationsButton from './components/NotificationsButton';
+import MessageInput from './components/Chat/MessageInput';
 
 import type {
   ThemeType,
@@ -10,7 +13,7 @@ import type {
   IncomingThemeValues,
 } from './components/common/ThemeProvider';
 
-export { NotificationCenterButton, NotificationCenter };
+export { Chat, ChatButton, MessageInput, NotificationsButton, Notifications };
 
 export type {
   ThemeType,

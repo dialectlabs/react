@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Head from 'next/head';
 import * as anchor from '@project-serum/anchor';
 import {
-  NotificationCenterButton,
+  NotificationsButton,
   IncomingThemeVariables,
 } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -11,8 +11,8 @@ import BellIcon from './icons/Bell';
 import SettingsIcon from './icons/Gear';
 import BackIcon from './icons/BackArrow';
 
-const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'FkZPdBJMUFQusgsC3Ts1aHRbdJQrjY18MzE7Ft7J4cb4'
+const JET_PUBLIC_KEY = new anchor.web3.PublicKey(
+  'HGuoH5EgezVA9M6kh5ie15xrLPuJBo9SDWfMjr778CHE'
 );
 
 export const themeVariables: IncomingThemeVariables = {
@@ -112,10 +112,10 @@ function AuthedHome() {
       </Head>
       <div className={`flex flex-col h-screen bg-${theme}`}>
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <NotificationCenterButton
+          <NotificationsButton
             wallet={wallet}
-            network={'devnet'}
-            publicKey={DIALECT_PUBLIC_KEY}
+            network={'localnet'}
+            publicKey={JET_PUBLIC_KEY}
             theme={theme}
             variables={themeVariables}
           />
