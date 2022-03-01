@@ -45,7 +45,7 @@ return (
     publicKey={YOUR_PROJECT_PUBLIC_KEY}
     network={'devnet'}
     theme={theme}
-  />  
+  />
 );
 
 // ...
@@ -67,13 +67,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 const wallet = useWallet();
 const theme: 'dark' | 'light' = 'dark';
 
-return (
-  <ChatButton
-    wallet={wallet}
-    network={'devnet'}
-    theme={theme}
-  />  
-);
+return <ChatButton wallet={wallet} network={'devnet'} theme={theme} />;
 
 // ...
 ```
@@ -188,7 +182,6 @@ popd
 pushd packages/dialect-react-ui/
 yarn build
 yarn build:styles
-yarn copy:svgs
 npm publish --access public
 popd
 ```

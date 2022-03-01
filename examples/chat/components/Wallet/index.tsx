@@ -9,8 +9,8 @@ import {
   WalletModalProvider,
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui';
-import { PhantomIcon } from '@dialectlabs/react-ui/components/Icon';
 import { clusterApiUrl } from '@solana/web3.js';
+import { PhantomIcon } from '../Icon';
 
 // Default styles that can be overridden by your app
 require('@solana/wallet-adapter-react-ui/styles.css');
