@@ -1,5 +1,6 @@
 import React from 'react';
 import cs from '../../utils/classNames';
+import { useTheme } from '../common/ThemeProvider';
 
 type IconButtonPropsType = {
   icon: JSX.Element;
@@ -14,13 +15,12 @@ export default React.forwardRef(function IconButton(
   props: IconButtonPropsType,
   ref: React.RefObject<HTMLInputElement> | null
 ): JSX.Element {
+  const { iconButton } = useTheme();
   return (
     <div className={cs(' relative', props.className)} style={props.style}>
       <button
         ref={ref}
-        className={
-          'w-9 h-9 -m-2 flex items-center justify-center transition-all hover:opacity-60'
-        }
+        className={iconButton}
         onClick={(event) => {
           event.preventDefault();
           props?.onClick();
