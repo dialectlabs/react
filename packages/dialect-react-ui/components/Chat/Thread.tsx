@@ -44,7 +44,7 @@ export default function Thread() {
 
   return (
     <div className="flex flex-col h-full justify-between">
-      <div className="h-full py-2 overflow-y-auto flex flex-col flex-col-reverse space-y-2 space-y-reverse justify-start">
+      <div className="h-full py-2 overflow-y-auto flex flex-col-reverse space-y-2 space-y-reverse justify-start">
         {messages.map((message) => {
           const isYou =
             message.owner.toString() === wallet?.publicKey?.toString();
