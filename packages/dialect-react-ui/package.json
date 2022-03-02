@@ -27,7 +27,7 @@
     "tailwindcss": "^3.0.18"
   },
   "peerDependencies": {
-    "@dialectlabs/react": "^0.1.1",
+    "@dialectlabs/react": "^0.1.2",
     "react": ">=17"
   },
   "repository": {
