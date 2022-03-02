@@ -6,6 +6,7 @@ import { idl, programs } from '@dialectlabs/web3';
 
 const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {
   // TODO: Move to protocol/web3
+  mainnet: 'https://api.mainnet-beta.solana.com',
   devnet: 'https://api.devnet.solana.com',
   localnet: 'http://localhost:8899',
 };
