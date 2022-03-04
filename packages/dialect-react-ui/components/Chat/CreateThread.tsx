@@ -41,10 +41,30 @@ export default function CreateThread({
       >
         0.058 SOL
       </ValueRow>
-      <p className={cs(textStyles.body, 'text-center mb-3')}>
+      <p className={cs(textStyles.body, 'text-center mb-1')}>
         All messages are stored on chain, so to start this message thread,
         you&apos;ll need to deposit a small amount of rent. This rent is
         recoverable.
+      </p>
+      <p className={cs(textStyles.small, 'opacity-50 text-center mb-3')}>
+        By creating this thread you agree to our{' '}
+        <a
+          className="underline"
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.dialect.to/tos"
+        >
+          Terms of Service
+        </a>{' '}
+        and{' '}
+        <a
+          className="underline"
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.dialect.to/privacy"
+        >
+          Privacy Policy
+        </a>
       </p>
       <Button
         onClick={async () => {
