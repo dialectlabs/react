@@ -109,6 +109,99 @@ function CreateThread() {
   );
 }
 
+function EmailForm() {
+  const { textStyles, input } = useTheme();
+  const [email, setEmail] = useState('');
+  const [isEmailSaving, setEmailSaving] = useState(false);
+  const [isEmailSaved, setEmailSaved] = useState(false);
+  const [isEmailEditing, setEmailEditing] = useState(true);
+  const [isEmailDeleting, setEmailDeleting] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  // const [isEmailShowed, setEmailShowed] = useState(true);
+
+  return (
+    <form onSubmit={(e) => e.preventDefault()}>
+      <div className="flex flex-col space-x-2 md:flex-row mb-2">
+        <input
+          className={cs(input, textStyles.body, 'w-full')}
+          placeholder="Enter email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onBlur={(e) =>
+            e.target.checkValidity()
+              ? setEmailError('')
+              : setEmailError('Please enter correct email')
+          }
+          disabled={isEmailSaved && !isEmailEditing}
+        />
+        {isEmailEditing ? (
+          <Button
+            onClick={async () => {
+              // TODO: validate & save email
+              setEmailSaving(true);
+              setTimeout(() => {
+                setEmailSaving(false);
+                setEmailSaved(true);
+                setEmailEditing(false);
+                setEmailDeleting(false);
+              }, 2000);
+            }}
+            loading={isEmailSaving}
+          >
+            {isEmailSaving ? 'Saving...' : 'Save'}
+          </Button>
+        ) : (
+          <>
+            {/* <Button
+              onClick={async () => {
+                // TODO: validate & save email
+                setEmailShowed(true);
+              }}
+              loading={isEmailSaving}
+            >
+              Show
+            </Button> */}
+            <Button
+              onClick={async () => {
+                setEmailEditing(true);
+              }}
+              loading={isEmailSaving}
+            >
+              Edit
+            </Button>
+            <Button
+              onClick={async () => {
+                // TODO: delete email association
+                setEmailDeleting(true);
+                setTimeout(() => {
+                  setEmail('');
+                  setEmailSaved(false);
+                  setEmailEditing(true);
+                  setEmailDeleting(false);
+                }, 2000);
+              }}
+              loading={isEmailDeleting}
+            >
+              {isEmailDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </>
+        )}
+      </div>
+      {emailError ? (
+        <p className={cs(textStyles.small, 'text-red-500 mt-2')}>
+          {emailError}
+        </p>
+      ) : null}
+      {!emailError && isEmailEditing ? (
+        <p className={cs(textStyles.small, 'mb-1')}>
+          You will receive confirmation email
+        </p>
+      ) : null}
+    </form>
+  );
+}
+
 function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
@@ -119,6 +212,10 @@ function Settings(props: {
 
   return (
     <>
+      <div className="mb-3">
+        <h2 className={cs(textStyles.bigText, 'mb-1')}>Email Notifications</h2>
+        <EmailForm />
+      </div>
       <div className="mb-3">
         <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
         {props.notifications
