@@ -113,7 +113,6 @@ function EmailForm() {
   const [isEmailEditing, setEmailEditing] = useState(true);
   const [isEmailDeleting, setEmailDeleting] = useState(false);
   const [emailError, setEmailError] = useState('');
-  // const [isEmailShowed, setEmailShowed] = useState(true);
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>
@@ -149,15 +148,6 @@ function EmailForm() {
           </Button>
         ) : (
           <>
-            {/* <Button
-              onClick={async () => {
-                // TODO: validate & save email
-                setEmailShowed(true);
-              }}
-              loading={isEmailSaving}
-            >
-              Show
-            </Button> */}
             <Button
               onClick={async () => {
                 setEmailEditing(true);
