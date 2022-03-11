@@ -29,6 +29,7 @@ export type ThemeColors =
 
 export type ThemeTextStyles =
   | 'h1'
+  | 'h2'
   | 'body'
   | 'small'
   | 'bigText'
@@ -108,6 +109,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     },
     textStyles: {
       h1: 'font-inter text-3xl font-bold',
+      h2: 'font-inter text-xl font-bold',
       input: 'font-inter',
       textArea: 'font-inter',
       messageBubble: 'font-inter',
@@ -169,6 +171,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     },
     textStyles: {
       h1: 'font-inter text-3xl font-bold',
+      h2: 'font-inter text-xl font-bold',
       input: 'font-inter',
       textArea: 'font-inter',
       messageBubble: 'font-inter',

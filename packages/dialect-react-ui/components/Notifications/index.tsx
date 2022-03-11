@@ -15,6 +15,11 @@ import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 
+export type NotificationType = {
+  name: string;
+  detail: string;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
@@ -85,7 +90,10 @@ function CreateThread() {
   );
 }
 
-function Settings(props: { toggleSettings: () => void }) {
+function Settings(props: {
+  toggleSettings: () => void;
+  notifications: NotificationType[];
+}) {
   const { dialectAddress, deleteDialect, isDialectDeleting, deletionError } =
     useDialect();
   const { colors, textStyles, icons } = useTheme();
@@ -93,30 +101,41 @@ function Settings(props: { toggleSettings: () => void }) {
   return (
     <>
       <div className="mb-3">
-        <p className={cs(textStyles.body, 'mb-1')}>Included event types</p>
-        <ul className={cs(textStyles.bigText, 'list-disc pl-6')}>
-          <li>Welcome message on thread creation</li>
-        </ul>
+        <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
+        {props.notifications?.map((type) => (
+          <ValueRow
+            key={type.name}
+            label={type.name}
+            highlighted
+            className={cs('mb-1')}
+            colon={false}
+          >
+            {type.detail}
+          </ValueRow>
+        ))}
       </div>
       <div>
-        <ValueRow label="Deposited Rent" className={cs('mb-1')}>
+        <h2 className={cs(textStyles.h2, 'mb-1')}>Thread Account</h2>
+        {dialectAddress ? (
+          <ValueRow
+            label={display(dialectAddress)}
+            highlighted
+            className="mt-1 mb-1"
+          >
+            <a
+              target="_blank"
+              href={getExplorerAddress(dialectAddress)}
+              rel="noreferrer"
+            >
+              View on Solscan ↗
+            </a>
+          </ValueRow>
+        ) : null}
+        <ValueRow label="Deposited Rent" highlighted className={cs('mb-3')}>
           0.058 SOL
         </ValueRow>
-        <Divider />
         {dialectAddress ? (
           <>
-            <ValueRow
-              label="Notifications thread account"
-              className="mt-1 mb-4"
-            >
-              <a
-                target="_blank"
-                href={getExplorerAddress(dialectAddress)}
-                rel="noreferrer"
-              >
-                {display(dialectAddress)}↗
-              </a>
-            </ValueRow>
             <BigButton
               className={colors.errorBg}
               onClick={async () => {
@@ -147,7 +166,9 @@ function Settings(props: { toggleSettings: () => void }) {
   );
 }
 
-export default function Notifications(): JSX.Element {
+export default function Notifications(props: {
+  notifications?: NotificationType[];
+}): JSX.Element {
   const {
     isWalletConnected,
     isDialectAvailable,
@@ -192,7 +213,12 @@ export default function Notifications(): JSX.Element {
   } else if (!isDialectAvailable) {
     content = <CreateThread />;
   } else if (isSettingsOpen) {
-    content = <Settings toggleSettings={toggleSettings} />;
+    content = (
+      <Settings
+        toggleSettings={toggleSettings}
+        notifications={props.notifications}
+      />
+    );
   } else if (isNoMessages) {
     content = (
       <Centered>

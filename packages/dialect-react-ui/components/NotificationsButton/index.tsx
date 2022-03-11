@@ -9,7 +9,7 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
-import Notifications from '../Notifications';
+import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
 import {
   ThemeProvider,
@@ -27,6 +27,7 @@ type PropTypes = {
   variables?: IncomingThemeVariables;
   bellClassName?: string;
   bellStyle?: object;
+  notifications: NotificationType[];
 };
 
 function useOutsideAlerter(
@@ -110,7 +111,7 @@ function WrappedNotificationsButton(
           // className="w-full h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <Notifications />
+          <Notifications notifications={props?.notifications} />
         </div>
       </Transition>
     </div>

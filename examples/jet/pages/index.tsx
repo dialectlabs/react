@@ -118,6 +118,10 @@ function AuthedHome() {
             publicKey={JET_PUBLIC_KEY}
             theme={theme}
             variables={themeVariables}
+            notifications={[
+              { name: 'Liqudiations', detail: 'Event' },
+              { name: 'Collateral health', detail: 'Below 130%' },
+            ]}
           />
           <WalletButton />
         </div>

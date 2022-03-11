@@ -13,6 +13,7 @@ export function ValueRow(props: {
   label: string;
   children: React.ReactNode;
   highlighted?: boolean;
+  colon?: boolean;
   className?: string;
 }) {
   const { textStyles, highlighted } = useTheme();
@@ -25,7 +26,10 @@ export function ValueRow(props: {
         props.className
       )}
     >
-      <span className={cs(textStyles.body)}>{props.label}:</span>
+      <span className={cs(textStyles.body)}>
+        {props.label}
+        {props.colon ? ':' : ''}
+      </span>
       <span className={cs(textStyles.body)}>{props.children}</span>
     </p>
   );
