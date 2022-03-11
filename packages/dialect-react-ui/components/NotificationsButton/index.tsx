@@ -78,7 +78,7 @@ function WrappedNotificationsButton(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const { colors, bellButton, icons } = useTheme();
+  const { colors, bellButton, icons, popupWrapper } = useTheme();
 
   return (
     <div className={cs('flex flex-col items-end relative', colors.primary)}>
@@ -93,8 +93,7 @@ function WrappedNotificationsButton(
         onClick={() => setOpen(!open)}
       ></IconButton>
       <Transition
-        className="z-50 absolute top-16 w-96 h-96"
-        style={{ width: '29rem', height: '29rem' }}
+        className={popupWrapper}
         show={open}
         enter="transition-opacity duration-300"
         enterFrom="opacity-0"
