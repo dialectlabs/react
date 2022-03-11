@@ -42,7 +42,10 @@ export function Footer(props: { showBackground: boolean }): JSX.Element {
       )}
       style={{ fontSize: '10px' }}
     >
-      Powered by <DialectLogo className="-mr-1 -mt-px" />
+      Powered by{' '}
+      <a href="https://dialect.to" target="_blank" rel="noreferrer">
+        <DialectLogo className="-mr-1 -mt-px" />
+      </a>
     </div>
   );
 }
