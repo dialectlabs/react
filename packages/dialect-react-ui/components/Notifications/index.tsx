@@ -164,7 +164,7 @@ export default function Notifications(): JSX.Element {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, popup, icons } = useTheme();
+  const { colors, popup, icons, notificationsDivider } = useTheme();
 
   let content: JSX.Element;
 
@@ -210,7 +210,7 @@ export default function Notifications(): JSX.Element {
               message={message.text}
               timestamp={message.timestamp}
             />
-            <Divider />
+            <Divider className={notificationsDivider} />
           </>
         ))}
       </>
