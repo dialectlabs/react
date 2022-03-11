@@ -116,9 +116,9 @@ function EmailForm() {
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>
-      <div className="flex flex-col space-x-2 md:flex-row mb-2">
+      <div className="flex flex-col space-y-2 mb-2">
         <input
-          className={cs(input, textStyles.body, 'w-full')}
+          className={cs(input, textStyles.body, 'w-full basis-full')}
           placeholder="Enter email"
           type="email"
           value={email}
@@ -128,12 +128,19 @@ function EmailForm() {
               ? setEmailError('')
               : setEmailError('Please enter correct email')
           }
+          onInvalid={(e) => {
+            e.preventDefault();
+            setEmailError('Please enter correct email');
+          }}
           disabled={isEmailSaved && !isEmailEditing}
         />
         {isEmailEditing ? (
           <Button
+            className="basis-full"
             onClick={async () => {
               // TODO: validate & save email
+              if (emailError) return;
+
               setEmailSaving(true);
               setTimeout(() => {
                 setEmailSaving(false);
@@ -147,8 +154,9 @@ function EmailForm() {
             {isEmailSaving ? 'Saving...' : 'Save'}
           </Button>
         ) : (
-          <>
+          <div className="flex flex-row space-x-2">
             <Button
+              className="basis-1/2"
               onClick={async () => {
                 setEmailEditing(true);
               }}
@@ -157,6 +165,7 @@ function EmailForm() {
               Edit
             </Button>
             <Button
+              className="basis-1/2"
               onClick={async () => {
                 // TODO: delete email association
                 setEmailDeleting(true);
@@ -171,7 +180,7 @@ function EmailForm() {
             >
               {isEmailDeleting ? 'Deleting...' : 'Delete'}
             </Button>
-          </>
+          </div>
         )}
       </div>
       {emailError ? (
