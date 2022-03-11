@@ -71,14 +71,14 @@ export type IncomingThemeValues = {
   textArea?: string;
   messageBubble?: string;
   otherMessageBubble?: string;
-  notificationBubble?: string;
+  notificationMessage?: string;
   notificationTimestamp?: string;
   notificationsDivider?: string;
   bellButton?: string;
   iconButton?: string;
   sendButton?: string;
-  popupWrapper?: string;
-  popup?: string;
+  modalWrapper?: string;
+  modal?: string;
   button?: string;
   buttonLoading?: string;
   bigButton?: string;
@@ -152,11 +152,11 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     messageBubble:
       'text-black px-4 py-2 rounded-2xl bg-transparent border border-neutral-300',
     otherMessageBubble: 'px-4 py-2 rounded-2xl bg-neutral-100',
-    notificationBubble: 'py-2',
+    notificationMessage: 'py-2',
     notificationTimestamp: '',
     notificationsDivider: '',
-    popupWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
-    popup: 'rounded-3xl',
+    modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
+    modal: 'rounded-3xl',
     button: 'bg-black text-white border border-black hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-black opacity-20 bg-transparent',
     bigButton: 'text-black border border-black hover:opacity-60',
@@ -217,11 +217,11 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'text-white px-4 py-2 rounded-2xl bg-transparent border border-neutral-800',
     otherMessageBubble:
       'px-4 py-2 rounded-2xl border border-neutral-900 bg-neutral-900',
-    notificationBubble: 'py-2',
+    notificationMessage: 'py-2',
     notificationTimestamp: '',
     notificationsDivider: '',
-    popupWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
-    popup: 'rounded-3xl',
+    modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
+    modal: 'rounded-3xl',
     button: 'bg-white text-black border border-white hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-white opacity-20 bg-transparent',
     bigButton: 'text-white border border-white hover:opacity-60',

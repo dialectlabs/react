@@ -164,7 +164,7 @@ export default function Notifications(): JSX.Element {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, popup, icons, notificationsDivider } = useTheme();
+  const { colors, modal, icons, notificationsDivider } = useTheme();
 
   let content: JSX.Element;
 
@@ -223,7 +223,7 @@ export default function Notifications(): JSX.Element {
         'flex flex-col h-full shadow-md overflow-hidden',
         colors.primary,
         colors.bg,
-        popup
+        modal
       )}
     >
       <Header

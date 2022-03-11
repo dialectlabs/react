@@ -78,7 +78,7 @@ function WrappedNotificationsButton(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const { colors, bellButton, icons, popupWrapper } = useTheme();
+  const { colors, bellButton, icons, modalWrapper } = useTheme();
 
   return (
     <div className={cs('flex flex-col items-end relative', colors.primary)}>
@@ -93,7 +93,7 @@ function WrappedNotificationsButton(
         onClick={() => setOpen(!open)}
       ></IconButton>
       <Transition
-        className={popupWrapper}
+        className={modalWrapper}
         show={open}
         enter="transition-opacity duration-300"
         enterFrom="opacity-0"

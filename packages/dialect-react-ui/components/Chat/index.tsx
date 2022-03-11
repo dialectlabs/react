@@ -38,7 +38,7 @@ export default function Chat(): JSX.Element {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, popup, icons } = useTheme();
+  const { colors, modal, icons } = useTheme();
 
   let content: JSX.Element;
 
@@ -94,7 +94,7 @@ export default function Chat(): JSX.Element {
         'flex flex-col h-full shadow-md overflow-hidden',
         colors.primary,
         colors.bg,
-        popup
+        modal
       )}
     >
       <Header

@@ -17,9 +17,9 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 export const Notification = ({ message, timestamp }: Props) => {
-  const { textStyles, notificationBubble, notificationTimestamp } = useTheme();
+  const { textStyles, notificationMessage, notificationTimestamp } = useTheme();
   return (
-    <div className={cs('flex flex-col', notificationBubble)}>
+    <div className={cs('flex flex-col', notificationMessage)}>
       <div className="flex-1 mb-2">
         <p className={cs(textStyles.body, 'font-medium text-base')}>
           {message}
