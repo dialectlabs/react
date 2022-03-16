@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialectLogo, Spinner as SpinnerIcon } from '../Icon';
+import { DialectLogo } from '../Icon';
 import cs from '../../utils/classNames';
 import { useTheme } from './ThemeProvider';
 
@@ -10,10 +10,8 @@ export function Divider(props: { className?: string }): JSX.Element {
 }
 
 export function ValueRow(props: {
-  label: string;
+  label: string | React.ReactNode;
   children: React.ReactNode;
-  highlighted?: boolean;
-  colon?: boolean;
   className?: string;
 }) {
   const { textStyles, highlighted } = useTheme();
@@ -22,14 +20,11 @@ export function ValueRow(props: {
     <p
       className={cs(
         'flex flex-row justify-between',
-        props.highlighted && highlighted,
+        highlighted,
         props.className
       )}
     >
-      <span className={cs(textStyles.body)}>
-        {props.label}
-        {props.colon ? ':' : ''}
-      </span>
+      <span className={cs(textStyles.body)}>{props.label}</span>
       <span className={cs(textStyles.body)}>{props.children}</span>
     </p>
   );
@@ -81,7 +76,7 @@ export function Button(props: {
   loading?: boolean;
   children: React.ReactNode;
 }): JSX.Element {
-  const { button, buttonLoading, textStyles, colors } = useTheme();
+  const { button, buttonLoading, textStyles } = useTheme();
 
   return (
     <button

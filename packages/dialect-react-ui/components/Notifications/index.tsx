@@ -64,7 +64,6 @@ function CreateThread() {
         Create notifications thread
       </h1>
       <ValueRow
-        highlighted
         label="Rent Deposit (recoverable)"
         className={cs('w-full mb-4')}
       >
@@ -103,13 +102,7 @@ function Settings(props: {
       <div className="mb-3">
         <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
         {props.notifications?.map((type) => (
-          <ValueRow
-            key={type.name}
-            label={type.name}
-            highlighted
-            className={cs('mb-1')}
-            colon={false}
-          >
+          <ValueRow key={type.name} label={type.name} className={cs('mb-1')}>
             {type.detail}
           </ValueRow>
         ))}
@@ -118,22 +111,32 @@ function Settings(props: {
         <h2 className={cs(textStyles.h2, 'mb-1')}>Thread Account</h2>
         {dialectAddress ? (
           <ValueRow
-            label={display(dialectAddress)}
-            highlighted
-            className="mt-1 mb-1"
+            label={
+              <>
+                <p className={cs(textStyles.small, 'opacity-60')}>
+                  Account address
+                </p>
+                <p>
+                  <a
+                    target="_blank"
+                    href={getExplorerAddress(dialectAddress)}
+                    rel="noreferrer"
+                  >
+                    {display(dialectAddress)}↗
+                  </a>
+                </p>
+              </>
+            }
+            className="mt-1 mb-4"
           >
-            <a
-              target="_blank"
-              href={getExplorerAddress(dialectAddress)}
-              rel="noreferrer"
-            >
-              View on Solscan ↗
-            </a>
+            <div className="text-right">
+              <p className={cs(textStyles.small, 'opacity-60')}>
+                Deposited Rent
+              </p>
+              <p>0.058 SOL</p>
+            </div>
           </ValueRow>
         ) : null}
-        <ValueRow label="Deposited Rent" highlighted className={cs('mb-3')}>
-          0.058 SOL
-        </ValueRow>
         {dialectAddress ? (
           <>
             <BigButton
