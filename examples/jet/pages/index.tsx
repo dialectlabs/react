@@ -25,6 +25,7 @@ export const themeVariables: IncomingThemeVariables = {
       accent: 'text-gradient',
       accentSolid: 'text-[#5895B9]',
       brand: 'text-[#E5EBF4]',
+      highlight: 'bg-white/30',
     },
     textStyles: {
       h1: 'font-poppins text-xl font-normal',
@@ -49,7 +50,7 @@ export const themeVariables: IncomingThemeVariables = {
     bigButton: 'text-white hover:opacity-60',
     bigButtonLoading: 'text-white min-h-[32px] opacity-20',
     divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#C3CADE] to-[#F8F9FB]',
-    highlighted: 'px-2 py-1 rounded-lg bg-white/30',
+    highlighted: 'px-2 py-1 rounded-lg',
   },
   dark: {
     colors: {
@@ -60,6 +61,7 @@ export const themeVariables: IncomingThemeVariables = {
       accent: 'text-gradient',
       accentSolid: 'text-[#5895B9]',
       brand: 'text-[#E5EBF4]',
+      highlight: 'bg-[#ABABAB]/10',
     },
     textStyles: {
       h1: 'font-poppins text-xl font-normal',
@@ -84,7 +86,7 @@ export const themeVariables: IncomingThemeVariables = {
     bigButton: 'text-white hover:opacity-60',
     bigButtonLoading: 'text-white min-h-[32px] opacity-20',
     divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#3C3C3C] to-[#505050]',
-    highlighted: 'px-2 py-1 rounded-lg bg-[#ABABAB]/10',
+    highlighted: 'px-2 py-1 rounded-lg',
   },
 };
 

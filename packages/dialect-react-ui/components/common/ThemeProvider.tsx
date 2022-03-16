@@ -156,7 +156,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     messageBubble:
       'text-black px-4 py-2 rounded-2xl bg-transparent border border-neutral-300',
     otherMessageBubble: 'px-4 py-2 rounded-2xl bg-neutral-100',
-    notificationMessage: 'bg-[#C5C5C5]/30 -mx-2 rounded-2xl py-3 px-3 mb-2',
+    notificationMessage: '-mx-2 rounded-2xl py-3 px-3 mb-2',
     notificationTimestamp: 'text-right',
     notificationsDivider: 'hidden',
     modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
@@ -167,7 +167,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     bigButtonLoading:
       'min-h-[42px] border border-black opacity-20 bg-transparent',
     divider: 'h-px opacity-10 bg-current',
-    highlighted: 'px-4 py-3 rounded-lg bg-black/5',
+    highlighted: 'px-4 py-3 rounded-lg',
   },
   dark: {
     colors: {
@@ -223,7 +223,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'text-white px-4 py-2 rounded-2xl bg-transparent border border-neutral-800',
     otherMessageBubble:
       'px-4 py-2 rounded-2xl border border-neutral-900 bg-neutral-900',
-    notificationMessage: 'bg-[#ABABAB]/10 -mx-2 rounded-2xl py-3 px-3 mb-2',
+    notificationMessage: '-mx-2 rounded-2xl py-3 px-3 mb-2',
     notificationTimestamp: 'text-right',
     notificationsDivider: 'hidden',
     modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
@@ -234,7 +234,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     bigButtonLoading:
       'min-h-[42px] border border-white opacity-20 bg-transparent',
     divider: 'h-px opacity-10 bg-current',
-    highlighted: 'px-4 py-3 rounded-lg bg-white/10',
+    highlighted: 'px-4 py-3 rounded-lg',
   },
 };
 

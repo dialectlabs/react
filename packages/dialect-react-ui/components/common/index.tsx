@@ -14,12 +14,13 @@ export function ValueRow(props: {
   children: React.ReactNode;
   className?: string;
 }) {
-  const { textStyles, highlighted } = useTheme();
+  const { colors, textStyles, highlighted } = useTheme();
 
   return (
     <p
       className={cs(
         'flex flex-row justify-between',
+        colors.highlight,
         highlighted,
         props.className
       )}
