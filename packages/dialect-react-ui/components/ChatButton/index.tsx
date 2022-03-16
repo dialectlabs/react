@@ -121,12 +121,14 @@ export default function ChatButton({
   ...props
 }: PropTypes): JSX.Element {
   return (
-    <ApiProvider>
-      <DialectProvider publicKey={props.publicKey}>
-        <ThemeProvider theme={theme} variables={variables}>
-          <WrappedChatButton {...props} />
-        </ThemeProvider>
-      </DialectProvider>
-    </ApiProvider>
+    <div className="dialect">
+      <ApiProvider>
+        <DialectProvider publicKey={props.publicKey}>
+          <ThemeProvider theme={theme} variables={variables}>
+            <WrappedChatButton {...props} />
+          </ThemeProvider>
+        </DialectProvider>
+      </ApiProvider>
+    </div>
   );
 }
