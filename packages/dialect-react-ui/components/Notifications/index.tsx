@@ -269,7 +269,7 @@ export default function Notifications(props: {
         />
         <Divider className="mx-2" />
         <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
-        <Footer showBackground={messages.length > 4} />
+        <Footer />
       </div>
     </div>
   );

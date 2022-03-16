@@ -25,7 +25,8 @@ export type ThemeColors =
   | 'secondary'
   | 'accent'
   | 'accentSolid'
-  | 'brand';
+  | 'brand'
+  | 'highlight';
 
 export type ThemeTextStyles =
   | 'h1'
@@ -110,6 +111,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       primary: 'text-black',
       accent: 'text-black',
       accentSolid: 'text-[#5895B9]',
+      highlight: 'bg-[#ABABAB]/10',
     },
     textStyles: {
       h1: 'font-inter text-3xl font-bold',
@@ -154,9 +156,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     messageBubble:
       'text-black px-4 py-2 rounded-2xl bg-transparent border border-neutral-300',
     otherMessageBubble: 'px-4 py-2 rounded-2xl bg-neutral-100',
-    notificationMessage: 'py-2',
-    notificationTimestamp: '',
-    notificationsDivider: '',
+    notificationMessage: 'bg-[#C5C5C5]/30 -mx-2 rounded-2xl py-3 px-3 mb-2',
+    notificationTimestamp: 'text-right',
+    notificationsDivider: 'hidden',
     modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
     modal: 'rounded-3xl',
     button: 'bg-black text-white border border-black hover:opacity-60',
@@ -176,6 +178,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       primary: 'text-white',
       accent: 'text-white',
       accentSolid: 'text-white',
+      highlight: 'bg-[#ABABAB]/10',
     },
     textStyles: {
       h1: 'font-inter text-3xl font-bold',
@@ -220,9 +223,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'text-white px-4 py-2 rounded-2xl bg-transparent border border-neutral-800',
     otherMessageBubble:
       'px-4 py-2 rounded-2xl border border-neutral-900 bg-neutral-900',
-    notificationMessage: 'py-2',
-    notificationTimestamp: '',
-    notificationsDivider: '',
+    notificationMessage: 'bg-[#ABABAB]/10 -mx-2 rounded-2xl py-3 px-3 mb-2',
+    notificationTimestamp: 'text-right',
+    notificationsDivider: 'hidden',
     modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
     modal: 'rounded-3xl',
     button: 'bg-white text-black border border-white hover:opacity-60',

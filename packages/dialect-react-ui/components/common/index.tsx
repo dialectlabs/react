@@ -30,20 +30,20 @@ export function ValueRow(props: {
   );
 }
 
-export function Footer(props: { showBackground: boolean }): JSX.Element {
+export function Footer(): JSX.Element {
   const { colors } = useTheme();
 
   return (
     <div
       className={cs(
-        'w-40 py-1 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase rounded-full',
-        props.showBackground && colors.bg
+        'w-[8.5rem] py-1 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase rounded-full',
+        colors.highlight
       )}
       style={{ fontSize: '10px' }}
     >
       Powered by{' '}
       <a href="https://dialect.to" target="_blank" rel="noreferrer">
-        <DialectLogo className="-mr-1 -mt-px" />
+        <DialectLogo className="-mr-1 ml-[3px]" />
       </a>
     </div>
   );
