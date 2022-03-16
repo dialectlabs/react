@@ -101,11 +101,17 @@ function Settings(props: {
     <>
       <div className="mb-3">
         <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
-        {props.notifications?.map((type) => (
-          <ValueRow key={type.name} label={type.name} className={cs('mb-1')}>
-            {type.detail}
-          </ValueRow>
-        ))}
+        {props.notifications
+          ? props.notifications.map((type) => (
+              <ValueRow
+                key={type.name}
+                label={type.name}
+                className={cs('mb-1')}
+              >
+                {type.detail}
+              </ValueRow>
+            ))
+          : 'No notification types supplied'}
       </div>
       <div>
         <h2 className={cs(textStyles.h2, 'mb-1')}>Thread Account</h2>
