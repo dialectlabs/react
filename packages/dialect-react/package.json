@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "React wrappers for Dialect's web3 notifications",
   "license": "MIT",
   "private": false,
