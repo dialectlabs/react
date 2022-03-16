@@ -17,15 +17,15 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 export const Notification = ({ message, timestamp }: Props) => {
-  const { textStyles } = useTheme();
+  const { textStyles, notificationMessage, notificationTimestamp } = useTheme();
   return (
-    <div className="flex flex-col py-2">
+    <div className={cs('flex flex-col', notificationMessage)}>
       <div className="flex-1 mb-2">
         <p className={cs(textStyles.body, 'font-medium text-base')}>
           {message}
         </p>
       </div>
-      <div>
+      <div className={notificationTimestamp}>
         <p className={cs(textStyles.small, 'opacity-60')}>
           {timeFormatter.format(timestamp)}
         </p>
