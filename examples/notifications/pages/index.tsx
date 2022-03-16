@@ -53,6 +53,10 @@ function AuthedHome() {
           publicKey={DIALECT_PUBLIC_KEY}
           theme={theme}
           variables={themeVariables}
+          notifications={[
+            { name: 'Welcome message on thread creation', detail: 'Event' },
+            { name: 'Collateral health', detail: 'Below 130%' },
+          ]}
         />
         <WalletButton />
       </div>
