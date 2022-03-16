@@ -89,26 +89,28 @@ export default function Chat(): JSX.Element {
   }
 
   return (
-    <div
-      className={cs(
-        'flex flex-col h-full shadow-md overflow-hidden',
-        colors.primary,
-        colors.bg,
-        modal
-      )}
-    >
-      <Header
-        isReady={isWalletConnected}
-        isCreateOpen={isCreateOpen}
-        toggleCreate={toggleCreate}
-        isSettingsOpen={isSettingsOpen}
-        toggleSettings={toggleSettings}
-      />
-      <Divider className="mx-2" />
-      <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
-      <Footer
-        showBackground={Boolean(dialects?.length && dialects?.length > 4)}
-      />
+    <div className="dialect h-full">
+      <div
+        className={cs(
+          'flex flex-col h-full shadow-md overflow-hidden',
+          colors.primary,
+          colors.bg,
+          modal
+        )}
+      >
+        <Header
+          isReady={isWalletConnected}
+          isCreateOpen={isCreateOpen}
+          toggleCreate={toggleCreate}
+          isSettingsOpen={isSettingsOpen}
+          toggleSettings={toggleSettings}
+        />
+        <Divider className="mx-2" />
+        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <Footer
+          showBackground={Boolean(dialects?.length && dialects?.length > 4)}
+        />
+      </div>
     </div>
   );
 }

@@ -253,22 +253,24 @@ export default function Notifications(props: {
   }
 
   return (
-    <div
-      className={cs(
-        'flex flex-col h-full shadow-md overflow-hidden',
-        colors.primary,
-        colors.bg,
-        modal
-      )}
-    >
-      <Header
-        isReady={isWalletConnected && isDialectAvailable}
-        isSettingsOpen={isSettingsOpen}
-        toggleSettings={toggleSettings}
-      />
-      <Divider className="mx-2" />
-      <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
-      <Footer showBackground={messages.length > 4} />
+    <div className="dialect h-full">
+      <div
+        className={cs(
+          'flex flex-col h-full shadow-md overflow-hidden',
+          colors.primary,
+          colors.bg,
+          modal
+        )}
+      >
+        <Header
+          isReady={isWalletConnected && isDialectAvailable}
+          isSettingsOpen={isSettingsOpen}
+          toggleSettings={toggleSettings}
+        />
+        <Divider className="mx-2" />
+        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <Footer showBackground={messages.length > 4} />
+      </div>
     </div>
   );
 }
