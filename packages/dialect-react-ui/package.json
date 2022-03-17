@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Dialect's react UI components",
   "license": "MIT",
   "private": false,
@@ -13,7 +13,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@dialectlabs/web3": "0.1.10",
+    "@dialectlabs/web3": "0.1.11",
     "@headlessui/react": "^1.2.0",
     "@project-serum/anchor": "^0.18.2",
     "react-linkify": "^1.0.0-alpha",
@@ -28,7 +28,7 @@
     "tailwindcss": "^3.0.18"
   },
   "peerDependencies": {
-    "@dialectlabs/react": "^0.1.4",
+    "@dialectlabs/react": "^0.1.5",
     "react": ">=17"
   },
   "repository": {
