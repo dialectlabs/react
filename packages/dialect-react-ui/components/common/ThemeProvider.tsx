@@ -40,7 +40,8 @@ export type ThemeTextStyles =
   | 'messageBubble'
   | 'buttonText'
   | 'bigButtonText'
-  | 'bigButtonSubtle';
+  | 'bigButtonSubtle'
+  | 'link';
 
 export type ThemeIcons =
   | 'arrownarrowright'
@@ -126,6 +127,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       buttonText: 'font-inter text-base',
       bigButtonText: 'font-inter font-medium text-base text-black',
       bigButtonSubtle: 'font-inter font-medium text-sm text-black',
+      link: 'underline decoration-1 break-words',
     },
     icons: {
       arrownarrowright: ArrowNarrowRight,
@@ -193,6 +195,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       buttonText: 'font-inter text-base',
       bigButtonText: 'font-inter font-medium text-base text-white',
       bigButtonSubtle: 'font-inter font-medium text-sm text-white',
+      link: 'underline decoration-1 break-words',
     },
     icons: {
       arrownarrowright: ArrowNarrowRight,
