@@ -71,6 +71,7 @@ export type IncomingThemeValues = {
   avatar?: string;
   header?: string;
   input?: string;
+  outlinedInput?: string;
   textArea?: string;
   messageBubble?: string;
   otherMessageBubble?: string;
@@ -153,6 +154,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     header: 'px-4 py-3',
     input:
       'text-xs text-neutral-700 px-2 py-2 border-b border-neutral-600 focus:rounded-md focus:outline-none focus:ring focus:ring-black focus:border-0',
+    outlinedInput:
+      'text-sm text-black bg-[#ABABAB]/10 px-3 py-3 border-2 border-[#ABABAB]/10 rounded-lg focus:border-night focus:outline-none',
     textArea:
       'text-sm text-neutral-800 bg-white border rounded-2xl px-2 py-1 border-neutral-300 placeholder-neutral-400 pr-10 focus:outline-none',
     messageBubble:
@@ -220,6 +223,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     header: 'px-4 py-4',
     input:
       'text-xs text-white bg-black px-2 py-2 border-b border-neutral-600 focus:rounded-md focus:outline-none focus:ring focus:ring-white',
+    outlinedInput:
+      'text-sm text-white bg-[#ABABAB]/10 px-3 py-3 border-2 border-neutral-600 rounded-lg focus:border-white focus:outline-none',
     textArea:
       'text-sm text-neutral-200 bg-black border rounded-2xl px-2 py-1 border-neutral-600 placeholder-neutral-600 pr-10 focus:outline-none',
     messageBubble:

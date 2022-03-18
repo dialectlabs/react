@@ -14,6 +14,7 @@ import cs from '../../utils/classNames';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
+import { EmailForm } from './EmailForm';
 
 export type NotificationType = {
   name: string;
@@ -109,98 +110,6 @@ function CreateThread() {
   );
 }
 
-function EmailForm() {
-  const { textStyles, input } = useTheme();
-  const [email, setEmail] = useState('');
-  const [isEmailSaving, setEmailSaving] = useState(false);
-  const [isEmailSaved, setEmailSaved] = useState(false);
-  const [isEmailEditing, setEmailEditing] = useState(true);
-  const [isEmailDeleting, setEmailDeleting] = useState(false);
-  const [emailError, setEmailError] = useState('');
-
-  return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <div className="flex flex-col space-y-2 mb-2">
-        <input
-          className={cs(input, textStyles.body, 'w-full basis-full')}
-          placeholder="Enter email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onBlur={(e) =>
-            e.target.checkValidity()
-              ? setEmailError('')
-              : setEmailError('Please enter correct email')
-          }
-          onInvalid={(e) => {
-            e.preventDefault();
-            setEmailError('Please enter correct email');
-          }}
-          disabled={isEmailSaved && !isEmailEditing}
-        />
-        {isEmailEditing ? (
-          <Button
-            className="basis-full"
-            onClick={async () => {
-              // TODO: validate & save email
-              if (emailError) return;
-
-              setEmailSaving(true);
-              setTimeout(() => {
-                setEmailSaving(false);
-                setEmailSaved(true);
-                setEmailEditing(false);
-                setEmailDeleting(false);
-              }, 2000);
-            }}
-            loading={isEmailSaving}
-          >
-            {isEmailSaving ? 'Saving...' : 'Save'}
-          </Button>
-        ) : (
-          <div className="flex flex-row space-x-2">
-            <Button
-              className="basis-1/2"
-              onClick={async () => {
-                setEmailEditing(true);
-              }}
-              loading={isEmailSaving}
-            >
-              Edit
-            </Button>
-            <Button
-              className="basis-1/2"
-              onClick={async () => {
-                // TODO: delete email association
-                setEmailDeleting(true);
-                setTimeout(() => {
-                  setEmail('');
-                  setEmailSaved(false);
-                  setEmailEditing(true);
-                  setEmailDeleting(false);
-                }, 2000);
-              }}
-              loading={isEmailDeleting}
-            >
-              {isEmailDeleting ? 'Deleting...' : 'Delete'}
-            </Button>
-          </div>
-        )}
-      </div>
-      {emailError ? (
-        <p className={cs(textStyles.small, 'text-red-500 mt-2')}>
-          {emailError}
-        </p>
-      ) : null}
-      {!emailError && isEmailEditing ? (
-        <p className={cs(textStyles.small, 'mb-1')}>
-          You will receive confirmation email
-        </p>
-      ) : null}
-    </form>
-  );
-}
-
 function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
@@ -211,10 +120,6 @@ function Settings(props: {
 
   return (
     <>
-      <div className="mb-3">
-        <h2 className={cs(textStyles.bigText, 'mb-1')}>Email Notifications</h2>
-        <EmailForm />
-      </div>
       <div className="mb-3">
         <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
         {props.notifications
@@ -228,6 +133,10 @@ function Settings(props: {
               </ValueRow>
             ))
           : 'No notification types supplied'}
+      </div>
+      <div className="mb-3">
+        <h2 className={cs(textStyles.bigText, 'mb-1')}>Email</h2>
+        <EmailForm />
       </div>
       <div>
         <h2 className={cs(textStyles.h2, 'mb-1')}>Thread Account</h2>

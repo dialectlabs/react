@@ -66,7 +66,9 @@ function AuthedHome() {
         </code>
         <code className="text-center text-neutral-400 dark:text-neutral-600">
           examples/
-          <code className="text-neutral-900 dark:text-neutral-100">basic</code>
+          <code className="text-neutral-900 dark:text-neutral-100">
+            notifications
+          </code>
         </code>
       </div>
     </div>
