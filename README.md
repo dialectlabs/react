@@ -45,6 +45,10 @@ return (
     publicKey={YOUR_PROJECT_PUBLIC_KEY}
     network={'devnet'}
     theme={theme}
+    notifications={[
+      { name: 'Welcome message on thread creation', detail: 'Event' },
+      { name: 'Collateral health', detail: 'Below 130%' },
+    ]}
   />
 );
 

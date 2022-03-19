@@ -36,7 +36,6 @@ export default function CreateThread({
       />
       <div className="h-4" />
       <ValueRow
-        highlighted
         label="Rent Deposit (recoverable)"
         className={cs('w-full mb-4')}
       >

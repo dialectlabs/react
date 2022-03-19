@@ -14,6 +14,12 @@ import cs from '../../utils/classNames';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
+import { EmailForm } from './EmailForm';
+
+export type NotificationType = {
+  name: string;
+  detail: string;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -59,7 +65,6 @@ function CreateThread() {
         Create notifications thread
       </h1>
       <ValueRow
-        highlighted
         label="Rent Deposit (recoverable)"
         className={cs('w-full mb-4')}
       >
@@ -105,99 +110,10 @@ function CreateThread() {
   );
 }
 
-function EmailForm() {
-  const { textStyles, input } = useTheme();
-  const [email, setEmail] = useState('');
-  const [isEmailSaving, setEmailSaving] = useState(false);
-  const [isEmailSaved, setEmailSaved] = useState(false);
-  const [isEmailEditing, setEmailEditing] = useState(true);
-  const [isEmailDeleting, setEmailDeleting] = useState(false);
-  const [emailError, setEmailError] = useState('');
-
-  return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <div className="flex flex-col space-y-2 mb-2">
-        <input
-          className={cs(input, textStyles.body, 'w-full basis-full')}
-          placeholder="Enter email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onBlur={(e) =>
-            e.target.checkValidity()
-              ? setEmailError('')
-              : setEmailError('Please enter correct email')
-          }
-          onInvalid={(e) => {
-            e.preventDefault();
-            setEmailError('Please enter correct email');
-          }}
-          disabled={isEmailSaved && !isEmailEditing}
-        />
-        {isEmailEditing ? (
-          <Button
-            className="basis-full"
-            onClick={async () => {
-              // TODO: validate & save email
-              if (emailError) return;
-
-              setEmailSaving(true);
-              setTimeout(() => {
-                setEmailSaving(false);
-                setEmailSaved(true);
-                setEmailEditing(false);
-                setEmailDeleting(false);
-              }, 2000);
-            }}
-            loading={isEmailSaving}
-          >
-            {isEmailSaving ? 'Saving...' : 'Save'}
-          </Button>
-        ) : (
-          <div className="flex flex-row space-x-2">
-            <Button
-              className="basis-1/2"
-              onClick={async () => {
-                setEmailEditing(true);
-              }}
-              loading={isEmailSaving}
-            >
-              Edit
-            </Button>
-            <Button
-              className="basis-1/2"
-              onClick={async () => {
-                // TODO: delete email association
-                setEmailDeleting(true);
-                setTimeout(() => {
-                  setEmail('');
-                  setEmailSaved(false);
-                  setEmailEditing(true);
-                  setEmailDeleting(false);
-                }, 2000);
-              }}
-              loading={isEmailDeleting}
-            >
-              {isEmailDeleting ? 'Deleting...' : 'Delete'}
-            </Button>
-          </div>
-        )}
-      </div>
-      {emailError ? (
-        <p className={cs(textStyles.small, 'text-red-500 mt-2')}>
-          {emailError}
-        </p>
-      ) : null}
-      {!emailError && isEmailEditing ? (
-        <p className={cs(textStyles.small, 'mb-1')}>
-          You will receive confirmation email
-        </p>
-      ) : null}
-    </form>
-  );
-}
-
-function Settings(props: { toggleSettings: () => void }) {
+function Settings(props: {
+  toggleSettings: () => void;
+  notifications: NotificationType[];
+}) {
   const { dialectAddress, deleteDialect, isDialectDeleting, deletionError } =
     useDialect();
   const { colors, textStyles, icons } = useTheme();
@@ -205,34 +121,55 @@ function Settings(props: { toggleSettings: () => void }) {
   return (
     <>
       <div className="mb-3">
-        <h2 className={cs(textStyles.bigText, 'mb-1')}>Email Notifications</h2>
-        <EmailForm />
+        <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
+        {props.notifications
+          ? props.notifications.map((type) => (
+              <ValueRow
+                key={type.name}
+                label={type.name}
+                className={cs('mb-1')}
+              >
+                {type.detail}
+              </ValueRow>
+            ))
+          : 'No notification types supplied'}
       </div>
       <div className="mb-3">
-        <p className={cs(textStyles.body, 'mb-1')}>Included event types</p>
-        <ul className={cs(textStyles.bigText, 'list-disc pl-6')}>
-          <li>Welcome message on thread creation</li>
-        </ul>
+        <h2 className={cs(textStyles.bigText, 'mb-1')}>Email</h2>
+        <EmailForm />
       </div>
       <div>
-        <ValueRow label="Deposited Rent" className={cs('mb-1')}>
-          0.058 SOL
-        </ValueRow>
-        <Divider />
+        <h2 className={cs(textStyles.h2, 'mb-1')}>Thread Account</h2>
+        {dialectAddress ? (
+          <ValueRow
+            label={
+              <>
+                <p className={cs(textStyles.small, 'opacity-60')}>
+                  Account address
+                </p>
+                <p>
+                  <a
+                    target="_blank"
+                    href={getExplorerAddress(dialectAddress)}
+                    rel="noreferrer"
+                  >
+                    {display(dialectAddress)}↗
+                  </a>
+                </p>
+              </>
+            }
+            className="mt-1 mb-4"
+          >
+            <div className="text-right">
+              <p className={cs(textStyles.small, 'opacity-60')}>
+                Deposited Rent
+              </p>
+              <p>0.058 SOL</p>
+            </div>
+          </ValueRow>
+        ) : null}
         {dialectAddress ? (
           <>
-            <ValueRow
-              label="Notifications thread account"
-              className="mt-1 mb-4"
-            >
-              <a
-                target="_blank"
-                href={getExplorerAddress(dialectAddress)}
-                rel="noreferrer"
-              >
-                {display(dialectAddress)}↗
-              </a>
-            </ValueRow>
             <BigButton
               className={colors.errorBg}
               onClick={async () => {
@@ -263,7 +200,9 @@ function Settings(props: { toggleSettings: () => void }) {
   );
 }
 
-export default function Notifications(): JSX.Element {
+export default function Notifications(props: {
+  notifications?: NotificationType[];
+}): JSX.Element {
   const {
     isWalletConnected,
     isDialectAvailable,
@@ -280,7 +219,7 @@ export default function Notifications(): JSX.Element {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, popup, icons } = useTheme();
+  const { colors, modal, icons, notificationsDivider } = useTheme();
 
   let content: JSX.Element;
 
@@ -308,7 +247,12 @@ export default function Notifications(): JSX.Element {
   } else if (!isDialectAvailable) {
     content = <CreateThread />;
   } else if (isSettingsOpen) {
-    content = <Settings toggleSettings={toggleSettings} />;
+    content = (
+      <Settings
+        toggleSettings={toggleSettings}
+        notifications={props.notifications}
+      />
+    );
   } else if (isNoMessages) {
     content = (
       <Centered>
@@ -326,7 +270,7 @@ export default function Notifications(): JSX.Element {
               message={message.text}
               timestamp={message.timestamp}
             />
-            <Divider />
+            <Divider className={notificationsDivider} />
           </>
         ))}
       </>
@@ -334,22 +278,24 @@ export default function Notifications(): JSX.Element {
   }
 
   return (
-    <div
-      className={cs(
-        'flex flex-col h-full shadow-md overflow-hidden',
-        colors.primary,
-        colors.bg,
-        popup
-      )}
-    >
-      <Header
-        isReady={isWalletConnected && isDialectAvailable}
-        isSettingsOpen={isSettingsOpen}
-        toggleSettings={toggleSettings}
-      />
-      <Divider className="mx-2" />
-      <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
-      <Footer showBackground={messages.length > 4} />
+    <div className="dialect h-full">
+      <div
+        className={cs(
+          'flex flex-col h-full shadow-md overflow-hidden',
+          colors.primary,
+          colors.bg,
+          modal
+        )}
+      >
+        <Header
+          isReady={isWalletConnected && isDialectAvailable}
+          isSettingsOpen={isSettingsOpen}
+          toggleSettings={toggleSettings}
+        />
+        <Divider className="mx-2" />
+        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <Footer />
+      </div>
     </div>
   );
 }
