@@ -3,6 +3,7 @@ export const ParsedErrorType = {
   DisconnectedFromChain: 'DISCONNECTED_FROM_CHAIN',
   CannotDecrypt: 'CANNOT_DECRYPT',
   UnknownError: 'UNKNOWN_ERROR',
+  NoAccount: 'NO_ACCOUNT',
 } as const;
 type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
 
@@ -41,6 +42,13 @@ const cannotDecryptDialect: ParsedErrorData = {
   matchers: ['Authentication failed during decryption attempt'],
 };
 
+const noAccount: ParsedErrorData = {
+  type: ParsedErrorType.NoAccount,
+  title: 'Error',
+  message: 'Account does not exist',
+  matchers: ['Account does not exist'],
+};
+
 const unknownError: ParsedErrorData = {
   type: ParsedErrorType.UnknownError,
   title: 'Error',
@@ -51,10 +59,11 @@ const errors: ParsedErrorData[] = [
   insufficientFunds,
   disconnectedFromChain,
   cannotDecryptDialect,
+  noAccount,
 ];
 
 const parseError = (error: Error) => {
-  console.log('error', error);
+  // console.log('error', error);
   return (
     errors.find((err) =>
       err.matchers?.find((matcher) => error.message.match(matcher))
@@ -73,6 +82,11 @@ export const withErrorParsing =
       const result: ReturnType<F> = await fn(...args);
       return result;
     } catch (e) {
-      throw parseError(e as Error); // TODO: it's unlikely that something else is going to be passed here, but we should think about that later on
+      const parsedError = parseError(e as Error); // TODO: it's unlikely that something else is going to be passed here, but we should think about that later on
+      if (parsedError == noAccount) {
+        // Silently fails if account is not exist yet
+        return;
+      }
+      throw parsedError;
     }
   };
