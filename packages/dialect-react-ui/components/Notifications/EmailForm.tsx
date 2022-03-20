@@ -1,19 +1,40 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { AddressType, saveAddress, useApi } from '@dialectlabs/react';
 import { useTheme } from '../common/ThemeProvider';
-import React, { useState } from 'react';
 import cs from '../../utils/classNames';
 import { Button, ValueRow } from '../common';
 
+function getEmailObj(addresses = []): AddressType | null {
+  return addresses.find((address) => address.type === 'email') || null;
+}
+
 export function EmailForm() {
+  const dapp = 'dialect';
+  const {
+    wallet,
+    addresses,
+    isSavingAddress,
+    deleteAddress,
+    isDeletingAddress,
+  } = useApi();
+  const emailObj = getEmailObj(addresses);
+
   const { textStyles, outlinedInput } = useTheme();
 
-  const [isEnabled, setEnabled] = useState(false);
+  const [isEnabled, setEnabled] = useState(emailObj?.enabled);
 
-  const [email, setEmail] = useState('');
-  const [isEmailSaving, setEmailSaving] = useState(false);
-  const [isEmailSaved, setEmailSaved] = useState(false);
-  const [isEmailEditing, setEmailEditing] = useState(true);
-  const [isEmailDeleting, setEmailDeleting] = useState(false);
+  const [email, setEmail] = useState(emailObj?.value);
+  const [isEmailSaved, setEmailSaved] = useState(Boolean(emailObj));
+  const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [emailError, setEmailError] = useState('');
+
+  useEffect(() => {
+    // Update state if addresses updated
+    setEnabled(emailObj?.enabled);
+    setEmail(emailObj?.value || '');
+    setEmailEditing(!emailObj?.enabled);
+    setEmailSaved(Boolean(emailObj));
+  }, [emailObj]);
 
   return (
     <div>
@@ -31,23 +52,29 @@ export function EmailForm() {
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="flex flex-col space-y-2 mb-2">
             <div className="">
-              <input
-                className={cs(outlinedInput, 'w-full basis-full')}
-                placeholder="Enter email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={(e) =>
-                  e.target.checkValidity()
-                    ? setEmailError('')
-                    : setEmailError('Please enter correct email')
-                }
-                onInvalid={(e) => {
-                  e.preventDefault();
-                  setEmailError('Please enter correct email');
-                }}
-                disabled={isEmailSaved && !isEmailEditing}
-              />
+              {isEmailSaved && !isEmailEditing ? (
+                <ValueRow>
+                  Email submitted, now you need to verify it. Check your inbox.
+                </ValueRow>
+              ) : (
+                <input
+                  className={cs(outlinedInput, 'w-full basis-full')}
+                  placeholder="Enter email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={(e) =>
+                    e.target.checkValidity()
+                      ? setEmailError('')
+                      : setEmailError('Please enter correct email')
+                  }
+                  onInvalid={(e) => {
+                    e.preventDefault();
+                    setEmailError('Please enter correct email');
+                  }}
+                  disabled={isEmailSaved && !isEmailEditing}
+                />
+              )}
             </div>
 
             {isEmailEditing ? (
@@ -58,17 +85,18 @@ export function EmailForm() {
                   // TODO: validate & save email
                   if (emailError) return;
 
-                  setEmailSaving(true);
-                  setTimeout(() => {
-                    setEmailSaving(false);
-                    setEmailSaved(true);
-                    setEmailEditing(false);
-                    setEmailDeleting(false);
-                  }, 2000);
+                  await saveAddress(wallet?.publicKey, dapp, {
+                    type: 'email',
+                    value: email,
+                    enabled: true,
+                  });
+
+                  setEmailSaved(true);
+                  setEmailEditing(false);
                 }}
-                loading={isEmailSaving}
+                loading={isSavingAddress}
               >
-                {isEmailSaving ? 'Saving...' : 'Submit'}
+                {isSavingAddress ? 'Saving...' : 'Submit'}
               </Button>
             ) : (
               <div className="flex flex-row space-x-2">
@@ -77,25 +105,23 @@ export function EmailForm() {
                   onClick={async () => {
                     setEmailEditing(true);
                   }}
-                  loading={isEmailSaving}
+                  loading={isSavingAddress}
                 >
                   Edit
                 </Button>
                 <Button
                   className="basis-1/2"
                   onClick={async () => {
-                    // TODO: delete email association
-                    setEmailDeleting(true);
-                    setTimeout(() => {
-                      setEmail('');
-                      setEmailSaved(false);
-                      setEmailEditing(true);
-                      setEmailDeleting(false);
-                    }, 2000);
+                    await deleteAddress(wallet?.publicKey, {
+                      addressId: emailObj?.addressId,
+                    });
+
+                    setEnabled(false);
+                    setEmail('');
                   }}
-                  loading={isEmailDeleting}
+                  loading={isDeletingAddress}
                 >
-                  {isEmailDeleting ? 'Deleting...' : 'Delete'}
+                  {isDeletingAddress ? 'Deleting...' : 'Delete'}
                 </Button>
               </div>
             )}

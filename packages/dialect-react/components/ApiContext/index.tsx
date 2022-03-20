@@ -1,8 +1,22 @@
 import * as anchor from '@project-serum/anchor';
 import { AnchorWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { idl, programs } from '@dialectlabs/web3';
+import {
+  AddressType,
+  deleteAddress,
+  fetchAddressesForDapp,
+  saveAddress,
+} from '../..';
+import { ParsedErrorData } from '../../utils/errors';
+import useSWR from 'swr';
 
 const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {
   // TODO: Move to protocol/web3
@@ -42,6 +56,19 @@ type ValueType = {
   rpcUrl: string | null;
   setRpcUrl: (_: string | null) => void;
   program: ProgramType;
+  addresses: AddressType[];
+  isSavingAddress: boolean;
+  saveAddress: (
+    wallet: anchor.web3.PublicKey,
+    address: AddressType
+  ) => Promise<void>;
+  savingAddressError: ParsedErrorData | null;
+  isDeletingAddress: boolean;
+  deleteAddress: (
+    wallet: anchor.web3.PublicKey,
+    address: AddressType
+  ) => Promise<void>;
+  deletingAddressError: ParsedErrorData | null;
 };
 
 const ApiContext = createContext<ValueType | null>(null);
@@ -51,15 +78,39 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
   const [program, setProgram] = useState<ProgramType>(null);
   const [network, setNetwork] = useState<string | null>('devnet');
   const [rpcUrl, setRpcUrl] = useState<string | null>(URLS.devnet);
-  const value = {
-    wallet,
-    setWallet,
-    network,
-    setNetwork,
-    rpcUrl,
-    setRpcUrl,
-    program,
-  };
+
+  const [isSavingAddress, setSavingAddress] = React.useState(false);
+  const [savingAddressError, setSavingAddressError] =
+    React.useState<ParsedErrorData | null>(null);
+
+  const [isDeletingAddress, setDeletingAddress] = React.useState(false);
+  const [deletingAddressError, setDeletingAddressError] =
+    React.useState<ParsedErrorData | null>(null);
+
+  const [fetchingError, setFetchingError] =
+    React.useState<ParsedErrorData | null>(null);
+
+  // TODO: pass dapp from props
+  const dapp = 'dialect';
+
+  const {
+    data: addresses,
+    mutate: mutateAddresses,
+    error: fetchError,
+  } = useSWR<AddressType[] | null, ParsedErrorData>(
+    wallet ? [wallet.publicKey, dapp] : null,
+    fetchAddressesForDapp,
+    {
+      // TODO: remove interval, mutate properly instead
+      refreshInterval: 1000,
+      onError: (err) => {
+        console.log('error fetching', err);
+        setFetchingError(err as ParsedErrorData);
+      },
+    }
+  );
+
+  console.log('ApiContext', addresses);
 
   const isWalletConnected = connected(wallet);
 
@@ -86,6 +137,70 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
       setProgram(null);
     }
   }, [wallet, isWalletConnected, network, rpcUrl]);
+
+  const saveAddressWrapper = useCallback(
+    async (wallet: anchor.web3.PublicKey, address: AddressType) => {
+      if (!isWalletConnected) return;
+
+      setSavingAddress(true);
+
+      try {
+        const data = await saveAddress(wallet, dapp, address);
+
+        await mutateAddresses(data);
+      } catch (e) {
+        // TODO: implement safer error handling
+        setSavingAddressError(e as ParsedErrorData);
+
+        // Passing through the error, in case for additional UI error handling
+        throw e;
+      } finally {
+        setSavingAddress(false);
+      }
+    },
+    [isWalletConnected, mutateAddresses]
+  );
+
+  const deleteAddressWrapper = useCallback(
+    async (wallet: anchor.web3.PublicKey, address: AddressType) => {
+      if (!isWalletConnected) return;
+
+      setDeletingAddress(true);
+
+      try {
+        await deleteAddress(wallet, address);
+
+        await mutateAddresses(null);
+      } catch (e) {
+        // TODO: implement safer error handling
+        setDeletingAddressError(e as ParsedErrorData);
+
+        // Passing through the error, in case for additional UI error handling
+        throw e;
+      } finally {
+        setDeletingAddress(false);
+      }
+    },
+    [isWalletConnected, mutateAddresses]
+  );
+
+  const value = {
+    wallet,
+    setWallet,
+    network,
+    setNetwork,
+    rpcUrl,
+    setRpcUrl,
+    program,
+    addresses,
+    isSavingAddress,
+    saveAddress: saveAddressWrapper,
+    savingAddressError,
+    isDeletingAddress,
+    deleteAddress: deleteAddressWrapper,
+    deletingAddressError,
+  };
+
   return (
     <ApiContext.Provider value={value}>{props.children}</ApiContext.Provider>
   );

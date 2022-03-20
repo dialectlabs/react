@@ -244,8 +244,6 @@ export default function Notifications(props: {
         <span className="opacity-60">Wallet not connected</span>
       </Centered>
     );
-  } else if (!isDialectAvailable) {
-    content = <CreateThread />;
   } else if (isSettingsOpen) {
     content = (
       <Settings
@@ -253,6 +251,8 @@ export default function Notifications(props: {
         notifications={props.notifications}
       />
     );
+  } else if (!isDialectAvailable) {
+    content = <CreateThread />;
   } else if (isNoMessages) {
     content = (
       <Centered>
@@ -288,7 +288,7 @@ export default function Notifications(props: {
         )}
       >
         <Header
-          isReady={isWalletConnected && isDialectAvailable}
+          isReady={isWalletConnected}
           isSettingsOpen={isSettingsOpen}
           toggleSettings={toggleSettings}
         />
