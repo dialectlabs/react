@@ -110,8 +110,6 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     }
   );
 
-  console.log('ApiContext', addresses);
-
   const isWalletConnected = connected(wallet);
 
   useEffect(() => {

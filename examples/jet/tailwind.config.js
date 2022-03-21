@@ -3,7 +3,7 @@ module.exports = {
     './{components,pages}/**/*.{js,ts,jsx,tsx}',
     // For local development uncomment next two lines for tailwind to take into account workspace files too
     // '../../node_modules/@dialectlabs/react-ui/**/*.{js,ts,jsx,tsx}',
-    // '../../packages/dialect-react-ui-jet/**/*.{js,ts,jsx,tsx}',
+    // '../../packages/dialect-react-ui/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     fontFamily: {

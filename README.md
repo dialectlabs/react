@@ -136,7 +136,7 @@ rm -rf lib
 ```javascript
 // For local development uncomment next two lines for tailwind to take into account workspace files too
 '../../node_modules/@dialectlabs/react-ui/**/*.{js,ts,jsx,tsx}',
-'../../packages/dialect-react-ui-jet/**/*.{js,ts,jsx,tsx}',
+'../../packages/dialect-react-ui/**/*.{js,ts,jsx,tsx}',
 ```
 
 4. And lastly, comment out the styles import in `examples/chat/pages/_app.tsx`, which is only used when importing compiled versions of Dialect's react packages:
