@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
-import { DialectLogo } from '../Icon';
 import cs from '../../utils/classNames';
+import IconButton from '../IconButton';
+import { DialectLogo } from '../Icon';
 import { useTheme } from './ThemeProvider';
 
 export function Divider(props: { className?: string }): JSX.Element {
@@ -166,6 +167,37 @@ export function Toggle({ checked, onClick, ...props }) {
         )}
       ></span>
     </label>
+  );
+}
+
+export function Accordion(props: {
+  title: React.ReactNode | string;
+  children: React.ReactNode;
+  className?: string;
+  defaultExpanded?: boolean;
+}) {
+  const { textStyles, colors, icons } = useTheme();
+  const [isExpanded, setExpanded] = useState(props.defaultExpanded);
+
+  return (
+    <div className={props?.className}>
+      <button
+        onClick={() => setExpanded((prev) => !prev)}
+        className={cs(textStyles.bigText, 'w-full flex justify-between mb-1')}
+      >
+        {props.title}
+        <IconButton
+          icon={<icons.chevron />}
+          className={cs(
+            'rounded-full w-6 h-6 flex items-center justify-center',
+            colors.highlight,
+            !isExpanded && 'rotate-180'
+          )}
+        />
+      </button>
+      <Divider className="mb-2" />
+      {isExpanded ? props.children : null}
+    </div>
   );
 }
 

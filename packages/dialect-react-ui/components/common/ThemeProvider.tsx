@@ -6,6 +6,7 @@ import {
   Bell as BellIcon,
   BackArrow,
   ChatBubble,
+  Chevron,
   Compose,
   Gear,
   NotConnected,
@@ -52,6 +53,7 @@ export type ThemeIcons =
   | 'bell'
   | 'back'
   | 'chat'
+  | 'chevron'
   | 'compose'
   | 'settings'
   | 'notConnected'
@@ -143,6 +145,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       back: BackArrow,
       chat: ChatBubble,
       compose: Compose,
+      chevron: Chevron,
       settings: Gear,
       notConnected: NotConnected,
       noNotifications: NoNotifications,
@@ -170,7 +173,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationMessage: '-mx-2 rounded-2xl py-3 px-3 mb-2',
     notificationTimestamp: 'text-right',
     notificationsDivider: 'hidden',
-    modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
+    modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[40rem]',
     modal: 'rounded-3xl',
     button: 'bg-black text-white border border-black hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-black opacity-20 bg-transparent',
@@ -215,6 +218,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
+      chevron: Chevron,
       compose: Compose,
       settings: Gear,
       notConnected: NotConnected,
@@ -243,7 +247,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationMessage: '-mx-2 rounded-2xl py-3 px-3 mb-2',
     notificationTimestamp: 'text-right',
     notificationsDivider: 'hidden',
-    modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
+    modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[40rem]',
     modal: 'rounded-3xl',
     button: 'bg-white text-black border border-white hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-white opacity-20 bg-transparent',

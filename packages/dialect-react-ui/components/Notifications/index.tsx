@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useDialect, MessageType, useApi } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
+  Accordion,
   BigButton,
   Button,
   Centered,
@@ -222,12 +223,9 @@ function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
 }) {
-  const { textStyles } = useTheme();
-
   return (
     <>
-      <div className="mb-3">
-        <h2 className={cs(textStyles.bigText, 'mb-1')}>Event types</h2>
+      <Accordion className="mb-3" defaultExpanded title="Event types">
         {props.notifications
           ? props.notifications.map((type) => (
               <ValueRow
@@ -239,15 +237,17 @@ function Settings(props: {
               </ValueRow>
             ))
           : 'No notification types supplied'}
-      </div>
-      <div className="mb-3">
-        <h2 className={cs(textStyles.bigText, 'mb-1')}>Email</h2>
+      </Accordion>
+      <Accordion className="mb-3" defaultExpanded title="Email Notifications">
         <EmailForm />
-      </div>
-      <div>
-        <h2 className={cs(textStyles.bigText, 'mb-1')}>On-Chain</h2>
+      </Accordion>
+      <Accordion
+        className="mb-3"
+        defaultExpanded
+        title="On-Chain Notifications"
+      >
         <OnChain onThreadDelete={props.toggleSettings} />
-      </div>
+      </Accordion>
     </>
   );
 }

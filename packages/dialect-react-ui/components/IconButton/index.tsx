@@ -23,7 +23,7 @@ export default React.forwardRef(function IconButton(
         className={iconButton}
         onClick={(event) => {
           event.preventDefault();
-          props?.onClick();
+          props?.onClick && props?.onClick();
         }}
       >
         {props.icon}
