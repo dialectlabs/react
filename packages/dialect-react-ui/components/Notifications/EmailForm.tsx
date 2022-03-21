@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AddressType, saveAddress, useApi } from '@dialectlabs/react';
 import { useTheme } from '../common/ThemeProvider';
 import cs from '../../utils/classNames';
-import { Button, ValueRow } from '../common';
+import { Button, Toggle, ValueRow } from '../common';
 
 function getEmailObj(addresses = []): AddressType | null {
   return addresses.find((address) => address.type === 'email') || null;
@@ -42,7 +42,7 @@ export function EmailForm() {
         className="mb-2"
         label="I want to receive email notifications for this Dapp"
       >
-        <input
+        <Toggle
           type="checkbox"
           checked={isEnabled}
           onClick={() => setEnabled((prev) => !prev)}

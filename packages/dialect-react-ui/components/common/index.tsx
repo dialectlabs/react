@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DialectLogo } from '../Icon';
 import cs from '../../utils/classNames';
 import { useTheme } from './ThemeProvider';
@@ -125,5 +125,40 @@ export function BigButton(props: {
         <div>{!props.loading ? props.icon : <Loader />}</div>
       </div>
     </button>
+  );
+}
+
+export function Toggle({ checked, onClick, ...props }) {
+  const [isChecked, setChecked] = useState(checked);
+  const { colors } = useTheme();
+  return (
+    <label className="flex items-center cursor-pointer relative h-5 w-10">
+      <input
+        type="checkbox"
+        className="appearance-none opacity-0 w-0 h-0"
+        checked={checked}
+        onClick={() => {
+          setChecked((prev) => !prev);
+          onClick();
+        }}
+        {...props}
+      />
+      {/* Background */}
+      <span
+        className={cs(
+          'h-5 w-10 rounded-full',
+          isChecked ? colors.toggleBackgroundActive : colors.toggleBackground
+          // isChecked ? colors.toggleBackgroundActive : 'bg-[#5B5B5B]'
+        )}
+      ></span>
+      {/* Thumb */}
+      <span
+        className={cs(
+          'absolute top-0.5 left-0.5 rounded-full h-4 w-4 transition shadow-sm',
+          colors.toggleThumb,
+          isChecked ? 'translate-x-[120%]' : ''
+        )}
+      ></span>
+    </label>
   );
 }

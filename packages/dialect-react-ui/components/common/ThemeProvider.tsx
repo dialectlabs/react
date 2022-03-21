@@ -26,7 +26,10 @@ export type ThemeColors =
   | 'accent'
   | 'accentSolid'
   | 'brand'
-  | 'highlight';
+  | 'highlight'
+  | 'toggleThumb'
+  | 'toggleBackground'
+  | 'toggleBackgroundActive';
 
 export type ThemeTextStyles =
   | 'h1'
@@ -114,6 +117,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       accent: 'text-black',
       accentSolid: 'text-[#5895B9]',
       highlight: 'bg-[#ABABAB]/10',
+      toggleBackground: 'bg-[#D6D6D6]',
+      toggleBackgroundActive: 'bg-[#25BC3B]',
+      toggleThumb: 'bg-[#EEEEEE]',
     },
     textStyles: {
       h1: 'font-inter text-3xl font-bold',
@@ -184,6 +190,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       accent: 'text-white',
       accentSolid: 'text-white',
       highlight: 'bg-[#ABABAB]/10',
+      toggleBackground: 'bg-[#5B5B5B]',
+      toggleBackgroundActive: 'bg-[#25BC3B]',
+      toggleThumb: 'bg-[#111111]',
     },
     textStyles: {
       h1: 'font-inter text-3xl font-bold',
