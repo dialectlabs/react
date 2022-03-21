@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
@@ -134,6 +134,9 @@ export function BigButton(props: {
 export function Toggle({ checked, onClick, ...props }) {
   const [isChecked, setChecked] = useState(checked);
   const { colors } = useTheme();
+
+  useEffect(() => setChecked(checked), [checked]);
+
   return (
     <label className="flex items-center cursor-pointer relative h-5 w-10">
       <input

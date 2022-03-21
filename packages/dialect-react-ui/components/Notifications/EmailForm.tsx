@@ -1,19 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { AddressType, saveAddress, useApi } from '@dialectlabs/react';
-import { useTheme } from '../common/ThemeProvider';
+import React, { useEffect, useState } from 'react';
+import { AddressType, useApi } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
+import { useTheme } from '../common/ThemeProvider';
 import { Button, Toggle, ValueRow } from '../common';
 
 function getEmailObj(addresses = []): AddressType | null {
+  if (!addresses) return null;
   return addresses.find((address) => address.type === 'email') || null;
 }
 
 export function EmailForm() {
-  const dapp = 'dialect';
   const {
     wallet,
     addresses,
     isSavingAddress,
+    saveAddress,
+    updateAddress,
     deleteAddress,
     isDeletingAddress,
   } = useApi();
@@ -85,11 +87,21 @@ export function EmailForm() {
                   // TODO: validate & save email
                   if (emailError) return;
 
-                  await saveAddress(wallet?.publicKey, dapp, {
-                    type: 'email',
-                    value: email,
-                    enabled: true,
-                  });
+                  if (emailObj) {
+                    await updateAddress(wallet?.publicKey, {
+                      type: 'email',
+                      value: email,
+                      enabled: true,
+                      id: emailObj?.id,
+                      addressId: emailObj?.addressId,
+                    });
+                  } else {
+                    await saveAddress(wallet?.publicKey, {
+                      type: 'email',
+                      value: email,
+                      enabled: true,
+                    });
+                  }
 
                   setEmailSaved(true);
                   setEmailEditing(false);
@@ -103,15 +115,6 @@ export function EmailForm() {
                 <Button
                   className="basis-1/2"
                   onClick={async () => {
-                    setEmailEditing(true);
-                  }}
-                  loading={isSavingAddress}
-                >
-                  Edit
-                </Button>
-                <Button
-                  className="basis-1/2"
-                  onClick={async () => {
                     await deleteAddress(wallet?.publicKey, {
                       addressId: emailObj?.addressId,
                     });
@@ -121,7 +124,16 @@ export function EmailForm() {
                   }}
                   loading={isDeletingAddress}
                 >
-                  {isDeletingAddress ? 'Deleting...' : 'Delete'}
+                  {isDeletingAddress ? 'Deleting...' : 'Delete email'}
+                </Button>
+                <Button
+                  className="basis-1/2"
+                  onClick={async () => {
+                    setEmailEditing(true);
+                  }}
+                  loading={isSavingAddress}
+                >
+                  Change
                 </Button>
               </div>
             )}

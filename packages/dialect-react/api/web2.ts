@@ -43,6 +43,26 @@ export const saveAddress = withErrorParsing(
   }
 );
 
+export const updateAddress = withErrorParsing(
+  async (wallet: anchor.web3.PublicKey, dapp: string, address: AddressType) => {
+    const rawResponse = await fetch(
+      `${DIALECT_BASE_URL}/wallets/${wallet.toString()}/dapps/${dapp}/addresses/${
+        address?.id
+      }`,
+      {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(address),
+      }
+    );
+    const content = await rawResponse.json();
+    return content;
+  }
+);
+
 // Save email, phone or other address along with wallet address
 export const deleteAddress = withErrorParsing(
   async (wallet: anchor.web3.PublicKey, address: AddressType) => {
@@ -54,7 +74,6 @@ export const deleteAddress = withErrorParsing(
         method: 'DELETE',
       }
     );
-    const content = await rawResponse.json();
-    return content;
+    return {};
   }
 );

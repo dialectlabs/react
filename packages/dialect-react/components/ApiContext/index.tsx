@@ -14,6 +14,7 @@ import {
   deleteAddress,
   fetchAddressesForDapp,
   saveAddress,
+  updateAddress,
 } from '../..';
 import { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
@@ -63,6 +64,10 @@ type ValueType = {
     address: AddressType
   ) => Promise<void>;
   savingAddressError: ParsedErrorData | null;
+  updateAddress: (
+    wallet: anchor.web3.PublicKey,
+    address: AddressType
+  ) => Promise<void>;
   isDeletingAddress: boolean;
   deleteAddress: (
     wallet: anchor.web3.PublicKey,
@@ -101,8 +106,6 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     wallet ? [wallet.publicKey, dapp] : null,
     fetchAddressesForDapp,
     {
-      // TODO: remove interval, mutate properly instead
-      refreshInterval: 1000,
       onError: (err) => {
         console.log('error fetching', err);
         setFetchingError(err as ParsedErrorData);
@@ -145,7 +148,30 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
       try {
         const data = await saveAddress(wallet, dapp, address);
 
-        await mutateAddresses(data);
+        await mutateAddresses([data]);
+      } catch (e) {
+        // TODO: implement safer error handling
+        setSavingAddressError(e as ParsedErrorData);
+
+        // Passing through the error, in case for additional UI error handling
+        throw e;
+      } finally {
+        setSavingAddress(false);
+      }
+    },
+    [isWalletConnected, mutateAddresses]
+  );
+
+  const updateAddressWrapper = useCallback(
+    async (wallet: anchor.web3.PublicKey, address: AddressType) => {
+      if (!isWalletConnected) return;
+
+      setSavingAddress(true);
+
+      try {
+        const data = await updateAddress(wallet, dapp, address);
+
+        await mutateAddresses([data]);
       } catch (e) {
         // TODO: implement safer error handling
         setSavingAddressError(e as ParsedErrorData);
@@ -167,8 +193,8 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
 
       try {
         await deleteAddress(wallet, address);
-
-        await mutateAddresses(null);
+        console.log('succeffully deleted');
+        await mutateAddresses([]);
       } catch (e) {
         // TODO: implement safer error handling
         setDeletingAddressError(e as ParsedErrorData);
@@ -194,6 +220,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     isSavingAddress,
     saveAddress: saveAddressWrapper,
     savingAddressError,
+    updateAddress: updateAddressWrapper,
     isDeletingAddress,
     deleteAddress: deleteAddressWrapper,
     deletingAddressError,
