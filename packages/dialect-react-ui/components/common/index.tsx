@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { ownerFetcher } from '@dialectlabs/web3';
+import { useApi } from '@dialectlabs/react';
+import useSWR from 'swr';
 import { DialectLogo } from '../Icon';
 import cs from '../../utils/classNames';
 import { useTheme } from './ThemeProvider';
@@ -162,3 +165,17 @@ export function Toggle({ checked, onClick, ...props }) {
     </label>
   );
 }
+
+export const useBalance = () => {
+  const { wallet, program } = useApi();
+
+  const { data, error } = useSWR(
+    program?.provider.connection && wallet
+      ? ['/owner', wallet, program?.provider.connection]
+      : null,
+    ownerFetcher
+  );
+  const balance = data?.lamports ? (data.lamports / 1e9).toFixed(2) : null;
+
+  return { balance, error };
+};

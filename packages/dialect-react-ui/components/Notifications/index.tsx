@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useDialect, MessageType } from '@dialectlabs/react';
+import { useDialect, MessageType, useApi } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
   BigButton,
@@ -7,6 +7,7 @@ import {
   Centered,
   Divider,
   Footer,
+  useBalance,
   ValueRow,
 } from '../common';
 import { useTheme } from '../common/ThemeProvider';
@@ -29,6 +30,7 @@ function Header(props: {
   isSettingsOpen: boolean;
   toggleSettings: () => void;
 }) {
+  const { isDialectAvailable } = useDialect();
   const { colors, textStyles, header, icons } = useTheme();
 
   if (props.isSettingsOpen) {
@@ -46,7 +48,7 @@ function Header(props: {
   return (
     <div className={cs('flex flex-row items-center justify-between', header)}>
       <span className={cs(textStyles.header, colors.accent)}>
-        Notifications
+        {isDialectAvailable ? 'Notifications' : 'Setup Notifications'}
       </span>
       {props.isReady ? (
         <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
@@ -55,15 +57,121 @@ function Header(props: {
   );
 }
 
-function CreateThread() {
-  const { createDialect, isDialectCreating, creationError } = useDialect();
-  const { colors, textStyles } = useTheme();
+function NetworkBadge({ network }) {
+  const { textStyles, colors } = useTheme();
+  let color = 'text-green-600';
+  if (network === 'devnet') {
+    color = 'text-yellow-600';
+  }
+  if (network === 'localnet') {
+    color = 'text-red-600';
+  }
+  return (
+    <span
+      className={cs(
+        'py-0.5 px-1 rounded-sm',
+        textStyles.small,
+        colors.highlight,
+        color
+      )}
+    >
+      {network}
+    </span>
+  );
+}
+
+function OnChain(props: { onThreadDelete?: () => void }) {
+  const { wallet, network } = useApi();
+  const {
+    createDialect,
+    isDialectCreating,
+    isDialectAvailable,
+    dialectAddress,
+    deleteDialect,
+    isDialectDeleting,
+    deletionError,
+    creationError,
+  } = useDialect();
+  const { colors, textStyles, icons } = useTheme();
+  const { balance } = useBalance();
+
+  if (isDialectAvailable) {
+    return (
+      <>
+        {isDialectAvailable && dialectAddress ? (
+          <ValueRow
+            label={
+              <>
+                <p className={cs(textStyles.small, 'opacity-60')}>
+                  Account address
+                </p>
+                <p>
+                  <a
+                    target="_blank"
+                    href={getExplorerAddress(dialectAddress)}
+                    rel="noreferrer"
+                  >
+                    {display(dialectAddress)}↗
+                  </a>
+                </p>
+              </>
+            }
+            className="mt-1 mb-4"
+          >
+            <div className="text-right">
+              <p className={cs(textStyles.small, 'opacity-60')}>
+                Deposited Rent
+              </p>
+              <p>0.058 SOL</p>
+            </div>
+          </ValueRow>
+        ) : null}
+        {isDialectAvailable && dialectAddress ? (
+          <>
+            <BigButton
+              className={colors.errorBg}
+              onClick={async () => {
+                await deleteDialect().catch(noop);
+                // TODO: properly wait for the deletion
+                props?.onThreadDelete();
+              }}
+              heading="Withdraw rent & delete history"
+              description="Events history will be lost forever"
+              icon={<icons.trash />}
+              loading={isDialectDeleting}
+            />
+            {deletionError &&
+              deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+                <p
+                  className={cs(
+                    textStyles.small,
+                    'text-red-500 text-center mt-2'
+                  )}
+                >
+                  {deletionError.message}
+                </p>
+              )}
+          </>
+        ) : null}
+      </>
+    );
+  }
 
   return (
-    <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1 className={cs(textStyles.h1, colors.accent, 'mb-4 text-center')}>
-        Create notifications thread
-      </h1>
+    <div className="h-full pb-8 m-auto flex flex-col">
+      {wallet ? (
+        <ValueRow
+          label={
+            <>
+              Balance ({display(wallet?.publicKey)}){' '}
+              <NetworkBadge network={network} />
+            </>
+          }
+          className="mt-1 mb-1"
+        >
+          {balance || 0} SOL
+        </ValueRow>
+      ) : null}
       <ValueRow
         label="Rent Deposit (recoverable)"
         className={cs('w-full mb-4')}
@@ -114,14 +222,12 @@ function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
 }) {
-  const { dialectAddress, deleteDialect, isDialectDeleting, deletionError } =
-    useDialect();
-  const { colors, textStyles, icons } = useTheme();
+  const { textStyles } = useTheme();
 
   return (
     <>
       <div className="mb-3">
-        <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
+        <h2 className={cs(textStyles.bigText, 'mb-1')}>Event types</h2>
         {props.notifications
           ? props.notifications.map((type) => (
               <ValueRow
@@ -139,62 +245,8 @@ function Settings(props: {
         <EmailForm />
       </div>
       <div>
-        <h2 className={cs(textStyles.h2, 'mb-1')}>Thread Account</h2>
-        {dialectAddress ? (
-          <ValueRow
-            label={
-              <>
-                <p className={cs(textStyles.small, 'opacity-60')}>
-                  Account address
-                </p>
-                <p>
-                  <a
-                    target="_blank"
-                    href={getExplorerAddress(dialectAddress)}
-                    rel="noreferrer"
-                  >
-                    {display(dialectAddress)}↗
-                  </a>
-                </p>
-              </>
-            }
-            className="mt-1 mb-4"
-          >
-            <div className="text-right">
-              <p className={cs(textStyles.small, 'opacity-60')}>
-                Deposited Rent
-              </p>
-              <p>0.058 SOL</p>
-            </div>
-          </ValueRow>
-        ) : null}
-        {dialectAddress ? (
-          <>
-            <BigButton
-              className={colors.errorBg}
-              onClick={async () => {
-                await deleteDialect().catch(noop);
-                // TODO: properly wait for the deletion
-                props.toggleSettings();
-              }}
-              heading="Withdraw rent & delete history"
-              description="Events history will be lost forever"
-              icon={<icons.trash />}
-              loading={isDialectDeleting}
-            />
-            {deletionError &&
-              deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-                <p
-                  className={cs(
-                    textStyles.small,
-                    'text-red-500 text-center mt-2'
-                  )}
-                >
-                  {deletionError.message}
-                </p>
-              )}
-          </>
-        ) : null}
+        <h2 className={cs(textStyles.bigText, 'mb-1')}>On-Chain</h2>
+        <OnChain onThreadDelete={props.toggleSettings} />
       </div>
     </>
   );
@@ -244,15 +296,13 @@ export default function Notifications(props: {
         <span className="opacity-60">Wallet not connected</span>
       </Centered>
     );
-  } else if (isSettingsOpen) {
+  } else if (isSettingsOpen || !isDialectAvailable) {
     content = (
       <Settings
         toggleSettings={toggleSettings}
         notifications={props.notifications}
       />
     );
-  } else if (!isDialectAvailable) {
-    content = <CreateThread />;
   } else if (isNoMessages) {
     content = (
       <Centered>
@@ -288,7 +338,7 @@ export default function Notifications(props: {
         )}
       >
         <Header
-          isReady={isWalletConnected}
+          isReady={isDialectAvailable}
           isSettingsOpen={isSettingsOpen}
           toggleSettings={toggleSettings}
         />

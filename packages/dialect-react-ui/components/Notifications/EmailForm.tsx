@@ -96,7 +96,7 @@ export function EmailForm() {
                 }}
                 loading={isSavingAddress}
               >
-                {isSavingAddress ? 'Saving...' : 'Submit'}
+                {isSavingAddress ? 'Saving...' : 'Submit email'}
               </Button>
             ) : (
               <div className="flex flex-row space-x-2">
