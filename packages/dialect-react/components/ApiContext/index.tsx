@@ -103,7 +103,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     mutate: mutateAddresses,
     error: fetchError,
   } = useSWR<AddressType[] | null, ParsedErrorData>(
-    wallet ? [wallet.publicKey, dapp] : null,
+    wallet ? [wallet, dapp] : null,
     fetchAddressesForDapp,
     {
       onError: (err) => {
