@@ -14,9 +14,20 @@ export type AddressType = {
   enabled: boolean;
 };
 
+export const fetchJSON = async (...args: any[]) => {
+  const response: ReturnType<F> = await fetch(...args);
+  if (response.ok) {
+    return response;
+  } else {
+    const error = new Error(response.statusText || response.status);
+    error.response = response;
+    throw error;
+  }
+};
+
 export const fetchAddressesForDapp = withErrorParsing(
   async (wallet: anchor.web3.PublicKey, dapp: string) => {
-    const rawResponse = await fetch(
+    const rawResponse = await fetchJSON(
       `${DIALECT_BASE_URL}/wallets/${wallet.toString()}/dapps/${dapp}/addresses`
     );
     const content = await rawResponse.json();
@@ -27,7 +38,7 @@ export const fetchAddressesForDapp = withErrorParsing(
 // Save email, phone or other address along with wallet address
 export const saveAddress = withErrorParsing(
   async (wallet: anchor.web3.PublicKey, dapp: string, address: AddressType) => {
-    const rawResponse = await fetch(
+    const rawResponse = await fetchJSON(
       `${DIALECT_BASE_URL}/wallets/${wallet.toString()}/dapps/${dapp}/addresses`,
       {
         method: 'POST',
@@ -45,7 +56,7 @@ export const saveAddress = withErrorParsing(
 
 export const updateAddress = withErrorParsing(
   async (wallet: anchor.web3.PublicKey, dapp: string, address: AddressType) => {
-    const rawResponse = await fetch(
+    const rawResponse = await fetchJSON(
       `${DIALECT_BASE_URL}/wallets/${wallet.toString()}/dapps/${dapp}/addresses/${
         address?.id
       }`,
@@ -66,7 +77,7 @@ export const updateAddress = withErrorParsing(
 // Save email, phone or other address along with wallet address
 export const deleteAddress = withErrorParsing(
   async (wallet: anchor.web3.PublicKey, address: AddressType) => {
-    const rawResponse = await fetch(
+    const rawResponse = await fetchJSON(
       `${DIALECT_BASE_URL}/wallets/${wallet.toString()}/addresses/${
         address.addressId
       }`,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AddressType, useApi } from '@dialectlabs/react';
+import { useApi, AddressType, ParsedErrorData } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { Button, Toggle, ValueRow } from '../common';
@@ -13,11 +13,14 @@ export function EmailForm() {
   const {
     wallet,
     addresses,
-    isSavingAddress,
+    fetchingAddressesError,
     saveAddress,
+    isSavingAddress,
+    savingAddressError,
     updateAddress,
     deleteAddress,
     isDeletingAddress,
+    deletingAddressError,
   } = useApi();
   const emailObj = getEmailObj(addresses);
 
@@ -28,7 +31,22 @@ export function EmailForm() {
   const [email, setEmail] = useState(emailObj?.value);
   const [isEmailSaved, setEmailSaved] = useState(Boolean(emailObj));
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
-  const [emailError, setEmailError] = useState('');
+  const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
+
+  const currentError =
+    emailError ||
+    fetchingAddressesError ||
+    savingAddressError ||
+    deletingAddressError;
+
+  deletingAddressError;
+  console.log({
+    emailError,
+    fetchingAddressesError,
+    savingAddressError,
+    deletingAddressError,
+    currentError,
+  });
 
   useEffect(() => {
     // Update state if addresses updated
@@ -67,12 +85,18 @@ export function EmailForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={(e) =>
                     e.target.checkValidity()
-                      ? setEmailError('')
-                      : setEmailError('Please enter correct email')
+                      ? setEmailError(null)
+                      : setEmailError({
+                          type: 'INCORRECT_EMAIL',
+                          message: 'Please enter correct email',
+                        })
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setEmailError('Please enter correct email');
+                    setEmailError({
+                      type: 'INCORRECT_EMAIL',
+                      message: 'Please enter correct email',
+                    });
                   }}
                   disabled={isEmailSaved && !isEmailEditing}
                 />
@@ -138,18 +162,18 @@ export function EmailForm() {
               </div>
             )}
           </div>
-          {emailError ? (
-            <p className={cs(textStyles.small, 'text-red-500 mt-2')}>
-              {emailError}
-            </p>
-          ) : null}
-          {!emailError && isEmailEditing ? (
+          {!currentError && isEmailEditing ? (
             <p className={cs(textStyles.small, 'mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
             </p>
           ) : null}
         </form>
+      )}
+      {currentError && (
+        <p className={cs(textStyles.small, 'text-red-500 mt-2')}>
+          {currentError.message}
+        </p>
       )}
     </div>
   );

@@ -15,7 +15,7 @@ import {
   fetchAddressesForDapp,
   saveAddress,
   updateAddress,
-} from '../..';
+} from '../../api';
 import { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
 
@@ -217,6 +217,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     setRpcUrl,
     program,
     addresses,
+    fetchingAddressesError: fetchingError,
     isSavingAddress,
     saveAddress: saveAddressWrapper,
     savingAddressError,

@@ -4,6 +4,7 @@ export const ParsedErrorType = {
   CannotDecrypt: 'CANNOT_DECRYPT',
   UnknownError: 'UNKNOWN_ERROR',
   NoAccount: 'NO_ACCOUNT',
+  IncorrectEmail: 'INCORRECT_EMAIL',
 } as const;
 type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
 
@@ -49,6 +50,13 @@ export const noAccount: ParsedErrorData = {
   matchers: ['Account does not exist'],
 };
 
+export const incorrectEmail: ParsedErrorData = {
+  type: ParsedErrorType.NoAccount,
+  title: 'Error',
+  message: 'Please enter correct email',
+  matchers: ['Incorrect email'],
+};
+
 export const unknownError: ParsedErrorData = {
   type: ParsedErrorType.UnknownError,
   title: 'Error',
@@ -59,6 +67,7 @@ const errors: ParsedErrorData[] = [
   insufficientFunds,
   disconnectedFromChain,
   cannotDecryptDialect,
+  incorrectEmail,
   noAccount,
 ];
 
