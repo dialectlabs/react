@@ -244,7 +244,7 @@ function Settings(props: {
       <Accordion
         className="mb-3"
         defaultExpanded
-        title="On-Chain Notifications"
+        title="Wallet Notifications"
       >
         <OnChain onThreadDelete={props.toggleSettings} />
       </Accordion>

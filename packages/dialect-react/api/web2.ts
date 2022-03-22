@@ -1,6 +1,8 @@
 import fetch from 'unfetch';
 import * as anchor from '@project-serum/anchor';
 import { withErrorParsing } from '../utils/errors';
+import { WalletContextState } from '@solana/wallet-adapter-react';
+import { WalletType } from '../components/ApiContext';
 
 const DIALECT_BASE_URL = '/api';
 
@@ -12,6 +14,22 @@ export type AddressType = {
   value: string;
   dapp: string;
   enabled: boolean;
+};
+
+const signPayload = async (wallet: WalletContextState, payload: Uint8Array) => {
+  try {
+    console.log("Signing payload " + JSON.stringify(payload));
+    const signature = wallet.signMessage ? await wallet.signMessage(payload) : await Promise.resolve(null);
+    if (!signature) throw new Error('Your wallet does not support signing messages. Please use a wallet that supports signing messages, such as Phantom.');
+    console.log("Payload signed " + JSON.stringify(signature));
+    return ({
+      signature,
+      publicKey: wallet.publicKey,
+    });
+  } catch (err) {
+    console.warn(err);
+    console.log("[error] signMessage: " + JSON.stringify(err));
+  }
 };
 
 export const fetchJSON = async (...args: any[]) => {
@@ -37,14 +55,22 @@ export const fetchAddressesForDapp = withErrorParsing(
 
 // Save email, phone or other address along with wallet address
 export const saveAddress = withErrorParsing(
-  async (wallet: anchor.web3.PublicKey, dapp: string, address: AddressType) => {
+  async (wallet: WalletType, dapp: string, address: AddressType) => {
+    const now = (new Date()).getTime();
+    console.log('now', now);
+    const dateEncoded = new TextEncoder().encode(btoa(JSON.stringify(now)));
+    console.log('dateEncded', dateEncoded);
+    const signature = await signPayload(wallet as WalletContextState, dateEncoded);
+    console.log('signature', signature);
+    console.log('wallet', wallet);
     const rawResponse = await fetchJSON(
-      `${DIALECT_BASE_URL}/wallets/${wallet.toString()}/dapps/${dapp}/addresses`,
+      `${DIALECT_BASE_URL}/wallets/${wallet.publicKey.toBase58()}/dapps/${dapp}/addresses`,
       {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Authorization: signature
         },
         body: JSON.stringify(address),
       }

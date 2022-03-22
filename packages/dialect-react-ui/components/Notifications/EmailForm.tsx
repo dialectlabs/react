@@ -112,7 +112,7 @@ export function EmailForm() {
                   if (emailError) return;
 
                   if (emailObj) {
-                    await updateAddress(wallet?.publicKey, {
+                    await updateAddress(wallet, {
                       type: 'email',
                       value: email,
                       enabled: true,
@@ -120,7 +120,7 @@ export function EmailForm() {
                       addressId: emailObj?.addressId,
                     });
                   } else {
-                    await saveAddress(wallet?.publicKey, {
+                    await saveAddress(wallet, {
                       type: 'email',
                       value: email,
                       enabled: true,
@@ -139,7 +139,7 @@ export function EmailForm() {
                 <Button
                   className="basis-1/2"
                   onClick={async () => {
-                    await deleteAddress(wallet?.publicKey, {
+                    await deleteAddress(wallet, {
                       addressId: emailObj?.addressId,
                     });
 
