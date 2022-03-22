@@ -3,6 +3,7 @@ export const ParsedErrorType = {
   DisconnectedFromChain: 'DISCONNECTED_FROM_CHAIN',
   CannotDecrypt: 'CANNOT_DECRYPT',
   UnknownError: 'UNKNOWN_ERROR',
+  NoAccount: 'NO_ACCOUNT',
 } as const;
 type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
 
@@ -14,7 +15,7 @@ export interface ParsedErrorData {
 }
 
 // TODO: Implement Error instances?
-const insufficientFunds: ParsedErrorData = {
+export const insufficientFunds: ParsedErrorData = {
   type: ParsedErrorType.InsufficientFunds,
   title: 'Insufficient Funds',
   message:
@@ -25,7 +26,7 @@ const insufficientFunds: ParsedErrorData = {
   ],
 };
 
-const disconnectedFromChain: ParsedErrorData = {
+export const disconnectedFromChain: ParsedErrorData = {
   type: ParsedErrorType.DisconnectedFromChain,
   title: 'Lost connection to Solana blockchain',
   message:
@@ -33,7 +34,7 @@ const disconnectedFromChain: ParsedErrorData = {
   matchers: ['Network request failed'],
 };
 
-const cannotDecryptDialect: ParsedErrorData = {
+export const cannotDecryptDialect: ParsedErrorData = {
   type: ParsedErrorType.CannotDecrypt,
   title: 'Cannot decrypt messages',
   message:
@@ -41,7 +42,14 @@ const cannotDecryptDialect: ParsedErrorData = {
   matchers: ['Authentication failed during decryption attempt'],
 };
 
-const unknownError: ParsedErrorData = {
+export const noAccount: ParsedErrorData = {
+  type: ParsedErrorType.NoAccount,
+  title: 'Error',
+  message: 'Account does not exist',
+  matchers: ['Account does not exist'],
+};
+
+export const unknownError: ParsedErrorData = {
   type: ParsedErrorType.UnknownError,
   title: 'Error',
   message: 'Something went wrong. Please try again later.',
@@ -51,10 +59,10 @@ const errors: ParsedErrorData[] = [
   insufficientFunds,
   disconnectedFromChain,
   cannotDecryptDialect,
+  noAccount,
 ];
 
 const parseError = (error: Error) => {
-  console.log('error', error);
   return (
     errors.find((err) =>
       err.matchers?.find((matcher) => error.message.match(matcher))
@@ -73,6 +81,7 @@ export const withErrorParsing =
       const result: ReturnType<F> = await fn(...args);
       return result;
     } catch (e) {
-      throw parseError(e as Error); // TODO: it's unlikely that something else is going to be passed here, but we should think about that later on
+      const parsedError = parseError(e as Error); // TODO: it's unlikely that something else is going to be passed here, but we should think about that later on
+      throw parsedError;
     }
   };
