@@ -89,6 +89,8 @@ export type IncomingThemeValues = {
   modalWrapper?: string;
   modal?: string;
   button?: string;
+  secondaryButton?: string;
+  secondaryRemoveButton?: string;
   buttonLoading?: string;
   bigButton?: string;
   bigButtonLoading?: string;
@@ -164,7 +166,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     input:
       'text-xs text-neutral-700 px-2 py-2 border-b border-neutral-600 focus:rounded-md focus:outline-none focus:ring focus:ring-black focus:border-0',
     outlinedInput:
-      'text-sm text-black bg-[#ABABAB]/10 px-3 py-3 border-2 border-[#ABABAB]/10 rounded-lg focus:border-black focus:outline-none',
+      'text-sm text-black bg-[#ABABAB]/10 px-3 py-2.5 border-2 border-[#ABABAB]/10 rounded-lg focus:border-black focus:outline-none',
     textArea:
       'text-sm text-neutral-800 bg-white border rounded-2xl px-2 py-1 border-neutral-300 placeholder-neutral-400 pr-10 focus:outline-none',
     messageBubble:
@@ -176,6 +178,12 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[40rem]',
     modal: 'rounded-3xl',
     button: 'bg-black text-white border border-black hover:opacity-60',
+    secondaryButton:
+      'bg-transparent text-black border border-black hover:bg-black/10',
+    // TODO: colors in the theme
+    secondaryRemoveButton:
+      'bg-transparent text-[#DE5454] border border-[#DE5454] hover:bg-[#DE5454]/10',
+    // TODO: buttonLoading for secondary
     buttonLoading: 'min-h-[42px] border border-black opacity-20 bg-transparent',
     bigButton: 'text-black border border-black hover:opacity-60',
     bigButtonLoading:
@@ -237,7 +245,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     input:
       'text-xs text-white bg-black px-2 py-2 border-b border-neutral-600 focus:rounded-md focus:outline-none focus:ring focus:ring-white',
     outlinedInput:
-      'text-sm text-white bg-[#ABABAB]/10 px-3 py-3 border-2 border-neutral-600 rounded-lg focus:border-white focus:outline-none',
+      'text-sm text-white bg-[#ABABAB]/10 px-3 py-2.5 border-2 border-neutral-600 rounded-lg focus:border-white focus:outline-none',
     textArea:
       'text-sm text-neutral-200 bg-black border rounded-2xl px-2 py-1 border-neutral-600 placeholder-neutral-600 pr-10 focus:outline-none',
     messageBubble:
@@ -250,6 +258,10 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[40rem]',
     modal: 'rounded-3xl',
     button: 'bg-white text-black border border-white hover:opacity-60',
+    secondaryButton:
+      'bg-transparent text-white border border-white hover:bg-white/10',
+    secondaryRemoveButton:
+      'bg-transparent text-[#DE5454] border border-[#DE5454] hover:bg-[#DE5454]/10',
     buttonLoading: 'min-h-[42px] border border-white opacity-20 bg-transparent',
     bigButton: 'text-white border border-white hover:opacity-60',
     bigButtonLoading:

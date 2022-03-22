@@ -3,6 +3,7 @@ import { useApi, AddressType, ParsedErrorData } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { Button, Toggle, ValueRow } from '../common';
+import { incorrectEmail } from '@dialectlabs/react/utils/errors';
 
 function getEmailObj(addresses: AddressType[] = []): AddressType | null {
   if (!addresses) return null;
@@ -24,16 +25,23 @@ export function EmailForm() {
   } = useApi();
   const emailObj = getEmailObj(addresses);
 
-  const { textStyles, outlinedInput } = useTheme();
-
-  const [isEnabled, setEnabled] = useState(emailObj?.enabled);
+  const {
+    textStyles,
+    outlinedInput,
+    colors,
+    secondaryButton,
+    secondaryRemoveButton,
+    highlighted,
+  } = useTheme();
 
   const [email, setEmail] = useState(emailObj?.value);
+  const [isEnabled, setEnabled] = useState(emailObj?.enabled);
   const [isEmailSaved, setEmailSaved] = useState(Boolean(emailObj));
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
 
   const isChanging = emailObj && isEmailEditing;
+  const isVerified = emailObj?.verified;
 
   const currentError =
     emailError ||
@@ -66,12 +74,22 @@ export function EmailForm() {
           <div className="flex flex-col space-y-2 mb-2">
             <div className="">
               {isEmailSaved && !isEmailEditing ? (
-                <ValueRow>
-                  Email submitted, now you need to verify it. Check your inbox.
-                </ValueRow>
+                <div
+                  className={cs(highlighted, textStyles.body, colors.highlight)}
+                >
+                  <span className="opacity-40">
+                    {!isVerified
+                      ? 'Email submitted, now you need to verify it. Check your inbox.'
+                      : '🔗 Email verified, you should now receive notifications'}
+                  </span>
+                </div>
               ) : (
                 <input
-                  className={cs(outlinedInput, 'w-full basis-full')}
+                  className={cs(
+                    outlinedInput,
+                    emailError && '!border-red-500 !text-red-500',
+                    'w-full basis-full'
+                  )}
                   placeholder="Enter email"
                   type="email"
                   value={email}
@@ -79,17 +97,11 @@ export function EmailForm() {
                   onBlur={(e) =>
                     e.target.checkValidity()
                       ? setEmailError(null)
-                      : setEmailError({
-                          type: 'INCORRECT_EMAIL',
-                          message: 'Please enter correct email',
-                        })
+                      : setEmailError(incorrectEmail)
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setEmailError({
-                      type: 'INCORRECT_EMAIL',
-                      message: 'Please enter correct email',
-                    });
+                    setEmailError(incorrectEmail);
                   }}
                   disabled={isEmailSaved && !isEmailEditing}
                 />
@@ -99,6 +111,7 @@ export function EmailForm() {
             {isChanging && (
               <div className="flex flex-row space-x-2">
                 <Button
+                  defaultStyle={secondaryButton}
                   className="basis-1/2"
                   onClick={() => {
                     setEmailEditing(false);
@@ -126,7 +139,7 @@ export function EmailForm() {
                   }}
                   loading={isSavingAddress}
                 >
-                  {isSavingAddress ? 'Changing...' : 'Change email'}
+                  {isSavingAddress ? 'Saving...' : 'Submit email'}
                 </Button>
               </div>
             )}
@@ -157,7 +170,8 @@ export function EmailForm() {
             {!isEmailEditing ? (
               <div className="flex flex-row space-x-2">
                 <Button
-                  className="basis-1/2"
+                  className={'basis-1/2'}
+                  defaultStyle={secondaryRemoveButton}
                   onClick={async () => {
                     await deleteAddress(wallet, {
                       addressId: emailObj?.addressId,
@@ -177,15 +191,33 @@ export function EmailForm() {
                   }}
                   loading={isSavingAddress}
                 >
-                  Change
+                  Change email
                 </Button>
               </div>
             ) : null}
           </div>
-          {!currentError && isEmailEditing ? (
+          {!currentError && !isChanging && isEmailEditing ? (
             <p className={cs(textStyles.small, 'mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
+            </p>
+          ) : null}
+          {!currentError && isChanging ? (
+            <p className={cs(textStyles.small, 'mb-1')}>
+              ⚠️ Email change/deletion is a global setting, affecting current
+              verified. You will be prompted to sign with your wallet, this
+              action is free.
+            </p>
+          ) : null}
+          {!currentError && !isEmailEditing && !isVerified ? (
+            <p className={cs(textStyles.small, 'mb-1')}>
+              Awaiting email verification...
+            </p>
+          ) : null}
+          {!currentError && !isEmailEditing && isVerified ? (
+            <p className={cs(textStyles.small, 'mb-1')}>
+              You can now chill and receive all the events directly to your
+              inbox.
             </p>
           ) : null}
         </form>

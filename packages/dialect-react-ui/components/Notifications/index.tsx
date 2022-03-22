@@ -93,7 +93,7 @@ function OnChain(props: { onThreadDelete?: () => void }) {
     deletionError,
     creationError,
   } = useDialect();
-  const { colors, textStyles, icons } = useTheme();
+  const { colors, textStyles, icons, secondaryRemoveButton } = useTheme();
   const { balance } = useBalance();
 
   if (isDialectAvailable) {
@@ -129,8 +129,9 @@ function OnChain(props: { onThreadDelete?: () => void }) {
         ) : null}
         {isDialectAvailable && dialectAddress ? (
           <>
+            {/* // TODO fix styles as secondary with red */}
             <BigButton
-              className={colors.errorBg}
+              className={cs(colors.errorBg, secondaryRemoveButton)}
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
@@ -241,11 +242,7 @@ function Settings(props: {
       <Accordion className="mb-3" defaultExpanded title="Email Notifications">
         <EmailForm />
       </Accordion>
-      <Accordion
-        className="mb-3"
-        defaultExpanded
-        title="Wallet Notifications"
-      >
+      <Accordion className="mb-3" defaultExpanded title="Wallet Notifications">
         <OnChain onThreadDelete={props.toggleSettings} />
       </Accordion>
     </>

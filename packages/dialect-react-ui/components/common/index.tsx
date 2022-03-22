@@ -75,6 +75,7 @@ export function Loader() {
 }
 
 export function Button(props: {
+  defaultStyle?: string;
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -82,13 +83,14 @@ export function Button(props: {
   children: React.ReactNode;
 }): JSX.Element {
   const { button, buttonLoading, textStyles } = useTheme();
+  const defaultStyle = props.defaultStyle || button;
 
   return (
     <button
       className={cs(
         'min-w-120 px-4 py-2 rounded-lg transition-all flex flex-row items-center justify-center',
         textStyles.buttonText,
-        !props.loading ? button : buttonLoading,
+        !props.loading ? defaultStyle : buttonLoading,
         props.className
       )}
       onClick={props.onClick}
