@@ -33,20 +33,13 @@ export function EmailForm() {
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
 
+  const isChanging = emailObj && isEmailEditing;
+
   const currentError =
     emailError ||
     fetchingAddressesError ||
     savingAddressError ||
     deletingAddressError;
-
-  deletingAddressError;
-  console.log({
-    emailError,
-    fetchingAddressesError,
-    savingAddressError,
-    deletingAddressError,
-    currentError,
-  });
 
   useEffect(() => {
     // Update state if addresses updated
@@ -103,15 +96,23 @@ export function EmailForm() {
               )}
             </div>
 
-            {isEmailEditing ? (
-              <Button
-                className="basis-full"
-                disabled={email === ''}
-                onClick={async () => {
-                  // TODO: validate & save email
-                  if (emailError) return;
+            {isChanging && (
+              <div className="flex flex-row space-x-2">
+                <Button
+                  className="basis-1/2"
+                  onClick={() => {
+                    setEmailEditing(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className={'basis-1/2'}
+                  disabled={email === ''}
+                  onClick={async () => {
+                    // TODO: validate & save email
+                    if (emailError) return;
 
-                  if (emailObj) {
                     await updateAddress(wallet?.publicKey, {
                       type: 'email',
                       value: email,
@@ -119,13 +120,30 @@ export function EmailForm() {
                       id: emailObj?.id,
                       addressId: emailObj?.addressId,
                     });
-                  } else {
-                    await saveAddress(wallet?.publicKey, {
-                      type: 'email',
-                      value: email,
-                      enabled: true,
-                    });
-                  }
+
+                    setEmailSaved(true);
+                    setEmailEditing(false);
+                  }}
+                  loading={isSavingAddress}
+                >
+                  {isSavingAddress ? 'Changing...' : 'Change email'}
+                </Button>
+              </div>
+            )}
+
+            {!isChanging && isEmailEditing ? (
+              <Button
+                className={'basis-full'}
+                disabled={email === ''}
+                onClick={async () => {
+                  // TODO: validate & save email
+                  if (emailError) return;
+
+                  await saveAddress(wallet?.publicKey, {
+                    type: 'email',
+                    value: email,
+                    enabled: true,
+                  });
 
                   setEmailSaved(true);
                   setEmailEditing(false);
@@ -134,7 +152,9 @@ export function EmailForm() {
               >
                 {isSavingAddress ? 'Saving...' : 'Submit email'}
               </Button>
-            ) : (
+            ) : null}
+
+            {!isEmailEditing ? (
               <div className="flex flex-row space-x-2">
                 <Button
                   className="basis-1/2"
@@ -160,7 +180,7 @@ export function EmailForm() {
                   Change
                 </Button>
               </div>
-            )}
+            ) : null}
           </div>
           {!currentError && isEmailEditing ? (
             <p className={cs(textStyles.small, 'mb-1')}>
