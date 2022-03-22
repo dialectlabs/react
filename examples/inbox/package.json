@@ -1,0 +1,51 @@
+{
+  "name": "@dialectlabs/react-examples-inbox",
+  "version": "0.1.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev": "next dev"
+  },
+  "keywords": [],
+  "author": "@dialectlabs",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.16.7",
+    "@dialectlabs/react": "^0.1.1",
+    "@dialectlabs/react-ui": "^0.1.5",
+    "@dialectlabs/web3": "0.1.6",
+    "@project-serum/anchor": "^0.18.2",
+    "@solana/wallet-adapter-base": "^0.7.0",
+    "@solana/wallet-adapter-react": "^0.13.1",
+    "@solana/wallet-adapter-react-ui": "^0.6.1",
+    "@solana/wallet-adapter-wallets": "^0.11.3",
+    "@solana/web3.js": "^1.22.0",
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "copy-to-clipboard": "^3.3.1",
+    "js-sha256": "^0.9.0",
+    "next": "^12.0.9",
+    "next-transpile-modules": "^9.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "swr": "^0.5.6"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^6.2.0",
+    "@types/bs58": "^4.0.1",
+    "@types/chai": "^4.2.21",
+    "@types/chai-as-promised": "^7.1.4",
+    "@types/react": "^17.0.34",
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.5",
+    "postcss-cli": "^8.3.1",
+    "prettier": "^2.4.0",
+    "tailwindcss": "^3.0.18",
+    "typescript": "^4.4.3"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  }
+}
