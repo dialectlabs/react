@@ -49,17 +49,17 @@ export const fetchJSON = async (
   ) {
     const tokenTTLMinutes = 5;
     const now = new Date().getTime();
+    const expirationTime = now + tokenTTLMinutes * 60;
     const dateEncoded = new TextEncoder().encode(
-      btoa(JSON.stringify(now + tokenTTLMinutes * 60))
+      btoa(JSON.stringify(expirationTime))
     );
     const { signature } = await signPayload(
       wallet as WalletContextState,
       dateEncoded
     );
+    const base64Signature = btoa(String.fromCharCode.apply(null, signature));
     headers = {
-      Authorization: btoa(String.fromCharCode.apply(null, signature)),
-      'X-Timestamp': now,
-      'X-Token-TTL': 5,
+      Authorization: `${expirationTime}.${base64Signature}`,
     };
   }
 
