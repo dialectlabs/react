@@ -63,10 +63,14 @@ export const fetchJSON = async (
     };
   }
 
-  const response: ReturnType<F> = await fetch(url, {
-    ...options,
-    headers: { ...options?.headers, ...headers },
-  });
+  const response: ReturnType<F> = await fetch(
+    url,
+    {
+      ...options,
+      headers: { ...options?.headers, ...headers },
+    },
+    ...args
+  );
   if (response.ok) {
     return response;
   } else {

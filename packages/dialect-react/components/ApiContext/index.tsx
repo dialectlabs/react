@@ -57,20 +57,21 @@ type ValueType = {
   rpcUrl: string | null;
   setRpcUrl: (_: string | null) => void;
   program: ProgramType;
-  addresses: AddressType[];
+  addresses: AddressType[] | null;
+  fetchingAddressesError: ParsedErrorData | null;
   isSavingAddress: boolean;
   saveAddress: (
-    wallet: anchor.web3.PublicKey,
+    wallet: WalletContextState,
     address: AddressType
   ) => Promise<void>;
   savingAddressError: ParsedErrorData | null;
   updateAddress: (
-    wallet: anchor.web3.PublicKey,
+    wallet: WalletContextState,
     address: AddressType
   ) => Promise<void>;
   isDeletingAddress: boolean;
   deleteAddress: (
-    wallet: anchor.web3.PublicKey,
+    wallet: WalletContextState,
     address: AddressType
   ) => Promise<void>;
   deletingAddressError: ParsedErrorData | null;
@@ -140,7 +141,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
   }, [wallet, isWalletConnected, network, rpcUrl]);
 
   const saveAddressWrapper = useCallback(
-    async (wallet: anchor.web3.PublicKey, address: AddressType) => {
+    async (wallet: WalletContextState, address: AddressType) => {
       if (!isWalletConnected) return;
 
       setSavingAddress(true);
@@ -163,7 +164,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
   );
 
   const updateAddressWrapper = useCallback(
-    async (wallet: anchor.web3.PublicKey, address: AddressType) => {
+    async (wallet: WalletContextState, address: AddressType) => {
       if (!isWalletConnected) return;
 
       setSavingAddress(true);
@@ -186,7 +187,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
   );
 
   const deleteAddressWrapper = useCallback(
-    async (wallet: anchor.web3.PublicKey, address: AddressType) => {
+    async (wallet: WalletContextState, address: AddressType) => {
       if (!isWalletConnected) return;
 
       setDeletingAddress(true);
@@ -216,7 +217,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     rpcUrl,
     setRpcUrl,
     program,
-    addresses,
+    addresses: addresses || [],
     fetchingAddressesError: fetchingError,
     isSavingAddress,
     saveAddress: saveAddressWrapper,

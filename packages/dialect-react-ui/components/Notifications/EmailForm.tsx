@@ -4,7 +4,7 @@ import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { Button, Toggle, ValueRow } from '../common';
 
-function getEmailObj(addresses = []): AddressType | null {
+function getEmailObj(addresses: AddressType[] = []): AddressType | null {
   if (!addresses) return null;
   return addresses.find((address) => address.type === 'email') || null;
 }
