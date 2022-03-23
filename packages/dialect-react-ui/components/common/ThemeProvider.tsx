@@ -25,10 +25,12 @@ export type ThemeColors =
   | 'secondary'
   | 'accent'
   | 'accentSolid'
-  | 'brand';
+  | 'brand'
+  | 'highlight';
 
 export type ThemeTextStyles =
   | 'h1'
+  | 'h2'
   | 'body'
   | 'small'
   | 'bigText'
@@ -38,7 +40,8 @@ export type ThemeTextStyles =
   | 'messageBubble'
   | 'buttonText'
   | 'bigButtonText'
-  | 'bigButtonSubtle';
+  | 'bigButtonSubtle'
+  | 'link';
 
 export type ThemeIcons =
   | 'arrownarrowright'
@@ -71,14 +74,14 @@ export type IncomingThemeValues = {
   textArea?: string;
   messageBubble?: string;
   otherMessageBubble?: string;
-  notificationBubble?: string;
+  notificationMessage?: string;
   notificationTimestamp?: string;
   notificationsDivider?: string;
   bellButton?: string;
   iconButton?: string;
   sendButton?: string;
-  popupWrapper?: string;
-  popup?: string;
+  modalWrapper?: string;
+  modal?: string;
   button?: string;
   buttonLoading?: string;
   bigButton?: string;
@@ -109,9 +112,11 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       primary: 'text-black',
       accent: 'text-black',
       accentSolid: 'text-[#5895B9]',
+      highlight: 'bg-[#ABABAB]/10',
     },
     textStyles: {
       h1: 'font-inter text-3xl font-bold',
+      h2: 'font-inter text-xl font-bold',
       input: 'font-inter',
       textArea: 'font-inter',
       messageBubble: 'font-inter',
@@ -122,6 +127,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       buttonText: 'font-inter text-base',
       bigButtonText: 'font-inter font-medium text-base text-black',
       bigButtonSubtle: 'font-inter font-medium text-sm text-black',
+      link: 'underline decoration-1 break-words',
     },
     icons: {
       arrownarrowright: ArrowNarrowRight,
@@ -152,18 +158,18 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     messageBubble:
       'text-black px-4 py-2 rounded-2xl bg-transparent border border-neutral-300',
     otherMessageBubble: 'px-4 py-2 rounded-2xl bg-neutral-100',
-    notificationBubble: 'py-2',
-    notificationTimestamp: '',
-    notificationsDivider: '',
-    popupWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
-    popup: 'rounded-3xl',
+    notificationMessage: '-mx-2 rounded-2xl py-3 px-3 mb-2',
+    notificationTimestamp: 'text-right',
+    notificationsDivider: 'hidden',
+    modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
+    modal: 'rounded-3xl',
     button: 'bg-black text-white border border-black hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-black opacity-20 bg-transparent',
     bigButton: 'text-black border border-black hover:opacity-60',
     bigButtonLoading:
       'min-h-[42px] border border-black opacity-20 bg-transparent',
     divider: 'h-px opacity-10 bg-current',
-    highlighted: 'px-4 py-3 rounded-lg bg-black/5',
+    highlighted: 'px-4 py-3 rounded-lg',
   },
   dark: {
     colors: {
@@ -174,9 +180,11 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       primary: 'text-white',
       accent: 'text-white',
       accentSolid: 'text-white',
+      highlight: 'bg-[#ABABAB]/10',
     },
     textStyles: {
       h1: 'font-inter text-3xl font-bold',
+      h2: 'font-inter text-xl font-bold',
       input: 'font-inter',
       textArea: 'font-inter',
       messageBubble: 'font-inter',
@@ -187,6 +195,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       buttonText: 'font-inter text-base',
       bigButtonText: 'font-inter font-medium text-base text-white',
       bigButtonSubtle: 'font-inter font-medium text-sm text-white',
+      link: 'underline decoration-1 break-words',
     },
     icons: {
       arrownarrowright: ArrowNarrowRight,
@@ -217,18 +226,18 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'text-white px-4 py-2 rounded-2xl bg-transparent border border-neutral-800',
     otherMessageBubble:
       'px-4 py-2 rounded-2xl border border-neutral-900 bg-neutral-900',
-    notificationBubble: 'py-2',
-    notificationTimestamp: '',
-    notificationsDivider: '',
-    popupWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
-    popup: 'rounded-3xl',
+    notificationMessage: '-mx-2 rounded-2xl py-3 px-3 mb-2',
+    notificationTimestamp: 'text-right',
+    notificationsDivider: 'hidden',
+    modalWrapper: 'absolute z-50 top-16 w-[30rem] h-[30rem]',
+    modal: 'rounded-3xl',
     button: 'bg-white text-black border border-white hover:opacity-60',
     buttonLoading: 'min-h-[42px] border border-white opacity-20 bg-transparent',
     bigButton: 'text-white border border-white hover:opacity-60',
     bigButtonLoading:
       'min-h-[42px] border border-white opacity-20 bg-transparent',
     divider: 'h-px opacity-10 bg-current',
-    highlighted: 'px-4 py-3 rounded-lg bg-white/10',
+    highlighted: 'px-4 py-3 rounded-lg',
   },
 };
 

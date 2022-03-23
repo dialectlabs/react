@@ -22,47 +22,52 @@ export default function Settings(props: { toggleSettings: () => void }) {
   return (
     <>
       <div>
-        <ValueRow label="Deposited Rent" className={cs('mb-1')}>
-          0.058 SOL
-        </ValueRow>
-        <Divider />
         {dialectAddress ? (
-          <>
-            <ValueRow label="Thread account" className="mt-1 mb-4">
-              <a
-                target="_blank"
-                href={getExplorerAddress(dialectAddress)}
-                rel="noreferrer"
-              >
-                {display(dialectAddress)}↗
-              </a>
-            </ValueRow>
-            <BigButton
-              className={colors.errorBg}
-              onClick={async () => {
-                await deleteDialect().catch(noop);
-                // TODO: properly wait for the deletion
-                props.toggleSettings();
-                setDialectAddress('');
-              }}
-              heading="Withdraw rent & delete history"
-              description="Events history will be lost forever"
-              icon={<icons.trash />}
-              loading={isDialectDeleting}
-            />
-            {deletionError &&
-              deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-                <p
-                  className={cs(
-                    textStyles.small,
-                    'text-red-500 text-center mt-2'
-                  )}
-                >
-                  {deletionError.message}
+          <ValueRow
+            label={
+              <>
+                <p className={cs(textStyles.small, 'opacity-60')}>
+                  Account address
                 </p>
-              )}
-          </>
+                <p>
+                  <a
+                    target="_blank"
+                    href={getExplorerAddress(dialectAddress)}
+                    rel="noreferrer"
+                  >
+                    {display(dialectAddress)}↗
+                  </a>
+                </p>
+              </>
+            }
+            className="mt-1 mb-4"
+          >
+            <div className="text-right">
+              <p className={cs(textStyles.small, 'opacity-60')}>
+                Deposited Rent
+              </p>
+              <p>0.058 SOL</p>
+            </div>
+          </ValueRow>
         ) : null}
+        <BigButton
+          className={colors.errorBg}
+          onClick={async () => {
+            await deleteDialect().catch(noop);
+            // TODO: properly wait for the deletion
+            props.toggleSettings();
+            setDialectAddress('');
+          }}
+          heading="Withdraw rent & delete history"
+          description="Events history will be lost forever"
+          icon={<icons.trash />}
+          loading={isDialectDeleting}
+        />
+        {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+          <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
+            {deletionError.message}
+          </p>
+        )}
       </div>
     </>
   );

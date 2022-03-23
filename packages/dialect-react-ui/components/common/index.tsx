@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialectLogo, Spinner as SpinnerIcon } from '../Icon';
+import { DialectLogo } from '../Icon';
 import cs from '../../utils/classNames';
 import { useTheme } from './ThemeProvider';
 
@@ -10,41 +10,41 @@ export function Divider(props: { className?: string }): JSX.Element {
 }
 
 export function ValueRow(props: {
-  label: string;
+  label: string | React.ReactNode;
   children: React.ReactNode;
-  highlighted?: boolean;
   className?: string;
 }) {
-  const { textStyles, highlighted } = useTheme();
+  const { colors, textStyles, highlighted } = useTheme();
 
   return (
     <p
       className={cs(
         'flex flex-row justify-between',
-        props.highlighted && highlighted,
+        colors.highlight,
+        highlighted,
         props.className
       )}
     >
-      <span className={cs(textStyles.body)}>{props.label}:</span>
+      <span className={cs(textStyles.body)}>{props.label}</span>
       <span className={cs(textStyles.body)}>{props.children}</span>
     </p>
   );
 }
 
-export function Footer(props: { showBackground: boolean }): JSX.Element {
+export function Footer(): JSX.Element {
   const { colors } = useTheme();
 
   return (
     <div
       className={cs(
-        'w-40 py-1 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase rounded-full',
-        props.showBackground && colors.bg
+        'w-[8.5rem] py-1 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase rounded-full',
+        colors.highlight
       )}
       style={{ fontSize: '10px' }}
     >
       Powered by{' '}
       <a href="https://dialect.to" target="_blank" rel="noreferrer">
-        <DialectLogo className="-mr-1 -mt-px" />
+        <DialectLogo className="-mr-1 ml-[3px]" />
       </a>
     </div>
   );
@@ -77,7 +77,7 @@ export function Button(props: {
   loading?: boolean;
   children: React.ReactNode;
 }): JSX.Element {
-  const { button, buttonLoading, textStyles, colors } = useTheme();
+  const { button, buttonLoading, textStyles } = useTheme();
 
   return (
     <button

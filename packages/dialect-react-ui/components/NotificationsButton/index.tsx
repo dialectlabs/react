@@ -9,7 +9,7 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
-import Notifications from '../Notifications';
+import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
 import {
   ThemeProvider,
@@ -27,6 +27,7 @@ type PropTypes = {
   variables?: IncomingThemeVariables;
   bellClassName?: string;
   bellStyle?: object;
+  notifications: NotificationType[];
 };
 
 function useOutsideAlerter(
@@ -78,7 +79,7 @@ function WrappedNotificationsButton(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const { colors, bellButton, icons, popupWrapper } = useTheme();
+  const { colors, bellButton, icons, modalWrapper } = useTheme();
 
   return (
     <div className={cs('flex flex-col items-end relative', colors.primary)}>
@@ -93,7 +94,7 @@ function WrappedNotificationsButton(
         onClick={() => setOpen(!open)}
       ></IconButton>
       <Transition
-        className={popupWrapper}
+        className={modalWrapper}
         show={open}
         enter="transition-opacity duration-300"
         enterFrom="opacity-0"
@@ -109,7 +110,7 @@ function WrappedNotificationsButton(
           // className="w-full h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <Notifications />
+          <Notifications notifications={props?.notifications} />
         </div>
       </Transition>
     </div>
@@ -122,12 +123,14 @@ export default function NotificationsButton({
   ...props
 }: PropTypes): JSX.Element {
   return (
-    <ApiProvider>
-      <DialectProvider publicKey={props.publicKey}>
-        <ThemeProvider theme={theme} variables={variables}>
-          <WrappedNotificationsButton {...props} />
-        </ThemeProvider>
-      </DialectProvider>
-    </ApiProvider>
+    <div className="dialect">
+      <ApiProvider>
+        <DialectProvider publicKey={props.publicKey}>
+          <ThemeProvider theme={theme} variables={variables}>
+            <WrappedNotificationsButton {...props} />
+          </ThemeProvider>
+        </DialectProvider>
+      </ApiProvider>
+    </div>
   );
 }

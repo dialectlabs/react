@@ -15,6 +15,11 @@ import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 
+export type NotificationType = {
+  name: string;
+  detail: string;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
@@ -59,7 +64,6 @@ function CreateThread() {
         Create notifications thread
       </h1>
       <ValueRow
-        highlighted
         label="Rent Deposit (recoverable)"
         className={cs('w-full mb-4')}
       >
@@ -85,7 +89,10 @@ function CreateThread() {
   );
 }
 
-function Settings(props: { toggleSettings: () => void }) {
+function Settings(props: {
+  toggleSettings: () => void;
+  notifications: NotificationType[];
+}) {
   const { dialectAddress, deleteDialect, isDialectDeleting, deletionError } =
     useDialect();
   const { colors, textStyles, icons } = useTheme();
@@ -93,30 +100,51 @@ function Settings(props: { toggleSettings: () => void }) {
   return (
     <>
       <div className="mb-3">
-        <p className={cs(textStyles.body, 'mb-1')}>Included event types</p>
-        <ul className={cs(textStyles.bigText, 'list-disc pl-6')}>
-          <li>Welcome message on thread creation</li>
-        </ul>
+        <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
+        {props.notifications
+          ? props.notifications.map((type) => (
+              <ValueRow
+                key={type.name}
+                label={type.name}
+                className={cs('mb-1')}
+              >
+                {type.detail}
+              </ValueRow>
+            ))
+          : 'No notification types supplied'}
       </div>
       <div>
-        <ValueRow label="Deposited Rent" className={cs('mb-1')}>
-          0.058 SOL
-        </ValueRow>
-        <Divider />
+        <h2 className={cs(textStyles.h2, 'mb-1')}>Thread Account</h2>
+        {dialectAddress ? (
+          <ValueRow
+            label={
+              <>
+                <p className={cs(textStyles.small, 'opacity-60')}>
+                  Account address
+                </p>
+                <p>
+                  <a
+                    target="_blank"
+                    href={getExplorerAddress(dialectAddress)}
+                    rel="noreferrer"
+                  >
+                    {display(dialectAddress)}↗
+                  </a>
+                </p>
+              </>
+            }
+            className="mt-1 mb-4"
+          >
+            <div className="text-right">
+              <p className={cs(textStyles.small, 'opacity-60')}>
+                Deposited Rent
+              </p>
+              <p>0.058 SOL</p>
+            </div>
+          </ValueRow>
+        ) : null}
         {dialectAddress ? (
           <>
-            <ValueRow
-              label="Notifications thread account"
-              className="mt-1 mb-4"
-            >
-              <a
-                target="_blank"
-                href={getExplorerAddress(dialectAddress)}
-                rel="noreferrer"
-              >
-                {display(dialectAddress)}↗
-              </a>
-            </ValueRow>
             <BigButton
               className={colors.errorBg}
               onClick={async () => {
@@ -147,7 +175,9 @@ function Settings(props: { toggleSettings: () => void }) {
   );
 }
 
-export default function Notifications(): JSX.Element {
+export default function Notifications(props: {
+  notifications?: NotificationType[];
+}): JSX.Element {
   const {
     isWalletConnected,
     isDialectAvailable,
@@ -164,7 +194,7 @@ export default function Notifications(): JSX.Element {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, popup, icons, notificationsDivider } = useTheme();
+  const { colors, modal, icons, notificationsDivider } = useTheme();
 
   let content: JSX.Element;
 
@@ -192,7 +222,12 @@ export default function Notifications(): JSX.Element {
   } else if (!isDialectAvailable) {
     content = <CreateThread />;
   } else if (isSettingsOpen) {
-    content = <Settings toggleSettings={toggleSettings} />;
+    content = (
+      <Settings
+        toggleSettings={toggleSettings}
+        notifications={props.notifications}
+      />
+    );
   } else if (isNoMessages) {
     content = (
       <Centered>
@@ -218,22 +253,24 @@ export default function Notifications(): JSX.Element {
   }
 
   return (
-    <div
-      className={cs(
-        'flex flex-col h-full shadow-md overflow-hidden',
-        colors.primary,
-        colors.bg,
-        popup
-      )}
-    >
-      <Header
-        isReady={isWalletConnected && isDialectAvailable}
-        isSettingsOpen={isSettingsOpen}
-        toggleSettings={toggleSettings}
-      />
-      <Divider className="mx-2" />
-      <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
-      <Footer showBackground={messages.length > 4} />
+    <div className="dialect h-full">
+      <div
+        className={cs(
+          'flex flex-col h-full shadow-md overflow-hidden',
+          colors.primary,
+          colors.bg,
+          modal
+        )}
+      >
+        <Header
+          isReady={isWalletConnected && isDialectAvailable}
+          isSettingsOpen={isSettingsOpen}
+          toggleSettings={toggleSettings}
+        />
+        <Divider className="mx-2" />
+        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <Footer />
+      </div>
     </div>
   );
 }

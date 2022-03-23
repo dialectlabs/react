@@ -16,7 +16,7 @@ export const themeVariables: IncomingThemeVariables = {
   dark: {
     bellButton:
       'w-10 h-10 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700',
-    popup: 'rounded-3xl shadow-xl shadow-neutral-900 border border-neutral-800',
+    modal: 'rounded-3xl shadow-xl shadow-neutral-900 border border-neutral-800',
   },
 };
 
@@ -53,6 +53,10 @@ function AuthedHome() {
           publicKey={DIALECT_PUBLIC_KEY}
           theme={theme}
           variables={themeVariables}
+          notifications={[
+            { name: 'Welcome message on thread creation', detail: 'Event' },
+            { name: 'Collateral health', detail: 'Below 130%' },
+          ]}
         />
         <WalletButton />
       </div>

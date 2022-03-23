@@ -1,4 +1,5 @@
 import React from 'react';
+import Linkify from 'react-linkify';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 
@@ -17,12 +18,32 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 export const Notification = ({ message, timestamp }: Props) => {
-  const { textStyles, notificationBubble, notificationTimestamp } = useTheme();
+  const { colors, textStyles, notificationMessage, notificationTimestamp } =
+    useTheme();
   return (
-    <div className={cs('flex flex-col', notificationBubble)}>
+    <div className={cs('flex flex-col', colors.highlight, notificationMessage)}>
       <div className="flex-1 mb-2">
         <p className={cs(textStyles.body, 'font-medium text-base')}>
-          {message}
+          <Linkify
+            componentDecorator={(
+              decoratedHref: string,
+              decoratedText: string,
+              key: string
+            ) => (
+              <a
+                target="blank"
+                className={textStyles.link}
+                href={decoratedHref}
+                key={key}
+              >
+                {decoratedText.length > 32
+                  ? decoratedText.slice(0, 32) + '...'
+                  : decoratedText}
+              </a>
+            )}
+          >
+            {message}
+          </Linkify>
         </p>
       </div>
       <div className={notificationTimestamp}>

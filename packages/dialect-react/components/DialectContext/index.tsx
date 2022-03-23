@@ -20,7 +20,11 @@ import {
   getDialectAddressWithOtherMember,
   sendMessage,
 } from '../../api';
-import { ParsedErrorData, ParsedErrorType } from '../../utils/errors';
+import {
+  noAccount,
+  ParsedErrorData,
+  ParsedErrorType,
+} from '../../utils/errors';
 import { messages as mockMessages } from './mock';
 
 const swrFetchDialectForMembers = (
@@ -146,7 +150,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     {
       refreshInterval: POLLING_INTERVAL_MS,
       onError: (err) => {
-        console.log('error fetching', err);
+        if (err !== noAccount) {
+          console.log('Error fetching dialects', err);
+        }
         setFetchingError(err as ParsedErrorData);
       },
     }
@@ -164,7 +170,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     {
       refreshInterval: POLLING_INTERVAL_MS,
       onError: (err) => {
-        console.log('error fetching', err);
+        if (err !== noAccount) {
+          console.log('Error fetching dialects', err);
+        }
         setFetchingError(err as ParsedErrorData);
       },
     }
