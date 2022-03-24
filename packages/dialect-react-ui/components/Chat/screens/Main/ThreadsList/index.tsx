@@ -1,7 +1,7 @@
 import React from 'react';
 import type { DialectAccount } from '@dialectlabs/react';
 import MessagePreview from './MessagePreview';
-import { Centered } from '../../../common';
+import { Centered } from '../../../../common';
 
 interface ThreadsListProps {
   chatThreads: DialectAccount[];
@@ -17,7 +17,7 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
     );
   }
   return (
-    <div className="flex flex-col space-y-2 md:max-w-xs">
+    <div className="flex flex-1 flex-col space-y-2">
       {chatThreads.map((subscription) => (
         <MessagePreview
           key={subscription.publicKey.toBase58()}

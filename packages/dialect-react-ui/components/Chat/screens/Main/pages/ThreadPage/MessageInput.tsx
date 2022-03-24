@@ -1,6 +1,6 @@
 import React, { KeyboardEvent, FormEvent } from 'react';
-import { useTheme } from '../common/ThemeProvider';
-import cs from '../../utils/classNames';
+import { useTheme } from '../../../../../common/ThemeProvider';
+import clsx from 'clsx';
 
 type PropsType = {
   text: string;
@@ -39,14 +39,14 @@ export default function MessageInput({
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
-                className={cs(textArea, 'resize-none h-full w-full')}
+                className={clsx(textArea, 'resize-none h-full w-full')}
               />
               <button
                 className="absolute inset-y-0 -right-2 flex items-center pr-3 disabled:cursor-not-allowed"
                 disabled={disabled}
               >
                 <icons.arrowsmright
-                  className={cs(sendButton, disabled ? 'opacity-50' : '')}
+                  className={clsx(sendButton, disabled ? 'opacity-50' : '')}
                 />
               </button>
             </div>

@@ -26,7 +26,9 @@ function AuthedHome() {
   return (
     <>
       <div className="flex flex-col h-screen bg-black">
-        <Wallet />
+        <div className="flex flex-row-reverse">
+          <Wallet />
+        </div>
         <DialectInbox wallet={wallet} />
       </div>
     </>

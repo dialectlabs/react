@@ -1,15 +1,19 @@
 import React from 'react';
 import { display } from '@dialectlabs/web3';
 import { useDialect } from '@dialectlabs/react';
-import { useTheme } from '../common/ThemeProvider';
-import { BigButton, Divider, ValueRow } from '../common';
-import { getExplorerAddress } from '../../utils/getExplorerAddress';
-import cs from '../../utils/classNames';
+import { useTheme } from '../../../../../common/ThemeProvider';
+import { BigButton, ValueRow } from '../../../../../common';
+import clsx from 'clsx';
+import { getExplorerAddress } from '../../../../../../utils/getExplorerAddress';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
-export default function Settings(props: { toggleSettings: () => void }) {
+interface SettingsProps {
+  onCloseRequest?: () => void;
+}
+
+const Settings = ({ onCloseRequest }: SettingsProps) => {
   const {
     dialectAddress,
     deleteDialect,
@@ -26,7 +30,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
           <ValueRow
             label={
               <>
-                <p className={cs(textStyles.small, 'opacity-60')}>
+                <p className={clsx(textStyles.small, 'opacity-60')}>
                   Account address
                 </p>
                 <p>
@@ -43,7 +47,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
             className="mt-1 mb-4"
           >
             <div className="text-right">
-              <p className={cs(textStyles.small, 'opacity-60')}>
+              <p className={clsx(textStyles.small, 'opacity-60')}>
                 Deposited Rent
               </p>
               <p>0.058 SOL</p>
@@ -55,7 +59,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
           onClick={async () => {
             await deleteDialect().catch(noop);
             // TODO: properly wait for the deletion
-            props.toggleSettings();
+            onCloseRequest?.();
             setDialectAddress('');
           }}
           heading="Withdraw rent & delete history"
@@ -64,11 +68,15 @@ export default function Settings(props: { toggleSettings: () => void }) {
           loading={isDialectDeleting}
         />
         {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-          <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
+          <p
+            className={clsx(textStyles.small, 'text-red-500 text-center mt-2')}
+          >
             {deletionError.message}
           </p>
         )}
       </div>
     </>
   );
-}
+};
+
+export default Settings;
