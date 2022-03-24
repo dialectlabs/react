@@ -31,7 +31,7 @@ export default function MessagePreview({
       <div className="dt-flex">
         <Avatar publicKey={otherMembers[0].publicKey} size="regular" />
       </div>
-      <div className="dt-flex grow dt-border-b dt-border-neutral-600 dt-justify-between dt-truncate">
+      <div className="dt-flex dt-grow dt-border-b dt-border-neutral-600 dt-justify-between dt-truncate">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {dialect?.dialect.members.length > 0 && <div>{otherMemberStr}</div>}
           {messages && messages?.length > 0 ? (
