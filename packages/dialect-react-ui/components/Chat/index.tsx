@@ -1,92 +1,54 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDialect } from '@dialectlabs/react';
-import { Centered, Divider, Footer } from '../common';
+import { Divider, Footer } from '../common';
 import { useTheme } from '../common/ThemeProvider';
 import cs from '../../utils/classNames';
-import MessagePreview from './MessagePreview';
-import CreateThread from './CreateThread';
+import CreateThread from './screens/CreateThread';
 import Header from './Header';
-import Thread from './Thread';
 import ThreadSettings from './ThreadSettings';
+import NoConnection from './screens/NoConnection';
+import NoWallet from './screens/NoWallet';
+import Main from './screens/Main';
+
+enum InboxRoutes {
+  Main = 'main',
+  NoConnection = 'no_connection',
+  NoWallet = 'no_wallet',
+  CreateThread = 'new_thread',
+  Settings = 'settings',
+}
 
 export default function Chat(): JSX.Element {
-  const {
-    disconnectedFromChain,
-    isWalletConnected,
-    dialectAddress,
-    dialects,
-    setDialectAddress,
-  } = useDialect();
+  const { disconnectedFromChain, isWalletConnected, dialects } = useDialect();
 
-  const [isCreateOpen, setCreateOpen] = useState(false);
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const [subscriptions, setSubscriptions] = useState<any[]>([]);
-  const [isNoSubscriptions, setIsNoSubscriptions] = useState(false);
-
-  useEffect(() => {
-    setSubscriptions(dialects || []);
-    setIsNoSubscriptions(dialects.length < 1);
-  }, [dialects]);
-
-  const toggleCreate = useCallback(
-    () => setCreateOpen(!isCreateOpen),
-    [isCreateOpen, setCreateOpen]
+  const [activeRoute, setActiveRoute] = useState<InboxRoutes>(
+    InboxRoutes.NoConnection
   );
 
-  const toggleSettings = useCallback(
-    () => setSettingsOpen(!isSettingsOpen),
-    [isSettingsOpen, setSettingsOpen]
+  useEffect(
+    function pickRoute() {
+      if (disconnectedFromChain) {
+        setActiveRoute(InboxRoutes.NoConnection);
+      } else if (!isWalletConnected) {
+        setActiveRoute(InboxRoutes.NoWallet);
+      } else {
+        setActiveRoute(InboxRoutes.Main);
+      }
+    },
+    [disconnectedFromChain, isWalletConnected]
   );
 
-  const { colors, modal, icons } = useTheme();
+  const { colors, modal } = useTheme();
 
-  let content: JSX.Element;
-
-  if (disconnectedFromChain) {
-    content = (
-      <Centered>
-        <icons.offline className="w-10 mb-6 opacity-60" />
-        <span className="opacity-60">Lost connection to Solana blockchain</span>
-      </Centered>
-    );
-  } else if (!isWalletConnected) {
-    content = (
-      <Centered>
-        <icons.notConnected className="mb-6 opacity-60" />
-        <span className="opacity-60">Wallet not connected</span>
-      </Centered>
-    );
-  } else if (isCreateOpen) {
-    content = <CreateThread toggleCreate={toggleCreate} />;
-  } else if (isSettingsOpen) {
-    content = <ThreadSettings toggleSettings={toggleSettings} />;
-  } else if (isNoSubscriptions) {
-    content = (
-      <Centered>
-        <span className="opacity-60">No messages yet</span>
-      </Centered>
-    );
-  } else if (dialectAddress) {
-    content = <Thread />;
-  } else {
-    content = (
-      <div className="flex flex-col space-y-2">
-        {subscriptions.map((subscription: any) => (
-          <MessagePreview
-            key={subscription.publicKey.toBase58()}
-            dialect={subscription}
-            onClick={() => {
-              console.log(
-                'setting dialect address',
-                subscription.publicKey.toBase58()
-              );
-              setDialectAddress(subscription.publicKey.toBase58());
-            }}
-          />
-        ))}
-      </div>
-    );
-  }
+  const routes: Record<InboxRoutes, React.ReactNode> = {
+    [InboxRoutes.NoConnection]: <NoConnection />,
+    [InboxRoutes.NoWallet]: <NoWallet />,
+    [InboxRoutes.CreateThread]: (
+      <CreateThread onCreated={() => setActiveRoute(InboxRoutes.Main)} />
+    ),
+    [InboxRoutes.Settings]: <ThreadSettings toggleSettings={() => {}} />,
+    [InboxRoutes.Main]: <Main />,
+  };
 
   return (
     <div className="dialect h-full">
@@ -100,13 +62,15 @@ export default function Chat(): JSX.Element {
       >
         <Header
           isReady={isWalletConnected}
-          isCreateOpen={isCreateOpen}
-          toggleCreate={toggleCreate}
-          isSettingsOpen={isSettingsOpen}
-          toggleSettings={toggleSettings}
+          isCreateOpen={activeRoute === InboxRoutes.CreateThread}
+          toggleCreate={() => setActiveRoute(InboxRoutes.CreateThread)}
+          isSettingsOpen={activeRoute === InboxRoutes.Settings}
+          toggleSettings={() => setActiveRoute(InboxRoutes.Settings)}
         />
         <Divider className="mx-2" />
-        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <div className="h-full py-4 px-4 overflow-y-scroll">
+          {routes[activeRoute]}
+        </div>
         <Footer
           showBackground={Boolean(dialects?.length && dialects?.length > 4)}
         />

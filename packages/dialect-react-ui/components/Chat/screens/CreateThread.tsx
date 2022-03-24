@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { useDialect } from '@dialectlabs/react';
 import { useApi } from '@dialectlabs/react';
-import { useTheme } from '../common/ThemeProvider';
-import { Button, ValueRow } from '../common';
+import { useTheme } from '../../common/ThemeProvider';
+import { Button, ValueRow } from '../../common';
 import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
-import cs from '../../utils/classNames';
+import cs from '../../../utils/classNames';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
-export default function CreateThread({
-  toggleCreate,
-}: {
-  toggleCreate: () => void;
-}) {
+interface CreateThreadProps {
+  onCreated: () => void;
+}
+
+export default function CreateThread({ onCreated }: CreateThreadProps) {
   const { createDialect, isDialectCreating, creationError, setDialectAddress } =
     useDialect();
   const { program } = useApi();
@@ -55,7 +55,7 @@ export default function CreateThread({
                 new anchor.web3.PublicKey(address)
               );
               setDialectAddress(da.toBase58());
-              toggleCreate();
+              onCreated();
             })
             .catch((err) => {
               console.log('error creating dialect', err);

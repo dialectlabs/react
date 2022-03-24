@@ -1,8 +1,8 @@
 import React from 'react';
 import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
-import Avatar from '../Avatar';
-import { useTheme } from '../common/ThemeProvider';
+import Avatar from '../../../Avatar';
+import { useTheme } from '../../../common/ThemeProvider';
 
 type PropsType = {
   dialect: DialectAccount;

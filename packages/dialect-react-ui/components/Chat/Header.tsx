@@ -5,6 +5,7 @@ import { useDialect } from '@dialectlabs/react';
 import IconButton from '../IconButton';
 import { useTheme } from '../common/ThemeProvider';
 import cs from '../../utils/classNames';
+import clsx from 'clsx';
 
 export default function Header(props: {
   isReady: boolean;
@@ -87,7 +88,12 @@ export default function Header(props: {
   }
 
   return (
-    <div className={cs('flex flex-row items-center justify-between', header)}>
+    <div
+      className={clsx(
+        'flex flex-row items-center justify-between h-20',
+        header
+      )}
+    >
       <span className={cs(textStyles.header, colors.primary)}>Messages</span>
       {props.isReady && !disconnectedFromChain ? (
         <IconButton icon={<icons.compose />} onClick={props.toggleCreate} />
