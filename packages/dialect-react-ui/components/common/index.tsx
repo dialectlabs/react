@@ -43,8 +43,13 @@ export function Footer(): JSX.Element {
       style={{ fontSize: '10px' }}
     >
       Powered by{' '}
-      <a href="https://dialect.to" target="_blank" rel="noreferrer">
-        <DialectLogo className="-dt-mr-1 ml-[3px]" />
+      <a
+        href="https://dialect.to"
+        target="_blank"
+        rel="noreferrer"
+        className="hover:dt-text-inherit"
+      >
+        <DialectLogo className="-dt-mr-1 dt-ml-[3px]" />
       </a>
     </div>
   );

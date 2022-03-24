@@ -147,15 +147,15 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     avatar:
       'dt-rounded-full dt-items-center dt-justify-center dt-text-neutral-900 bg-neutral-100',
     bellButton:
-      'dt-w-12 dt-h-12 focus:dt-outline-none dt-border dt-border-gray-200 dt-shadow-md',
+      'dt-w-12 dt-h-12 dt-outline-none dt-border dt-border-gray-200 dt-shadow-md',
     iconButton:
-      'dt-w-9 dt-h-9 -dt-m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60',
+      'dt-w-9 dt-h-9 -dt-m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60 dt-outline-none',
     sendButton: 'dt-h-5 dt-w-5 dt-text-white dt-rounded-full dt-bg-black',
     header: 'dt-px-4 dt-py-3',
     input:
-      'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md focus:dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0',
+      'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0',
     textArea:
-      'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 focus:dt-outline-none',
+      'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none',
     messageBubble:
       'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-transparent dt-border dt-border-neutral-300',
     otherMessageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-neutral-100',
@@ -217,15 +217,15 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     },
     avatar:
       'dt-rounded-full dt-items-center dt-justify-center dt-bg-neutral-900',
-    bellButton: 'dt-w-12 dt-h-12 focus:dt-outline-none dt-shadow-md',
+    bellButton: 'dt-w-12 dt-h-12 dt-outline-none dt-shadow-md',
     iconButton:
-      'dt-w-9 dt-h-9 -dt-m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60',
+      'dt-w-9 dt-h-9 -dt-m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60 dt-outline-none',
     sendButton: 'dt-h-5 dt-w-5 dt-text-black dt-rounded-full dt-bg-white',
-    header: 'dt-px-4 dt-py-4',
+    header: 'dt-px-4 dt-py-3',
     input:
-      'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md focus:dt-outline-none focus:dt-ring focus:dt-ring-white',
+      'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white',
     textArea:
-      'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 focus:dt-outline-none',
+      'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 dt-outline-none',
     messageBubble:
       'dt-text-white dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-transparent dt-border dt-border-neutral-800',
     otherMessageBubble:
