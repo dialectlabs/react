@@ -6,7 +6,6 @@ import { useTheme } from '../../../../../common/ThemeProvider';
 import { Button, ValueRow } from '../../../../../common';
 import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
 import clsx from 'clsx';
-import { display } from '../../../protocol';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
