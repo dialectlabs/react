@@ -77,7 +77,7 @@ function AuthedHome() {
           @dialectlabs/react
         </code>
         <div>
-          <code className="shrink dt-text-center dt-text-transparent dt-bg-clip-text dt-bg-gradient-to-r from-[#B852DC] to-[#59C29D]">
+          <code className="shrink dt-text-center dt-text-transparent dt-bg-clip-text dt-bg-gradient-to-r dt-from-[#B852DC] dt-to-[#59C29D]">
             examples/chat
           </code>
         </div>

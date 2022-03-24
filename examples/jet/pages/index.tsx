@@ -28,14 +28,15 @@ export const themeVariables: IncomingThemeVariables = {
       highlight: 'bg-white/30',
     },
     textStyles: {
-      h1: 'font-poppins dt-text-xl dt-font-normal',
+      h1: 'dt-font-poppins dt-text-xl dt-font-normal',
       body: 'dt-font-sans dt-text-sm dt-leading-snug ',
       small: 'dt-font-sans dt-text-[13px] dt-leading-snug',
       bigText: 'dt-text-base dt-font-medium dt-leading-snug',
-      header: 'font-poppins dt-text-lg',
-      buttonText: 'dt-text-xs dt-uppercase tracking-[1.5px] dt-text-[#E6EBF3]',
-      bigButtonText: 'dt-text-xs dt-uppercase tracking-[1.5px]',
-      bigButtonSubtle: 'dt-text-xs dt-uppercase tracking-[1.5px]',
+      header: 'dt-font-poppins dt-text-lg',
+      buttonText:
+        'dt-text-xs dt-uppercase dt-tracking-[1.5px] dt-text-[#E6EBF3]',
+      bigButtonText: 'dt-text-xs dt-uppercase dt-tracking-[1.5px]',
+      bigButtonSubtle: 'dt-text-xs dt-uppercase dt-tracking-[1.5px]',
     },
     icons: {
       bell: BellIcon,
@@ -50,7 +51,7 @@ export const themeVariables: IncomingThemeVariables = {
     bigButton: 'dt-text-white hover:dt-opacity-60',
     bigButtonLoading: 'dt-text-white dt-min-h-[32px] dt-opacity-20',
     divider:
-      'dt-h-[4px] dt-rounded-lg dt-bg-gradient-to-b from-[#C3CADE] to-[#F8F9FB]',
+      'dt-h-[4px] dt-rounded-lg dt-bg-gradient-to-b dt-from-[#C3CADE] dt-to-[#F8F9FB]',
     highlighted: 'dt-px-2 dt-py-1 dt-rounded-lg',
   },
   dark: {
@@ -65,14 +66,14 @@ export const themeVariables: IncomingThemeVariables = {
       highlight: 'dt-bg-[#ABABAB]/10',
     },
     textStyles: {
-      h1: 'font-poppins dt-text-xl dt-font-normal',
+      h1: 'dt-font-poppins dt-text-xl dt-font-normal',
       body: 'dt-font-sans dt-text-sm dt-leading-snug ',
       small: 'dt-font-sans dt-text-[13px] dt-leading-snug',
       bigText: 'dt-text-base dt-font-medium dt-leading-snug',
-      header: 'font-poppins dt-text-lg',
-      buttonText: 'dt-text-xs dt-uppercase tracking-[1.5px] dt-text-[#444]',
-      bigButtonText: 'dt-text-xs dt-uppercase tracking-[1.5px]',
-      bigButtonSubtle: 'dt-text-xs dt-uppercase tracking-[1.5px]',
+      header: 'dt-font-poppins dt-text-lg',
+      buttonText: 'dt-text-xs dt-uppercase dt-tracking-[1.5px] dt-text-[#444]',
+      bigButtonText: 'dt-text-xs dt-uppercase dt-tracking-[1.5px]',
+      bigButtonSubtle: 'dt-text-xs dt-uppercase dt-tracking-[1.5px]',
     },
     icons: {
       bell: BellIcon,
@@ -87,7 +88,7 @@ export const themeVariables: IncomingThemeVariables = {
     bigButton: 'dt-text-white hover:dt-opacity-60',
     bigButtonLoading: 'dt-text-white dt-min-h-[32px] dt-opacity-20',
     divider:
-      'dt-h-[4px] dt-rounded-lg dt-bg-gradient-to-b from-[#3C3C3C] to-[#505050]',
+      'dt-h-[4px] dt-rounded-lg dt-bg-gradient-to-b dt-from-[#3C3C3C] dt-to-[#505050]',
     highlighted: 'dt-px-2 dt-py-1 dt-rounded-lg',
   },
 };
@@ -130,7 +131,7 @@ function AuthedHome() {
           <WalletButton />
         </div>
         <div className="dt-h-full dt-flex dt-flex-col dt-justify-center">
-          <div className="dt-text-center font-poppins">
+          <div className="dt-text-center dt-font-poppins">
             <h1 className="dt-text-4xl text-gradient">Jet Protocol</h1>
             <div>
               <button onClick={toggleTheme}>
