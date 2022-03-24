@@ -15,8 +15,9 @@ const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
 export const themeVariables: IncomingThemeVariables = {
   dark: {
     bellButton:
-      'w-10 h-10 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700',
-    modal: 'rounded-3xl shadow-xl shadow-neutral-900 border border-neutral-800',
+      'dt-w-10 dt-h-10 dt-shadow-xl dt-shadow-neutral-800 dt-border dt-border-neutral-600 hover:dt-shadow-neutral-700',
+    modal:
+      'dt-rounded-3xl dt-shadow-xl dt-shadow-neutral-900 dt-border dt-border-neutral-800',
   },
 };
 
@@ -45,8 +46,8 @@ function AuthedHome() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-black">
-      <div className="flex flex-row justify-end p-2 items-center space-x-2">
+    <div className="dt-flex dt-flex-col dt-h-screen dt-bg-white dark:dt-bg-black">
+      <div className="dt-flex dt-flex-row dt-justify-end dt-p-2 dt-items-center dt-space-x-2">
         <NotificationsButton
           wallet={wallet}
           network={'localnet'}
@@ -60,13 +61,15 @@ function AuthedHome() {
         />
         <WalletButton />
       </div>
-      <div className="h-full text-2xl flex flex-col justify-center">
-        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
+      <div className="dt-h-full dt-text-2xl dt-flex dt-flex-col dt-justify-center">
+        <code className="dt-text-center dt-text-neutral-400 dark:text-neutral-600 dt-text-sm dt-mb-2">
           @dialectlabs/react
         </code>
-        <code className="text-center text-neutral-400 dark:text-neutral-600">
+        <code className="dt-text-center dt-text-neutral-400 dark:text-neutral-600">
           examples/
-          <code className="text-neutral-900 dark:text-neutral-100">basic</code>
+          <code className="dt-text-neutral-900 dark:text-neutral-100">
+            basic
+          </code>
         </code>
       </div>
     </div>

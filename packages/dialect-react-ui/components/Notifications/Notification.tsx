@@ -21,9 +21,15 @@ export const Notification = ({ message, timestamp }: Props) => {
   const { colors, textStyles, notificationMessage, notificationTimestamp } =
     useTheme();
   return (
-    <div className={cs('flex flex-col', colors.highlight, notificationMessage)}>
-      <div className="flex-1 mb-2">
-        <p className={cs(textStyles.body, 'font-medium text-base')}>
+    <div
+      className={cs(
+        'dt-flex dt-flex-col',
+        colors.highlight,
+        notificationMessage
+      )}
+    >
+      <div className="dt-flex-1 dt-mb-2">
+        <p className={cs(textStyles.body, 'dt-font-medium dt-text-base')}>
           <Linkify
             componentDecorator={(
               decoratedHref: string,
@@ -47,7 +53,7 @@ export const Notification = ({ message, timestamp }: Props) => {
         </p>
       </div>
       <div className={notificationTimestamp}>
-        <p className={cs(textStyles.small, 'opacity-60')}>
+        <p className={cs(textStyles.small, 'dt-opacity-60')}>
           {timeFormatter.format(timestamp)}
         </p>
       </div>

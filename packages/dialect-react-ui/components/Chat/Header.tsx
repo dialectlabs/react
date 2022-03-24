@@ -23,22 +23,22 @@ export default function Header(props: {
 
   if (props.isCreateOpen) {
     return (
-      <div className={cs('flex flex-row items-center', header)}>
+      <div className={cs('dt-flex dt-flex-row dt-items-center', header)}>
         <IconButton
           icon={<icons.x />}
           onClick={props.toggleCreate}
-          className="mr-2"
+          className="dt-mr-2"
         />
         <span className={cs(textStyles.header, colors.accent)}></span>
       </div>
     );
   } else if (props.isSettingsOpen) {
     return (
-      <div className={cs('flex flex-row items-center', header)}>
+      <div className={cs('dt-flex dt-flex-row dt-items-center', header)}>
         <IconButton
           icon={<icons.back />}
           onClick={props.toggleSettings}
-          className="mr-2"
+          className="dt-mr-2"
         />
         <span className={cs(textStyles.header, colors.accent)}>Settings</span>
       </div>
@@ -56,28 +56,28 @@ export default function Header(props: {
     return (
       <div
         className={cs(
-          'relative flex flex-row items-center justify-between',
+          'dt-relative dt-flex dt-flex-row dt-items-center dt-justify-between',
           header
         )}
       >
         <IconButton
           icon={<icons.back />}
           onClick={() => setDialectAddress('')}
-          className="mr-2 absolute"
+          className="dt-mr-2 dt-absolute"
         />
-        <div className="flex flex-col items-center">
+        <div className="dt-flex dt-flex-col dt-items-center">
           <span className={cs(textStyles.header, colors.accent)}>
             {otherMemberStr}
           </span>
           {dialect?.dialect.encrypted ? (
-            <span className="text-xs opacity-50">encrypted</span>
+            <span className="dt-text-xs dt-opacity-50">encrypted</span>
           ) : (
-            <span className="text-xs opacity-50">unencrypted</span>
+            <span className="dt-text-xs dt-opacity-50">unencrypted</span>
           )}
         </div>
         {props.isReady ? (
           <IconButton
-            className={isAdmin ? '' : 'invisible'}
+            className={isAdmin ? '' : 'dt-invisible'}
             icon={<icons.settings />}
             onClick={props.toggleSettings}
           />
@@ -87,7 +87,12 @@ export default function Header(props: {
   }
 
   return (
-    <div className={cs('flex flex-row items-center justify-between', header)}>
+    <div
+      className={cs(
+        'dt-flex dt-flex-row dt-items-center dt-justify-between',
+        header
+      )}
+    >
       <span className={cs(textStyles.header, colors.primary)}>Messages</span>
       {props.isReady && !disconnectedFromChain ? (
         <IconButton icon={<icons.compose />} onClick={props.toggleCreate} />

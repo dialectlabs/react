@@ -32,18 +32,23 @@ function Header(props: {
 
   if (props.isSettingsOpen) {
     return (
-      <div className={cs('flex flex-row items-center', header)}>
+      <div className={cs('dt-flex dt-flex-row dt-items-center', header)}>
         <IconButton
           icon={<icons.back />}
           onClick={props.toggleSettings}
-          className="mr-2"
+          className="dt-mr-2"
         />
         <span className={cs(textStyles.header, colors.accent)}>Settings</span>
       </div>
     );
   }
   return (
-    <div className={cs('flex flex-row items-center justify-between', header)}>
+    <div
+      className={cs(
+        'dt-flex dt-flex-row dt-items-center dt-justify-between',
+        header
+      )}
+    >
       <span className={cs(textStyles.header, colors.accent)}>
         Notifications
       </span>
@@ -59,17 +64,19 @@ function CreateThread() {
   const { colors, textStyles } = useTheme();
 
   return (
-    <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1 className={cs(textStyles.h1, colors.accent, 'mb-4 text-center')}>
+    <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-items-center dt-justify-center">
+      <h1
+        className={cs(textStyles.h1, colors.accent, 'dt-mb-4 dt-text-center')}
+      >
         Create notifications thread
       </h1>
       <ValueRow
         label="Rent Deposit (recoverable)"
-        className={cs('w-full mb-4')}
+        className={cs('dt-w-full dt-mb-4')}
       >
         0.058 SOL
       </ValueRow>
-      <p className={cs(textStyles.body, 'text-center mb-3')}>
+      <p className={cs(textStyles.body, 'dt-text-center dt-mb-3')}>
         To start this message thread, you&apos;ll need to deposit a small amount
         of rent, since messages are stored on-chain.
       </p>
@@ -81,7 +88,12 @@ function CreateThread() {
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
+        <p
+          className={cs(
+            textStyles.small,
+            'dt-text-red-500 dt-text-center dt-mt-2'
+          )}
+        >
           {creationError.message}
         </p>
       )}
@@ -99,14 +111,14 @@ function Settings(props: {
 
   return (
     <>
-      <div className="mb-3">
-        <h2 className={cs(textStyles.h2, 'mb-1')}>Notifications</h2>
+      <div className="dt-mb-3">
+        <h2 className={cs(textStyles.h2, 'dt-mb-1')}>Notifications</h2>
         {props.notifications
           ? props.notifications.map((type) => (
               <ValueRow
                 key={type.name}
                 label={type.name}
-                className={cs('mb-1')}
+                className={cs('dt-mb-1')}
               >
                 {type.detail}
               </ValueRow>
@@ -114,12 +126,12 @@ function Settings(props: {
           : 'No notification types supplied'}
       </div>
       <div>
-        <h2 className={cs(textStyles.h2, 'mb-1')}>Thread Account</h2>
+        <h2 className={cs(textStyles.h2, 'dt-mb-1')}>Thread Account</h2>
         {dialectAddress ? (
           <ValueRow
             label={
               <>
-                <p className={cs(textStyles.small, 'opacity-60')}>
+                <p className={cs(textStyles.small, 'dt-opacity-60')}>
                   Account address
                 </p>
                 <p>
@@ -133,10 +145,10 @@ function Settings(props: {
                 </p>
               </>
             }
-            className="mt-1 mb-4"
+            className="dt-mt-1 dt-mb-4"
           >
-            <div className="text-right">
-              <p className={cs(textStyles.small, 'opacity-60')}>
+            <div className="dt-text-right">
+              <p className={cs(textStyles.small, 'dt-opacity-60')}>
                 Deposited Rent
               </p>
               <p>0.058 SOL</p>
@@ -162,7 +174,7 @@ function Settings(props: {
                 <p
                   className={cs(
                     textStyles.small,
-                    'text-red-500 text-center mt-2'
+                    'dt-text-red-500 dt-text-center dt-mt-2'
                   )}
                 >
                   {deletionError.message}
@@ -201,22 +213,24 @@ export default function Notifications(props: {
   if (disconnectedFromChain) {
     content = (
       <Centered>
-        <icons.offline className="w-10 mb-6 opacity-60" />
-        <span className="opacity-60">Lost connection to Solana blockchain</span>
+        <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">
+          Lost connection to Solana dt-blockchain
+        </span>
       </Centered>
     );
   } else if (cannotDecryptDialect) {
     content = (
       <Centered>
-        <icons.offline className="w-10 mb-6 opacity-60" />
-        <span className="opacity-60">Cannot decrypt messages</span>
+        <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">Cannot decrypt messages</span>
       </Centered>
     );
   } else if (!isWalletConnected) {
     content = (
       <Centered>
-        <icons.notConnected className="mb-6 opacity-60" />
-        <span className="opacity-60">Wallet not connected</span>
+        <icons.notConnected className="dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">Wallet not connected</span>
       </Centered>
     );
   } else if (!isDialectAvailable) {
@@ -231,8 +245,8 @@ export default function Notifications(props: {
   } else if (isNoMessages) {
     content = (
       <Centered>
-        <icons.noNotifications className="mb-6" />
-        <span className="opacity-60">No notifications yet</span>
+        <icons.noNotifications className="dt-mb-6" />
+        <span className="dt-opacity-60">No notifications yet</span>
       </Centered>
     );
   } else {
@@ -253,10 +267,10 @@ export default function Notifications(props: {
   }
 
   return (
-    <div className="dialect h-full">
+    <div className="dialect dt-h-full">
       <div
         className={cs(
-          'flex flex-col h-full shadow-md overflow-hidden',
+          'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
           colors.primary,
           colors.bg,
           modal
@@ -267,8 +281,10 @@ export default function Notifications(props: {
           isSettingsOpen={isSettingsOpen}
           toggleSettings={toggleSettings}
         />
-        <Divider className="mx-2" />
-        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <Divider className="dt-mx-2" />
+        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll">
+          {content}
+        </div>
         <Footer />
       </div>
     </div>

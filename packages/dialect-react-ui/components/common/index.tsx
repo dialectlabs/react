@@ -19,7 +19,7 @@ export function ValueRow(props: {
   return (
     <p
       className={cs(
-        'flex flex-row justify-between',
+        'dt-flex dt-flex-row dt-justify-between',
         colors.highlight,
         highlighted,
         props.className
@@ -37,14 +37,14 @@ export function Footer(): JSX.Element {
   return (
     <div
       className={cs(
-        'w-[8.5rem] py-1 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase rounded-full',
+        'dt-w-[8.5rem] dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-absolute dt-bottom-3 dt-left-0 dt-right-0 dt-mx-auto dt-uppercase dt-rounded-full',
         colors.highlight
       )}
       style={{ fontSize: '10px' }}
     >
       Powered by{' '}
       <a href="https://dialect.to" target="_blank" rel="noreferrer">
-        <DialectLogo className="-mr-1 ml-[3px]" />
+        <DialectLogo className="-dt-mr-1 ml-[3px]" />
       </a>
     </div>
   );
@@ -56,7 +56,7 @@ export function Centered(props: { children: React.ReactNode }): JSX.Element {
   return (
     <div
       className={cs(
-        'h-full flex flex-col items-center justify-center',
+        'dt-h-full dt-flex dt-flex-col dt-items-center dt-justify-center',
         textStyles.body
       )}
     >
@@ -67,7 +67,7 @@ export function Centered(props: { children: React.ReactNode }): JSX.Element {
 
 export function Loader() {
   const { icons } = useTheme();
-  return <icons.spinner className="animate-spin" />;
+  return <icons.spinner className="dt-animate-spin" />;
 }
 
 export function Button(props: {
@@ -82,7 +82,7 @@ export function Button(props: {
   return (
     <button
       className={cs(
-        'min-w-120 px-4 py-2 rounded-lg transition-all flex flex-row items-center justify-center',
+        'min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
         !props.loading ? button : buttonLoading,
         props.className
@@ -109,7 +109,7 @@ export function BigButton(props: {
   return (
     <button
       className={cs(
-        'w-full px-4 py-3 rounded-lg transition-all',
+        'dt-w-full dt-px-4 dt-py-3 dt-rounded-lg dt-transition-all',
         !props.loading ? bigButton : bigButtonLoading,
         props.className
       )}
@@ -117,8 +117,8 @@ export function BigButton(props: {
       onClick={props.onClick}
       disabled={props.loading || props.disabled}
     >
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-col items-start">
+      <div className="dt-flex dt-flex-row dt-justify-between dt-items-center">
+        <div className="dt-flex dt-flex-col dt-items-start">
           <p className={textStyles.bigButtonText}>{props.heading}</p>
           <p className={textStyles.bigButtonSubtle}>{props.description}</p>
         </div>

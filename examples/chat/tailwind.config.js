@@ -5,6 +5,7 @@ module.exports = {
     // '../../node_modules/@dialectlabs/react-ui/**/*.{js,ts,jsx,tsx}',
     // '../../packages/dialect-react-ui/**/*.{js,ts,jsx,tsx}',
   ],
+  prefix: 'dt-',
   theme: {
     extend: {
       fontFamily: {

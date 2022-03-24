@@ -26,7 +26,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
           <ValueRow
             label={
               <>
-                <p className={cs(textStyles.small, 'opacity-60')}>
+                <p className={cs(textStyles.small, 'dt-opacity-60')}>
                   Account address
                 </p>
                 <p>
@@ -40,10 +40,10 @@ export default function Settings(props: { toggleSettings: () => void }) {
                 </p>
               </>
             }
-            className="mt-1 mb-4"
+            className="dt-mt-1 dt-mb-4"
           >
-            <div className="text-right">
-              <p className={cs(textStyles.small, 'opacity-60')}>
+            <div className="dt-text-right">
+              <p className={cs(textStyles.small, 'dt-opacity-60')}>
                 Deposited Rent
               </p>
               <p>0.058 SOL</p>
@@ -64,7 +64,12 @@ export default function Settings(props: { toggleSettings: () => void }) {
           loading={isDialectDeleting}
         />
         {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-          <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
+          <p
+            className={cs(
+              textStyles.small,
+              'dt-text-red-500 dt-text-center dt-mt-2'
+            )}
+          >
             {deletionError.message}
           </p>
         )}

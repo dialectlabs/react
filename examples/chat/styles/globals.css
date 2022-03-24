@@ -16,16 +16,16 @@ a {
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing: dt-border-box;
 }
 
 @layer components {
   .wallet-adapter-button.dialect-wallet-button {
-    border: 1px solid white;
-    @apply flex items-center transition ease-in-out duration-300 text-black dark:text-white border dark:border-neutral-600 rounded-md py-2 px-6 bg-white dark:bg-transparent shadow-md shadow-neutral-300 dark:shadow-neutral-800 text-[#353535];
+    dt-border: 1px solid white;
+    @apply dt-flex dt-items-center dt-transition dt-ease-in-out dt-duration-300 dt-text-black dark:dt-text-white dt-border dark:dt-border-neutral-600 dt-rounded-md dt-py-2 dt-px-6 dt-bg-white dark:dt-bg-transparent dt-shadow-md dt-shadow-neutral-300 dark:dt-shadow-neutral-800 dt-text-[#353535];
   }
   .wallet-adapter-button.dialect-wallet-button:hover,
   .wallet-adapter-button.dialect-wallet-button:not([disabled]):hover {
-    @apply bg-none shadow-lg shadow-neutral-400 dark:shadow-neutral-700;
+    @apply dt-bg-none dt-shadow-lg dt-shadow-neutral-400 dark:dt-shadow-neutral-700;
   }
 }

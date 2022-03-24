@@ -45,15 +45,17 @@ export default function Chat(): JSX.Element {
   if (disconnectedFromChain) {
     content = (
       <Centered>
-        <icons.offline className="w-10 mb-6 opacity-60" />
-        <span className="opacity-60">Lost connection to Solana blockchain</span>
+        <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">
+          Lost connection to Solana dt-blockchain
+        </span>
       </Centered>
     );
   } else if (!isWalletConnected) {
     content = (
       <Centered>
-        <icons.notConnected className="mb-6 opacity-60" />
-        <span className="opacity-60">Wallet not connected</span>
+        <icons.notConnected className="dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">Wallet not connected</span>
       </Centered>
     );
   } else if (isCreateOpen) {
@@ -63,14 +65,14 @@ export default function Chat(): JSX.Element {
   } else if (isNoSubscriptions) {
     content = (
       <Centered>
-        <span className="opacity-60">No messages yet</span>
+        <span className="dt-opacity-60">No messages yet</span>
       </Centered>
     );
   } else if (dialectAddress) {
     content = <Thread />;
   } else {
     content = (
-      <div className="flex flex-col space-y-2">
+      <div className="dt-flex dt-flex-col dt-space-y-2">
         {subscriptions.map((subscription: any) => (
           <MessagePreview
             key={subscription.publicKey.toBase58()}
@@ -89,10 +91,10 @@ export default function Chat(): JSX.Element {
   }
 
   return (
-    <div className="dialect h-full">
+    <div className="dialect dt-h-full">
       <div
         className={cs(
-          'flex flex-col h-full shadow-md overflow-hidden',
+          'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
           colors.primary,
           colors.bg,
           modal
@@ -105,8 +107,10 @@ export default function Chat(): JSX.Element {
           isSettingsOpen={isSettingsOpen}
           toggleSettings={toggleSettings}
         />
-        <Divider className="mx-2" />
-        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <Divider className="dt-mx-2" />
+        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll">
+          {content}
+        </div>
         <Footer
           showBackground={Boolean(dialects?.length && dialects?.length > 4)}
         />

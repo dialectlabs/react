@@ -17,21 +17,22 @@ const FRIKTION_PUBLIC_KEY = new anchor.web3.PublicKey(
 
 export const themeVariables: IncomingThemeVariables = {
   light: {
-    bellButton: 'w-[42px] h-[42px] rounded focus:outline-none',
-    popupWrapper: 'absolute z-50 top-12 w-[29rem] h-[37rem]',
+    bellButton: 'dt-w-[42px] dt-h-[42px] rounded focus:outline-none',
+    popupWrapper: 'absolute z-50 top-12 dt-w-[29rem] dt-h-[37rem]',
     popup: 'rounded-lg',
     notificationBubble: '-mx-2 rounded-2xl py-3 px-3 mb-2',
     notificationTimestamp: 'text-right',
     notificationsDivider: 'hidden',
   },
   dark: {
-    bellButton: 'w-[42px] h-[42px] rounded focus:outline-none bg-[#272A36]',
-    popupWrapper: 'absolute z-50 top-12 w-[29rem] h-[37rem]',
+    bellButton:
+      'dt-w-[42px] dt-h-[42px] rounded focus:outline-none dt-bg-[#272A36]',
+    popupWrapper: 'absolute z-50 top-12 dt-w-[29rem] dt-h-[37rem]',
     popup: 'rounded-lg',
     colors: {
-      bg: 'bg-[#08070E]',
+      bg: 'dt-bg-[#08070E]',
     },
-    notificationBubble: 'bg-[#121219] -mx-2 rounded-2xl py-3 px-3 mb-2',
+    notificationBubble: 'dt-bg-[#121219] -mx-2 rounded-2xl py-3 px-3 mb-2',
     notificationTimestamp: 'text-right',
     notificationsDivider: 'hidden',
   },
