@@ -10,6 +10,6 @@
 
 ## [0.2.0] - 2022-03-25
 
-* Started to keep changelog up to date (better soon than later...)
+* Started to keep changelog up to date... again...
 * Added esm build to final bundle (resolves [#42](https://github.com/dialectlabs/react/issues/42))
   * Changed direct styles import from `@dialectlabs/react-ui/lib/index.css` to `@dialectlabs/react-ui/index.css`
