@@ -7,27 +7,29 @@ import NoConnection from './screens/NoConnection';
 import NoWallet from './screens/NoWallet';
 import Main from './screens/Main';
 
-enum InboxRoutes {
+enum Routes {
   Main = 'main',
   NoConnection = 'no_connection',
   NoWallet = 'no_wallet',
 }
 
-export default function Chat(): JSX.Element {
+interface ChatProps {
+  inbox?: boolean;
+}
+
+export default function Chat({ inbox }: ChatProps): JSX.Element {
   const { disconnectedFromChain, isWalletConnected, dialects } = useDialect();
 
-  const [activeRoute, setActiveRoute] = useState<InboxRoutes>(
-    InboxRoutes.NoConnection
-  );
+  const [activeRoute, setActiveRoute] = useState<Routes>(Routes.NoConnection);
 
   useEffect(
     function pickRoute() {
       if (disconnectedFromChain) {
-        setActiveRoute(InboxRoutes.NoConnection);
+        setActiveRoute(Routes.NoConnection);
       } else if (!isWalletConnected) {
-        setActiveRoute(InboxRoutes.NoWallet);
+        setActiveRoute(Routes.NoWallet);
       } else {
-        setActiveRoute(InboxRoutes.Main);
+        setActiveRoute(Routes.Main);
       }
     },
     [disconnectedFromChain, isWalletConnected]
@@ -35,10 +37,10 @@ export default function Chat(): JSX.Element {
 
   const { colors, modal } = useTheme();
 
-  const routes: Record<InboxRoutes, React.ReactNode> = {
-    [InboxRoutes.NoConnection]: <NoConnection />,
-    [InboxRoutes.NoWallet]: <NoWallet />,
-    [InboxRoutes.Main]: <Main />,
+  const routes: Record<Routes, React.ReactNode> = {
+    [Routes.NoConnection]: <NoConnection />,
+    [Routes.NoWallet]: <NoWallet />,
+    [Routes.Main]: <Main inbox={inbox} />,
   };
 
   return (

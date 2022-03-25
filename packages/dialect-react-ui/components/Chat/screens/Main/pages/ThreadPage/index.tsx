@@ -18,9 +18,7 @@ const ThreadPage = () => {
     <div className="flex flex-col flex-1">
       <div className="px-4 py-4 mb-2 flex justify-between border-b border-neutral-600 font-bold">
         <div
-          className={clsx('cursor-pointer', {
-            'md:hidden': !settingsOpen,
-          })}
+          className={clsx('cursor-pointer')}
           onClick={() => {
             if (settingsOpen) {
               setSettingsOpen(false);
