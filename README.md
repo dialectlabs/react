@@ -146,7 +146,7 @@ rm -rf lib
 4. And lastly, comment out the styles import in `examples/chat/pages/_app.tsx`, which is only used when importing compiled versions of Dialect's react packages:
 
 ```typescript
-// import '@dialectlabs/react-ui/styles';
+// import '@dialectlabs/react-ui/index.css';
 ```
 
 All of the above changes require restarting the next server, if you've already started it.
