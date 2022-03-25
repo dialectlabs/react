@@ -30,7 +30,7 @@ If you're interested in developing on Dialect while making live changes to the l
 ### Embed a notifications modal in your navbar
 
 ```typescript
-import '@dialectlabs/react-ui/styles';
+import '@dialectlabs/react-ui/index.css';
 
 import { NotificationsButton } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -66,7 +66,7 @@ The component above is a self-contained button that opens a notifications modal 
 ### Embed wallet-to-wallet chat in your navbar
 
 ```typescript
-import '@dialectlabs/react-ui/styles';
+import '@dialectlabs/react-ui/index.css';
 
 import { ChatButton } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
