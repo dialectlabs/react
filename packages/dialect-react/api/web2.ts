@@ -9,30 +9,25 @@ const DIALECT_BASE_URL = '/api';
 export type AddressType = {
   id?: string;
   addressId?: string;
-  type: 'email' | 'phone' | 'telegram';
-  verified: boolean;
-  value: string;
-  dapp: string;
-  enabled: boolean;
+  type?: 'email' | 'phone' | 'telegram';
+  verified?: boolean;
+  value?: string;
+  dapp?: string;
+  enabled?: boolean;
 };
 
 const signPayload = async (wallet: WalletContextState, payload: Uint8Array) => {
-  try {
-    const signature = wallet.signMessage
-      ? await wallet.signMessage(payload)
-      : await Promise.resolve(null);
-    if (!signature)
-      throw new Error(
-        'Your wallet does not support signing messages. Please use a wallet that supports signing messages, such as Phantom.'
-      );
-    return {
-      signature,
-      publicKey: wallet.publicKey,
-    };
-  } catch (err) {
-    console.warn(err);
-    console.log('[error] signMessage: ' + JSON.stringify(err));
-  }
+  const signature = wallet.signMessage
+    ? await wallet.signMessage(payload)
+    : await Promise.resolve(null);
+  if (!signature)
+    throw new Error(
+      'Your wallet does not support signing messages. Please use a wallet that supports signing messages, such as Phantom.'
+    );
+  return {
+    signature,
+    publicKey: wallet.publicKey,
+  };
 };
 
 export const fetchJSON = async (
@@ -57,13 +52,15 @@ export const fetchJSON = async (
       wallet as WalletContextState,
       dateEncoded
     );
-    const base64Signature = btoa(String.fromCharCode.apply(null, signature));
+    const base64Signature = btoa(
+      String.fromCharCode.apply(null, signature as unknown as number[])
+    );
     headers = {
       Authorization: `${expirationTime}.${base64Signature}`,
     };
   }
 
-  const response: ReturnType<F> = await fetch(
+  const response = await fetch(
     url,
     {
       ...options,
@@ -74,7 +71,9 @@ export const fetchJSON = async (
   if (response.ok) {
     return response;
   } else {
-    const error = new Error(response.statusText || response.status);
+    const error = new Error(
+      response.statusText || `Response status: ${response.status}`
+    );
     error.response = response;
     throw error;
   }
@@ -96,7 +95,7 @@ export const saveAddress = withErrorParsing(
   async (wallet: WalletType, dapp: string, address: AddressType) => {
     const rawResponse = await fetchJSON(
       wallet,
-      `${DIALECT_BASE_URL}/wallets/${wallet.publicKey.toBase58()}/dapps/${dapp}/addresses`,
+      `${DIALECT_BASE_URL}/wallets/${wallet?.publicKey.toBase58()}/dapps/${dapp}/addresses`,
       {
         method: 'POST',
         headers: {

@@ -5,6 +5,7 @@ export const ParsedErrorType = {
   UnknownError: 'UNKNOWN_ERROR',
   NoAccount: 'NO_ACCOUNT',
   IncorrectEmail: 'INCORRECT_EMAIL',
+  NotSigned: 'NOT_SIGNED',
 } as const;
 type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
 
@@ -57,6 +58,13 @@ export const incorrectEmail: ParsedErrorData = {
   matchers: ['Incorrect email'],
 };
 
+export const notSigned: ParsedErrorData = {
+  type: ParsedErrorType.NotSigned,
+  title: 'Error',
+  message: 'You need to sign message',
+  matchers: ['User rejected the request'],
+};
+
 export const unknownError: ParsedErrorData = {
   type: ParsedErrorType.UnknownError,
   title: 'Error',
@@ -68,6 +76,7 @@ const errors: ParsedErrorData[] = [
   disconnectedFromChain,
   cannotDecryptDialect,
   incorrectEmail,
+  notSigned,
   noAccount,
 ];
 

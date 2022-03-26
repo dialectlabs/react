@@ -110,6 +110,7 @@ export function EmailForm() {
                     e.preventDefault();
                     setEmailError(incorrectEmail);
                   }}
+                  pattern="^\S+@\S+\.\S+$"
                   disabled={isEmailSaved && !isEmailEditing}
                 />
               )}
@@ -156,7 +157,6 @@ export function EmailForm() {
                 className={'basis-full'}
                 disabled={email === ''}
                 onClick={async () => {
-                  // TODO: validate & save email
                   if (emailError) return;
 
                   await saveAddress(wallet, {

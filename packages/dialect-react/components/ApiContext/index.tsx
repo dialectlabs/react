@@ -60,20 +60,11 @@ type ValueType = {
   addresses: AddressType[] | null;
   fetchingAddressesError: ParsedErrorData | null;
   isSavingAddress: boolean;
-  saveAddress: (
-    wallet: WalletContextState,
-    address: AddressType
-  ) => Promise<void>;
+  saveAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   savingAddressError: ParsedErrorData | null;
-  updateAddress: (
-    wallet: WalletContextState,
-    address: AddressType
-  ) => Promise<void>;
+  updateAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   isDeletingAddress: boolean;
-  deleteAddress: (
-    wallet: WalletContextState,
-    address: AddressType
-  ) => Promise<void>;
+  deleteAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   deletingAddressError: ParsedErrorData | null;
 };
 
