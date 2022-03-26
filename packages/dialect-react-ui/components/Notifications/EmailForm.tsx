@@ -5,7 +5,7 @@ import { useTheme } from '../common/ThemeProvider';
 import { Button, Toggle, ValueRow } from '../common';
 import { incorrectEmail } from '@dialectlabs/react/utils/errors';
 
-function getEmailObj(addresses: AddressType[] = []): AddressType | null {
+function getEmailObj(addresses: AddressType[] | null): AddressType | null {
   if (!addresses) return null;
   return addresses.find((address) => address.type === 'email') || null;
 }
@@ -66,7 +66,16 @@ export function EmailForm() {
         <Toggle
           type="checkbox"
           checked={isEnabled}
-          onClick={() => setEnabled((prev) => !prev)}
+          onClick={async () => {
+            const nextValue = !isEnabled;
+            if (emailObj && emailObj.enabled !== nextValue) {
+              await updateAddress(wallet, {
+                id: emailObj.id,
+                enabled: nextValue,
+              });
+            }
+            setEnabled(!isEnabled);
+          }}
         />
       </ValueRow>
       {isEnabled && (
@@ -78,9 +87,7 @@ export function EmailForm() {
                   className={cs(highlighted, textStyles.body, colors.highlight)}
                 >
                   <span className="opacity-40">
-                    {!isVerified
-                      ? 'Email submitted, now you need to verify it. Check your inbox.'
-                      : '🔗 Email verified, you should now receive notifications'}
+                    🔗 Email submitted, now you should receive notifications
                   </span>
                 </div>
               ) : (
@@ -205,13 +212,8 @@ export function EmailForm() {
           {!currentError && isChanging ? (
             <p className={cs(textStyles.small, 'mb-1')}>
               ⚠️ Email change/deletion is a global setting, affecting current
-              verified. You will be prompted to sign with your wallet, this
+              submitted. You will be prompted to sign with your wallet, this
               action is free.
-            </p>
-          ) : null}
-          {!currentError && !isEmailEditing && !isVerified ? (
-            <p className={cs(textStyles.small, 'mb-1')}>
-              Awaiting email verification...
             </p>
           ) : null}
           {!currentError && !isEmailEditing && isVerified ? (
