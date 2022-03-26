@@ -141,6 +141,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
         const data = await saveAddress(wallet, dapp, address);
 
         await mutateAddresses([data]);
+        setSavingAddressError(null);
       } catch (e) {
         // TODO: implement safer error handling
         setSavingAddressError(e as ParsedErrorData);
@@ -164,6 +165,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
         const data = await updateAddress(wallet, dapp, address);
 
         await mutateAddresses([data]);
+        setSavingAddressError(null);
       } catch (e) {
         // TODO: implement safer error handling
         setSavingAddressError(e as ParsedErrorData);
@@ -187,6 +189,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
         await deleteAddress(wallet, address);
         console.log('succeffully deleted');
         await mutateAddresses([]);
+        setDeletingAddressError(null);
       } catch (e) {
         // TODO: implement safer error handling
         setDeletingAddressError(e as ParsedErrorData);
