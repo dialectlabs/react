@@ -35,7 +35,7 @@ export function EmailForm() {
   } = useTheme();
 
   const [email, setEmail] = useState(emailObj?.value);
-  const [isEnabled, setEnabled] = useState(emailObj?.enabled);
+  const [isEnabled, setEnabled] = useState(Boolean(emailObj?.enabled));
   const [isEmailSaved, setEmailSaved] = useState(Boolean(emailObj));
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
@@ -51,7 +51,7 @@ export function EmailForm() {
 
   useEffect(() => {
     // Update state if addresses updated
-    setEnabled(emailObj?.enabled);
+    setEnabled(Boolean(emailObj?.enabled));
     setEmail(emailObj?.value || '');
     setEmailEditing(!emailObj?.enabled);
     setEmailSaved(Boolean(emailObj));

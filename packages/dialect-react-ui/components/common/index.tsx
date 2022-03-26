@@ -135,7 +135,7 @@ export function BigButton(props: {
 }
 
 export function Toggle({ checked, onClick, ...props }) {
-  const [isChecked, setChecked] = useState(checked);
+  const [isChecked, setChecked] = useState<boolean>(checked);
   const { colors } = useTheme();
 
   useEffect(() => setChecked(checked), [checked]);
@@ -146,7 +146,7 @@ export function Toggle({ checked, onClick, ...props }) {
         type="checkbox"
         className="appearance-none opacity-0 w-0 h-0"
         checked={checked}
-        onClick={() => {
+        onChange={() => {
           setChecked((prev) => !prev);
           onClick();
         }}
@@ -157,7 +157,6 @@ export function Toggle({ checked, onClick, ...props }) {
         className={cs(
           'h-5 w-10 rounded-full',
           isChecked ? colors.toggleBackgroundActive : colors.toggleBackground
-          // isChecked ? colors.toggleBackgroundActive : 'bg-[#5B5B5B]'
         )}
       ></span>
       {/* Thumb */}
