@@ -20,7 +20,7 @@ For example via `<link>` tag
 — Import compiled styles into your app's entrypoint
 
 ```typescript
-import '@dialectlabs/react-ui/lib/index.css';
+import '@dialectlabs/react-ui/styles';
 ```
 
 ## Development
