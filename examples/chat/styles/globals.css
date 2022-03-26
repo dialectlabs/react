@@ -16,7 +16,7 @@ a {
 }
 
 * {
-  box-sizing: dt-border-box;
+  box-sizing: border-box;
 }
 
 @layer components {

@@ -62,12 +62,12 @@ function AuthedHome() {
         <WalletButton />
       </div>
       <div className="dt-h-full dt-text-2xl dt-flex dt-flex-col dt-justify-center">
-        <code className="dt-text-center dt-text-neutral-400 dark:text-neutral-600 dt-text-sm dt-mb-2">
+        <code className="dt-text-center dt-text-neutral-400 dark:dt-text-neutral-600 dt-text-sm dt-mb-2">
           @dialectlabs/react
         </code>
-        <code className="dt-text-center dt-text-neutral-400 dark:text-neutral-600">
+        <code className="dt-text-center dt-text-neutral-400 dark:dt-text-neutral-600">
           examples/
-          <code className="dt-text-neutral-900 dark:text-neutral-100">
+          <code className="dt-text-neutral-900 dark:dt-text-neutral-100">
             basic
           </code>
         </code>

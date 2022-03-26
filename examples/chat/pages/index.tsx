@@ -29,7 +29,7 @@ export const themeVariables: IncomingThemeVariables = {
     },
     button: `${defaultVariables.light.button} dt-border-none dt-bg-[#B852DC]`,
     highlighted: `${defaultVariables.light.highlighted} dt-bg-[#F6F6F6] dt-border dt-border-[#F0F0F0]`,
-    input: `${defaultVariables.light.input} border-b-[#59C29D] focus:dt-ring-[#59C29D] dt-text-[#59C29D]`,
+    input: `${defaultVariables.light.input} dt-border-b-[#59C29D] focus:dt-ring-[#59C29D] dt-text-[#59C29D]`,
     iconButton: `${defaultVariables.light.iconButton} hover:dt-text-[#59C29D] hover:dt-opacity-100`,
     avatar: `${defaultVariables.light.avatar} dt-bg-[#F6F6F6]`,
     messageBubble: `${defaultVariables.light.messageBubble} dt-border-none dt-bg-[#448EF7] dt-text-white`,
@@ -73,7 +73,7 @@ function AuthedHome() {
         <WalletButton />
       </div>
       <div className="dt-h-full dt-text-2xl dt-flex dt-flex-col dt-justify-center dt-items-center">
-        <code className="dt-text-center dt-text-neutral-400 dark:text-neutral-600 dt-text-sm dt-mb-2">
+        <code className="dt-text-center dt-text-neutral-400 dark:dt-text-neutral-600 dt-text-sm dt-mb-2">
           @dialectlabs/react
         </code>
         <div>
