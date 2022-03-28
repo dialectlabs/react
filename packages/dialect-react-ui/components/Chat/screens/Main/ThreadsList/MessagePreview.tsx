@@ -1,8 +1,8 @@
 import React from 'react';
 import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
-import Avatar from '../Avatar';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../../../../common/ThemeProvider';
+import Avatar from '../../../../Avatar';
 
 type PropsType = {
   dialect: DialectAccount;
@@ -33,7 +33,7 @@ export default function MessagePreview({
       <div className="flex">
         <Avatar publicKey={otherMembers[0].publicKey} size="regular" />
       </div>
-      <div className="flex grow border-b border-neutral-600 justify-between truncate">
+      <div className="flex grow border-b border-neutral-600 justify-between truncate pr-2">
         <div className="flex flex-col max-w-full truncate">
           {dialect?.dialect.members.length > 0 && <div>{otherMemberStr}</div>}
           {messages && messages?.length > 0 ? (

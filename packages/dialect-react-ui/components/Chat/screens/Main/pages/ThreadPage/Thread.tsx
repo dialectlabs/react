@@ -1,11 +1,11 @@
 import React, { KeyboardEvent, FormEvent, useState } from 'react';
-import cs from '../../utils/classNames';
+import cs from '../../../../../../utils/classNames';
 import { useDialect } from '@dialectlabs/react';
 import { useApi } from '@dialectlabs/react';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../../../../../common/ThemeProvider';
 import { formatTimestamp } from '@dialectlabs/react';
 import MessageInput from './MessageInput';
-import Avatar from '../Avatar';
+import Avatar from '../../../../../Avatar';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};

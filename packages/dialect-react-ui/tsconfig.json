@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es2019",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "declaration": true,
     "outDir": "lib/cjs",
     "allowJs": true,
@@ -15,9 +19,15 @@
     "isolatedModules": true,
     "jsx": "react",
     "sourceMap": true,
-    "noEmit": false
+    "noEmit": false,
+    "importsNotUsedAsValues": "error"
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "type": "module"
 }
