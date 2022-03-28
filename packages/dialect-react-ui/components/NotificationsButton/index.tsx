@@ -124,7 +124,7 @@ export default function NotificationsButton({
 }: PropTypes): JSX.Element {
   return (
     <div className="dialect">
-      <ApiProvider>
+      <ApiProvider dapp={props.publicKey.toBase58()}>
         <DialectProvider publicKey={props.publicKey}>
           <ThemeProvider theme={theme} variables={variables}>
             <WrappedNotificationsButton {...props} />
