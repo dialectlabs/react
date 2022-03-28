@@ -15,7 +15,7 @@ const Main = ({ inbox }: MainProps) => {
 
   const { icons } = useTheme();
 
-  const [newThreadOpen, setNewThreadOpen] = useState<boolean>(false);
+  const [newThreadOpen, setNewThreadOpen] = useState(false);
 
   return (
     <div className="h-full flex flex-1 justify-between min-w-full">
