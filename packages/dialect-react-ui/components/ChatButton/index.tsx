@@ -123,7 +123,7 @@ export default function ChatButton({
   return (
     <div className="dialect">
       <ApiProvider>
-        <DialectProvider publicKey={props.publicKey}>
+        <DialectProvider>
           <ThemeProvider theme={theme} variables={variables}>
             <WrappedChatButton {...props} />
           </ThemeProvider>

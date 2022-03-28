@@ -52,7 +52,7 @@ interface Message {
 
 type PropsType = {
   children: JSX.Element;
-  publicKey: anchor.web3.PublicKey;
+  publicKey?: anchor.web3.PublicKey;
 };
 
 // TODO: revisit api functions and errors to be moved out from context
