@@ -46,26 +46,6 @@ export default function CreateThread({
         you&apos;ll need to deposit a small amount of rent. This rent is
         recoverable.
       </p>
-      <p className={cs(textStyles.small, 'opacity-50 text-center mb-3')}>
-        By creating this thread you agree to our{' '}
-        <a
-          className="underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/tos"
-        >
-          Terms of Service
-        </a>{' '}
-        and{' '}
-        <a
-          className="underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/privacy"
-        >
-          Privacy Policy
-        </a>
-      </p>
       <Button
         onClick={async () => {
           createDialect(address, [true, true], [false, true])
@@ -92,6 +72,26 @@ export default function CreateThread({
           {creationError.message}
         </p>
       )}
+      <p className={cs(textStyles.small, 'opacity-50 text-center mt-3')}>
+        By creating this thread you agree to our{' '}
+        <a
+          className="underline"
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.dialect.to/tos"
+        >
+          Terms of Service
+        </a>{' '}
+        and{' '}
+        <a
+          className="underline"
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.dialect.to/privacy"
+        >
+          Privacy Policy
+        </a>
+      </p>
     </div>
   );
 }

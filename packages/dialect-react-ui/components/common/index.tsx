@@ -182,20 +182,20 @@ export function Accordion(props: {
 
   return (
     <div className={props?.className}>
-      <button
-        onClick={() => setExpanded((prev) => !prev)}
+      <div
+        // onClick={() => setExpanded((prev) => !prev)}
         className={cs(textStyles.bigText, 'w-full flex justify-between mb-1')}
       >
         {props.title}
-        <IconButton
+        {/* <IconButton
           icon={<icons.chevron />}
           className={cs(
             'rounded-full w-6 h-6 flex items-center justify-center',
             colors.highlight,
             !isExpanded && 'rotate-180'
           )}
-        />
-      </button>
+        /> */}
+      </div>
       <Divider className="mb-2" />
       {isExpanded ? props.children : null}
     </div>

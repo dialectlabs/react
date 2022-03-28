@@ -136,8 +136,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       bigText: 'font-inter text-base font-medium',
       header: 'font-inter text-base font-medium',
       buttonText: 'font-inter text-base',
-      bigButtonText: 'font-inter font-medium text-base text-black',
-      bigButtonSubtle: 'font-inter font-medium text-sm text-black',
+      bigButtonText: 'font-inter font-medium text-base text-[#DE5454]',
+      bigButtonSubtle: 'font-inter font-medium text-sm text-[#DE5454]',
       link: 'underline decoration-1 break-words',
     },
     icons: {
@@ -216,8 +216,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       bigText: 'font-inter text-base font-medium',
       header: 'font-inter text-base font-medium',
       buttonText: 'font-inter text-base',
-      bigButtonText: 'font-inter font-medium text-base text-white',
-      bigButtonSubtle: 'font-inter font-medium text-sm text-white',
+      bigButtonText: 'font-inter font-medium text-base text-[#DE5454]',
+      bigButtonSubtle: 'font-inter font-medium text-sm text-[#DE5454]',
       link: 'underline decoration-1 break-words',
     },
     icons: {

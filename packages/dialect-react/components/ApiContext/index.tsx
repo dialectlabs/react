@@ -44,6 +44,7 @@ export const connected = (
 
 type PropsType = {
   children: JSX.Element;
+  dapp?: string; // base58 public key format
 };
 
 export type WalletType = WalletContextState | AnchorWallet | null | undefined;
@@ -86,16 +87,15 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
 
   const [fetchingError, setFetchingError] =
     React.useState<ParsedErrorData | null>(null);
-
-  // TODO: pass dapp from props
-  const dapp = 'dialect';
+  
+  const dapp = props.dapp;
 
   const {
     data: addresses,
     mutate: mutateAddresses,
     error: fetchError,
   } = useSWR<AddressType[] | null, ParsedErrorData>(
-    wallet ? [wallet, dapp] : null,
+    wallet && dapp ? [wallet, dapp] : null,
     fetchAddressesForDapp,
     {
       onError: (err) => {
@@ -133,7 +133,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
 
   const saveAddressWrapper = useCallback(
     async (wallet: WalletContextState, address: AddressType) => {
-      if (!isWalletConnected) return;
+      if (!isWalletConnected || !dapp) return;
 
       setSavingAddress(true);
 
@@ -157,7 +157,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
 
   const updateAddressWrapper = useCallback(
     async (wallet: WalletContextState, address: AddressType) => {
-      if (!isWalletConnected) return;
+      if (!isWalletConnected || !dapp) return;
 
       setSavingAddress(true);
 

@@ -49,7 +49,7 @@ function Header(props: {
   return (
     <div className={cs('flex flex-row items-center justify-between', header)}>
       <span className={cs(textStyles.header, colors.accent)}>
-        {isDialectAvailable ? 'Notifications' : 'Setup Notifications'}
+        Notifications
       </span>
       {props.isReady ? (
         <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
@@ -81,7 +81,7 @@ function NetworkBadge({ network }) {
   );
 }
 
-function OnChain(props: { onThreadDelete?: () => void }) {
+function Wallet(props: { onThreadDelete?: () => void }) {
   const { wallet, network } = useApi();
   const {
     createDialect,
@@ -98,7 +98,7 @@ function OnChain(props: { onThreadDelete?: () => void }) {
 
   if (isDialectAvailable) {
     return (
-      <>
+      <div>
         {isDialectAvailable && dialectAddress ? (
           <ValueRow
             label={
@@ -117,7 +117,7 @@ function OnChain(props: { onThreadDelete?: () => void }) {
                 </p>
               </>
             }
-            className="mt-1 mb-4"
+            className="mt-1 mb-2"
           >
             <div className="text-right">
               <p className={cs(textStyles.small, 'opacity-60')}>
@@ -138,7 +138,7 @@ function OnChain(props: { onThreadDelete?: () => void }) {
                 props?.onThreadDelete();
               }}
               heading="Withdraw rent & delete history"
-              description="Events history will be lost forever"
+              description="Notification history will be lost forever"
               icon={<icons.trash />}
               loading={isDialectDeleting}
             />
@@ -155,54 +155,49 @@ function OnChain(props: { onThreadDelete?: () => void }) {
               )}
           </>
         ) : null}
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="h-full pb-8 m-auto flex flex-col">
+    <div className="h-full m-auto flex flex-col">
       {wallet ? (
         <ValueRow
           label={
             <>
-              Balance ({display(wallet?.publicKey)}){' '}
-              <NetworkBadge network={network} />
+              <p className={cs(textStyles.small, 'opacity-60')}>
+                Wallet address
+              </p>
+              <p>
+                <a
+                  target="_blank"
+                  href={getExplorerAddress(wallet.publicKey)}
+                  rel="noreferrer"
+                >
+                  {display(wallet?.publicKey)}↗
+                </a>
+              </p>
             </>
           }
           className="mt-1 mb-1"
         >
-          {balance || 0} SOL
+          <div className="text-right">
+            <p className={cs(textStyles.small, 'opacity-60')}>
+              Balance
+            </p>
+            <p>{balance || 0} SOL</p>
+          </div>
         </ValueRow>
       ) : null}
       <ValueRow
         label="Rent Deposit (recoverable)"
-        className={cs('w-full mb-4')}
+        className={cs('w-full mb-3')}
       >
         0.058 SOL
       </ValueRow>
-      <p className={cs(textStyles.body, 'text-center mb-1')}>
-        To start this message thread, you&apos;ll need to deposit a small amount
-        of rent, since messages are stored on-chain.
-      </p>
       <p className={cs(textStyles.small, 'opacity-50 text-center mb-3')}>
-        By creating this thread you agree to our{' '}
-        <a
-          className="underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/tos"
-        >
-          Terms of Service
-        </a>{' '}
-        and{' '}
-        <a
-          className="underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/privacy"
-        >
-          Privacy Policy
-        </a>
+        To start this notifications thread, you&apos;ll need to deposit a small amount
+        of rent, since messages are stored on-chain.
       </p>
       <Button
         onClick={() => createDialect().catch(noop)}
@@ -224,9 +219,11 @@ function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
 }) {
+  const { colors, highlighted, textStyles } = useTheme();
   return (
     <>
-      <Accordion className="mb-3" defaultExpanded title="Event types">
+      <Accordion className="mb-8" defaultExpanded title="Notification types">
+        <p className={cs(textStyles.small, 'opacity-50 my-3')}>The following notification types are supported</p>
         {props.notifications
           ? props.notifications.map((type) => (
               <ValueRow
@@ -239,12 +236,34 @@ function Settings(props: {
             ))
           : 'No notification types supplied'}
       </Accordion>
-      <Accordion className="mb-3" defaultExpanded title="Email Notifications">
+      <Accordion className="mb-8" defaultExpanded title="Wallet notifications">
+        <p className={cs(textStyles.small, 'opacity-50 my-3')}>Receive notifications directly to your wallet</p>
+        <Wallet onThreadDelete={props.toggleSettings} />
+      </Accordion>
+      <Accordion className="mb-3" defaultExpanded title="Email notifications">
+        <p className={cs(textStyles.small, 'opacity-50 my-3')}>Receive notifications to your email. Emails are stored securely off-chain.</p>
         <EmailForm />
       </Accordion>
-      <Accordion className="mb-3" defaultExpanded title="Wallet Notifications">
-        <OnChain onThreadDelete={props.toggleSettings} />
-      </Accordion>
+      <p className={cs(textStyles.small, 'opacity-50 text-center mb-10')}>
+        By enabling notifications you agree to our{' '}
+        <a
+          className="underline"
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.dialect.to/tos"
+        >
+          Terms of Service
+        </a>{' '}
+        and{' '}
+        <a
+          className="underline"
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.dialect.to/privacy"
+        >
+          Privacy Policy
+        </a>
+      </p>
     </>
   );
 }

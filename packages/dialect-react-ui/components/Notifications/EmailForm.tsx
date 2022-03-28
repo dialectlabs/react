@@ -61,7 +61,7 @@ export function EmailForm() {
     <div>
       <ValueRow
         className="mb-2"
-        label="I want to receive email notifications for this Dapp"
+        label={`Enable email notifications`}
       >
         <Toggle
           type="checkbox"
@@ -87,7 +87,7 @@ export function EmailForm() {
                   className={cs(highlighted, textStyles.body, colors.highlight)}
                 >
                   <span className="opacity-40">
-                    🔗 Email submitted, now you should receive notifications
+                    🔗 Email submitted
                   </span>
                 </div>
               ) : (
@@ -177,6 +177,15 @@ export function EmailForm() {
             {!isEmailEditing ? (
               <div className="flex flex-row space-x-2">
                 <Button
+                  className="basis-1/2"
+                  onClick={async () => {
+                    setEmailEditing(true);
+                  }}
+                  loading={isSavingAddress}
+                >
+                  Change email
+                </Button>
+                <Button
                   className={'basis-1/2'}
                   defaultStyle={secondaryRemoveButton}
                   onClick={async () => {
@@ -191,15 +200,6 @@ export function EmailForm() {
                 >
                   {isDeletingAddress ? 'Deleting...' : 'Delete email'}
                 </Button>
-                <Button
-                  className="basis-1/2"
-                  onClick={async () => {
-                    setEmailEditing(true);
-                  }}
-                  loading={isSavingAddress}
-                >
-                  Change email
-                </Button>
               </div>
             ) : null}
           </div>
@@ -211,8 +211,7 @@ export function EmailForm() {
           ) : null}
           {!currentError && isChanging ? (
             <p className={cs(textStyles.small, 'mb-1')}>
-              ⚠️ Email change/deletion is a global setting, affecting current
-              submitted. You will be prompted to sign with your wallet, this
+              ⚠️ Changing or deleting your email is a global setting across all dapps. You will be prompted to sign with your wallet, this
               action is free.
             </p>
           ) : null}

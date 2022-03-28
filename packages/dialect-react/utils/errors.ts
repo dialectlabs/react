@@ -61,7 +61,7 @@ export const incorrectEmail: ParsedErrorData = {
 export const notSigned: ParsedErrorData = {
   type: ParsedErrorType.NotSigned,
   title: 'Error',
-  message: 'You need to sign message',
+  message: 'You must sign the message to complete this action',
   matchers: ['User rejected the request'],
 };
 

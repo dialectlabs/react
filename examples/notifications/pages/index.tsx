@@ -54,8 +54,7 @@ function AuthedHome() {
           theme={theme}
           variables={themeVariables}
           notifications={[
-            { name: 'Welcome message on thread creation', detail: 'Event' },
-            { name: 'Collateral health', detail: 'Below 130%' },
+            { name: 'Welcome message', detail: 'On thread creation' },
           ]}
         />
         <WalletButton />
