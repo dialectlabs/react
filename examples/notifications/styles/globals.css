@@ -21,7 +21,7 @@ a {
 
 @layer components {
   .wallet-adapter-button.dialect-wallet-button {
-    dt-border: 1px solid white;
+    border: 1px solid white;
     @apply dt-flex dt-items-center dt-transition dt-ease-in-out dt-duration-300 dt-text-black dark:dt-text-white dt-border dt-border-neutral-300 dark:dt-border-neutral-600 dt-rounded-md dt-py-2 dt-px-6 dt-bg-transparent dt-shadow-md dt-shadow-neutral-300 dark:dt-shadow-neutral-800;
   }
   .wallet-adapter-button.dialect-wallet-button:hover,
