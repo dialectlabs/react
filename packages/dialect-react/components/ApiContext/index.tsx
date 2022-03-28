@@ -87,7 +87,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
 
   const [fetchingError, setFetchingError] =
     React.useState<ParsedErrorData | null>(null);
-  
+
   const dapp = props.dapp;
 
   const {
@@ -169,7 +169,6 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
       } catch (e) {
         // TODO: implement safer error handling
         setSavingAddressError(e as ParsedErrorData);
-
         // Passing through the error, in case for additional UI error handling
         throw e;
       } finally {
@@ -187,7 +186,6 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
 
       try {
         await deleteAddress(wallet, address);
-        console.log('succeffully deleted');
         await mutateAddresses([]);
         setDeletingAddressError(null);
       } catch (e) {

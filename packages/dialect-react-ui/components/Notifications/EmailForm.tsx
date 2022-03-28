@@ -36,10 +36,10 @@ export function EmailForm() {
 
   const [email, setEmail] = useState(emailObj?.value);
   const [isEnabled, setEnabled] = useState(Boolean(emailObj?.enabled));
-  const [isEmailSaved, setEmailSaved] = useState(Boolean(emailObj));
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
 
+  const isEmailSaved = Boolean(emailObj);
   const isChanging = emailObj && isEmailEditing;
   const isVerified = emailObj?.verified;
 
@@ -54,21 +54,18 @@ export function EmailForm() {
     setEnabled(Boolean(emailObj?.enabled));
     setEmail(emailObj?.value || '');
     setEmailEditing(!emailObj?.enabled);
-    setEmailSaved(Boolean(emailObj));
   }, [emailObj]);
 
   return (
     <div>
-      <ValueRow
-        className="mb-2"
-        label={`Enable email notifications`}
-      >
+      <ValueRow className="mb-2" label="Enable email notifications">
         <Toggle
           type="checkbox"
           checked={isEnabled}
           onClick={async () => {
             const nextValue = !isEnabled;
             if (emailObj && emailObj.enabled !== nextValue) {
+              // TODO: handle error
               await updateAddress(wallet, {
                 id: emailObj.id,
                 enabled: nextValue,
@@ -86,9 +83,7 @@ export function EmailForm() {
                 <div
                   className={cs(highlighted, textStyles.body, colors.highlight)}
                 >
-                  <span className="opacity-40">
-                    🔗 Email submitted
-                  </span>
+                  <span className="opacity-40">🔗 Email submitted</span>
                 </div>
               ) : (
                 <input
@@ -142,7 +137,6 @@ export function EmailForm() {
                       addressId: emailObj?.addressId,
                     });
 
-                    setEmailSaved(true);
                     setEmailEditing(false);
                   }}
                   loading={isSavingAddress}
@@ -164,9 +158,6 @@ export function EmailForm() {
                     value: email,
                     enabled: true,
                   });
-
-                  setEmailSaved(true);
-                  setEmailEditing(false);
                 }}
                 loading={isSavingAddress}
               >
@@ -192,9 +183,6 @@ export function EmailForm() {
                     await deleteAddress(wallet, {
                       addressId: emailObj?.addressId,
                     });
-
-                    setEnabled(false);
-                    setEmail('');
                   }}
                   loading={isDeletingAddress}
                 >
@@ -211,8 +199,9 @@ export function EmailForm() {
           ) : null}
           {!currentError && isChanging ? (
             <p className={cs(textStyles.small, 'mb-1')}>
-              ⚠️ Changing or deleting your email is a global setting across all dapps. You will be prompted to sign with your wallet, this
-              action is free.
+              ⚠️ Changing or deleting your email is a global setting across all
+              dapps. You will be prompted to sign with your wallet, this action
+              is free.
             </p>
           ) : null}
           {!currentError && !isEmailEditing && isVerified ? (
