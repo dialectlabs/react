@@ -17,3 +17,7 @@
 ## [0.2.1] - 2022-03-29
 
 - Isolate dialect styles via 'dt-' prefix in tailwind
+
+## [0.2.2] - 2022-03-29
+
+- Add focus-visible polifill to avoid focus state on buttons on mouse click
