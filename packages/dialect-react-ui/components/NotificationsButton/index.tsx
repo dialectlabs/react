@@ -82,32 +82,37 @@ function WrappedNotificationsButton(
   const { colors, bellButton, icons, modalWrapper } = useTheme();
 
   return (
-    <div className={cs('flex flex-col items-end relative', colors.primary)}>
+    <div
+      className={cs(
+        'dt-flex dt-flex-col dt-items-end dt-relative',
+        colors.primary
+      )}
+    >
       <IconButton
         ref={bellRef}
         className={cs(
-          'flex items-center justify-center rounded-full focus:outline-none shadow-md',
+          'dt-flex dt-items-center dt-justify-center dt-rounded-full focus:dt-outline-none dt-shadow-md',
           colors.bg,
           bellButton
         )}
-        icon={<icons.bell className={cs('w-6 h-6 rounded-full')} />}
+        icon={<icons.bell className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={() => setOpen(!open)}
       ></IconButton>
       <Transition
         className={modalWrapper}
         show={open}
-        enter="transition-opacity duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-100"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
+        enter="dt-transition-opacity dt-duration-300"
+        enterFrom="dt-opacity-0"
+        enterTo="dt-opacity-100"
+        leave="dt-transition-opacity dt-duration-100"
+        leaveFrom="dt-opacity-100"
+        leaveTo="dt-opacity-0"
       >
         <div
           ref={wrapperRef}
-          className="w-full h-full"
+          className="dt-w-full dt-h-full"
           // TODO: investigate blur
-          // className="w-full h-full bg-white/10"
+          // className="dt-w-full dt-h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
           <Notifications notifications={props?.notifications} />

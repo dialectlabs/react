@@ -1,5 +1,6 @@
 import React from 'react';
 import cs from '../../utils/classNames';
+import { ButtonBase } from '../common/preflighted';
 import { useTheme } from '../common/ThemeProvider';
 
 type IconButtonPropsType = {
@@ -17,8 +18,8 @@ export default React.forwardRef(function IconButton(
 ): JSX.Element {
   const { iconButton } = useTheme();
   return (
-    <div className={cs(' relative', props.className)} style={props.style}>
-      <button
+    <div className={cs('dt-relative', props.className)} style={props.style}>
+      <ButtonBase
         ref={ref}
         className={iconButton}
         onClick={(event) => {
@@ -27,7 +28,7 @@ export default React.forwardRef(function IconButton(
         }}
       >
         {props.icon}
-      </button>
+      </ButtonBase>
     </div>
   );
 });

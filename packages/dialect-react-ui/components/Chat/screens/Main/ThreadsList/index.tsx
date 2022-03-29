@@ -12,12 +12,12 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
   if (!chatThreads.length) {
     return (
       <Centered>
-        <span className="opacity-60">No messages yet</span>
+        <span className="dt-opacity-60">No messages yet</span>
       </Centered>
     );
   }
   return (
-    <div className="flex flex-1 flex-col space-y-2">
+    <div className="dt-flex dt-flex-1 dt-flex-col dt-space-y-2">
       {chatThreads.map((subscription) => (
         <MessagePreview
           key={subscription.publicKey.toBase58()}

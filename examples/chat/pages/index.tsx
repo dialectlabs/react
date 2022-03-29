@@ -8,30 +8,32 @@ import { defaultVariables } from '@dialectlabs/react-ui';
 // teal: #59C29D
 // dark: #353535
 // light: #F6F6F6
-// border-light: #F0F0F0
+// dt-border-light: #F0F0F0
 // blue: #448EF7
 
 // TODO: Use useTheme instead of explicitly importing defaultVariables
 export const themeVariables: IncomingThemeVariables = {
   dark: {
     bellButton:
-      'w-12 h-12 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700',
-    modal: 'rounded-3xl shadow-xl shadow-neutral-900 border border-neutral-800',
+      'dt-w-12 dt-h-12 dt-shadow-xl dt-shadow-neutral-800 dt-border dt-border-neutral-600 hover:dt-shadow-neutral-700',
+    modal:
+      'dt-rounded-3xl dt-shadow-xl dt-shadow-neutral-900 dt-border dt-border-neutral-800',
   },
   light: {
     bellButton:
-      'w-12 h-12 shadow-md hover:shadow-lg shadow-neutral-300 hover:shadow-neutral-400 text-[#59C29D]',
-    modal: 'border border-[#F0F0F0] shadow-lg shadow-neutral-300 rounded-xl',
+      'dt-w-12 dt-h-12 dt-shadow-md hover:dt-shadow-lg dt-shadow-neutral-300 hover:dt-shadow-neutral-400 dt-text-[#59C29D]',
+    modal:
+      'dt-border border-[#F0F0F0] dt-shadow-lg dt-shadow-neutral-300 dt-rounded-xl',
     colors: {
-      primary: 'text-[#353535]',
+      primary: 'dt-text-[#353535]',
     },
-    button: `${defaultVariables.light.button} border-none bg-[#B852DC]`,
-    highlighted: `${defaultVariables.light.highlighted} bg-[#F6F6F6] border border-[#F0F0F0]`,
-    input: `${defaultVariables.light.input} border-b-[#59C29D] focus:ring-[#59C29D] text-[#59C29D]`,
-    iconButton: `${defaultVariables.light.iconButton} hover:text-[#59C29D] hover:opacity-100`,
-    avatar: `${defaultVariables.light.avatar} bg-[#F6F6F6]`,
-    messageBubble: `${defaultVariables.light.messageBubble} border-none bg-[#448EF7] text-white`,
-    sendButton: `${defaultVariables.light.sendButton} bg-[#59C29D]`,
+    button: `${defaultVariables.light.button} dt-border-none dt-bg-[#B852DC]`,
+    highlighted: `${defaultVariables.light.highlighted} dt-bg-[#F6F6F6] dt-border dt-border-[#F0F0F0]`,
+    input: `${defaultVariables.light.input} dt-border-b-[#59C29D] focus:dt-ring-[#59C29D] dt-text-[#59C29D]`,
+    iconButton: `${defaultVariables.light.iconButton} hover:dt-text-[#59C29D] hover:dt-opacity-100`,
+    avatar: `${defaultVariables.light.avatar} dt-bg-[#F6F6F6]`,
+    messageBubble: `${defaultVariables.light.messageBubble} dt-border-none dt-bg-[#448EF7] dt-text-white`,
+    sendButton: `${defaultVariables.light.sendButton} dt-bg-[#59C29D]`,
   },
 };
 
@@ -60,8 +62,8 @@ function AuthedHome() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-black">
-      <div className="flex flex-row justify-end p-2 items-center space-x-2">
+    <div className="dt-flex dt-flex-col dt-h-screen dt-bg-white dark:dt-bg-black">
+      <div className="dt-flex dt-flex-row dt-justify-end dt-p-2 dt-items-center dt-space-x-2">
         <ChatButton
           wallet={wallet}
           network={'localnet'}
@@ -70,12 +72,12 @@ function AuthedHome() {
         />
         <WalletButton />
       </div>
-      <div className="h-full text-2xl flex flex-col justify-center items-center">
-        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
+      <div className="dt-h-full dt-text-2xl dt-flex dt-flex-col dt-justify-center dt-items-center">
+        <code className="dt-text-center dt-text-neutral-400 dark:dt-text-neutral-600 dt-text-sm dt-mb-2">
           @dialectlabs/react
         </code>
         <div>
-          <code className="shrink text-center text-transparent bg-clip-text bg-gradient-to-r from-[#B852DC] to-[#59C29D]">
+          <code className="shrink dt-text-center dt-text-transparent dt-bg-clip-text dt-bg-gradient-to-r dt-from-[#B852DC] dt-to-[#59C29D]">
             examples/chat
           </code>
         </div>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { display } from '@dialectlabs/web3';
 import { useDialect } from '@dialectlabs/react';
+import clsx from 'clsx';
+import { A, P } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import { BigButton, ValueRow } from '../../../../../common';
-import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../../../utils/getExplorerAddress';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -30,27 +31,27 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
           <ValueRow
             label={
               <>
-                <p className={clsx(textStyles.small, 'opacity-60')}>
+                <P className={clsx(textStyles.small, 'dt-opacity-60')}>
                   Account address
-                </p>
-                <p>
-                  <a
+                </P>
+                <P>
+                  <A
                     target="_blank"
                     href={getExplorerAddress(dialectAddress)}
                     rel="noreferrer"
                   >
                     {display(dialectAddress)}↗
-                  </a>
-                </p>
+                  </A>
+                </P>
               </>
             }
-            className="mt-1 mb-4"
+            className="dt-mt-1 dt-mb-4"
           >
-            <div className="text-right">
-              <p className={clsx(textStyles.small, 'opacity-60')}>
+            <div className="dt-text-right">
+              <P className={clsx(textStyles.small, 'dt-opacity-60')}>
                 Deposited Rent
-              </p>
-              <p>0.058 SOL</p>
+              </P>
+              <P>0.058 SOL</P>
             </div>
           </ValueRow>
         ) : null}
@@ -68,11 +69,14 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
           loading={isDialectDeleting}
         />
         {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-          <p
-            className={clsx(textStyles.small, 'text-red-500 text-center mt-2')}
+          <P
+            className={clsx(
+              textStyles.small,
+              'dt-text-red-500 dt-text-center dt-mt-2'
+            )}
           >
             {deletionError.message}
-          </p>
+          </P>
         )}
       </div>
     </>

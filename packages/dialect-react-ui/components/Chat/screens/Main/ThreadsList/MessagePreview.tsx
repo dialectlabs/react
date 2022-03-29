@@ -1,7 +1,6 @@
 import React from 'react';
 import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
-import { useTheme } from '../../../../common/ThemeProvider';
 import Avatar from '../../../../Avatar';
 
 type PropsType = {
@@ -13,7 +12,6 @@ export default function MessagePreview({
   dialect,
   onClick,
 }: PropsType): JSX.Element {
-  const { divider } = useTheme();
   const { wallet } = useApi();
   const otherMembers = dialect?.dialect.members.filter(
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
@@ -27,30 +25,30 @@ export default function MessagePreview({
 
   return (
     <div
-      className="flex space-x-2 items-center w-full cursor-pointer"
+      className="dt-flex dt-space-x-2 dt-items-center dt-w-full dt-cursor-pointer"
       onClick={onClick}
     >
-      <div className="flex">
+      <div className="dt-flex">
         <Avatar publicKey={otherMembers[0].publicKey} size="regular" />
       </div>
-      <div className="flex grow border-b border-neutral-600 justify-between truncate pr-2">
-        <div className="flex flex-col max-w-full truncate">
+      <div className="dt-flex dt-grow dt-border-b dt-border-neutral-600 dt-justify-between dt-truncate dt-pr-2">
+        <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {dialect?.dialect.members.length > 0 && <div>{otherMemberStr}</div>}
           {messages && messages?.length > 0 ? (
-            <div className="max-w-full text-sm opacity-50 mb-2 truncate">
-              <span className="opacity-50">
+            <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-truncate">
+              <span className="dt-opacity-50">
                 {messages[0].owner.toString() ===
                   wallet?.publicKey?.toString() && 'You:'}
               </span>{' '}
               {messages[0].text}
             </div>
           ) : (
-            <div className="text-sm opacity-30 italic mb-2">
+            <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2">
               No messages yet
             </div>
           )}
         </div>
-        <div className="text-xs opacity-30">
+        <div className="dt-text-xs dt-opacity-30">
           {formatTimestamp(dialect.dialect.lastMessageTimestamp)}
         </div>
       </div>

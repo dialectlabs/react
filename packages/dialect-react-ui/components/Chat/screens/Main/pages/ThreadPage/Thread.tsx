@@ -43,8 +43,8 @@ export default function Thread() {
     sendingMessage;
 
   return (
-    <div className="flex flex-col h-full justify-between">
-      <div className="h-full py-2 overflow-y-auto flex flex-col-reverse space-y-2 space-y-reverse justify-start">
+    <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">
+      <div className="dt-h-full dt-py-2 dt-overflow-y-auto dt-flex dt-flex-col-reverse dt-space-y-2 dt-space-y-reverse dt-justify-start">
         {messages.map((message) => {
           const isYou =
             message.owner.toString() === wallet?.publicKey?.toString();
@@ -53,15 +53,17 @@ export default function Thread() {
             return (
               <div
                 key={message.timestamp}
-                className={'ml-10 flex flex-row items-center mb-2 justify-end'}
+                className={
+                  'dt-ml-10 dt-flex dt-flex-row dt-items-center dt-mb-2 dt-justify-end'
+                }
               >
-                <div className={cs(messageBubble, 'max-w-full flex-row')}>
-                  <div className={'items-end'}>
-                    <div className={'break-words text-sm text-right'}>
+                <div className={cs(messageBubble, 'dt-max-w-full dt-flex-row')}>
+                  <div className={'dt-items-end'}>
+                    <div className={'dt-break-words dt-text-sm dt-text-right'}>
                       {message.text}
                     </div>
                     <div className={''}>
-                      <div className={'opacity-50 text-xs'}>
+                      <div className={'dt-opacity-50 dt-text-xs'}>
                         {formatTimestamp(message.timestamp)}
                       </div>
                     </div>
@@ -72,20 +74,25 @@ export default function Thread() {
           }
 
           return (
-            <div key={message.timestamp} className={'flex flex-row mb-2'}>
+            <div
+              key={message.timestamp}
+              className={'dt-flex dt-flex-row dt-mb-2'}
+            >
               <div className={''}>
                 <Avatar size="small" publicKey={message.owner} />
               </div>
               <div
                 className={cs(
                   otherMessageBubble,
-                  'max-w-xs flex-row flex-shrink'
+                  'dt-max-w-xs dt-flex-row dt-flex-shrink'
                 )}
               >
-                <div className={'text-left'}>
-                  <div className={'text-sm break-words'}>{message.text}</div>
-                  <div className={'items-end'}>
-                    <div className={'opacity-50 text-xs text-right'}>
+                <div className={'dt-text-left'}>
+                  <div className={'dt-text-sm dt-break-words'}>
+                    {message.text}
+                  </div>
+                  <div className={'dt-items-end'}>
+                    <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>
                       {formatTimestamp(message.timestamp)}
                     </div>
                   </div>

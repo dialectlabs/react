@@ -44,16 +44,18 @@ export default function Chat({ inbox }: ChatProps): JSX.Element {
   };
 
   return (
-    <div className="dialect h-full">
+    <div className="dialect dt-h-full">
       <div
         className={cs(
-          'flex flex-col h-full shadow-md overflow-hidden',
+          'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
           colors.primary,
           colors.bg,
           modal
         )}
       >
-        <div className="h-full overflow-y-scroll">{routes[activeRoute]}</div>
+        <div className="dt-h-full dt-overflow-y-scroll">
+          {routes[activeRoute]}
+        </div>
         <Footer
           showBackground={Boolean(dialects?.length && dialects?.length > 4)}
         />

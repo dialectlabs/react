@@ -7,8 +7,10 @@ const NoConnection = () => {
 
   return (
     <Centered>
-      <icons.offline className="w-10 mb-6 opacity-60" />
-      <span className="opacity-60">Lost connection to Solana blockchain</span>
+      <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+      <span className="dt-opacity-60">
+        Lost connection to Solana blockchain
+      </span>
     </Centered>
   );
 };

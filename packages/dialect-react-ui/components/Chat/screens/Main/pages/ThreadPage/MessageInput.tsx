@@ -1,6 +1,7 @@
 import React, { KeyboardEvent, FormEvent } from 'react';
-import { useTheme } from '../../../../../common/ThemeProvider';
 import clsx from 'clsx';
+import { ButtonBase, Textarea } from '../../../../../common/preflighted';
+import { useTheme } from '../../../../../common/ThemeProvider';
 
 type PropsType = {
   text: string;
@@ -27,40 +28,40 @@ export default function MessageInput({
   //   : undefined;
   return (
     <div className="dialect">
-      <div className="flex flex-col pb-2 mb-2">
+      <div className="dt-flex dt-flex-col dt-pb-2 dt-mb-2">
         <form onSubmit={onSubmit}>
-          <div className="relative">
-            <div className="text-sm break-words py-1 pl-2 pr-11">
+          <div className="dt-relative">
+            <div className="dt-text-sm dt-break-words dt-py-1 dt-pl-2 dt-pr-11">
               {text || 'h'}
             </div>
-            <div className="absolute top-0 w-full h-full flex flex-grow items-center">
-              <textarea
+            <div className="dt-absolute dt-top-0 dt-w-full dt-h-full dt-flex dt-flex-grow dt-items-center">
+              <Textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
-                className={clsx(textArea, 'resize-none h-full w-full')}
+                className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full')}
               />
-              <button
-                className="absolute inset-y-0 -right-2 flex items-center pr-3 disabled:cursor-not-allowed"
+              <ButtonBase
+                className="dt-button dt-absolute dt-inset-y-0 dt--right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"
                 disabled={disabled}
               >
                 <icons.arrowsmright
-                  className={clsx(sendButton, disabled ? 'opacity-50' : '')}
+                  className={clsx(sendButton, disabled ? 'dt-opacity-50' : '')}
                 />
-              </button>
+              </ButtonBase>
             </div>
           </div>
         </form>
-        <div className="flex justify-between">
-          <div className="flex space-x-3">
-            <div className="text-xs pl-1">{text.length}/280</div>
-            {/* <div className="text-xs">⊙ {0 || '–'}</div> */}
+        <div className="dt-flex dt-justify-between">
+          <div className="dt-flex dt-space-x-3">
+            <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
+            {/* <div className="dt-text-xs">⊙ {0 || '–'}</div> */}
           </div>
           {!disabled && (
-            <div className="flex text-xs items-center pr-1">
+            <div className="dt-flex dt-text-xs dt-items-center dt-pr-1">
               enter
-              <icons.arrownarrowright className="h-4 w-4" />
+              <icons.arrownarrowright className="dt-h-4 dt-w-4" />
             </div>
           )}
         </div>

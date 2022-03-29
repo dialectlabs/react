@@ -7,5 +7,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-  important: '.dialect',
+  prefix: 'dt-',
 };

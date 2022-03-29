@@ -4,6 +4,7 @@ module.exports = {
     // For local development uncomment next two lines for tailwind to take into account workspace files too
     // '../../node_modules/@dialectlabs/react-ui/**/*.{js,ts,jsx,tsx}',
   ],
+  prefix: 'dt-',
   theme: {
     extend: {
       fontFamily: {

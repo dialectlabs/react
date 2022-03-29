@@ -4,13 +4,13 @@ import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 
 const containerStyleMap = {
-  regular: 'w-14 h-14',
-  small: 'w-11 h-11',
+  regular: 'dt-w-14 dt-h-14',
+  small: 'dt-w-11 dt-h-11',
 };
 
 const textStyleMap = {
-  regular: 'text-lg',
-  small: 'text-base',
+  regular: 'dt-text-lg',
+  small: 'dt-text-base',
 };
 
 type PropTypes = {
@@ -24,7 +24,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
     <div
       className={cs(
         avatar,
-        `flex
+        `dt-flex
         ${containerStyleMap[size]}`
       )}
     >
