@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, SVGProps } from 'react';
 import deepMerge from '../../utils/deepMerge';
 import {
   ArrowNarrowRight,
@@ -98,7 +98,7 @@ export type ThemeValues = Required<
   Omit<IncomingThemeValues, 'colors' | 'textStyles' | 'icons'> & {
     colors: Record<ThemeColors, string>;
     textStyles: Record<ThemeTextStyles, string>;
-    icons: Record<ThemeIcons, React.ReactElement>;
+    icons: Record<ThemeIcons, (svg: SVGProps<SVGSVGElement>) => JSX.Element>;
   }
 >;
 

@@ -2,8 +2,11 @@ import Chat from './components/Chat';
 import ChatButton from './components/ChatButton';
 import Notifications from './components/Notifications';
 import NotificationsButton from './components/NotificationsButton';
-import MessageInput from './components/Chat/MessageInput';
-import { defaultVariables } from './components/common/ThemeProvider';
+import Inbox from './components/Inbox';
+import {
+  defaultVariables,
+  ThemeProvider,
+} from './components/common/ThemeProvider';
 
 import type {
   ThemeType,
@@ -17,10 +20,11 @@ import type {
 export {
   Chat,
   ChatButton,
-  MessageInput,
   NotificationsButton,
   Notifications,
+  Inbox,
   defaultVariables,
+  ThemeProvider,
 };
 
 export type {

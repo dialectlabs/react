@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ChatButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { defaultVariables } from '@dialectlabs/react-ui/components/common/ThemeProvider';
+import { defaultVariables } from '@dialectlabs/react-ui';
 // pink: #B852DC
 // teal: #59C29D
 // dark: #353535

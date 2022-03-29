@@ -1,5 +1,8 @@
 import * as anchor from '@project-serum/anchor';
-import { AnchorWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import type {
+  AnchorWallet,
+  WalletContextState,
+} from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { idl, programs } from '@dialectlabs/web3';

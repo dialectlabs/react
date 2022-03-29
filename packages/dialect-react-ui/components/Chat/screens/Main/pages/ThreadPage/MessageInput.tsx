@@ -1,7 +1,7 @@
 import React, { KeyboardEvent, FormEvent } from 'react';
-import { ButtonBase, Textarea } from '../common/preflighted';
-import { useTheme } from '../common/ThemeProvider';
-import cs from '../../utils/classNames';
+import clsx from 'clsx';
+import { ButtonBase, Textarea } from '../../../../../common/preflighted';
+import { useTheme } from '../../../../../common/ThemeProvider';
 
 type PropsType = {
   text: string;
@@ -40,14 +40,14 @@ export default function MessageInput({
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
-                className={cs(textArea, 'dt-resize-none dt-h-full dt-w-full')}
+                className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full')}
               />
               <ButtonBase
                 className="dt-button dt-absolute dt-inset-y-0 dt--right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"
                 disabled={disabled}
               >
                 <icons.arrowsmright
-                  className={cs(sendButton, disabled ? 'dt-opacity-50' : '')}
+                  className={clsx(sendButton, disabled ? 'dt-opacity-50' : '')}
                 />
               </ButtonBase>
             </div>

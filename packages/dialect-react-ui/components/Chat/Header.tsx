@@ -5,6 +5,7 @@ import { useDialect } from '@dialectlabs/react';
 import IconButton from '../IconButton';
 import { useTheme } from '../common/ThemeProvider';
 import cs from '../../utils/classNames';
+import clsx from 'clsx';
 
 export default function Header(props: {
   isReady: boolean;
@@ -88,8 +89,8 @@ export default function Header(props: {
 
   return (
     <div
-      className={cs(
-        'dt-flex dt-flex-row dt-items-center dt-justify-between',
+      className={clsx(
+        'dt-flex dt-flex-row dt-items-center dt-justify-between dt-h-20',
         header
       )}
     >

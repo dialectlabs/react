@@ -1004,20 +1004,6 @@
     js-sha256 "^0.9.0"
     tweetnacl "1.0.3"
 
-"@dialectlabs/web3@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/web3/-/web3-0.1.6.tgz#3dbda8485d68dd419a9eeba42f9ac697823445d6"
-  integrity sha512-mL0/5TCkP6zU6zEMKOGXJc5TPMwY+UbQcIM87wAcZSNOnFxEBnH8DmU2PQiPn2pICWRarZPzsWVDBfbRkUhXkA==
-  dependencies:
-    "@project-serum/anchor" "0.18.2"
-    "@solana/spl-token" "^0.1.8"
-    "@solana/web3.js" "^1.22.0"
-    bytebuffer "^5.0.1"
-    copy-to-clipboard "^3.3.1"
-    ed2curve "0.3.0"
-    js-sha256 "^0.9.0"
-    tweetnacl "1.0.3"
-
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.npmjs.org/@eslint/eslintrc/-/eslintrc-0.4.3.tgz"
@@ -2340,6 +2326,11 @@ cliui@^7.0.2:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
+
+clsx@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
+  integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
 
 color-convert@^1.9.0:
   version "1.9.3"

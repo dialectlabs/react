@@ -1,16 +1,20 @@
 import React from 'react';
 import { display } from '@dialectlabs/web3';
 import { useDialect } from '@dialectlabs/react';
-import { useTheme } from '../common/ThemeProvider';
-import { BigButton, Divider, ValueRow } from '../common';
-import { getExplorerAddress } from '../../utils/getExplorerAddress';
-import cs from '../../utils/classNames';
-import { A, P } from '../common/preflighted';
+import clsx from 'clsx';
+import { A, P } from '../../../../../common/preflighted';
+import { useTheme } from '../../../../../common/ThemeProvider';
+import { BigButton, ValueRow } from '../../../../../common';
+import { getExplorerAddress } from '../../../../../../utils/getExplorerAddress';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
-export default function Settings(props: { toggleSettings: () => void }) {
+interface SettingsProps {
+  onCloseRequest?: () => void;
+}
+
+const Settings = ({ onCloseRequest }: SettingsProps) => {
   const {
     dialectAddress,
     deleteDialect,
@@ -27,7 +31,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
           <ValueRow
             label={
               <>
-                <P className={cs(textStyles.small, 'dt-opacity-60')}>
+                <P className={clsx(textStyles.small, 'dt-opacity-60')}>
                   Account address
                 </P>
                 <P>
@@ -44,7 +48,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
             className="dt-mt-1 dt-mb-4"
           >
             <div className="dt-text-right">
-              <P className={cs(textStyles.small, 'dt-opacity-60')}>
+              <P className={clsx(textStyles.small, 'dt-opacity-60')}>
                 Deposited Rent
               </P>
               <P>0.058 SOL</P>
@@ -56,7 +60,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
           onClick={async () => {
             await deleteDialect().catch(noop);
             // TODO: properly wait for the deletion
-            props.toggleSettings();
+            onCloseRequest?.();
             setDialectAddress('');
           }}
           heading="Withdraw rent & delete history"
@@ -66,7 +70,7 @@ export default function Settings(props: { toggleSettings: () => void }) {
         />
         {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
           <P
-            className={cs(
+            className={clsx(
               textStyles.small,
               'dt-text-red-500 dt-text-center dt-mt-2'
             )}
@@ -77,4 +81,6 @@ export default function Settings(props: { toggleSettings: () => void }) {
       </div>
     </>
   );
-}
+};
+
+export default Settings;
