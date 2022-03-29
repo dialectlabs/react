@@ -21,7 +21,7 @@ const Main = ({ inbox }: MainProps) => {
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-min-w-full">
       <div
         className={clsx(
-          'dt-flex dt-flex-1 dt-flex-col dt-border-r border-neutral-600',
+          'dt-flex dt-flex-1 dt-flex-col dt-border-r dt-border-neutral-600',
           {
             'md:dt-max-w-xs': inbox,
             'md:dt-block': inbox,
@@ -29,7 +29,7 @@ const Main = ({ inbox }: MainProps) => {
           }
         )}
       >
-        <div className="dt-px-2 dt-py-4 dt-mb-2 dt-flex dt-justify-between dt-border-b border-neutral-600 dt-font-bold">
+        <div className="dt-px-2 dt-py-4 dt-mb-2 dt-flex dt-justify-between dt-border-b dt-border-neutral-600 dt-font-bold">
           Messages
           <div
             className="dt-cursor-pointer"
