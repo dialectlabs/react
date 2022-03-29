@@ -50,7 +50,7 @@ export default function Chat({ inbox }: ChatProps): JSX.Element {
           'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
           colors.primary,
           colors.bg,
-          { modal: !inbox }
+          { [modal]: !inbox }
         )}
       >
         <div className="dt-h-full">{routes[activeRoute]}</div>

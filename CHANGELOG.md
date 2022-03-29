@@ -30,3 +30,7 @@
 ## [0.2.4] - 2022-03-30
 
 - Introduces new component `Inbox` which represents a full page chat with a split view
+
+## [0.2.5] - 2022-03-30
+
+- Fixes modal styling prop in `Chat` component
