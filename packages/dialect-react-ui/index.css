@@ -28,8 +28,8 @@
   */
 
 .dialect *,
-::before,
-::after {
+.dialect ::before,
+.dialect ::after {
   box-sizing: border-box; /* 1 */
   border-width: 0; /* 2 */
   border-style: solid; /* 2 */
@@ -37,7 +37,7 @@
 }
 
 .dialect ::before,
-::after {
+.dialect ::after {
   --tw-content: '';
 }
 
@@ -47,7 +47,7 @@
   3. Ensure horizontal rules are visible by default.
   */
 
-.dialect hr {
+.dt-hr {
   height: 0; /* 1 */
   color: inherit; /* 2 */
   border-top-width: 1px; /* 3 */
@@ -57,7 +57,7 @@
   Add the correct text decoration in Chrome, Edge, and Safari.
   */
 
-.dialect abbr:where([title]) {
+.dt-abbr:where([title]) {
   text-decoration: underline dotted;
 }
 
@@ -65,12 +65,12 @@
   Remove the default font size and weight for headings.
   */
 
-.dialect h1,
-.dialect h2,
-.dialect h3,
-.dialect h4,
-.dialect h5,
-.dialect h6 {
+.dt-h1,
+.dt-h2,
+.dt-h3,
+.dt-h4,
+.dt-h5,
+.dt-h6 {
   font-size: inherit;
   font-weight: inherit;
 }
@@ -79,7 +79,7 @@
   Reset links to optimize for opt-in styling instead of opt-out.
   */
 
-.dialect a {
+.dt-a {
   color: inherit;
   text-decoration: inherit;
 }
@@ -88,8 +88,8 @@
   Add the correct font weight in Edge and Safari.
   */
 
-.dialect b,
-.dialect strong {
+.dt-b,
+.dt-strong {
   font-weight: bolder;
 }
 
@@ -98,10 +98,10 @@
   2. Correct the odd `em` font sizing in all browsers.
   */
 
-.dialect code,
-.dialect kbd,
-.dialect samp,
-.dialect pre {
+.dt-code,
+.dt-kbd,
+.dt-samp,
+.dt-pre {
   font-family: theme(
     'fontFamily.mono',
     ui-monospace,
@@ -120,7 +120,7 @@
   Add the correct font size in all browsers.
   */
 
-.dialect small {
+.dt-small {
   font-size: 80%;
 }
 
@@ -128,19 +128,19 @@
   Prevent `sub` and `sup` elements from affecting the line height in all browsers.
   */
 
-.dialect sub,
-.dialect sup {
+.dt-sub,
+.dt-sup {
   font-size: 75%;
   line-height: 0;
   position: relative;
   vertical-align: baseline;
 }
 
-.dialect sub {
+.dt-sub {
   bottom: -0.25em;
 }
 
-.dialect sup {
+.dt-sup {
   top: -0.5em;
 }
 
@@ -150,7 +150,7 @@
   3. Remove gaps between table borders by default.
   */
 
-.dialect table {
+.dt-table {
   text-indent: 0; /* 1 */
   border-color: inherit; /* 2 */
   border-collapse: collapse; /* 3 */
@@ -162,11 +162,11 @@
   3. Remove default padding in all browsers.
   */
 
-.dialect button,
-.dialect input,
-.dialect optgroup,
-.dialect select,
-.dialect textarea {
+.dt-button,
+.dt-input,
+.dt-optgroup,
+.dt-select,
+.dt-textarea {
   font-family: inherit; /* 1 */
   font-size: 100%; /* 1 */
   line-height: inherit; /* 1 */
@@ -179,8 +179,8 @@
   Remove the inheritance of text transform in Edge and Firefox.
   */
 
-.dialect button,
-.dialect select {
+.dt-button,
+.dt-select {
   text-transform: none;
 }
 
@@ -189,10 +189,7 @@
   2. Remove default button styles.
   */
 
-.dialect button,
-.dialect [type='button'],
-.dialect [type='reset'],
-.dialect [type='submit'] {
+.dt-button {
   -webkit-appearance: button; /* 1 */
   background-color: transparent; /* 2 */
   background-image: none; /* 2 */
@@ -218,7 +215,7 @@
   Add the correct vertical alignment in Chrome and Firefox.
   */
 
-.dialect progress {
+.dt-progress {
   vertical-align: baseline;
 }
 
@@ -232,11 +229,11 @@
 }
 
 /*
+  For [type='search']
   1. Correct the odd appearance in Chrome and Safari.
   2. Correct the outline style in Safari.
   */
-
-.dialect [type='search'] {
+.dt-search {
   -webkit-appearance: textfield; /* 1 */
   outline-offset: -2px; /* 2 */
 }
@@ -263,7 +260,7 @@
   Add the correct display in Chrome and Safari.
   */
 
-.dialect summary {
+.dt-summary {
   display: list-item;
 }
 
@@ -271,34 +268,22 @@
   Removes the default spacing and border for appropriate elements.
   */
 
-.dialect blockquote,
-.dialect dl,
-.dialect dd,
-.dialect h1,
-.dialect h2,
-.dialect h3,
-.dialect h4,
-.dialect h5,
-.dialect h6,
-.dialect hr,
-.dialect figure,
-.dialect p,
-.dialect pre {
+.dt-text {
   margin: 0;
 }
 
-.dialect fieldset {
+.dt-fieldset {
   margin: 0;
   padding: 0;
 }
 
-.dialect legend {
+.dt-legend {
   padding: 0;
 }
 
-.dialect ol,
-.dialect ul,
-.dialect menu {
+.dt-ol,
+.dt-ul,
+.dt-menu {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -308,7 +293,7 @@
   Prevent resizing textareas horizontally by default.
   */
 
-.dialect textarea {
+.dt-textarea {
   resize: vertical;
 }
 
@@ -317,8 +302,8 @@
   2. Set the default placeholder color to the user's configured gray 400 color.
   */
 
-.dialect input::placeholder,
-.dialect textarea::placeholder {
+.dt-input::placeholder,
+.dt-textarea::placeholder {
   opacity: 1; /* 1 */
   color: theme('colors.gray.400', #9ca3af); /* 2 */
 }
@@ -327,8 +312,7 @@
   Set the default cursor for buttons.
   */
 
-.dialect button,
-[role='button'] {
+.dt-button {
   cursor: pointer;
 }
 
@@ -345,14 +329,14 @@
      This can trigger a poorly considered lint error in some tools but is included by design.
   */
 
-.dialect img,
-.dialect svg,
-.dialect video,
-.dialect canvas,
-.dialect audio,
-.dialect iframe,
-.dialect embed,
-.dialect object {
+.dt-img,
+.dt-svg,
+.dt-video,
+.dt-canvas,
+.dt-audio,
+.dt-iframe,
+.dt-embed,
+.dt-object {
   display: block; /* 1 */
   vertical-align: middle; /* 2 */
 }
@@ -361,18 +345,10 @@
   Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
   */
 
-.dialect img,
-.dialect video {
+.dt-img,
+.dt-video {
   max-width: 100%;
   height: auto;
-}
-
-/*
-  Ensure the default browser behavior of the `hidden` attribute.
-  */
-
-.dialect [hidden] {
-  display: none;
 }
 
 @tailwind components;

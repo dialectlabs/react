@@ -1,6 +1,7 @@
 import React from 'react';
 import Linkify from 'react-linkify';
 import cs from '../../utils/classNames';
+import { A, P } from '../common/preflighted';
 import { useTheme } from '../common/ThemeProvider';
 
 type Props = {
@@ -29,14 +30,14 @@ export const Notification = ({ message, timestamp }: Props) => {
       )}
     >
       <div className="dt-flex-1 dt-mb-2">
-        <p className={cs(textStyles.body, 'dt-font-medium dt-text-base')}>
+        <P className={cs(textStyles.body, 'dt-font-medium dt-text-base')}>
           <Linkify
             componentDecorator={(
               decoratedHref: string,
               decoratedText: string,
               key: string
             ) => (
-              <a
+              <A
                 target="blank"
                 className={textStyles.link}
                 href={decoratedHref}
@@ -45,17 +46,17 @@ export const Notification = ({ message, timestamp }: Props) => {
                 {decoratedText.length > 32
                   ? decoratedText.slice(0, 32) + '...'
                   : decoratedText}
-              </a>
+              </A>
             )}
           >
             {message}
           </Linkify>
-        </p>
+        </P>
       </div>
       <div className={notificationTimestamp}>
-        <p className={cs(textStyles.small, 'dt-opacity-60')}>
+        <P className={cs(textStyles.small, 'dt-opacity-60')}>
           {timeFormatter.format(timestamp)}
-        </p>
+        </P>
       </div>
     </div>
   );

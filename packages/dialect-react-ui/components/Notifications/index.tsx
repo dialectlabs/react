@@ -10,6 +10,7 @@ import {
   ValueRow,
 } from '../common';
 import { useTheme } from '../common/ThemeProvider';
+import { A, H1, H2, P } from '../common/preflighted';
 import cs from '../../utils/classNames';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
@@ -65,21 +66,21 @@ function CreateThread() {
 
   return (
     <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-items-center dt-justify-center">
-      <h1
+      <H1
         className={cs(textStyles.h1, colors.accent, 'dt-mb-4 dt-text-center')}
       >
         Create notifications thread
-      </h1>
+      </H1>
       <ValueRow
         label="Rent Deposit (recoverable)"
         className={cs('dt-w-full dt-mb-4')}
       >
         0.058 SOL
       </ValueRow>
-      <p className={cs(textStyles.body, 'dt-text-center dt-mb-3')}>
+      <P className={cs(textStyles.body, 'dt-text-center dt-mb-3')}>
         To start this message thread, you&apos;ll need to deposit a small amount
         of rent, since messages are stored on-chain.
-      </p>
+      </P>
       <Button
         onClick={() => createDialect().catch(noop)}
         loading={isDialectCreating}
@@ -88,14 +89,14 @@ function CreateThread() {
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <p
+        <P
           className={cs(
             textStyles.small,
             'dt-text-red-500 dt-text-center dt-mt-2'
           )}
         >
           {creationError.message}
-        </p>
+        </P>
       )}
     </div>
   );
@@ -112,7 +113,7 @@ function Settings(props: {
   return (
     <>
       <div className="dt-mb-3">
-        <h2 className={cs(textStyles.h2, 'dt-mb-1')}>Notifications</h2>
+        <H2 className={cs(textStyles.h2, 'dt-mb-1')}>Notifications</H2>
         {props.notifications
           ? props.notifications.map((type) => (
               <ValueRow
@@ -126,32 +127,32 @@ function Settings(props: {
           : 'No notification types supplied'}
       </div>
       <div>
-        <h2 className={cs(textStyles.h2, 'dt-mb-1')}>Thread Account</h2>
+        <H2 className={cs(textStyles.h2, 'dt-mb-1')}>Thread Account</H2>
         {dialectAddress ? (
           <ValueRow
             label={
               <>
-                <p className={cs(textStyles.small, 'dt-opacity-60')}>
+                <P className={cs(textStyles.small, 'dt-opacity-60')}>
                   Account address
-                </p>
-                <p>
-                  <a
+                </P>
+                <P>
+                  <A
                     target="_blank"
                     href={getExplorerAddress(dialectAddress)}
                     rel="noreferrer"
                   >
                     {display(dialectAddress)}↗
-                  </a>
-                </p>
+                  </A>
+                </P>
               </>
             }
             className="dt-mt-1 dt-mb-4"
           >
             <div className="dt-text-right">
-              <p className={cs(textStyles.small, 'dt-opacity-60')}>
+              <P className={cs(textStyles.small, 'dt-opacity-60')}>
                 Deposited Rent
-              </p>
-              <p>0.058 SOL</p>
+              </P>
+              <P>0.058 SOL</P>
             </div>
           </ValueRow>
         ) : null}
@@ -171,14 +172,14 @@ function Settings(props: {
             />
             {deletionError &&
               deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-                <p
+                <P
                   className={cs(
                     textStyles.small,
                     'dt-text-red-500 dt-text-center dt-mt-2'
                   )}
                 >
                   {deletionError.message}
-                </p>
+                </P>
               )}
           </>
         ) : null}
@@ -215,7 +216,7 @@ export default function Notifications(props: {
       <Centered>
         <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
         <span className="dt-opacity-60">
-          Lost connection to Solana dt-blockchain
+          Lost connection to Solana blockchain
         </span>
       </Centered>
     );

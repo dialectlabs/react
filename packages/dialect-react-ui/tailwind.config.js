@@ -8,5 +8,4 @@ module.exports = {
   },
   plugins: [],
   prefix: 'dt-',
-  important: '.dialect',
 };

@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { useDialect } from '@dialectlabs/react';
 import { useApi } from '@dialectlabs/react';
-import { useTheme } from '../common/ThemeProvider';
 import { Button, ValueRow } from '../common';
+import { H1, Input, P } from '../common/preflighted';
+import { useTheme } from '../common/ThemeProvider';
 import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 
@@ -23,11 +24,11 @@ export default function CreateThread({
 
   return (
     <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-items-center dt-justify-center">
-      <h1 className={cs(textStyles.h1, colors.primary, 'dt-text-center')}>
+      <H1 className={cs(textStyles.h1, colors.primary, 'dt-text-center')}>
         Create thread
-      </h1>
+      </H1>
       <span className="dt-text-xs dt-mb-4 dt-opacity-50">unencrypted</span>
-      <input
+      <Input
         className={cs(input, 'dt-w-full')}
         placeholder="Recipient address"
         type="text"
@@ -41,11 +42,11 @@ export default function CreateThread({
       >
         0.058 SOL
       </ValueRow>
-      <p className={cs(textStyles.body, 'dt-text-center dt-mb-3')}>
+      <P className={cs('dt-text', textStyles.body, 'dt-text-center dt-mb-3')}>
         All messages are stored on chain, so to start this message thread,
         you&apos;ll need to deposit a small amount of rent. This rent is
         recoverable.
-      </p>
+      </P>
       <Button
         onClick={async () => {
           createDialect(address, [true, true], [false, true])
@@ -68,14 +69,14 @@ export default function CreateThread({
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <p
+        <P
           className={cs(
             textStyles.small,
             'dt-text-red-500 dt-text-center dt-mt-2'
           )}
         >
           {creationError.message}
-        </p>
+        </P>
       )}
     </div>
   );

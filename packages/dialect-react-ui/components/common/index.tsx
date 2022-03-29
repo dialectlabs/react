@@ -2,6 +2,7 @@ import React from 'react';
 import { DialectLogo } from '../Icon';
 import cs from '../../utils/classNames';
 import { useTheme } from './ThemeProvider';
+import { A, ButtonBase, P } from './preflighted';
 
 export function Divider(props: { className?: string }): JSX.Element {
   const { divider } = useTheme();
@@ -17,7 +18,7 @@ export function ValueRow(props: {
   const { colors, textStyles, highlighted } = useTheme();
 
   return (
-    <p
+    <div
       className={cs(
         'dt-flex dt-flex-row dt-justify-between',
         colors.highlight,
@@ -27,7 +28,7 @@ export function ValueRow(props: {
     >
       <span className={cs(textStyles.body)}>{props.label}</span>
       <span className={cs(textStyles.body)}>{props.children}</span>
-    </p>
+    </div>
   );
 }
 
@@ -43,14 +44,14 @@ export function Footer(): JSX.Element {
       style={{ fontSize: '10px' }}
     >
       Powered by{' '}
-      <a
+      <A
         href="https://dialect.to"
         target="_blank"
         rel="noreferrer"
         className="hover:dt-text-inherit"
       >
-        <DialectLogo className="-dt-mr-1 dt-ml-[3px]" />
-      </a>
+        <DialectLogo className="dt--mr-1 dt--mt-1 dt-ml-[3px]" />
+      </A>
     </div>
   );
 }
@@ -85,7 +86,7 @@ export function Button(props: {
   const { button, buttonLoading, textStyles } = useTheme();
 
   return (
-    <button
+    <ButtonBase
       className={cs(
         'min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
@@ -96,7 +97,7 @@ export function Button(props: {
       disabled={props.loading || props.disabled}
     >
       {!props.loading ? props.children : <Loader />}
-    </button>
+    </ButtonBase>
   );
 }
 
@@ -112,7 +113,7 @@ export function BigButton(props: {
   const { bigButton, bigButtonLoading, textStyles } = useTheme();
 
   return (
-    <button
+    <ButtonBase
       className={cs(
         'dt-w-full dt-px-4 dt-py-3 dt-rounded-lg dt-transition-all',
         !props.loading ? bigButton : bigButtonLoading,
@@ -124,11 +125,11 @@ export function BigButton(props: {
     >
       <div className="dt-flex dt-flex-row dt-justify-between dt-items-center">
         <div className="dt-flex dt-flex-col dt-items-start">
-          <p className={textStyles.bigButtonText}>{props.heading}</p>
-          <p className={textStyles.bigButtonSubtle}>{props.description}</p>
+          <P className={textStyles.bigButtonText}>{props.heading}</P>
+          <P className={textStyles.bigButtonSubtle}>{props.description}</P>
         </div>
         <div>{!props.loading ? props.icon : <Loader />}</div>
       </div>
-    </button>
+    </ButtonBase>
   );
 }

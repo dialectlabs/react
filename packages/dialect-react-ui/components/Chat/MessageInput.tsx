@@ -1,4 +1,5 @@
 import React, { KeyboardEvent, FormEvent } from 'react';
+import { ButtonBase, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/ThemeProvider';
 import cs from '../../utils/classNames';
 
@@ -34,21 +35,21 @@ export default function MessageInput({
               {text || 'h'}
             </div>
             <div className="dt-absolute dt-top-0 dt-w-full dt-h-full dt-flex dt-flex-grow dt-items-center">
-              <textarea
+              <Textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
                 className={cs(textArea, 'dt-resize-none dt-h-full dt-w-full')}
               />
-              <button
-                className="dt-absolute dt-inset-y-0 -dt-right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"
+              <ButtonBase
+                className="dt-button dt-absolute dt-inset-y-0 dt--right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"
                 disabled={disabled}
               >
                 <icons.arrowsmright
                   className={cs(sendButton, disabled ? 'dt-opacity-50' : '')}
                 />
-              </button>
+              </ButtonBase>
             </div>
           </div>
         </form>

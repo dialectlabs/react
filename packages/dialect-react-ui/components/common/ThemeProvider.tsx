@@ -66,7 +66,7 @@ export type IncomingThemeValues = {
     [key in ThemeTextStyles]?: string;
   };
   icons?: {
-    [key in ThemeIcons]?: React.ReactNode;
+    [key in ThemeIcons]?: React.ReactElement;
   };
   avatar?: string;
   header?: string;
@@ -98,7 +98,7 @@ export type ThemeValues = Required<
   Omit<IncomingThemeValues, 'colors' | 'textStyles' | 'icons'> & {
     colors: Record<ThemeColors, string>;
     textStyles: Record<ThemeTextStyles, string>;
-    icons: Record<ThemeIcons, React.ReactNode>;
+    icons: Record<ThemeIcons, React.ReactElement>;
   }
 >;
 
@@ -149,7 +149,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     bellButton:
       'dt-w-12 dt-h-12 dt-outline-none dt-border dt-border-gray-200 dt-shadow-md',
     iconButton:
-      'dt-w-9 dt-h-9 -dt-m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60 dt-outline-none',
+      'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60 dt-outline-none',
     sendButton: 'dt-h-5 dt-w-5 dt-text-white dt-rounded-full dt-bg-black',
     header: 'dt-px-4 dt-py-3',
     input:
@@ -159,7 +159,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     messageBubble:
       'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-transparent dt-border dt-border-neutral-300',
     otherMessageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-neutral-100',
-    notificationMessage: '-dt-mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
+    notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
     modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[30rem]',
@@ -219,7 +219,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'dt-rounded-full dt-items-center dt-justify-center dt-bg-neutral-900',
     bellButton: 'dt-w-12 dt-h-12 dt-outline-none dt-shadow-md',
     iconButton:
-      'dt-w-9 dt-h-9 -dt-m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60 dt-outline-none',
+      'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60 dt-outline-none',
     sendButton: 'dt-h-5 dt-w-5 dt-text-black dt-rounded-full dt-bg-white',
     header: 'dt-px-4 dt-py-3',
     input:
@@ -230,7 +230,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'dt-text-white dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-transparent dt-border dt-border-neutral-800',
     otherMessageBubble:
       'dt-px-4 dt-py-2 dt-rounded-2xl dt-border dt-border-neutral-900 bg-neutral-900',
-    notificationMessage: '-dt-mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
+    notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
     modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[30rem]',

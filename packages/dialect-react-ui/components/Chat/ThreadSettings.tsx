@@ -5,6 +5,7 @@ import { useTheme } from '../common/ThemeProvider';
 import { BigButton, Divider, ValueRow } from '../common';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import cs from '../../utils/classNames';
+import { A, P } from '../common/preflighted';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -26,27 +27,27 @@ export default function Settings(props: { toggleSettings: () => void }) {
           <ValueRow
             label={
               <>
-                <p className={cs(textStyles.small, 'dt-opacity-60')}>
+                <P className={cs(textStyles.small, 'dt-opacity-60')}>
                   Account address
-                </p>
-                <p>
-                  <a
+                </P>
+                <P>
+                  <A
                     target="_blank"
                     href={getExplorerAddress(dialectAddress)}
                     rel="noreferrer"
                   >
                     {display(dialectAddress)}↗
-                  </a>
-                </p>
+                  </A>
+                </P>
               </>
             }
             className="dt-mt-1 dt-mb-4"
           >
             <div className="dt-text-right">
-              <p className={cs(textStyles.small, 'dt-opacity-60')}>
+              <P className={cs(textStyles.small, 'dt-opacity-60')}>
                 Deposited Rent
-              </p>
-              <p>0.058 SOL</p>
+              </P>
+              <P>0.058 SOL</P>
             </div>
           </ValueRow>
         ) : null}
@@ -64,14 +65,14 @@ export default function Settings(props: { toggleSettings: () => void }) {
           loading={isDialectDeleting}
         />
         {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-          <p
+          <P
             className={cs(
               textStyles.small,
               'dt-text-red-500 dt-text-center dt-mt-2'
             )}
           >
             {deletionError.message}
-          </p>
+          </P>
         )}
       </div>
     </>
