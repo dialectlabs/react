@@ -8,7 +8,7 @@ import {
   DialectProvider,
   useApi,
 } from '@dialectlabs/react';
-import { ThemeProvider } from '@dialectlabs/react-ui/components/common/ThemeProvider';
+import { ThemeProvider } from '@dialectlabs/react-ui';
 
 function AuthedHome() {
   const wallet = useWallet();
@@ -24,14 +24,14 @@ function AuthedHome() {
   useEffect(() => setRpcUrl(null), [setRpcUrl]);
 
   return (
-    <>
+    <div className="dialect">
       <div className="flex flex-col h-screen bg-black">
         <div className="flex flex-row-reverse">
           <Wallet />
         </div>
         <DialectInbox wallet={wallet} />
       </div>
-    </>
+    </div>
   );
 }
 

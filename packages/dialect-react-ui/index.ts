@@ -3,7 +3,10 @@ import ChatButton from './components/ChatButton';
 import Notifications from './components/Notifications';
 import NotificationsButton from './components/NotificationsButton';
 import Inbox from './components/Inbox';
-import { defaultVariables } from './components/common/ThemeProvider';
+import {
+  defaultVariables,
+  ThemeProvider,
+} from './components/common/ThemeProvider';
 
 import type {
   ThemeType,
@@ -21,6 +24,7 @@ export {
   Notifications,
   Inbox,
   defaultVariables,
+  ThemeProvider,
 };
 
 export type {

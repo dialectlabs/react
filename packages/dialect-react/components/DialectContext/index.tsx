@@ -1,4 +1,3 @@
-import { Wallet } from '@project-serum/anchor/src/provider';
 import React, {
   createContext,
   useCallback,
@@ -6,7 +5,7 @@ import React, {
   useEffect,
 } from 'react';
 import useSWR from 'swr';
-import * as anchor from '@project-serum/anchor';
+import type { Wallet } from '@project-serum/anchor';
 import { connected, useApi } from '../ApiContext';
 import { createMetadata, DialectAccount, Metadata } from '@dialectlabs/web3';
 import {
@@ -25,7 +24,6 @@ import {
   ParsedErrorData,
   ParsedErrorType,
 } from '../../utils/errors';
-import { messages as mockMessages } from './mock';
 
 const swrFetchDialectForMembers = (
   _: string,
