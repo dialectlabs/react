@@ -10,25 +10,24 @@ type IconButtonPropsType = {
   onClick: () => void;
 };
 
-type ButtonProps = React.HTMLProps<HTMLButtonElement>;
+type ButtonProps = React.HTMLProps<HTMLButtonElement> & IconButtonPropsType;
 
-export default React.forwardRef(function IconButton(
-  props: IconButtonPropsType,
-  ref: React.RefObject<HTMLInputElement> | null
-): JSX.Element {
-  const { iconButton } = useTheme();
-  return (
-    <div className={cs('dt-relative', props.className)} style={props.style}>
-      <ButtonBase
-        ref={ref}
-        className={iconButton}
-        onClick={(event) => {
-          event.preventDefault();
-          props?.onClick();
-        }}
-      >
-        {props.icon}
-      </ButtonBase>
-    </div>
-  );
-});
+export default React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function IconButton(props, ref): JSX.Element {
+    const { iconButton } = useTheme();
+    return (
+      <div className={cs('dt-relative', props.className)} style={props.style}>
+        <ButtonBase
+          ref={ref}
+          className={iconButton}
+          onClick={(event) => {
+            event.preventDefault();
+            props?.onClick?.();
+          }}
+        >
+          {props.icon}
+        </ButtonBase>
+      </div>
+    );
+  }
+);

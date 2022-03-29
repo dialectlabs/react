@@ -24,16 +24,12 @@
 
 /*
   1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
-  2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
   */
 
 .dialect *,
 .dialect ::before,
 .dialect ::after {
   box-sizing: border-box; /* 1 */
-  border-width: 0; /* 2 */
-  border-style: solid; /* 2 */
-  border-color: theme('borderColor.DEFAULT', currentColor); /* 2 */
 }
 
 .dialect ::before,
@@ -160,8 +156,8 @@
   1. Change the font styles in all browsers.
   2. Remove the margin in Firefox and Safari.
   3. Remove default padding in all browsers.
+  4. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
   */
-
 .dt-button,
 .dt-input,
 .dt-optgroup,
@@ -173,6 +169,9 @@
   color: inherit; /* 1 */
   margin: 0; /* 2 */
   padding: 0; /* 3 */
+  border-width: 0; /* 4 */
+  border-style: solid; /* 4 */
+  border-color: theme('borderColor.DEFAULT', currentColor); /* 4 */
 }
 
 /*
@@ -193,6 +192,17 @@
   -webkit-appearance: button; /* 1 */
   background-color: transparent; /* 2 */
   background-image: none; /* 2 */
+}
+
+.dt-button:focus:not(.focus-visible),
+.dt-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.dt-button.focus-visible,
+.dt-button:focus-visible {
+  outline-style: solid;
+  outline-width: 2px;
 }
 
 /*

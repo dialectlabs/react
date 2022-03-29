@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
 import cs from '../../utils/classNames';
 
 export const A = ({
@@ -64,9 +64,15 @@ export const Textarea = ({
   return <textarea className={cs('dt-textarea', className)} {...props} />;
 };
 
-export const ButtonBase = ({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'button'> & { className?: string }) => {
-  return <button className={cs('dt-button', className)} {...props} />;
+type ButtonProps = React.ComponentPropsWithoutRef<'button'> & {
+  className?: string;
 };
+
+export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <button ref={ref} className={cs('dt-button', className)} {...props} />
+    );
+  }
+);
+ButtonBase.displayName = 'ButtonBase';
