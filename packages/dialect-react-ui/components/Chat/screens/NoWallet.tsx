@@ -7,8 +7,8 @@ const NoConnection = () => {
 
   return (
     <Centered>
-      <icons.notConnected className="mb-6 opacity-60" />
-      <span className="opacity-60">Wallet not connected</span>
+      <icons.notConnected className="dt-mb-6 dt-opacity-60" />
+      <span className="dt-opacity-60">Wallet not connected</span>
     </Centered>
   );
 };

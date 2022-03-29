@@ -26,10 +26,10 @@ export default function CreateThread({
   const [address, setAddress] = useState('');
 
   return (
-    <div className="flex flex-col flex-1">
-      <div className="px-4 py-4 mb-2 flex justify-between border-b border-neutral-600 font-bold">
+    <div className="dt-flex dt-flex-col dt-flex-1">
+      <div className="dt-px-4 dt-py-4 dt-mb-2 dt-flex dt-justify-between dt-border-b border-neutral-600 dt-font-bold">
         <div
-          className="cursor-pointer md:hidden"
+          className="dt-cursor-pointer md:dt-hidden"
           onClick={() => {
             onCloseRequest?.();
           }}
@@ -40,26 +40,26 @@ export default function CreateThread({
         <div />
       </div>
 
-      <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
-        <h1 className={clsx(textStyles.h1, colors.primary, 'text-center')}>
+      <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-items-center dt-justify-center">
+        <h1 className={clsx(textStyles.h1, colors.primary, 'dt-text-center')}>
           Create thread
         </h1>
-        <span className="text-xs mb-4 opacity-50">unencrypted</span>
+        <span className="dt-text-xs dt-mb-4 dt-opacity-50">unencrypted</span>
         <input
-          className={clsx(input, 'w-full')}
+          className={clsx(input, 'dt-w-full')}
           placeholder="Recipient address"
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
-        <div className="h-4" />
+        <div className="dt-h-4" />
         <ValueRow
           label="Rent Deposit (recoverable)"
-          className={clsx('w-full mb-4')}
+          className={clsx('dt-w-full dt-mb-4')}
         >
           0.058 SOL
         </ValueRow>
-        <p className={clsx(textStyles.body, 'text-center mb-3')}>
+        <p className={clsx(textStyles.body, 'dt-text-center dt-mb-3')}>
           All messages are stored on chain, so to start this message thread,
           you&apos;ll need to deposit a small amount of rent. This rent is
           recoverable.
@@ -88,7 +88,10 @@ export default function CreateThread({
         {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
         {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
           <p
-            className={clsx(textStyles.small, 'text-red-500 text-center mt-2')}
+            className={clsx(
+              textStyles.small,
+              'dt-text-red-500 dt-text-center dt-mt-2'
+            )}
           >
             {creationError.message}
           </p>

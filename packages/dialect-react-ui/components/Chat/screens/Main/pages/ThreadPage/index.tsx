@@ -15,10 +15,10 @@ const ThreadPage = () => {
   if (!dialectAddress) return null;
 
   return (
-    <div className="flex flex-col flex-1">
-      <div className="px-4 py-4 mb-2 flex justify-between border-b border-neutral-600 font-bold">
+    <div className="dt-flex dt-flex-col dt-flex-1">
+      <div className="dt-px-4 dt-py-4 dt-mb-2 dt-flex dt-justify-between dt-border-b border-neutral-600 dt-font-bold">
         <div
-          className={clsx('cursor-pointer')}
+          className={clsx('dt-cursor-pointer')}
           onClick={() => {
             if (settingsOpen) {
               setSettingsOpen(false);
@@ -31,13 +31,13 @@ const ThreadPage = () => {
         </div>
         {dialect ? display(dialect.dialect.members[1].publicKey) : 'null'}
         <div
-          className="cursor-pointer"
+          className="dt-cursor-pointer"
           onClick={() => setSettingsOpen((prev) => !prev)}
         >
           <icons.settings />
         </div>
       </div>
-      <div className="flex-1 px-2">
+      <div className="dt-flex-1 dt-px-2">
         {settingsOpen ? <Settings /> : <Thread />}
       </div>
     </div>
