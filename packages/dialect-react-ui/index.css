@@ -200,6 +200,12 @@
   outline: none;
 }
 
+.dt-button.focus-visible,
+.dt-button:focus-visible {
+  outline-style: solid;
+  outline-width: 2px;
+}
+
 /*
   Use the modern Firefox focus style for all focusable elements.
   */
