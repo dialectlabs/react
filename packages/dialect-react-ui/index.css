@@ -195,6 +195,11 @@
   background-image: none; /* 2 */
 }
 
+.dt-button:focus:not(.focus-visible),
+.dt-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /*
   Use the modern Firefox focus style for all focusable elements.
   */
