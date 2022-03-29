@@ -21,3 +21,7 @@
 ## [0.2.2] - 2022-03-29
 
 - Add focus-visible polifill to avoid focus state on buttons on mouse click
+
+## [0.2.3] - 2022-03-30
+
+- Fix: handle for clicks outside modal
