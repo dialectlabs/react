@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useDialect } from '@dialectlabs/react';
 import { Footer } from '../common';
 import { useTheme } from '../common/ThemeProvider';
-import cs from '../../utils/classNames';
 import NoConnection from './screens/NoConnection';
 import NoWallet from './screens/NoWallet';
 import Main from './screens/Main';
+import clsx from 'clsx';
 
 enum Routes {
   Main = 'main',
@@ -46,16 +46,14 @@ export default function Chat({ inbox }: ChatProps): JSX.Element {
   return (
     <div className="dialect dt-h-full">
       <div
-        className={cs(
+        className={clsx(
           'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
           colors.primary,
           colors.bg,
-          modal
+          { modal: !inbox }
         )}
       >
-        <div className="dt-h-full dt-overflow-y-scroll">
-          {routes[activeRoute]}
-        </div>
+        <div className="dt-h-full">{routes[activeRoute]}</div>
         <Footer
           showBackground={Boolean(dialects?.length && dialects?.length > 4)}
         />
