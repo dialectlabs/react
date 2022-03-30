@@ -116,7 +116,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
   if (isDialectAvailable) {
     return (
       <div>
-        <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
+        <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
           Web3 notifications to your wallet are now enabled
         </P>
         {isDialectAvailable && dialectAddress ? (
@@ -179,7 +179,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
 
   return (
     <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
+      <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
         Receive notifications directly to your wallet
       </P>
       {wallet ? (
@@ -190,7 +190,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
               <NetworkBadge network={network} />
             </>
           }
-          className="dt-mt-1 dt-mb-1"
+          className="dt-mb-2"
         >
           <span className="dt-text-right">{balance || 0} SOL</span>
         </ValueRow>
@@ -201,9 +201,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
       >
         0.058 SOL
       </ValueRow>
-      <P
-        className={cs(textStyles.small, 'dt-opacity-50 dt-text-center dt-mb-3')}
-      >
+      <P className={cs(textStyles.small, 'dt-opacity-50 dt-text-left dt-mb-3')}>
         To start this notifications thread, you&apos;ll need to deposit a small
         amount of rent, since messages are stored on-chain.
       </P>
@@ -253,7 +251,7 @@ function Settings(props: {
     <>
       {channelsOptions.web3 && (
         <Accordion
-          className="dt-mb-8"
+          className="dt-mb-6"
           defaultExpanded
           title="Web3 notifications"
         >
@@ -262,15 +260,15 @@ function Settings(props: {
       )}
       {channelsOptions.email && (
         <Accordion
-          className="dt-mb-3"
+          className="dt-mb-6"
           defaultExpanded
           title="Email notifications"
         >
           <EmailForm />
         </Accordion>
       )}
-      <Accordion className="dt-mb-8" defaultExpanded title="Notification types">
-        <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
+      <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
+        <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
           The following notification types are supported
         </P>
         {props.notifications
@@ -293,7 +291,7 @@ function Settings(props: {
       >
         By enabling notifications you agree to our{' '}
         <A
-          className="underline"
+          className="dt-underline"
           target="_blank"
           rel="noreferrer"
           href="https://www.dialect.to/tos"
@@ -302,7 +300,7 @@ function Settings(props: {
         </A>{' '}
         and{' '}
         <A
-          className="underline"
+          className="dt-underline"
           target="_blank"
           rel="noreferrer"
           href="https://www.dialect.to/privacy"
@@ -397,7 +395,7 @@ export default function Notifications(props: {
     <div className="dialect dt-h-full">
       <div
         className={cs(
-          'dt-flex dt-flex-col dt-h-full dt-overflow-hidden dt-no-scrollbar',
+          'dt-flex dt-flex-col dt-h-full dt-overflow-hidden',
           colors.primary,
           colors.bg,
           modal
@@ -408,7 +406,7 @@ export default function Notifications(props: {
           isSettingsOpen={isSettingsOpen}
           toggleSettings={toggleSettings}
         />
-        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll">
+        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll dt-no-scrollbar">
           {content}
         </div>
         <Footer />

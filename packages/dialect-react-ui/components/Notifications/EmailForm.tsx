@@ -59,7 +59,7 @@ export function EmailForm() {
 
   return (
     <div>
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
+      <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
         {isEmailSaved
           ? 'Email notifications are now enabled. Emails are stored securely off-chain.'
           : 'Receive notifications to your email. Emails are stored securely off-chain.'}
