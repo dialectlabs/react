@@ -3,7 +3,7 @@ import * as anchor from '@project-serum/anchor';
 import { useDialect } from '@dialectlabs/react';
 import { useApi } from '@dialectlabs/react';
 import { Button, ValueRow } from '../common';
-import { H1, Input, P } from '../common/preflighted';
+import { A, H1, Input, P } from '../common/preflighted';
 import { useTheme } from '../common/ThemeProvider';
 import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
@@ -78,25 +78,27 @@ export default function CreateThread({
           {creationError.message}
         </P>
       )}
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-text-center dt-mt-3')}>
+      <P
+        className={cs(textStyles.small, 'dt-opacity-50 dt-text-center dt-mt-3')}
+      >
         By creating this thread you agree to our{' '}
-        <a
+        <A
           className="underline"
           target="_blank"
           rel="noreferrer"
           href="https://www.dialect.to/tos"
         >
           Terms of Service
-        </a>{' '}
-        and{' '}
-        <a
+        </A>{' '}
+        and{' '}
+        <A
           className="underline"
           target="_blank"
           rel="noreferrer"
           href="https://www.dialect.to/privacy"
         >
           Privacy Policy
-        </a>
+        </A>
       </P>
     </div>
   );
