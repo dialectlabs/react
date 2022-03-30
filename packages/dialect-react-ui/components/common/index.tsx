@@ -42,7 +42,7 @@ export function Footer(): JSX.Element {
     <div
       className={cs(
         'w-[8.5rem] py-1 inline-flex items-center justify-center absolute bottom-3 left-0 right-0 mx-auto uppercase rounded-full',
-        colors.highlight
+        colors.highlightSolid
       )}
       style={{ fontSize: '10px' }}
     >
@@ -158,7 +158,7 @@ export function Toggle({ checked, onClick, ...props }) {
           'h-5 w-10 rounded-full',
           isChecked ? colors.toggleBackgroundActive : colors.toggleBackground
         )}
-      ></span>
+      />
       {/* Thumb */}
       <span
         className={cs(
@@ -166,7 +166,7 @@ export function Toggle({ checked, onClick, ...props }) {
           colors.toggleThumb,
           isChecked ? 'translate-x-[120%]' : ''
         )}
-      ></span>
+      />
     </label>
   );
 }

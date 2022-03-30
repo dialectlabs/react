@@ -28,6 +28,7 @@ export type ThemeColors =
   | 'accentSolid'
   | 'brand'
   | 'highlight'
+  | 'highlightSolid'
   | 'toggleThumb'
   | 'toggleBackground'
   | 'toggleBackgroundActive';
@@ -121,6 +122,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       accent: 'text-black',
       accentSolid: 'text-[#5895B9]',
       highlight: 'bg-[#ABABAB]/10',
+      highlightSolid: 'bg-[#F2F3F2]',
       toggleBackground: 'bg-[#D6D6D6]',
       toggleBackgroundActive: 'bg-[#25BC3B]',
       toggleThumb: 'bg-[#EEEEEE]',
@@ -201,6 +203,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       accent: 'text-white',
       accentSolid: 'text-white',
       highlight: 'bg-[#ABABAB]/20',
+      highlightSolid: 'bg-[#262626]',
       toggleBackground: 'bg-[#5B5B5B]',
       toggleBackgroundActive: 'bg-[#25BC3B]',
       toggleThumb: 'bg-[#111111]',

@@ -7,6 +7,7 @@ import {
 } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
+import Head from 'next/head';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'D2pyBevYb6dit1oCx6e8vCxFK9mBeYCRe8TTntk2Tm98'
@@ -46,6 +47,18 @@ function AuthedHome() {
 
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-black">
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <NotificationsButton
           wallet={wallet}

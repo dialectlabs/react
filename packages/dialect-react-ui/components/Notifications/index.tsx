@@ -58,7 +58,10 @@ function Header(props: {
           Notifications
         </span>
         {props.isReady ? (
-          <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
+          <IconButton
+            icon={<icons.settings />}
+            onClick={props.toggleSettings}
+          />
         ) : null}
       </div>
       <Divider className="mx-2" />
@@ -66,7 +69,7 @@ function Header(props: {
   );
 }
 
-function NetworkBadge({ network }) {
+function NetworkBadge({ network = 'devnet' }: { network?: string | null }) {
   const { textStyles, colors } = useTheme();
   let color = 'text-green-600';
   if (network === 'devnet') {
@@ -127,12 +130,12 @@ function Wallet(props: { onThreadDelete?: () => void }) {
             }
             className="mt-1 mb-2"
           >
-            <div className="text-right">
+            <span className="text-right">
               <p className={cs(textStyles.small, 'opacity-60')}>
                 Deposited Rent
               </p>
               <p>0.058 SOL</p>
-            </div>
+            </span>
           </ValueRow>
         ) : null}
         {isDialectAvailable && dialectAddress ? (
@@ -143,7 +146,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
-                props?.onThreadDelete();
+                props?.onThreadDelete?.();
               }}
               heading="Withdraw rent & delete history"
               description="Notification history will be lost forever"
@@ -173,28 +176,13 @@ function Wallet(props: { onThreadDelete?: () => void }) {
         <ValueRow
           label={
             <>
-              <p className={cs(textStyles.small, 'opacity-60')}>
-                Wallet address
-              </p>
-              <p>
-                <a
-                  target="_blank"
-                  href={getExplorerAddress(wallet.publicKey)}
-                  rel="noreferrer"
-                >
-                  {display(wallet?.publicKey)}↗
-                </a>
-              </p>
+              Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}){' '}
+              <NetworkBadge network={network} />
             </>
           }
           className="mt-1 mb-1"
         >
-          <div className="text-right">
-            <p className={cs(textStyles.small, 'opacity-60')}>
-              Balance
-            </p>
-            <p>{balance || 0} SOL</p>
-          </div>
+          <span className="text-right">{balance || 0} SOL</span>
         </ValueRow>
       ) : null}
       <ValueRow
@@ -204,8 +192,8 @@ function Wallet(props: { onThreadDelete?: () => void }) {
         0.058 SOL
       </ValueRow>
       <p className={cs(textStyles.small, 'opacity-50 text-center mb-3')}>
-        To start this notifications thread, you&apos;ll need to deposit a small amount
-        of rent, since messages are stored on-chain.
+        To start this notifications thread, you&apos;ll need to deposit a small
+        amount of rent, since messages are stored on-chain.
       </p>
       <Button
         onClick={() => createDialect().catch(noop)}
@@ -227,19 +215,26 @@ function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
 }) {
-  const { colors, highlighted, textStyles } = useTheme();
+  const { textStyles } = useTheme();
   return (
     <>
       <Accordion className="mb-8" defaultExpanded title="Web3 notifications">
-        <p className={cs(textStyles.small, 'opacity-50 my-3')}>Receive notifications directly to your wallet</p>
+        <p className={cs(textStyles.small, 'opacity-50 my-3')}>
+          Receive notifications directly to your wallet
+        </p>
         <Wallet onThreadDelete={props.toggleSettings} />
       </Accordion>
       <Accordion className="mb-3" defaultExpanded title="Email notifications">
-        <p className={cs(textStyles.small, 'opacity-50 my-3')}>Receive notifications to your email. Emails are stored securely off-chain.</p>
+        <p className={cs(textStyles.small, 'opacity-50 my-3')}>
+          Receive notifications to your email. Emails are stored securely
+          off-chain.
+        </p>
         <EmailForm />
       </Accordion>
       <Accordion className="mb-8" defaultExpanded title="Notification types">
-        <p className={cs(textStyles.small, 'opacity-50 my-3')}>The following notification types are supported</p>
+        <p className={cs(textStyles.small, 'opacity-50 my-3')}>
+          The following notification types are supported
+        </p>
         {props.notifications
           ? props.notifications.map((type) => (
               <ValueRow
@@ -324,7 +319,7 @@ export default function Notifications(props: {
     content = (
       <Settings
         toggleSettings={toggleSettings}
-        notifications={props.notifications}
+        notifications={props.notifications || []}
       />
     );
   } else if (isNoMessages) {
