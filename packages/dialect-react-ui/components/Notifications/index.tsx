@@ -34,27 +34,35 @@ function Header(props: {
   const { isDialectAvailable } = useDialect();
   const { colors, textStyles, header, icons } = useTheme();
 
+  if (!isDialectAvailable) return null;
+
   if (props.isSettingsOpen) {
     return (
-      <div className={cs('flex flex-row items-center', header)}>
-        <IconButton
-          icon={<icons.back />}
-          onClick={props.toggleSettings}
-          className="mr-2"
-        />
-        <span className={cs(textStyles.header, colors.accent)}>Settings</span>
-      </div>
+      <>
+        <div className={cs('flex flex-row items-center', header)}>
+          <IconButton
+            icon={<icons.back />}
+            onClick={props.toggleSettings}
+            className="mr-2"
+          />
+          <span className={cs(textStyles.header, colors.accent)}>Settings</span>
+        </div>
+        <Divider className="mx-2" />
+      </>
     );
   }
   return (
-    <div className={cs('flex flex-row items-center justify-between', header)}>
-      <span className={cs(textStyles.header, colors.accent)}>
-        Notifications
-      </span>
-      {props.isReady ? (
-        <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
-      ) : null}
-    </div>
+    <>
+      <div className={cs('flex flex-row items-center justify-between', header)}>
+        <span className={cs(textStyles.header, colors.accent)}>
+          Notifications
+        </span>
+        {props.isReady ? (
+          <IconButton icon={<icons.settings />} onClick={props.toggleSettings} />
+        ) : null}
+      </div>
+      <Divider className="mx-2" />
+    </>
   );
 }
 
@@ -222,6 +230,14 @@ function Settings(props: {
   const { colors, highlighted, textStyles } = useTheme();
   return (
     <>
+      <Accordion className="mb-8" defaultExpanded title="Web3 notifications">
+        <p className={cs(textStyles.small, 'opacity-50 my-3')}>Receive notifications directly to your wallet</p>
+        <Wallet onThreadDelete={props.toggleSettings} />
+      </Accordion>
+      <Accordion className="mb-3" defaultExpanded title="Email notifications">
+        <p className={cs(textStyles.small, 'opacity-50 my-3')}>Receive notifications to your email. Emails are stored securely off-chain.</p>
+        <EmailForm />
+      </Accordion>
       <Accordion className="mb-8" defaultExpanded title="Notification types">
         <p className={cs(textStyles.small, 'opacity-50 my-3')}>The following notification types are supported</p>
         {props.notifications
@@ -235,14 +251,6 @@ function Settings(props: {
               </ValueRow>
             ))
           : 'No notification types supplied'}
-      </Accordion>
-      <Accordion className="mb-8" defaultExpanded title="Wallet notifications">
-        <p className={cs(textStyles.small, 'opacity-50 my-3')}>Receive notifications directly to your wallet</p>
-        <Wallet onThreadDelete={props.toggleSettings} />
-      </Accordion>
-      <Accordion className="mb-3" defaultExpanded title="Email notifications">
-        <p className={cs(textStyles.small, 'opacity-50 my-3')}>Receive notifications to your email. Emails are stored securely off-chain.</p>
-        <EmailForm />
       </Accordion>
       <p className={cs(textStyles.small, 'opacity-50 text-center mb-10')}>
         By enabling notifications you agree to our{' '}
@@ -358,7 +366,6 @@ export default function Notifications(props: {
           isSettingsOpen={isSettingsOpen}
           toggleSettings={toggleSettings}
         />
-        <Divider className="mx-2" />
         <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
         <Footer />
       </div>
