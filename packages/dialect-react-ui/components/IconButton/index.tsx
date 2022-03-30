@@ -9,11 +9,9 @@ type IconButtonPropsType = {
   onClick: () => void;
 };
 
-type ButtonProps = React.HTMLProps<HTMLButtonElement>;
-
 export default React.forwardRef(function IconButton(
   props: IconButtonPropsType,
-  ref: React.RefObject<HTMLInputElement> | null
+  ref: React.ForwardedRef<HTMLButtonElement>
 ): JSX.Element {
   const { iconButton } = useTheme();
   return (

@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  useEffect,
+  useState,
+} from 'react';
 import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
@@ -134,7 +139,14 @@ export function BigButton(props: {
   );
 }
 
-export function Toggle({ checked, onClick, ...props }) {
+export function Toggle({
+  checked,
+  onClick,
+  ...props
+}: { checked: boolean; onClick: () => void } & DetailedHTMLProps<
+  InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>) {
   const [isChecked, setChecked] = useState<boolean>(checked);
   const { colors } = useTheme();
 

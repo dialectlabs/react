@@ -72,7 +72,7 @@ export type IncomingThemeValues = {
     [key in ThemeTextStyles]?: string;
   };
   icons?: {
-    [key in ThemeIcons]?: React.ReactNode;
+    [key in ThemeIcons]?: React.ComponentType<any>;
   };
   avatar?: string;
   header?: string;
@@ -107,7 +107,7 @@ export type ThemeValues = Required<
   Omit<IncomingThemeValues, 'colors' | 'textStyles' | 'icons'> & {
     colors: Record<ThemeColors, string>;
     textStyles: Record<ThemeTextStyles, string>;
-    icons: Record<ThemeIcons, React.ReactNode>;
+    icons: Record<ThemeIcons, React.ComponentType<any>>;
   }
 >;
 
