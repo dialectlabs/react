@@ -54,7 +54,7 @@ export const noAccount: ParsedErrorData = {
 export const incorrectEmail: ParsedErrorData = {
   type: ParsedErrorType.NoAccount,
   title: 'Error',
-  message: 'Please enter correct email',
+  message: 'Please enter a valid email',
   matchers: ['Incorrect email'],
 };
 

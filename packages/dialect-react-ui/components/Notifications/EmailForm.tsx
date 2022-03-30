@@ -3,7 +3,7 @@ import { useApi, AddressType, ParsedErrorData } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { Button, Toggle, ValueRow } from '../common';
-import { incorrectEmail } from '@dialectlabs/react/utils/errors';
+import { incorrectEmail } from '@dialectlabs/react/lib/utils/errors'; // FIXME: import from a better location
 
 function getEmailObj(addresses: AddressType[] | null): AddressType | null {
   if (!addresses) return null;

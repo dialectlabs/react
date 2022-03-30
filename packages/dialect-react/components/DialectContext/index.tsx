@@ -1,4 +1,3 @@
-import { Wallet } from '@project-serum/anchor/src/provider';
 import React, {
   createContext,
   useCallback,
@@ -220,7 +219,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     setMetadataCreating(true);
 
     try {
-      const data = await createMetadata(program, wallet as Wallet);
+      const data = await createMetadata(program, wallet as anchor.Wallet);
 
       await mutateMetadata(data, false);
       setMetadataCreationError(null);
