@@ -64,7 +64,7 @@ export function EmailForm() {
           ? 'Email notifications are now enabled. Emails are stored securely off-chain.'
           : 'Receive notifications to your email. Emails are stored securely off-chain.'}
       </P>
-      <ValueRow className="mb-2" label="Enable email notifications">
+      <ValueRow className="dt-mb-2" label="Enable email notifications">
         <Toggle
           type="checkbox"
           checked={isEnabled}
@@ -83,20 +83,20 @@ export function EmailForm() {
       </ValueRow>
       {isEnabled && (
         <form onSubmit={(e) => e.preventDefault()}>
-          <div className="flex flex-col space-y-2 mb-2">
+          <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
               {isEmailSaved && !isEmailEditing ? (
                 <div
                   className={cs(highlighted, textStyles.body, colors.highlight)}
                 >
-                  <span className="opacity-40">🔗 Email submitted</span>
+                  <span className="dt-opacity-40">🔗 Email submitted</span>
                 </div>
               ) : (
                 <input
                   className={cs(
                     outlinedInput,
-                    emailError && '!border-red-500 !text-red-500',
-                    'w-full basis-full'
+                    emailError && '!dt-border-red-500 !dt-text-red-500',
+                    'dt-w-full dt-basis-full'
                   )}
                   placeholder="Enter email"
                   type="email"
@@ -118,10 +118,10 @@ export function EmailForm() {
             </div>
 
             {isChanging && (
-              <div className="flex flex-row space-x-2">
+              <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   defaultStyle={secondaryButton}
-                  className="basis-1/2"
+                  className="dt-basis-1/2"
                   onClick={() => {
                     setEmailEditing(false);
                   }}
@@ -129,7 +129,7 @@ export function EmailForm() {
                   Cancel
                 </Button>
                 <Button
-                  className={'basis-1/2'}
+                  className="dt-basis-1/2"
                   disabled={email === ''}
                   onClick={async () => {
                     // TODO: validate & save email
@@ -154,7 +154,7 @@ export function EmailForm() {
 
             {!isChanging && isEmailEditing ? (
               <Button
-                className={'basis-full'}
+                className="dt-basis-full"
                 disabled={email === ''}
                 onClick={async () => {
                   if (emailError) return;
@@ -172,9 +172,9 @@ export function EmailForm() {
             ) : null}
 
             {!isEmailEditing ? (
-              <div className="flex flex-row space-x-2">
+              <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
-                  className="basis-1/2"
+                  className="dt-basis-1/2"
                   onClick={async () => {
                     setEmailEditing(true);
                   }}
@@ -183,7 +183,7 @@ export function EmailForm() {
                   Change email
                 </Button>
                 <Button
-                  className={'basis-1/2'}
+                  className="dt-basis-1/2"
                   defaultStyle={secondaryRemoveButton}
                   onClick={async () => {
                     await deleteAddress(wallet, {
@@ -198,20 +198,20 @@ export function EmailForm() {
             ) : null}
           </div>
           {!currentError && !isChanging && isEmailEditing ? (
-            <p className={cs(textStyles.small, 'mb-1')}>
+            <p className={cs(textStyles.small, 'dt-mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
             </p>
           ) : null}
           {!currentError && isChanging ? (
-            <p className={cs(textStyles.small, 'mb-1')}>
+            <p className={cs(textStyles.small, 'dt-mb-1')}>
               ⚠️ Changing or deleting your email is a global setting across all
               dapps. You will be prompted to sign with your wallet, this action
               is free.
             </p>
           ) : null}
           {!currentError && !isEmailEditing && isVerified ? (
-            <p className={cs(textStyles.small, 'mb-1')}>
+            <p className={cs(textStyles.small, 'dt-mb-1')}>
               You can now chill and receive all the events directly to your
               inbox.
             </p>
@@ -219,7 +219,7 @@ export function EmailForm() {
         </form>
       )}
       {currentError && (
-        <p className={cs(textStyles.small, 'text-red-500 mt-2')}>
+        <p className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
           {currentError.message}
         </p>
       )}

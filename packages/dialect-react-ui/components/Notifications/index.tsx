@@ -150,7 +150,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
         {isDialectAvailable && dialectAddress ? (
           <>
             <Button
-              className="w-full"
+              className="dt-w-full"
               defaultStyle={secondaryRemoveButton}
               onClick={async () => {
                 await deleteDialect().catch(noop);
@@ -218,7 +218,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
         <P
           className={cs(
             textStyles.small,
-            'dt-text-red-500 dt-text-center mt-2'
+            'dt-text-red-500 dt-text-center dt-mt-2'
           )}
         >
           {creationError.message}
@@ -397,7 +397,7 @@ export default function Notifications(props: {
     <div className="dialect dt-h-full">
       <div
         className={cs(
-          'dt-flex dt-flex-col dt-h-full dt-overflow-hidden',
+          'dt-flex dt-flex-col dt-h-full dt-overflow-hidden dt-no-scrollbar',
           colors.primary,
           colors.bg,
           modal

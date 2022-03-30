@@ -361,5 +361,16 @@
   height: auto;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.dt-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.dt-no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 @tailwind components;
 @tailwind utilities;
