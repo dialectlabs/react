@@ -3,7 +3,7 @@ import { useApi, AddressType, ParsedErrorData } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { Button, Toggle, ValueRow } from '../common';
-import { incorrectEmail } from '@dialectlabs/react/utils/errors'; // FIXME: import from a better location
+import { DialectErrors } from '@dialectlabs/react';
 import { P } from '../common/preflighted';
 
 function getEmailObj(addresses: AddressType[] | null): AddressType | null {
@@ -105,11 +105,11 @@ export function EmailForm() {
                   onBlur={(e) =>
                     e.target.checkValidity()
                       ? setEmailError(null)
-                      : setEmailError(incorrectEmail)
+                      : setEmailError(DialectErrors.incorrectEmail)
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setEmailError(incorrectEmail);
+                    setEmailError(DialectErrors.incorrectEmail);
                   }}
                   pattern="^\S+@\S+\.\S+$"
                   disabled={isEmailSaved && !isEmailEditing}

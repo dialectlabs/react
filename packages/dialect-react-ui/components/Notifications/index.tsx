@@ -3,7 +3,6 @@ import { useDialect, MessageType, useApi } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
   Accordion,
-  BigButton,
   Button,
   Centered,
   Divider,
@@ -111,7 +110,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
     deletionError,
     creationError,
   } = useDialect();
-  const { colors, textStyles, icons, secondaryRemoveButton } = useTheme();
+  const { textStyles, secondaryRemoveButton } = useTheme();
   const { balance } = useBalance();
 
   if (isDialectAvailable) {
@@ -150,30 +149,28 @@ function Wallet(props: { onThreadDelete?: () => void }) {
         ) : null}
         {isDialectAvailable && dialectAddress ? (
           <>
-            {/* // TODO fix styles as secondary with red */}
-            <BigButton
-              className={cs(colors.errorBg, secondaryRemoveButton)}
+            <Button
+              className="w-full"
+              defaultStyle={secondaryRemoveButton}
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
                 props?.onThreadDelete?.();
               }}
-              heading="Withdraw rent & delete history"
-              description="Notification history will be lost forever"
-              icon={<icons.trash />}
               loading={isDialectDeleting}
-            />
+            >
+              Withdraw rent & delete history
+            </Button>
             {deletionError &&
-              deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-                <P
-                  className={cs(
-                    textStyles.small,
-                    'dt-text-red-500 dt-text-center dt-mt-2'
-                  )}
-                >
-                  {deletionError.message}
-                </P>
-              )}
+            deletionError.type !== 'DISCONNECTED_FROM_CHAIN' ? (
+              <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                {deletionError.message}
+              </P>
+            ) : (
+              <P className={cs(textStyles.small, 'dt-opacity-50 dt-mt-2')}>
+                Notification history will be lost forever
+              </P>
+            )}
           </>
         ) : null}
       </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as anchor from '@project-serum/anchor';
+import type * as anchor from '@project-serum/anchor';
 import {
   ApiProvider,
   connected,
