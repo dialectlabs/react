@@ -4,10 +4,12 @@ import type { WalletType } from '@dialectlabs/react';
 
 interface InboxProps {
   wallet: WalletType;
+  contentClassName?: string;
+  wrapperClassName: string;
 }
 
 const Inbox = (props: InboxProps) => {
-  return <Chat inbox />;
+  return <Chat inbox {...props} />;
 };
 
 export default Inbox;

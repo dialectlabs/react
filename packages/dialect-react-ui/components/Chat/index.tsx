@@ -15,10 +15,16 @@ enum Routes {
 
 interface ChatProps {
   inbox?: boolean;
+  wrapperClassName?: string;
+  contentWrapperClassName?: string;
 }
 
-export default function Chat({ inbox }: ChatProps): JSX.Element {
-  const { disconnectedFromChain, isWalletConnected, dialects } = useDialect();
+export default function Chat({
+  inbox,
+  wrapperClassName,
+  contentWrapperClassName,
+}: ChatProps): JSX.Element {
+  const { disconnectedFromChain, isWalletConnected } = useDialect();
 
   const [activeRoute, setActiveRoute] = useState<Routes>(Routes.NoConnection);
 
@@ -44,19 +50,17 @@ export default function Chat({ inbox }: ChatProps): JSX.Element {
   };
 
   return (
-    <div className="dialect dt-h-full">
+    <div className={clsx('dialect dt-h-full', wrapperClassName)}>
       <div
         className={clsx(
           'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
           colors.primary,
           colors.bg,
+          contentWrapperClassName,
           { [modal]: !inbox }
         )}
       >
         <div className="dt-h-full">{routes[activeRoute]}</div>
-        <Footer
-          showBackground={Boolean(dialects?.length && dialects?.length > 4)}
-        />
       </div>
     </div>
   );
