@@ -72,7 +72,7 @@ export type IncomingThemeValues = {
     [key in ThemeTextStyles]?: string;
   };
   icons?: {
-    [key in ThemeIcons]?: React.ReactElement;
+    [key in ThemeIcons]?: (svg: SVGProps<SVGSVGElement>) => JSX.Element;
   };
   avatar?: string;
   header?: string;

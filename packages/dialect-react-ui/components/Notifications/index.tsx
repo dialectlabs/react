@@ -117,12 +117,15 @@ function Wallet(props: { onThreadDelete?: () => void }) {
   if (isDialectAvailable) {
     return (
       <div>
+        <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
+          Web3 notifications to your wallet are now enabled
+        </P>
         {isDialectAvailable && dialectAddress ? (
           <ValueRow
             label={
               <>
                 <P className={cs(textStyles.small, 'dt-opacity-60')}>
-                  Account address
+                  Notifications account address
                 </P>
                 <P>
                   <A
@@ -179,6 +182,9 @@ function Wallet(props: { onThreadDelete?: () => void }) {
 
   return (
     <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
+      <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
+        Receive notifications directly to your wallet
+      </P>
       {wallet ? (
         <ValueRow
           label={
@@ -254,9 +260,6 @@ function Settings(props: {
           defaultExpanded
           title="Web3 notifications"
         >
-          <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
-            Receive notifications directly to your wallet
-          </P>
           <Wallet onThreadDelete={props.toggleSettings} />
         </Accordion>
       )}
@@ -266,10 +269,6 @@ function Settings(props: {
           defaultExpanded
           title="Email notifications"
         >
-          <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
-            Receive notifications to your email. Emails are stored securely
-            off-chain.
-          </P>
           <EmailForm />
         </Accordion>
       )}

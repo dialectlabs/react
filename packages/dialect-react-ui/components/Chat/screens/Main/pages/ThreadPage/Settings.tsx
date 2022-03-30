@@ -32,7 +32,7 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
             label={
               <>
                 <P className={clsx(textStyles.small, 'dt-opacity-60')}>
-                  Account address
+                  Notifications account address
                 </P>
                 <P>
                   <A

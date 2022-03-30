@@ -3,7 +3,8 @@ import { useApi, AddressType, ParsedErrorData } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { Button, Toggle, ValueRow } from '../common';
-import { incorrectEmail } from '@dialectlabs/react/lib/utils/errors'; // FIXME: import from a better location
+import { incorrectEmail } from '@dialectlabs/react/utils/errors'; // FIXME: import from a better location
+import { P } from '../common/preflighted';
 
 function getEmailObj(addresses: AddressType[] | null): AddressType | null {
   if (!addresses) return null;
@@ -58,6 +59,11 @@ export function EmailForm() {
 
   return (
     <div>
+      <P className={cs(textStyles.small, 'dt-opacity-50 dt-my-3')}>
+        {isEmailSaved
+          ? 'Email notifications are now enabled. Emails are stored securely off-chain.'
+          : 'Receive notifications to your email. Emails are stored securely off-chain.'}
+      </P>
       <ValueRow className="mb-2" label="Enable email notifications">
         <Toggle
           type="checkbox"
