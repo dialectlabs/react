@@ -17,7 +17,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "sourceMap": true,
-    "noEmit": false
+    "noEmit": false,
+    "importsNotUsedAsValues": "error"
   },
   "include": [
     "next-env.d.ts",

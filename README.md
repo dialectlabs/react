@@ -30,6 +30,8 @@ If you're interested in developing on Dialect while making live changes to the l
 ### Embed a notifications modal in your navbar
 
 ```typescript
+import '@dialectlabs/react-ui/index.css';
+
 import { NotificationsButton } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
@@ -64,6 +66,8 @@ The component above is a self-contained button that opens a notifications modal 
 ### Embed wallet-to-wallet chat in your navbar
 
 ```typescript
+import '@dialectlabs/react-ui/index.css';
+
 import { ChatButton } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 
@@ -142,7 +146,7 @@ rm -rf lib
 4. And lastly, comment out the styles import in `examples/chat/pages/_app.tsx`, which is only used when importing compiled versions of Dialect's react packages:
 
 ```typescript
-// import '@dialectlabs/react-ui/lib/index.css';
+// import '@dialectlabs/react-ui/index.css';
 ```
 
 All of the above changes require restarting the next server, if you've already started it.

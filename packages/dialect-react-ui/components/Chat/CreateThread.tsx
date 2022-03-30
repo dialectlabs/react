@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { useDialect } from '@dialectlabs/react';
 import { useApi } from '@dialectlabs/react';
-import { useTheme } from '../common/ThemeProvider';
 import { Button, ValueRow } from '../common';
+import { H1, Input, P } from '../common/preflighted';
+import { useTheme } from '../common/ThemeProvider';
 import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 
@@ -22,30 +23,30 @@ export default function CreateThread({
   const [address, setAddress] = useState('');
 
   return (
-    <div className="h-full pb-8 max-w-sm m-auto flex flex-col items-center justify-center">
-      <h1 className={cs(textStyles.h1, colors.primary, 'text-center')}>
+    <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-items-center dt-justify-center">
+      <H1 className={cs(textStyles.h1, colors.primary, 'dt-text-center')}>
         Create thread
-      </h1>
-      <span className="text-xs mb-4 opacity-50">unencrypted</span>
-      <input
-        className={cs(input, 'w-full')}
+      </H1>
+      <span className="dt-text-xs dt-mb-4 dt-opacity-50">unencrypted</span>
+      <Input
+        className={cs(input, 'dt-w-full')}
         placeholder="Recipient address"
         type="text"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
       />
-      <div className="h-4" />
+      <div className="dt-h-4" />
       <ValueRow
         label="Rent Deposit (recoverable)"
-        className={cs('w-full mb-4')}
+        className={cs('dt-w-full dt-mb-4')}
       >
         0.058 SOL
       </ValueRow>
-      <p className={cs(textStyles.body, 'text-center mb-1')}>
+      <P className={cs(textStyles.body, 'dt-text-center dt-mb-3')}>
         All messages are stored on chain, so to start this message thread,
         you&apos;ll need to deposit a small amount of rent. This rent is
         recoverable.
-      </p>
+      </P>
       <Button
         onClick={async () => {
           createDialect(address, [true, true], [false, true])
@@ -68,11 +69,16 @@ export default function CreateThread({
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <p className={cs(textStyles.small, 'text-red-500 text-center mt-2')}>
+        <P
+          className={cs(
+            textStyles.small,
+            'dt-text-red-500 dt-text-center dt-mt-2'
+          )}
+        >
           {creationError.message}
-        </p>
+        </P>
       )}
-      <p className={cs(textStyles.small, 'opacity-50 text-center mt-3')}>
+      <P className={cs(textStyles.small, 'dt-opacity-50 dt-text-center dt-mt-3')}>
         By creating this thread you agree to our{' '}
         <a
           className="underline"
@@ -91,7 +97,7 @@ export default function CreateThread({
         >
           Privacy Policy
         </a>
-      </p>
+      </P>
     </div>
   );
 }

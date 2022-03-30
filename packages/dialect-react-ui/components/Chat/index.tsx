@@ -1,112 +1,59 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDialect } from '@dialectlabs/react';
-import { Centered, Divider, Footer } from '../common';
+import { Footer } from '../common';
 import { useTheme } from '../common/ThemeProvider';
-import cs from '../../utils/classNames';
-import MessagePreview from './MessagePreview';
-import CreateThread from './CreateThread';
-import Header from './Header';
-import Thread from './Thread';
-import ThreadSettings from './ThreadSettings';
+import NoConnection from './screens/NoConnection';
+import NoWallet from './screens/NoWallet';
+import Main from './screens/Main';
+import clsx from 'clsx';
 
-export default function Chat(): JSX.Element {
-  const {
-    disconnectedFromChain,
-    isWalletConnected,
-    dialectAddress,
-    dialects,
-    setDialectAddress,
-  } = useDialect();
+enum Routes {
+  Main = 'main',
+  NoConnection = 'no_connection',
+  NoWallet = 'no_wallet',
+}
 
-  const [isCreateOpen, setCreateOpen] = useState(false);
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const [subscriptions, setSubscriptions] = useState<any[]>([]);
-  const [isNoSubscriptions, setIsNoSubscriptions] = useState(false);
+interface ChatProps {
+  inbox?: boolean;
+}
 
-  useEffect(() => {
-    setSubscriptions(dialects || []);
-    setIsNoSubscriptions(dialects.length < 1);
-  }, [dialects]);
+export default function Chat({ inbox }: ChatProps): JSX.Element {
+  const { disconnectedFromChain, isWalletConnected, dialects } = useDialect();
 
-  const toggleCreate = useCallback(
-    () => setCreateOpen(!isCreateOpen),
-    [isCreateOpen, setCreateOpen]
+  const [activeRoute, setActiveRoute] = useState<Routes>(Routes.NoConnection);
+
+  useEffect(
+    function pickRoute() {
+      if (disconnectedFromChain) {
+        setActiveRoute(Routes.NoConnection);
+      } else if (!isWalletConnected) {
+        setActiveRoute(Routes.NoWallet);
+      } else {
+        setActiveRoute(Routes.Main);
+      }
+    },
+    [disconnectedFromChain, isWalletConnected]
   );
 
-  const toggleSettings = useCallback(
-    () => setSettingsOpen(!isSettingsOpen),
-    [isSettingsOpen, setSettingsOpen]
-  );
+  const { colors, modal } = useTheme();
 
-  const { colors, modal, icons } = useTheme();
-
-  let content: JSX.Element;
-
-  if (disconnectedFromChain) {
-    content = (
-      <Centered>
-        <icons.offline className="w-10 mb-6 opacity-60" />
-        <span className="opacity-60">Lost connection to Solana blockchain</span>
-      </Centered>
-    );
-  } else if (!isWalletConnected) {
-    content = (
-      <Centered>
-        <icons.notConnected className="mb-6 opacity-60" />
-        <span className="opacity-60">Wallet not connected</span>
-      </Centered>
-    );
-  } else if (isCreateOpen) {
-    content = <CreateThread toggleCreate={toggleCreate} />;
-  } else if (isSettingsOpen) {
-    content = <ThreadSettings toggleSettings={toggleSettings} />;
-  } else if (isNoSubscriptions) {
-    content = (
-      <Centered>
-        <span className="opacity-60">No messages yet</span>
-      </Centered>
-    );
-  } else if (dialectAddress) {
-    content = <Thread />;
-  } else {
-    content = (
-      <div className="flex flex-col space-y-2">
-        {subscriptions.map((subscription: any) => (
-          <MessagePreview
-            key={subscription.publicKey.toBase58()}
-            dialect={subscription}
-            onClick={() => {
-              console.log(
-                'setting dialect address',
-                subscription.publicKey.toBase58()
-              );
-              setDialectAddress(subscription.publicKey.toBase58());
-            }}
-          />
-        ))}
-      </div>
-    );
-  }
+  const routes: Record<Routes, React.ReactNode> = {
+    [Routes.NoConnection]: <NoConnection />,
+    [Routes.NoWallet]: <NoWallet />,
+    [Routes.Main]: <Main inbox={inbox} />,
+  };
 
   return (
-    <div className="dialect h-full">
+    <div className="dialect dt-h-full">
       <div
-        className={cs(
-          'flex flex-col h-full shadow-md overflow-hidden',
+        className={clsx(
+          'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
           colors.primary,
           colors.bg,
-          modal
+          { [modal]: !inbox }
         )}
       >
-        <Header
-          isReady={isWalletConnected}
-          isCreateOpen={isCreateOpen}
-          toggleCreate={toggleCreate}
-          isSettingsOpen={isSettingsOpen}
-          toggleSettings={toggleSettings}
-        />
-        <Divider className="mx-2" />
-        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <div className="dt-h-full">{routes[activeRoute]}</div>
         <Footer
           showBackground={Boolean(dialects?.length && dialects?.length > 4)}
         />

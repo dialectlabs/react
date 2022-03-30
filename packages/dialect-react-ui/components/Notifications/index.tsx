@@ -12,6 +12,7 @@ import {
   ValueRow,
 } from '../common';
 import { useTheme } from '../common/ThemeProvider';
+import { A, H1, H2, P } from '../common/preflighted';
 import cs from '../../utils/classNames';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
@@ -40,11 +41,11 @@ function Header(props: {
   if (props.isSettingsOpen) {
     return (
       <>
-        <div className={cs('flex flex-row items-center', header)}>
+        <div className={cs('dt-flex dt-flex-row dt-items-center', header)}>
           <IconButton
             icon={<icons.back />}
             onClick={props.toggleSettings}
-            className="mr-2"
+            className="dt-mr-2"
           />
           <span className={cs(textStyles.header, colors.accent)}>Settings</span>
         </div>
@@ -54,7 +55,12 @@ function Header(props: {
   }
   return (
     <>
-      <div className={cs('flex flex-row items-center justify-between', header)}>
+      <div
+      className={cs(
+        'dt-flex dt-flex-row dt-items-center dt-justify-between',
+        header
+      )}
+    >
         <span className={cs(textStyles.header, colors.accent)}>
           Notifications
         </span>
@@ -90,6 +96,48 @@ function NetworkBadge({ network = 'devnet' }: { network?: string | null }) {
     >
       {network}
     </span>
+  );
+}
+
+function CreateThread() {
+  const { createDialect, isDialectCreating, creationError } = useDialect();
+  const { colors, textStyles } = useTheme();
+
+  return (
+    <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-items-center dt-justify-center">
+      <H1
+        className={cs(textStyles.h1, colors.accent, 'dt-mb-4 dt-text-center')}
+      >
+        Create notifications thread
+      </H1>
+      <ValueRow
+        label="Rent Deposit (recoverable)"
+        className={cs('dt-w-full dt-mb-4')}
+      >
+        0.058 SOL
+      </ValueRow>
+      <P className={cs(textStyles.body, 'dt-text-center dt-mb-3')}>
+        To start this message thread, you&apos;ll need to deposit a small amount
+        of rent, since messages are stored on-chain.
+      </P>
+      <Button
+        onClick={() => createDialect().catch(noop)}
+        loading={isDialectCreating}
+      >
+        {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
+      </Button>
+      {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
+      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+        <P
+          className={cs(
+            textStyles.small,
+            'dt-text-red-500 dt-text-center dt-mt-2'
+          )}
+        >
+          {creationError.message}
+        </P>
+      )}
+    </div>
   );
 }
 
@@ -212,11 +260,6 @@ function Wallet(props: { onThreadDelete?: () => void }) {
   );
 }
 
-const baseChannelOptions: Record<Channel, boolean> = {
-  web3: false,
-  email: false,
-};
-
 function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
@@ -258,14 +301,14 @@ function Settings(props: {
         </p>
         {props.notifications
           ? props.notifications.map((type) => (
-              <ValueRow
-                key={type.name}
-                label={type.name}
-                className={cs('mb-1')}
-              >
-                {type.detail}
-              </ValueRow>
-            ))
+            <ValueRow
+              key={type.name}
+              label={type.name}
+              className={cs('mb-1')}
+            >
+              {type.detail}
+            </ValueRow>
+          ))
           : 'No notification types supplied'}
       </Accordion>
       <p className={cs(textStyles.small, 'opacity-50 text-center mb-10')}>
@@ -319,22 +362,24 @@ export default function Notifications(props: {
   if (disconnectedFromChain) {
     content = (
       <Centered>
-        <icons.offline className="w-10 mb-6 opacity-60" />
-        <span className="opacity-60">Lost connection to Solana blockchain</span>
+        <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">
+          Lost connection to Solana blockchain
+        </span>
       </Centered>
     );
   } else if (cannotDecryptDialect) {
     content = (
       <Centered>
-        <icons.offline className="w-10 mb-6 opacity-60" />
-        <span className="opacity-60">Cannot decrypt messages</span>
+        <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">Cannot decrypt messages</span>
       </Centered>
     );
   } else if (!isWalletConnected) {
     content = (
       <Centered>
-        <icons.notConnected className="mb-6 opacity-60" />
-        <span className="opacity-60">Wallet not connected</span>
+        <icons.notConnected className="dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">Wallet not connected</span>
       </Centered>
     );
   } else if (isSettingsOpen || !isDialectAvailable) {
@@ -348,8 +393,8 @@ export default function Notifications(props: {
   } else if (isNoMessages) {
     content = (
       <Centered>
-        <icons.noNotifications className="mb-6" />
-        <span className="opacity-60">No notifications yet</span>
+        <icons.noNotifications className="dt-mb-6" />
+        <span className="dt-opacity-60">No notifications yet</span>
       </Centered>
     );
   } else {
@@ -370,10 +415,10 @@ export default function Notifications(props: {
   }
 
   return (
-    <div className="dialect h-full">
+    <div className="dialect dt-h-full">
       <div
         className={cs(
-          'flex flex-col h-full shadow-md overflow-hidden',
+          'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
           colors.primary,
           colors.bg,
           modal
@@ -384,7 +429,9 @@ export default function Notifications(props: {
           isSettingsOpen={isSettingsOpen}
           toggleSettings={toggleSettings}
         />
-        <div className="h-full py-2 px-4 overflow-y-scroll">{content}</div>
+        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll">
+          {content}
+        </div>
         <Footer />
       </div>
     </div>
