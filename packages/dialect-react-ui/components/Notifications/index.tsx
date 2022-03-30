@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useDialect, MessageType, useApi } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import {
@@ -17,6 +17,7 @@ import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import { EmailForm } from './EmailForm';
+import type { Channel } from '../common/types';
 
 export type NotificationType = {
   name: string;
@@ -211,26 +212,46 @@ function Wallet(props: { onThreadDelete?: () => void }) {
   );
 }
 
+const baseChannelOptions: Record<Channel, boolean> = {
+  web3: false,
+  email: false,
+};
+
 function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
+  channels: Channel[];
 }) {
   const { textStyles } = useTheme();
+
+  const channelsOptions = useMemo(
+    () =>
+      Object.fromEntries(
+        // Since by default options everything is false, passed options are considered enabled
+        props.channels.map((channel) => [channel, !baseChannelOptions[channel]])
+      ) as Record<Channel, boolean>,
+    [props.channels]
+  );
+
   return (
     <>
-      <Accordion className="mb-8" defaultExpanded title="Web3 notifications">
-        <p className={cs(textStyles.small, 'opacity-50 my-3')}>
-          Receive notifications directly to your wallet
-        </p>
-        <Wallet onThreadDelete={props.toggleSettings} />
-      </Accordion>
-      <Accordion className="mb-3" defaultExpanded title="Email notifications">
-        <p className={cs(textStyles.small, 'opacity-50 my-3')}>
-          Receive notifications to your email. Emails are stored securely
-          off-chain.
-        </p>
-        <EmailForm />
-      </Accordion>
+      {channelsOptions.web3 && (
+        <Accordion className="mb-8" defaultExpanded title="Web3 notifications">
+          <p className={cs(textStyles.small, 'opacity-50 my-3')}>
+            Receive notifications directly to your wallet
+          </p>
+          <Wallet onThreadDelete={props.toggleSettings} />
+        </Accordion>
+      )}
+      {channelsOptions.email && (
+        <Accordion className="mb-3" defaultExpanded title="Email notifications">
+          <p className={cs(textStyles.small, 'opacity-50 my-3')}>
+            Receive notifications to your email. Emails are stored securely
+            off-chain.
+          </p>
+          <EmailForm />
+        </Accordion>
+      )}
       <Accordion className="mb-8" defaultExpanded title="Notification types">
         <p className={cs(textStyles.small, 'opacity-50 my-3')}>
           The following notification types are supported
@@ -273,6 +294,7 @@ function Settings(props: {
 
 export default function Notifications(props: {
   notifications?: NotificationType[];
+  channels?: Channel[];
 }): JSX.Element {
   const {
     isWalletConnected,
@@ -320,6 +342,7 @@ export default function Notifications(props: {
       <Settings
         toggleSettings={toggleSettings}
         notifications={props.notifications || []}
+        channels={props.channels || []}
       />
     );
   } else if (isNoMessages) {
