@@ -262,7 +262,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
     modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[40rem]',
-    modal: 'dt-rounded-3xl',
+    modal: 'dt-shadow-md dt-rounded-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     secondaryButton:

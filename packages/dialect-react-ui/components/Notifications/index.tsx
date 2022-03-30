@@ -48,7 +48,7 @@ function Header(props: {
           />
           <span className={cs(textStyles.header, colors.accent)}>Settings</span>
         </div>
-        <Divider className="mx-2" />
+        <Divider className="dt-mx-2" />
       </>
     );
   }
@@ -70,7 +70,7 @@ function Header(props: {
           />
         ) : null}
       </div>
-      <Divider className="mx-2" />
+      <Divider className="dt-mx-2" />
     </>
   );
 }
@@ -397,7 +397,7 @@ export default function Notifications(props: {
     <div className="dialect dt-h-full">
       <div
         className={cs(
-          'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
+          'dt-flex dt-flex-col dt-h-full dt-overflow-hidden',
           colors.primary,
           colors.bg,
           modal
