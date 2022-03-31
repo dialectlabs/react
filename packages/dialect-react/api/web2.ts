@@ -3,6 +3,7 @@ import { withErrorParsing } from '../utils/errors';
 import type { WalletContextState } from '@solana/wallet-adapter-react';
 import type { WalletType } from '../components/ApiContext';
 
+// TODO: make this customizable
 const DIALECT_BASE_URL = '/api';
 
 export type AddressType = {
