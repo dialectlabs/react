@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as anchor from '@project-serum/anchor';
+import type * as anchor from '@project-serum/anchor';
 import {
   ApiProvider,
   connected,
@@ -17,6 +17,7 @@ import {
   IncomingThemeVariables,
   useTheme,
 } from '../common/ThemeProvider';
+import type { Channel } from '../common/types';
 
 type PropTypes = {
   wallet: WalletType;
@@ -28,6 +29,7 @@ type PropTypes = {
   bellClassName?: string;
   bellStyle?: object;
   notifications: NotificationType[];
+  channels?: Channel[];
 };
 
 function useOutsideAlerter(
@@ -97,7 +99,7 @@ function WrappedNotificationsButton(
         )}
         icon={<icons.bell className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={() => setOpen(!open)}
-      ></IconButton>
+      />
       <Transition
         className={modalWrapper}
         show={open}
@@ -115,7 +117,10 @@ function WrappedNotificationsButton(
           // className="dt-w-full dt-h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <Notifications notifications={props?.notifications} />
+          <Notifications
+            channels={props.channels}
+            notifications={props?.notifications}
+          />
         </div>
       </Transition>
     </div>
@@ -124,15 +129,16 @@ function WrappedNotificationsButton(
 
 export default function NotificationsButton({
   theme = 'dark',
+  channels = ['web3'],
   variables,
   ...props
 }: PropTypes): JSX.Element {
   return (
     <div className="dialect">
-      <ApiProvider>
+      <ApiProvider dapp={props.publicKey.toBase58()}>
         <DialectProvider publicKey={props.publicKey}>
           <ThemeProvider theme={theme} variables={variables}>
-            <WrappedNotificationsButton {...props} />
+            <WrappedNotificationsButton channels={channels} {...props} />
           </ThemeProvider>
         </DialectProvider>
       </ApiProvider>

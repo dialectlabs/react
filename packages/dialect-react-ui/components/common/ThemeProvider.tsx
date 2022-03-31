@@ -6,6 +6,7 @@ import {
   Bell as BellIcon,
   BackArrow,
   ChatBubble,
+  Chevron,
   Compose,
   Gear,
   NotConnected,
@@ -26,7 +27,11 @@ export type ThemeColors =
   | 'accent'
   | 'accentSolid'
   | 'brand'
-  | 'highlight';
+  | 'highlight'
+  | 'highlightSolid'
+  | 'toggleThumb'
+  | 'toggleBackground'
+  | 'toggleBackgroundActive';
 
 export type ThemeTextStyles =
   | 'h1'
@@ -49,6 +54,7 @@ export type ThemeIcons =
   | 'bell'
   | 'back'
   | 'chat'
+  | 'chevron'
   | 'compose'
   | 'settings'
   | 'notConnected'
@@ -66,11 +72,12 @@ export type IncomingThemeValues = {
     [key in ThemeTextStyles]?: string;
   };
   icons?: {
-    [key in ThemeIcons]?: React.ReactElement;
+    [key in ThemeIcons]?: (svg: SVGProps<SVGSVGElement>) => JSX.Element;
   };
   avatar?: string;
   header?: string;
   input?: string;
+  outlinedInput?: string;
   textArea?: string;
   messageBubble?: string;
   otherMessageBubble?: string;
@@ -83,6 +90,8 @@ export type IncomingThemeValues = {
   modalWrapper?: string;
   modal?: string;
   button?: string;
+  secondaryButton?: string;
+  secondaryDangerButton?: string;
   buttonLoading?: string;
   bigButton?: string;
   bigButtonLoading?: string;
@@ -113,6 +122,10 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       accent: 'dt-text-black',
       accentSolid: 'dt-text-[#5895B9]',
       highlight: 'dt-bg-[#ABABAB]/10',
+      highlightSolid: 'dt-bg-[#F2F3F2]',
+      toggleBackground: 'dt-bg-[#D6D6D6]',
+      toggleBackgroundActive: 'dt-bg-[#25BC3B]',
+      toggleThumb: 'dt-bg-[#EEEEEE]',
     },
     textStyles: {
       h1: 'dt-font-inter dt-text-3xl dt-font-bold',
@@ -122,7 +135,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       messageBubble: 'dt-font-inter',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
-      bigText: 'dt-font-inter dt-text-base dt-font-medium',
+      bigText: 'dt-font-inter dt-text-lg dt-font-medium',
       header: 'dt-font-inter dt-text-base dt-font-medium',
       buttonText: 'dt-font-inter dt-text-base',
       bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-black',
@@ -136,6 +149,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       back: BackArrow,
       chat: ChatBubble,
       compose: Compose,
+      chevron: Chevron,
       settings: Gear,
       notConnected: NotConnected,
       noNotifications: NoNotifications,
@@ -153,6 +167,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     header: 'dt-px-4 dt-py-3',
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0',
+    outlinedInput:
+      'dt-text-sm dt-text-black dt-bg-[#ABABAB]/10 dt-px-3 dt-py-2.5 dt-border-2 dt-border-[#ABABAB]/10 dt-rounded-lg dt-focus:border-black dt-focus:outline-none',
     textArea:
       'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none',
     messageBubble:
@@ -161,10 +177,16 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
-    modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[30rem]',
+    modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[40rem]',
     modal: 'dt-rounded-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
+    secondaryButton:
+      'dt-bg-transparent dt-text-black dt-border dt-border-black hover:dt-bg-black/10',
+    // TODO: colors in the theme
+    secondaryDangerButton:
+      'dt-bg-transparent dt-text-[#DE5454] dt-border dt-border-[#DE5454] hover:dt-bg-[#DE5454]/10',
+    // TODO: buttonLoading for secondary
     buttonLoading:
       'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 dt-bg-transparent',
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
@@ -182,7 +204,11 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       primary: 'dt-text-white',
       accent: 'dt-text-white',
       accentSolid: 'dt-text-white',
-      highlight: 'dt-bg-[#ABABAB]/10',
+      highlight: 'dt-bg-[#ABABAB]/20',
+      highlightSolid: 'dt-bg-[#262626]',
+      toggleBackground: 'dt-bg-[#5B5B5B]',
+      toggleBackgroundActive: 'dt-bg-[#25BC3B]',
+      toggleThumb: 'dt-bg-[#111111]',
     },
     textStyles: {
       h1: 'dt-font-inter dt-text-3xl dt-font-bold',
@@ -192,7 +218,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       messageBubble: 'dt-font-inter',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
-      bigText: 'dt-font-inter dt-text-base dt-font-medium',
+      bigText: 'dt-font-inter dt-text-lg dt-font-medium',
       header: 'dt-font-inter dt-text-base dt-font-medium',
       buttonText: 'dt-font-inter dt-text-base',
       bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-white',
@@ -205,6 +231,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
+      chevron: Chevron,
       compose: Compose,
       settings: Gear,
       notConnected: NotConnected,
@@ -223,6 +250,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     header: 'dt-px-4 dt-py-3',
     input:
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white',
+    outlinedInput:
+      'dt-text-sm dt-text-white dt-bg-[#ABABAB]/10 dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus:dt-border-white focus:dt-outline-none',
     textArea:
       'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 dt-outline-none',
     messageBubble:
@@ -232,16 +261,20 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
-    modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[30rem]',
-    modal: 'dt-rounded-3xl',
+    modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[40rem]',
+    modal: 'dt-shadow-md dt-rounded-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
+    secondaryButton:
+      'dt-bg-transparent dt-text-white dt-border dt-border-white hover:dt-bg-white/10',
+    secondaryDangerButton:
+      'dt-bg-transparent dt-text-[#DE5454] dt-border dt-border-[#DE5454] hover:dt-bg-[#DE5454]/10',
     buttonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
-    divider: 'dt-h-px dt-opacity-10 dt-bg-current',
+    divider: 'dt-h-px dt-opacity-30 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
   },
 };

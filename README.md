@@ -135,21 +135,21 @@ rm -rf lib
 '@dialectlabs/react',
 ```
 
-3. Dialect uses tailwind for styling. Uncomment the following lines from `examples/chat/tailwind.config.js` to ensure tailwind styles are correctly applied live:
+3. `dialect-react-ui` contains `exports` property in `package.json`, which breaks the importing during local development. Adjust the `import` property to navigate to the .ts file.
 
-```javascript
-// For local development uncomment next two lines for tailwind to take into account workspace files too
-'../../node_modules/@dialectlabs/react-ui/**/*.{js,ts,jsx,tsx}',
-'../../packages/dialect-react-ui-jet/**/*.{js,ts,jsx,tsx}',
+```json
+"exports": {
+  ".": {
+    "import": "./index.ts",
+    "require": "./lib/cjs/index.js"
+  },
+  "./index.css": "./lib/index.css"
+},
 ```
 
-4. And lastly, comment out the styles import in `examples/chat/pages/_app.tsx`, which is only used when importing compiled versions of Dialect's react packages:
+4. And lastly, launch `yarn build:styles:watch` in `packages/dialect-react-ui` in order to transpile styles on the fly with prefixes
 
-```typescript
-// import '@dialectlabs/react-ui/index.css';
-```
-
-All of the above changes require restarting the next server, if you've already started it.
+All of the above changes require restarting the next server and clearing cache (just in case), if you've already started it.
 
 You can now run the example by following the instructions in the next section.
 

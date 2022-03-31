@@ -4,6 +4,8 @@ export const ParsedErrorType = {
   CannotDecrypt: 'CANNOT_DECRYPT',
   UnknownError: 'UNKNOWN_ERROR',
   NoAccount: 'NO_ACCOUNT',
+  IncorrectEmail: 'INCORRECT_EMAIL',
+  NotSigned: 'NOT_SIGNED',
 } as const;
 type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
 
@@ -49,6 +51,21 @@ export const noAccount: ParsedErrorData = {
   matchers: ['Account does not exist'],
 };
 
+// TODO: move web2 errors, no need to parse them as web3
+export const incorrectEmail: ParsedErrorData = {
+  type: ParsedErrorType.NoAccount,
+  title: 'Error',
+  message: 'Please enter a valid email',
+  matchers: ['Incorrect email'],
+};
+
+export const notSigned: ParsedErrorData = {
+  type: ParsedErrorType.NotSigned,
+  title: 'Error',
+  message: 'You must sign the message to complete this action',
+  matchers: ['User rejected the request'],
+};
+
 export const unknownError: ParsedErrorData = {
   type: ParsedErrorType.UnknownError,
   title: 'Error',
@@ -59,6 +76,8 @@ const errors: ParsedErrorData[] = [
   insufficientFunds,
   disconnectedFromChain,
   cannotDecryptDialect,
+  incorrectEmail,
+  notSigned,
   noAccount,
 ];
 

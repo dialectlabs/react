@@ -50,7 +50,7 @@ interface Message {
 
 type PropsType = {
   children: JSX.Element;
-  publicKey: anchor.web3.PublicKey;
+  publicKey?: anchor.web3.PublicKey;
 };
 
 // TODO: revisit api functions and errors to be moved out from context
@@ -218,7 +218,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     setMetadataCreating(true);
 
     try {
-      const data = await createMetadata(program, wallet as Wallet);
+      const data = await createMetadata(program, wallet as anchor.Wallet);
 
       await mutateMetadata(data, false);
       setMetadataCreationError(null);

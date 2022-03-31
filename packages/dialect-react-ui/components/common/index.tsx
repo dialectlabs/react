@@ -1,6 +1,15 @@
-import React from 'react';
-import { DialectLogo } from '../Icon';
+import React, {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  useEffect,
+  useState,
+} from 'react';
+import { ownerFetcher } from '@dialectlabs/web3';
+import { useApi } from '@dialectlabs/react';
+import useSWR from 'swr';
 import cs from '../../utils/classNames';
+import IconButton from '../IconButton';
+import { DialectLogo } from '../Icon';
 import { useTheme } from './ThemeProvider';
 import { A, ButtonBase, P } from './preflighted';
 
@@ -39,7 +48,7 @@ export function Footer(): JSX.Element {
     <div
       className={cs(
         'dt-w-[8.5rem] dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-absolute dt-bottom-3 dt-left-0 dt-right-0 dt-mx-auto dt-uppercase dt-rounded-full',
-        colors.highlight
+        colors.highlightSolid
       )}
       style={{ fontSize: '10px' }}
     >
@@ -50,7 +59,7 @@ export function Footer(): JSX.Element {
         rel="noreferrer"
         className="hover:dt-text-inherit"
       >
-        <DialectLogo className="dt--mr-1 dt--mt-1 dt-ml-[3px]" />
+        <DialectLogo className="-dt-mr-1 -dt-mt-1 dt-ml-[3px]" />
       </A>
     </div>
   );
@@ -77,6 +86,7 @@ export function Loader() {
 }
 
 export function Button(props: {
+  defaultStyle?: string;
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -84,13 +94,14 @@ export function Button(props: {
   children: React.ReactNode;
 }): JSX.Element {
   const { button, buttonLoading, textStyles } = useTheme();
+  const defaultStyle = props.defaultStyle || button;
 
   return (
     <ButtonBase
       className={cs(
-        'min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
+        'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
-        !props.loading ? button : buttonLoading,
+        !props.loading ? defaultStyle : buttonLoading,
         props.className
       )}
       onClick={props.onClick}
@@ -133,3 +144,92 @@ export function BigButton(props: {
     </ButtonBase>
   );
 }
+
+export function Toggle({
+  checked,
+  onClick,
+  ...props
+}: { checked: boolean; onClick: () => void } & DetailedHTMLProps<
+  InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>) {
+  const [isChecked, setChecked] = useState<boolean>(checked);
+  const { colors } = useTheme();
+
+  useEffect(() => setChecked(checked), [checked]);
+
+  return (
+    <label className="dt-flex dt-items-center dt-cursor-pointer dt-relative dt-h-5 dt-w-10">
+      <input
+        type="checkbox"
+        className="dt-appearance-none dt-opacity-0 dt-w-0 dt-h-0"
+        checked={checked}
+        onChange={() => {
+          setChecked((prev) => !prev);
+          onClick();
+        }}
+        {...props}
+      />
+      {/* Background */}
+      <span
+        className={cs(
+          'dt-h-5 dt-w-10 dt-rounded-full',
+          isChecked ? colors.toggleBackgroundActive : colors.toggleBackground
+        )}
+      />
+      {/* Thumb */}
+      <span
+        className={cs(
+          'dt-absolute dt-top-0.5 dt-left-0.5 dt-rounded-full dt-h-4 dt-w-4 dt-transition dt-shadow-sm',
+          colors.toggleThumb,
+          isChecked ? 'dt-translate-x-[120%]' : ''
+        )}
+      />
+    </label>
+  );
+}
+
+export function Accordion(props: {
+  title: React.ReactNode | string;
+  children: React.ReactNode;
+  className?: string;
+  defaultExpanded?: boolean;
+}) {
+  const { textStyles, colors, icons } = useTheme();
+  const [isExpanded, setExpanded] = useState(props.defaultExpanded);
+
+  return (
+    <div className={props?.className}>
+      <div
+        // onClick={() => setExpanded((prev) => !prev)}
+        className={cs(textStyles.bigText, 'dt-w-full dt-flex dt-justify-between dt-mb-1')}
+      >
+        {props.title}
+        {/* <IconButton
+          icon={<icons.chevron />}
+          className={cs(
+            'rounded-full w-6 h-6 flex items-center justify-center',
+            colors.highlight,
+            !isExpanded && 'rotate-180'
+          )}
+        /> */}
+      </div>
+      <Divider className="dt-mb-2" />
+      {isExpanded ? props.children : null}
+    </div>
+  );
+}
+
+export const useBalance = () => {
+  const { wallet, program } = useApi();
+
+  const { data, error } = useSWR(
+    program?.provider.connection && wallet
+      ? ['/owner', wallet, program?.provider.connection]
+      : null,
+    ownerFetcher
+  );
+  const balance = data?.lamports ? (data.lamports / 1e9).toFixed(2) : null;
+
+  return { balance, error };
+};

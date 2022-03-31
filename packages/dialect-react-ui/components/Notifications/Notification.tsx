@@ -35,7 +35,7 @@ export const Notification = ({ message, timestamp }: Props) => {
             componentDecorator={(
               decoratedHref: string,
               decoratedText: string,
-              key: string
+              key: number
             ) => (
               <A
                 target="blank"
