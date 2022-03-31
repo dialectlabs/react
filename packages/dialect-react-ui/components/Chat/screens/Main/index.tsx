@@ -18,17 +18,17 @@ const Main = ({ inbox }: MainProps) => {
   const [newThreadOpen, setNewThreadOpen] = useState(false);
 
   return (
-    <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full dt-relative">
+    <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
       <div
         className={clsx(
           'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
           {
-            'md:dt-max-w-xs md:dt-border-r md:dt-block': inbox,
+            'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
             'dt-hidden': dialectAddress || newThreadOpen,
           }
         )}
       >
-        <div className="dt-px-2 dt-py-6 dt-mb-2 dt-flex dt-justify-between dt-border-b dt-border-neutral-600 dt-font-bold">
+        <div className="dt-px-2 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold">
           Messages
           <div
             className="dt-cursor-pointer"
@@ -54,7 +54,10 @@ const Main = ({ inbox }: MainProps) => {
           }}
         />
       ) : (
-        <ThreadPage inbox={inbox} />
+        <ThreadPage
+          inbox={inbox}
+          onNewThreadClick={() => setNewThreadOpen(true)}
+        />
       )}
     </div>
   );

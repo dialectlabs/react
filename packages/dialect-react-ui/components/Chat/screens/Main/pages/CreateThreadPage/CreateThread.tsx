@@ -28,7 +28,7 @@ export default function CreateThread({
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
-      <div className="dt-px-4 dt-py-4 dt-mb-2 dt-flex dt-justify-between dt-border-b dt-border-neutral-600 dt-font-bold dt-items-center">
+      <div className="dt-px-4 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold dt-items-center">
         <div
           className="dt-cursor-pointer"
           onClick={() => {

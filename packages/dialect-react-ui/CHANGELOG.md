@@ -49,3 +49,9 @@
   - Added prop `channels` to `NotificationsButton` component
   - Added Email Notifications section in settings
 - Major changes to Notifications flow and UI
+
+## [0.3.1] - 2022-04-01
+
+- fix `Inbox` resizing
+- add sidebar scrolling in `Inbox` mode
+- styling tweaks
