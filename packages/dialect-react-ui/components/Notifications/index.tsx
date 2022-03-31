@@ -216,7 +216,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
         <P
           className={cs(
             textStyles.small,
-            'dt-text-red-500 dt-text-center dt-mt-2'
+            'dt-text-red-500 dt-text-left dt-mt-2'
           )}
         >
           {creationError.message}
