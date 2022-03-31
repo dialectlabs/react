@@ -31,7 +31,7 @@ export function EmailForm() {
     outlinedInput,
     colors,
     secondaryButton,
-    secondaryRemoveButton,
+    secondaryDangerButton,
     highlighted,
   } = useTheme();
 
@@ -56,6 +56,37 @@ export function EmailForm() {
     setEmail(emailObj?.value || '');
     setEmailEditing(!emailObj?.enabled);
   }, [emailObj]);
+
+  const updateEmail = async () => {
+    // TODO: validate & save email
+    if (emailError) return;
+
+    await updateAddress(wallet, {
+      type: 'email',
+      value: email,
+      enabled: true,
+      id: emailObj?.id,
+      addressId: emailObj?.addressId,
+    });
+
+    setEmailEditing(false);
+  };
+
+  const saveEmail = async () => {
+    if (emailError) return;
+
+    await saveAddress(wallet, {
+      type: 'email',
+      value: email,
+      enabled: true,
+    });
+  };
+
+  const deleteEmail = async () => {
+    await deleteAddress(wallet, {
+      addressId: emailObj?.addressId,
+    });
+  };
 
   return (
     <div>
@@ -122,29 +153,14 @@ export function EmailForm() {
                 <Button
                   defaultStyle={secondaryButton}
                   className="dt-basis-1/2"
-                  onClick={() => {
-                    setEmailEditing(false);
-                  }}
+                  onClick={() => setEmailEditing(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   className="dt-basis-1/2"
                   disabled={email === ''}
-                  onClick={async () => {
-                    // TODO: validate & save email
-                    if (emailError) return;
-
-                    await updateAddress(wallet, {
-                      type: 'email',
-                      value: email,
-                      enabled: true,
-                      id: emailObj?.id,
-                      addressId: emailObj?.addressId,
-                    });
-
-                    setEmailEditing(false);
-                  }}
+                  onClick={updateEmail}
                   loading={isSavingAddress}
                 >
                   {isSavingAddress ? 'Saving...' : 'Submit email'}
@@ -156,15 +172,7 @@ export function EmailForm() {
               <Button
                 className="dt-basis-full"
                 disabled={email === ''}
-                onClick={async () => {
-                  if (emailError) return;
-
-                  await saveAddress(wallet, {
-                    type: 'email',
-                    value: email,
-                    enabled: true,
-                  });
-                }}
+                onClick={saveEmail}
                 loading={isSavingAddress}
               >
                 {isSavingAddress ? 'Saving...' : 'Submit email'}
@@ -175,21 +183,15 @@ export function EmailForm() {
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   className="dt-basis-1/2"
-                  onClick={async () => {
-                    setEmailEditing(true);
-                  }}
+                  onClick={() => setEmailEditing(true)}
                   loading={isSavingAddress}
                 >
                   Change email
                 </Button>
                 <Button
                   className="dt-basis-1/2"
-                  defaultStyle={secondaryRemoveButton}
-                  onClick={async () => {
-                    await deleteAddress(wallet, {
-                      addressId: emailObj?.addressId,
-                    });
-                  }}
+                  defaultStyle={secondaryDangerButton}
+                  onClick={deleteEmail}
                   loading={isDeletingAddress}
                 >
                   {isDeletingAddress ? 'Deleting...' : 'Delete email'}

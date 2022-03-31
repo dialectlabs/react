@@ -56,7 +56,7 @@ export const fetchJSON = async (
       String.fromCharCode.apply(null, signature as unknown as number[])
     );
     headers = {
-      Authorization: `${expirationTime}.${base64Signature}`,
+      Authorization: `Bearer ${expirationTime}.${base64Signature}`,
     };
   }
 

@@ -110,7 +110,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
     deletionError,
     creationError,
   } = useDialect();
-  const { textStyles, secondaryRemoveButton } = useTheme();
+  const { textStyles, secondaryDangerButton } = useTheme();
   const { balance } = useBalance();
 
   if (isDialectAvailable) {
@@ -151,7 +151,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
           <>
             <Button
               className="dt-w-full"
-              defaultStyle={secondaryRemoveButton}
+              defaultStyle={secondaryDangerButton}
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion

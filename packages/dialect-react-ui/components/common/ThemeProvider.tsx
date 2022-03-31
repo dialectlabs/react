@@ -91,7 +91,7 @@ export type IncomingThemeValues = {
   modal?: string;
   button?: string;
   secondaryButton?: string;
-  secondaryRemoveButton?: string;
+  secondaryDangerButton?: string;
   buttonLoading?: string;
   bigButton?: string;
   bigButtonLoading?: string;
@@ -184,7 +184,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     secondaryButton:
       'dt-bg-transparent dt-text-black dt-border dt-border-black hover:dt-bg-black/10',
     // TODO: colors in the theme
-    secondaryRemoveButton:
+    secondaryDangerButton:
       'dt-bg-transparent dt-text-[#DE5454] dt-border dt-border-[#DE5454] hover:dt-bg-[#DE5454]/10',
     // TODO: buttonLoading for secondary
     buttonLoading:
@@ -267,7 +267,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     secondaryButton:
       'dt-bg-transparent dt-text-white dt-border dt-border-white hover:dt-bg-white/10',
-    secondaryRemoveButton:
+    secondaryDangerButton:
       'dt-bg-transparent dt-text-[#DE5454] dt-border dt-border-[#DE5454] hover:dt-bg-[#DE5454]/10',
     buttonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',

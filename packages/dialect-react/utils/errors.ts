@@ -51,6 +51,7 @@ export const noAccount: ParsedErrorData = {
   matchers: ['Account does not exist'],
 };
 
+// TODO: move web2 errors, no need to parse them as web3
 export const incorrectEmail: ParsedErrorData = {
   type: ParsedErrorType.NoAccount,
   title: 'Error',
