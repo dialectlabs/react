@@ -55,3 +55,7 @@
 - fix `Inbox` resizing
 - add sidebar scrolling in `Inbox` mode
 - styling tweaks
+
+## [0.3.2] - 2022-04-01
+
+- fix missing dt prefix in color

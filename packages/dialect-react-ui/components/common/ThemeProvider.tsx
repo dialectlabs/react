@@ -257,7 +257,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     messageBubble:
       'dt-text-white dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-transparent dt-border dt-border-neutral-800',
     otherMessageBubble:
-      'dt-px-4 dt-py-2 dt-rounded-2xl dt-border dt-border-neutral-900 bg-neutral-900',
+      'dt-px-4 dt-py-2 dt-rounded-2xl dt-border dt-border-neutral-900 dt-bg-neutral-900',
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
