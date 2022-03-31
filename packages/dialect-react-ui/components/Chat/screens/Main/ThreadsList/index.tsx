@@ -17,7 +17,7 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
     );
   }
   return (
-    <div className="dt-flex dt-flex-1 dt-flex-col dt-space-y-2">
+    <div className="dt-flex dt-flex-1 dt-flex-col dt-space-y-2 dt-pl-2">
       {chatThreads.map((subscription) => (
         <MessagePreview
           key={subscription.publicKey.toBase58()}
