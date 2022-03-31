@@ -42,3 +42,10 @@
 ## [0.2.7] - 2022-03-30
 
 - Fix `Inbox` props
+
+## [0.3.0] - 2022-03-31
+
+- Add email notifications support
+  - Added prop `channels` to `NotificationsButton` component
+  - Added Email Notifications section in settings
+- Major changes to Notifications flow and UI
