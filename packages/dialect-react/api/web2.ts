@@ -1,8 +1,7 @@
 import fetch from 'unfetch';
-import * as anchor from '@project-serum/anchor';
 import { withErrorParsing } from '../utils/errors';
-import { WalletContextState } from '@solana/wallet-adapter-react';
-import { WalletType } from '../components/ApiContext';
+import type { WalletContextState } from '@solana/wallet-adapter-react';
+import type { WalletType } from '../components/ApiContext';
 
 const DIALECT_BASE_URL = '/api';
 
@@ -83,7 +82,7 @@ export const fetchAddressesForDapp = withErrorParsing(
   async (wallet: WalletType, dapp: string) => {
     const rawResponse = await fetchJSON(
       wallet,
-      `${DIALECT_BASE_URL}/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses`
+      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses`
     );
     const content = await rawResponse.json();
     return content;
@@ -95,7 +94,7 @@ export const saveAddress = withErrorParsing(
   async (wallet: WalletType, dapp: string, address: AddressType) => {
     const rawResponse = await fetchJSON(
       wallet,
-      `${DIALECT_BASE_URL}/wallets/${wallet?.publicKey.toBase58()}/dapps/${dapp}/addresses`,
+      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toBase58()}/dapps/${dapp}/addresses`,
       {
         method: 'POST',
         headers: {
@@ -114,7 +113,7 @@ export const updateAddress = withErrorParsing(
   async (wallet: WalletType, dapp: string, address: AddressType) => {
     const rawResponse = await fetchJSON(
       wallet,
-      `${DIALECT_BASE_URL}/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
+      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
         address?.id
       }`,
       {
@@ -136,7 +135,7 @@ export const deleteAddress = withErrorParsing(
   async (wallet: WalletType, address: AddressType) => {
     const rawResponse = await fetchJSON(
       wallet,
-      `${DIALECT_BASE_URL}/wallets/${wallet?.publicKey.toString()}/addresses/${
+      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/addresses/${
         address.addressId
       }`,
       {
