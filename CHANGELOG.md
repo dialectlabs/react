@@ -38,3 +38,7 @@
 ## [0.2.6] - 2022-03-30
 
 - Polishing `Chat` component (styling & UX)
+
+## [0.2.7] - 2022-03-30
+
+- Fix `Inbox` props

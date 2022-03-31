@@ -5,7 +5,7 @@ import type { WalletType } from '@dialectlabs/react';
 interface InboxProps {
   wallet: WalletType;
   contentClassName?: string;
-  wrapperClassName: string;
+  wrapperClassName?: string;
 }
 
 const Inbox = (props: InboxProps) => {

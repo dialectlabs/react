@@ -50,7 +50,12 @@ export default function Chat({
   };
 
   return (
-    <div className={clsx('dialect dt-h-full', wrapperClassName)}>
+    <div
+      className={clsx(
+        'dialect',
+        wrapperClassName ? wrapperClassName : 'dt-h-full'
+      )}
+    >
       <div
         className={clsx(
           'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
