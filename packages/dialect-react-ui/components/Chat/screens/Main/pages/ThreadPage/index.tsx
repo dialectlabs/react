@@ -8,10 +8,11 @@ import { display } from '@dialectlabs/web3';
 import { P } from '../../../../../common/preflighted';
 
 interface ThreadPageProps {
+  onNewThreadClick?: () => void;
   inbox?: boolean;
 }
 
-const ThreadPage = ({ inbox }: ThreadPageProps) => {
+const ThreadPage = ({ inbox, onNewThreadClick }: ThreadPageProps) => {
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons } = useTheme();
 
@@ -29,15 +30,21 @@ const ThreadPage = ({ inbox }: ThreadPageProps) => {
       return null;
     }
     return (
-      <div className="dt-flex dt-flex-1 dt-justify-center dt-items-center">
-        <P>Select a chat to start messaging</P>
+      <div className="dt-hidden md:dt-flex dt-flex-1 dt-justify-center dt-items-center">
+        <div
+          className="dt-flex dt-cursor-pointer dt-opacity-30"
+          onClick={onNewThreadClick}
+        >
+          <icons.compose className="dt-mr-2" />
+          <P>Send a new message</P>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
-      <div className="dt-px-4 dt-py-4 dt-mb-2 dt-flex dt-justify-between dt-border-b dt-border-neutral-600 dt-font-bold dt-items-center">
+      <div className="dt-px-4 dt-py-1 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-items-center">
         <div
           className={clsx('dt-cursor-pointer')}
           onClick={() => {
@@ -51,7 +58,9 @@ const ThreadPage = ({ inbox }: ThreadPageProps) => {
           <icons.back />
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
-          {dialect && display(dialect.dialect.members[1].publicKey)}
+          <span className="dt-text-base dt-font-medium dt-text-white">
+            {dialect && display(dialect.dialect.members[1].publicKey)}
+          </span>
           {dialect?.dialect.encrypted ? (
             <span className="dt-text-xs dt-opacity-50">encrypted</span>
           ) : (
