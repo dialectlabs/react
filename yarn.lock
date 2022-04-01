@@ -990,6 +990,32 @@
     eip1193-provider "^1.0.1"
     js-sha3 "^0.8.0"
 
+"@dialectlabs/react-ui@^0.2.0":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/react-ui/-/react-ui-0.2.7.tgz#aa78a98927166ed5a5a0a56464bc77afe4d46caa"
+  integrity sha512-6NGziuAlFFrK4rm1J+lm9JtNHD7jEwu7LaKLQ36Twf8PKmgfIkrPnOI/suoXB33WOeW3OJt4VK17fmcMbeWfpQ==
+  dependencies:
+    "@dialectlabs/web3" "0.1.11"
+    "@headlessui/react" "^1.2.0"
+    "@project-serum/anchor" "^0.18.2"
+    clsx "^1.1.1"
+    focus-visible "^5.2.0"
+    react-linkify "^1.0.0-alpha"
+    swr "^0.5.6"
+
+"@dialectlabs/react@^0.1.0", "@dialectlabs/react@^0.1.1":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/react/-/react-0.1.7.tgz#8d5fada5a005746950c97e44184d72d4df101b55"
+  integrity sha512-mlKkjr460GWgp8KBgR9RfE5qz9dhNcm5uFK1ivtQ1bnsYurPyTe1W4wzKXHsUvkgWHtHPf9IUKaOxj4xTtbS2w==
+  dependencies:
+    "@dialectlabs/web3" "0.1.11"
+    "@project-serum/anchor" "^0.18.2"
+    "@solana/wallet-adapter-base" "^0.7.0"
+    "@solana/wallet-adapter-react" "^0.13.1"
+    "@solana/wallet-adapter-wallets" "^0.11.3"
+    "@solana/web3.js" "^1.22.0"
+    swr "^0.5.6"
+
 "@dialectlabs/web3@0.1.11":
   version "0.1.11"
   resolved "https://registry.yarnpkg.com/@dialectlabs/web3/-/web3-0.1.11.tgz#63db30d23cd7e612c83d928abb359d53db2ac5ad"
