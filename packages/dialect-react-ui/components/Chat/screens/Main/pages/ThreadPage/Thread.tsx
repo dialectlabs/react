@@ -36,9 +36,13 @@ export default function Thread() {
   const youCanWrite = dialect?.dialect.members.some(
     (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1]
   );
-  const disabled =
+  const disableSendButton =
     text.length <= 0 ||
     text.length > 280 ||
+    isDialectCreating ||
+    sendingMessage;
+
+  const disableTextarea =
     isDialectCreating ||
     sendingMessage;
 
@@ -108,7 +112,8 @@ export default function Thread() {
           setText={setText}
           onSubmit={onMessageSubmit}
           onEnterPress={onEnterPress}
-          disabled={disabled}
+          disableSendButton={disableSendButton}
+          disableTextarea={disableTextarea}
         />
       )}
     </div>

@@ -2,13 +2,15 @@ import React, { KeyboardEvent, FormEvent } from 'react';
 import clsx from 'clsx';
 import { ButtonBase, Textarea } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
+import { Loader } from '../../../../../common';
 
 type PropsType = {
   text: string;
   setText: (text: string) => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onEnterPress: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
-  disabled: boolean;
+  disableSendButton: boolean;
+  disableTextarea: boolean;
 };
 
 export default function MessageInput({
@@ -16,7 +18,8 @@ export default function MessageInput({
   setText,
   onSubmit,
   onEnterPress,
-  disabled,
+  disableSendButton,
+  disableTextarea,
 }: PropsType): JSX.Element {
   const { icons, textArea, sendButton } = useTheme();
   // const { data } = useSWR(
@@ -41,14 +44,21 @@ export default function MessageInput({
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
                 className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full')}
+                disabled={disableTextarea}
               />
               <ButtonBase
                 className="dt-button dt-absolute dt-inset-y-0 dt--right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"
-                disabled={disabled}
+                disabled={disableSendButton}
               >
-                <icons.arrowsmright
-                  className={clsx(sendButton, disabled ? 'dt-opacity-50' : '')}
-                />
+                {
+                  disableTextarea ? (
+                    <Loader />
+                  ) : (
+                    <icons.arrowsmright
+                      className={clsx(sendButton, disableSendButton ? 'dt-opacity-50' : '')}
+                    />
+                  )
+                }
               </ButtonBase>
             </div>
           </div>
@@ -58,7 +68,7 @@ export default function MessageInput({
             <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
             {/* <div className="dt-text-xs">⊙ {0 || '–'}</div> */}
           </div>
-          {!disabled && (
+          {!disableSendButton && (
             <div className="dt-flex dt-text-xs dt-items-center dt-pr-1">
               enter
               <icons.arrownarrowright className="dt-h-4 dt-w-4" />
