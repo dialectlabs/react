@@ -6,9 +6,8 @@ import { useTheme } from '../../../../../common/ThemeProvider';
 import { formatTimestamp } from '@dialectlabs/react';
 import MessageInput from './MessageInput';
 import Avatar from '../../../../../Avatar';
+import type { ParsedErrorData } from '@dialectlabs/react/utils/errors';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
 
 export default function Thread() {
   const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
@@ -17,12 +16,17 @@ export default function Thread() {
   const { messageBubble, otherMessageBubble } = useTheme();
 
   const [text, setText] = useState<string>('');
+  const [error, setError] = useState<ParsedErrorData | null | undefined>();
+
+  const handleError = (err: ParsedErrorData) => {
+    setError(err);
+  };
 
   const onMessageSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await sendMessage(text)
       .then(() => setText(''))
-      .catch(noop);
+      .catch(handleError);
   };
 
   const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -30,7 +34,7 @@ export default function Thread() {
       e.preventDefault();
       await sendMessage(text)
         .then(() => setText(''))
-        .catch(noop);
+        .catch(handleError);
     }
   };
   const youCanWrite = dialect?.dialect.members.some(
@@ -114,6 +118,8 @@ export default function Thread() {
           onEnterPress={onEnterPress}
           disableSendButton={disableSendButton}
           inputDisabled={inputDisabled}
+          error={error}
+          setError={setError}
         />
       )}
     </div>
