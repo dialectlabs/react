@@ -10,7 +10,7 @@ type PropsType = {
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onEnterPress: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
   disableSendButton: boolean;
-  disableTextarea: boolean;
+  inputDisabled: boolean;
 };
 
 export default function MessageInput({
@@ -19,7 +19,7 @@ export default function MessageInput({
   onSubmit,
   onEnterPress,
   disableSendButton,
-  disableTextarea,
+  inputDisabled,
 }: PropsType): JSX.Element {
   const { icons, textArea, sendButton } = useTheme();
   // const { data } = useSWR(
@@ -44,14 +44,14 @@ export default function MessageInput({
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
                 className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full')}
-                disabled={disableTextarea}
+                disabled={inputDisabled}
               />
               <ButtonBase
                 className="dt-button dt-absolute dt-inset-y-0 dt--right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"
                 disabled={disableSendButton}
               >
                 {
-                  disableTextarea ? (
+                  inputDisabled ? (
                     <Loader />
                   ) : (
                     <icons.arrowsmright

@@ -42,7 +42,7 @@ export default function Thread() {
     isDialectCreating ||
     sendingMessage;
 
-  const disableTextarea =
+  const inputDisabled =
     isDialectCreating ||
     sendingMessage;
 
@@ -113,7 +113,7 @@ export default function Thread() {
           onSubmit={onMessageSubmit}
           onEnterPress={onEnterPress}
           disableSendButton={disableSendButton}
-          disableTextarea={disableTextarea}
+          inputDisabled={inputDisabled}
         />
       )}
     </div>
