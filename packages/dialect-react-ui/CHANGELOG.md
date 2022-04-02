@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - Add documentation to `README` on how to set up a hot-reloading local development environment.
+- Disabled send message text area and show loader instead of send button when message is sending or waiting approval
 
 ## [0.1.0] - 2022-02-12
 
