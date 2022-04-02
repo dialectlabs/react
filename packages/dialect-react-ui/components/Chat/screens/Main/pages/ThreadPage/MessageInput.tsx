@@ -3,10 +3,13 @@ import clsx from 'clsx';
 import { ButtonBase, Textarea } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import { Loader } from '../../../../../common';
+import type { ParsedErrorData } from '@dialectlabs/react/utils/errors';
 
 type PropsType = {
   text: string;
   setText: (text: string) => void;
+  error: ParsedErrorData | null | undefined;
+  setError: (error: ParsedErrorData | null | undefined) => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onEnterPress: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
   disableSendButton: boolean;
@@ -16,6 +19,8 @@ type PropsType = {
 export default function MessageInput({
   text,
   setText,
+  error,
+  setError,
   onSubmit,
   onEnterPress,
   disableSendButton,
@@ -40,7 +45,10 @@ export default function MessageInput({
             <div className="dt-absolute dt-top-0 dt-w-full dt-h-full dt-flex dt-flex-grow dt-items-center">
               <Textarea
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={(e) => {
+                  setError(null);
+                  setText(e.target.value);
+                }}
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
                 className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full')}
@@ -65,7 +73,14 @@ export default function MessageInput({
         </form>
         <div className="dt-flex dt-justify-between">
           <div className="dt-flex dt-space-x-3">
-            <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
+            {
+              error ? (
+                <div className="dt-text-xs dt-pl-1 dt-text-red-500">Error: {error.message}</div>
+              ) : (
+                <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
+              )
+            }
+
             {/* <div className="dt-text-xs">⊙ {0 || '–'}</div> */}
           </div>
           {!disableSendButton && (
