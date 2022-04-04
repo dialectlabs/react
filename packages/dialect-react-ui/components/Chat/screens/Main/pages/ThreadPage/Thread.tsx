@@ -1,13 +1,11 @@
 import React, { KeyboardEvent, FormEvent, useState } from 'react';
 import cs from '../../../../../../utils/classNames';
-import { useDialect } from '@dialectlabs/react';
-import { useApi } from '@dialectlabs/react';
+import { useApi, useDialect } from '@dialectlabs/react';
+import type { ParsedErrorData } from '@dialectlabs/react';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import { formatTimestamp } from '@dialectlabs/react';
 import MessageInput from './MessageInput';
 import Avatar from '../../../../../Avatar';
-import type { ParsedErrorData } from '@dialectlabs/react/utils/errors';
-
 
 export default function Thread() {
   const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
