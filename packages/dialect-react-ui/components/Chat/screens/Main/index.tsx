@@ -5,12 +5,14 @@ import ThreadPage from './pages/ThreadPage/';
 import clsx from 'clsx';
 import { useTheme } from '../../../common/ThemeProvider';
 import CreateThread from './pages/CreateThreadPage/CreateThread';
+import IconButton from '../../../IconButton';
 
 interface MainProps {
   inbox?: boolean;
+  toggleModal?: () => void;
 }
 
-const Main = ({ inbox }: MainProps) => {
+const Main = ({ inbox, toggleModal }: MainProps) => {
   const { dialectAddress, dialects, setDialectAddress } = useDialect();
 
   const { icons } = useTheme();
@@ -30,13 +32,20 @@ const Main = ({ inbox }: MainProps) => {
       >
         <div className="dt-px-2 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold">
           Messages
-          <div
-            className="dt-cursor-pointer"
-            onClick={() => {
-              setNewThreadOpen(true);
-            }}
-          >
-            <icons.compose />
+          <div className="dt-flex">
+            <div
+              className="dt-cursor-pointer"
+              onClick={() => {
+                setNewThreadOpen(true);
+              }}
+            >
+              <icons.compose />
+            </div>
+            {!inbox && (
+              <div className="sm:dt-hidden dt-ml-3">
+                <IconButton icon={<icons.x />} onClick={toggleModal} />
+              </div>
+            )}
           </div>
         </div>
         <ThreadsList
@@ -49,6 +58,8 @@ const Main = ({ inbox }: MainProps) => {
       </div>
       {newThreadOpen ? (
         <CreateThread
+          inbox={inbox}
+          toggleModal={toggleModal}
           onCloseRequest={() => {
             setNewThreadOpen(false);
           }}
@@ -56,6 +67,7 @@ const Main = ({ inbox }: MainProps) => {
       ) : (
         <ThreadPage
           inbox={inbox}
+          toggleModal={toggleModal}
           onNewThreadClick={() => setNewThreadOpen(true)}
         />
       )}

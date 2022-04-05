@@ -7,18 +7,23 @@ import { useTheme } from '../../../../../common/ThemeProvider';
 import { Button, ValueRow } from '../../../../../common';
 import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
 import clsx from 'clsx';
+import IconButton from '../../../../../IconButton';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
 interface CreateThreadProps {
+  inbox?: boolean;
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
+  toggleModal?: () => void;
 }
 
 export default function CreateThread({
+  inbox,
   onNewThreadCreated,
   onCloseRequest,
+  toggleModal,
 }: CreateThreadProps) {
   const { createDialect, isDialectCreating, creationError, setDialectAddress } =
     useDialect();
@@ -38,7 +43,13 @@ export default function CreateThread({
           <icons.back />
         </div>
         New thread
-        <div />
+        <div>
+          {!inbox && toggleModal && (
+            <div className="sm:dt-hidden dt-ml-3">
+              <IconButton icon={<icons.x />} onClick={toggleModal} />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-items-center dt-justify-center">

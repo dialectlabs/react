@@ -177,8 +177,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
-    modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[40rem]',
-    modal: 'dt-rounded-3xl',
+    modalWrapper:
+      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+    modal: 'dt-rounded-none sm:dt-rounded-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
     secondaryButton:
@@ -261,8 +262,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
-    modalWrapper: 'dt-absolute dt-z-50 dt-top-16 dt-w-[30rem] dt-h-[40rem]',
-    modal: 'dt-shadow-md dt-rounded-3xl',
+    modalWrapper:
+      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     secondaryButton:

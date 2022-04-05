@@ -4,6 +4,7 @@ import * as anchor from '@project-serum/anchor';
 import {
   NotificationsButton,
   IncomingThemeVariables,
+  defaultVariables,
 } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -17,8 +18,7 @@ export const themeVariables: IncomingThemeVariables = {
   dark: {
     bellButton:
       'w-10 h-10 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700',
-    modal:
-      'rounded-3xl shadow-xl shadow-neutral-900 border border-[#ABABAB]/40', // 0.4 opacity based on trial-and-error
+    modal: `${defaultVariables.dark.modal} sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-[#ABABAB]/40`, // 0.4 opacity based on trial-and-error
   },
 };
 

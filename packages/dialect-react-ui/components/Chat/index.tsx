@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDialect } from '@dialectlabs/react';
 import { Footer } from '../common';
 import { useTheme } from '../common/ThemeProvider';
-import NoConnection from './screens/NoConnection';
-import NoWallet from './screens/NoWallet';
+import Error from './screens/Error';
 import Main from './screens/Main';
 import clsx from 'clsx';
 
@@ -17,15 +16,16 @@ interface ChatProps {
   inbox?: boolean;
   wrapperClassName?: string;
   contentWrapperClassName?: string;
+  toggleModal: () => void;
 }
 
 export default function Chat({
   inbox,
   wrapperClassName,
   contentWrapperClassName,
+  toggleModal,
 }: ChatProps): JSX.Element {
   const { disconnectedFromChain, isWalletConnected } = useDialect();
-
   const [activeRoute, setActiveRoute] = useState<Routes>(Routes.NoConnection);
 
   useEffect(
@@ -44,9 +44,11 @@ export default function Chat({
   const { colors, modal } = useTheme();
 
   const routes: Record<Routes, React.ReactNode> = {
-    [Routes.NoConnection]: <NoConnection />,
-    [Routes.NoWallet]: <NoWallet />,
-    [Routes.Main]: <Main inbox={inbox} />,
+    [Routes.NoConnection]: (
+      <Error type="NoConnection" toggleModal={toggleModal} />
+    ),
+    [Routes.NoWallet]: <Error type="NoWallet" toggleModal={toggleModal} />,
+    [Routes.Main]: <Main toggleModal={toggleModal} inbox={inbox} />,
   };
 
   return (

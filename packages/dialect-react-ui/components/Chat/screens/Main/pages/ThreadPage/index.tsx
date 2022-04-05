@@ -6,13 +6,19 @@ import Thread from './Thread';
 import Settings from './Settings';
 import { display } from '@dialectlabs/web3';
 import { P } from '../../../../../common/preflighted';
+import IconButton from '../../../../../IconButton';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
   inbox?: boolean;
+  toggleModal?: () => void;
 }
 
-const ThreadPage = ({ inbox, onNewThreadClick }: ThreadPageProps) => {
+const ThreadPage = ({
+  inbox,
+  onNewThreadClick,
+  toggleModal,
+}: ThreadPageProps) => {
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons } = useTheme();
 
@@ -67,13 +73,20 @@ const ThreadPage = ({ inbox, onNewThreadClick }: ThreadPageProps) => {
             <span className="dt-text-xs dt-opacity-50">unencrypted</span>
           )}
         </div>
-        <div
-          className={clsx('dt-cursor-pointer', {
-            'dt-invisible': settingsOpen,
-          })}
-          onClick={() => setSettingsOpen((prev) => !prev)}
-        >
-          <icons.settings />
+        <div className="dt-flex">
+          <div
+            className={clsx('dt-cursor-pointer', {
+              'dt-invisible': settingsOpen,
+            })}
+            onClick={() => setSettingsOpen((prev) => !prev)}
+          >
+            <icons.settings />
+          </div>
+          {!inbox && toggleModal && (
+            <div className="sm:dt-hidden dt-ml-3">
+              <IconButton icon={<icons.x />} onClick={toggleModal} />
+            </div>
+          )}
         </div>
       </div>
       <div className="dt-flex-1 dt-px-2 dt-overflow-y-scroll">

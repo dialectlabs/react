@@ -9,6 +9,7 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
+import useMobile from '../../utils/useMobile';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
 import {
@@ -81,6 +82,17 @@ function WrappedNotificationsButton(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
+  const isMobile = useMobile();
+
+  useEffect(() => {
+    // Prevent scrolling of backdrop content on mobile
+    document.documentElement.classList[open && isMobile ? 'add' : 'remove'](
+      'dt-overflow-hidden',
+      'dt-static',
+      'sm:overflow-auto'
+    );
+  }, [open, isMobile]);
+
   const { colors, bellButton, icons, modalWrapper } = useTheme();
 
   return (
@@ -120,6 +132,7 @@ function WrappedNotificationsButton(
           <Notifications
             channels={props.channels}
             notifications={props?.notifications}
+            toggleModal={() => setOpen((open) => !open)}
           />
         </div>
       </Transition>
