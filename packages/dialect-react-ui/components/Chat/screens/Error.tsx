@@ -6,10 +6,10 @@ import IconButton from '../../IconButton';
 
 type PropsType = {
   type: 'NoConnection' | 'NoWallet';
-  toggleModal: () => void;
+  onModalClose: () => void;
 };
 
-const Error = ({ type, toggleModal }: PropsType) => {
+const Error = ({ type, onModalClose }: PropsType) => {
   const { header, icons } = useTheme();
 
   if (!type) return null;
@@ -24,7 +24,7 @@ const Error = ({ type, toggleModal }: PropsType) => {
           )}
         >
           <div className="dt-ml-3">
-            <IconButton icon={<icons.x />} onClick={toggleModal} />
+            <IconButton icon={<icons.x />} onClick={onModalClose} />
           </div>
         </div>
       </div>

@@ -112,7 +112,7 @@ function WrappedChatButton(
           // className="dt-w-full dt-h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <Chat toggleModal={() => setOpen((open) => !open)} />
+          <Chat onModalClose={() => setOpen(false)} />
         </div>
       </Transition>
     </div>

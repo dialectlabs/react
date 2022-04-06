@@ -31,7 +31,7 @@ const noop = () => {};
 function Header(props: {
   isReady: boolean;
   isSettingsOpen: boolean;
-  toggleModal: () => void;
+  onModalClose: () => void;
   toggleSettings: () => void;
 }) {
   const { isDialectAvailable } = useDialect();
@@ -72,7 +72,7 @@ function Header(props: {
             />
           ) : null}
           <div className="sm:dt-hidden dt-ml-3">
-            <IconButton icon={<icons.x />} onClick={props.toggleModal} />
+            <IconButton icon={<icons.x />} onClick={props.onModalClose} />
           </div>
         </div>
       </div>
@@ -319,7 +319,7 @@ function Settings(props: {
 }
 
 export default function Notifications(props: {
-  toggleModal: () => void;
+  onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
 }): JSX.Element {
@@ -411,7 +411,7 @@ export default function Notifications(props: {
         <Header
           isReady={isDialectAvailable}
           isSettingsOpen={isSettingsOpen}
-          toggleModal={props.toggleModal}
+          onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
         />
         <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll dt-no-scrollbar">

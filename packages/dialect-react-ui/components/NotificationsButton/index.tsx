@@ -132,7 +132,7 @@ function WrappedNotificationsButton(
           <Notifications
             channels={props.channels}
             notifications={props?.notifications}
-            toggleModal={() => setOpen((open) => !open)}
+            onModalClose={() => setOpen(false)}
           />
         </div>
       </Transition>

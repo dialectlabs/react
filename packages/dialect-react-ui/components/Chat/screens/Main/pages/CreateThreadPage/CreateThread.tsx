@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { useDialect } from '@dialectlabs/react';
 import { useApi } from '@dialectlabs/react';
-import { H1, Input, P } from '../../../../../common/preflighted';
-import { useTheme } from '../../../../../common/ThemeProvider';
-import { Button, ValueRow } from '../../../../../common';
 import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
 import clsx from 'clsx';
 import IconButton from '../../../../../IconButton';
+import { H1, Input, P } from '../../../../../common/preflighted';
+import { useTheme } from '../../../../../common/ThemeProvider';
+import { Button, ValueRow } from '../../../../../common';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -16,14 +16,14 @@ interface CreateThreadProps {
   inbox?: boolean;
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
-  toggleModal?: () => void;
+  onModalClose?: () => void;
 }
 
 export default function CreateThread({
   inbox,
   onNewThreadCreated,
   onCloseRequest,
-  toggleModal,
+  onModalClose,
 }: CreateThreadProps) {
   const { createDialect, isDialectCreating, creationError, setDialectAddress } =
     useDialect();
@@ -44,9 +44,9 @@ export default function CreateThread({
         </div>
         New thread
         <div>
-          {!inbox && toggleModal && (
+          {!inbox && onModalClose && (
             <div className="sm:dt-hidden dt-ml-3">
-              <IconButton icon={<icons.x />} onClick={toggleModal} />
+              <IconButton icon={<icons.x />} onClick={onModalClose} />
             </div>
           )}
         </div>

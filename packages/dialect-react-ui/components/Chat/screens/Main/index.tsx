@@ -9,10 +9,10 @@ import IconButton from '../../../IconButton';
 
 interface MainProps {
   inbox?: boolean;
-  toggleModal?: () => void;
+  onModalClose?: () => void;
 }
 
-const Main = ({ inbox, toggleModal }: MainProps) => {
+const Main = ({ inbox, onModalClose }: MainProps) => {
   const { dialectAddress, dialects, setDialectAddress } = useDialect();
 
   const { icons } = useTheme();
@@ -43,7 +43,7 @@ const Main = ({ inbox, toggleModal }: MainProps) => {
             </div>
             {!inbox && (
               <div className="sm:dt-hidden dt-ml-3">
-                <IconButton icon={<icons.x />} onClick={toggleModal} />
+                <IconButton icon={<icons.x />} onClick={onModalClose} />
               </div>
             )}
           </div>
@@ -59,7 +59,7 @@ const Main = ({ inbox, toggleModal }: MainProps) => {
       {newThreadOpen ? (
         <CreateThread
           inbox={inbox}
-          toggleModal={toggleModal}
+          onModalClose={onModalClose}
           onCloseRequest={() => {
             setNewThreadOpen(false);
           }}
@@ -67,7 +67,7 @@ const Main = ({ inbox, toggleModal }: MainProps) => {
       ) : (
         <ThreadPage
           inbox={inbox}
-          toggleModal={toggleModal}
+          onModalClose={onModalClose}
           onNewThreadClick={() => setNewThreadOpen(true)}
         />
       )}

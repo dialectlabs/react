@@ -11,13 +11,13 @@ import IconButton from '../../../../../IconButton';
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
   inbox?: boolean;
-  toggleModal?: () => void;
+  onModalClose?: () => void;
 }
 
 const ThreadPage = ({
   inbox,
   onNewThreadClick,
-  toggleModal,
+  onModalClose,
 }: ThreadPageProps) => {
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons } = useTheme();
@@ -82,9 +82,9 @@ const ThreadPage = ({
           >
             <icons.settings />
           </div>
-          {!inbox && toggleModal && (
+          {!inbox && onModalClose && (
             <div className="sm:dt-hidden dt-ml-3">
-              <IconButton icon={<icons.x />} onClick={toggleModal} />
+              <IconButton icon={<icons.x />} onClick={onModalClose} />
             </div>
           )}
         </div>
