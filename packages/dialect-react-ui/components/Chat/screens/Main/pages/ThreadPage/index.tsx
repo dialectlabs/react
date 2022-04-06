@@ -65,7 +65,9 @@ const ThreadPage = ({
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
           <span className="dt-text-base dt-font-medium dt-text-white">
-            {dialect && display(dialect.dialect.members[1].publicKey)}
+            {dialect
+              ? display(dialect.dialect.members[1].publicKey)
+              : 'Loading...'}
           </span>
           {dialect?.dialect.encrypted ? (
             <span className="dt-text-xs dt-opacity-50">encrypted</span>
