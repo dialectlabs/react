@@ -89,7 +89,7 @@ function WrappedNotificationsButton(
     document.documentElement.classList[open && isMobile ? 'add' : 'remove'](
       'dt-overflow-hidden',
       'dt-static',
-      'sm:overflow-auto'
+      'sm:dt-overflow-auto'
     );
   }, [open, isMobile]);
 
