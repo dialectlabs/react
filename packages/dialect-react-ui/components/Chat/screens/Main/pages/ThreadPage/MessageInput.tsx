@@ -31,16 +31,17 @@ export default function MessageInput({
       <div className="dt-flex dt-flex-col dt-pb-2 dt-mb-2">
         <form onSubmit={onSubmit}>
           <div className="dt-relative">
-            <div className="dt-text-sm dt-break-words dt-py-1 dt-pl-2 dt-pr-11">
+            <div style={{ width: '24rem'}} className="dt-text-sm dt-break-words dt-py-1 dt-pl-2 dt-pr-11">
               {text || 'h'}
             </div>
             <div className="dt-absolute dt-top-0 dt-w-full dt-h-full dt-flex dt-flex-grow dt-items-center">
               <Textarea
+                style={{ width: '29rem'}}
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
-                className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full')}
+                className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full dt-break-all')}
               />
               <ButtonBase
                 className="dt-button dt-absolute dt-inset-y-0 dt--right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"

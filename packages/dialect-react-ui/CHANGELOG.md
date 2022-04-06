@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - Add documentation to `README` on how to set up a hot-reloading local development environment.
+- Fix for typing a long msg without space expand the entire chat
 
 ## [0.1.0] - 2022-02-12
 
