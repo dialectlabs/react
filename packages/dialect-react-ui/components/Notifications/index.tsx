@@ -1,6 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { useDialect, MessageType, useApi } from '@dialectlabs/react';
+import { useDialect, useApi } from '@dialectlabs/react';
+import type { MessageType } from '@dialectlabs/react';
+import { getExplorerAddress } from '../../utils/getExplorerAddress';
+import useMobile from '../../utils/useMobile';
+import cs from '../../utils/classNames';
 import { display } from '@dialectlabs/web3';
+import { useTheme } from '../common/ThemeProvider';
+import { A, P } from '../common/preflighted';
+import type { Channel } from '../common/types';
 import {
   Accordion,
   Button,
@@ -10,15 +17,9 @@ import {
   useBalance,
   ValueRow,
 } from '../common';
-import { useTheme } from '../common/ThemeProvider';
-import { A, P } from '../common/preflighted';
-import cs from '../../utils/classNames';
-import { getExplorerAddress } from '../../utils/getExplorerAddress';
-import useMobile from '../../utils/useMobile';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import { EmailForm } from './EmailForm';
-import type { Channel } from '../common/types';
 
 export type NotificationType = {
   name: string;

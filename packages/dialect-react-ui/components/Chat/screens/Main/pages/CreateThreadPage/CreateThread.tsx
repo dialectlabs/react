@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
-import { useDialect } from '@dialectlabs/react';
-import { useApi } from '@dialectlabs/react';
-import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
+import {
+  useDialect,
+  useApi,
+  getDialectAddressWithOtherMember,
+} from '@dialectlabs/react';
 import clsx from 'clsx';
 import IconButton from '../../../../../IconButton';
 import { H1, Input, P } from '../../../../../common/preflighted';

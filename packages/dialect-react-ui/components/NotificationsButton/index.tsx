@@ -4,14 +4,12 @@ import {
   ApiProvider,
   connected,
   useApi,
-  WalletType,
   DialectProvider,
 } from '@dialectlabs/react';
+import type { WalletType } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
 import useMobile from '../../utils/useMobile';
-import Notifications, { NotificationType } from '../Notifications';
-import IconButton from '../IconButton';
 import {
   ThemeProvider,
   ThemeType,
@@ -19,6 +17,8 @@ import {
   useTheme,
 } from '../common/ThemeProvider';
 import type { Channel } from '../common/types';
+import Notifications, { NotificationType } from '../Notifications';
+import IconButton from '../IconButton';
 
 type PropTypes = {
   wallet: WalletType;

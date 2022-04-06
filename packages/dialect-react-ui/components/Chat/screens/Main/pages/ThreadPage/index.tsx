@@ -1,12 +1,12 @@
-import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { useDialect } from '@dialectlabs/react';
-import { useTheme } from '../../../../../common/ThemeProvider';
-import Thread from './Thread';
-import Settings from './Settings';
 import { display } from '@dialectlabs/web3';
+import { useTheme } from '../../../../../common/ThemeProvider';
 import { P } from '../../../../../common/preflighted';
 import IconButton from '../../../../../IconButton';
+import Settings from './Settings';
+import Thread from './Thread';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;

@@ -1,6 +1,6 @@
 import React from 'react';
-import Chat from '../Chat';
 import type { WalletType } from '@dialectlabs/react';
+import Chat from '../Chat';
 
 interface InboxProps {
   wallet: WalletType;

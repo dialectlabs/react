@@ -15,7 +15,7 @@ interface ChatProps {
   inbox?: boolean;
   wrapperClassName?: string;
   contentWrapperClassName?: string;
-  onModalClose: () => void;
+  onModalClose?: () => void;
 }
 
 export default function Chat({
@@ -44,9 +44,11 @@ export default function Chat({
 
   const routes: Record<Routes, React.ReactNode> = {
     [Routes.NoConnection]: (
-      <Error type="NoConnection" onModalClose={onModalClose} />
+      <Error type="NoConnection" onModalClose={onModalClose} inbox={inbox} />
     ),
-    [Routes.NoWallet]: <Error type="NoWallet" onModalClose={onModalClose} />,
+    [Routes.NoWallet]: (
+      <Error type="NoWallet" onModalClose={onModalClose} inbox={inbox} />
+    ),
     [Routes.Main]: <Main onModalClose={onModalClose} inbox={inbox} />,
   };
 

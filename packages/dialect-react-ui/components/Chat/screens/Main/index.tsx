@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import ThreadsList from './ThreadsList';
-import { useDialect } from '@dialectlabs/react';
-import ThreadPage from './pages/ThreadPage/';
 import clsx from 'clsx';
+import { useDialect } from '@dialectlabs/react';
 import { useTheme } from '../../../common/ThemeProvider';
-import CreateThread from './pages/CreateThreadPage/CreateThread';
 import IconButton from '../../../IconButton';
+import CreateThread from './pages/CreateThreadPage/CreateThread';
+import ThreadPage from './pages/ThreadPage/';
+import ThreadsList from './ThreadsList';
 
 interface MainProps {
   inbox?: boolean;
@@ -41,7 +41,7 @@ const Main = ({ inbox, onModalClose }: MainProps) => {
             >
               <icons.compose />
             </div>
-            {!inbox && (
+            {!inbox && onModalClose && (
               <div className="sm:dt-hidden dt-ml-3">
                 <IconButton icon={<icons.x />} onClick={onModalClose} />
               </div>
