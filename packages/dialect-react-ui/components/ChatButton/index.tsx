@@ -76,7 +76,7 @@ function WrappedChatButton(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const { colors, bellButton, icons } = useTheme();
+  const { colors, bellButton, icons, modalWrapper } = useTheme();
 
   return (
     <div
@@ -96,8 +96,7 @@ function WrappedChatButton(
         onClick={() => setOpen(!open)}
       ></IconButton>
       <Transition
-        className="dt-z-50 dt-absolute dt-top-16 dt-w-96 dt-h-96"
-        style={{ width: '29rem', height: '29rem' }}
+        className={modalWrapper}
         show={open}
         enter="dt-transition-opacity dt-duration-300"
         enterFrom="dt-opacity-0"
@@ -113,7 +112,7 @@ function WrappedChatButton(
           // className="dt-w-full dt-h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <Chat />
+          <Chat onModalClose={() => setOpen(false)} />
         </div>
       </Transition>
     </div>

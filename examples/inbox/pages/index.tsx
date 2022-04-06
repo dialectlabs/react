@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
-import { Wallet, WalletContext } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Inbox as DialectInbox } from '@dialectlabs/react-ui';
+import { Inbox as DialectInbox, ThemeProvider } from '@dialectlabs/react-ui';
 import {
   ApiProvider,
   connected,
   DialectProvider,
   useApi,
 } from '@dialectlabs/react';
-import { ThemeProvider } from '@dialectlabs/react-ui';
+import { Wallet, WalletContext } from '../components/Wallet';
 
 function AuthedHome() {
   const wallet = useWallet();

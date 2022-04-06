@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useApi, AddressType, ParsedErrorData } from '@dialectlabs/react';
+import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
+import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
-import { Button, Toggle, ValueRow } from '../common';
-import { DialectErrors } from '@dialectlabs/react';
 import { P } from '../common/preflighted';
+import { Button, Toggle, ValueRow } from '../common';
 
 function getEmailObj(addresses: AddressType[] | null): AddressType | null {
   if (!addresses) return null;
