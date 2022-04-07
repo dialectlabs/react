@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, FormEvent, useState } from 'react';
+import React, { KeyboardEvent, FormEvent, useState, useEffect } from 'react';
 import cs from '../../../../../../utils/classNames';
 import { useApi, useDialect } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
@@ -15,6 +15,7 @@ export default function Thread() {
 
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<ParsedErrorData | null | undefined>();
+  const [youCanWrite, setYouCanWrite] = useState<boolean>(false);
 
   const handleError = (err: ParsedErrorData) => {
     setError(err);
@@ -35,9 +36,18 @@ export default function Thread() {
         .catch(handleError);
     }
   };
-  const youCanWrite = dialect?.dialect.members.some(
-    (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1]
-  );
+
+  useEffect(() => {
+    const membersContainCurrentKey = dialect?.dialect.members.some(
+      (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1] // is not admin but does have write privilages
+    );
+    if (membersContainCurrentKey) {
+      setYouCanWrite(membersContainCurrentKey);
+    }
+  }, [
+    dialect?.dialect,
+  ]);
+
   const disableSendButton =
     text.length <= 0 ||
     text.length > 280 ||
