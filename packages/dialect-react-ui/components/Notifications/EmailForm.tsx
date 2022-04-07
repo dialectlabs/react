@@ -200,30 +200,30 @@ export function EmailForm() {
             ) : null}
           </div>
           {!currentError && !isChanging && isEmailEditing ? (
-            <p className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={cs(textStyles.small, 'dt-mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
-            </p>
+            </P>
           ) : null}
           {!currentError && isChanging ? (
-            <p className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={cs(textStyles.small, 'dt-mb-1')}>
               ⚠️ Changing or deleting your email is a global setting across all
               dapps. You will be prompted to sign with your wallet, this action
               is free.
-            </p>
+            </P>
           ) : null}
           {!currentError && !isEmailEditing && isVerified ? (
-            <p className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={cs(textStyles.small, 'dt-mb-1')}>
               You can now chill and receive all the events directly to your
               inbox.
-            </p>
+            </P>
           ) : null}
         </form>
       )}
       {currentError && (
-        <p className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+        <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
           {currentError.message}
-        </p>
+        </P>
       )}
     </div>
   );

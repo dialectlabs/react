@@ -150,7 +150,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
               <P className={cs(textStyles.small, 'dt-opacity-60')}>
                 Deposited Rent
               </P>
-              <p>0.058 SOL</p>
+              <P>0.058 SOL</P>
             </span>
           </ValueRow>
         ) : null}
