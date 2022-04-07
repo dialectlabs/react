@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.16.7",
+    "@cardinal/namespaces-components": "2.5.0",
     "@dialectlabs/react": "^0.2.0",
     "@dialectlabs/react-ui": "^0.3.0",
     "@dialectlabs/web3": "0.1.11",

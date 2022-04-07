@@ -8,6 +8,7 @@ import {
   useApi,
 } from '@dialectlabs/react';
 import { Wallet, WalletContext } from '../components/Wallet';
+import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 
 function AuthedHome() {
   const wallet = useWallet();
@@ -19,8 +20,14 @@ function AuthedHome() {
     () => setWallet(connected(wallet) ? wallet : null),
     [setWallet, wallet, isWalletConnected]
   );
-  useEffect(() => setNetwork('localnet'), [setNetwork]);
-  useEffect(() => setRpcUrl(null), [setRpcUrl]);
+  useEffect(() => setNetwork('mainnet'), [setNetwork]);
+  useEffect(
+    () =>
+      setRpcUrl(
+        'https://solana-api.syndica.io/access-token/6sW38nSZ1Qm4WVRN4Vnbjb9EF2QudlpGZBToMtPyqoXqkIenDwJ5FVK1HdWSqqah/rpc'
+      ),
+    [setRpcUrl]
+  );
 
   return (
     <div className="dialect">
@@ -39,9 +46,11 @@ export default function Home(): JSX.Element {
     <WalletContext>
       <ApiProvider>
         <DialectProvider>
-          <ThemeProvider theme={'dark'}>
-            <AuthedHome />
-          </ThemeProvider>
+          <WalletIdentityProvider>
+            <ThemeProvider theme={'dark'}>
+              <AuthedHome />
+            </ThemeProvider>
+          </WalletIdentityProvider>
         </DialectProvider>
       </ApiProvider>
     </WalletContext>

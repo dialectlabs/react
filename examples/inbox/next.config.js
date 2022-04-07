@@ -15,8 +15,8 @@ const withTM = require('next-transpile-modules')([
   '@project-serum/sol-wallet-adapter',
   // FIXME: Uncomment these if you haven't built @dialectlabs/react and @dialectlabs/react-ui packages
   // and targeting the sources
-  // '@dialectlabs/react-ui',
-  // '@dialectlabs/react',
+  '@dialectlabs/react-ui',
+  '@dialectlabs/react',
   // TODO: Ideally this should be @dialectlabs/web3 to reduce the amount of relative imports
   // Even more ideal case - this shouldn't be here at all, this repo should target a published version of @dialectlabs/web3
   // and changed to a `yarn link`ed version in testing/dev cases

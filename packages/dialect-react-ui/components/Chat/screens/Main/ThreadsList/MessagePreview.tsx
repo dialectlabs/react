@@ -2,6 +2,7 @@ import React from 'react';
 import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
+import { DisplayAddress } from '@cardinal/namespaces-components';
 
 type PropsType = {
   dialect: DialectAccount;
@@ -12,7 +13,7 @@ export default function MessagePreview({
   dialect,
   onClick,
 }: PropsType): JSX.Element {
-  const { wallet } = useApi();
+  const { wallet, program } = useApi();
   const otherMembers = dialect?.dialect.members.filter(
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
   );
@@ -33,7 +34,15 @@ export default function MessagePreview({
       </div>
       <div className="dt-flex dt-grow dt-border-b dt-border-neutral-600 dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
-          {dialect?.dialect.members.length > 0 && <div>{otherMemberStr}</div>}
+          {dialect?.dialect.members.length > 0 &&
+            (program?.provider.connection ? (
+              <DisplayAddress
+                connection={program?.provider.connection}
+                address={otherMembers[0].publicKey}
+              />
+            ) : (
+              <>{display(otherMembers[0].publicKey)}</>
+            ))}
           {messages && messages?.length > 0 ? (
             <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-truncate">
               <span className="dt-opacity-50">
