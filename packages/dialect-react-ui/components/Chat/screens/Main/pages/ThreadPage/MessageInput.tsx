@@ -40,7 +40,7 @@ export default function MessageInput({
         <form onSubmit={onSubmit}>
           <div className="dt-relative">
             <div className="dt-text-sm dt-break-words dt-py-1 dt-pl-2 dt-pr-11">
-              {text || 'h'}
+              {text.trim() || 'h'}
             </div>
             <div className="dt-absolute dt-top-0 dt-w-full dt-h-full dt-flex dt-flex-grow dt-items-center">
               <Textarea
