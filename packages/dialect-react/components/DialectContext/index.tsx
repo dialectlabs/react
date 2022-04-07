@@ -5,9 +5,9 @@ import React, {
   useEffect,
 } from 'react';
 import useSWR from 'swr';
-import type { Wallet } from '@project-serum/anchor';
-import { connected, useApi } from '../ApiContext';
+import { useApi } from '../ApiContext';
 import { createMetadata, DialectAccount, Metadata } from '@dialectlabs/web3';
+import type * as anchor from '@project-serum/anchor';
 import {
   createDialectForMembers,
   deleteDialect,
@@ -24,6 +24,7 @@ import {
   ParsedErrorData,
   ParsedErrorType,
 } from '../../utils/errors';
+import { connected } from '../../utils/helpers';
 
 const swrFetchDialectForMembers = (
   _: string,
@@ -400,4 +401,4 @@ export function useDialect(): DialectContextType {
 }
 
 export type MessageType = Message;
-export type DialectAccount = DialectAccount;
+export type { DialectAccount };

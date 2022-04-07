@@ -5,8 +5,9 @@ import {
   ParsedErrorData,
   useDialect,
   getDialectAddressWithOtherMember,
+  WalletName,
 } from '@dialectlabs/react';
-import { H1, Input, P } from '../../../../../common/preflighted';
+import { A, H1, Input, P } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import {
   Button,
@@ -32,11 +33,28 @@ function ActionCaption({
   creationError: ParsedErrorData | null;
 }) {
   const { textStyles } = useTheme();
+  const { walletName } = useApi();
 
   if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
     return (
       <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2 dt-px-2')}>
         {creationError.message}
+      </P>
+    );
+  }
+
+  if (walletName !== WalletName.Sollet) {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
+        Use{' '}
+        <A
+          href="https://www.sollet.io/"
+          target="_blank"
+          className="dt-underline"
+        >
+          Sollet.io
+        </A>{' '}
+        wallet to send encrypted messages.
       </P>
     );
   }
@@ -58,7 +76,7 @@ export default function CreateThread({
 }: CreateThreadProps) {
   const { createDialect, isDialectCreating, creationError, setDialectAddress } =
     useDialect();
-  const { program, network, wallet } = useApi();
+  const { program, network, wallet, walletName } = useApi();
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
@@ -155,6 +173,7 @@ export default function CreateThread({
             <span className="dt-flex dt-items-center">
               <Toggle
                 checked={encrypted}
+                disabled={walletName !== WalletName.Sollet}
                 onClick={() => setEncrypted((enc) => !enc)}
               />
             </span>
