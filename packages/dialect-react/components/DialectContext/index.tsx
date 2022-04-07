@@ -76,7 +76,7 @@ type DialectContextType = {
     scopes1?: [boolean, boolean],
     scopes2?: [boolean, boolean],
     encrypted?: boolean
-  ) => Promise<void>;
+  ) => Promise<DialectAccount>;
   isDialectCreating: boolean;
   creationError: ParsedErrorData | null;
   deleteDialect: () => Promise<void>;
@@ -311,6 +311,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
         await mutateDialect(data, false);
         setCreationError(null);
+
+        return data;
       } catch (e) {
         // TODO: implement safer error handling
         setCreationError(e as ParsedErrorData);
