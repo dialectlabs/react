@@ -58,7 +58,7 @@ const Main = ({ inbox }: MainProps) => {
           }
         )}
       >
-        <div className="dt-px-2 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold">
+        <div className="dt-px-4 dt-pt-4 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold">
           Messages
           <div
             className="dt-cursor-pointer"

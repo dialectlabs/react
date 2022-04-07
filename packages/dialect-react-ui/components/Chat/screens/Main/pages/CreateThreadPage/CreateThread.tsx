@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
-import { useDialect } from '@dialectlabs/react';
-import { useApi } from '@dialectlabs/react';
+import {
+  useApi,
+  ParsedErrorData,
+  useDialect,
+  getDialectAddressWithOtherMember,
+} from '@dialectlabs/react';
 import { H1, Input, P } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import {
@@ -11,17 +15,41 @@ import {
   useBalance,
   ValueRow,
 } from '../../../../../common';
-import { getDialectAddressWithOtherMember } from '@dialectlabs/react';
 import clsx from 'clsx';
 import { display } from '@dialectlabs/web3';
 import { Lock, NoLock } from '../../../../../Icon';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
-
 interface CreateThreadProps {
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
+}
+
+function ActionCaption({
+  creationError,
+  encrypted,
+}: {
+  encrypted: boolean;
+  creationError: ParsedErrorData | null;
+}) {
+  const { textStyles } = useTheme();
+
+  if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2 dt-px-2')}>
+        {creationError.message}
+      </P>
+    );
+  }
+
+  if (encrypted) {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
+        ⚠️ Do not use a wallet with significant funds on it
+      </P>
+    );
+  }
+
+  return null;
 }
 
 export default function CreateThread({
@@ -50,13 +78,12 @@ export default function CreateThread({
       })
       .catch((err) => {
         console.log('error creating dialect', err);
-        noop();
       });
   };
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
-      <div className="dt-px-4 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold dt-items-center">
+      <div className="dt-px-4 dt-py-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold dt-items-center">
         <div
           className="dt-cursor-pointer"
           onClick={() => {
@@ -65,16 +92,16 @@ export default function CreateThread({
         >
           <icons.back />
         </div>
-        New thread
+        Send Message
         <div />
       </div>
 
-      <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-items-center dt-justify-center">
+      <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col">
         <H1
           className={clsx(
             textStyles.h1,
             colors.primary,
-            'dt-text-center dt-mb-4'
+            'dt-text-center dt-mb-4 dt-mt-4'
           )}
         >
           Create thread
@@ -112,39 +139,31 @@ export default function CreateThread({
           <ValueRow
             label={
               encrypted ? (
-                <span className="dt-flex">
-                  <Lock className="dt-mr-2 dt-opacity-60" />
-                  unencrypted
+                <span className="dt-flex dt-items-center">
+                  <Lock className="dt-mr-1 dt-opacity-60" />
+                  encrypted
                 </span>
               ) : (
-                <span className="dt-flex">
-                  <NoLock className="dt-mr-2 dt-opacity-60" />
+                <span className="dt-flex dt-items-center">
+                  <NoLock className="dt-mr-1 dt-opacity-60" />
                   unencrypted
                 </span>
               )
             }
             className="dt-flex-1"
           >
-            <Toggle
-              checked={encrypted}
-              onClick={() => setEncrypted((enc) => !enc)}
-            />
+            <span className="dt-flex dt-items-center">
+              <Toggle
+                checked={encrypted}
+                onClick={() => setEncrypted((enc) => !enc)}
+              />
+            </span>
           </ValueRow>
           <Button onClick={createThread} loading={isDialectCreating}>
             {isDialectCreating ? 'Creating...' : 'Create thread'}
           </Button>
         </div>
-        {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
-        {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-          <P
-            className={clsx(
-              textStyles.small,
-              'dt-text-red-500 dt-text-center dt-mt-2'
-            )}
-          >
-            {creationError.message}
-          </P>
-        )}
+        <ActionCaption encrypted={encrypted} creationError={creationError} />
       </div>
     </div>
   );

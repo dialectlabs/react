@@ -19,7 +19,7 @@ import {
   saveAddress,
   updateAddress,
 } from '../../api';
-import { ParsedErrorData } from '../../utils/errors';
+import type { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
 
 const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {

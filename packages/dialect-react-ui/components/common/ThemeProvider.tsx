@@ -128,7 +128,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       toggleThumb: 'dt-bg-[#EEEEEE]',
     },
     textStyles: {
-      h1: 'dt-font-inter dt-text-3xl dt-font-bold',
+      h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
       h2: 'dt-font-inter dt-text-xl dt-font-bold',
       input: 'dt-font-inter',
       textArea: 'dt-font-inter',
@@ -211,7 +211,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       toggleThumb: 'dt-bg-[#111111]',
     },
     textStyles: {
-      h1: 'dt-font-inter dt-text-3xl dt-font-bold',
+      h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
       h2: 'dt-font-inter dt-text-xl dt-font-bold',
       input: 'dt-font-inter',
       textArea: 'dt-font-inter',
