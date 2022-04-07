@@ -127,6 +127,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       toggleBackgroundActive: 'dt-bg-[#25BC3B]',
       toggleThumb: 'dt-bg-[#EEEEEE]',
     },
+    // TODO: simplify setting just font-family
     textStyles: {
       h1: 'dt-font-inter dt-text-3xl dt-font-bold',
       h2: 'dt-font-inter dt-text-xl dt-font-bold',

@@ -8,14 +8,14 @@ import {
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
-import Chat from '../Chat';
-import IconButton from '../IconButton';
 import {
   ThemeProvider,
   ThemeType,
   IncomingThemeVariables,
   useTheme,
 } from '../common/ThemeProvider';
+import Chat from '../Chat';
+import IconButton from '../IconButton';
 
 type PropTypes = {
   wallet: WalletType;

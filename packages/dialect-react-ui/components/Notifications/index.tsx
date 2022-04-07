@@ -219,6 +219,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
         {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
+      {/* TODO: move red color to the theme */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
         <P
           className={cs(
@@ -379,6 +380,7 @@ export default function Notifications(props: {
     content = (
       <Centered>
         <icons.noNotifications className="dt-mb-6" />
+        {/* TODO: use some textstyle */}
         <span className="dt-opacity-60">No notifications yet</span>
       </Centered>
     );
