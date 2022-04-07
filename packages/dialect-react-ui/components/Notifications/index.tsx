@@ -66,7 +66,7 @@ function Header(props: {
           </div>
         )}
         <div className="dt-flex">
-          {props.isReady && props.isSettingsOpen ? (
+          {props.isReady && !props.isSettingsOpen ? (
             <IconButton
               icon={<icons.settings />}
               onClick={props.toggleSettings}

@@ -63,3 +63,7 @@
 ## [0.3.3] - 2022-04-07
 
 - fix mobile behavior + fix not preflighed text
+
+## [0.3.4] - 2022-04-07
+
+- fix settings button on notifications modal
