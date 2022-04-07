@@ -39,7 +39,7 @@ export default function Thread() {
 
   useEffect(() => {
     const membersContainCurrentKey = dialect?.dialect.members.some(
-      (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1]
+      (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1] // is not admin but does have write privilages
     );
     if (membersContainCurrentKey) {
       setYouCanWrite(membersContainCurrentKey);
