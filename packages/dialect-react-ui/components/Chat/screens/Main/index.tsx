@@ -24,30 +24,30 @@ const Main = ({ inbox }: MainProps) => {
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
-      <button
-        onClick={async () => {
-          const walletContextState = (wallet as WalletContextState)!;
+      {/*<button*/}
+      {/*  onClick={async () => {*/}
+      {/*    const walletContextState = (wallet as WalletContextState)!;*/}
 
-          if (walletContextState.wallet?.name === WalletName.Sollet) {
-            const adapter: BaseSolletWalletAdapter =
-              walletContextState.adapter as unknown as BaseSolletWalletAdapter;
-            console.log(adapter);
-            const solWalletAdapter: SolWalletAdapter =
-              adapter._wallet as unknown as SolWalletAdapter;
-            const publicKey = wallet?.publicKey?.toBytes()!;
-            const keys = await solWalletAdapter.diffieHellman(publicKey);
-            console.log(keys);
-          } else {
-            alert(
-              `DiffieHellman not supported in ${walletContextState.wallet?.name}`
-            );
-          }
-          // const uint8Array = new Uint8Array([1, 2]);
-          // const uint8Array1 = await wal.signMessage(uint8Array);
-        }}
-      >
-        DiffieHellman
-      </button>
+      {/*    if (walletContextState.wallet?.name === WalletName.Sollet) {*/}
+      {/*      const adapter: BaseSolletWalletAdapter =*/}
+      {/*        walletContextState.adapter as unknown as BaseSolletWalletAdapter;*/}
+      {/*      console.log(adapter);*/}
+      {/*      const solWalletAdapter: SolWalletAdapter =*/}
+      {/*        adapter._wallet as unknown as SolWalletAdapter;*/}
+      {/*      const publicKey = wallet?.publicKey?.toBytes()!;*/}
+      {/*      const keys = await solWalletAdapter.diffieHellman(publicKey);*/}
+      {/*      console.log(keys);*/}
+      {/*    } else {*/}
+      {/*      alert(*/}
+      {/*        `DiffieHellman not supported in ${walletContextState.wallet?.name}`*/}
+      {/*      );*/}
+      {/*    }*/}
+      {/*    // const uint8Array = new Uint8Array([1, 2]);*/}
+      {/*    // const uint8Array1 = await wal.signMessage(uint8Array);*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  DiffieHellman*/}
+      {/*</button>*/}
 
       <div
         className={clsx(

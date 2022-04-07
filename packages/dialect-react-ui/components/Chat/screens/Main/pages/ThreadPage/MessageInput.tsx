@@ -58,28 +58,29 @@ export default function MessageInput({
                 className="dt-button dt-absolute dt-inset-y-0 dt--right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"
                 disabled={disableSendButton}
               >
-                {
-                  inputDisabled ? (
-                    <Loader />
-                  ) : (
-                    <icons.arrowsmright
-                      className={clsx(sendButton, disableSendButton ? 'dt-opacity-50' : '')}
-                    />
-                  )
-                }
+                {inputDisabled ? (
+                  <Loader />
+                ) : (
+                  <icons.arrowsmright
+                    className={clsx(
+                      sendButton,
+                      disableSendButton ? 'dt-opacity-50' : ''
+                    )}
+                  />
+                )}
               </ButtonBase>
             </div>
           </div>
         </form>
         <div className="dt-flex dt-justify-between">
           <div className="dt-flex dt-space-x-3">
-            {
-              error ? (
-                <div className="dt-text-xs dt-pl-1 dt-text-red-500">Error: {error.message}</div>
-              ) : (
-                <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
-              )
-            }
+            {error ? (
+              <div className="dt-text-xs dt-pl-1 dt-text-red-500">
+                Error: {error.message}
+              </div>
+            ) : (
+              <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
+            )}
 
             {/* <div className="dt-text-xs">⊙ {0 || '–'}</div> */}
           </div>

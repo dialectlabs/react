@@ -7,6 +7,8 @@ export { default as Chevron } from './Chevron';
 export { default as Compose } from './Compose';
 export { default as DialectLogo } from './DialectLogo';
 export { default as Gear } from './Gear';
+export { default as Lock } from './Lock';
+export { default as NoLock } from './NoLock';
 export { default as NoNotifications } from './NoNotifications';
 export { default as NotConnected } from './NotConnected';
 export { default as Offline } from './Offline';

@@ -13,6 +13,7 @@ import { DialectLogo } from '../Icon';
 import { useTheme } from './ThemeProvider';
 import { A, ButtonBase, P } from './preflighted';
 
+// TODO: separate these components to separate files
 export function Divider(props: { className?: string }): JSX.Element {
   const { divider } = useTheme();
 
@@ -202,7 +203,10 @@ export function Accordion(props: {
     <div className={props?.className}>
       <div
         // onClick={() => setExpanded((prev) => !prev)}
-        className={cs(textStyles.bigText, 'dt-w-full dt-flex dt-justify-between dt-mb-1')}
+        className={cs(
+          textStyles.bigText,
+          'dt-w-full dt-flex dt-justify-between dt-mb-1'
+        )}
       >
         {props.title}
         {/* <IconButton
