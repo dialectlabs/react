@@ -59,3 +59,7 @@
 ## [0.3.2] - 2022-04-01
 
 - fix missing dt prefix in color
+
+## [0.3.3] - 2022-04-07
+
+- fix mobile behavior + fix not preflighed text
