@@ -8,7 +8,6 @@ import MessageInput from './MessageInput';
 import Avatar from '../../../../../Avatar';
 import type { ParsedErrorData } from '@dialectlabs/react/utils/errors';
 
-
 export default function Thread() {
   const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
     useDialect();
@@ -46,9 +45,7 @@ export default function Thread() {
     isDialectCreating ||
     sendingMessage;
 
-  const inputDisabled =
-    isDialectCreating ||
-    sendingMessage;
+  const inputDisabled = isDialectCreating || sendingMessage;
 
   return (
     <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">

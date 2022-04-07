@@ -3,9 +3,11 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
+  useState,
 } from 'react';
 import useSWR from 'swr';
-import { useApi } from '../ApiContext';
+import { useApi, WalletName } from '../ApiContext';
 import { createMetadata, DialectAccount, Metadata } from '@dialectlabs/web3';
 import type * as anchor from '@project-serum/anchor';
 import {
@@ -13,7 +15,6 @@ import {
   deleteDialect,
   deleteMetadata,
   fetchDialect,
-  fetchDialectForMembers,
   fetchDialects,
   fetchMetadata,
   getDialectAddressWithOtherMember,
@@ -24,15 +25,19 @@ import {
   ParsedErrorData,
   ParsedErrorType,
 } from '../../utils/errors';
-import { connected } from '../../utils/helpers';
+import { connected, isAnchorWallet } from '../../utils/helpers';
+import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
+import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
+import type { EncryptionProps } from '@dialectlabs/web3/lib/es/api/text-serde';
 
-const swrFetchDialectForMembers = (
+const swrFetchDialect = async (
   _: string,
-  ...args: Parameters<typeof fetchDialectForMembers>
-) => fetchDialectForMembers(...args);
-
-const swrFetchDialect = (_: string, ...args: Parameters<typeof fetchDialect>) =>
-  fetchDialect(...args);
+  program: anchor.Program,
+  address: string,
+  getEncryptionProps: () => Promise<EncryptionProps | null>
+) => {
+  return fetchDialect(program, address, await getEncryptionProps());
+};
 
 const swrFetchDialects = (
   _: string,
@@ -119,8 +124,51 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [sendMessageError, setSendMessageError] =
     React.useState<ParsedErrorData | null>(null);
 
-  const { wallet, program } = useApi();
+  const { wallet, program, walletName } = useApi();
   const isWalletConnected = connected(wallet);
+
+  const [encryptionProps, setEncryptionProps] =
+    useState<EncryptionProps | null>(null);
+
+  const getEncryptionProps =
+    useCallback(async (): Promise<EncryptionProps | null> => {
+      if (
+        !wallet ||
+        isAnchorWallet(wallet) ||
+        walletName !== WalletName.Sollet
+      ) {
+        return null;
+      }
+
+      // If cached encrypted props exist, return them
+      if (encryptionProps) {
+        return encryptionProps;
+      }
+
+      const adapter: BaseSolletWalletAdapter =
+        wallet.adapter as unknown as BaseSolletWalletAdapter;
+
+      // TODO: needs to be improved with better tooling/solutions
+      const solWalletAdapter: SolWalletAdapter =
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - accessing a protected property
+        adapter._wallet as unknown as SolWalletAdapter;
+
+      const publicKey = wallet.publicKey?.toBytes();
+
+      if (!publicKey) {
+        return null;
+      }
+
+      const keypair = await solWalletAdapter.diffieHellman(publicKey);
+      const props = {
+        diffieHellmanKeyPair: keypair,
+        ed25519PublicKey: publicKey,
+      };
+
+      setEncryptionProps(props);
+      return props;
+    }, [encryptionProps, wallet, walletName]);
 
   const {
     data: metadata,
@@ -163,7 +211,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     error: fetchError,
   } = useSWR<DialectAccount | null, ParsedErrorData>(
     wallet && program && dialectAddress
-      ? ['dialect', program, dialectAddress]
+      ? ['dialect', program, dialectAddress, getEncryptionProps]
       : null,
     swrFetchDialect,
     {
@@ -257,7 +305,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
           wallet.publicKey?.toString(),
           props.publicKey?.toString() || publicKey,
           scopes1,
-          scopes2
+          scopes2,
+          await getEncryptionProps()
         );
 
         await mutateDialect(data, false);
@@ -278,6 +327,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       props.publicKey,
       wallet?.publicKey,
       isWalletConnected,
+      getEncryptionProps,
     ]
   );
 
@@ -334,7 +384,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       setSendingMessage(true);
 
       try {
-        await sendMessage(program, dialect, text);
+        await sendMessage(program, dialect, text, await getEncryptionProps());
 
         await mutateDialect(null);
       } catch (e) {
@@ -347,7 +397,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         setSendingMessage(false);
       }
     },
-    [isWalletConnected, program, dialect, mutateDialect]
+    [getEncryptionProps, isWalletConnected, program, dialect, mutateDialect]
   );
 
   const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
