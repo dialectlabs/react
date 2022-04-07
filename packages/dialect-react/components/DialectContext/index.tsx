@@ -212,15 +212,14 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   ]);
 
   useEffect(() => {
-    if (messages.length > 0) {
-      if (wallet && dialect?.dialect && messages.length !== dialect.dialect.messages.length) {
-        setMessages(dialect.dialect.messages);
-      }
-    } else {
-      setMessages(wallet && dialect?.dialect ? dialect.dialect.messages : []);
+    const hasNewMessage = wallet && dialect?.dialect && messages.length !== dialect.dialect.messages.length;
+    if (hasNewMessage) {
+      setMessages(dialect.dialect.messages);
     }
   }, [
+    wallet,
     dialect?.dialect,
+    messages.length,
   ]);
 
   const createMetadataWrapper = useCallback(async () => {

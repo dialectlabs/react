@@ -45,8 +45,8 @@ export default function Thread() {
       setYouCanWrite(membersContainCurrentKey);
     }
   }, [
-    dialect?.dialect
-  ])
+    dialect?.dialect,
+  ]);
 
   const disableSendButton =
     text.length <= 0 ||
