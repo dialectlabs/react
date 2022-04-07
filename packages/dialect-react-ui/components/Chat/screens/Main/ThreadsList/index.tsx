@@ -5,7 +5,7 @@ import { Centered } from '../../../../common';
 
 interface ThreadsListProps {
   chatThreads: DialectAccount[];
-  onThreadClick?: (key: string) => void;
+  onThreadClick?: (dialectAccount: DialectAccount) => void;
 }
 
 const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
@@ -23,7 +23,7 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
           key={subscription.publicKey.toBase58()}
           dialect={subscription}
           onClick={() => {
-            onThreadClick?.(subscription.publicKey.toBase58());
+            onThreadClick?.(subscription);
           }}
         />
       ))}

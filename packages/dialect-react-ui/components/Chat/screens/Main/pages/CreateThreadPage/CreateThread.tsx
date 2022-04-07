@@ -84,7 +84,7 @@ export default function CreateThread({
   const [encrypted, setEncrypted] = useState(false);
 
   const createThread = async () => {
-    createDialect(address, [true, true], [false, true])
+    createDialect(address, [true, true], [false, true], encrypted)
       .then(async () => {
         const [da, _] = await getDialectAddressWithOtherMember(
           program,

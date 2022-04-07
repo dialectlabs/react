@@ -3,8 +3,6 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
-  useState,
 } from 'react';
 import useSWR from 'swr';
 import { useApi, WalletName } from '../ApiContext';
@@ -76,7 +74,8 @@ type DialectContextType = {
   createDialect: (
     publicKey?: string,
     scopes1?: [boolean, boolean],
-    scopes2?: [boolean, boolean]
+    scopes2?: [boolean, boolean],
+    encrypted?: boolean
   ) => Promise<void>;
   isDialectCreating: boolean;
   creationError: ParsedErrorData | null;
@@ -89,7 +88,7 @@ type DialectContextType = {
   dialects: DialectAccount[];
   setDialectAddress: (dialectAddress: string) => void;
   dialectAddress: string | null;
-  sendMessage: (text: string) => Promise<void>;
+  sendMessage: (text: string, encrypted?: boolean) => Promise<void>;
   sendingMessage: boolean;
   sendMessageError: ParsedErrorData | null;
 };
@@ -128,7 +127,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const isWalletConnected = connected(wallet);
 
   const [encryptionProps, setEncryptionProps] =
-    useState<EncryptionProps | null>(null);
+    React.useState<EncryptionProps | null>(null);
 
   const getEncryptionProps =
     useCallback(async (): Promise<EncryptionProps | null> => {
@@ -161,13 +160,13 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       }
 
       const keypair = await solWalletAdapter.diffieHellman(publicKey);
-      const props = {
+      const freshEncryptionProps = {
         diffieHellmanKeyPair: keypair,
         ed25519PublicKey: publicKey,
       };
 
-      setEncryptionProps(props);
-      return props;
+      setEncryptionProps(freshEncryptionProps);
+      return freshEncryptionProps;
     }, [encryptionProps, wallet, walletName]);
 
   const {
@@ -286,7 +285,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     async (
       publicKey?: string,
       scopes1 = [true, false],
-      scopes2 = [false, true]
+      scopes2 = [false, true],
+      encrypted = false
     ) => {
       if (
         !program ||
@@ -306,7 +306,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
           props.publicKey?.toString() || publicKey,
           scopes1,
           scopes2,
-          await getEncryptionProps()
+          encrypted ? await getEncryptionProps() : null
         );
 
         await mutateDialect(data, false);
@@ -378,13 +378,18 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
   const sendMessageWrapper = useCallback(
-    async (text: string) => {
+    async (text: string, encrypted = false) => {
       if (!program || !isWalletConnected || !dialect) return;
 
       setSendingMessage(true);
 
       try {
-        await sendMessage(program, dialect, text, await getEncryptionProps());
+        await sendMessage(
+          program,
+          dialect,
+          text,
+          encrypted ? await getEncryptionProps() : null
+        );
 
         await mutateDialect(null);
       } catch (e) {
