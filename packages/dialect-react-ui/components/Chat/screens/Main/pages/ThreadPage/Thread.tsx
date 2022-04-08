@@ -23,7 +23,7 @@ export default function Thread() {
 
   const onMessageSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await sendMessage(text)
+    await sendMessage(text, dialect?.dialect.encrypted)
       .then(() => setText(''))
       .catch(handleError);
   };
