@@ -4,10 +4,20 @@
   "description": "React wrappers for Dialect's web3 notifications",
   "license": "MIT",
   "private": false,
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/es/index.js",
+  "types": "./lib/es/index.d.ts",
   "scripts": {
-    "build": "rm -rf lib && tsc"
+    "build": "rm -rf lib && yarn build:cjs || yarn build:esm",
+    "build:cjs": "tsc",
+    "build:esm": "tsc --project tsconfig.esm.json"
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/es/index.js",
+      "require": "./lib/cjs/index.js"
+    },
+    "./index.css": "./lib/index.css"
   },
   "repository": {
     "type": "git",
