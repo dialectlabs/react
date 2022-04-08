@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
 } from 'react';
 import useSWR from 'swr';
 import { useApi, WalletName } from '../ApiContext';
@@ -96,6 +97,8 @@ type DialectContextType = {
 const DialectContext = createContext<DialectContextType | null>(null);
 
 const POLLING_INTERVAL_MS = 1000;
+
+const getNull = () => null;
 
 export const DialectProvider = (props: PropsType): JSX.Element => {
   const [metadataCreating, setMetadataCreating] = React.useState(false);
@@ -204,13 +207,24 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   );
 
+  const dialectFromList = dialects?.find(
+    (d) => d.publicKey.toBase58() === dialectAddress
+  );
+
   const {
     data: dialect,
     mutate: mutateDialect,
     error: fetchError,
   } = useSWR<DialectAccount | null, ParsedErrorData>(
     wallet && program && dialectAddress
-      ? ['dialect', program, dialectAddress, getEncryptionProps]
+      ? [
+          'dialect',
+          program,
+          dialectAddress,
+          // Find the dialect from the fetched list and get the encrypted property
+          // TODO: Definitely a subject for refactor
+          dialectFromList?.dialect.encrypted ? getEncryptionProps : getNull,
+        ]
       : null,
     swrFetchDialect,
     {
