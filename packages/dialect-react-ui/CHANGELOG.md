@@ -2,11 +2,6 @@
 
 ## [UNRELEASED]
 
-- Disabled send message text area and show loader instead of send button when message is sending or waiting approval
-- Show send error message below the text input box in chat
-- Remove flicker on message send
-- Add encrypted threads support with Sollet wallet
-
 ## [0.1.0] - 2022-02-12
 
 - First version for open source. Includes pre-built notification center components in react-ui package, and first
@@ -70,3 +65,10 @@
 ## [0.3.4] - 2022-04-07
 
 - fix settings button on notifications modal
+
+## [0.4.0] - 2022-04-08
+
+- Disabled send message text area and show loader instead of send button when message is sending or waiting approval
+- Show send error message below the text input box in chat
+- Remove flicker on message send
+- Add encrypted threads support with Sollet wallet
