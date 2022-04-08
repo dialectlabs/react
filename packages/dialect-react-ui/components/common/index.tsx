@@ -8,7 +8,6 @@ import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
-import IconButton from '../IconButton';
 import { DialectLogo } from '../Icon';
 import { useTheme } from './ThemeProvider';
 import { A, ButtonBase, P } from './preflighted';
@@ -202,7 +201,10 @@ export function Accordion(props: {
     <div className={props?.className}>
       <div
         // onClick={() => setExpanded((prev) => !prev)}
-        className={cs(textStyles.bigText, 'dt-w-full dt-flex dt-justify-between dt-mb-1')}
+        className={cs(
+          textStyles.bigText,
+          'dt-w-full dt-flex dt-justify-between dt-mb-1'
+        )}
       >
         {props.title}
         {/* <IconButton

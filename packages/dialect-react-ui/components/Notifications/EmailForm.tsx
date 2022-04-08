@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useApi, AddressType, ParsedErrorData } from '@dialectlabs/react';
+import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
+import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
-import { Button, Toggle, ValueRow } from '../common';
-import { DialectErrors } from '@dialectlabs/react';
 import { P } from '../common/preflighted';
+import { Button, Toggle, ValueRow } from '../common';
 
 function getEmailObj(addresses: AddressType[] | null): AddressType | null {
   if (!addresses) return null;
@@ -200,30 +200,30 @@ export function EmailForm() {
             ) : null}
           </div>
           {!currentError && !isChanging && isEmailEditing ? (
-            <p className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={cs(textStyles.small, 'dt-mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
-            </p>
+            </P>
           ) : null}
           {!currentError && isChanging ? (
-            <p className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={cs(textStyles.small, 'dt-mb-1')}>
               ⚠️ Changing or deleting your email is a global setting across all
               dapps. You will be prompted to sign with your wallet, this action
               is free.
-            </p>
+            </P>
           ) : null}
           {!currentError && !isEmailEditing && isVerified ? (
-            <p className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={cs(textStyles.small, 'dt-mb-1')}>
               You can now chill and receive all the events directly to your
               inbox.
-            </p>
+            </P>
           ) : null}
         </form>
       )}
       {currentError && (
-        <p className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+        <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
           {currentError.message}
-        </p>
+        </P>
       )}
     </div>
   );

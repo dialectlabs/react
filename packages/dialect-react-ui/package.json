@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "description": "Dialect's react UI components",
   "license": "MIT",
   "private": false,
@@ -31,6 +31,7 @@
     "clsx": "^1.1.1",
     "focus-visible": "^5.2.0",
     "react-linkify": "^1.0.0-alpha",
+    "react-media-hook": "^0.4.9",
     "swr": "^0.5.6"
   },
   "devDependencies": {

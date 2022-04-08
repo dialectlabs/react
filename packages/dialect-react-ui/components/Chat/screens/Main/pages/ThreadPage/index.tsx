@@ -1,18 +1,24 @@
-import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { useDialect } from '@dialectlabs/react';
-import { useTheme } from '../../../../../common/ThemeProvider';
-import Thread from './Thread';
-import Settings from './Settings';
 import { display } from '@dialectlabs/web3';
+import { useTheme } from '../../../../../common/ThemeProvider';
 import { P } from '../../../../../common/preflighted';
+import IconButton from '../../../../../IconButton';
+import Settings from './Settings';
+import Thread from './Thread';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
   inbox?: boolean;
+  onModalClose?: () => void;
 }
 
-const ThreadPage = ({ inbox, onNewThreadClick }: ThreadPageProps) => {
+const ThreadPage = ({
+  inbox,
+  onNewThreadClick,
+  onModalClose,
+}: ThreadPageProps) => {
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons } = useTheme();
 
@@ -59,7 +65,9 @@ const ThreadPage = ({ inbox, onNewThreadClick }: ThreadPageProps) => {
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
           <span className="dt-text-base dt-font-medium dt-text-white">
-            {dialect && display(dialect.dialect.members[1].publicKey)}
+            {dialect
+              ? display(dialect.dialect.members[1].publicKey)
+              : 'Loading...'}
           </span>
           {dialect?.dialect.encrypted ? (
             <span className="dt-text-xs dt-opacity-50">encrypted</span>
@@ -67,13 +75,20 @@ const ThreadPage = ({ inbox, onNewThreadClick }: ThreadPageProps) => {
             <span className="dt-text-xs dt-opacity-50">unencrypted</span>
           )}
         </div>
-        <div
-          className={clsx('dt-cursor-pointer', {
-            'dt-invisible': settingsOpen,
-          })}
-          onClick={() => setSettingsOpen((prev) => !prev)}
-        >
-          <icons.settings />
+        <div className="dt-flex">
+          <div
+            className={clsx('dt-cursor-pointer', {
+              'dt-invisible': settingsOpen,
+            })}
+            onClick={() => setSettingsOpen((prev) => !prev)}
+          >
+            <icons.settings />
+          </div>
+          {!inbox && onModalClose && (
+            <div className="sm:dt-hidden dt-ml-3">
+              <IconButton icon={<icons.x />} onClick={onModalClose} />
+            </div>
+          )}
         </div>
       </div>
       <div className="dt-flex-1 dt-px-2 dt-overflow-y-scroll">

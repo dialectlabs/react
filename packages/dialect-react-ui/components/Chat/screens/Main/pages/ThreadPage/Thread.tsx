@@ -1,9 +1,8 @@
 import React, { KeyboardEvent, FormEvent, useState, useEffect } from 'react';
 import cs from '../../../../../../utils/classNames';
-import { useApi, useDialect } from '@dialectlabs/react';
+import { useApi, useDialect, formatTimestamp } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
 import { useTheme } from '../../../../../common/ThemeProvider';
-import { formatTimestamp } from '@dialectlabs/react';
 import MessageInput from './MessageInput';
 import Avatar from '../../../../../Avatar';
 
