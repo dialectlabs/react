@@ -31,7 +31,7 @@ export default function Thread() {
   const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.keyCode == 13 && e.shiftKey == false) {
       e.preventDefault();
-      await sendMessage(text)
+      await sendMessage(text, dialect?.dialect.encrypted)
         .then(() => setText(''))
         .catch(handleError);
     }

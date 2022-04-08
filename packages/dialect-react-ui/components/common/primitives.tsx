@@ -12,6 +12,7 @@ import IconButton from '../IconButton';
 import { DialectLogo } from '../Icon';
 import { useTheme } from './ThemeProvider';
 import { A, ButtonBase, P } from './preflighted';
+import clsx from 'clsx';
 
 // TODO: separate these components to separate files
 export function Divider(props: { className?: string }): JSX.Element {
@@ -160,7 +161,12 @@ export function Toggle({
   useEffect(() => setChecked(checked), [checked]);
 
   return (
-    <label className="dt-flex dt-items-center dt-cursor-pointer dt-relative dt-h-5 dt-w-10">
+    <label
+      className={clsx(
+        props.disabled ? 'dt-cursor-not-allowed' : 'dt-cursor-pointer',
+        'dt-flex dt-items-center dt-relative dt-h-5 dt-w-10'
+      )}
+    >
       <input
         type="checkbox"
         className="dt-appearance-none dt-opacity-0 dt-w-0 dt-h-0"
