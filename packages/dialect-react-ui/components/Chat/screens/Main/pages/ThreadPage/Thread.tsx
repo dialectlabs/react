@@ -22,7 +22,7 @@ export default function Thread() {
 
   const onMessageSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await sendMessage(text)
+    await sendMessage(text, dialect?.dialect.encrypted)
       .then(() => setText(''))
       .catch(handleError);
   };
@@ -30,7 +30,7 @@ export default function Thread() {
   const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.keyCode == 13 && e.shiftKey == false) {
       e.preventDefault();
-      await sendMessage(text)
+      await sendMessage(text, dialect?.dialect.encrypted)
         .then(() => setText(''))
         .catch(handleError);
     }
@@ -53,9 +53,7 @@ export default function Thread() {
     isDialectCreating ||
     sendingMessage;
 
-  const inputDisabled =
-    isDialectCreating ||
-    sendingMessage;
+  const inputDisabled = isDialectCreating || sendingMessage;
 
   return (
     <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">

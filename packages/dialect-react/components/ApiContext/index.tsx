@@ -19,30 +19,16 @@ import {
   saveAddress,
   updateAddress,
 } from '../../api';
-import { ParsedErrorData } from '../../utils/errors';
+import type { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
+import { WalletName as AdapterWalletName } from '@solana/wallet-adapter-wallets';
+import { connected, isAnchorWallet } from '../../utils/helpers';
 
 const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {
   // TODO: Move to protocol/web3
   mainnet: 'https://api.mainnet-beta.solana.com',
   devnet: 'https://api.devnet.solana.com',
   localnet: 'http://localhost:8899',
-};
-
-export const connected = (
-  wallet: WalletType
-): wallet is WalletContextState | AnchorWallet => {
-  /*
-    Wallets can be of type AnchorWallet or WalletContextState.
-
-    - AnchorWallet is undefined if not connected. It has no connected attribute.
-    - WalletContextState may be either null/undefined, or its attribute connected is false if it's not connected.
-
-    This function connected should accommodate both types of wallets.
-  */
-  return (
-    (wallet || false) && ('connected' in wallet ? wallet?.connected : true)
-  );
 };
 
 type PropsType = {
@@ -53,8 +39,24 @@ type PropsType = {
 export type WalletType = WalletContextState | AnchorWallet | null | undefined;
 export type ProgramType = anchor.Program | null;
 
+export const WalletName = { ...AdapterWalletName, Anchor: 'Anchor' as const };
+export type WalletNameType = keyof typeof WalletName;
+
+export const getWalletName = (wallet: WalletType): WalletNameType | null => {
+  if (!wallet) {
+    return null;
+  }
+
+  if (isAnchorWallet(wallet)) {
+    return WalletName.Anchor;
+  }
+
+  return (wallet.wallet?.name as WalletNameType) ?? null;
+};
+
 type ValueType = {
   wallet: WalletType;
+  walletName: WalletNameType | null;
   setWallet: (_: WalletType) => void;
   network: string | null;
   setNetwork: (_: string | null) => void;
@@ -74,7 +76,7 @@ type ValueType = {
 
 const ApiContext = createContext<ValueType | null>(null);
 
-export const ApiProvider = (props: PropsType): JSX.Element => {
+export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const [wallet, setWallet] = useState<WalletType>(null);
   const [program, setProgram] = useState<ProgramType>(null);
   const [network, setNetwork] = useState<string | null>('devnet');
@@ -90,8 +92,6 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
 
   const [fetchingError, setFetchingError] =
     React.useState<ParsedErrorData | null>(null);
-
-  const dapp = props.dapp;
 
   const {
     data: addresses,
@@ -135,7 +135,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
   }, [wallet, isWalletConnected, network, rpcUrl]);
 
   const saveAddressWrapper = useCallback(
-    async (wallet: WalletContextState, address: AddressType) => {
+    async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected || !dapp) return;
 
       setSavingAddress(true);
@@ -155,11 +155,11 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
         setSavingAddress(false);
       }
     },
-    [isWalletConnected, mutateAddresses]
+    [dapp, isWalletConnected, mutateAddresses]
   );
 
   const updateAddressWrapper = useCallback(
-    async (wallet: WalletContextState, address: AddressType) => {
+    async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected || !dapp) return;
 
       setSavingAddress(true);
@@ -178,11 +178,11 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
         setSavingAddress(false);
       }
     },
-    [isWalletConnected, mutateAddresses]
+    [dapp, isWalletConnected, mutateAddresses]
   );
 
   const deleteAddressWrapper = useCallback(
-    async (wallet: WalletContextState, address: AddressType) => {
+    async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected) return;
 
       setDeletingAddress(true);
@@ -204,8 +204,9 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     [isWalletConnected, mutateAddresses]
   );
 
-  const value = {
+  const value: ValueType = {
     wallet,
+    walletName: getWalletName(wallet),
     setWallet,
     network,
     setNetwork,
@@ -223,9 +224,7 @@ export const ApiProvider = (props: PropsType): JSX.Element => {
     deletingAddressError,
   };
 
-  return (
-    <ApiContext.Provider value={value}>{props.children}</ApiContext.Provider>
-  );
+  return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 };
 
 export function useApi(): ValueType {

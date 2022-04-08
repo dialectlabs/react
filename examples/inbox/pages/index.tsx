@@ -28,7 +28,12 @@ function AuthedHome() {
         <div className="flex flex-row-reverse">
           <Wallet />
         </div>
-        <DialectInbox wallet={wallet} />
+        <div className="w-full lg:max-w-[1048px] px-6 h-[calc(100vh-8rem)] mt-8 mx-auto">
+          <DialectInbox
+            wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
+            wallet={wallet}
+          />
+        </div>
       </div>
     </div>
   );

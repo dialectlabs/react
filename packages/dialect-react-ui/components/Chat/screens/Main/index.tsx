@@ -50,8 +50,8 @@ const Main = ({ inbox, onModalClose }: MainProps) => {
         </div>
         <ThreadsList
           chatThreads={dialects}
-          onThreadClick={(dAddr) => {
-            setDialectAddress(dAddr);
+          onThreadClick={(dialectAccount) => {
+            setDialectAddress(dialectAccount.publicKey.toBase58());
             setNewThreadOpen(false);
           }}
         />

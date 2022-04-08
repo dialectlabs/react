@@ -4,6 +4,7 @@ import { ChatButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { defaultVariables } from '@dialectlabs/react-ui';
+import Head from 'next/head';
 // pink: #B852DC
 // teal: #59C29D
 // dark: #353535
@@ -62,27 +63,42 @@ function AuthedHome() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-black">
-      <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <ChatButton
-          wallet={wallet}
-          network={'localnet'}
-          theme={theme}
-          variables={themeVariables}
+    <>
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
         />
-        <WalletButton />
-      </div>
-      <div className="h-full text-2xl flex flex-col justify-center items-center">
-        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
-          @dialectlabs/react
-        </code>
-        <div>
-          <code className="shrink text-center text-transparent bg-clip-text bg-gradient-to-r from-[#B852DC] to-[#59C29D]">
-            examples/chat
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+
+      <div className="flex flex-col h-screen bg-white dark:bg-black">
+        <div className="flex flex-row justify-end p-2 items-center space-x-2">
+          <ChatButton
+            wallet={wallet}
+            network={'localnet'}
+            theme={theme}
+            variables={themeVariables}
+          />
+          <WalletButton />
+        </div>
+        <div className="h-full text-2xl flex flex-col justify-center items-center">
+          <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
+            @dialectlabs/react
           </code>
+          <div>
+            <code className="shrink text-center text-transparent bg-clip-text bg-gradient-to-r from-[#B852DC] to-[#59C29D]">
+              examples/chat
+            </code>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
