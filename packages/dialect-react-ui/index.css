@@ -32,6 +32,97 @@
   box-sizing: border-box; /* 1 */
 }
 
+/* Since we couldn't use preflight for border, define default border style for every side */
+/* https://github.com/tailwindlabs/tailwindcss/issues/938 */
+.dt-border-t {
+  border-top-style: solid;
+}
+.dt-border-r {
+  border-right-style: solid;
+}
+.dt-border-b {
+  border-bottom-style: solid;
+}
+.dt-border-l {
+  border-left-style: solid;
+}
+
+@media (min-width: 640px) {
+  .sm\:dt-border-t {
+    border-top-style: solid;
+  }
+  .sm\:dt-border-r {
+    border-right-style: solid;
+  }
+  .sm\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .sm\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:dt-border-t {
+    border-top-style: solid;
+  }
+  .md\:dt-border-r {
+    border-right-style: solid;
+  }
+  .md\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .md\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:dt-border-t {
+    border-top-style: solid;
+  }
+  .lg\:dt-border-r {
+    border-right-style: solid;
+  }
+  .lg\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .lg\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:dt-border-t {
+    border-top-style: solid;
+  }
+  .xl\:dt-border-r {
+    border-right-style: solid;
+  }
+  .xl\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .xl\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+@media (min-width: 1536px) {
+  .\2xl\:dt-border-t {
+    border-top-style: solid;
+  }
+  .\2xl\:dt-border-r {
+    border-right-style: solid;
+  }
+  .\2xl\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .\2xl\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+
 .dialect ::before,
 .dialect ::after {
   --tw-content: '';
