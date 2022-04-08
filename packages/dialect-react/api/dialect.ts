@@ -3,7 +3,6 @@ import {
   createDialect,
   deleteDialect as originalDeleteDialect,
   DialectAccount,
-  FindDialectQuery,
   findDialects,
   getDialect,
   getDialectForMembers,
@@ -12,6 +11,7 @@ import {
   sendMessage as originalSendMessage,
 } from '@dialectlabs/web3';
 import { withErrorParsing } from '../utils/errors';
+import type { EncryptionProps } from '@dialectlabs/web3/lib/es/api/text-serde';
 
 const todayFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: true,
@@ -77,8 +77,9 @@ export const createDialectForMembers = withErrorParsing(
     program: anchor.Program,
     pubkey1: string,
     pubkey2: string,
-    scopes1,
-    scopes2
+    scopes1: [boolean, boolean],
+    scopes2: [boolean, boolean],
+    encryptionProps?: EncryptionProps | null
   ) => {
     const member1: Member = {
       publicKey: new anchor.web3.PublicKey(pubkey1),
@@ -92,7 +93,8 @@ export const createDialectForMembers = withErrorParsing(
       program,
       program.provider.wallet,
       [member1, member2],
-      false // unencrypted
+      Boolean(encryptionProps),
+      encryptionProps
     );
   }
 );
@@ -123,8 +125,16 @@ export const fetchDialectForMembers = withErrorParsing(
 );
 
 export const fetchDialect = withErrorParsing(
-  async (program: anchor.Program, address: string) => {
-    return await getDialect(program, new anchor.web3.PublicKey(address));
+  async (
+    program: anchor.Program,
+    address: string,
+    encryptionProps?: EncryptionProps | null
+  ) => {
+    return await getDialect(
+      program,
+      new anchor.web3.PublicKey(address),
+      encryptionProps
+    );
   }
 );
 
@@ -161,12 +171,18 @@ export const deleteDialect = withErrorParsing(
 );
 
 export const sendMessage = withErrorParsing(
-  async (program: anchor.Program, dialect: DialectAccount, text: string) => {
+  async (
+    program: anchor.Program,
+    dialect: DialectAccount,
+    text: string,
+    encryptionProps?: EncryptionProps | null
+  ) => {
     return await originalSendMessage(
       program,
       dialect,
       program.provider.wallet,
-      text
+      text,
+      encryptionProps
     );
   }
 );

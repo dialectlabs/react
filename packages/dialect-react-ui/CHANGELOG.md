@@ -2,7 +2,10 @@
 
 ## [UNRELEASED]
 
-- Add documentation to `README` on how to set up a hot-reloading local development environment.
+- Disabled send message text area and show loader instead of send button when message is sending or waiting approval
+- Show send error message below the text input box in chat
+- Remove flicker on message send
+- Add encrypted threads support with Sollet wallet
 
 ## [0.1.0] - 2022-02-12
 

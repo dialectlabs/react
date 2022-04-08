@@ -1,23 +1,33 @@
 {
   "name": "@dialectlabs/react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "React wrappers for Dialect's web3 notifications",
   "license": "MIT",
   "private": false,
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/es/index.js",
+  "types": "./lib/es/index.d.ts",
   "scripts": {
-    "build": "rm -rf lib && tsc"
+    "build": "rm -rf lib && yarn build:cjs || yarn build:esm",
+    "build:cjs": "tsc",
+    "build:esm": "tsc --project tsconfig.esm.json"
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/es/index.js",
+      "require": "./lib/cjs/index.js"
+    }
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/web3": "0.1.11",
-    "@project-serum/anchor": "^0.18.2",
+    "@dialectlabs/web3": "^0.2.0",
+    "@project-serum/anchor": "^0.23.0",
     "@solana/wallet-adapter-base": "^0.7.0",
     "@solana/wallet-adapter-react": "^0.13.1",
+    "@solana/wallet-adapter-sollet": "^0.11.1",
     "@solana/wallet-adapter-wallets": "^0.11.3",
     "@solana/web3.js": "^1.22.0",
     "swr": "^0.5.6",

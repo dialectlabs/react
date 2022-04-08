@@ -1,12 +1,10 @@
-import React, { KeyboardEvent, FormEvent, useState } from 'react';
+import React, { KeyboardEvent, FormEvent, useState, useEffect } from 'react';
 import cs from '../../../../../../utils/classNames';
-import { useDialect, useApi, formatTimestamp } from '@dialectlabs/react';
+import { useApi, useDialect, formatTimestamp } from '@dialectlabs/react';
+import type { ParsedErrorData } from '@dialectlabs/react';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import MessageInput from './MessageInput';
 import Avatar from '../../../../../Avatar';
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
 
 export default function Thread() {
   const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
@@ -15,30 +13,47 @@ export default function Thread() {
   const { messageBubble, otherMessageBubble } = useTheme();
 
   const [text, setText] = useState<string>('');
+  const [error, setError] = useState<ParsedErrorData | null | undefined>();
+  const [youCanWrite, setYouCanWrite] = useState<boolean>(false);
+
+  const handleError = (err: ParsedErrorData) => {
+    setError(err);
+  };
 
   const onMessageSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await sendMessage(text)
+    await sendMessage(text, dialect?.dialect.encrypted)
       .then(() => setText(''))
-      .catch(noop);
+      .catch(handleError);
   };
 
   const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.keyCode == 13 && e.shiftKey == false) {
       e.preventDefault();
-      await sendMessage(text)
+      await sendMessage(text, dialect?.dialect.encrypted)
         .then(() => setText(''))
-        .catch(noop);
+        .catch(handleError);
     }
   };
-  const youCanWrite = dialect?.dialect.members.some(
-    (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1]
-  );
-  const disabled =
+
+  useEffect(() => {
+    const membersContainCurrentKey = dialect?.dialect.members.some(
+      (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1] // is not admin but does have write privilages
+    );
+    if (membersContainCurrentKey) {
+      setYouCanWrite(membersContainCurrentKey);
+    }
+  }, [
+    dialect?.dialect,
+  ]);
+
+  const disableSendButton =
     text.length <= 0 ||
     text.length > 280 ||
     isDialectCreating ||
     sendingMessage;
+
+  const inputDisabled = isDialectCreating || sendingMessage;
 
   return (
     <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">
@@ -106,7 +121,10 @@ export default function Thread() {
           setText={setText}
           onSubmit={onMessageSubmit}
           onEnterPress={onEnterPress}
-          disabled={disabled}
+          disableSendButton={disableSendButton}
+          inputDisabled={inputDisabled}
+          error={error}
+          setError={setError}
         />
       )}
     </div>

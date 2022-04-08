@@ -1,22 +1,30 @@
 import React, { KeyboardEvent, FormEvent } from 'react';
 import clsx from 'clsx';
+import type { ParsedErrorData } from '@dialectlabs/react';
 import { ButtonBase, Textarea } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
+import { Loader } from '../../../../../common';
 
 type PropsType = {
   text: string;
   setText: (text: string) => void;
+  error: ParsedErrorData | null | undefined;
+  setError: (error: ParsedErrorData | null | undefined) => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onEnterPress: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
-  disabled: boolean;
+  disableSendButton: boolean;
+  inputDisabled: boolean;
 };
 
 export default function MessageInput({
   text,
   setText,
+  error,
+  setError,
   onSubmit,
   onEnterPress,
-  disabled,
+  disableSendButton,
+  inputDisabled,
 }: PropsType): JSX.Element {
   const { icons, textArea, sendButton } = useTheme();
   // const { data } = useSWR(
@@ -37,28 +45,46 @@ export default function MessageInput({
             <div className="dt-absolute dt-top-0 dt-w-full dt-h-full dt-flex dt-flex-grow dt-items-center">
               <Textarea
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={(e) => {
+                  setError(null);
+                  setText(e.target.value);
+                }}
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
                 className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full')}
+                disabled={inputDisabled}
               />
               <ButtonBase
                 className="dt-button dt-absolute dt-inset-y-0 dt--right-2 dt-flex dt-items-center dt-pr-3 disabled:dt-cursor-not-allowed"
-                disabled={disabled}
+                disabled={disableSendButton}
               >
-                <icons.arrowsmright
-                  className={clsx(sendButton, disabled ? 'dt-opacity-50' : '')}
-                />
+                {inputDisabled ? (
+                  <Loader />
+                ) : (
+                  <icons.arrowsmright
+                    className={clsx(
+                      sendButton,
+                      disableSendButton ? 'dt-opacity-50' : ''
+                    )}
+                  />
+                )}
               </ButtonBase>
             </div>
           </div>
         </form>
         <div className="dt-flex dt-justify-between">
           <div className="dt-flex dt-space-x-3">
-            <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
+            {error ? (
+              <div className="dt-text-xs dt-pl-1 dt-text-red-500">
+                Error: {error.message}
+              </div>
+            ) : (
+              <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
+            )}
+
             {/* <div className="dt-text-xs">⊙ {0 || '–'}</div> */}
           </div>
-          {!disabled && (
+          {!disableSendButton && (
             <div className="dt-flex dt-text-xs dt-items-center dt-pr-1">
               enter
               <icons.arrownarrowright className="dt-h-4 dt-w-4" />
