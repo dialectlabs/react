@@ -40,8 +40,8 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
             'dt-px-4 dt-py-2 dt-mr-2'
           )}
         >
-          ⚠ You have encrypted threads in your inbox that can be viewed by using
-          Sollet.io wallet
+          ⚠ You have encrypted messages in your inbox. Connect the Sollet.io
+          wallet to read them.
         </div>
       )}
       {chatThreads.map((subscription) => (

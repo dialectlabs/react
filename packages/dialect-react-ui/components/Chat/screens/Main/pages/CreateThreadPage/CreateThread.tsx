@@ -65,7 +65,8 @@ function ActionCaption({
   if (encrypted) {
     return (
       <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
-        ⚠️ Do not use a wallet with significant funds on it
+        ⚠️ Sollet.io encryption standards in the browser are experimental. Do
+        not connect a wallet with significant funds in it.
       </P>
     );
   }
