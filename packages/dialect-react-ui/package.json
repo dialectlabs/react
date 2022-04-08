@@ -27,7 +27,7 @@
   "dependencies": {
     "@dialectlabs/web3": "^0.2.0",
     "@headlessui/react": "^1.2.0",
-    "@project-serum/anchor": "^0.18.2",
+    "@project-serum/anchor": "^0.23.0",
     "clsx": "^1.1.1",
     "focus-visible": "^5.2.0",
     "react-linkify": "^1.0.0-alpha",
