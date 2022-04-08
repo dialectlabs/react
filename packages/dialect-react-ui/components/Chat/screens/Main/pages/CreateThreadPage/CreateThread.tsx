@@ -7,6 +7,8 @@ import {
   getDialectAddressWithOtherMember,
   WalletName,
 } from '@dialectlabs/react';
+import clsx from 'clsx';
+import IconButton from '../../../../../IconButton';
 import { A, H1, Input, P } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import {
@@ -16,13 +18,14 @@ import {
   useBalance,
   ValueRow,
 } from '../../../../../common';
-import clsx from 'clsx';
 import { display } from '@dialectlabs/web3';
 import { Lock, NoLock } from '../../../../../Icon';
 
 interface CreateThreadProps {
+  inbox?: boolean;
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
+  onModalClose?: () => void;
 }
 
 function ActionCaption({
@@ -71,8 +74,10 @@ function ActionCaption({
 }
 
 export default function CreateThread({
+  inbox,
   onNewThreadCreated,
   onCloseRequest,
+  onModalClose,
 }: CreateThreadProps) {
   const { createDialect, isDialectCreating, creationError, setDialectAddress } =
     useDialect();
@@ -111,7 +116,13 @@ export default function CreateThread({
           <icons.back />
         </div>
         Send Message
-        <div />
+        <div>
+          {!inbox && onModalClose && (
+            <div className="sm:dt-hidden dt-ml-3">
+              <IconButton icon={<icons.x />} onClick={onModalClose} />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col">

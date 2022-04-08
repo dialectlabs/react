@@ -5,6 +5,7 @@
 - Add documentation to `README` on how to set up a hot-reloading local development environment.
 - Disabled send message text area and show loader instead of send button when message is sending or waiting approval
 - Show send error message below the text input box in chat
+- Remove flicker on message send
 
 ## [0.1.0] - 2022-02-12
 
@@ -61,3 +62,11 @@
 ## [0.3.2] - 2022-04-01
 
 - fix missing dt prefix in color
+
+## [0.3.3] - 2022-04-07
+
+- fix mobile behavior + fix not preflighed text
+
+## [0.3.4] - 2022-04-07
+
+- fix settings button on notifications modal

@@ -31,6 +31,7 @@
     "clsx": "^1.1.1",
     "focus-visible": "^5.2.0",
     "react-linkify": "^1.0.0-alpha",
+    "react-media-hook": "^0.4.9",
     "swr": "^0.5.6"
   },
   "devDependencies": {

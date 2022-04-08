@@ -128,6 +128,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
   const { wallet, program, walletName } = useApi();
   const isWalletConnected = connected(wallet);
+  const [messages, setMessages] = React.useState<Message[]>([]);
 
   const [encryptionProps, setEncryptionProps] =
     React.useState<EncryptionProps | null>(null);
@@ -278,6 +279,17 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     fetchError?.type,
   ]);
 
+  useEffect(() => {
+    const hasNewMessage = wallet && dialect?.dialect && messages.length !== dialect.dialect.messages.length;
+    if (hasNewMessage) {
+      setMessages(dialect.dialect.messages);
+    }
+  }, [
+    wallet,
+    dialect?.dialect,
+    messages.length,
+  ]);
+
   const createMetadataWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !wallet?.publicKey) {
       return;
@@ -425,7 +437,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     [getEncryptionProps, isWalletConnected, program, dialect, mutateDialect]
   );
 
-  const messages = wallet && dialect?.dialect ? dialect.dialect.messages : [];
   // const messages = mockMessages;
   const isDialectAvailable = Boolean(dialect);
   const isMetadataAvailable = Boolean(metadata);

@@ -8,7 +8,6 @@ import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
-import IconButton from '../IconButton';
 import { DialectLogo } from '../Icon';
 import { useTheme } from './ThemeProvider';
 import { A, ButtonBase, P } from './preflighted';

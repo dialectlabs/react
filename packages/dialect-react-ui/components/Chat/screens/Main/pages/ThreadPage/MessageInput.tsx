@@ -1,9 +1,9 @@
 import React, { KeyboardEvent, FormEvent } from 'react';
 import clsx from 'clsx';
+import type { ParsedErrorData } from '@dialectlabs/react';
 import { ButtonBase, Textarea } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import { Loader } from '../../../../../common';
-import type { ParsedErrorData } from '@dialectlabs/react/utils/errors';
 
 type PropsType = {
   text: string;

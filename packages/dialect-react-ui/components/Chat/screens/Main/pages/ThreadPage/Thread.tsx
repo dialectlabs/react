@@ -1,12 +1,10 @@
-import React, { KeyboardEvent, FormEvent, useState } from 'react';
+import React, { KeyboardEvent, FormEvent, useState, useEffect } from 'react';
 import cs from '../../../../../../utils/classNames';
-import { useDialect } from '@dialectlabs/react';
-import { useApi } from '@dialectlabs/react';
+import { useApi, useDialect, formatTimestamp } from '@dialectlabs/react';
+import type { ParsedErrorData } from '@dialectlabs/react';
 import { useTheme } from '../../../../../common/ThemeProvider';
-import { formatTimestamp } from '@dialectlabs/react';
 import MessageInput from './MessageInput';
 import Avatar from '../../../../../Avatar';
-import type { ParsedErrorData } from '@dialectlabs/react/utils/errors';
 
 export default function Thread() {
   const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
@@ -16,6 +14,7 @@ export default function Thread() {
 
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<ParsedErrorData | null | undefined>();
+  const [youCanWrite, setYouCanWrite] = useState<boolean>(false);
 
   const handleError = (err: ParsedErrorData) => {
     setError(err);
@@ -36,9 +35,18 @@ export default function Thread() {
         .catch(handleError);
     }
   };
-  const youCanWrite = dialect?.dialect.members.some(
-    (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1]
-  );
+
+  useEffect(() => {
+    const membersContainCurrentKey = dialect?.dialect.members.some(
+      (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1] // is not admin but does have write privilages
+    );
+    if (membersContainCurrentKey) {
+      setYouCanWrite(membersContainCurrentKey);
+    }
+  }, [
+    dialect?.dialect,
+  ]);
+
   const disableSendButton =
     text.length <= 0 ||
     text.length > 280 ||

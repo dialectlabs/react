@@ -1,6 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { useDialect, MessageType, useApi } from '@dialectlabs/react';
+import { useDialect, useApi } from '@dialectlabs/react';
+import type { MessageType } from '@dialectlabs/react';
+import { getExplorerAddress } from '../../utils/getExplorerAddress';
+import useMobile from '../../utils/useMobile';
+import cs from '../../utils/classNames';
 import { display } from '@dialectlabs/web3';
+import { useTheme } from '../common/ThemeProvider';
+import { A, P } from '../common/preflighted';
+import type { Channel } from '../common/types';
 import {
   Accordion,
   Button,
@@ -11,14 +18,9 @@ import {
   useBalance,
   ValueRow,
 } from '../common';
-import { useTheme } from '../common/ThemeProvider';
-import { A, P } from '../common/preflighted';
-import cs from '../../utils/classNames';
-import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import { EmailForm } from './EmailForm';
-import type { Channel } from '../common/types';
 
 export type NotificationType = {
   name: string;
@@ -31,28 +33,15 @@ const noop = () => {};
 function Header(props: {
   isReady: boolean;
   isSettingsOpen: boolean;
+  onModalClose: () => void;
   toggleSettings: () => void;
 }) {
   const { isDialectAvailable } = useDialect();
   const { colors, textStyles, header, icons } = useTheme();
+  const isMobile = useMobile();
 
-  if (!isDialectAvailable) return null;
+  if (!isDialectAvailable && !isMobile) return null;
 
-  if (props.isSettingsOpen) {
-    return (
-      <>
-        <div className={cs('dt-flex dt-flex-row dt-items-center', header)}>
-          <IconButton
-            icon={<icons.back />}
-            onClick={props.toggleSettings}
-            className="dt-mr-2"
-          />
-          <span className={cs(textStyles.header, colors.accent)}>Settings</span>
-        </div>
-        <Divider className="dt-mx-2" />
-      </>
-    );
-  }
   return (
     <>
       <div
@@ -61,15 +50,33 @@ function Header(props: {
           header
         )}
       >
-        <span className={cs(textStyles.header, colors.accent)}>
-          Notifications
-        </span>
-        {props.isReady ? (
-          <IconButton
-            icon={<icons.settings />}
-            onClick={props.toggleSettings}
-          />
-        ) : null}
+        {!props.isSettingsOpen ? (
+          <span className={cs(textStyles.header, colors.accent)}>
+            Notifications
+          </span>
+        ) : (
+          <div className="dt-flex">
+            <IconButton
+              icon={<icons.back />}
+              onClick={props.toggleSettings}
+              className="dt-mr-2"
+            />
+            <span className={cs(textStyles.header, colors.accent)}>
+              Settings
+            </span>
+          </div>
+        )}
+        <div className="dt-flex">
+          {props.isReady && !props.isSettingsOpen ? (
+            <IconButton
+              icon={<icons.settings />}
+              onClick={props.toggleSettings}
+            />
+          ) : null}
+          <div className="sm:dt-hidden dt-ml-3">
+            <IconButton icon={<icons.x />} onClick={props.onModalClose} />
+          </div>
+        </div>
       </div>
       <Divider className="dt-mx-2" />
     </>
@@ -121,7 +128,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
               <P className={cs(textStyles.small, 'dt-opacity-60')}>
                 Deposited Rent
               </P>
-              <p>0.058 SOL</p>
+              <P>0.058 SOL</P>
             </span>
           </ValueRow>
         ) : null}
@@ -190,6 +197,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
         {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
       </Button>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
+      {/* TODO: move red color to the theme */}
       {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
         <P
           className={cs(
@@ -291,6 +299,7 @@ function Settings(props: {
 }
 
 export default function Notifications(props: {
+  onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
 }): JSX.Element {
@@ -349,6 +358,7 @@ export default function Notifications(props: {
     content = (
       <Centered>
         <icons.noNotifications className="dt-mb-6" />
+        {/* TODO: use some textstyle */}
         <span className="dt-opacity-60">No notifications yet</span>
       </Centered>
     );
@@ -382,6 +392,7 @@ export default function Notifications(props: {
         <Header
           isReady={isDialectAvailable}
           isSettingsOpen={isSettingsOpen}
+          onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
         />
         <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll dt-no-scrollbar">

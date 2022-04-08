@@ -4,13 +4,12 @@ import {
   ApiProvider,
   connected,
   useApi,
-  WalletType,
   DialectProvider,
 } from '@dialectlabs/react';
+import type { WalletType } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
-import Notifications, { NotificationType } from '../Notifications';
-import IconButton from '../IconButton';
+import useMobile from '../../utils/useMobile';
 import {
   ThemeProvider,
   ThemeType,
@@ -18,6 +17,8 @@ import {
   useTheme,
 } from '../common/ThemeProvider';
 import type { Channel } from '../common/types';
+import Notifications, { NotificationType } from '../Notifications';
+import IconButton from '../IconButton';
 
 type PropTypes = {
   wallet: WalletType;
@@ -81,6 +82,17 @@ function WrappedNotificationsButton(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
+  const isMobile = useMobile();
+
+  useEffect(() => {
+    // Prevent scrolling of backdrop content on mobile
+    document.documentElement.classList[open && isMobile ? 'add' : 'remove'](
+      'dt-overflow-hidden',
+      'dt-static',
+      'sm:dt-overflow-auto'
+    );
+  }, [open, isMobile]);
+
   const { colors, bellButton, icons, modalWrapper } = useTheme();
 
   return (
@@ -120,6 +132,7 @@ function WrappedNotificationsButton(
           <Notifications
             channels={props.channels}
             notifications={props?.notifications}
+            onModalClose={() => setOpen(false)}
           />
         </div>
       </Transition>
