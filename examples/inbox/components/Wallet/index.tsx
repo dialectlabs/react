@@ -1,19 +1,20 @@
-import React, { FC, useMemo } from 'react';
+import React, {FC, useMemo} from 'react';
 import {
   ConnectionProvider,
   WalletProvider,
 } from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import {WalletAdapterNetwork} from '@solana/wallet-adapter-base';
 import {
-  getPhantomWallet,
-  getSolletWallet,
+  GlowWalletAdapter,
+  PhantomWalletAdapter,
+  SolletWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import {
   WalletModalProvider,
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui';
-import { clusterApiUrl } from '@solana/web3.js';
-import { PhantomIcon } from '../Icon';
+import {clusterApiUrl} from '@solana/web3.js';
+import {PhantomIcon, GlowIcon} from '../Icon';
 
 // Default styles that can be overridden by your app
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -24,7 +25,7 @@ export const Wallet = () => {
       <WalletModalProvider>
         <WalletMultiButton
           className="dialect-wallet-button"
-          startIcon={<PhantomIcon />}
+          startIcon={<PhantomIcon/>}
         />
       </WalletModalProvider>
     </>
@@ -42,15 +43,9 @@ export const WalletContext: FC = (props) => {
   // Only the wallets you configure here will be compiled into your application
   const wallets = useMemo(
     () => [
-      getPhantomWallet(),
-      // getSlopeWallet(),
-      // getSolflareWallet(),
-      // getTorusWallet({
-      //   options: { clientId: 'Get a client ID @ https://developer.tor.us' }
-      // }),
-      // getLedgerWallet(),
-      getSolletWallet({ network }),
-      // getSolletExtensionWallet({ network }),
+      new GlowWalletAdapter(),
+      new PhantomWalletAdapter(),
+      new SolletWalletAdapter({ network })
     ],
     [network]
   );
