@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import { Wallet, WalletContext } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Inbox as DialectInbox } from '@dialectlabs/react-ui';
+import { Inbox as DialectInbox, ThemeProvider } from '@dialectlabs/react-ui';
 import {
   ApiProvider,
   connected,
   DialectProvider,
   useApi,
 } from '@dialectlabs/react';
-import { ThemeProvider } from '@dialectlabs/react-ui';
 
 function AuthedHome() {
   const wallet = useWallet();
@@ -29,7 +28,12 @@ function AuthedHome() {
         <div className="flex flex-row-reverse">
           <Wallet />
         </div>
-        <DialectInbox wallet={wallet} />
+        <div className="w-full lg:max-w-[1048px] px-6 h-[calc(100vh-8rem)] mt-8 mx-auto">
+          <DialectInbox
+            wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
+            wallet={wallet}
+          />
+        </div>
       </div>
     </div>
   );

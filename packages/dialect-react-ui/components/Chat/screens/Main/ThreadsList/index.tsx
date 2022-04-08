@@ -30,7 +30,7 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
   }
 
   return (
-    <div className="dt-flex dt-flex-1 dt-flex-col dt-space-y-2 dt-py-2 dt-pl-2 dt-overflow-y-auto">
+    <div className="dt-flex dt-flex-1 dt-flex-col dt-space-y-2 dt-py-2 dt-overflow-y-auto">
       {isNotSollet && hasEncryptedMessages && (
         <div
           className={clsx(
@@ -44,19 +44,16 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
           Sollet.io wallet
         </div>
       )}
-      {chatThreads
-        .filter((subscription) =>
-          isNotSollet ? !subscription.dialect.encrypted : true
-        )
-        .map((subscription) => (
-          <MessagePreview
-            key={subscription.publicKey.toBase58()}
-            dialect={subscription}
-            onClick={() => {
-              onThreadClick?.(subscription);
-            }}
-          />
-        ))}
+      {chatThreads.map((subscription) => (
+        <MessagePreview
+          key={subscription.publicKey.toBase58()}
+          dialect={subscription}
+          disabled={isNotSollet && subscription.dialect.encrypted}
+          onClick={() => {
+            onThreadClick?.(subscription);
+          }}
+        />
+      ))}
     </div>
   );
 };

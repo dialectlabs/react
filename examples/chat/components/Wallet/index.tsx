@@ -4,7 +4,10 @@ import {
   WalletProvider,
 } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { getPhantomWallet, getSolletWallet } from '@solana/wallet-adapter-wallets';
+import {
+  getPhantomWallet,
+  getSolletWallet,
+} from '@solana/wallet-adapter-wallets';
 import {
   WalletModalProvider,
   WalletMultiButton,
@@ -49,7 +52,7 @@ export const WalletContext: FC = (props) => {
       getSolletWallet({ network }),
       // getSolletExtensionWallet({ network }),
     ],
-    []
+    [network]
   );
 
   return (

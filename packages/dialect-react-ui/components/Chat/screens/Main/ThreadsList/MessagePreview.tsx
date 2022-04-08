@@ -2,10 +2,12 @@ import React from 'react';
 import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
+import clsx from 'clsx';
 
 type PropsType = {
   dialect: DialectAccount;
   onClick: () => void;
+  disabled?: boolean;
 };
 
 function FirstMessage({ dialect }: { dialect: DialectAccount }) {
@@ -38,6 +40,7 @@ function FirstMessage({ dialect }: { dialect: DialectAccount }) {
 export default function MessagePreview({
   dialect,
   onClick,
+  disabled = false,
 }: PropsType): JSX.Element {
   const { wallet } = useApi();
   const otherMembers = dialect?.dialect.members.filter(
@@ -50,8 +53,11 @@ export default function MessagePreview({
 
   return (
     <div
-      className="dt-flex dt-space-x-2 dt-items-center dt-w-full dt-cursor-pointer"
-      onClick={onClick}
+      className={clsx(
+        disabled ? 'dt-cursor-not-allowed' : 'dt-cursor-pointer',
+        'dt-flex dt-space-x-2 dt-items-center dt-w-full'
+      )}
+      onClick={!disabled ? onClick : undefined}
     >
       <div className="dt-flex">
         <Avatar publicKey={otherMembers[0].publicKey} size="regular" />

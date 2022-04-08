@@ -172,6 +172,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       return freshEncryptionProps;
     }, [encryptionProps, wallet, walletName]);
 
+  useEffect(() => {
+    if (!isWalletConnected) {
+      setEncryptionProps(null);
+    }
+  }, [isWalletConnected]);
+
   const {
     data: metadata,
     mutate: mutateMetadata,
