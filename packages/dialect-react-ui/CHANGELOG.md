@@ -1,7 +1,6 @@
 # CHANGELOG
 
 ## [UNRELEASED]
-- Fix invalid thread recipient display name 
 
 ## [0.1.0] - 2022-02-12
 
@@ -73,3 +72,7 @@
 - Show send error message below the text input box in chat
 - Remove flicker on message send
 - Add encrypted threads support with Sollet wallet
+
+## [0.4.1] - 2022-04-09
+
+- Fix invalid thread recipient display name 
