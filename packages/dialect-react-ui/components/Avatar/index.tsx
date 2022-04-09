@@ -2,6 +2,8 @@ import React from 'react';
 import * as anchor from '@project-serum/anchor';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
+import { AddressImage, DisplayAddress } from '@cardinal/namespaces-components';
+import { useApi } from '@dialectlabs/react';
 
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
@@ -20,6 +22,8 @@ type PropTypes = {
 
 export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
+  const { program } = useApi();
+
   return (
     <div
       className={cs(
@@ -29,7 +33,16 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
       )}
     >
       <div className={`${textStyleMap[size]}`}>
-        {publicKey.toString().substr(0, 1)}
+        {program?.provider.connection ? (
+            <AddressImage
+              height="100%"
+              connection={program?.provider.connection}
+              address={publicKey}
+              placeholder={publicKey.toString().substr(0, 1)}
+            />
+          ) : (
+            publicKey.toString().substr(0, 1)
+          )}
       </div>
     </div>
   );
