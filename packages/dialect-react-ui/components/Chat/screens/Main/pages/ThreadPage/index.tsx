@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { useDialect } from '@dialectlabs/react';
+import { useApi, useDialect } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import { P } from '../../../../../common/preflighted';
@@ -19,10 +19,20 @@ const ThreadPage = ({
   onNewThreadClick,
   onModalClose,
 }: ThreadPageProps) => {
+  const { wallet } = useApi();
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons } = useTheme();
 
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+
+  const otherMembers = dialect?.dialect.members.filter(
+    (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
+  );
+  const otherMembersStrs = otherMembers?.map((member) =>
+    display(member.publicKey)
+  );
+
+  const otherMemberStr = otherMembersStrs?.[0];
 
   useEffect(
     function resetSettings() {
@@ -65,9 +75,7 @@ const ThreadPage = ({
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
           <span className="dt-text-base dt-font-medium dt-text-white">
-            {dialect
-              ? display(dialect.dialect.members[1].publicKey)
-              : 'Loading...'}
+            {dialect ? display(otherMemberStr) : 'Loading...'}
           </span>
           {dialect?.dialect.encrypted ? (
             <span className="dt-text-xs dt-opacity-50">encrypted</span>

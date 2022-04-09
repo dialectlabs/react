@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- Fix invalid thread recipient display name 
 
 ## [0.1.0] - 2022-02-12
 
