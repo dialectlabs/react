@@ -138,7 +138,7 @@ rm -rf lib
 3. `dialect-react-ui` contains `exports` property in `package.json`, which breaks the importing during local development. Adjust the `import` property to navigate to the .ts file. Similarly to `dialect-react-ui`, please update the `exports` property in your `package.json` in under the `dialect-react` package for local development.
 
 ```json
-// `package.json` under `dialect-react-ui`
+// package.json under dialect-react-ui
 "exports": {
   ".": {
     "import": "./index.ts",
@@ -148,7 +148,7 @@ rm -rf lib
 },
 ```
 ```json
-// `package.json` under `dialect-react`
+// package.json under dialect-react
   "exports": {
     ".": {
       "import": "./index.ts",
