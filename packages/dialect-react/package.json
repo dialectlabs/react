@@ -10,7 +10,11 @@
   "scripts": {
     "build": "rm -rf lib && yarn build:cjs || yarn build:esm",
     "build:cjs": "tsc",
-    "build:esm": "tsc --project tsconfig.esm.json"
+    "build:cjs:watch": "tsc --watch",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:esm:watch": "tsc --project tsconfig.esm.json --watch",
+    "clean": "rm -rf lib",
+    "dev": "yarn clean && concurrently \"npm:build:cjs:watch\" \"npm:build:esm:watch\""
   },
   "exports": {
     ".": {
