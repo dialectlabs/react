@@ -4,7 +4,7 @@ import {
   WalletProvider,
 } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import {
   WalletModalProvider,
   WalletMultiButton,
@@ -35,7 +35,7 @@ export const WalletContext: FC = (props) => {
   // Only the wallets you configure here will be compiled into your application
   const wallets = useMemo(
     () => [
-      getPhantomWallet(),
+      new PhantomWalletAdapter(),
       // getSlopeWallet(),
       // getSolflareWallet(),
       // getTorusWallet({
