@@ -13,7 +13,7 @@ interface ThreadsListProps {
 
 const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
   const { walletName } = useApi();
-  const isNotSollet = walletName !== WalletName.Sollet;
+  const isNotSollet = walletName !== 'Sollet';
   const hasEncryptedMessages = useMemo(
     () => chatThreads.some((subscription) => subscription.dialect.encrypted),
     [chatThreads]

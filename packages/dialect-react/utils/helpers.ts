@@ -3,7 +3,6 @@ import type {
   WalletContextState,
 } from '@solana/wallet-adapter-react';
 import type { WalletType } from '../components/ApiContext';
-import { WalletName } from '../components/ApiContext';
 
 export const connected = (
   wallet: WalletType

@@ -3,10 +3,9 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
 } from 'react';
 import useSWR from 'swr';
-import { useApi, WalletName } from '../ApiContext';
+import { useApi } from '../ApiContext';
 import { createMetadata, DialectAccount, Metadata } from '@dialectlabs/web3';
 import type * as anchor from '@project-serum/anchor';
 import {
@@ -27,6 +26,7 @@ import {
 import { connected, isAnchorWallet } from '../../utils/helpers';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
+import { SolletWalletName } from '@solana/wallet-adapter-sollet';
 import type { EncryptionProps } from '@dialectlabs/web3/lib/es/api/text-serde';
 
 const swrFetchDialect = async (
@@ -138,7 +138,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       if (
         !wallet ||
         isAnchorWallet(wallet) ||
-        walletName !== WalletName.Sollet
+        walletName !== SolletWalletName
       ) {
         return null;
       }
@@ -280,15 +280,14 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   ]);
 
   useEffect(() => {
-    const hasNewMessage = wallet && dialect?.dialect && messages.length !== dialect.dialect.messages.length;
+    const hasNewMessage =
+      wallet &&
+      dialect?.dialect &&
+      messages.length !== dialect.dialect.messages.length;
     if (hasNewMessage) {
       setMessages(dialect.dialect.messages);
     }
-  }, [
-    wallet,
-    dialect?.dialect,
-    messages.length,
-  ]);
+  }, [wallet, dialect?.dialect, messages.length]);
 
   const createMetadataWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !wallet?.publicKey) {

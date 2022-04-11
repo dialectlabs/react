@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import {
-  useApi,
-  ParsedErrorData,
-  useDialect,
   getDialectAddressWithOtherMember,
+  ParsedErrorData,
+  useApi,
+  useDialect,
   WalletName,
 } from '@dialectlabs/react';
 import clsx from 'clsx';
@@ -46,7 +46,7 @@ function ActionCaption({
     );
   }
 
-  if (walletName !== WalletName.Sollet) {
+  if (walletName !== 'Sollet') {
     return (
       <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
         Use{' '}
@@ -185,7 +185,7 @@ export default function CreateThread({
             <span className="dt-flex dt-items-center">
               <Toggle
                 checked={encrypted}
-                disabled={walletName !== WalletName.Sollet}
+                disabled={walletName !== 'Sollet'}
                 onClick={() => setEncrypted((enc) => !enc)}
               />
             </span>
