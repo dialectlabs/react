@@ -50,7 +50,7 @@
   border-left-style: solid;
 }
 
-@media (min-width: 640px) {
+@media screen(sm) {
   .sm\:dt-border {
     border-style: solid;
   }
@@ -68,7 +68,7 @@
   }
 }
 
-@media (min-width: 768px) {
+@media screen(md) {
   .md\:dt-border {
     border-style: solid;
   }
@@ -86,7 +86,7 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media screen(lg) {
   .lg\:dt-border {
     border-style: solid;
   }
@@ -104,7 +104,7 @@
   }
 }
 
-@media (min-width: 1280px) {
+@media screen(xl) {
   .xl\:dt-border {
     border-style: solid;
   }
@@ -122,7 +122,7 @@
   }
 }
 
-@media (min-width: 1536px) {
+@media screen(2xl) {
   .\2xl\:dt-border {
     border-style: solid;
   }
