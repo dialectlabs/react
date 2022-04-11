@@ -32,6 +32,115 @@
   box-sizing: border-box; /* 1 */
 }
 
+/* Since we couldn't use preflight for border, define default border style for every side */
+/* https://github.com/tailwindlabs/tailwindcss/issues/938 */
+.dt-border {
+  border-style: solid;
+}
+.dt-border-t {
+  border-top-style: solid;
+}
+.dt-border-r {
+  border-right-style: solid;
+}
+.dt-border-b {
+  border-bottom-style: solid;
+}
+.dt-border-l {
+  border-left-style: solid;
+}
+
+@media screen(sm) {
+  .sm\:dt-border {
+    border-style: solid;
+  }
+  .sm\:dt-border-t {
+    border-top-style: solid;
+  }
+  .sm\:dt-border-r {
+    border-right-style: solid;
+  }
+  .sm\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .sm\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+@media screen(md) {
+  .md\:dt-border {
+    border-style: solid;
+  }
+  .md\:dt-border-t {
+    border-top-style: solid;
+  }
+  .md\:dt-border-r {
+    border-right-style: solid;
+  }
+  .md\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .md\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+@media screen(lg) {
+  .lg\:dt-border {
+    border-style: solid;
+  }
+  .lg\:dt-border-t {
+    border-top-style: solid;
+  }
+  .lg\:dt-border-r {
+    border-right-style: solid;
+  }
+  .lg\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .lg\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+@media screen(xl) {
+  .xl\:dt-border {
+    border-style: solid;
+  }
+  .xl\:dt-border-t {
+    border-top-style: solid;
+  }
+  .xl\:dt-border-r {
+    border-right-style: solid;
+  }
+  .xl\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .xl\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+@media screen(2xl) {
+  .\2xl\:dt-border {
+    border-style: solid;
+  }
+  .\2xl\:dt-border-t {
+    border-top-style: solid;
+  }
+  .\2xl\:dt-border-r {
+    border-right-style: solid;
+  }
+  .\2xl\:dt-border-b {
+    border-bottom-style: solid;
+  }
+  .\2xl\:dt-border-l {
+    border-left-style: solid;
+  }
+}
+
+
 .dialect ::before,
 .dialect ::after {
   --tw-content: '';
