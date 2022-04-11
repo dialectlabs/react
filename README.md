@@ -135,9 +135,10 @@ rm -rf lib
 '@dialectlabs/react',
 ```
 
-3. `dialect-react-ui` contains `exports` property in `package.json`, which breaks the importing during local development. Adjust the `import` property to navigate to the .ts file.
+3. `dialect-react-ui` contains `exports` property in `package.json`, which breaks the importing during local development. Adjust the `import` property to navigate to the .ts file. Similarly to `dialect-react-ui`, please update the `exports` property in your `package.json` in under the `dialect-react` package for local development.
 
 ```json
+// package.json under dialect-react-ui
 "exports": {
   ".": {
     "import": "./index.ts",
@@ -146,6 +147,16 @@ rm -rf lib
   "./index.css": "./lib/index.css"
 },
 ```
+```json
+// package.json under dialect-react
+  "exports": {
+    ".": {
+      "import": "./index.ts",
+      "require": "./lib/cjs/index.js"
+    }
+  },
+```
+
 
 4. And lastly, launch `yarn build:styles:watch` in `packages/dialect-react-ui` in order to transpile styles on the fly with prefixes
 
