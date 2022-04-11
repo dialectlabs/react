@@ -37,7 +37,8 @@
   },
   "workspaces": [
     "examples/*",
-    "packages/*"
+    "packages/*",
+    "starters/*"
   ],
   "engines": {
     "node": ">=15.10 <17"
