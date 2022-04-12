@@ -5,6 +5,7 @@ import {
   ParsedErrorData,
   useApi,
   useDialect,
+  Wallets,
 } from '@dialectlabs/react';
 import clsx from 'clsx';
 import IconButton from '../../../../../IconButton';
@@ -45,7 +46,7 @@ function ActionCaption({
     );
   }
 
-  if (walletName !== 'Sollet') {
+  if (walletName !== Wallets.Sollet) {
     return (
       <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
         Use{' '}
@@ -184,7 +185,7 @@ export default function CreateThread({
             <span className="dt-flex dt-items-center">
               <Toggle
                 checked={encrypted}
-                disabled={walletName !== 'Sollet'}
+                disabled={walletName !== Wallets.Sollet}
                 onClick={() => setEncrypted((enc) => !enc)}
               />
             </span>

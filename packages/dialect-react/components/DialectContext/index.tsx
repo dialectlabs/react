@@ -26,8 +26,8 @@ import {
 import { connected, isAnchorWallet } from '../../utils/helpers';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
-import { SolletWalletName } from '@solana/wallet-adapter-sollet';
 import type { EncryptionProps } from '@dialectlabs/web3/lib/es/api/text-serde';
+import { Wallets } from '../../utils/wallets';
 
 const swrFetchDialect = async (
   _: string,
@@ -135,11 +135,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
   const getEncryptionProps =
     useCallback(async (): Promise<EncryptionProps | null> => {
-      if (
-        !wallet ||
-        isAnchorWallet(wallet) ||
-        walletName !== SolletWalletName
-      ) {
+      if (!wallet || isAnchorWallet(wallet) || walletName !== Wallets.Sollet) {
         return null;
       }
 

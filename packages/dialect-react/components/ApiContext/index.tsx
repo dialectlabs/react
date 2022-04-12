@@ -36,7 +36,6 @@ type PropsType = {
   dapp?: string; // base58 public key format
 };
 
-export type { WalletName };
 export type WalletType = WalletContextState | AnchorWallet | null | undefined;
 export type ProgramType = anchor.Program | null;
 
