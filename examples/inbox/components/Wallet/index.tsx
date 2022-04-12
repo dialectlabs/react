@@ -5,6 +5,7 @@ import {
 } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
+  GlowWalletAdapter,
   PhantomWalletAdapter,
   SolletWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
@@ -43,14 +44,8 @@ export const WalletContext: FC = (props) => {
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
-      // getSlopeWallet(),
-      // getSolflareWallet(),
-      // getTorusWallet({
-      //   options: { clientId: 'Get a client ID @ https://developer.tor.us' }
-      // }),
-      // getLedgerWallet(),
+      new GlowWalletAdapter(),
       new SolletWalletAdapter({ network }),
-      // getSolletExtensionWallet({ network }),
     ],
     [network]
   );
