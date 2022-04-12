@@ -4,6 +4,8 @@ module.exports = function (config) {
     resolve: {
       ...config.resolve,
       fallback: {
+        assert: false,
+        buffer: false,
         crypto: false,
         stream: false,
       },

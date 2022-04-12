@@ -120,3 +120,8 @@
   display: flex;
   gap: 2rem;
 }
+
+.modal {
+  padding: 0.5rem;
+  border-radius: 1.5rem;
+}

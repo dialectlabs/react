@@ -3,8 +3,14 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { ChatButton } from '@dialectlabs/react-ui';
+import { ChatButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
 import styles from '../styles/Home.module.css';
+
+export const themeVariables: IncomingThemeVariables = {
+  dark: {
+    modal: styles.modal,
+  },
+};
 
 const Home: NextPage = () => {
   const wallet = useWallet();
@@ -24,7 +30,7 @@ const Home: NextPage = () => {
 
         <div className={styles.walletButtons}>
           <WalletMultiButton />
-          <ChatButton wallet={wallet} />
+          <ChatButton wallet={wallet} variables={themeVariables} />
         </div>
 
         <p className={styles.description}>
