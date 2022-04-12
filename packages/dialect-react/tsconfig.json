@@ -3,5 +3,11 @@
   "compilerOptions": {
     "outDir": "lib/cjs/"
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
