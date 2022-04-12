@@ -148,8 +148,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         return encryptionProps;
       }
 
-      const adapter: BaseSolletWalletAdapter =
-        wallet.adapter as unknown as BaseSolletWalletAdapter;
+      const adapter: BaseSolletWalletAdapter = wallet.wallet
+        ?.adapter as unknown as BaseSolletWalletAdapter;
 
       // TODO: needs to be improved with better tooling/solutions
       const solWalletAdapter: SolWalletAdapter =

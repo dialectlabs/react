@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as anchor from '@project-serum/anchor';
 import {
   getDialectAddressWithOtherMember,
   ParsedErrorData,
   useApi,
   useDialect,
-  WalletName,
 } from '@dialectlabs/react';
 import clsx from 'clsx';
 import IconButton from '../../../../../IconButton';
