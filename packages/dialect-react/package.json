@@ -6,7 +6,7 @@
   "private": false,
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
-  "types": "./lib/esm/index.d.ts",
+  "types": "./lib/types/index.d.ts",
   "scripts": {
     "build": "rm -rf lib && yarn build:cjs || yarn build:esm",
     "build:cjs": "tsc",

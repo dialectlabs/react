@@ -1,7 +1,9 @@
 {
   "exclude": [
     "node_modules",
-    "packages/*/*/node_modules"
+    "lib",
+    "packages/*/*/node_modules",
+    "packages/*/*/lib"
   ],
   "compilerOptions": {
     // target
@@ -33,7 +35,5 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true
-    // other
-    // "allowJs": true,
   }
 }
