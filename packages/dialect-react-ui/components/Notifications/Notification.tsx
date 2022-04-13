@@ -30,7 +30,12 @@ export const Notification = ({ message, timestamp }: Props) => {
       )}
     >
       <div className="dt-flex-1 dt-mb-2">
-        <P className={cs(textStyles.body, 'dt-font-medium dt-text-base')}>
+        <P
+          className={cs(
+            textStyles.body,
+            'dt-break-words dt-whitespace-pre-wrap dt-font-medium dt-text-base'
+          )}
+        >
           <Linkify
             componentDecorator={(
               decoratedHref: string,
