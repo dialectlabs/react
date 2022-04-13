@@ -34,7 +34,7 @@ const Main = ({ inbox, onModalClose }: MainProps) => {
           Messages
           <div className="dt-flex">
             <div
-              className="dt-cursor-pointer"
+              className="dt-cursor-pointer dt-inline-flex"
               onClick={() => {
                 setNewThreadOpen(true);
               }}
