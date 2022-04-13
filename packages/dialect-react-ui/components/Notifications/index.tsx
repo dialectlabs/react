@@ -395,7 +395,7 @@ export default function Notifications(props: {
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
         />
-        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll dt-no-scrollbar">
+        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-auto dt-no-scrollbar">
           {content}
         </div>
         <Footer />

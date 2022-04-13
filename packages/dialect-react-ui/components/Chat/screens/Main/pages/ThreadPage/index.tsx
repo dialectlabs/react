@@ -99,7 +99,7 @@ const ThreadPage = ({
           )}
         </div>
       </div>
-      <div className="dt-flex-1 dt-px-2 dt-overflow-y-scroll">
+      <div className="dt-flex-1 dt-px-2 dt-overflow-y-auto">
         {settingsOpen ? <Settings /> : <Thread />}
       </div>
     </div>
