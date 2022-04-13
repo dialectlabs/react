@@ -467,7 +467,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
   return (
     <DialectContext.Provider value={value}>
-        {props.children}
+      {props.children}
     </DialectContext.Provider>
   );
 };
