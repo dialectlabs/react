@@ -5,6 +5,7 @@ import {
 } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
+  GlowWalletAdapter,
   PhantomWalletAdapter,
   SolletWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
@@ -14,7 +15,6 @@ import {
 } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
 import { PhantomIcon } from '../Icon';
-import { GlowWalletAdapter } from '@solana/wallet-adapter-wallets/lib/cjs';
 
 // Default styles that can be overridden by your app
 require('@solana/wallet-adapter-react-ui/styles.css');
