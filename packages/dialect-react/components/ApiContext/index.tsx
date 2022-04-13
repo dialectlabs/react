@@ -21,8 +21,8 @@ import {
 } from '../../api';
 import type { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
-import { WalletName as AdapterWalletName } from '@solana/wallet-adapter-wallets';
 import { connected, isAnchorWallet } from '../../utils/helpers';
+import type { WalletName } from '@solana/wallet-adapter-base';
 
 const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {
   // TODO: Move to protocol/web3
@@ -39,24 +39,21 @@ type PropsType = {
 export type WalletType = WalletContextState | AnchorWallet | null | undefined;
 export type ProgramType = anchor.Program | null;
 
-export const WalletName = { ...AdapterWalletName, Anchor: 'Anchor' as const };
-export type WalletNameType = keyof typeof WalletName;
-
-export const getWalletName = (wallet: WalletType): WalletNameType | null => {
+export const getWalletName = (wallet: WalletType): WalletName | null => {
   if (!wallet) {
     return null;
   }
 
   if (isAnchorWallet(wallet)) {
-    return WalletName.Anchor;
+    return 'Anchor' as WalletName;
   }
 
-  return (wallet.wallet?.name as WalletNameType) ?? null;
+  return wallet.wallet?.adapter.name ?? null;
 };
 
 type ValueType = {
   wallet: WalletType;
-  walletName: WalletNameType | null;
+  walletName: WalletName | null;
   setWallet: (_: WalletType) => void;
   network: string | null;
   setNetwork: (_: string | null) => void;

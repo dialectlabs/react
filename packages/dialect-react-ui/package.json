@@ -5,11 +5,11 @@
   "license": "MIT",
   "private": false,
   "main": "./lib/cjs/index.js",
-  "module": "./lib/es/index.js",
-  "types": "./lib/es/index.d.ts",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/es/index.js",
+      "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
     },
     "./index.css": "./lib/index.css"

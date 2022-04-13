@@ -5,8 +5,8 @@
   "license": "MIT",
   "private": false,
   "main": "./lib/cjs/index.js",
-  "module": "./lib/es/index.js",
-  "types": "./lib/es/index.d.ts",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/types/index.d.ts",
   "scripts": {
     "build": "rm -rf lib && yarn build:cjs || yarn build:esm",
     "build:cjs": "tsc",
@@ -18,7 +18,7 @@
   },
   "exports": {
     ".": {
-      "import": "./lib/es/index.js",
+      "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
     }
   },
@@ -29,16 +29,16 @@
   "dependencies": {
     "@dialectlabs/web3": "^0.2.0",
     "@project-serum/anchor": "^0.23.0",
-    "@solana/wallet-adapter-base": "^0.7.0",
-    "@solana/wallet-adapter-react": "^0.13.1",
-    "@solana/wallet-adapter-sollet": "^0.11.1",
-    "@solana/wallet-adapter-wallets": "^0.11.3",
-    "@solana/web3.js": "^1.22.0",
+    "@solana/wallet-adapter-base": "^0.9.5",
+    "@solana/wallet-adapter-react": "^0.15.4",
+    "@solana/wallet-adapter-wallets": "^0.15.5",
+    "@solana/web3.js": "^1.37.1",
     "swr": "^0.5.6",
     "unfetch": "^4.2.0"
   },
   "devDependencies": {
-    "@types/react": "^17.0.34"
+    "@types/react": "^17.0.34",
+    "@solana/wallet-adapter-sollet": "^0.11.1"
   },
   "peerDependencies": {
     "react": ">=17"

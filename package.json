@@ -8,6 +8,8 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "scripts": {
+    "bootstrap": "yarn build:all",
+    "build:all": "yarn run build:react || yarn run build:react-ui",
     "build:react-ui": "yarn workspace @dialectlabs/react-ui run build",
     "build:react": "yarn workspace @dialectlabs/react run build",
     "dev:react-ui": "yarn workspace @dialectlabs/react-ui run dev",
@@ -37,7 +39,8 @@
   },
   "workspaces": [
     "examples/*",
-    "packages/*"
+    "packages/*",
+    "starters/*"
   ],
   "engines": {
     "node": ">=15.10 <17"

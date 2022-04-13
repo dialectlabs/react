@@ -23,7 +23,8 @@ yarn add @dialectlabs/react @dialectlabs/react-ui
 Dialect's react components library is best learned by example. This section describes how to use Dialect in your app by showing you how it has been embedded in various example apps in the `examples/` folder of this repository. Follow along in this section, & refer to the code in those examples.
 
 1. `examples/chat/` -- A wallet-to-wallet chat example.
-2. `examples/notifications/` -- A dapp notifications example. Note that to receive dapp messages to this UI component, you'll need to also run a monitoring service from Dialect's examples. That example can be found in `@dialectlabs/monitor.git`.
+2. `examples/inbox/` -- A full page wallet-to-wallet chat example.
+3. `examples/notifications/` -- A dapp notifications example. Note that to receive dapp messages to this UI component, you'll need to also run a monitoring service from Dialect's examples. That example can be found in `@dialectlabs/monitor.git`.
 
 If you're interested in developing on Dialect while making live changes to the library, see the Development section below.
 
@@ -120,45 +121,12 @@ Once set up, you'll have live, hot-reloading on changes. Some manual configurati
 
 Choose one of the `examples/` apps you'd like to do development from and then make the following changes in its source. For illustration purposes we choose `examples/chat/`.
 
-1. Ensure no packages have been built to the `lib/` folder:
+For example you want to make changes in `dialect-react` library
 
+Run
 ```shell
-rm -rf lib
-```
-
-2. Enable module transpilation in whichever `examples/` app you're building in. For example, if you're working from `examples/chat/`, uncomment both react packages in the next-transpile-modules section of `examples/chat/next.config.js`.
-
-```javascript
-// Uncomment these if you haven't built @dialectlabs/react and @dialectlabs/react-ui packages
-// and targeting the sources
-'@dialectlabs/react-ui',
-'@dialectlabs/react',
-```
-
-3. `dialect-react-ui` contains `exports` property in `package.json`, which breaks the importing during local development. Adjust the `import` property to navigate to the .ts file. Similarly to `dialect-react-ui`, please update the `exports` property in your `package.json` in under the `dialect-react` package for local development.
-
-```json
-// package.json under dialect-react-ui
-"exports": {
-  ".": {
-    "import": "./index.ts",
-    "require": "./lib/cjs/index.js"
-  },
-  "./index.css": "./lib/index.css"
-},
-```
-```json
-// package.json under dialect-react
-  "exports": {
-    ".": {
-      "import": "./index.ts",
-      "require": "./lib/cjs/index.js"
-    }
-  },
-```
-
-
-4. And lastly, launch `yarn build:styles:watch` in `packages/dialect-react-ui` in order to transpile styles on the fly with prefixes
+yarn dev:react
+````
 
 All of the above changes require restarting the next server and clearing cache (just in case), if you've already started it.
 
@@ -175,6 +143,35 @@ yarn dev
 ```
 
 Now you have a hot reload of the packages in the workspace.
+
+#### Developing another project with linked library
+
+For example you want to make changes in `dialect-react` library and see changes in another project
+
+1. Link `dialect-react` library
+```shell
+cd packages/dialect-react
+yarn link
+```
+2. Link `react` and `react-dom` libraries. This is necessary since you shouldn't have two different react libraries in one project
+```shell
+cd node_modules/react
+yarn link
+
+cd node_modules/react-dom
+yarn link
+```
+3. Go to your project and link libraries
+```shell
+cd my-project
+yarn link @dialectlabs/react
+yarn link react
+yarn link react-dom
+```
+4. Run library bundler in dev mode
+```shell
+yarn dev:react
+```
 
 ### Etc.
 
@@ -200,7 +197,6 @@ popd
 
 pushd packages/dialect-react-ui/
 yarn build
-yarn build:styles
 npm publish --access public
 popd
 ```

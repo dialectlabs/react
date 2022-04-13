@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.esm.json",
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS"
+  }
+}
