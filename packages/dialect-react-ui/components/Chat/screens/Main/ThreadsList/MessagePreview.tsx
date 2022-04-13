@@ -3,10 +3,7 @@ import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
 import clsx from 'clsx';
-import { DisplayAddress } from '@cardinal/namespaces-components';
-import { TwitterIcon } from '../../../../Icon/Twitter';
-import type { Connection } from '@project-serum/anchor';
-import type { PublicKey } from '@solana/web3.js';
+import { CardinalDisplayAddress } from '../../../../CardinalAddress';
 
 type PropsType = {
   dialect: DialectAccount;
@@ -41,26 +38,6 @@ function FirstMessage({ dialect }: { dialect: DialectAccount }) {
   );
 }
 
-function CardinalImage({
-  connection,
-  publicKey
-}: { connection: Connection, publicKey: PublicKey}) {
-  return (
-    <div className='dt-flex dt-inline-flex items-center'>
-      <DisplayAddress
-        connection={connection}
-        address={publicKey}
-      />
-      <div className='dt-flex dt-items-center dt-px-1'>
-        <TwitterIcon
-          height={18}
-          width={18}
-        />
-      </div>
-    </div>
-  );
-}
-
 export default function MessagePreview({
   dialect,
   onClick,
@@ -89,7 +66,7 @@ export default function MessagePreview({
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {dialect?.dialect.members.length > 0 &&
             (program?.provider.connection ? (
-              <CardinalImage
+              <CardinalDisplayAddress
                 connection={program?.provider.connection}
                 publicKey={otherMembers[0].publicKey}
               />
