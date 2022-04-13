@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- New esm/cjs build configuration
 
 ## [0.2.0] - 2022-03-31
 
