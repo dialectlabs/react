@@ -27,7 +27,6 @@ import { connected, isAnchorWallet } from '../../utils/helpers';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
 import type { EncryptionProps } from '@dialectlabs/web3/lib/es/api/text-serde';
-import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 
 const swrFetchDialect = async (
   _: string,
@@ -468,9 +467,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
   return (
     <DialectContext.Provider value={value}>
-      <WalletIdentityProvider>
         {props.children}
-      </WalletIdentityProvider>
     </DialectContext.Provider>
   );
 };
