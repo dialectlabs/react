@@ -1,7 +1,6 @@
 # CHANGELOG
 
 ## [UNRELEASED]
-- New esm/cjs build configuration
 
 ## [0.2.0] - 2022-03-31
 
@@ -10,3 +9,7 @@
 ## [0.3.0] - 2022-04-08
 
 - Add encrypted threads support with Sollet wallet
+
+## [0.4.0] - 2022-04-13
+
+- New esm/cjs build configuration

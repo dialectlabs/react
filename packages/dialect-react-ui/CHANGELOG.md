@@ -1,8 +1,6 @@
 # CHANGELOG
 
 ## [UNRELEASED]
-- Fix border-style issue in preflight styles
-- new esm/cjs build configuration
 
 ## [0.1.0] - 2022-02-12
 
@@ -78,3 +76,8 @@
 ## [0.4.1] - 2022-04-09
 
 - Fix invalid thread recipient display name 
+
+## [0.5.0] - 2022-04-13
+
+- Fix border-style issue in preflight styles
+- new esm/cjs build configuration
