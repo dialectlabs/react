@@ -115,7 +115,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
                 <P>
                   <A
                     target="_blank"
-                    href={getExplorerAddress(dialectAddress)}
+                    href={getExplorerAddress(dialectAddress, network)}
                     rel="noreferrer"
                   >
                     {display(dialectAddress)}↗

@@ -1,6 +1,6 @@
 import React from 'react';
 import { display } from '@dialectlabs/web3';
-import { useDialect } from '@dialectlabs/react';
+import { useApi, useDialect } from '@dialectlabs/react';
 import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../../../utils/getExplorerAddress';
 import { A, P } from '../../../../../common/preflighted';
@@ -15,6 +15,7 @@ interface SettingsProps {
 }
 
 const Settings = ({ onCloseRequest }: SettingsProps) => {
+  const { network } = useApi();
   const {
     dialectAddress,
     deleteDialect,
@@ -38,7 +39,7 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
                 <P>
                   <A
                     target="_blank"
-                    href={getExplorerAddress(dialectAddress)}
+                    href={getExplorerAddress(dialectAddress, network)}
                     rel="noreferrer"
                   >
                     {display(dialectAddress)}↗
