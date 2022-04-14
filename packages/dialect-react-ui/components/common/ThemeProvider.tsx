@@ -90,13 +90,17 @@ export type IncomingThemeValues = {
   modalWrapper?: string;
   modal?: string;
   button?: string;
-  secondaryButton?: string;
-  secondaryDangerButton?: string;
   buttonLoading?: string;
-  bigButton?: string;
-  bigButtonLoading?: string;
+  secondaryButton?: string;
+  secondaryButtonLoading?: string;
+  secondaryDangerButton?: string;
+  secondaryDangerButtonLoading?: string;
   divider?: string;
   highlighted?: string;
+  scrollbar?: string;
+  // TODO: Deprecate BigButton
+  bigButton?: string;
+  bigButtonLoading?: string;
 };
 
 export type IncomingThemeVariables = Partial<
@@ -113,6 +117,7 @@ export type ThemeValues = Required<
 
 export const defaultVariables: Record<ThemeType, ThemeValues> = {
   light: {
+    // TODO: either put all colors in the theme or define as css-custom-properties to simplify overriding
     colors: {
       bg: 'dt-bg-white',
       secondary: '',
@@ -121,7 +126,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       primary: 'dt-text-black',
       accent: 'dt-text-black',
       accentSolid: 'dt-text-[#5895B9]',
-      highlight: 'dt-bg-[#ABABAB]/10',
+      highlight: 'dt-bg-subtle-day',
       highlightSolid: 'dt-bg-[#F2F3F2]',
       toggleBackground: 'dt-bg-[#D6D6D6]',
       toggleBackgroundActive: 'dt-bg-[#25BC3B]',
@@ -169,7 +174,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0',
     outlinedInput:
-      'dt-text-sm dt-text-black dt-bg-[#ABABAB]/10 dt-px-3 dt-py-2.5 dt-border-2 dt-border-[#ABABAB]/10 dt-rounded-lg dt-focus:border-black dt-focus:outline-none',
+      'dt-text-sm dt-text-black dt-bg-subtle-day dt-px-3 dt-py-2.5 dt-border-2 dt-border-subtle-day dt-rounded-lg dt-focus:border-black dt-focus:outline-none',
     textArea:
       'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none',
     messageBubble:
@@ -180,22 +185,24 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationsDivider: 'dt-hidden',
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
-    modal: 'dt-rounded-none sm:dt-rounded-3xl',
+    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
+    buttonLoading:
+      'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 !dt-text-black !dt-bg-transparent',
     secondaryButton:
       'dt-bg-transparent dt-text-black dt-border dt-border-black hover:dt-bg-black/10',
-    // TODO: colors in the theme
+    secondaryButtonLoading: '',
     secondaryDangerButton:
-      'dt-bg-transparent dt-text-[#DE5454] dt-border dt-border-[#DE5454] hover:dt-bg-[#DE5454]/10',
-    // TODO: buttonLoading for secondary
-    buttonLoading:
-      'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 dt-bg-transparent',
+      'dt-bg-transparent dt-text-error-day dt-border dt-border-error-day hover:dt-bg-error-day/10',
+    secondaryDangerButtonLoading: 'dt-min-h-[42px] dt-text-error-day/40',
+    divider: 'dt-h-px dt-opacity-10 dt-bg-current',
+    highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
+    scrollbar: 'dt-light-scrollbar',
+    // TODO: Deprecate BigButton
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 dt-bg-transparent',
-    divider: 'dt-h-px dt-opacity-10 dt-bg-current',
-    highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
   },
   dark: {
     colors: {
@@ -206,7 +213,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       primary: 'dt-text-white',
       accent: 'dt-text-white',
       accentSolid: 'dt-text-white',
-      highlight: 'dt-bg-[#ABABAB]/20',
+      highlight: 'dt-bg-subtle-night',
       highlightSolid: 'dt-bg-[#262626]',
       toggleBackground: 'dt-bg-[#5B5B5B]',
       toggleBackgroundActive: 'dt-bg-[#25BC3B]',
@@ -253,7 +260,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     input:
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white',
     outlinedInput:
-      'dt-text-sm dt-text-white dt-bg-[#ABABAB]/10 dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus:dt-border-white focus:dt-outline-none',
+      'dt-text-sm dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus:dt-border-white focus:dt-outline-none',
     textArea:
       'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 dt-outline-none',
     messageBubble:
@@ -268,17 +275,22 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
-    secondaryButton:
-      'dt-bg-transparent dt-text-white dt-border dt-border-white hover:dt-bg-white/10',
-    secondaryDangerButton:
-      'dt-bg-transparent dt-text-[#DE5454] dt-border dt-border-[#DE5454] hover:dt-bg-[#DE5454]/10',
     buttonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
+    secondaryButton:
+      'dt-bg-transparent dt-text-white dt-border dt-border-white hover:dt-bg-white/10',
+    secondaryButtonLoading: '',
+    secondaryDangerButton:
+      'dt-bg-transparent dt-text-error-night dt-border dt-border-error-night hover:dt-bg-error-night/10',
+    secondaryDangerButtonLoading:
+      'dt-min-h-[42px] dt-text-error-night/10 dt-opacity-20',
+    divider: 'dt-h-px dt-opacity-30 dt-bg-current',
+    highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
+    scrollbar: 'dt-dark-scrollbar',
+    // TODO: Deprecate BigButton
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
-    divider: 'dt-h-px dt-opacity-30 dt-bg-current',
-    highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
   },
 };
 

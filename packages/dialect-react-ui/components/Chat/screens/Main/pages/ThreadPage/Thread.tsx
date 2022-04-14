@@ -1,16 +1,17 @@
 import React, { KeyboardEvent, FormEvent, useState, useEffect } from 'react';
-import cs from '../../../../../../utils/classNames';
 import { useApi, useDialect, formatTimestamp } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
+import { LinkifiedText } from '../../../../../common';
 import { useTheme } from '../../../../../common/ThemeProvider';
-import MessageInput from './MessageInput';
+import cs from '../../../../../../utils/classNames';
 import Avatar from '../../../../../Avatar';
+import MessageInput from './MessageInput';
 
 export default function Thread() {
   const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
     useDialect();
   const { wallet } = useApi();
-  const { messageBubble, otherMessageBubble } = useTheme();
+  const { messageBubble, otherMessageBubble, scrollbar } = useTheme();
 
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<ParsedErrorData | null | undefined>();
@@ -43,9 +44,7 @@ export default function Thread() {
     if (membersContainCurrentKey) {
       setYouCanWrite(membersContainCurrentKey);
     }
-  }, [
-    dialect?.dialect,
-  ]);
+  }, [dialect?.dialect]);
 
   const disableSendButton =
     text.length <= 0 ||
@@ -57,7 +56,13 @@ export default function Thread() {
 
   return (
     <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">
-      <div className="dt-h-full dt-py-2 dt-overflow-y-auto dt-flex dt-flex-col-reverse dt-space-y-2 dt-space-y-reverse dt-justify-start">
+      {/* TODO: fix messages which stretch the entire messaging col */}
+      <div
+        className={cs(
+          'dt-h-full dt-py-2 dt-overflow-y-auto dt-flex dt-flex-col-reverse dt-space-y-2 dt-space-y-reverse dt-justify-start',
+          scrollbar
+        )}
+      >
         {messages.map((message) => {
           const isYou =
             message.owner.toString() === wallet?.publicKey?.toString();
@@ -72,8 +77,12 @@ export default function Thread() {
               >
                 <div className={cs(messageBubble, 'dt-max-w-full dt-flex-row')}>
                   <div className={'dt-items-end'}>
-                    <div className={'dt-break-words dt-text-sm dt-text-right'}>
-                      {message.text}
+                    <div
+                      className={
+                        'dt-break-words dt-whitespace-pre-wrap dt-text-sm dt-text-right'
+                      }
+                    >
+                      <LinkifiedText>{message.text}</LinkifiedText>
                     </div>
                     <div className={''}>
                       <div className={'dt-opacity-50 dt-text-xs'}>
@@ -97,12 +106,16 @@ export default function Thread() {
               <div
                 className={cs(
                   otherMessageBubble,
-                  'dt-max-w-xs dt-flex-row dt-flex-shrink'
+                  'dt-max-w-xs dt-flex-row dt-flex-shrink dt-ml-1'
                 )}
               >
                 <div className={'dt-text-left'}>
-                  <div className={'dt-text-sm dt-break-words'}>
-                    {message.text}
+                  <div
+                    className={
+                      'dt-text-sm dt-break-words dt-whitespace-pre-wrap'
+                    }
+                  >
+                    <LinkifiedText>{message.text}</LinkifiedText>
                   </div>
                   <div className={'dt-items-end'}>
                     <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>

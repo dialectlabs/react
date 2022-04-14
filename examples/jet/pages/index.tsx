@@ -34,6 +34,7 @@ export const themeVariables: IncomingThemeVariables = {
       bigText: 'text-base font-medium leading-snug',
       header: 'font-poppins text-lg',
       buttonText: 'text-xs uppercase tracking-[1.5px] text-[#E6EBF3]',
+      // TODO: Deprecate BigButton
       bigButtonText: 'text-xs uppercase tracking-[1.5px]',
       bigButtonSubtle: 'text-xs uppercase tracking-[1.5px]',
     },
@@ -47,10 +48,11 @@ export const themeVariables: IncomingThemeVariables = {
     modal: 'rounded-3xl jet-shadow',
     button: 'bg-gradient text-[#E6EBF3] hover:opacity-60',
     buttonLoading: 'bg-gradient min-h-[32px] opacity-20',
-    bigButton: 'text-white hover:opacity-60',
-    bigButtonLoading: 'text-white min-h-[32px] opacity-20',
     divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#C3CADE] to-[#F8F9FB]',
     highlighted: 'px-2 py-1 rounded-lg',
+    // TODO: Deprecate BigButton
+    bigButton: 'text-white hover:opacity-60',
+    bigButtonLoading: 'text-white min-h-[32px] opacity-20',
   },
   dark: {
     colors: {
@@ -70,6 +72,7 @@ export const themeVariables: IncomingThemeVariables = {
       bigText: 'text-base font-medium leading-snug',
       header: 'font-poppins text-lg',
       buttonText: 'text-xs uppercase tracking-[1.5px] text-[#444]',
+      // TODO: Deprecate BigButton
       bigButtonText: 'text-xs uppercase tracking-[1.5px]',
       bigButtonSubtle: 'text-xs uppercase tracking-[1.5px]',
     },
@@ -83,10 +86,11 @@ export const themeVariables: IncomingThemeVariables = {
     modal: 'rounded-3xl jet-shadow',
     button: 'bg-gradient text-[#E6EBF3] hover:opacity-60',
     buttonLoading: 'bg-gradient min-h-[32px] opacity-20',
-    bigButton: 'text-white hover:opacity-60',
-    bigButtonLoading: 'text-white min-h-[32px] opacity-20',
     divider: 'h-[4px] rounded-lg bg-gradient-to-b from-[#3C3C3C] to-[#505050]',
     highlighted: 'px-2 py-1 rounded-lg',
+    // TODO: Deprecate BigButton
+    bigButton: 'text-white hover:opacity-60',
+    bigButtonLoading: 'text-white min-h-[32px] opacity-20',
   },
 };
 

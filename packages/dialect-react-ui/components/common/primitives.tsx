@@ -88,6 +88,7 @@ export function Loader() {
 
 export function Button(props: {
   defaultStyle?: string;
+  loadingStyle?: string;
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -95,14 +96,16 @@ export function Button(props: {
   children: React.ReactNode;
 }): JSX.Element {
   const { button, buttonLoading, textStyles } = useTheme();
-  const defaultStyle = props.defaultStyle || button;
+  const defaultClassName = props.defaultStyle || button;
+  const loadingClassName = props.loadingStyle || buttonLoading;
 
   return (
     <ButtonBase
       className={cs(
         'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
-        !props.loading ? defaultStyle : buttonLoading,
+        defaultClassName,
+        props.loading && loadingClassName,
         props.className
       )}
       onClick={props.onClick}
@@ -113,6 +116,7 @@ export function Button(props: {
   );
 }
 
+// TODO: Deprecate BigButton
 export function BigButton(props: {
   className?: string;
   onClick?: () => void;

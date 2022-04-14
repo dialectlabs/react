@@ -2,10 +2,10 @@ import React from 'react';
 import { display } from '@dialectlabs/web3';
 import { useDialect } from '@dialectlabs/react';
 import clsx from 'clsx';
+import { getExplorerAddress } from '../../../../../../utils/getExplorerAddress';
 import { A, P } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
-import { BigButton, ValueRow } from '../../../../../common';
-import { getExplorerAddress } from '../../../../../../utils/getExplorerAddress';
+import { Button, ValueRow } from '../../../../../common';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -22,7 +22,8 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
     deletionError,
     setDialectAddress,
   } = useDialect();
-  const { colors, textStyles, icons } = useTheme();
+  const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
+    useTheme();
 
   return (
     <>
@@ -55,19 +56,20 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
             </div>
           </ValueRow>
         ) : null}
-        <BigButton
-          className={colors.errorBg}
+        <Button
+          className="dt-w-full"
+          defaultStyle={secondaryDangerButton}
+          loadingStyle={secondaryDangerButtonLoading}
           onClick={async () => {
             await deleteDialect().catch(noop);
             // TODO: properly wait for the deletion
             onCloseRequest?.();
             setDialectAddress('');
           }}
-          heading="Withdraw rent & delete history"
-          description="Events history will be lost forever"
-          icon={<icons.trash />}
           loading={isDialectDeleting}
-        />
+        >
+          Withdraw rent & delete history
+        </Button>
         {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
           <P
             className={clsx(

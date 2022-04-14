@@ -51,7 +51,10 @@ export default function MessageInput({
                 }}
                 onKeyDown={onEnterPress}
                 placeholder="Write something"
-                className={clsx(textArea, 'dt-resize-none dt-h-full dt-w-full')}
+                className={clsx(
+                  textArea,
+                  'dt-resize-none dt-h-full dt-w-full dt-no-scrollbar'
+                )}
                 disabled={inputDisabled}
               />
               <ButtonBase

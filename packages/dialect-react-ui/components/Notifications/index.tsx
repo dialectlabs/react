@@ -95,7 +95,8 @@ function Wallet(props: { onThreadDelete?: () => void }) {
     deletionError,
     creationError,
   } = useDialect();
-  const { textStyles, secondaryDangerButton } = useTheme();
+  const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
+    useTheme();
   const { balance } = useBalance();
 
   if (isDialectAvailable) {
@@ -137,6 +138,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
             <Button
               className="dt-w-full"
               defaultStyle={secondaryDangerButton}
+              loadingStyle={secondaryDangerButtonLoading}
               onClick={async () => {
                 await deleteDialect().catch(noop);
                 // TODO: properly wait for the deletion
@@ -319,7 +321,7 @@ export default function Notifications(props: {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, modal, icons, notificationsDivider } = useTheme();
+  const { colors, modal, icons, notificationsDivider, scrollbar } = useTheme();
 
   let content: JSX.Element;
 
@@ -395,7 +397,12 @@ export default function Notifications(props: {
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
         />
-        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-scroll dt-no-scrollbar">
+        <div
+          className={cs(
+            'dt-h-full dt-py-2 dt-px-4 dt-overflow-y-auto',
+            scrollbar
+          )}
+        >
           {content}
         </div>
         <Footer />
