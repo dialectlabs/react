@@ -34,7 +34,9 @@
 
 /* Since we couldn't use preflight for border, define default border style for every side */
 /* https://github.com/tailwindlabs/tailwindcss/issues/938 */
-.dt-border {
+/* TODO: find a way to list all borders */
+.dt-border,
+.dt-border-2 {
   border-style: solid;
 }
 .dt-border-t {
@@ -51,7 +53,8 @@
 }
 
 @media screen(sm) {
-  .sm\:dt-border {
+  .sm\:dt-border,
+  .sm\:dt-border-2 {
     border-style: solid;
   }
   .sm\:dt-border-t {
@@ -69,7 +72,8 @@
 }
 
 @media screen(md) {
-  .md\:dt-border {
+  .md\:dt-border,
+  .md\:dt-border-2 {
     border-style: solid;
   }
   .md\:dt-border-t {
@@ -87,7 +91,8 @@
 }
 
 @media screen(lg) {
-  .lg\:dt-border {
+  .lg\:dt-border,
+  .lg\:dt-border-2 {
     border-style: solid;
   }
   .lg\:dt-border-t {
@@ -105,7 +110,8 @@
 }
 
 @media screen(xl) {
-  .xl\:dt-border {
+  .xl\:dt-border,
+  .xl\:dt-border-2 {
     border-style: solid;
   }
   .xl\:dt-border-t {
@@ -123,7 +129,8 @@
 }
 
 @media screen(2xl) {
-  .\2xl\:dt-border {
+  .\2xl\:dt-border,
+  .\2xl\:dt-border-2 {
     border-style: solid;
   }
   .\2xl\:dt-border-t {
