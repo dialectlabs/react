@@ -69,6 +69,7 @@ export default function MessagePreview({
               <CardinalDisplayAddress
                 connection={program?.provider.connection}
                 publicKey={otherMembers[0].publicKey}
+                showTwitterIcon={true}
               />
             ) : (
               <>{display(otherMembers[0].publicKey)}</>
