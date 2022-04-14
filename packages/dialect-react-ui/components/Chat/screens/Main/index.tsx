@@ -33,6 +33,7 @@ const Main = ({ inbox, onModalClose }: MainProps) => {
         <div className="dt-px-2 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold">
           Messages
           <div className="dt-flex">
+            {/* TODO: replace with IconButton to be sematic */}
             <div
               className="dt-cursor-pointer dt-inline-flex"
               onClick={() => {

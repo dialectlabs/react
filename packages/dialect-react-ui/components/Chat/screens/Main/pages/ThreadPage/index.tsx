@@ -47,6 +47,7 @@ const ThreadPage = ({
     }
     return (
       <div className="dt-hidden md:dt-flex dt-flex-1 dt-justify-center dt-items-center">
+        {/* TODO: replace with Button to be sematic */}
         <div
           className="dt-flex dt-cursor-pointer dt-opacity-30"
           onClick={onNewThreadClick}
@@ -61,6 +62,7 @@ const ThreadPage = ({
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
       <div className="dt-px-4 dt-py-1 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-items-center">
+        {/* TODO: replace with IconButton to be sematic */}
         <div
           className={clsx('dt-cursor-pointer')}
           onClick={() => {
@@ -84,6 +86,7 @@ const ThreadPage = ({
           )}
         </div>
         <div className="dt-flex">
+          {/* TODO: replace with IconButton to be sematic */}
           <div
             className={clsx('dt-cursor-pointer', {
               'dt-invisible': settingsOpen,
