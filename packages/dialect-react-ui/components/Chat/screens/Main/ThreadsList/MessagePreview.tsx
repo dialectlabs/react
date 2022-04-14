@@ -1,4 +1,3 @@
-import React from 'react';
 import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
@@ -46,9 +45,6 @@ export default function MessagePreview({
   const { wallet, program } = useApi();
   const otherMembers = dialect?.dialect.members.filter(
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
-  );
-  const otherMembersStrs = otherMembers.map((member) =>
-    display(member.publicKey)
   );
 
   return (
