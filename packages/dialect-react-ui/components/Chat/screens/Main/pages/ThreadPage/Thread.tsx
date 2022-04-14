@@ -1,8 +1,7 @@
 import React, { KeyboardEvent, FormEvent, useState, useEffect } from 'react';
-import Linkify from 'react-linkify';
 import { useApi, useDialect, formatTimestamp } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
-import { A } from '../../../../../common/preflighted';
+import { LinkifiedText } from '../../../../../common';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import cs from '../../../../../../utils/classNames';
 import Avatar from '../../../../../Avatar';
@@ -12,8 +11,7 @@ export default function Thread() {
   const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
     useDialect();
   const { wallet } = useApi();
-  const { messageBubble, otherMessageBubble, textStyles, scrollbar } =
-    useTheme();
+  const { messageBubble, otherMessageBubble, scrollbar } = useTheme();
 
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<ParsedErrorData | null | undefined>();
@@ -84,26 +82,7 @@ export default function Thread() {
                         'dt-break-words dt-whitespace-pre-wrap dt-text-sm dt-text-right'
                       }
                     >
-                      <Linkify
-                        componentDecorator={(
-                          decoratedHref: string,
-                          decoratedText: string,
-                          key: number
-                        ) => (
-                          <A
-                            target="blank"
-                            className={textStyles.link}
-                            href={decoratedHref}
-                            key={key}
-                          >
-                            {decoratedText.length > 32
-                              ? decoratedText.slice(0, 32) + '...'
-                              : decoratedText}
-                          </A>
-                        )}
-                      >
-                        {message.text}
-                      </Linkify>
+                      <LinkifiedText>{message.text}</LinkifiedText>
                     </div>
                     <div className={''}>
                       <div className={'dt-opacity-50 dt-text-xs'}>
@@ -136,26 +115,7 @@ export default function Thread() {
                       'dt-text-sm dt-break-words dt-whitespace-pre-wrap'
                     }
                   >
-                    <Linkify
-                      componentDecorator={(
-                        decoratedHref: string,
-                        decoratedText: string,
-                        key: number
-                      ) => (
-                        <A
-                          target="blank"
-                          className={textStyles.link}
-                          href={decoratedHref}
-                          key={key}
-                        >
-                          {decoratedText.length > 32
-                            ? decoratedText.slice(0, 32) + '...'
-                            : decoratedText}
-                        </A>
-                      )}
-                    >
-                      {message.text}
-                    </Linkify>
+                    <LinkifiedText>{message.text}</LinkifiedText>
                   </div>
                   <div className={'dt-items-end'}>
                     <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>

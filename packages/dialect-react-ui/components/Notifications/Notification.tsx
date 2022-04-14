@@ -1,7 +1,7 @@
 import React from 'react';
-import Linkify from 'react-linkify';
 import cs from '../../utils/classNames';
-import { A, P } from '../common/preflighted';
+import { LinkifiedText } from '../common';
+import { P } from '../common/preflighted';
 import { useTheme } from '../common/ThemeProvider';
 
 type Props = {
@@ -36,26 +36,7 @@ export const Notification = ({ message, timestamp }: Props) => {
             'dt-break-words dt-whitespace-pre-wrap dt-font-medium dt-text-base'
           )}
         >
-          <Linkify
-            componentDecorator={(
-              decoratedHref: string,
-              decoratedText: string,
-              key: number
-            ) => (
-              <A
-                target="blank"
-                className={textStyles.link}
-                href={decoratedHref}
-                key={key}
-              >
-                {decoratedText.length > 32
-                  ? decoratedText.slice(0, 32) + '...'
-                  : decoratedText}
-              </A>
-            )}
-          >
-            {message}
-          </Linkify>
+          <LinkifiedText>{message}</LinkifiedText>
         </P>
       </div>
       <div className={notificationTimestamp}>
