@@ -65,6 +65,7 @@ const ThreadPage = ({
       <CardinalDisplayAddress
         connection={program?.provider.connection}
         publicKey={otherMembers[0].publicKey}
+        isLinkable={true}
       />
     ) : (
       <>{display(otherMembers[0].publicKey)}</>

@@ -5,9 +5,9 @@ import type { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import cs from '../../utils/classNames';
 
-const formatTwitterLink = (handle: string | undefined, className?: string) => {
+const formatTwitterLink = (handle: string | undefined, isLinkable: boolean, className?: string) => {
   if (!handle) return <a></a>;
-  return (
+  return (isLinkable?
     <a
       href={`https://twitter.com/${handle}`}
       className={className}
@@ -16,6 +16,7 @@ const formatTwitterLink = (handle: string | undefined, className?: string) => {
     >
       {handle}
     </a>
+    : handle
   );
 };
 
@@ -25,9 +26,9 @@ function shortenAddress(address: string, chars = 5): string {
   )}`;
 }
 
-const formatShortAddress = (address: PublicKey | undefined) => {
+const formatShortAddress = (address: PublicKey | undefined, isLinkable: boolean) => {
   if (!address) return <></>;
-  return (
+  return (isLinkable?
     <a
       href={`https://explorer.solana.com/address/${address.toString()}`}
       target="_blank"
@@ -35,6 +36,7 @@ const formatShortAddress = (address: PublicKey | undefined) => {
     >
       {shortenAddress(address.toString())}
     </a>
+    : shortenAddress(address.toString())
   );
 };
 
@@ -44,6 +46,7 @@ const DisplayAddressNew = ({
   loadingName,
   dimensionClassName = '',
   colorClassName = 'dt-text-white',
+  isLinkable=false,
 }: {
   address: PublicKey | undefined;
   displayName: string | undefined;
@@ -51,6 +54,7 @@ const DisplayAddressNew = ({
   dimensionClassName?: string;
   colorClassName?: string;
   className?: string;
+  isLinkable?: boolean
 }) => {
   if (!address) return <></>;
   return loadingName ? (
@@ -60,8 +64,8 @@ const DisplayAddressNew = ({
   ) : (
     <div className="dt-flex dt-gap-1.5">
       {displayName?.includes('@')
-        ? formatTwitterLink(displayName, colorClassName)
-        : displayName || formatShortAddress(address)}
+        ? formatTwitterLink(displayName, isLinkable, colorClassName)
+        : displayName || formatShortAddress(address, isLinkable)}
     </div>
   );
 };
@@ -69,9 +73,11 @@ const DisplayAddressNew = ({
 export function CardinalDisplayAddress({
   connection,
   publicKey,
+  isLinkable=false,
 }: {
   connection: Connection;
   publicKey: PublicKey;
+  isLinkable?: boolean
 }) {
   const { displayName, loadingName } = useAddressName(connection, publicKey);
   const showTwitterIcon = displayName?.includes('@');
@@ -82,6 +88,7 @@ export function CardinalDisplayAddress({
         address={publicKey}
         displayName={displayName}
         loadingName={loadingName}
+        isLinkable={isLinkable}
       />
       {showTwitterIcon && (
         <div className="dt-flex dt-items-center dt-px-1">
