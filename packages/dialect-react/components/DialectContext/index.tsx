@@ -24,6 +24,7 @@ import {
   ParsedErrorType,
 } from '../../utils/errors';
 import { connected, isAnchorWallet } from '../../utils/helpers';
+import type { Message } from '@dialectlabs/web3';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
 import type { EncryptionProps } from '@dialectlabs/web3/lib/es/api/text-serde';
@@ -46,11 +47,6 @@ const swrFetchMetadata = (
   _: string,
   ...args: Parameters<typeof fetchMetadata>
 ) => fetchMetadata(...args);
-
-interface Message {
-  text: string;
-  timestamp: number;
-}
 
 type PropsType = {
   children: JSX.Element;
