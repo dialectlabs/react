@@ -13,7 +13,7 @@
 
 - Started to keep changelog up to date... again...
 - Added esm build to final bundle (resolves [#42](https://github.com/dialectlabs/react/issues/42))
-    - Changed direct styles import from `@dialectlabs/react-ui/lib/index.css` to `@dialectlabs/react-ui/index.css`
+  - Changed direct styles import from `@dialectlabs/react-ui/lib/index.css` to `@dialectlabs/react-ui/index.css`
 
 ## [0.2.1] - 2022-03-29
 
@@ -77,9 +77,18 @@
 
 ## [0.4.1] - 2022-04-09
 
-- Fix invalid thread recipient display name 
+- Fix invalid thread recipient display name
 
 ## [0.5.0] - 2022-04-13
 
 - Fix border-style issue in preflight styles
 - new esm/cjs build configuration
+
+## [0.5.1] - 2022-04-14
+
+- fix: provide the current network to solscan links
+- fix: elegant scrollbars on Windows and Linux
+
+## [0.5.2] - 2022-04-14
+
+- fix: border-style issue

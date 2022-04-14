@@ -31,7 +31,9 @@ export function EmailForm() {
     outlinedInput,
     colors,
     secondaryButton,
+    secondaryButtonLoading,
     secondaryDangerButton,
+    secondaryDangerButtonLoading,
     highlighted,
   } = useTheme();
 
@@ -152,6 +154,7 @@ export function EmailForm() {
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   defaultStyle={secondaryButton}
+                  loadingStyle={secondaryButtonLoading}
                   className="dt-basis-1/2"
                   onClick={() => setEmailEditing(false)}
                 >
@@ -191,6 +194,7 @@ export function EmailForm() {
                 <Button
                   className="dt-basis-1/2"
                   defaultStyle={secondaryDangerButton}
+                  loadingStyle={secondaryDangerButtonLoading}
                   onClick={deleteEmail}
                   loading={isDeletingAddress}
                 >
