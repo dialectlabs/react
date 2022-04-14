@@ -1,5 +1,4 @@
 import { useAddressName } from '@cardinal/namespaces-components';
-import ContentLoader from "react-content-loader";
 import { TwitterIcon } from '../Icon/Twitter';
 import type { Connection } from '@project-serum/anchor';
 import type { PublicKey } from '@solana/web3.js';
@@ -42,7 +41,6 @@ const DisplayAddressNew = ({
   address,
   height = "13",
   width = "300",
-  dark = false,
   style,
   color = "#FFFFFF",
 }: {
@@ -50,7 +48,6 @@ const DisplayAddressNew = ({
   address: PublicKey | undefined;
   height?: string;
   width?: string;
-  dark?: boolean;
   style?: React.CSSProperties;
   color?: string
 }) => {
@@ -66,12 +63,7 @@ const DisplayAddressNew = ({
         overflow: "hidden",
       }}
     >
-      <ContentLoader
-        backgroundColor={dark ? "#333" : undefined}
-        foregroundColor={dark ? "#555" : undefined}
-      >
-        <rect style={{ ...style }} x={0} y={0} width={width} height={height} />
-      </ContentLoader>
+      Loading...
     </div>
   ) : (
     <div style={{ display: "flex", gap: "5px", ...style }}>
