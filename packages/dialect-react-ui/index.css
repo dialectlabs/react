@@ -479,10 +479,6 @@
 }
 .dt-light-scrollbar {
   /* Firefox: Foreground, Background */
-  scrollbar-color: transparent transparent;
-}
-.dt-light-scrollbar:hover {
-  /* Firefox: Foreground, Background */
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 .dt-light-scrollbar::-webkit-scrollbar-thumb {
@@ -496,12 +492,7 @@
 .dt-light-scrollbar:hover::-webkit-scrollbar-thumb {
   box-shadow: inset 0 0 10px 10px rgba(0, 0, 0, 0.3);
 }
-/* TODO: add the delay before hiding scrollbar via js */
 .dt-dark-scrollbar {
-  /* Firefox: Foreground, Background */
-  scrollbar-color: transparent transparent;
-}
-.dt-dark-scrollbar:hover {
   /* Firefox: Foreground, Background */
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
