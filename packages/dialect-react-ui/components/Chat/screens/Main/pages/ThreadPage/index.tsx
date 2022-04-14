@@ -59,7 +59,8 @@ const ThreadPage = ({
     );
   }
 
-  const displayAddress = dialect?.dialect.members.length > 0 &&
+  const displayAddress =
+    dialect?.dialect.members.length > 0 &&
     (program?.provider.connection ? (
       <CardinalDisplayAddress
         connection={program?.provider.connection}

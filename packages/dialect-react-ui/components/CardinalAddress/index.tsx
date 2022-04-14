@@ -39,17 +39,17 @@ const formatShortAddress = (address: PublicKey | undefined) => {
 const DisplayAddressNew = ({
   connection,
   address,
-  height = "13",
-  width = "300",
+  height = '13',
+  width = '300',
   style,
-  color = "#FFFFFF",
+  color = '#FFFFFF',
 }: {
   connection: Connection;
   address: PublicKey | undefined;
   height?: string;
   width?: string;
   style?: React.CSSProperties;
-  color?: string
+  color?: string;
 }) => {
   const { displayName, loadingName } = useAddressName(connection, address);
 
@@ -60,14 +60,14 @@ const DisplayAddressNew = ({
         ...style,
         height,
         width,
-        overflow: "hidden",
+        overflow: 'hidden',
       }}
     >
       Loading...
     </div>
   ) : (
-    <div style={{ display: "flex", gap: "5px", ...style }}>
-      {displayName?.includes("@")
+    <div style={{ display: 'flex', gap: '5px', ...style }}>
+      {displayName?.includes('@')
         ? formatTwitterLink(displayName, color)
         : displayName || formatShortAddress(address)}
     </div>
@@ -78,20 +78,19 @@ export function CardinalDisplayAddress({
   connection,
   publicKey,
   showTwitterIcon,
-}: { connection: Connection, publicKey: PublicKey, showTwitterIcon: Boolean}) {
+}: {
+  connection: Connection;
+  publicKey: PublicKey;
+  showTwitterIcon: boolean;
+}) {
   return (
-    <div className='dt-flex dt-inline-flex items-center'>
-      <DisplayAddressNew
-        connection={connection}
-        address={publicKey}
-      />
-      {showTwitterIcon &&
-      <div className='dt-flex dt-items-center dt-px-1'>
-        <TwitterIcon
-          height={18}
-          width={18}
-        />
-      </div>}
+    <div className="dt-flex dt-inline-flex items-center">
+      <DisplayAddressNew connection={connection} address={publicKey} />
+      {showTwitterIcon && (
+        <div className="dt-flex dt-items-center dt-px-1">
+          <TwitterIcon height={18} width={18} />
+        </div>
+      )}
     </div>
   );
 }
