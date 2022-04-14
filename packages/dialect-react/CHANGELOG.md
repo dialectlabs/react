@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+– fix: import Message type from '@dialectlabs/web3'
+
 ## [0.2.0] - 2022-03-31
 
 - Add email notifications support
