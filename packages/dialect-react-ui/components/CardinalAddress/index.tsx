@@ -5,9 +5,13 @@ import type { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import cs from '../../utils/classNames';
 
-const formatTwitterLink = (handle: string | undefined, isLinkable: boolean, className?: string) => {
+const formatTwitterLink = (
+  handle: string | undefined,
+  isLinkable: boolean,
+  className?: string
+) => {
   if (!handle) return <a></a>;
-  return (isLinkable?
+  return isLinkable ? (
     <a
       href={`https://twitter.com/${handle}`}
       className={className}
@@ -16,7 +20,8 @@ const formatTwitterLink = (handle: string | undefined, isLinkable: boolean, clas
     >
       {handle}
     </a>
-    : handle
+  ) : (
+    handle
   );
 };
 
@@ -26,9 +31,12 @@ function shortenAddress(address: string, chars = 5): string {
   )}`;
 }
 
-const formatShortAddress = (address: PublicKey | undefined, isLinkable: boolean) => {
+const formatShortAddress = (
+  address: PublicKey | undefined,
+  isLinkable: boolean
+) => {
   if (!address) return <></>;
-  return (isLinkable?
+  return isLinkable ? (
     <a
       href={`https://explorer.solana.com/address/${address.toString()}`}
       target="_blank"
@@ -36,7 +44,8 @@ const formatShortAddress = (address: PublicKey | undefined, isLinkable: boolean)
     >
       {shortenAddress(address.toString())}
     </a>
-    : shortenAddress(address.toString())
+  ) : (
+    shortenAddress(address.toString())
   );
 };
 
@@ -46,7 +55,7 @@ const DisplayAddressNew = ({
   loadingName,
   dimensionClassName = '',
   colorClassName = 'dt-text-white',
-  isLinkable=false,
+  isLinkable = false,
 }: {
   address: PublicKey | undefined;
   displayName: string | undefined;
@@ -54,7 +63,7 @@ const DisplayAddressNew = ({
   dimensionClassName?: string;
   colorClassName?: string;
   className?: string;
-  isLinkable?: boolean
+  isLinkable?: boolean;
 }) => {
   if (!address) return <></>;
   return loadingName ? (
@@ -73,11 +82,11 @@ const DisplayAddressNew = ({
 export function CardinalDisplayAddress({
   connection,
   publicKey,
-  isLinkable=false,
+  isLinkable = false,
 }: {
   connection: Connection;
   publicKey: PublicKey;
-  isLinkable?: boolean
+  isLinkable?: boolean;
 }) {
   const { displayName, loadingName } = useAddressName(connection, publicKey);
   const showTwitterIcon = displayName?.includes('@');

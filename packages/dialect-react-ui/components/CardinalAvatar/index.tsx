@@ -1,6 +1,6 @@
-import type { PublicKey, Connection } from "@solana/web3.js";
+import type { PublicKey, Connection } from '@solana/web3.js';
 import { useAddressImage } from '@cardinal/namespaces-components';
-import { HiUserCircle } from "react-icons/hi";
+import { HiUserCircle } from 'react-icons/hi';
 import cs from '../../utils/classNames';
 
 export const CardinalAvatar = ({
@@ -18,20 +18,16 @@ export const CardinalAvatar = ({
 
   if (!address) return <></>;
   return loadingImage ? (
-    <div
-      className={cs(className, 'dt-rounded-full', 'dt-overflow-hidden')}
-    >
+    <div className={cs(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
       <>{placeholder}</>
     </div>
   ) : addressImage ? (
     <img
-      className='dt-rounded-full'
+      className="dt-rounded-full"
       alt={`profile-${address.toString()}`}
       src={addressImage}
     ></img>
   ) : (
-    <>{placeholder}</> || (
-      <HiUserCircle className={className} />
-    )
+    <>{placeholder}</> || <HiUserCircle className={className} />
   );
 };

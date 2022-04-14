@@ -33,15 +33,15 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
     >
       <div className={`${textStyleMap[size]}`}>
         {program?.provider.connection ? (
-            <CardinalAvatar
-              className='dt-h-full'
-              connection={program?.provider.connection}
-              address={publicKey}
-              placeholder={publicKey.toString().substr(0, 1)}
-            />
-          ) : (
-            publicKey.toString().substr(0, 1)
-          )}
+          <CardinalAvatar
+            className="dt-h-full"
+            connection={program?.provider.connection}
+            address={publicKey}
+            placeholder={publicKey.toString().substr(0, 1)}
+          />
+        ) : (
+          publicKey.toString().substr(0, 1)
+        )}
       </div>
     </div>
   );
