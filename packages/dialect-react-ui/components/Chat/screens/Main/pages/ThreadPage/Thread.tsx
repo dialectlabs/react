@@ -127,7 +127,7 @@ export default function Thread() {
               <div
                 className={cs(
                   otherMessageBubble,
-                  'dt-max-w-xs dt-flex-row dt-flex-shrink'
+                  'dt-max-w-xs dt-flex-row dt-flex-shrink dt-ml-1'
                 )}
               >
                 <div className={'dt-text-left'}>
