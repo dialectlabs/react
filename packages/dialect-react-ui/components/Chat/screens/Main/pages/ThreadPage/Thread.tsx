@@ -72,7 +72,7 @@ export default function Thread() {
               <div
                 key={message.timestamp}
                 className={
-                  'dt-ml-10 dt-flex dt-flex-row dt-items-center dt-mb-2 dt-justify-end'
+                  'dt-ml-10 dt-flex dt-flex-row dt-items-center dt-mb-2 dt-justify-end dt-message'
                 }
               >
                 <div className={cs(messageBubble, 'dt-max-w-full dt-flex-row')}>
@@ -98,7 +98,7 @@ export default function Thread() {
           return (
             <div
               key={message.timestamp}
-              className={'dt-flex dt-flex-row dt-mb-2'}
+              className={'dt-flex dt-flex-row dt-mb-2 dt-message'}
             >
               <div className={''}>
                 <Avatar size="small" publicKey={message.owner} />
