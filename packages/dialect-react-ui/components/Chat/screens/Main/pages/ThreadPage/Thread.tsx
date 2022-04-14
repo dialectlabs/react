@@ -12,7 +12,8 @@ export default function Thread() {
   const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
     useDialect();
   const { wallet } = useApi();
-  const { messageBubble, otherMessageBubble, textStyles } = useTheme();
+  const { messageBubble, otherMessageBubble, textStyles, scrollbar } =
+    useTheme();
 
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<ParsedErrorData | null | undefined>();
@@ -57,7 +58,13 @@ export default function Thread() {
 
   return (
     <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">
-      <div className="dt-h-full dt-py-2 dt-overflow-y-auto dt-flex dt-flex-col-reverse dt-space-y-2 dt-space-y-reverse dt-justify-start">
+      {/* TODO: fix messages which stretch the entire messaging col */}
+      <div
+        className={cs(
+          'dt-h-full dt-py-2 dt-overflow-y-auto dt-flex dt-flex-col-reverse dt-space-y-2 dt-space-y-reverse dt-justify-start',
+          scrollbar
+        )}
+      >
         {messages.map((message) => {
           const isYou =
             message.owner.toString() === wallet?.publicKey?.toString();
@@ -74,7 +81,7 @@ export default function Thread() {
                   <div className={'dt-items-end'}>
                     <div
                       className={
-                        'dt-break-words dt-text-sm dt-text-right dt-whitespace-pre-wrap'
+                        'dt-break-words dt-whitespace-pre-wrap dt-text-sm dt-text-right'
                       }
                     >
                       <Linkify

@@ -19,7 +19,7 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
     [chatThreads]
   );
 
-  const { colors, highlighted, textStyles } = useTheme();
+  const { colors, highlighted, textStyles, scrollbar } = useTheme();
 
   if (!chatThreads.length) {
     return (
@@ -30,7 +30,12 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
   }
 
   return (
-    <div className="dt-flex dt-flex-1 dt-flex-col dt-space-y-2 dt-py-2 dt-overflow-y-auto">
+    <div
+      className={clsx(
+        'dt-flex dt-flex-1 dt-flex-col dt-space-y-2 dt-py-2 dt-overflow-y-auto',
+        scrollbar
+      )}
+    >
       {isNotSollet && hasEncryptedMessages && (
         <div
           className={clsx(

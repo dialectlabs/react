@@ -319,7 +319,7 @@ export default function Notifications(props: {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, modal, icons, notificationsDivider } = useTheme();
+  const { colors, modal, icons, notificationsDivider, scrollbar } = useTheme();
 
   let content: JSX.Element;
 
@@ -395,7 +395,12 @@ export default function Notifications(props: {
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
         />
-        <div className="dt-h-full dt-py-2 dt-px-4 dt-overflow-y-auto dt-no-scrollbar">
+        <div
+          className={cs(
+            'dt-h-full dt-py-2 dt-px-4 dt-overflow-y-auto',
+            scrollbar
+          )}
+        >
           {content}
         </div>
         <Footer />
