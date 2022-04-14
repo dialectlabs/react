@@ -34,6 +34,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
       <div className={`${textStyleMap[size]}`}>
         {program?.provider.connection ? (
             <CardinalAvatar
+              className='dt-h-full'
               height="100%"
               connection={program?.provider.connection}
               address={publicKey}

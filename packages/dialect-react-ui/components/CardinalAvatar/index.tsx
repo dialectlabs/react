@@ -1,53 +1,37 @@
 import type { PublicKey, Connection } from "@solana/web3.js";
 import { useAddressImage } from '@cardinal/namespaces-components';
 import { HiUserCircle } from "react-icons/hi";
+import cs from '../../utils/classNames';
 
 export const CardinalAvatar = ({
   connection,
   address,
-  style,
-  height = "150px",
-  width = "150px",
-  dark = false,
   placeholder,
+  className,
 }: {
   connection: Connection;
   address: PublicKey | undefined;
-  height?: string;
-  width?: string;
-  dark?: boolean;
   placeholder?: React.ReactNode;
-  style?: React.CSSProperties;
+  className?: string;
 }) => {
   const { addressImage, loadingImage } = useAddressImage(connection, address);
 
   if (!address) return <></>;
   return loadingImage ? (
     <div
-      style={{
-        ...style,
-        height,
-        width,
-        borderRadius: "50%",
-        overflow: "hidden",
-      }}
+      className={cs(className, 'dt-rounded-full', 'dt-overflow-hidden')}
     >
       <>{placeholder}</>
     </div>
   ) : addressImage ? (
     <img
-      style={{
-        ...style,
-        height: height,
-        width: width,
-        borderRadius: "50%",
-      }}
+      className='dt-rounded-full'
       alt={`profile-${address.toString()}`}
       src={addressImage}
     ></img>
   ) : (
     <>{placeholder}</> || (
-      <HiUserCircle style={{ width, height, color: "#FFF" }} />
+      <HiUserCircle className={className} />
     )
   );
 };
