@@ -97,6 +97,7 @@ export type IncomingThemeValues = {
   bigButtonLoading?: string;
   divider?: string;
   highlighted?: string;
+  scrollbar?: string;
 };
 
 export type IncomingThemeVariables = Partial<
@@ -180,7 +181,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     notificationsDivider: 'dt-hidden',
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
-    modal: 'dt-rounded-none sm:dt-rounded-3xl',
+    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
     secondaryButton:
@@ -196,6 +197,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-10 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
+    scrollbar: 'dt-light-scrollbar',
   },
   dark: {
     colors: {
@@ -279,6 +281,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-30 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
+    scrollbar: 'dt-dark-scrollbar',
   },
 };
 
