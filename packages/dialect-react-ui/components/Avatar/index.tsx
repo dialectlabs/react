@@ -1,9 +1,8 @@
-import React from 'react';
-import * as anchor from '@project-serum/anchor';
 import cs from '../../utils/classNames';
+import type { PublicKey } from '@project-serum/anchor';
 import { useTheme } from '../common/ThemeProvider';
-import { AddressImage, DisplayAddress } from '@cardinal/namespaces-components';
 import { useApi } from '@dialectlabs/react';
+import { CardinalAvatar } from '../CardinalAvatar';
 
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
@@ -16,7 +15,7 @@ const textStyleMap = {
 };
 
 type PropTypes = {
-  publicKey: anchor.web3.PublicKey;
+  publicKey: PublicKey;
   size: 'regular' | 'small';
 };
 
@@ -34,7 +33,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
     >
       <div className={`${textStyleMap[size]}`}>
         {program?.provider.connection ? (
-            <AddressImage
+            <CardinalAvatar
               height="100%"
               connection={program?.provider.connection}
               address={publicKey}
