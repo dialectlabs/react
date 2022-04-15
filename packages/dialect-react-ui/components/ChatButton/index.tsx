@@ -16,6 +16,7 @@ import {
 } from '../common/ThemeProvider';
 import Chat from '../Chat';
 import IconButton from '../IconButton';
+import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 
 type PropTypes = {
   wallet: WalletType;
@@ -128,9 +129,11 @@ export default function ChatButton({
     <div className="dialect">
       <ApiProvider>
         <DialectProvider>
-          <ThemeProvider theme={theme} variables={variables}>
-            <WrappedChatButton {...props} />
-          </ThemeProvider>
+          <WalletIdentityProvider>
+            <ThemeProvider theme={theme} variables={variables}>
+              <WrappedChatButton {...props} />
+            </ThemeProvider>
+          </WalletIdentityProvider>
         </DialectProvider>
       </ApiProvider>
     </div>

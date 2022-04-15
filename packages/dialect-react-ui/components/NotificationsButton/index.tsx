@@ -19,6 +19,7 @@ import {
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
+import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 
 type PropTypes = {
   wallet: WalletType;
@@ -150,9 +151,11 @@ export default function NotificationsButton({
     <div className="dialect">
       <ApiProvider dapp={props.publicKey.toBase58()}>
         <DialectProvider publicKey={props.publicKey}>
-          <ThemeProvider theme={theme} variables={variables}>
-            <WrappedNotificationsButton channels={channels} {...props} />
-          </ThemeProvider>
+          <WalletIdentityProvider>
+            <ThemeProvider theme={theme} variables={variables}>
+              <WrappedNotificationsButton channels={channels} {...props} />
+            </ThemeProvider>
+          </WalletIdentityProvider>
         </DialectProvider>
       </ApiProvider>
     </div>
