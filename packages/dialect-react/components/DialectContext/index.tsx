@@ -23,7 +23,7 @@ import {
   ParsedErrorData,
   ParsedErrorType,
 } from '../../utils/errors';
-import { connected, isAnchorWallet } from '../../utils/helpers';
+import { connected, getMessageHash, isAnchorWallet } from '../../utils/helpers';
 import type { Message } from '@dialectlabs/web3';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
@@ -274,10 +274,13 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     const hasNewMessage =
       wallet &&
       dialect?.dialect &&
-      messages.length !== dialect.dialect.messages.length;
+      (messages.length !== dialect.dialect.messages.length 
+        // Could be there performacne issue to calc hash for long array?
+        || getMessageHash(dialect.dialect.messages) !== getMessageHash(messages));
     if (hasNewMessage) {
       setMessages(dialect.dialect.messages);
     }
+
   }, [wallet, dialect?.dialect, messages.length]);
 
   const createMetadataWrapper = useCallback(async () => {

@@ -1,8 +1,10 @@
+import type { Message } from '@dialectlabs/web3';
 import type {
   AnchorWallet,
   WalletContextState,
 } from '@solana/wallet-adapter-react';
 import type { WalletType } from '../components/ApiContext';
+import hash from "object-hash"
 
 export const connected = (
   wallet: WalletType
@@ -26,3 +28,7 @@ export const isWalletContextState = (
 
 export const isAnchorWallet = (wallet: WalletType): wallet is AnchorWallet =>
   !!wallet && !('connected' in wallet);
+
+export const getMessageHash = (messages: Message[]) => {
+  return hash(messages);
+}
