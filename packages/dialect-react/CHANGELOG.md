@@ -1,7 +1,6 @@
 # CHANGELOG
 
 ## [UNRELEASED]
-- Add ability to show twiter handle of verified wallet addresses using Cardinal
 
 – fix: import Message type from '@dialectlabs/web3'
 

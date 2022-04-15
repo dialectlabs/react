@@ -2,8 +2,6 @@
 
 ## [UNRELEASED]
 
-- Add ability to show twiter handle of verified wallet addresses using Cardinal
-
 ## [0.1.0] - 2022-02-12
 
 - First version for open source. Includes pre-built notification center components in react-ui package, and first
@@ -92,3 +90,7 @@
 ## [0.5.2] - 2022-04-14
 
 - fix: border-style issue
+
+## [0.6.0] - 2022-04-15
+
+- Add ability to show twitter handle/avatar of verified wallet addresses using Cardinal
