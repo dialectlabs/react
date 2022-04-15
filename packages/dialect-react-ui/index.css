@@ -521,37 +521,3 @@
 
 @tailwind components;
 @tailwind utilities;
-
-.dt-message {
-  animation: bounce 200ms;
-  animation: grow 200ms;
-}
-
-/* .dt-message::after {
-  content: '';
-  flex: 0 0 40px;
-  aspect-ratio: 1/1;
-  animation: grow 200ms;
-} */
-
-@keyframes bounce {
-  0% {
-    transform: translateY(100%);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-  100% {
-    transform: translateY(0);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
-}
-
-@keyframes grow {
-  0% {
-    max-height: 0;
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-  100% {
-    max-height: 100%;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
-}
