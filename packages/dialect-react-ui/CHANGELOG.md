@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- Fixed styles for chat title (white text for light scheme)
 
 ## [0.1.0] - 2022-02-12
 
