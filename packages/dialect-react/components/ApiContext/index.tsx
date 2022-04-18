@@ -18,6 +18,7 @@ import {
   fetchAddressesForDapp,
   saveAddress,
   updateAddress,
+  verifyEmail,
 } from '../../api';
 import type { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
@@ -68,7 +69,10 @@ type ValueType = {
   updateAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   isDeletingAddress: boolean;
   deleteAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
+  verifyEmail: (wallet: WalletType, address: AddressType, code: string) => Promise<void>;
   deletingAddressError: ParsedErrorData | null;
+  isSendingCode: boolean;
+  verificationCodeError: ParsedErrorData | null;
 };
 
 const ApiContext = createContext<ValueType | null>(null);
@@ -89,6 +93,9 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
 
   const [fetchingError, setFetchingError] =
     React.useState<ParsedErrorData | null>(null);
+
+  const [verificationCodeError, setVerificationCodeError] = useState<ParsedErrorData | null>(null); 
+  const [isSendingCode, setSendingCode] = React.useState(false);
 
   const {
     data: addresses,
@@ -201,6 +208,24 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     [isWalletConnected, mutateAddresses]
   );
 
+  const verifyEmailWrapper = useCallback(
+    async (wallet: WalletType, address: AddressType, code: string) => {
+      if (!isWalletConnected || !dapp) return;
+      setSendingCode(true);
+      try {
+        const data = await verifyEmail(wallet, dapp, address, code);
+        await mutateAddresses([data]);
+        setSendingCode(false);
+      } catch (err) {
+        setVerificationCodeError(err as ParsedErrorData)
+        throw err;
+      }finally {
+        setSendingCode(false);
+      }
+
+    }, [dapp, isWalletConnected, mutateAddresses]
+  )
+
   const value: ValueType = {
     wallet,
     walletName: getWalletName(wallet),
@@ -218,6 +243,9 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     updateAddress: updateAddressWrapper,
     isDeletingAddress,
     deleteAddress: deleteAddressWrapper,
+    verifyEmail: verifyEmailWrapper,
+    verificationCodeError,
+    isSendingCode,
     deletingAddressError,
   };
 

@@ -146,3 +146,25 @@ export const deleteAddress = withErrorParsing(
     return {};
   }
 );
+
+export const verifyEmail = withErrorParsing(
+  async (wallet: WalletType, dapp: string, address: AddressType, code) => {
+    console.log(address);
+    const rawResponse = await fetchJSON(
+      wallet,
+      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
+        address?.id
+      }/verify`,
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({code, addressId: address.addressId}),
+      }
+    );
+    const content = await rawResponse.json();
+    return content;
+  }
+)

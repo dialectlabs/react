@@ -23,6 +23,9 @@ export function EmailForm() {
     deleteAddress,
     isDeletingAddress,
     deletingAddressError,
+    verificationCodeError,
+    isSendingCode,
+    verifyEmail
   } = useApi();
   const emailObj = getEmailObj(addresses);
 
@@ -42,6 +45,8 @@ export function EmailForm() {
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
 
+  const [verificationCode, setVerificationCode] = useState("");
+
   const isEmailSaved = Boolean(emailObj);
   const isChanging = emailObj && isEmailEditing;
   const isVerified = emailObj?.verified;
@@ -50,7 +55,8 @@ export function EmailForm() {
     emailError ||
     fetchingAddressesError ||
     savingAddressError ||
-    deletingAddressError;
+    deletingAddressError || 
+    verificationCodeError;
 
   useEffect(() => {
     // Update state if addresses updated
@@ -90,6 +96,59 @@ export function EmailForm() {
     });
   };
 
+  const sendCode = async () => {
+    await verifyEmail(wallet, {
+      type: 'email',
+      value: email,
+      enabled: true,
+      id: emailObj?.id,
+      addressId: emailObj?.addressId,
+    }, verificationCode);
+
+    setVerificationCode("")
+  }
+
+  const renderVerifiedState = () => {
+    return (
+      <div className={cs(highlighted, textStyles.body, colors.highlight)}>
+        <span className="dt-opacity-40">🔗 Email submitted</span>
+     </div>
+    )
+  }
+
+  const renderVerificationCode = () => {
+    return (
+      <div className='dt-flex dt-flex-row dt-space-x-2'>
+       <input
+          className={cs(
+            'dt-w-full',
+            outlinedInput,
+          )}
+          placeholder="Enter verification code"
+          type="text"  
+          value={verificationCode}
+          onChange={(e) => setVerificationCode(e.target.value)}
+          />
+          <Button
+            className="dt-basis-1/4"
+            onClick={deleteEmail}
+            defaultStyle={secondaryButton}
+            loadingStyle={secondaryButtonLoading}
+            loading={isDeletingAddress}
+          >
+              {isDeletingAddress ? 'Deleting...' : 'Cancel'}
+          </Button>
+          <Button
+            className="dt-basis-1/4"
+            onClick={sendCode}
+            loading={isSendingCode}
+          >
+              {isDeletingAddress ? 'Deleting...' : 'Submit'}
+          </Button>
+      </div>
+    )
+  }
+
   return (
     <div>
       <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
@@ -119,11 +178,9 @@ export function EmailForm() {
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
               {isEmailSaved && !isEmailEditing ? (
-                <div
-                  className={cs(highlighted, textStyles.body, colors.highlight)}
-                >
-                  <span className="dt-opacity-40">🔗 Email submitted</span>
-                </div>
+                <>
+                  {isVerified ? renderVerifiedState() : renderVerificationCode()}
+                </>
               ) : (
                 <input
                   className={cs(
@@ -182,7 +239,15 @@ export function EmailForm() {
               </Button>
             ) : null}
 
-            {!isEmailEditing ? (
+            {!isEmailEditing && !isVerified ? (
+               <div className="dt-flex dt-flex-row dt-space-x-2">
+                   <P className={cs(textStyles.small, 'dt-mb-1', 'dt-opacity-50')}>
+                      Email submitted, check supersymmetry@dialect.to for verification code. If you haven’t received verification email:
+                  </P>
+              </div>
+            ) : null}
+
+            {!isEmailEditing && isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   className="dt-basis-1/2"
