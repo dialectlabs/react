@@ -1,5 +1,5 @@
 import { useAddressName } from '@cardinal/namespaces-components';
-import { getNameEntry } from '@cardinal/namespaces'
+import { getNameEntry } from '@cardinal/namespaces';
 import { TwitterIcon } from '../Icon/Twitter';
 import type { Connection } from '@project-serum/anchor';
 import type { PublicKey } from '@solana/web3.js';
@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import cs from '../../utils/classNames';
 import { A } from '../common/preflighted';
 import { display, Member } from '@dialectlabs/web3';
-
 
 const formatTwitterLink = (
   handle: string | undefined,
@@ -84,15 +83,22 @@ const TwitterHandle = ({
   );
 };
 
-export const fetchAddressFromTwitterHandle = async (connection: Connection, handle: string) => {
+export const fetchAddressFromTwitterHandle = async (
+  connection: Connection,
+  handle: string
+) => {
   const NAMESPACE = 'twitter';
   try {
-    const { parsed, pubkey } = await getNameEntry(connection, NAMESPACE, handle);
-    return {result: { parsed, pubkey }}
+    const { parsed, pubkey } = await getNameEntry(
+      connection,
+      NAMESPACE,
+      handle
+    );
+    return { result: { parsed, pubkey } };
   } catch (e) {
-    return { result: undefined }
+    return { result: undefined };
   }
-}
+};
 
 export function DisplayAddress({
   connection,

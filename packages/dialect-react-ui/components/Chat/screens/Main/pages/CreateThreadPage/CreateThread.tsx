@@ -18,7 +18,7 @@ import {
   useBalance,
   ValueRow,
 } from '../../../../../common';
-import {fetchAddressFromTwitterHandle} from "../../../../../CardinalAddress"
+import { fetchAddressFromTwitterHandle } from '../../../../../CardinalAddress';
 import { display } from '@dialectlabs/web3';
 import { Lock, NoLock } from '../../../../../Icon';
 
@@ -80,7 +80,9 @@ const showAddressInputStatus = (valid: boolean) => {
 
   if (valid) {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-2 dt-px-2')}>
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-2 dt-px-2')}
+      >
         You have enterred a valid address or twitter handle
       </P>
     );
@@ -91,7 +93,7 @@ const showAddressInputStatus = (valid: boolean) => {
       </P>
     );
   }
-}
+};
 
 export default function CreateThread({
   inbox,
@@ -135,7 +137,7 @@ export default function CreateThread({
       return;
     }
 
-    const finalAddress = cardinalAddress.length? cardinalAddress: address;
+    const finalAddress = cardinalAddress.length ? cardinalAddress : address;
     createDialect(finalAddress, [true, true], [false, true], encrypted)
       .then(async () => {
         const [da, _] = await getDialectAddressWithOtherMember(
@@ -157,27 +159,29 @@ export default function CreateThread({
         setValidAddress(false);
       } else if (address.charAt(0) === '@') {
         const handle = address.substring(1, address.length);
-        const { result } = await fetchAddressFromTwitterHandle(program?.provider.connection, handle)
+        const { result } = await fetchAddressFromTwitterHandle(
+          program?.provider.connection,
+          handle
+        );
         if (result) {
           setValidAddress(true);
           setCardinalAddress(result.parsed.data.toBase58());
         } else {
-          setValidAddress(false)
+          setValidAddress(false);
           setCardinalAddress('');
         }
       } else {
         try {
           new anchor.web3.PublicKey(address);
           setValidAddress(true);
-        } catch(e) {
+        } catch (e) {
           setValidAddress(false);
         }
       }
-      // Send Axios request here
-    }, 2000)
+    }, 2000);
 
-    return () => clearTimeout(delayDebounceFn)
-  }, [address])
+    return () => clearTimeout(delayDebounceFn);
+  }, [address]);
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
