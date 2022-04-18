@@ -4,22 +4,23 @@ import type { Connection } from '@project-serum/anchor';
 import type { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import cs from '../../utils/classNames';
+import { A } from '../common/preflighted';
 
 const formatTwitterLink = (
   handle: string | undefined,
   isLinkable: boolean,
   className?: string
 ) => {
-  if (!handle) return <a></a>;
+  if (!handle) return <A></A>;
   return isLinkable ? (
-    <a
+    <A
       href={`https://twitter.com/${handle}`}
       className={className}
       target="_blank"
       rel="noreferrer"
     >
       {handle}
-    </a>
+    </A>
   ) : (
     handle
   );
@@ -37,13 +38,13 @@ const formatShortAddress = (
 ) => {
   if (!address) return <></>;
   return isLinkable ? (
-    <a
+    <A
       href={`https://explorer.solana.com/address/${address.toString()}`}
       target="_blank"
       rel="noopener noreferrer"
     >
       {shortenAddress(address.toString())}
-    </a>
+    </A>
   ) : (
     shortenAddress(address.toString())
   );
