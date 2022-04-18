@@ -2,6 +2,7 @@ import type { PublicKey, Connection } from '@solana/web3.js';
 import { useAddressImage } from '@cardinal/namespaces-components';
 import { HiUserCircle } from 'react-icons/hi';
 import cs from '../../utils/classNames';
+import { Img } from '../common/preflighted';
 
 export const CardinalAvatar = ({
   connection,
@@ -22,11 +23,11 @@ export const CardinalAvatar = ({
       <>{placeholder}</>
     </div>
   ) : addressImage ? (
-    <img
+    <Img
       className="dt-rounded-full"
       alt={`profile-${address.toString()}`}
       src={addressImage}
-    ></img>
+    />
   ) : (
     <>{placeholder}</> || <HiUserCircle className={className} />
   );
