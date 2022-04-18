@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as anchor from '@project-serum/anchor';
 import {
   getDialectAddressWithOtherMember,
@@ -18,6 +18,7 @@ import {
   useBalance,
   ValueRow,
 } from '../../../../../common';
+import {fetchAddressFromTwitterHandle} from "../../../../../CardinalAddress"
 import { display } from '@dialectlabs/web3';
 import { Lock, NoLock } from '../../../../../Icon';
 
@@ -36,7 +37,7 @@ function ActionCaption({
   creationError: ParsedErrorData | null;
 }) {
   const { textStyles } = useTheme();
-  const { walletName } = useApi();
+  const { walletName, program } = useApi();
 
   if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
     return (
@@ -74,6 +75,24 @@ function ActionCaption({
   return null;
 }
 
+const showAddressInputStatus = (valid: boolean) => {
+  const { textStyles } = useTheme();
+
+  if (valid) {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-2 dt-px-2')}>
+        You have enterred a valid address or twitter handle
+      </P>
+    );
+  } else {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2 dt-px-2')}>
+        Invalid address or no address associated with twitter handle
+      </P>
+    );
+  }
+}
+
 export default function CreateThread({
   inbox,
   onNewThreadCreated,
@@ -92,7 +111,9 @@ export default function CreateThread({
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
   const [address, setAddress] = useState('');
+  const [cardinalAddress, setCardinalAddress] = useState('');
   const [encrypted, setEncrypted] = useState(false);
+  const [validAddress, setValidAddress] = useState(false);
 
   const createThread = async () => {
     const currentChatWithAddress = dialects.find((subscription) => {
@@ -113,11 +134,13 @@ export default function CreateThread({
       onCloseRequest?.();
       return;
     }
-    createDialect(address, [true, true], [false, true], encrypted)
+
+    const finalAddress = cardinalAddress.length? cardinalAddress: address;
+    createDialect(finalAddress, [true, true], [false, true], encrypted)
       .then(async () => {
         const [da, _] = await getDialectAddressWithOtherMember(
           program,
-          new anchor.web3.PublicKey(address)
+          new anchor.web3.PublicKey(finalAddress)
         );
         setDialectAddress(da.toBase58());
         onNewThreadCreated?.(da.toBase58());
@@ -127,6 +150,34 @@ export default function CreateThread({
         console.log('error creating dialect', err);
       });
   };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (address.length === 0) {
+        setValidAddress(false);
+      } else if (address.charAt(0) === '@') {
+        const handle = address.substring(1, address.length);
+        const { result } = await fetchAddressFromTwitterHandle(program?.provider.connection, handle)
+        if (result) {
+          setValidAddress(true);
+          setCardinalAddress(result.parsed.data.toBase58());
+        } else {
+          setValidAddress(false)
+          setCardinalAddress('');
+        }
+      } else {
+        try {
+          new anchor.web3.PublicKey(address);
+          setValidAddress(true);
+        } catch(e) {
+          setValidAddress(false);
+        }
+      }
+      // Send Axios request here
+    }, 2000)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [address])
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
@@ -162,11 +213,12 @@ export default function CreateThread({
         </H1>
         <Input
           className={clsx(outlinedInput, 'dt-w-full dt-mb-2')}
-          placeholder="Enter recipient address"
+          placeholder="Enter recipient address or Twitter handle: @saydialect"
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
+        {showAddressInputStatus(validAddress)}
         <ValueRow
           label={
             <>
