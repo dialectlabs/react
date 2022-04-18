@@ -94,3 +94,7 @@
 ## [0.6.0] - 2022-04-15
 
 - Add ability to show twitter handle/avatar of verified wallet addresses using Cardinal
+
+## [0.6.1] - 2022-04-18
+
+- Fix: normalize avatars' styles
