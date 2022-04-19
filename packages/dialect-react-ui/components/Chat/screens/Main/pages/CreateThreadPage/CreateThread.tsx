@@ -178,7 +178,7 @@ export default function CreateThread({
           setValidAddress(false);
         }
       }
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [address]);

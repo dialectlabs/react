@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- Add ability to create new thread using Twitter handle if there is an address associated with the handle.
+
 ## [0.1.0] - 2022-02-12
 
 - First version for open source. Includes pre-built notification center components in react-ui package, and first
