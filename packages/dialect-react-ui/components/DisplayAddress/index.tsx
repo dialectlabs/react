@@ -96,7 +96,7 @@ export const fetchAddressFromTwitterHandle = async (
     );
     return { result: { parsed, pubkey } };
   } catch (e) {
-    return { result: undefined };
+    return { result: null };
   }
 };
 

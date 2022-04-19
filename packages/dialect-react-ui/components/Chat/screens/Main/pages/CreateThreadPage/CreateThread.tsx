@@ -81,14 +81,14 @@ const showAddressInputStatus = (valid: boolean) => {
   if (valid) {
     return (
       <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-2 dt-px-2')}
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
       >
         You have enterred a valid address or twitter handle
       </P>
     );
   } else {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2 dt-px-2')}>
+      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
         Invalid address or no address associated with twitter handle
       </P>
     );
@@ -137,7 +137,7 @@ export default function CreateThread({
       return;
     }
 
-    const finalAddress = cardinalAddress.length ? cardinalAddress : address;
+    const finalAddress = cardinalAddress || address;
     createDialect(finalAddress, [true, true], [false, true], encrypted)
       .then(async () => {
         const [da, _] = await getDialectAddressWithOtherMember(
@@ -157,26 +157,31 @@ export default function CreateThread({
     const delayDebounceFn = setTimeout(async () => {
       if (address.length === 0) {
         setValidAddress(false);
-      } else if (address.charAt(0) === '@') {
-        const handle = address.substring(1, address.length);
-        const { result } = await fetchAddressFromTwitterHandle(
-          program?.provider.connection,
-          handle
-        );
-        if (result) {
-          setValidAddress(true);
-          setCardinalAddress(result.parsed.data.toBase58());
-        } else {
-          setValidAddress(false);
-          setCardinalAddress('');
-        }
-      } else {
+        return;
+      }
+
+      if (address.charAt(0) != '@') {
         try {
           new anchor.web3.PublicKey(address);
           setValidAddress(true);
         } catch (e) {
           setValidAddress(false);
         }
+        return;
+      }
+
+      const handle = address.substring(1, address.length);
+      const { result } = await fetchAddressFromTwitterHandle(
+        program?.provider.connection,
+        handle
+      );
+
+      if (result) {
+        setValidAddress(true);
+        setCardinalAddress(result.parsed.data.toBase58());
+      } else {
+        setValidAddress(false);
+        setCardinalAddress('');
       }
     }, 1000);
 
@@ -216,7 +221,7 @@ export default function CreateThread({
           Create thread
         </H1>
         <Input
-          className={clsx(outlinedInput, 'dt-w-full dt-mb-2')}
+          className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
           placeholder="Enter recipient address or Twitter handle: @saydialect"
           type="text"
           value={address}
