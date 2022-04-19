@@ -12,6 +12,7 @@ export { default as NoLock } from './NoLock';
 export { default as NoNotifications } from './NoNotifications';
 export { default as NotConnected } from './NotConnected';
 export { default as Offline } from './Offline';
+export { default as Resend } from './Resend';
 export { default as Spinner } from './Spinner';
 export { default as Trash } from './Trash';
 export { default as X } from './X';

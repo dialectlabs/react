@@ -149,7 +149,6 @@ export const deleteAddress = withErrorParsing(
 
 export const verifyEmail = withErrorParsing(
   async (wallet: WalletType, dapp: string, address: AddressType, code) => {
-    console.log(address);
     const rawResponse = await fetchJSON(
       wallet,
       `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
@@ -166,5 +165,25 @@ export const verifyEmail = withErrorParsing(
     );
     const content = await rawResponse.json();
     return content;
+  }
+)
+
+export const resendCode = withErrorParsing(
+  async (wallet: WalletType, dapp: string, address: AddressType) => {
+    await fetchJSON(
+      wallet,
+      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
+        address?.id
+      }/resendCode`,
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(address),
+      }
+    );
+    return {};
   }
 )

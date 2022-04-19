@@ -5,6 +5,7 @@ import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { P } from '../common/preflighted';
 import { Button, Toggle, ValueRow } from '../common';
+import ResendIcon from '../Icon/Resend';
 
 function getEmailObj(addresses: AddressType[] | null): AddressType | null {
   if (!addresses) return null;
@@ -25,7 +26,8 @@ export function EmailForm() {
     deletingAddressError,
     verificationCodeError,
     isSendingCode,
-    verifyEmail
+    verifyEmail,
+    resendCode
   } = useApi();
   const emailObj = getEmailObj(addresses);
 
@@ -38,6 +40,8 @@ export function EmailForm() {
     secondaryDangerButton,
     secondaryDangerButtonLoading,
     highlighted,
+    disabledButton,
+    button
   } = useTheme();
 
   const [email, setEmail] = useState(emailObj?.value);
@@ -96,6 +100,15 @@ export function EmailForm() {
     });
   };
 
+  const resendEmailCode = async () => {
+    await resendCode(wallet, {
+      type: 'email',
+      value: email,
+      enabled: true,
+      id: emailObj?.id,
+      addressId: emailObj?.addressId})
+  };
+
   const sendCode = async () => {
     await verifyEmail(wallet, {
       type: 'email',
@@ -131,19 +144,21 @@ export function EmailForm() {
           />
           <Button
             className="dt-basis-1/4"
+            onClick={sendCode}
+            defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
+            disabled={verificationCode.length !== 6}
+            loading={isSendingCode}
+          >
+              {isSendingCode ? 'Sending code...' : 'Submit'}
+          </Button>
+          <Button
+            className="dt-basis-1/4"
             onClick={deleteEmail}
             defaultStyle={secondaryButton}
             loadingStyle={secondaryButtonLoading}
             loading={isDeletingAddress}
           >
               {isDeletingAddress ? 'Deleting...' : 'Cancel'}
-          </Button>
-          <Button
-            className="dt-basis-1/4"
-            onClick={sendCode}
-            loading={isSendingCode}
-          >
-              {isDeletingAddress ? 'Deleting...' : 'Submit'}
           </Button>
       </div>
     )
@@ -241,8 +256,12 @@ export function EmailForm() {
 
             {!isEmailEditing && !isVerified ? (
                <div className="dt-flex dt-flex-row dt-space-x-2">
-                   <P className={cs(textStyles.small, 'dt-mb-1', 'dt-opacity-50')}>
-                      Email submitted, check supersymmetry@dialect.to for verification code. If you haven’t received verification email:
+                   <P className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendEmailCode}>
+                      <span className='dt-opacity-50'> Email submitted, check {email} for verification code. If you haven’t received verification email:</span>
+                      <div className='dt-inline-block dt-cursor-pointer'>
+                        <ResendIcon className='dt-px-1 dt-inline-block' height={18} width={18} /> 
+                        Resend code
+                      </div>
                   </P>
               </div>
             ) : null}
