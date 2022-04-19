@@ -30,7 +30,7 @@
   "devDependencies": {
     "@svgr/webpack": "^6.2.0",
     "@types/bs58": "^4.0.1",
-    "@types/react": "^17.0.34",
+    "@types/react": "^17.0.44",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.5",
     "postcss-cli": "^8.3.1",
