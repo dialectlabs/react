@@ -39,6 +39,7 @@
   },
   "peerDependencies": {
     "react": ">=17",
+    "@saberhq/use-solana": "^1.12.62",
     "@solana/wallet-adapter-react": "^0.15.4",
     "@solana/wallet-adapter-base": "^0.9.5"
   }

@@ -1,10 +1,10 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { ChatButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
 import styles from '../styles/Home.module.css';
+import { useSolana } from '@saberhq/use-solana';
+import { useEffect } from 'react';
 
 export const themeVariables: IncomingThemeVariables = {
   dark: {
@@ -13,7 +13,11 @@ export const themeVariables: IncomingThemeVariables = {
 };
 
 const Home: NextPage = () => {
-  const wallet = useWallet();
+  const wallet = useSolana();
+
+  useEffect(() => {
+    wallet.activate('Sollet');
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -29,7 +33,6 @@ const Home: NextPage = () => {
         </h1>
 
         <div className={styles.walletButtons}>
-          <WalletMultiButton />
           <ChatButton wallet={wallet} variables={themeVariables} />
         </div>
 
