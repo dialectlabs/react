@@ -75,21 +75,43 @@ function ActionCaption({
   return null;
 }
 
-const showAddressInputStatus = (valid: boolean) => {
+const showAddressInputStatus = (
+  valid: boolean,
+  address: string,
+  cardinalAddress: string
+) => {
   const { textStyles } = useTheme();
 
-  if (valid) {
+  if (!address) {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
+        Empty address or twitter handle
+      </P>
+    );
+  }
+
+  const isTwitter = address.charAt(0) === '@';
+
+  if (isTwitter && valid && cardinalAddress) {
     return (
       <P
         className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
       >
-        You have enterred a valid address or twitter handle
+        Associated address is: {cardinalAddress}
       </P>
     );
-  } else {
+  } else if (isTwitter && !valid && !cardinalAddress) {
     return (
       <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Invalid address or no address associated with twitter handle
+        No address is associated with this twitter handle
+      </P>
+    );
+  }
+
+  if (!valid) {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
+        This is an invalid address
       </P>
     );
   }
@@ -227,7 +249,7 @@ export default function CreateThread({
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
-        {showAddressInputStatus(validAddress)}
+        {showAddressInputStatus(validAddress, address, cardinalAddress)}
         <ValueRow
           label={
             <>
