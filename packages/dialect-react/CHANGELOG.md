@@ -15,3 +15,7 @@
 ## [0.4.0] - 2022-04-13
 
 - New esm/cjs build configuration
+
+## [0.4.1] - 2022-04-19
+
+- Fix Sollet wallet detection with @saberhq/use-solana pacakge
