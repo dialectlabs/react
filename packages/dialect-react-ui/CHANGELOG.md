@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- Reset dialect address when wallet changed
 
 ## [0.1.0] - 2022-02-12
 
