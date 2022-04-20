@@ -42,6 +42,10 @@ const ThreadPage = ({
     [dialect]
   );
 
+  useEffect(() => {
+    setDialectAddress('');
+  }, [wallet])
+
   if (!dialectAddress) {
     if (!inbox) {
       return null;
