@@ -23,3 +23,7 @@
 ## [0.4.2] - 2022-04-20
 
 - fix: Sollet wallet detection with @saberhq/use-solana package in production
+
+## [0.4.3] - 2022-04-20
+
+- hotfix: Sollet wallet detection with @saberhq/use-solana package in production

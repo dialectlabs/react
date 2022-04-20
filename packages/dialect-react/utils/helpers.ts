@@ -31,11 +31,18 @@ export const isAnchorWallet = (wallet: WalletType): wallet is AnchorWallet =>
 // this is kinda heuristic since we don't know which exactly wallet provider will be used in app
 // so that we should try to extract adapter from(currently only two ways, for wallet-adapter and use-solana)
 export const extractWalletAdapter = (
-  walletContext: WalletType
+  /* due to current api, we expect to have either context with a wallet or a wallet itself... */
+  walletOrWalletContext: WalletType
 ): Adapter | null => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const wallet = walletContext.wallet;
+  if (!walletOrWalletContext) {
+    return null;
+  }
+  let wallet: any;
+  if ('wallet' in walletOrWalletContext) {
+    wallet = walletOrWalletContext.wallet;
+  } else {
+    wallet = walletOrWalletContext;
+  }
   if (!wallet) {
     return null;
   }

@@ -109,3 +109,7 @@
 ## [0.6.3] - 2022-04-20
 
 - Bump `@dialectlabs/react` package version
+
+## [0.6.4] - 2022-04-20
+
+- Bump `@dialectlabs/react` package version

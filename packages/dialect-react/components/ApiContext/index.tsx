@@ -27,7 +27,7 @@ import {
   isAnchorWallet,
 } from '../../utils/helpers';
 import type { WalletName } from '@solana/wallet-adapter-base';
-import type { UseSolana } from '@saberhq/use-solana';
+import type { WalletAdapter } from '@saberhq/use-solana';
 
 const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {
   // TODO: Move to protocol/web3
@@ -44,7 +44,7 @@ type PropsType = {
 export type WalletType =
   | WalletContextState
   | AnchorWallet
-  | UseSolana
+  | WalletAdapter
   | null
   | undefined;
 
