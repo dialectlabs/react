@@ -59,6 +59,13 @@ export const incorrectEmail: ParsedErrorData = {
   matchers: ['Incorrect email'],
 };
 
+export const incorrectSmsNumber: ParsedErrorData = {
+  type: ParsedErrorType.NoAccount,
+  title: 'Error',
+  message: 'Please enter a valid SMS number',
+  matchers: ['Incorrect SMS number'],
+};
+
 export const notSigned: ParsedErrorData = {
   type: ParsedErrorType.NotSigned,
   title: 'Error',

@@ -9,7 +9,7 @@ const DIALECT_BASE_URL = '/api';
 export type AddressType = {
   id?: string;
   addressId?: string;
-  type?: 'email' | 'phone' | 'telegram';
+  type?: 'email' | 'sms' | 'telegram';
   verified?: boolean;
   value?: string;
   dapp?: string;
