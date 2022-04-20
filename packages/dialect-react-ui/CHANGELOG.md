@@ -2,6 +2,7 @@
 
 ## [UNRELEASED]
 - Fixed styles for chat title (white text for light scheme)
+- Reset dialect address when wallet changed
 
 ## [0.1.0] - 2022-02-12
 
@@ -95,3 +96,7 @@
 ## [0.6.0] - 2022-04-15
 
 - Add ability to show twitter handle/avatar of verified wallet addresses using Cardinal
+
+## [0.6.1] - 2022-04-18
+
+- Fix: normalize avatars' styles

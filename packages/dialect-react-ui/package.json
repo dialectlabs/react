@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Dialect's react UI components",
   "license": "MIT",
   "private": false,
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@svgr/cli": "^6.2.1",
-    "@types/react": "^17.0.34",
+    "@types/react": "^17.0.44",
     "@types/react-linkify": "^1.0.1",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.5",
