@@ -5,6 +5,7 @@ import { ChatButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
 import styles from '../styles/Home.module.css';
 import { useSolana } from '@saberhq/use-solana';
 import { useEffect } from 'react';
+import { WalletType } from '@dialectlabs/react';
 
 export const themeVariables: IncomingThemeVariables = {
   dark: {
@@ -33,7 +34,10 @@ const Home: NextPage = () => {
         </h1>
 
         <div className={styles.walletButtons}>
-          <ChatButton wallet={wallet} variables={themeVariables} />
+          <ChatButton
+            wallet={wallet as unknown as WalletType}
+            variables={themeVariables}
+          />
         </div>
 
         <p className={styles.description}>

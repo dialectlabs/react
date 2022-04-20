@@ -39,10 +39,9 @@ export const extractWalletAdapter = (
   if (!wallet) {
     return null;
   }
-  const isSaberUseSolana = wallet.constructor.name === 'WrappedWalletAdapter';
+  const isSaberUseSolana = Boolean(wallet.adapter.adapter);
   if (isSaberUseSolana) {
     return wallet.adapter.adapter;
   }
-
   return wallet.adapter;
 };

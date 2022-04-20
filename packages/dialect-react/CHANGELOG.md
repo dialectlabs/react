@@ -18,4 +18,8 @@
 
 – fix: import Message type from '@dialectlabs/web3'
 
-- fix: Sollet wallet detection with @saberhq/use-solana pacakge
+- fix: Sollet wallet detection with @saberhq/use-solana package
+
+## [0.4.2] - 2022-04-20
+
+- fix: Sollet wallet detection with @saberhq/use-solana package in production

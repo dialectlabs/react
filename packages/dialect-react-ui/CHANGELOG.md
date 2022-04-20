@@ -104,4 +104,8 @@
 - Fixed styles for button loading state, borders, transforms
 - Fixed styles for chat title (white text for light scheme)
 - Reset dialect address when wallet changed
-- Bump `react` package version
+- Bump `@dialectlabs/react` package version
+
+## [0.6.3] - 2022-04-20
+
+- Bump `@dialectlabs/react` package version
