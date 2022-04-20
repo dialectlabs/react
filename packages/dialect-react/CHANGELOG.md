@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 – fix: import Message type from '@dialectlabs/web3'
+- fix: Sollet wallet detection with @saberhq/use-solana pacakge
 
 ## [0.2.0] - 2022-03-31
 
