@@ -93,7 +93,7 @@ const ThreadPage = ({
           <icons.back />
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
-          <span className="dt-text-base dt-font-medium dt-text-white">
+          <span className="dt-text-base dt-font-medium dt-text">
             {dialect ? displayAddress : 'Loading...'}
           </span>
           {dialect?.dialect.encrypted ? (
