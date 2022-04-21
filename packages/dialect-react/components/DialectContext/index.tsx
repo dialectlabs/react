@@ -105,8 +105,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [creating, setCreating] = React.useState(false);
   const [dialectAddress, setDialectAddress] = React.useState('');
 
-  const [fetchingError, setFetchingError] =
-    React.useState<ParsedErrorData | null>(null);
   const [metadataCreationError, setMetadataCreationError] =
     React.useState<ParsedErrorData | null>(null);
   const [creationError, setCreationError] =
@@ -185,9 +183,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     swrFetchMetadata,
     {
       refreshInterval: POLLING_INTERVAL_MS,
-      onError: (err) => {
-        setFetchingError(err as ParsedErrorData);
-      },
     }
   );
 
@@ -202,12 +197,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     swrFetchDialects,
     {
       refreshInterval: POLLING_INTERVAL_MS,
-      onError: (err) => {
-        if (err !== noAccount) {
-          console.log('Error fetching dialects', err);
-        }
-        setFetchingError(err as ParsedErrorData);
-      },
     }
   );
 
@@ -233,12 +222,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     swrFetchDialect,
     {
       refreshInterval: POLLING_INTERVAL_MS,
-      onError: (err) => {
-        if (err !== noAccount) {
-          console.log('Error fetching dialects', err);
-        }
-        setFetchingError(err as ParsedErrorData);
-      },
     }
   );
 
@@ -256,12 +239,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
   useEffect(() => {
     const existingErrorType =
-      fetchingError?.type ??
+      fetchDialectsError?.type ??
       fetchError?.type ??
       fetchMetadataError?.type ??
       creationError?.type ??
       deletionError?.type;
-
     setCannotDecryptDialect(
       existingErrorType === ParsedErrorType.CannotDecrypt
     );
@@ -269,7 +251,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       existingErrorType === ParsedErrorType.DisconnectedFromChain
     );
   }, [
-    fetchingError?.type,
+    fetchDialectsError?.type,
     fetchMetadataError?.type,
     creationError?.type,
     deletionError?.type,
