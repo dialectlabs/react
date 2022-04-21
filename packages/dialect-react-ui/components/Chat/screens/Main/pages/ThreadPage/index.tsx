@@ -65,7 +65,8 @@ const ThreadPage = ({
   }
 
   return (
-    <div className="dt-flex dt-flex-col dt-flex-1">
+    <div className="dt-flex dt-flex-col dt-flex-1 dt-min-w-[0px]">
+      {/* ↑ The min-width: 0 is used to prevent the column from overflow the container. Explanation: https://makandracards.com/makandra/66994-css-flex-and-min-width */}
       <div className="dt-px-4 dt-py-1 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-items-center">
         {/* TODO: replace with IconButton to be sematic */}
         <div

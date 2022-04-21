@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: prevent long message from expanding entire chat
+
 ## [0.1.0] - 2022-02-12
 
 - First version for open source. Includes pre-built notification center components in react-ui package, and first
