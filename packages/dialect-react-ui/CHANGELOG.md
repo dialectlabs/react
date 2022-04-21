@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: if there is a chat with entered wallet redirect to this chat; add error parsing for chat already exists
+
 ## [0.1.0] - 2022-02-12
 
 - First version for open source. Includes pre-built notification center components in react-ui package, and first
