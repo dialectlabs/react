@@ -259,6 +259,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   ]);
 
   useEffect(() => {
+    if (!isWalletConnected) {
+      setMessages([]);
+      return;
+    }
+
     const hasNewMessage =
       wallet &&
       dialect?.dialect &&
@@ -269,7 +274,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     if (hasNewMessage) {
       setMessages(dialect.dialect.messages);
     }
-  }, [wallet, dialect?.dialect, messages, messages.length]);
+  }, [wallet, dialect?.dialect, messages, messages.length, isWalletConnected]);
 
   const createMetadataWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !wallet?.publicKey) {
