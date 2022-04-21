@@ -274,13 +274,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     const hasNewMessage =
       wallet &&
       dialect?.dialect &&
-      (messages.length !== dialect.dialect.messages.length 
+      (messages.length !== dialect.dialect.messages.length ||
         // Could be there performacne issue to calc hash for long array?
-        || getMessageHash(dialect.dialect.messages) !== getMessageHash(messages));
+        getMessageHash(dialect.dialect.messages) !== getMessageHash(messages));
     if (hasNewMessage) {
       setMessages(dialect.dialect.messages);
     }
-
   }, [wallet, dialect?.dialect, messages.length]);
 
   const createMetadataWrapper = useCallback(async () => {
