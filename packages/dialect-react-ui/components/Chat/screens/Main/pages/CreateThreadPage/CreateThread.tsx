@@ -80,8 +80,13 @@ export default function CreateThread({
   onCloseRequest,
   onModalClose,
 }: CreateThreadProps) {
-  const { createDialect, isDialectCreating, creationError, setDialectAddress } =
-    useDialect();
+  const {
+    createDialect,
+    dialects,
+    isDialectCreating,
+    creationError,
+    setDialectAddress,
+  } = useDialect();
   const { program, network, wallet, walletName } = useApi();
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
@@ -90,6 +95,24 @@ export default function CreateThread({
   const [encrypted, setEncrypted] = useState(false);
 
   const createThread = async () => {
+    const currentChatWithAddress = dialects.find((subscription) => {
+      const otherMemebers = subscription?.dialect.members.filter(
+        (member) =>
+          member.publicKey.toString() !== wallet?.publicKey?.toString()
+      );
+      return (
+        otherMemebers.length == 1 &&
+        address == otherMemebers[0]?.publicKey.toString()
+      );
+    });
+    if (currentChatWithAddress) {
+      const currentThreadWithAddress =
+        currentChatWithAddress.publicKey.toBase58();
+      setDialectAddress(currentThreadWithAddress);
+      onNewThreadCreated?.(currentThreadWithAddress);
+      onCloseRequest?.();
+      return;
+    }
     createDialect(address, [true, true], [false, true], encrypted)
       .then(async () => {
         const [da, _] = await getDialectAddressWithOtherMember(
