@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - fix: if there is a chat with entered wallet redirect to this chat; add error parsing for chat already exists
+- fix: prevent long message from expanding entire chat
 
 ## [0.1.0] - 2022-02-12
 
@@ -100,3 +101,22 @@
 ## [0.6.1] - 2022-04-18
 
 - Fix: normalize avatars' styles
+
+## [0.6.2] - 2022-04-20
+
+- Fixed styles for button loading state, borders, transforms
+- Fixed styles for chat title (white text for light scheme)
+- Reset dialect address when wallet changed
+- Bump `@dialectlabs/react` package version
+
+## [0.6.3] - 2022-04-20
+
+- Bump `@dialectlabs/react` package version
+
+## [0.6.4] - 2022-04-20
+
+- Bump `@dialectlabs/react` package version
+
+## [0.6.5] - 2022-04-21
+
+- Bump `@dialectlabs/react` package version

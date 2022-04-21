@@ -23,7 +23,12 @@ import {
   ParsedErrorData,
   ParsedErrorType,
 } from '../../utils/errors';
-import { connected, isAnchorWallet } from '../../utils/helpers';
+import {
+  connected,
+  getMessageHash,
+  extractWalletAdapter,
+  isAnchorWallet,
+} from '../../utils/helpers';
 import type { Message } from '@dialectlabs/web3';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
@@ -139,8 +144,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         return encryptionProps;
       }
 
-      const adapter: BaseSolletWalletAdapter = wallet.wallet
-        ?.adapter as unknown as BaseSolletWalletAdapter;
+      const adapter: BaseSolletWalletAdapter = extractWalletAdapter(
+        wallet
+      ) as BaseSolletWalletAdapter;
 
       // TODO: needs to be improved with better tooling/solutions
       const solWalletAdapter: SolWalletAdapter =
@@ -274,11 +280,14 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     const hasNewMessage =
       wallet &&
       dialect?.dialect &&
-      messages.length !== dialect.dialect.messages.length;
+      (messages.length !== dialect.dialect.messages.length ||
+        // Could be there a performance issue to calc hash for long array?
+        // TODO: maybe refactor with clever mutateDialect
+        getMessageHash(dialect.dialect.messages) !== getMessageHash(messages));
     if (hasNewMessage) {
       setMessages(dialect.dialect.messages);
     }
-  }, [wallet, dialect?.dialect, messages.length]);
+  }, [wallet, dialect?.dialect, messages, messages.length]);
 
   const createMetadataWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !wallet?.publicKey) {
