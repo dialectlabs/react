@@ -7,6 +7,7 @@ import { P } from '../../../../../common/preflighted';
 import IconButton from '../../../../../IconButton';
 import Settings from './Settings';
 import Thread from './Thread';
+import { CardinalDisplayAddress } from '../../../../../CardinalAddress';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
@@ -19,7 +20,7 @@ const ThreadPage = ({
   onNewThreadClick,
   onModalClose,
 }: ThreadPageProps) => {
-  const { wallet } = useApi();
+  const { wallet, program } = useApi();
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons } = useTheme();
 
@@ -41,6 +42,10 @@ const ThreadPage = ({
     [dialect]
   );
 
+  useEffect(() => {
+    setDialectAddress('');
+  }, [wallet])
+
   if (!dialectAddress) {
     if (!inbox) {
       return null;
@@ -59,6 +64,18 @@ const ThreadPage = ({
     );
   }
 
+  const displayAddress =
+    dialect?.dialect.members.length > 0 &&
+    (program?.provider.connection ? (
+      <CardinalDisplayAddress
+        connection={program?.provider.connection}
+        publicKey={otherMembers[0].publicKey}
+        isLinkable={true}
+      />
+    ) : (
+      <>{display(otherMembers[0].publicKey)}</>
+    ));
+
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
       <div className="dt-px-4 dt-py-1 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-items-center">
@@ -76,8 +93,8 @@ const ThreadPage = ({
           <icons.back />
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
-          <span className="dt-text-base dt-font-medium dt-text-white">
-            {dialect ? display(otherMemberStr) : 'Loading...'}
+          <span className="dt-text-base dt-font-medium dt-text">
+            {dialect ? displayAddress : 'Loading...'}
           </span>
           {dialect?.dialect.encrypted ? (
             <span className="dt-text-xs dt-opacity-50">encrypted</span>

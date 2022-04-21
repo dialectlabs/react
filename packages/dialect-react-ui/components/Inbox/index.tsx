@@ -1,6 +1,7 @@
 import React from 'react';
 import type { WalletType } from '@dialectlabs/react';
 import Chat from '../Chat';
+import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 
 interface InboxProps {
   wallet: WalletType;
@@ -9,7 +10,11 @@ interface InboxProps {
 }
 
 const Inbox = (props: InboxProps) => {
-  return <Chat inbox {...props} />;
+  return (
+    <WalletIdentityProvider>
+      <Chat inbox {...props} />
+    </WalletIdentityProvider>
+  );
 };
 
 export default Inbox;

@@ -23,7 +23,12 @@ import {
   ParsedErrorData,
   ParsedErrorType,
 } from '../../utils/errors';
-import { connected, getMessageHash, isAnchorWallet } from '../../utils/helpers';
+import {
+  connected,
+  getMessageHash,
+  extractWalletAdapter,
+  isAnchorWallet,
+} from '../../utils/helpers';
 import type { Message } from '@dialectlabs/web3';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
@@ -139,8 +144,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         return encryptionProps;
       }
 
-      const adapter: BaseSolletWalletAdapter = wallet.wallet
-        ?.adapter as unknown as BaseSolletWalletAdapter;
+      const adapter: BaseSolletWalletAdapter = extractWalletAdapter(
+        wallet
+      ) as BaseSolletWalletAdapter;
 
       // TODO: needs to be improved with better tooling/solutions
       const solWalletAdapter: SolWalletAdapter =

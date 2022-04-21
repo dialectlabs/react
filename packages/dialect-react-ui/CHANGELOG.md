@@ -90,3 +90,26 @@
 ## [0.5.2] - 2022-04-14
 
 - fix: border-style issue
+
+## [0.6.0] - 2022-04-15
+
+- Add ability to show twitter handle/avatar of verified wallet addresses using Cardinal
+
+## [0.6.1] - 2022-04-18
+
+- Fix: normalize avatars' styles
+
+## [0.6.2] - 2022-04-20
+
+- Fixed styles for button loading state, borders, transforms
+- Fixed styles for chat title (white text for light scheme)
+- Reset dialect address when wallet changed
+- Bump `@dialectlabs/react` package version
+
+## [0.6.3] - 2022-04-20
+
+- Bump `@dialectlabs/react` package version
+
+## [0.6.4] - 2022-04-20
+
+- Bump `@dialectlabs/react` package version
