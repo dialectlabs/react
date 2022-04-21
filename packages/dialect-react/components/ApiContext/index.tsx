@@ -70,7 +70,7 @@ type ValueType = {
   updateAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   isDeletingAddress: boolean;
   deleteAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
-  verifyEmail: (wallet: WalletType, address: AddressType, code: string) => Promise<void>;
+  verifyCode: (wallet: WalletType, address: AddressType, code: string) => Promise<void>;
   deletingAddressError: ParsedErrorData | null;
   isSendingCode: boolean;
   verificationCodeError: ParsedErrorData | null;
@@ -210,7 +210,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     [isWalletConnected, mutateAddresses]
   );
 
-  const verifyEmailWrapper = useCallback(
+  const verifyCodeWrapper = useCallback(
     async (wallet: WalletType, address: AddressType, code: string) => {
       if (!isWalletConnected || !dapp) return;
       setSendingCode(true);
@@ -263,7 +263,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     updateAddress: updateAddressWrapper,
     isDeletingAddress,
     deleteAddress: deleteAddressWrapper,
-    verifyEmail: verifyEmailWrapper,
+    verifyCode: verifyCodeWrapper,
     resendCode: resendCodeWrapper,
     verificationCodeError,
     isSendingCode,

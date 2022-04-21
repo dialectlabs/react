@@ -26,7 +26,7 @@ export function EmailForm() {
     deletingAddressError,
     verificationCodeError,
     isSendingCode,
-    verifyEmail,
+    verifyCode,
     resendCode
   } = useApi();
   const emailObj = getEmailObj(addresses);
@@ -110,7 +110,7 @@ export function EmailForm() {
   };
 
   const sendCode = async () => {
-    await verifyEmail(wallet, {
+    await verifyCode(wallet, {
       type: 'email',
       value: email,
       enabled: true,

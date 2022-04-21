@@ -26,7 +26,7 @@ export function SmsForm() {
     deletingAddressError,
     verificationCodeError,
     isSendingCode,
-    verifyEmail,
+    verifyCode,
     resendCode
   } = useApi();
   const smsObj = getSmsObj(addresses);
@@ -111,7 +111,7 @@ export function SmsForm() {
 
   const sendCode = async () => {
     // TODO verifyEmail should just be verifyAddress
-    await verifyEmail(wallet, {
+    await verifyCode(wallet, {
       type: 'sms',
       value: smsNumber,
       enabled: true,
