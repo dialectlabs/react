@@ -2,9 +2,6 @@
 
 ## [UNRELEASED]
 
-- fix: if there is a chat with entered wallet redirect to this chat; add error parsing for chat already exists
-- fix: prevent long message from expanding entire chat
-
 ## [0.1.0] - 2022-02-12
 
 - First version for open source. Includes pre-built notification center components in react-ui package, and first
@@ -119,4 +116,10 @@
 
 ## [0.6.5] - 2022-04-21
 
+- Bump `@dialectlabs/react` package version
+
+## [0.6.6] - 2022-04-21
+
+- fix: if there is a chat with entered wallet redirect to this chat; add error parsing for chat already exists
+- fix: prevent long message from expanding entire chat
 - Bump `@dialectlabs/react` package version

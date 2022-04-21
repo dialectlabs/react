@@ -2,8 +2,6 @@
 
 ## [UNRELEASED]
 
-- fix: recovering after disconnected from the Solana blockchain error
-
 ## [0.2.0] - 2022-03-31
 
 - Add email notifications support
@@ -35,3 +33,7 @@
 - fix: added hash value for array, arrays comparing by hash not by message length
 
 — fix: make messages keys more unique
+
+## [0.4.5] - 2022-04-22
+
+- fix: recovering after disconnected from the Solana blockchain error
