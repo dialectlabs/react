@@ -168,7 +168,7 @@ export function SmsForm() {
   return (
     <div>
       <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-        {isSmsNumberSaved
+        {isSmsNumberSaved && isVerified
           ? 'SMS notifications are now enabled. Phone numbers are stored securely off-chain.'
           : 'Receive notifications to your phone. Phone numbers are stored securely off-chain.'}
       </P>
