@@ -260,7 +260,7 @@ function Settings(props: {
         <Accordion
           className="dt-mb-6"
           defaultExpanded
-          title="Sms notifications"
+          title="SMS notifications"
         >
          <SmsForm />
        </Accordion>
@@ -415,7 +415,6 @@ export default function Notifications(props: {
         >
           {content}
         </div>
-        <Footer />
       </div>
     </div>
   );

@@ -169,8 +169,8 @@ export function SmsForm() {
     <div>
       <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
         {isSmsNumberSaved
-          ? 'SMS notifications are now enabled. SMS numbers are stored securely off-chain.'
-          : 'Receive notifications to your SMS number. SMS numbers are stored securely off-chain.'}
+          ? 'SMS notifications are now enabled. Phone numbers are stored securely off-chain.'
+          : 'Receive notifications to your phone number. Phone numbers are stored securely off-chain.'}
       </P>
       <ValueRow className="dt-mb-2" label="Enable SMS notifications">
         <Toggle
@@ -217,7 +217,7 @@ export function SmsForm() {
                     e.preventDefault();
                     setSmsNumberError(DialectErrors.incorrectSmsNumber);
                   }}
-                  pattern="^\S+@\S+\.\S+$"
+                 // pattern="^\S+@\S+\.\S+$"
                   disabled={isSmsNumberSaved && !isSmsNumberEditing}
                 />
               )}

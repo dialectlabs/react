@@ -167,7 +167,7 @@ export function EmailForm() {
   return (
     <div>
       <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-        {isEmailSaved
+        {isEmailSaved && isVerified
           ? 'Email notifications are now enabled. Emails are stored securely off-chain.'
           : 'Receive notifications to your email. Emails are stored securely off-chain.'}
       </P>
@@ -257,7 +257,7 @@ export function EmailForm() {
             {!isEmailEditing && !isVerified ? (
                <div className="dt-flex dt-flex-row dt-space-x-2">
                    <P className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendEmailCode}>
-                      <span className='dt-opacity-50'> Email submitted, check {email} for verification code. If you haven’t received verification email:</span>
+                      <span className='dt-opacity-50'> Check your email for a verification code.</span>
                       <div className='dt-inline-block dt-cursor-pointer'>
                         <ResendIcon className='dt-px-1 dt-inline-block' height={18} width={18} /> 
                         Resend code
