@@ -84,8 +84,21 @@ const showAddressInputStatus = (
 
   if (!address) {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Empty address or twitter handle
+      <P
+        className={clsx(
+          textStyles.small,
+          'dt-opacity-60 dt-text-white dt-text dt-mt-1 dt-px-2'
+        )}
+      >
+        {'Twitter handle can be linked with '}
+        <A
+          href={`https://twitter.cardinal.so`}
+          target="_blank"
+          rel="noreferrer"
+          className="dt-underline"
+        >
+          twitter.cardinal.so
+        </A>
       </P>
     );
   }
@@ -97,10 +110,12 @@ const showAddressInputStatus = (
       <P
         className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
       >
-        Associated address is: {cardinalAddress}
+        {cardinalAddress}
       </P>
     );
-  } else if (isTwitter && !valid && !cardinalAddress) {
+  }
+
+  if (isTwitter && !valid && !cardinalAddress) {
     return (
       <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
         No address is associated with this twitter handle
@@ -108,10 +123,30 @@ const showAddressInputStatus = (
     );
   }
 
-  if (!valid) {
+  if (!isTwitter && !valid) {
     return (
       <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        This is an invalid address
+        Invalid address or Twitter handle
+      </P>
+    );
+  }
+
+  if (!isTwitter && valid && !cardinalAddress) {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        Valid address
+      </P>
+    );
+  }
+
+  if (!isTwitter && valid && cardinalAddress) {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        {cardinalAddress}
       </P>
     );
   }
@@ -138,6 +173,7 @@ export default function CreateThread({
   const [cardinalAddress, setCardinalAddress] = useState('');
   const [encrypted, setEncrypted] = useState(false);
   const [validAddress, setValidAddress] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   const createThread = async () => {
     const currentChatWithAddress = dialects.find((subscription) => {
@@ -175,40 +211,50 @@ export default function CreateThread({
       });
   };
 
+  const onAddressChange = (addr: string) => {
+    setAddress(addr);
+    setIsTyping(true);
+  };
+
+  const tryFetchAddressFromTwitterHandle = async (handle: string) => {
+    console.log('tryFetchAddressFromTwitterHandle', handle);
+    const { result } = await fetchAddressFromTwitterHandle(
+      program?.provider.connection,
+      handle
+    );
+
+    if (result) {
+      setValidAddress(true);
+      setCardinalAddress(result.parsed.data.toBase58());
+    } else {
+      setValidAddress(false);
+      setCardinalAddress('');
+    }
+  };
+
   useEffect(() => {
     const delayDebounceFn = setTimeout(async () => {
       if (address.length === 0) {
         setValidAddress(false);
-        return;
-      }
-
-      if (address.charAt(0) != '@') {
+      } else if (address.charAt(0) != '@') {
         try {
           new anchor.web3.PublicKey(address);
           setValidAddress(true);
+          setCardinalAddress('');
         } catch (e) {
-          setValidAddress(false);
+          await tryFetchAddressFromTwitterHandle(address);
         }
-        return;
-      }
-
-      const handle = address.substring(1, address.length);
-      const { result } = await fetchAddressFromTwitterHandle(
-        program?.provider.connection,
-        handle
-      );
-
-      if (result) {
-        setValidAddress(true);
-        setCardinalAddress(result.parsed.data.toBase58());
       } else {
-        setValidAddress(false);
-        setCardinalAddress('');
+        const handle = address.substring(1, address.length);
+        await tryFetchAddressFromTwitterHandle(handle);
       }
+      setIsTyping(false);
     }, 1000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [address]);
+
+  const disabled = !address || (!isTyping && !validAddress);
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
@@ -244,12 +290,13 @@ export default function CreateThread({
         </H1>
         <Input
           className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
-          placeholder="Enter recipient address or Twitter handle: @saydialect"
+          placeholder="D1AL...DY5h or @saydialect"
           type="text"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(e) => onAddressChange(e.target.value)}
         />
-        {showAddressInputStatus(validAddress, address, cardinalAddress)}
+        {!isTyping &&
+          showAddressInputStatus(validAddress, address, cardinalAddress)}
         <ValueRow
           label={
             <>
@@ -297,7 +344,11 @@ export default function CreateThread({
               />
             </span>
           </ValueRow>
-          <Button onClick={createThread} loading={isDialectCreating}>
+          <Button
+            onClick={createThread}
+            loading={isDialectCreating}
+            disabled={disabled}
+          >
             {isDialectCreating ? 'Creating...' : 'Create thread'}
           </Button>
         </div>
