@@ -96,8 +96,10 @@ export default function CreateThread({
           program,
           new anchor.web3.PublicKey(address)
         );
-        setDialectAddress(da.toBase58());
-        onNewThreadCreated?.(da.toBase58());
+        setTimeout(() => {
+          setDialectAddress(da.toBase58());
+          onNewThreadCreated?.(da.toBase58());
+        }, 0);
         onCloseRequest?.();
       })
       .catch((err) => {
