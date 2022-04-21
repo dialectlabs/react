@@ -63,14 +63,15 @@ export default function Thread() {
           scrollbar
         )}
       >
-        {messages.map((message) => {
+        {messages.map((message, idx) => {
           const isYou =
             message.owner.toString() === wallet?.publicKey?.toString();
+          const key = message.timestamp + idx;
 
           if (isYou) {
             return (
               <div
-                key={message.timestamp}
+                key={key}
                 className={
                   'dt-ml-10 dt-flex dt-flex-row dt-items-center dt-mb-2 dt-justify-end'
                 }
@@ -96,10 +97,7 @@ export default function Thread() {
           }
 
           return (
-            <div
-              key={message.timestamp}
-              className={'dt-flex dt-flex-row dt-mb-2'}
-            >
+            <div key={key} className={'dt-flex dt-flex-row dt-mb-2'}>
               <div className={''}>
                 <Avatar size="small" publicKey={message.owner} />
               </div>

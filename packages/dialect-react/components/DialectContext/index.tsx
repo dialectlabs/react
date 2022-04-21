@@ -25,6 +25,7 @@ import {
 } from '../../utils/errors';
 import {
   connected,
+  getMessageHash,
   extractWalletAdapter,
   isAnchorWallet,
 } from '../../utils/helpers';
@@ -279,11 +280,14 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     const hasNewMessage =
       wallet &&
       dialect?.dialect &&
-      messages.length !== dialect.dialect.messages.length;
+      (messages.length !== dialect.dialect.messages.length ||
+        // Could be there a performance issue to calc hash for long array?
+        // TODO: maybe refactor with clever mutateDialect
+        getMessageHash(dialect.dialect.messages) !== getMessageHash(messages));
     if (hasNewMessage) {
       setMessages(dialect.dialect.messages);
     }
-  }, [wallet, dialect?.dialect, messages.length]);
+  }, [wallet, dialect?.dialect, messages, messages.length]);
 
   const createMetadataWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !wallet?.publicKey) {

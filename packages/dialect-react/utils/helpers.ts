@@ -1,8 +1,10 @@
+import type { Message } from '@dialectlabs/web3';
 import type {
   AnchorWallet,
   WalletContextState,
 } from '@solana/wallet-adapter-react';
 import type { WalletType } from '../components/ApiContext';
+import hash from "object-hash"
 import type { Adapter } from '@solana/wallet-adapter-base';
 
 export const connected = (
@@ -27,6 +29,10 @@ export const isWalletContextState = (
 
 export const isAnchorWallet = (wallet: WalletType): wallet is AnchorWallet =>
   !!wallet && !('connected' in wallet);
+
+export const getMessageHash = (messages: Message[]) => {
+  return hash(messages);
+}
 
 // this is kinda heuristic since we don't know which exactly wallet provider will be used in app
 // so that we should try to extract adapter from(currently only two ways, for wallet-adapter and use-solana)
