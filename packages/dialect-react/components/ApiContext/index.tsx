@@ -18,7 +18,7 @@ import {
   fetchAddressesForDapp,
   saveAddress,
   updateAddress,
-  verifyEmail,
+  verifyCode,
   resendCode,
 } from '../../api';
 import type { ParsedErrorData } from '../../utils/errors';
@@ -220,7 +220,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
       if (!isWalletConnected || !dapp) return;
       setSendingCode(true);
       try {
-        const data = await verifyEmail(wallet, dapp, address, code);
+        const data = await verifyCode(wallet, dapp, address, code);
         await mutateAddresses([data]);
         setSendingCode(false);
         setVerificationCodeError(null);

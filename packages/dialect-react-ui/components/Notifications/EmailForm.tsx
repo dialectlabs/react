@@ -256,13 +256,13 @@ export function EmailForm() {
 
             {!isEmailEditing && !isVerified ? (
                <div className="dt-flex dt-flex-row dt-space-x-2">
-                   <P className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendEmailCode}>
+                   <div className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendEmailCode}>
                       <span className='dt-opacity-50'> Check your email for a verification code.</span>
                       <div className='dt-inline-block dt-cursor-pointer'>
                         <ResendIcon className='dt-px-1 dt-inline-block' height={18} width={18} /> 
                         Resend code
                       </div>
-                  </P>
+                  </div>
               </div>
             ) : null}
 

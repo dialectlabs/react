@@ -147,7 +147,7 @@ export const deleteAddress = withErrorParsing(
   }
 );
 
-export const verifyEmail = withErrorParsing(
+export const verifyCode = withErrorParsing(
   async (wallet: WalletType, dapp: string, address: AddressType, code) => {
     const rawResponse = await fetchJSON(
       wallet,
