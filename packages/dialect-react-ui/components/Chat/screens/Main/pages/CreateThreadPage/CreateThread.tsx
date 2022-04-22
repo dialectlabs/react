@@ -35,12 +35,18 @@ function ActionCaption({
   encrypted: boolean;
   creationError: ParsedErrorData | null;
 }) {
-  const { textStyles } = useTheme();
+  const { textStyles, xPaddedText } = useTheme();
   const { walletName } = useApi();
 
   if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2 dt-px-2')}>
+      <P
+        className={clsx(
+          textStyles.small,
+          xPaddedText,
+          'dt-text-red-500 dt-mt-2'
+        )}
+      >
         {creationError.message}
       </P>
     );
@@ -48,7 +54,9 @@ function ActionCaption({
 
   if (walletName !== 'Sollet') {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
+      <P
+        className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
+      >
         Use{' '}
         <A
           href="https://www.sollet.io/"
@@ -64,7 +72,9 @@ function ActionCaption({
 
   if (encrypted) {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
+      <P
+        className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
+      >
         ⚠️ Sollet.io encryption standards in the browser are experimental. Do
         not connect a wallet with significant funds in it.
       </P>

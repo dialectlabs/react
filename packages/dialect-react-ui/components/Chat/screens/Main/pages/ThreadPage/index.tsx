@@ -22,7 +22,7 @@ const ThreadPage = ({
 }: ThreadPageProps) => {
   const { wallet, program } = useApi();
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
-  const { icons } = useTheme();
+  const { icons, xPaddedText } = useTheme();
 
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
@@ -116,7 +116,7 @@ const ThreadPage = ({
           )}
         </div>
       </div>
-      <div className="dt-flex-1 dt-px-2 dt-overflow-y-auto">
+      <div className={clsx(xPaddedText, 'dt-flex-1 dt-overflow-y-auto')}>
         {settingsOpen ? <Settings /> : <Thread />}
       </div>
     </div>

@@ -1,35 +1,30 @@
-import React, { useState } from 'react';
-import { Toggle, ValueRow } from '../common';
+import React from 'react';
+import clsx from 'clsx';
+import { useTheme } from './ThemeProvider';
+import { Divider } from './primitives';
 
-type PropsType = {
-  title: string | React.ReactNode;
-  enabled: boolean;
-  onChange?: (nextValue: boolean) => void;
+export default function Section(props: {
+  title: React.ReactNode | string;
   children: React.ReactNode;
-};
-
-export default function Section({
-  title,
-  enabled,
-  children,
-  onChange,
-}: PropsType) {
-  const [isEnabled, setEnabled] = useState(enabled);
+  className?: string;
+  defaultExpanded?: boolean;
+}) {
+  const { textStyles, xPaddedText } = useTheme();
 
   return (
-    <div>
-      <ValueRow className="dt-mb-2" label={title}>
-        <Toggle
-          type="checkbox"
-          checked={isEnabled}
-          onClick={async () => {
-            const nextValue = !isEnabled;
-            await onChange?.(nextValue);
-            setEnabled(!isEnabled);
-          }}
-        />
-      </ValueRow>
-      {isEnabled && children}
+    <div className={props?.className}>
+      <Divider className="dt-mb-2" />
+      <div
+        className={clsx(
+          textStyles.bigText,
+          'dt-w-full dt-flex dt-justify-between dt-py-2 dt-px-4 dt-mb-1'
+        )}
+      >
+        {props.title}
+      </div>
+      <Divider className="dt-mb-2" />
+      {/* TODO: use unified classname for padded  */}
+      <div className={clsx('dt-py-2', xPaddedText)}>{props.children}</div>
     </div>
   );
 }

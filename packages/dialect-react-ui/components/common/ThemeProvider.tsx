@@ -98,6 +98,8 @@ export type IncomingThemeValues = {
   divider?: string;
   highlighted?: string;
   scrollbar?: string;
+  section?: string;
+  xPaddedText?: string;
   // TODO: Deprecate BigButton
   bigButton?: string;
   bigButtonLoading?: string;
@@ -200,6 +202,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     divider: 'dt-h-px dt-opacity-10 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
     scrollbar: 'dt-light-scrollbar',
+    section:
+      'dt-p-2 dt-rounded-2xl dt-bg-dark-day dt-border dt-border-outline-day',
+    xPaddedText: 'dt-px-2',
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
@@ -207,7 +212,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
   },
   dark: {
     colors: {
-      bg: 'dt-bg-black',
+      bg: 'dt-bg-solid-night',
       secondary: '',
       brand: '',
       errorBg: 'dt-bg-transparent',
@@ -216,9 +221,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       accentSolid: 'dt-text-white',
       highlight: 'dt-bg-subtle-night',
       highlightSolid: 'dt-bg-[#262626]',
-      toggleBackground: 'dt-bg-[#5B5B5B]',
+      toggleBackground: 'dt-bg-white/60',
       toggleBackgroundActive: 'dt-bg-[#25BC3B]',
-      toggleThumb: 'dt-bg-[#111111]',
+      toggleThumb: 'dt-bg-[#363636]',
     },
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
@@ -288,6 +293,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     divider: 'dt-h-px dt-opacity-30 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
     scrollbar: 'dt-dark-scrollbar',
+    section:
+      'dt-p-2 dt-rounded-2xl dt-bg-dark-night dt-border dt-border-outline-night',
+    xPaddedText: 'dt-px-2',
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:

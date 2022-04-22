@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import clsx from 'clsx';
 import { useDialect, useApi } from '@dialectlabs/react';
 import type { MessageType } from '@dialectlabs/react';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
@@ -9,13 +10,12 @@ import { useTheme } from '../common/ThemeProvider';
 import { A, P } from '../common/preflighted';
 import type { Channel } from '../common/types';
 import {
-  Accordion,
   Button,
   Centered,
   Divider,
-  Footer,
   NetworkBadge,
   Section,
+  ToggleSection,
   useBalance,
   ValueRow,
 } from '../common';
@@ -96,16 +96,66 @@ function Wallet(props: { onThreadDelete?: () => void }) {
     deletionError,
     creationError,
   } = useDialect();
-  const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
-    useTheme();
+  const {
+    textStyles,
+    xPaddedText,
+    secondaryDangerButton,
+    secondaryDangerButtonLoading,
+  } = useTheme();
   const { balance } = useBalance();
 
-  if (isDialectAvailable) {
-    return (
-      <div>
-        <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-          Web3 notifications to your wallet are now enabled
+  let content = (
+    <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
+      {wallet ? (
+        <ValueRow
+          label={
+            <>
+              Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}){' '}
+              <NetworkBadge network={network} />
+            </>
+          }
+          className="dt-mb-2"
+        >
+          <span className="dt-text-right">{balance || 0} SOL</span>
+        </ValueRow>
+      ) : null}
+      <ValueRow
+        label="Rent Deposit (recoverable)"
+        className={cs('dt-w-full dt-mb-3')}
+      >
+        0.058 SOL
+      </ValueRow>
+      <Button
+        className="dt-mb-2"
+        onClick={() => createDialect().catch(noop)}
+        loading={isDialectCreating}
+      >
+        {isDialectCreating
+          ? 'Creating...'
+          : 'Create on-chain notifications thread'}
+      </Button>
+      <P className={cs(textStyles.small, 'dt-p-1 dt-opacity-50 dt-text-left')}>
+        To start this notifications thread, you&apos;ll need to deposit a small
+        amount of rent, since messages are stored on-chain.
+      </P>
+      {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
+      {/* TODO: move red color to the theme */}
+      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
+        <P
+          className={cs(
+            textStyles.small,
+            'dt-text-red-500 dt-text-left dt-mt-2'
+          )}
+        >
+          {creationError.message}
         </P>
+      )}
+    </div>
+  );
+
+  if (isDialectAvailable) {
+    content = (
+      <div>
         {isDialectAvailable && dialectAddress ? (
           <ValueRow
             label={
@@ -151,11 +201,23 @@ function Wallet(props: { onThreadDelete?: () => void }) {
             </Button>
             {deletionError &&
             deletionError.type !== 'DISCONNECTED_FROM_CHAIN' ? (
-              <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+              <P
+                className={cs(
+                  textStyles.small,
+                  xPaddedText,
+                  'dt-text-red-500 dt-mt-2'
+                )}
+              >
                 {deletionError.message}
               </P>
             ) : (
-              <P className={cs(textStyles.small, 'dt-opacity-50 dt-mt-2')}>
+              <P
+                className={cs(
+                  textStyles.small,
+                  xPaddedText,
+                  'dt-opacity-50 dt-mt-2'
+                )}
+              >
                 Notification history will be lost forever
               </P>
             )}
@@ -166,52 +228,13 @@ function Wallet(props: { onThreadDelete?: () => void }) {
   }
 
   return (
-    <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-        Receive notifications directly to your wallet
-      </P>
-      {wallet ? (
-        <ValueRow
-          label={
-            <>
-              Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}){' '}
-              <NetworkBadge network={network} />
-            </>
-          }
-          className="dt-mb-2"
-        >
-          <span className="dt-text-right">{balance || 0} SOL</span>
-        </ValueRow>
-      ) : null}
-      <ValueRow
-        label="Rent Deposit (recoverable)"
-        className={cs('dt-w-full dt-mb-3')}
-      >
-        0.058 SOL
-      </ValueRow>
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-text-left dt-mb-3')}>
-        To start this notifications thread, you&apos;ll need to deposit a small
-        amount of rent, since messages are stored on-chain.
-      </P>
-      <Button
-        onClick={() => createDialect().catch(noop)}
-        loading={isDialectCreating}
-      >
-        {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
-      </Button>
-      {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
-      {/* TODO: move red color to the theme */}
-      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <P
-          className={cs(
-            textStyles.small,
-            'dt-text-red-500 dt-text-left dt-mt-2'
-          )}
-        >
-          {creationError.message}
-        </P>
-      )}
-    </div>
+    <ToggleSection
+      className="dt-mb-6"
+      title="💬  Web3 wallet notifications"
+      enabled={isDialectAvailable}
+    >
+      {content}
+    </ToggleSection>
   );
 }
 
@@ -225,7 +248,7 @@ function Settings(props: {
   notifications: NotificationType[];
   channels: Channel[];
 }) {
-  const { textStyles } = useTheme();
+  const { textStyles, xPaddedText } = useTheme();
 
   const channelsOptions = useMemo(
     () =>
@@ -238,27 +261,23 @@ function Settings(props: {
 
   return (
     <>
-      {channelsOptions.web3 && (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="Web3 notifications"
-        ></Accordion>
-      )}
-      {channelsOptions.email && (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="Email notifications"
+      <div className={clsx('dt-py-2', xPaddedText)}>
+        {channelsOptions.web3 && (
+          <div className="dt-mb-2">
+            <Wallet onThreadDelete={props.toggleSettings} />
+          </div>
+        )}
+        {channelsOptions.email && (
+          <div className="dt-mb-2">
+            <EmailForm />
+          </div>
+        )}
+      </div>
+
+      <Section className="dt-mb-" title="Notification types">
+        <P
+          className={cs(textStyles.small, xPaddedText, 'dt-opacity-50 dt-mb-3')}
         >
-          <EmailForm />
-        </Accordion>
-      )}
-      <Section title="💬  Web3 wallet notifications">
-        <Wallet onThreadDelete={props.toggleSettings} />
-      </Section>
-      <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
-        <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
           The following notification types are supported
         </P>
         {props.notifications
@@ -272,11 +291,12 @@ function Settings(props: {
               </ValueRow>
             ))
           : 'No notification types supplied'}
-      </Accordion>
+      </Section>
       <P
         className={cs(
           textStyles.small,
-          'dt-opacity-50 dt-text-center dt-mb-10'
+          xPaddedText,
+          'dt-opacity-50 dt-text-center'
         )}
       >
         By enabling notifications you agree to our{' '}
@@ -399,15 +419,9 @@ export default function Notifications(props: {
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
         />
-        <div
-          className={cs(
-            'dt-h-full dt-py-2 dt-px-4 dt-overflow-y-auto',
-            scrollbar
-          )}
-        >
+        <div className={cs('dt-h-full dt-overflow-y-auto', scrollbar)}>
           {content}
         </div>
-        <Footer />
       </div>
     </div>
   );
