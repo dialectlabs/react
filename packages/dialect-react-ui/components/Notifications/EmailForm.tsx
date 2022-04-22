@@ -169,6 +169,7 @@ export function EmailForm() {
       <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
         {isEmailSaved && isVerified
           ? 'Email notifications are now enabled. Emails are stored securely off-chain.'
+          
           : 'Receive notifications to your email. Emails are stored securely off-chain.'}
       </P>
       <ValueRow className="dt-mb-2" label="Enable email notifications">
@@ -298,12 +299,6 @@ export function EmailForm() {
               ⚠️ Changing or deleting your email is a global setting across all
               dapps. You will be prompted to sign with your wallet, this action
               is free.
-            </P>
-          ) : null}
-          {!currentError && !isEmailEditing && isVerified ? (
-            <P className={cs(textStyles.small, 'dt-mb-1')}>
-              You can now chill and receive all the events directly to your
-              inbox.
             </P>
           ) : null}
         </form>
