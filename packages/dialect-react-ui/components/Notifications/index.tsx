@@ -15,6 +15,7 @@ import {
   Divider,
   Footer,
   NetworkBadge,
+  Section,
   useBalance,
   ValueRow,
 } from '../common';
@@ -242,9 +243,7 @@ function Settings(props: {
           className="dt-mb-6"
           defaultExpanded
           title="Web3 notifications"
-        >
-          <Wallet onThreadDelete={props.toggleSettings} />
-        </Accordion>
+        ></Accordion>
       )}
       {channelsOptions.email && (
         <Accordion
@@ -255,6 +254,9 @@ function Settings(props: {
           <EmailForm />
         </Accordion>
       )}
+      <Section title="💬  Web3 wallet notifications">
+        <Wallet onThreadDelete={props.toggleSettings} />
+      </Section>
       <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
         <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
           The following notification types are supported
