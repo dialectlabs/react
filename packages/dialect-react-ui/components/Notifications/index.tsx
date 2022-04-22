@@ -13,7 +13,6 @@ import {
   Button,
   Centered,
   Divider,
-  Footer,
   NetworkBadge,
   useBalance,
   ValueRow,
@@ -405,7 +404,6 @@ export default function Notifications(props: {
         >
           {content}
         </div>
-        <Footer />
       </div>
     </div>
   );
