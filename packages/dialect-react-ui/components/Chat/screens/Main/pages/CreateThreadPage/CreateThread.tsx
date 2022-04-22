@@ -217,7 +217,6 @@ export default function CreateThread({
   };
 
   const tryFetchAddressFromTwitterHandle = async (handle: string) => {
-    console.log('tryFetchAddressFromTwitterHandle', handle);
     const { result } = await fetchAddressFromTwitterHandle(
       program?.provider.connection,
       handle
