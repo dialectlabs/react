@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [0.6.9] - 2022-04-22
+
 - chore: remove wildcard exports
 - feat: remove Powered By footer
 
