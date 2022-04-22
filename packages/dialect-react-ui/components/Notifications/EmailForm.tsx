@@ -212,8 +212,7 @@ export function EmailForm() {
             ) : null}
             {!currentError && !isEmailEditing && isVerified ? (
               <P className={cs(textStyles.small, xPaddedText, 'dt-mb-1')}>
-                You can now chill and receive all the events directly to your
-                inbox.
+                🔗 Email verified, you should now receive notifications.
               </P>
             ) : null}
           </form>

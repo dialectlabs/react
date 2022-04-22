@@ -388,7 +388,7 @@ export default function Notifications(props: {
     );
   } else {
     content = (
-      <>
+      <div className={'dt-px-4'}>
         {messages.map((message: MessageType) => (
           <>
             <Notification
@@ -399,7 +399,7 @@ export default function Notifications(props: {
             <Divider className={notificationsDivider} />
           </>
         ))}
-      </>
+      </div>
     );
   }
 

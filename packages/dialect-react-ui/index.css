@@ -487,6 +487,8 @@
 .dt-light-scrollbar {
   /* Firefox: Foreground, Background */
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  /* TODO: add scrollbar-gutter to remove flicker on scroll */
+  /* scrollbar-gutter: stable; */
 }
 .dt-light-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 9999px;
@@ -502,6 +504,8 @@
 .dt-dark-scrollbar {
   /* Firefox: Foreground, Background */
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  /* TODO: add scrollbar-gutter to remove flicker on scroll */
+  /* scrollbar-gutter: stable; */
 }
 .dt-dark-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 9999px;

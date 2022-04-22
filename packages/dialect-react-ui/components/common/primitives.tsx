@@ -174,9 +174,9 @@ export function Toggle({
         type="checkbox"
         className="dt-input dt-appearance-none dt-opacity-0 dt-w-0 dt-h-0"
         checked={checked}
-        onChange={() => {
+        onChange={async () => {
+          await onClick();
           setChecked((prev) => !prev);
-          onClick();
         }}
         {...props}
       />
