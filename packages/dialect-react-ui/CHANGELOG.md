@@ -127,3 +127,7 @@
 ## [0.6.7] - 2022-04-22
 
 - hotfix: remove memory leak while wallet is disconnected
+
+## [0.6.8] - 2022-04-22
+
+- Bump `@dialectlabs/react` package version

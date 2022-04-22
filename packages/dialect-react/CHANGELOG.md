@@ -37,3 +37,7 @@
 ## [0.4.5] - 2022-04-22
 
 - fix: recovering after disconnected from the Solana blockchain error
+
+## [0.4.6] - 2022-04-22
+
+- hotfix: remove memory leak while wallet is disconnected
