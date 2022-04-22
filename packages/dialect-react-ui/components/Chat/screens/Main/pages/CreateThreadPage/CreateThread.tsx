@@ -18,7 +18,7 @@ import {
   useBalance,
   ValueRow,
 } from '../../../../../common';
-import { fetchAddressFromTwitterHandle } from '../../../../../CardinalAddress';
+import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
 import { display } from '@dialectlabs/web3';
 import { Lock, NoLock } from '../../../../../Icon';
 
