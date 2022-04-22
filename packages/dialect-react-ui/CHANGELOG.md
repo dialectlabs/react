@@ -123,3 +123,7 @@
 - fix: if there is a chat with entered wallet redirect to this chat; add error parsing for chat already exists
 - fix: prevent long message from expanding entire chat
 - Bump `@dialectlabs/react` package version
+
+## [0.6.7] - 2022-04-22
+
+- hotfix: remove memory leak while wallet is disconnected
