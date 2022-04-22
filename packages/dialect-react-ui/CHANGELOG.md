@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- chore: remove wildcard exports
+- feat: remove Powered By footer
+
 ## [0.6.8] - 2022-04-22
 
 - Bump `@dialectlabs/react` package version

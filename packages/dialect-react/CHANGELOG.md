@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: remove wildcard exports
+
 ## [0.4.6] - 2022-04-22
 
 - hotfix: remove memory leak while wallet is disconnected
