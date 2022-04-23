@@ -2,7 +2,8 @@
 
 ## [UNRELEASED]
 
-- Add ability to create new thread using Twitter handle if there is an address associated with the handle.
+- Add client-side address or twitter handle validation.
+- Allow thread creation using twitter handle.
 
 ## [0.6.9] - 2022-04-22
 
