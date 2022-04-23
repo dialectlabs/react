@@ -1389,20 +1389,6 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@dialectlabs/react-ui@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/react-ui/-/react-ui-0.5.2.tgz#a2fd38230389a355d9eba69143b00a5a152ecd94"
-  integrity sha512-5hNM4sezs3jF44EOCAwy+ijigI2PM0Lu17bbw9F+H9GIqD2w8ESqRyylROQtEk57bnrepVXQDTh6+NcEqdCpsA==
-  dependencies:
-    "@dialectlabs/web3" "^0.2.0"
-    "@headlessui/react" "^1.2.0"
-    "@project-serum/anchor" "^0.23.0"
-    clsx "^1.1.1"
-    focus-visible "^5.2.0"
-    react-linkify "^1.0.0-alpha"
-    react-media-hook "^0.4.9"
-    swr "^0.5.6"
-
 "@dialectlabs/web3@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@dialectlabs/web3/-/web3-0.2.0.tgz#8ea5f9a63e1ef37f8c8611a17cbcb3ea7089c338"

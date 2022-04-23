@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- Add client-side address or twitter handle validation.
+- Allow thread creation using twitter handle.
+
 ## [0.6.9] - 2022-04-22
 
 - chore: remove wildcard exports
