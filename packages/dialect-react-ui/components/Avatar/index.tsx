@@ -3,9 +3,11 @@ import type { PublicKey } from '@project-serum/anchor';
 import { useTheme } from '../common/ThemeProvider';
 import { useApi } from '@dialectlabs/react';
 import type { Connection } from '@solana/web3.js';
-import { useAddressImage } from '@cardinal/namespaces-components';
+import { tryGetImageUrl } from '@cardinal/namespaces-components';
+import { getReverseEntry, breakName, formatName } from '@cardinal/namespaces';
 import { HiUserCircle } from 'react-icons/hi';
 import { Img } from '../common/preflighted';
+import useSWR from 'swr';
 
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
@@ -33,10 +35,17 @@ const CardinalAvatar = ({
   placeholder?: React.ReactNode;
   className?: string;
 }) => {
-  const { addressImage, loadingImage } = useAddressImage(connection, address);
+  const reverseEntry = useSWR([connection, address], getReverseEntry);
+  const displayName = formatName(
+    reverseEntry.data?.parsed.namespaces,
+    reverseEntry.data?.parsed.entryName
+  );
+  const [_namespace, handle] = displayName ? breakName(displayName) : [];
+  const addressImage = useSWR(handle, tryGetImageUrl);
+  const addressImageUrl = addressImage.data;
 
   if (!address) return <></>;
-  return loadingImage ? (
+  return !addressImage.data ? (
     <div className={cs(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
       <>{placeholder}</>
     </div>
@@ -44,7 +53,7 @@ const CardinalAvatar = ({
     <Img
       className="dt-rounded-full"
       alt={`profile-${address.toString()}`}
-      src={addressImage}
+      src={addressImageUrl}
     />
   ) : (
     <>{placeholder}</> || <HiUserCircle className={className} />
