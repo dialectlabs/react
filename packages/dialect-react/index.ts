@@ -1,10 +1,38 @@
-export * from './components/ApiContext';
-export * from './components/DialectContext';
-export * from './api';
-export * as DialectErrors from './utils/errors';
-export { connected } from './utils/helpers';
-
+import * as DialectErrors from './utils/errors';
+import type { WalletType, ProgramType } from './components/ApiContext';
+import type { MessageType, DialectAccount } from './components/DialectContext';
 import type { AddressType } from './api';
 import type { ParsedErrorData } from './utils/errors';
 
-export type { AddressType, ParsedErrorData };
+export { ApiProvider, useApi, getWalletName } from './components/ApiContext';
+export { DialectProvider, useDialect } from './components/DialectContext';
+export { connected } from './utils/helpers';
+export {
+  formatTimestamp,
+  getDialectAddressForMemberPubkeys,
+  getDialectAddressWithOtherMember,
+  createDialectForMembers,
+  createMetadata,
+  deleteAddress,
+  deleteDialect,
+  fetchDialectForMembers,
+  fetchDialect,
+  fetchDialects,
+  deleteMetadata,
+  fetchAddressesForDapp,
+  fetchMetadata,
+  saveAddress,
+  updateAddress,
+  sendMessage,
+} from './api';
+
+export { DialectErrors };
+
+export type {
+  AddressType,
+  ParsedErrorData,
+  WalletType,
+  ProgramType,
+  MessageType,
+  DialectAccount,
+};

@@ -13,7 +13,6 @@ import {
   Button,
   Centered,
   Divider,
-  Footer,
   NetworkBadge,
   useBalance,
   ValueRow,

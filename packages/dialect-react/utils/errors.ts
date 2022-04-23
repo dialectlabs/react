@@ -6,6 +6,7 @@ export const ParsedErrorType = {
   NoAccount: 'NO_ACCOUNT',
   IncorrectEmail: 'INCORRECT_EMAIL',
   NotSigned: 'NOT_SIGNED',
+  ThreadExists: 'THREAD_EXISTS',
 } as const;
 type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
 
@@ -73,6 +74,13 @@ export const notSigned: ParsedErrorData = {
   matchers: ['User rejected the request'],
 };
 
+export const threadAlreadyExists: ParsedErrorData = {
+  type: ParsedErrorType.ThreadExists,
+  title: 'Error',
+  message: 'You already have chat with this address',
+  matchers: ['A raw constraint was violated'],
+};
+
 export const unknownError: ParsedErrorData = {
   type: ParsedErrorType.UnknownError,
   title: 'Error',
@@ -86,6 +94,7 @@ const errors: ParsedErrorData[] = [
   incorrectEmail,
   notSigned,
   noAccount,
+  threadAlreadyExists,
 ];
 
 const parseError = (error: Error) => {

@@ -1,5 +1,5 @@
 {
-  "name": "nextjs",
+  "name": "nextjs-saberhq-use-solana",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,10 +10,7 @@
   },
   "dependencies": {
     "@dialectlabs/react-ui": "^0.6.9",
-    "@solana/wallet-adapter-base": "^0.9.5",
-    "@solana/wallet-adapter-react": "^0.15.4",
-    "@solana/wallet-adapter-react-ui": "^0.9.6",
-    "@solana/wallet-adapter-wallets": "^0.15.5",
+    "@saberhq/use-solana": "^1.12.62",
     "next": "^12.1.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
