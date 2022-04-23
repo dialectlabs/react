@@ -2631,26 +2631,6 @@
     superstruct "^0.14.2"
     tweetnacl "^1.0.0"
 
-"@solana/web3.js@^1.38.0":
-  version "1.39.1"
-  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.39.1.tgz#858ecd42ff2a5bcba3a4bb642a50194d77e2a578"
-  integrity sha512-Q7XnWTAiU7n7GcoINDAAMLO7CJHpm5kPK46HKwJi2x0cusHQ3WFa7QEp6aPzH7tuf7yl/Kw1lYitcwTVOvqARA==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@ethersproject/sha2" "^5.5.0"
-    "@solana/buffer-layout" "^4.0.0"
-    bn.js "^5.0.0"
-    borsh "^0.7.0"
-    bs58 "^4.0.1"
-    buffer "6.0.1"
-    cross-fetch "^3.1.4"
-    jayson "^3.4.4"
-    js-sha3 "^0.8.0"
-    rpc-websockets "^7.4.2"
-    secp256k1 "^4.0.2"
-    superstruct "^0.14.2"
-    tweetnacl "^1.0.0"
-
 "@solflare-wallet/sdk@^1.0.11":
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@solflare-wallet/sdk/-/sdk-1.0.12.tgz#f242db308d750e2b6edcf2056fd9c794d8dbb917"
