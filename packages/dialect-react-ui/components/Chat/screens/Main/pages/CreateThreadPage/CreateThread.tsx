@@ -5,7 +5,6 @@ import {
   ParsedErrorData,
   useApi,
   useDialect,
-  Wallets,
 } from '@dialectlabs/react';
 import clsx from 'clsx';
 import IconButton from '../../../../../IconButton';
@@ -27,6 +26,29 @@ interface CreateThreadProps {
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
   onModalClose?: () => void;
+}
+
+function CardinalCTA() {
+  const { textStyles } = useTheme();
+  return (
+    <P
+      className={clsx(
+        textStyles.small,
+        'dt-opacity-60 dt-text-white dt-text dt-mt-1 dt-px-2'
+      )}
+    >
+      {'Link your Twitter handle with '}
+      <A
+        href={`https://twitter.cardinal.so`}
+        target="_blank"
+        rel="noreferrer"
+        className="dt-underline"
+      >
+        twitter.cardinal.so
+      </A>
+      {'.'}
+    </P>
+  );
 }
 
 function ActionCaption({
@@ -82,26 +104,7 @@ const showAddressInputStatus = (
 ) => {
   const { textStyles } = useTheme();
 
-  if (!address) {
-    return (
-      <P
-        className={clsx(
-          textStyles.small,
-          'dt-opacity-60 dt-text-white dt-text dt-mt-1 dt-px-2'
-        )}
-      >
-        {'Twitter handle can be linked with '}
-        <A
-          href={`https://twitter.cardinal.so`}
-          target="_blank"
-          rel="noreferrer"
-          className="dt-underline"
-        >
-          twitter.cardinal.so
-        </A>
-      </P>
-    );
-  }
+  if (!address) return CardinalCTA();
 
   const isTwitter = address.charAt(0) === '@';
 
@@ -294,8 +297,9 @@ export default function CreateThread({
           value={address}
           onChange={(e) => onAddressChange(e.target.value)}
         />
-        {!isTyping &&
-          showAddressInputStatus(validAddress, address, cardinalAddress)}
+        {!isTyping
+          ? showAddressInputStatus(validAddress, address, cardinalAddress)
+          : CardinalCTA()}
         <ValueRow
           label={
             <>
