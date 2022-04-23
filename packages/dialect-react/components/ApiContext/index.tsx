@@ -66,7 +66,7 @@ type ValueType = {
   fetchingAddressesError: ParsedErrorData | null;
   isSavingAddress: boolean;
   saveAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
-  savingAddressError: ParsedErrorData | null;
+  savingAddressError: Error | null;
   updateAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   isDeletingAddress: boolean;
   deleteAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
@@ -75,9 +75,9 @@ type ValueType = {
     address: AddressType,
     code: string
   ) => Promise<void>;
-  deletingAddressError: ParsedErrorData | null;
+  deletingAddressError: Error | null;
   isSendingCode: boolean;
-  verificationCodeError: ParsedErrorData | null;
+  verificationCodeError: Error | null;
   resendCode: (wallet: WalletType, address: AddressType) => Promise<void>;
 };
 
@@ -89,20 +89,14 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const [network, setNetwork] = useState<string | null>('devnet');
   const [rpcUrl, setRpcUrl] = useState<string | null>(URLS.devnet);
 
-  const [isSavingAddress, setSavingAddress] = React.useState(false);
-  const [savingAddressError, setSavingAddressError] =
-    React.useState<ParsedErrorData | null>(null);
+  const [isSavingAddress, setSavingAddress] = useState(false);
+  const [isDeletingAddress, setDeletingAddress] = useState(false);
+  const [isSendingCode, setSendingCode] = useState(false);
 
-  const [isDeletingAddress, setDeletingAddress] = React.useState(false);
-  const [deletingAddressError, setDeletingAddressError] =
-    React.useState<ParsedErrorData | null>(null);
-
-  const [fetchingError, setFetchingError] =
-    React.useState<ParsedErrorData | null>(null);
-
-  const [verificationCodeError, setVerificationCodeError] =
-    useState<ParsedErrorData | null>(null);
-  const [isSendingCode, setSendingCode] = React.useState(false);
+  const [savingAddressError, setSavingAddressError] = useState<Error | null>(null);
+  const [deletingAddressError, setDeletingAddressError] = useState<Error | null>(null);
+  const [fetchingError, setFetchingError] = useState<ParsedErrorData | null>(null);
+  const [verificationCodeError, setVerificationCodeError] = useState<Error | null>(null);
 
   const {
     data: addresses,
@@ -153,15 +147,10 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
 
       try {
         const data = await saveAddress(wallet, dapp, address);
-
         await mutateAddresses([data]);
         setSavingAddressError(null);
       } catch (e) {
-        // TODO: implement safer error handling
-        setSavingAddressError(e as ParsedErrorData);
-
-        // Passing through the error, in case for additional UI error handling
-        throw e;
+        setSavingAddressError(e as Error);
       } finally {
         setSavingAddress(false);
       }
@@ -172,19 +161,14 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const updateAddressWrapper = useCallback(
     async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected || !dapp) return;
-
       setSavingAddress(true);
 
       try {
         const data = await updateAddress(wallet, dapp, address);
-
         await mutateAddresses([data]);
         setSavingAddressError(null);
       } catch (e) {
-        // TODO: implement safer error handling
-        setSavingAddressError(e as ParsedErrorData);
-        // Passing through the error, in case for additional UI error handling
-        throw e;
+        setSavingAddressError(e as Error);
       } finally {
         setSavingAddress(false);
       }
@@ -195,7 +179,6 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const deleteAddressWrapper = useCallback(
     async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected) return;
-
       setDeletingAddress(true);
 
       try {
@@ -203,11 +186,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
         await mutateAddresses([]);
         setDeletingAddressError(null);
       } catch (e) {
-        // TODO: implement safer error handling
-        setDeletingAddressError(e as ParsedErrorData);
-
-        // Passing through the error, in case for additional UI error handling
-        throw e;
+        setDeletingAddressError(e as Error);
       } finally {
         setDeletingAddress(false);
       }
@@ -224,9 +203,8 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
         await mutateAddresses([data]);
         setSendingCode(false);
         setVerificationCodeError(null);
-      } catch (err) {
-        setVerificationCodeError(err as ParsedErrorData);
-        throw err;
+      } catch (e) {
+        setVerificationCodeError(e as Error);
       } finally {
         setSendingCode(false);
       }
@@ -243,8 +221,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
         setSendingCode(false);
         setVerificationCodeError(null);
       } catch (err) {
-        setVerificationCodeError(err as ParsedErrorData);
-        throw err;
+        setVerificationCodeError(err as Error);
       } finally {
         setSendingCode(false);
       }
