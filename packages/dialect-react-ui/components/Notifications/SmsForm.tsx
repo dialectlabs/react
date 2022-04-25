@@ -19,12 +19,9 @@ export function SmsForm() {
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
-    savingAddressError,
     updateAddress,
     deleteAddress,
     isDeletingAddress,
-    deletingAddressError,
-    verificationCodeError,
     isSendingCode,
     verifyCode,
     resendCode
@@ -48,6 +45,10 @@ export function SmsForm() {
   const [isEnabled, setEnabled] = useState(Boolean(smsObj?.enabled));
   const [isSmsNumberEditing, setSmsNumberEditing] = useState(!smsObj?.enabled);
   const [smsNumberError, setSmsNumberError] = useState<ParsedErrorData | null>(null);
+
+  const [verificationCodeError, setVerificationCodeError] = useState<Error | null>(null);
+  const [deletingAddressError, setDeletingAddressError] = useState<Error | null>(null);
+  const [savingAddressError, setSavingAddressError] = useState<Error | null>(null);
 
   const [verificationCode, setVerificationCode] = useState("");
 
@@ -73,53 +74,71 @@ export function SmsForm() {
     // TODO: validate & save sms number
     if (smsNumberError) return;
 
-    await updateAddress(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-      id: smsObj?.id,
-      addressId: smsObj?.addressId,
-    });
-
-    setSmsNumberEditing(false);
+    try {
+      await updateAddress(wallet, {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+        id: smsObj?.id,
+        addressId: smsObj?.addressId,
+      });
+      setSmsNumberEditing(false);
+    } catch(e) {
+      setSavingAddressError(e as Error);
+    }
   };
 
   const saveSmsNumber = async () => {
     if (smsNumberError) return;
 
-    await saveAddress(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-    });
+    try {
+      await saveAddress(wallet, {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+      });
+    } catch(e) {
+      setSavingAddressError(e as Error);
+    }
   };
 
   const deleteSmsNumber = async () => {
-    await deleteAddress(wallet, {
-      addressId: smsObj?.addressId,
-    });
+    try {
+      await deleteAddress(wallet, {
+        addressId: smsObj?.addressId,
+      });
+    } catch(e) {
+      setDeletingAddressError(e as Error);
+    }
   };
 
   const resendSmsVerificationCode = async () => {
-    await resendCode(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-      id: smsObj?.id,
-      addressId: smsObj?.addressId})
+    try {
+      await resendCode(wallet, {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+        id: smsObj?.id,
+        addressId: smsObj?.addressId}) 
+    } catch (e) {
+      setVerificationCodeError(e as Error);
+    }
   };
 
   const sendCode = async () => {
-    // TODO verifyEmail should just be verifyAddress
-    await verifyCode(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-      id: smsObj?.id,
-      addressId: smsObj?.addressId,
-    }, verificationCode);
-
-    setVerificationCode("")
+    try {
+      await verifyCode(wallet, {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+        id: smsObj?.id,
+        addressId: smsObj?.addressId,
+      }, verificationCode);
+  
+      setVerificationCode("")
+    } catch(e) {
+      setVerificationCodeError(e as Error)
+    }
   }
 
   const renderVerifiedState = () => {

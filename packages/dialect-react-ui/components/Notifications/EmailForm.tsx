@@ -19,15 +19,12 @@ export function EmailForm() {
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
-    savingAddressError,
     updateAddress,
     deleteAddress,
     isDeletingAddress,
-    deletingAddressError,
-    verificationCodeError,
     isSendingCode,
     verifyCode,
-    resendCode
+    resendCode,
   } = useApi();
   const emailObj = getEmailObj(addresses);
 
@@ -49,6 +46,10 @@ export function EmailForm() {
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
 
+  const [verificationCodeError, setVerificationCodeError] = useState<Error | null>(null);
+  const [deletingAddressError, setDeletingAddressError] = useState<Error | null>(null);
+  const [savingAddressError, setSavingAddressError] = useState<Error | null>(null);
+
   const [verificationCode, setVerificationCode] = useState("");
 
   const isEmailSaved = Boolean(emailObj);
@@ -60,7 +61,7 @@ export function EmailForm() {
     fetchingAddressesError ||
     savingAddressError ||
     deletingAddressError || 
-    verificationCodeError;
+    verificationCodeError
 
   useEffect(() => {
     // Update state if addresses updated
@@ -73,52 +74,71 @@ export function EmailForm() {
     // TODO: validate & save email
     if (emailError) return;
 
-    await updateAddress(wallet, {
-      type: 'email',
-      value: email,
-      enabled: true,
-      id: emailObj?.id,
-      addressId: emailObj?.addressId,
-    });
-
-    setEmailEditing(false);
+    try {
+      await updateAddress(wallet, {
+        type: 'email',
+        value: email,
+        enabled: true,
+        id: emailObj?.id,
+        addressId: emailObj?.addressId,
+      });
+  
+      setEmailEditing(false);
+    } catch (e) {
+      setSavingAddressError(e as Error);
+    }
   };
 
   const saveEmail = async () => {
     if (emailError) return;
 
-    await saveAddress(wallet, {
-      type: 'email',
-      value: email,
-      enabled: true,
-    });
+    try {
+      await saveAddress(wallet, {
+        type: 'email',
+        value: email,
+        enabled: true,
+      });
+    } catch (e) {
+      setSavingAddressError(e as Error);
+    }
   };
 
   const deleteEmail = async () => {
-    await deleteAddress(wallet, {
-      addressId: emailObj?.addressId,
-    });
+    try {
+      await deleteAddress(wallet, {
+        addressId: emailObj?.addressId,
+      });
+    } catch (e) {
+      setDeletingAddressError(e as Error);
+    }
   };
 
   const resendEmailCode = async () => {
-    await resendCode(wallet, {
-      type: 'email',
-      value: email,
-      enabled: true,
-      id: emailObj?.id,
-      addressId: emailObj?.addressId})
+    try {
+      await resendCode(wallet, {
+        type: 'email',
+        value: email,
+        enabled: true,
+        id: emailObj?.id,
+        addressId: emailObj?.addressId})
+    } catch (e) {
+      setVerificationCodeError(e as Error);
+    }
   };
 
   const sendCode = async () => {
-    await verifyCode(wallet, {
-      type: 'email',
-      value: email,
-      enabled: true,
-      id: emailObj?.id,
-      addressId: emailObj?.addressId,
-    }, verificationCode);
-
-    setVerificationCode("")
+    try {
+      await verifyCode(wallet, {
+        type: 'email',
+        value: email,
+        enabled: true,
+        id: emailObj?.id,
+        addressId: emailObj?.addressId,
+      }, verificationCode);
+      setVerificationCode("");
+    } catch (e) {
+      setVerificationCodeError(e as Error);
+    }
   }
 
   const renderVerifiedState = () => {

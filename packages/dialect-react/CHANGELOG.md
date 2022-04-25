@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 - feat: added API for code verification + resend code 
 – fix: import Message type from '@dialectlabs/web3'
+- fix: move out error handling from API. API just throwig error
 
 ## [0.2.0] - 2022-03-31
 

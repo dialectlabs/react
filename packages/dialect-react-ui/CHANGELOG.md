@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 - feat: added UI in notification for email verification
 - feat: added UI in notification for sms verification
+- fix: Error handling on UI side 
 
 ## [0.1.0] - 2022-02-12
 
