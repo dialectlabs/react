@@ -30,7 +30,7 @@ const signPayload = async (wallet: WalletContextState, payload: Uint8Array) => {
   };
 };
 
-const generateToken = async (wallet: WalletType): Promise<TokenType> => {
+const generateToken = async (wallet: WalletType): Promise<string> => {
   const tokenTTLMinutes = 180;
   const now = new Date().getTime();
 
@@ -48,36 +48,31 @@ const generateToken = async (wallet: WalletType): Promise<TokenType> => {
     String.fromCharCode.apply(null, signature as unknown as number[])
   );
 
-  return {
-    expirationTime: expirationTime.toString(),
-    base64Signature
-  };
+  return `${expirationTime}.${base64Signature}`;
 }
 
-const saveToken = (token: TokenType) => {
-  window.sessionStorage.setItem("expirationTime", token.expirationTime.toString());
-  window.sessionStorage.setItem("base64Signature", token.base64Signature)
+const saveToken = (token: string) => {
+  if (!window) return;
+  window.sessionStorage.setItem("token", token)
 }
 
 export const removeToken = () => {
-  window.sessionStorage.removeItem("expirationTime");
-  window.sessionStorage.removeItem("base64Signature")
+  if (!window) return;
+  window.sessionStorage.removeItem("token");
 }
 
-const getTokenFromStorage = (): TokenType | undefined => {
-  const expirationTime =  window.sessionStorage.getItem("expirationTime");
-  const base64Signature = window.sessionStorage.getItem("base64Signature");
+const getTokenFromStorage = (): string | undefined => {
+  if (!window) return;
+  const token =  window.sessionStorage.getItem("token");
 
-  if (!expirationTime || !base64Signature) return;
-  return {
-    expirationTime, 
-    base64Signature
-  }
+  if (!token) return;
+  return token
 }
 
-const isTokenExpired = (token: TokenType) => {
-  const expirationTime = +token.expirationTime;
-  return expirationTime < new Date().getTime();
+const isTokenExpired = (token: string) => {
+  const expirationTime = token.split('.')[0];
+  if (!expirationTime) return false;
+  return +expirationTime < new Date().getTime();
 }
 
 export const fetchJSON = async (
@@ -101,7 +96,7 @@ export const fetchJSON = async (
     }
 
     headers = {
-      Authorization: `Bearer ${token?.expirationTime}.${token?.base64Signature}`,
+      Authorization: `Bearer ${token}`,
     };
   }
 
