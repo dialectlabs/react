@@ -39,10 +39,6 @@ type PropsType = {
 
 export type WalletType = WalletContextState | AnchorWallet | null | undefined;
 export type ProgramType = anchor.Program | null;
-export type TokenType = {
-  expirationTime: string,
-  base64Signature: string
-}
 
 export const getWalletName = (wallet: WalletType): WalletName | null => {
   if (!wallet) {

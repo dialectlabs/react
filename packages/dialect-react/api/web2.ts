@@ -1,7 +1,7 @@
 import fetch from 'unfetch';
 import { withErrorParsing } from '../utils/errors';
 import type { WalletContextState } from '@solana/wallet-adapter-react';
-import type { TokenType, WalletType } from '../components/ApiContext';
+import type { WalletType } from '../components/ApiContext';
 
 // TODO: make this customizable
 const DIALECT_BASE_URL = '/api';
