@@ -22,6 +22,7 @@ import {
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import { EmailForm } from './EmailForm';
+import { SmsForm } from './SmsForm';
 
 export type NotificationType = {
   name: string;
@@ -256,6 +257,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
 const baseChannelOptions: Record<Channel, boolean> = {
   web3: false,
   email: false,
+  sms: false,
 };
 
 function Settings(props: {
@@ -285,6 +287,11 @@ function Settings(props: {
         {channelsOptions.email && (
           <div className="dt-mb-2">
             <EmailForm />
+          </div>
+        )}
+        {channelsOptions.sms && (
+          <div className="dt-mb-2">
+            <SmsForm />
           </div>
         )}
       </div>

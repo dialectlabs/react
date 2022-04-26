@@ -1,4 +1,5 @@
 import { useAddressName } from '@cardinal/namespaces-components';
+import { getNameEntry } from '@cardinal/namespaces';
 import { TwitterIcon } from '../Icon/Twitter';
 import type { Connection } from '@project-serum/anchor';
 import type { PublicKey } from '@solana/web3.js';
@@ -80,6 +81,23 @@ const TwitterHandle = ({
         : displayName || formatShortAddress(address, isLinkable)}
     </div>
   );
+};
+
+export const fetchAddressFromTwitterHandle = async (
+  connection: Connection,
+  handle: string
+) => {
+  const NAMESPACE = 'twitter';
+  try {
+    const { parsed, pubkey } = await getNameEntry(
+      connection,
+      NAMESPACE,
+      handle
+    );
+    return { result: { parsed, pubkey } };
+  } catch (e) {
+    return { result: null };
+  }
 };
 
 export function DisplayAddress({

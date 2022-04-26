@@ -18,6 +18,8 @@ import {
   fetchAddressesForDapp,
   saveAddress,
   updateAddress,
+  verifyCode,
+  resendCode,
 } from '../../api';
 import type { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
@@ -79,7 +81,15 @@ type ValueType = {
   updateAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   isDeletingAddress: boolean;
   deleteAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
+  verifyCode: (
+    wallet: WalletType,
+    address: AddressType,
+    code: string
+  ) => Promise<void>;
   deletingAddressError: ParsedErrorData | null;
+  isSendingCode: boolean;
+  verificationCodeError: ParsedErrorData | null;
+  resendCode: (wallet: WalletType, address: AddressType) => Promise<void>;
 };
 
 const ApiContext = createContext<ValueType | null>(null);
@@ -100,6 +110,10 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
 
   const [fetchingError, setFetchingError] =
     React.useState<ParsedErrorData | null>(null);
+
+  const [verificationCodeError, setVerificationCodeError] =
+    useState<ParsedErrorData | null>(null);
+  const [isSendingCode, setSendingCode] = React.useState(false);
 
   const {
     data: addresses,
@@ -212,6 +226,43 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     [isWalletConnected, mutateAddresses]
   );
 
+  const verifyCodeWrapper = useCallback(
+    async (wallet: WalletType, address: AddressType, code: string) => {
+      if (!isWalletConnected || !dapp) return;
+      setSendingCode(true);
+      try {
+        const data = await verifyCode(wallet, dapp, address, code);
+        await mutateAddresses([data]);
+        setSendingCode(false);
+        setVerificationCodeError(null);
+      } catch (err) {
+        setVerificationCodeError(err as ParsedErrorData);
+        throw err;
+      } finally {
+        setSendingCode(false);
+      }
+    },
+    [dapp, isWalletConnected, mutateAddresses]
+  );
+
+  const resendCodeWrapper = useCallback(
+    async (wallet: WalletType, address: AddressType) => {
+      if (!isWalletConnected || !dapp) return;
+      setSendingCode(true);
+      try {
+        await resendCode(wallet, dapp, address);
+        setSendingCode(false);
+        setVerificationCodeError(null);
+      } catch (err) {
+        setVerificationCodeError(err as ParsedErrorData);
+        throw err;
+      } finally {
+        setSendingCode(false);
+      }
+    },
+    [dapp, isWalletConnected, mutateAddresses]
+  );
+
   const value: ValueType = {
     wallet,
     walletName: getWalletName(wallet),
@@ -229,6 +280,10 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     updateAddress: updateAddressWrapper,
     isDeletingAddress,
     deleteAddress: deleteAddressWrapper,
+    verifyCode: verifyCodeWrapper,
+    resendCode: resendCodeWrapper,
+    verificationCodeError,
+    isSendingCode,
     deletingAddressError,
   };
 

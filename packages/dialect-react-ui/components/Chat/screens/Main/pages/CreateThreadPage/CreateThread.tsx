@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as anchor from '@project-serum/anchor';
+import { display } from '@dialectlabs/web3';
 import {
   getDialectAddressWithOtherMember,
   ParsedErrorData,
   useApi,
   useDialect,
-  Wallets,
 } from '@dialectlabs/react';
 import clsx from 'clsx';
-import IconButton from '../../../../../IconButton';
 import { A, H1, Input, P } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import {
@@ -18,14 +17,38 @@ import {
   useBalance,
   ValueRow,
 } from '../../../../../common';
-import { display } from '@dialectlabs/web3';
+import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
 import { Lock, NoLock } from '../../../../../Icon';
+import IconButton from '../../../../../IconButton';
 
 interface CreateThreadProps {
   inbox?: boolean;
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
   onModalClose?: () => void;
+}
+
+function CardinalCTA() {
+  const { textStyles } = useTheme();
+  return (
+    <P
+      className={clsx(
+        textStyles.small,
+        'dt-opacity-60 dt-text-white dt-text dt-mt-1 dt-px-2'
+      )}
+    >
+      {'Link your Twitter handle with '}
+      <A
+        href={'https://twitter.cardinal.so'}
+        target="_blank"
+        rel="noreferrer"
+        className="dt-underline"
+      >
+        twitter.cardinal.so
+      </A>
+      {'.'}
+    </P>
+  );
 }
 
 function ActionCaption({
@@ -84,6 +107,64 @@ function ActionCaption({
   return null;
 }
 
+const showAddressInputStatus = (
+  valid: boolean,
+  address: string,
+  cardinalAddress: string
+) => {
+  const { textStyles } = useTheme();
+
+  if (!address) return CardinalCTA();
+
+  const isTwitter = address.charAt(0) === '@';
+
+  if (isTwitter && valid && cardinalAddress) {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        {cardinalAddress}
+      </P>
+    );
+  }
+
+  if (isTwitter && !valid && !cardinalAddress) {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
+        No address is associated with this twitter handle
+      </P>
+    );
+  }
+
+  if (!isTwitter && !valid) {
+    return (
+      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
+        Invalid address or Twitter handle
+      </P>
+    );
+  }
+
+  if (!isTwitter && valid && !cardinalAddress) {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        Valid address
+      </P>
+    );
+  }
+
+  if (!isTwitter && valid && cardinalAddress) {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        {cardinalAddress}
+      </P>
+    );
+  }
+};
+
 export default function CreateThread({
   inbox,
   onNewThreadCreated,
@@ -102,7 +183,10 @@ export default function CreateThread({
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
   const [address, setAddress] = useState('');
+  const [cardinalAddress, setCardinalAddress] = useState('');
   const [encrypted, setEncrypted] = useState(false);
+  const [validAddress, setValidAddress] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   const createThread = async () => {
     const currentChatWithAddress = dialects.find((subscription) => {
@@ -123,11 +207,13 @@ export default function CreateThread({
       onCloseRequest?.();
       return;
     }
-    createDialect(address, [true, true], [false, true], encrypted)
+
+    const finalAddress = cardinalAddress || address;
+    createDialect(finalAddress, [true, true], [false, true], encrypted)
       .then(async () => {
         const [da, _] = await getDialectAddressWithOtherMember(
           program,
-          new anchor.web3.PublicKey(address)
+          new anchor.web3.PublicKey(finalAddress)
         );
         setDialectAddress(da.toBase58());
         onNewThreadCreated?.(da.toBase58());
@@ -137,6 +223,50 @@ export default function CreateThread({
         console.log('error creating dialect', err);
       });
   };
+
+  const onAddressChange = (addr: string) => {
+    setAddress(addr);
+    setIsTyping(true);
+  };
+
+  const tryFetchAddressFromTwitterHandle = async (handle: string) => {
+    const { result } = await fetchAddressFromTwitterHandle(
+      program?.provider.connection,
+      handle
+    );
+
+    if (result) {
+      setValidAddress(true);
+      setCardinalAddress(result.parsed.data.toBase58());
+    } else {
+      setValidAddress(false);
+      setCardinalAddress('');
+    }
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (address.length === 0) {
+        setValidAddress(false);
+      } else if (address.charAt(0) != '@') {
+        try {
+          new anchor.web3.PublicKey(address);
+          setValidAddress(true);
+          setCardinalAddress('');
+        } catch (e) {
+          await tryFetchAddressFromTwitterHandle(address);
+        }
+      } else {
+        const handle = address.substring(1, address.length);
+        await tryFetchAddressFromTwitterHandle(handle);
+      }
+      setIsTyping(false);
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [address]);
+
+  const disabled = !address || (!isTyping && !validAddress);
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
@@ -171,12 +301,15 @@ export default function CreateThread({
           Create thread
         </H1>
         <Input
-          className={clsx(outlinedInput, 'dt-w-full dt-mb-2')}
-          placeholder="Enter recipient address"
+          className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
+          placeholder="D1AL...DY5h or @saydialect"
           type="text"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(e) => onAddressChange(e.target.value)}
         />
+        {!isTyping
+          ? showAddressInputStatus(validAddress, address, cardinalAddress)
+          : CardinalCTA()}
         <ValueRow
           label={
             <>
@@ -224,7 +357,11 @@ export default function CreateThread({
               />
             </span>
           </ValueRow>
-          <Button onClick={createThread} loading={isDialectCreating}>
+          <Button
+            onClick={createThread}
+            loading={isDialectCreating}
+            disabled={disabled}
+          >
             {isDialectCreating ? 'Creating...' : 'Create thread'}
           </Button>
         </div>
