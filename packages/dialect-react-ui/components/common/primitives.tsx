@@ -8,9 +8,8 @@ import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
-import { DialectLogo } from '../Icon';
 import { useTheme } from './ThemeProvider';
-import { A, ButtonBase, P } from './preflighted';
+import { ButtonBase, P } from './preflighted';
 import clsx from 'clsx';
 
 // TODO: separate these components to separate files
@@ -38,30 +37,6 @@ export function ValueRow(props: {
     >
       <span className={cs(textStyles.body)}>{props.label}</span>
       <span className={cs(textStyles.body)}>{props.children}</span>
-    </div>
-  );
-}
-
-export function Footer(): JSX.Element {
-  const { colors } = useTheme();
-
-  return (
-    <div
-      className={cs(
-        'dt-w-[8.5rem] dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-absolute dt-bottom-3 dt-left-0 dt-right-0 dt-mx-auto dt-uppercase dt-rounded-full',
-        colors.highlightSolid
-      )}
-      style={{ fontSize: '10px' }}
-    >
-      Powered by{' '}
-      <A
-        href="https://dialect.to"
-        target="_blank"
-        rel="noreferrer"
-        className="hover:dt-text-inherit"
-      >
-        <DialectLogo className="-dt-mr-1 -dt-mt-1 dt-ml-[3px]" />
-      </A>
     </div>
   );
 }
@@ -98,13 +73,15 @@ export function Button(props: {
   const { button, buttonLoading, textStyles } = useTheme();
   const defaultClassName = props.defaultStyle || button;
   const loadingClassName = props.loadingStyle || buttonLoading;
+  const disabledClassName =
+    'dt-bg-white dt-text-black dt-border dt-border-white dt-opacity-40';
 
   return (
     <ButtonBase
       className={cs(
         'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
-        defaultClassName,
+        props.disabled ? disabledClassName : defaultClassName,
         props.loading && loadingClassName,
         props.className
       )}
@@ -211,12 +188,11 @@ export function Accordion(props: {
   return (
     <div className={props?.className}>
       <div
-        // onClick={() => setExpanded((prev) => !prev)}
         className={cs(
           textStyles.bigText,
           'dt-w-full dt-flex dt-justify-between dt-mb-1'
         )}
-      >
+      > 
         {props.title}
         {/* <IconButton
           icon={<icons.chevron />}
@@ -232,6 +208,7 @@ export function Accordion(props: {
     </div>
   );
 }
+
 
 export const useBalance = () => {
   const { wallet, program } = useApi();
