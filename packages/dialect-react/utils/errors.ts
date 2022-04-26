@@ -5,6 +5,7 @@ export const ParsedErrorType = {
   UnknownError: 'UNKNOWN_ERROR',
   NoAccount: 'NO_ACCOUNT',
   IncorrectEmail: 'INCORRECT_EMAIL',
+  IncorrectSMSNumber: 'INCORRECT_SMS',
   NotSigned: 'NOT_SIGNED',
   ThreadExists: 'THREAD_EXISTS',
 } as const;
@@ -54,14 +55,14 @@ export const noAccount: ParsedErrorData = {
 
 // TODO: move web2 errors, no need to parse them as web3
 export const incorrectEmail: ParsedErrorData = {
-  type: ParsedErrorType.NoAccount,
+  type: ParsedErrorType.IncorrectEmail,
   title: 'Error',
   message: 'Please enter a valid email',
   matchers: ['Incorrect email'],
 };
 
 export const incorrectSmsNumber: ParsedErrorData = {
-  type: ParsedErrorType.NoAccount,
+  type: ParsedErrorType.IncorrectSMSNumber,
   title: 'Error',
   message: 'Please enter a valid SMS number',
   matchers: ['Incorrect SMS number'],
