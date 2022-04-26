@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dialectlabs/react-ui": "^0.6.9",
+    "@dialectlabs/react-ui": "^0.6.10",
     "@saberhq/use-solana": "^1.12.62",
     "next": "^12.1.5",
     "react": "^17.0.2",
