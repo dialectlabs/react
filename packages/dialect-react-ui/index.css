@@ -477,8 +477,10 @@
 }
 
 .dialect *::-webkit-scrollbar {
-  width: 12px; /* Mostly for vertical scrollbars */
-  height: 12px; /* Mostly for horizontal scrollbars */
+  /* Mostly for vertical scrollbars */
+  width: 12px;
+  /* Mostly for horizontal scrollbars */
+  height: 12px;
 }
 .dialect *::-webkit-scrollbar-track {
   /* Background */
@@ -579,3 +581,9 @@
 
 @tailwind components;
 @tailwind utilities;
+
+@supports (overflow: overlay) {
+  .dt-overflow-y-auto {
+    overflow-y: overlay;
+  }
+}

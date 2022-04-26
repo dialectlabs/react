@@ -9,7 +9,7 @@ export default function Section(props: {
   className?: string;
   defaultExpanded?: boolean;
 }) {
-  const { textStyles, xPaddedText } = useTheme();
+  const { textStyles, sectionHeader, xPaddedText } = useTheme();
 
   return (
     <div className={props?.className}>
@@ -17,7 +17,8 @@ export default function Section(props: {
       <div
         className={clsx(
           textStyles.bigText,
-          'dt-w-full dt-flex dt-justify-between dt-py-2 dt-px-4 dt-mb-1'
+          sectionHeader,
+          'dt-w-full dt-flex dt-justify-between dt-py-2 dt-mb-1'
         )}
       >
         {props.title}

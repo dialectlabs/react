@@ -5,6 +5,7 @@ import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { P } from '../common/preflighted';
 import { Button, ToggleSection } from '../common';
+import clsx from 'clsx';
 
 function getEmailObj(addresses: AddressType[] | null): AddressType | null {
   if (!addresses) return null;
@@ -106,7 +107,12 @@ export function EmailForm() {
       >
         <div>
           <form onSubmit={(e) => e.preventDefault()}>
-            <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
+            <div
+              className={clsx(
+                'dt-flex dt-flex-col dt-mb-2',
+                (!isEmailSaved || isEmailEditing) && 'dt-space-y-2'
+              )}
+            >
               <div className="">
                 {isEmailSaved && !isEmailEditing ? (
                   <div

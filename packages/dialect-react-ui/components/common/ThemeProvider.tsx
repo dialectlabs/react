@@ -76,6 +76,7 @@ export type IncomingThemeValues = {
   };
   avatar?: string;
   header?: string;
+  sectionHeader?: string;
   input?: string;
   outlinedInput?: string;
   textArea?: string;
@@ -172,7 +173,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     iconButton:
       'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60',
     sendButton: 'dt-h-5 dt-w-5 dt-text-white dt-rounded-full dt-bg-black',
-    header: 'dt-px-4 dt-py-3',
+    header: 'dt-py-3 dt-px-4',
+    sectionHeader: 'dt-px-4',
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0',
     outlinedInput:
@@ -234,7 +236,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
       bigText: 'dt-font-inter dt-text-lg dt-font-medium',
-      header: 'dt-font-inter dt-text-base dt-font-medium',
+      header: 'dt-font-inter dt-text-lg dt-font-medium',
       buttonText: 'dt-font-inter dt-text-base',
       bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-white',
       bigButtonSubtle: 'dt-font-inter dt-font-medium dt-text-sm dt-text-white',
@@ -262,7 +264,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     iconButton:
       'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60',
     sendButton: 'dt-h-5 dt-w-5 dt-text-black dt-rounded-full dt-bg-white',
-    header: 'dt-px-4 dt-py-3',
+    header: 'dt-py-3 dt-px-4',
+    sectionHeader: 'dt-px-4',
     input:
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white',
     outlinedInput:

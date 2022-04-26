@@ -39,9 +39,24 @@ function Header(props: {
 }) {
   const { isDialectAvailable } = useDialect();
   const { colors, textStyles, header, icons } = useTheme();
-  const isMobile = useMobile();
 
-  if (!isDialectAvailable && !isMobile) return null;
+  if (!isDialectAvailable) {
+    return (
+      <>
+        <div
+          className={cs(
+            'dt-flex dt-flex-row dt-items-center dt-justify-between',
+            header
+          )}
+        >
+          <span className={cs(textStyles.header, colors.accent)}>
+            Setup Notifications
+          </span>
+        </div>
+        <Divider />
+      </>
+    );
+  }
 
   return (
     <>
@@ -79,7 +94,7 @@ function Header(props: {
           </div>
         </div>
       </div>
-      <Divider className="dt-mx-2" />
+      <Divider />
     </>
   );
 }
