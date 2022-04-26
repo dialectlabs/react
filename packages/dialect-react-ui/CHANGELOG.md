@@ -3,9 +3,9 @@
 ## [UNRELEASED]
 - feat: added UI in notification for email verification
 - feat: added UI in notification for sms verification
-
 - Add client-side address or twitter handle validation.
 - Allow thread creation using twitter handle.
+- Only show delete thread button to dialect admins.
 
 ## [0.6.9] - 2022-04-22
 
