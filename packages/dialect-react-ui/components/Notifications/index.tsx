@@ -22,6 +22,7 @@ import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
+import { TelegramForm } from './TelegramForm';
 
 export type NotificationType = {
   name: string;
@@ -218,6 +219,8 @@ function Wallet(props: { onThreadDelete?: () => void }) {
 const baseChannelOptions: Record<Channel, boolean> = {
   web3: false,
   email: false,
+  sms: false,
+  telegram: false,
 };
 
 function Settings(props: {
@@ -263,6 +266,15 @@ function Settings(props: {
           title="SMS notifications"
         >
          <SmsForm />
+       </Accordion>
+      )}
+       {channelsOptions.telegram &&  (
+        <Accordion
+          className="dt-mb-6"
+          defaultExpanded
+          title="Telegram"
+        >
+         <TelegramForm />
        </Accordion>
       )}
       <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
