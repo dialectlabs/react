@@ -31,7 +31,7 @@ export type ThemeColors =
   | 'highlightSolid'
   | 'toggleThumb'
   | 'toggleBackground'
-  | 'toggleBackgroundActive';
+  | 'toggleBackgroundActive'
 
 export type ThemeTextStyles =
   | 'h1'
@@ -101,6 +101,7 @@ export type IncomingThemeValues = {
   // TODO: Deprecate BigButton
   bigButton?: string;
   bigButtonLoading?: string;
+  disabledButton?: string;
 };
 
 export type IncomingThemeVariables = Partial<
@@ -204,6 +205,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 dt-bg-transparent',
+    disabledButton: 'dt-bg-[#ABABAB]/20 dt-text-black/20 dt-border dt-border-white/20 hover:dt-bg-black/10'
   },
   dark: {
     colors: {
@@ -292,6 +294,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
+    disabledButton: 'dt-bg-[#ABABAB]/20 dt-text-white/20 dt-border dt-border-white/20 hover:dt-bg-white/10'
   },
 };
 

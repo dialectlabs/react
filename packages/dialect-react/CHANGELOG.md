@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- feat: added API for code verification + resend code 
+– fix: import Message type from '@dialectlabs/web3'
+
 ## [0.4.7] - 2022-04-22
 
 - chore: remove wildcard exports

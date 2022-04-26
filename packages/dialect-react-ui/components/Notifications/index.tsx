@@ -20,6 +20,7 @@ import {
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import { EmailForm } from './EmailForm';
+import { SmsForm } from './SmsForm';
 
 export type NotificationType = {
   name: string;
@@ -253,6 +254,15 @@ function Settings(props: {
         >
           <EmailForm />
         </Accordion>
+      )}
+      {channelsOptions.sms &&  (
+        <Accordion
+          className="dt-mb-6"
+          defaultExpanded
+          title="SMS notifications"
+        >
+         <SmsForm />
+       </Accordion>
       )}
       <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
         <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>

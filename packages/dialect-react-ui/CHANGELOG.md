@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- feat: added UI in notification for email verification
+- feat: added UI in notification for sms verification
 
 - Add client-side address or twitter handle validation.
 - Allow thread creation using twitter handle.
