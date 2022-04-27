@@ -274,7 +274,9 @@ function Settings(props: {
           defaultExpanded
           title="Telegram"
         >
-         <TelegramForm />
+         <TelegramForm
+            botURL="https://telegram.me/DialectNotificationsbot"
+         />
        </Accordion>
       )}
       <Accordion className="dt-mb-6" defaultExpanded title="Notification types">

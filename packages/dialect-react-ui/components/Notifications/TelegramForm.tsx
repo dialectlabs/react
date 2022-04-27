@@ -7,12 +7,16 @@ import { P } from '../common/preflighted';
 import { Button, Toggle, ValueRow } from '../common';
 import ResendIcon from '../Icon/Resend';
 
+export interface TelegramFormProps {
+    botURL?: string;
+}
+
 function getTelegramObj(addresses: AddressType[] | null): AddressType | null {
   if (!addresses) return null;
   return addresses.find((address) => address.type === 'telegram') || null;
 }
 
-export function TelegramForm() {
+export function TelegramForm(props: TelegramFormProps) {
   const {
     wallet,
     addresses,
@@ -249,7 +253,7 @@ export function TelegramForm() {
             {!isTelegramUsernameEditing && !isVerified ? (
                <>
                 <div className={cs(textStyles.small, "dt-flex dt-flex-row dt-space-x-2")}>
-                    <a className={cs(textStyles.small)} href='https://telegram.me/DialectNotificationsbot' target="_blank">
+                    <a className={cs(textStyles.small)} href={props.botURL} target="_blank">
                         🤖 
                         <span className='dt-opacity-50'> Get verification code by starting </span>
                         <span className='dt-underline'>this bot </span> 
