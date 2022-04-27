@@ -51,7 +51,7 @@ export function TelegramForm() {
 
   const [verificationCode, setVerificationCode] = useState("");
 
-  const isSmsNumberSaved = Boolean(telegramObj);
+  const isTelegramSaved = Boolean(telegramObj);
   const isChanging = telegramObj && isTelegramUsernameEditing;
   const isVerified = telegramObj?.verified;
 
@@ -70,7 +70,6 @@ export function TelegramForm() {
   }, [telegramObj]);
 
   const updateTelegram = async () => {
-    // TODO: validate & save sms number
     if (telegramError) return;
 
     await updateAddress(wallet, {
@@ -87,9 +86,11 @@ export function TelegramForm() {
   const saveTelegram = async () => {
     if (telegramError) return;
 
+    let value = telegramUsername.replace('@', '');
+
     await saveAddress(wallet, {
       type: 'telegram',
-      value: telegramUsername,
+      value: value,
       enabled: true,
     });
   };
@@ -168,7 +169,7 @@ export function TelegramForm() {
   return (
     <div>
       <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-        {isSmsNumberSaved && isVerified
+        {isTelegramSaved && isVerified
           ? 'Telegram notifications are now enabled. Telegram username are stored securely off-chain.'
           : 'Receive notifications to your telegram. Telegram are stored securely off-chain.'}
       </P>
@@ -193,7 +194,7 @@ export function TelegramForm() {
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
-              {isSmsNumberSaved && !isTelegramUsernameEditing ? (
+              {isTelegramSaved && !isTelegramUsernameEditing ? (
                 <>
                   {isVerified ? renderVerifiedState() : renderVerificationCode()}
                 </>
@@ -204,20 +205,11 @@ export function TelegramForm() {
                     telegramError && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
                   )}
-                  placeholder="dialect"
+                  placeholder="Enter telegram username"
                   type="text"
                   value={telegramUsername}
                   onChange={(e) => setTelegramUsername(e.target.value)}
-                  onBlur={(e) =>
-                    e.target.checkValidity()
-                      ? setTelegramError(null)
-                      : setTelegramError(DialectErrors.incorrectSmsNumber)
-                  }
-                  onInvalid={(e) => {
-                    e.preventDefault();
-                    setTelegramError(DialectErrors.incorrectSmsNumber);
-                  }}
-                  disabled={isSmsNumberSaved && !isTelegramUsernameEditing}
+                  disabled={isTelegramSaved && !isTelegramUsernameEditing}
                 />
               )}
             </div>
@@ -256,8 +248,13 @@ export function TelegramForm() {
 
             {!isTelegramUsernameEditing && !isVerified ? (
                <>
-                <div className="dt-flex dt-flex-row dt-space-x-2">
-                    <a className={cs(textStyles.small, 'dt-underline')} href='https://telegram.me/dialect_notifications_bot' target="_blank">Join to our telegram bot to get verification code</a>
+                <div className={cs(textStyles.small, "dt-flex dt-flex-row dt-space-x-2")}>
+                    <a className={cs(textStyles.small)} href='https://telegram.me/DialectNotificationsbot' target="_blank">
+                        🤖 
+                        <span className='dt-opacity-50'> Get verification code by starting </span>
+                        <span className='dt-underline'>this bot </span> 
+                        <span className='dt-opacity-50'>with command: /start</span>
+                    </a>   
                 </div> 
                 <div className="dt-flex dt-flex-row dt-space-x-2">
                     <P className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendCodeVerification}>
