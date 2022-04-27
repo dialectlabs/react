@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type * as anchor from '@project-serum/anchor';
 import {
   ApiProvider,
   connected,
   useApi,
   DialectProvider,
+  baseChannelOptions,
 } from '@dialectlabs/react';
-import type { WalletType } from '@dialectlabs/react';
+import type { WalletType, ChannelType as Channel } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
 import useMobile from '../../utils/useMobile';
@@ -16,7 +17,6 @@ import {
   IncomingThemeVariables,
   useTheme,
 } from '../common/ThemeProvider';
-import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
@@ -32,6 +32,7 @@ type PropTypes = {
   bellStyle?: object;
   notifications: NotificationType[];
   channels?: Channel[];
+  channelsOptions?: Record<Channel, boolean>;
 };
 
 function useOutsideAlerter(
@@ -64,7 +65,7 @@ function useOutsideAlerter(
 }
 
 function WrappedNotificationsButton(
-  props: Omit<PropTypes, 'theme' | 'variables'>
+  props: Omit<PropTypes, 'theme' | 'variables' | 'channels'>
 ): JSX.Element {
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
@@ -131,7 +132,7 @@ function WrappedNotificationsButton(
           // style={{ backdropFilter: 'blur(132px)' }}
         >
           <Notifications
-            channels={props.channels}
+            channelsOptions={props.channelsOptions}
             notifications={props?.notifications}
             onModalClose={() => setOpen(false)}
           />
@@ -147,13 +148,28 @@ export default function NotificationsButton({
   variables,
   ...props
 }: PropTypes): JSX.Element {
+  const channelsOptions = useMemo(
+    () =>
+      Object.fromEntries(
+        // Since by default options everything is false, passed options are considered enabled
+        channels.map((channel) => [channel, !baseChannelOptions[channel]])
+      ) as Record<Channel, boolean>,
+    [channels]
+  );
+
   return (
     <div className="dialect">
-      <ApiProvider dapp={props.publicKey.toBase58()}>
+      <ApiProvider
+        dapp={props.publicKey.toBase58()}
+        channelsOptions={channelsOptions}
+      >
         <DialectProvider publicKey={props.publicKey}>
           <WalletIdentityProvider>
             <ThemeProvider theme={theme} variables={variables}>
-              <WrappedNotificationsButton channels={channels} {...props} />
+              <WrappedNotificationsButton
+                channelsOptions={channelsOptions}
+                {...props}
+              />
             </ThemeProvider>
           </WalletIdentityProvider>
         </DialectProvider>

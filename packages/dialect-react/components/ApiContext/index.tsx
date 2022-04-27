@@ -21,6 +21,7 @@ import {
   verifyCode,
   resendCode,
 } from '../../api';
+import type { Channel } from '../../api';
 import type { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
 import {
@@ -41,6 +42,7 @@ const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {
 type PropsType = {
   children: JSX.Element;
   dapp?: string; // base58 public key format
+  channelsOptions?: Record<Channel, boolean>;
 };
 
 export type WalletType =
@@ -94,7 +96,11 @@ type ValueType = {
 
 const ApiContext = createContext<ValueType | null>(null);
 
-export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
+export const ApiProvider = ({
+  dapp,
+  channelsOptions,
+  children,
+}: PropsType): JSX.Element => {
   const [wallet, setWallet] = useState<WalletType>(null);
   const [program, setProgram] = useState<ProgramType>(null);
   const [network, setNetwork] = useState<string | null>('devnet');
@@ -108,6 +114,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const [deletingAddressError, setDeletingAddressError] =
     React.useState<ParsedErrorData | null>(null);
 
+  // TODO: remove the fetching error in favor of withErrorParsing wrapper for web2
   const [fetchingError, setFetchingError] =
     React.useState<ParsedErrorData | null>(null);
 
@@ -115,16 +122,18 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     useState<ParsedErrorData | null>(null);
   const [isSendingCode, setSendingCode] = React.useState(false);
 
+  const isWeb2Enabled =
+    dapp && channelsOptions && (channelsOptions.email || channelsOptions.sms);
   const {
     data: addresses,
     mutate: mutateAddresses,
     error: fetchError,
   } = useSWR<AddressType[] | null, ParsedErrorData>(
-    wallet && dapp ? [wallet, dapp] : null,
+    wallet && dapp && isWeb2Enabled ? [wallet, dapp] : null,
     fetchAddressesForDapp,
     {
       onError: (err) => {
-        console.log('error fetching', err);
+        console.log('error fetching web2 addresses', err);
         setFetchingError(err as ParsedErrorData);
       },
     }
