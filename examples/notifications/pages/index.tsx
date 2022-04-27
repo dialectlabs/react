@@ -20,6 +20,16 @@ export const themeVariables: IncomingThemeVariables = {
       'w-10 h-10 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700',
     modal: `${defaultVariables.dark.modal} sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-[#ABABAB]/40`, // 0.4 opacity based on trial-and-error
   },
+  animations: {
+    popup: {
+      enter: 'transition-all duration-300 origin-top-right',
+      enterFrom: 'opacity-0 scale-75',
+      enterTo: 'opacity-100 scale-100',
+      leave: 'transition-all duration-100 origin-top-right',
+      leaveFrom: 'opacity-100 scale-100',
+      leaveTo: 'opacity-0 scale-75',
+    },
+  },
 };
 
 type ThemeType = 'light' | 'dark' | undefined;
@@ -70,7 +80,7 @@ function AuthedHome() {
           notifications={[
             { name: 'Welcome message', detail: 'On thread creation' },
           ]}
-          channels={['web3', 'email', "sms"]}
+          channels={['web3', 'email', 'sms']}
         />
         <WalletButton />
       </div>

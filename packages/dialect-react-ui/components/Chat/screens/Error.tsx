@@ -1,4 +1,3 @@
-import React from 'react';
 import cs from '../../../utils/classNames';
 import { Centered } from '../../common';
 import { useTheme } from '../../common/ThemeProvider';

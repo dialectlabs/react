@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+- feat: add ability to configure animation props
+- fix: theme's defaultVariables are no longer mutable
+- chore: bump @dialectlabs/web3
+
 ## [0.6.11] - 2022-04-26
 
 - feat: added UI in notification for email verification
