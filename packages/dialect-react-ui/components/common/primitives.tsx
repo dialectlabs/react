@@ -192,7 +192,7 @@ export function Accordion(props: {
           textStyles.bigText,
           'dt-w-full dt-flex dt-justify-between dt-mb-1'
         )}
-      > 
+      >
         {props.title}
         {/* <IconButton
           icon={<icons.chevron />}
@@ -208,7 +208,6 @@ export function Accordion(props: {
     </div>
   );
 }
-
 
 export const useBalance = () => {
   const { wallet, program } = useApi();
