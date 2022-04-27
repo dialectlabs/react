@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [0.7.0] - 2022-04-27
+
 - feat: add ability to configure animation props
 - fix: theme's defaultVariables are no longer mutable
 - chore: bump @dialectlabs/web3

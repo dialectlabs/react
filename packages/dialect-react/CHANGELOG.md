@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [0.4.10] - 2022-04-27
+
 - chore: bump @dialectlabs/web3
 
 ## [0.4.9] - 2022-04-26
