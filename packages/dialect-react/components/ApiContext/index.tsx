@@ -18,6 +18,7 @@ import {
   fetchAddressesForDapp,
   saveAddress,
   updateAddress,
+  removeToken,
   verifyCode,
   resendCode,
 } from '../../api';
@@ -152,6 +153,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
       );
       setProgram(program);
     } else {
+      removeToken();
       setProgram(null);
     }
   }, [wallet, isWalletConnected, network, rpcUrl]);
