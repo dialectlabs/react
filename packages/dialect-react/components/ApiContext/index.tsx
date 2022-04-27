@@ -110,7 +110,6 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
 
   useEffect(() => {
     if (isWalletConnected) {
-      removeToken();
       const n: 'mainnet' | 'devnet' | 'localnet' =
         network && Object.keys(URLS).includes(network)
           ? (network as 'mainnet' | 'devnet' | 'localnet')
@@ -129,6 +128,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
       );
       setProgram(program);
     } else {
+      removeToken();
       setProgram(null);
     }
   }, [wallet, isWalletConnected, network, rpcUrl]);
