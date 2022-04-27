@@ -13,7 +13,7 @@
     "@babel/runtime": "^7.16.7",
     "@dialectlabs/react": "^0.4.9",
     "@dialectlabs/react-ui": "^0.6.10",
-    "@dialectlabs/web3": "^0.2.0",
+    "@dialectlabs/web3": "^0.3.0",
     "@project-serum/anchor": "^0.23.0",
     "@solana/wallet-adapter-base": "^0.9.5",
     "@solana/wallet-adapter-react": "^0.15.4",

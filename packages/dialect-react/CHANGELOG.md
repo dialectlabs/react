@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: bump @dialectlabs/web3
+
 ## [0.4.9] - 2022-04-26
 
 - feat: added API for code verification + resend code 
