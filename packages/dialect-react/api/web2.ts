@@ -9,7 +9,7 @@ const DIALECT_BASE_URL = '/api';
 export type AddressType = {
   id?: string;
   addressId?: string;
-  type?: 'email' | 'phone' | 'telegram';
+  type?: 'email' | 'sms' | 'telegram';
   verified?: boolean;
   value?: string;
   dapp?: string;
@@ -186,3 +186,44 @@ export const deleteAddress = withErrorParsing(
     return {};
   }
 );
+
+export const verifyCode = withErrorParsing(
+  async (wallet: WalletType, dapp: string, address: AddressType, code) => {
+    const rawResponse = await fetchJSON(
+      wallet,
+      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
+        address?.id
+      }/verify`,
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({code, addressId: address.addressId}),
+      }
+    );
+    const content = await rawResponse.json();
+    return content;
+  }
+)
+
+export const resendCode = withErrorParsing(
+  async (wallet: WalletType, dapp: string, address: AddressType) => {
+    await fetchJSON(
+      wallet,
+      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
+        address?.id
+      }/resendCode`,
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(address),
+      }
+    );
+    return {};
+  }
+)

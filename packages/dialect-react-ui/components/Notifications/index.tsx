@@ -13,7 +13,6 @@ import {
   Button,
   Centered,
   Divider,
-  Footer,
   NetworkBadge,
   useBalance,
   ValueRow,
@@ -21,6 +20,7 @@ import {
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import { EmailForm } from './EmailForm';
+import { SmsForm } from './SmsForm';
 
 export type NotificationType = {
   name: string;
@@ -255,6 +255,15 @@ function Settings(props: {
           <EmailForm />
         </Accordion>
       )}
+      {channelsOptions.sms &&  (
+        <Accordion
+          className="dt-mb-6"
+          defaultExpanded
+          title="SMS notifications"
+        >
+         <SmsForm />
+       </Accordion>
+      )}
       <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
         <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
           The following notification types are supported
@@ -405,7 +414,6 @@ export default function Notifications(props: {
         >
           {content}
         </div>
-        <Footer />
       </div>
     </div>
   );

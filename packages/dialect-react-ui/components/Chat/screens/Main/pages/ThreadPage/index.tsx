@@ -7,7 +7,7 @@ import { P } from '../../../../../common/preflighted';
 import IconButton from '../../../../../IconButton';
 import Settings from './Settings';
 import Thread from './Thread';
-import { CardinalDisplayAddress } from '../../../../../CardinalAddress';
+import { DisplayAddress } from '../../../../../DisplayAddress';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
@@ -44,7 +44,7 @@ const ThreadPage = ({
 
   useEffect(() => {
     setDialectAddress('');
-  }, [wallet])
+  }, [wallet]);
 
   if (!dialectAddress) {
     if (!inbox) {
@@ -64,20 +64,9 @@ const ThreadPage = ({
     );
   }
 
-  const displayAddress =
-    dialect?.dialect.members.length > 0 &&
-    (program?.provider.connection ? (
-      <CardinalDisplayAddress
-        connection={program?.provider.connection}
-        publicKey={otherMembers[0].publicKey}
-        isLinkable={true}
-      />
-    ) : (
-      <>{display(otherMembers[0].publicKey)}</>
-    ));
-
   return (
-    <div className="dt-flex dt-flex-col dt-flex-1">
+    <div className="dt-flex dt-flex-col dt-flex-1 dt-min-w-[0px]">
+      {/* ↑ The min-width: 0 is used to prevent the column from overflow the container. Explanation: https://makandracards.com/makandra/66994-css-flex-and-min-width */}
       <div className="dt-px-4 dt-py-1 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-items-center">
         {/* TODO: replace with IconButton to be sematic */}
         <div
@@ -93,8 +82,16 @@ const ThreadPage = ({
           <icons.back />
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
-          <span className="dt-text-base dt-font-medium dt-text-white">
-            {dialect ? displayAddress : 'Loading...'}
+          <span className="dt-text-base dt-font-medium dt-text">
+            {dialect ? (
+              <DisplayAddress
+                connection={program?.provider.connection}
+                dialectMembers={dialect?.dialect.members}
+                isLinkable={true}
+              />
+            ) : (
+              'Loading...'
+            )}
           </span>
           {dialect?.dialect.encrypted ? (
             <span className="dt-text-xs dt-opacity-50">encrypted</span>
