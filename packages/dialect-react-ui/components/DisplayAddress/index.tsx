@@ -1,10 +1,13 @@
 import { useAddressName } from '@cardinal/namespaces-components';
+import { getNameEntry } from '@cardinal/namespaces';
 import { TwitterIcon } from '../Icon/Twitter';
 import type { Connection } from '@project-serum/anchor';
 import type { PublicKey } from '@solana/web3.js';
+import { useApi } from '@dialectlabs/react';
 import clsx from 'clsx';
 import cs from '../../utils/classNames';
 import { A } from '../common/preflighted';
+import { display, Member } from '@dialectlabs/web3';
 
 const formatTwitterLink = (
   handle: string | undefined,
@@ -50,7 +53,7 @@ const formatShortAddress = (
   );
 };
 
-const DisplayAddressNew = ({
+const TwitterHandle = ({
   address,
   displayName,
   loadingName,
@@ -80,21 +83,49 @@ const DisplayAddressNew = ({
   );
 };
 
-export function CardinalDisplayAddress({
+export const fetchAddressFromTwitterHandle = async (
+  connection: Connection,
+  handle: string
+) => {
+  const NAMESPACE = 'twitter';
+  try {
+    const { parsed, pubkey } = await getNameEntry(
+      connection,
+      NAMESPACE,
+      handle
+    );
+    return { result: { parsed, pubkey } };
+  } catch (e) {
+    return { result: null };
+  }
+};
+
+export function DisplayAddress({
   connection,
-  publicKey,
+  dialectMembers,
   isLinkable = false,
 }: {
   connection: Connection;
-  publicKey: PublicKey;
+  dialectMembers: Member[] | undefined;
   isLinkable?: boolean;
 }) {
+  const { wallet } = useApi();
+
+  if (!dialectMembers.length) {
+    return null;
+  }
+
+  const otherMembers = dialectMembers.filter(
+    (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
+  );
+
+  const publicKey = otherMembers[0].publicKey;
   const { displayName, loadingName } = useAddressName(connection, publicKey);
   const showTwitterIcon = displayName?.includes('@');
 
-  return (
+  return connection ? (
     <div className="dt-flex dt-inline-flex items-center">
-      <DisplayAddressNew
+      <TwitterHandle
         address={publicKey}
         displayName={displayName}
         loadingName={loadingName}
@@ -106,5 +137,7 @@ export function CardinalDisplayAddress({
         </div>
       )}
     </div>
+  ) : (
+    <>{display(publicKey)}</>
   );
 }
