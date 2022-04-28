@@ -1,7 +1,7 @@
 import * as DialectErrors from './utils/errors';
 import type { WalletType, ProgramType } from './components/ApiContext';
 import type { MessageType, DialectAccount } from './components/DialectContext';
-import type { AddressType } from './api';
+import type { AddressType, Channel as ChannelType } from './api';
 import type { ParsedErrorData } from './utils/errors';
 
 export * from './components/ApiContext';
@@ -17,5 +17,6 @@ export type {
   WalletType,
   ProgramType,
   MessageType,
+  ChannelType,
   DialectAccount,
 };

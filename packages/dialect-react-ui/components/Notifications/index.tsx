@@ -1,13 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { useDialect, useApi } from '@dialectlabs/react';
-import type { MessageType } from '@dialectlabs/react';
+import { useDialect, useApi, baseChannelOptions } from '@dialectlabs/react';
+import type { MessageType, Channel } from '@dialectlabs/react';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import useMobile from '../../utils/useMobile';
 import cs from '../../utils/classNames';
 import { display } from '@dialectlabs/web3';
 import { useTheme } from '../common/ThemeProvider';
 import { A, P } from '../common/preflighted';
-import type { Channel } from '../common/types';
 import {
   Accordion,
   Button,
@@ -214,26 +213,13 @@ function Wallet(props: { onThreadDelete?: () => void }) {
   );
 }
 
-const baseChannelOptions: Record<Channel, boolean> = {
-  web3: false,
-  email: false,
-};
-
 function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
-  channels: Channel[];
+  channelsOptions: Record<Channel, boolean>;
 }) {
   const { textStyles } = useTheme();
-
-  const channelsOptions = useMemo(
-    () =>
-      Object.fromEntries(
-        // Since by default options everything is false, passed options are considered enabled
-        props.channels.map((channel) => [channel, !baseChannelOptions[channel]])
-      ) as Record<Channel, boolean>,
-    [props.channels]
-  );
+  const { channelsOptions } = props;
 
   return (
     <>
@@ -255,14 +241,14 @@ function Settings(props: {
           <EmailForm />
         </Accordion>
       )}
-      {channelsOptions.sms &&  (
+      {channelsOptions.sms && (
         <Accordion
           className="dt-mb-6"
           defaultExpanded
           title="SMS notifications"
         >
-         <SmsForm />
-       </Accordion>
+          <SmsForm />
+        </Accordion>
       )}
       <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
         <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
@@ -312,7 +298,7 @@ function Settings(props: {
 export default function Notifications(props: {
   onModalClose: () => void;
   notifications?: NotificationType[];
-  channels?: Channel[];
+  channelsOptions?: Record<Channel, boolean>;
 }): JSX.Element {
   const {
     isWalletConnected,
@@ -362,7 +348,7 @@ export default function Notifications(props: {
       <Settings
         toggleSettings={toggleSettings}
         notifications={props.notifications || []}
-        channels={props.channels || []}
+        channelsOptions={props.channelsOptions || baseChannelOptions}
       />
     );
   } else if (isNoMessages) {
