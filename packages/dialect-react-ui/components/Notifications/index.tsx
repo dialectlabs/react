@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDialect, useApi } from '@dialectlabs/react';
 import type { MessageType } from '@dialectlabs/react';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
@@ -255,14 +255,14 @@ function Settings(props: {
           <EmailForm />
         </Accordion>
       )}
-      {channelsOptions.sms &&  (
+      {channelsOptions.sms && (
         <Accordion
           className="dt-mb-6"
           defaultExpanded
           title="SMS notifications"
         >
-         <SmsForm />
-       </Accordion>
+          <SmsForm />
+        </Accordion>
       )}
       <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
         <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
