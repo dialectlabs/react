@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: remove wallet identity provider from notifications button
+
 ## [0.7.1] - 2022-04-28
 
 - chore: bump @dialectlabs/web3
