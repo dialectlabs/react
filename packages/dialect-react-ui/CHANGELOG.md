@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [0.7.3] - 2022-04-29
+
 - feat: revert powered by footer
 
 ## [0.7.2] - 2022-04-28
