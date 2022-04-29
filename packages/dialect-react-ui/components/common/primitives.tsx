@@ -46,21 +46,23 @@ export function Footer(): JSX.Element {
   const { colors } = useTheme();
 
   return (
-    <div
-      className={cs(
-        'dt-px-3 dt-py-1 dt-flex dt-items-center dt-justify-center dt-absolute dt-bottom-3 dt-left-1/2 -dt-translate-x-1/2 dt-uppercase dt-rounded-full dt-text-[10px]',
-        colors.highlightSolid
-      )}
-    >
-      Powered by{' '}
-      <A
-        href="https://dialect.to"
-        target="_blank"
-        rel="noreferrer"
-        className="hover:dt-text-inherit"
+    <div className="dt-flex dt-justify-center dt-py-3">
+      <div
+        className={cs(
+          'dt-px-3 dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-uppercase dt-rounded-full dt-text-[10px]',
+          colors.highlightSolid
+        )}
       >
-        <DialectLogo className="dt-ml-[3px] -dt-mt-[1px]" />
-      </A>
+        Powered by{' '}
+        <A
+          href="https://dialect.to"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:dt-text-inherit"
+        >
+          <DialectLogo className="dt-ml-[3px] -dt-mt-[1px]" />
+        </A>
+      </div>
     </div>
   );
 }

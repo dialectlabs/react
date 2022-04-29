@@ -12,6 +12,7 @@ import { A, H1, Input, P } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import {
   Button,
+  Footer,
   NetworkBadge,
   Toggle,
   useBalance,
@@ -39,7 +40,7 @@ function CardinalCTA() {
     >
       {'Link your Twitter handle with '}
       <A
-        href={`https://twitter.cardinal.so`}
+        href={'https://twitter.cardinal.so'}
         target="_blank"
         rel="noreferrer"
         className="dt-underline"
@@ -280,7 +281,7 @@ export default function CreateThread({
         </div>
       </div>
 
-      <div className="dt-h-full dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col">
+      <div className="dt-flex-1 dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col">
         <H1
           className={clsx(
             textStyles.h1,
@@ -356,6 +357,10 @@ export default function CreateThread({
           </Button>
         </div>
         <ActionCaption encrypted={encrypted} creationError={creationError} />
+      </div>
+
+      <div>
+        <Footer />
       </div>
     </div>
   );
