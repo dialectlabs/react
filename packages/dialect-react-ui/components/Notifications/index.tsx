@@ -13,6 +13,7 @@ import {
   Button,
   Centered,
   Divider,
+  Footer,
   NetworkBadge,
   useBalance,
   ValueRow,
@@ -217,6 +218,7 @@ function Wallet(props: { onThreadDelete?: () => void }) {
 const baseChannelOptions: Record<Channel, boolean> = {
   web3: false,
   email: false,
+  sms: false,
 };
 
 function Settings(props: {
@@ -237,74 +239,83 @@ function Settings(props: {
 
   return (
     <>
-      {channelsOptions.web3 && (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="Web3 notifications"
-        >
-          <Wallet onThreadDelete={props.toggleSettings} />
-        </Accordion>
-      )}
-      {channelsOptions.email && (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="Email notifications"
-        >
-          <EmailForm />
-        </Accordion>
-      )}
-      {channelsOptions.sms && (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="SMS notifications"
-        >
-          <SmsForm />
-        </Accordion>
-      )}
-      <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
-        <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-          The following notification types are supported
-        </P>
-        {props.notifications
-          ? props.notifications.map((type) => (
-              <ValueRow
-                key={type.name}
-                label={type.name}
-                className={cs('dt-mb-1')}
-              >
-                {type.detail}
-              </ValueRow>
-            ))
-          : 'No notification types supplied'}
-      </Accordion>
-      <P
-        className={cs(
-          textStyles.small,
-          'dt-opacity-50 dt-text-center dt-mb-10'
+      <div className="dt-flex-1">
+        {channelsOptions.web3 && (
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="Web3 notifications"
+          >
+            <Wallet onThreadDelete={props.toggleSettings} />
+          </Accordion>
         )}
-      >
-        By enabling notifications you agree to our{' '}
-        <A
-          className="dt-underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/tos"
+        {channelsOptions.email && (
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="Email notifications"
+          >
+            <EmailForm />
+          </Accordion>
+        )}
+        {channelsOptions.sms && (
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="SMS notifications"
+          >
+            <SmsForm />
+          </Accordion>
+        )}
+        <Accordion
+          className="dt-mb-6"
+          defaultExpanded
+          title="Notification types"
         >
-          Terms of Service
-        </A>{' '}
-        and{' '}
-        <A
-          className="dt-underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/privacy"
+          <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
+            The following notification types are supported
+          </P>
+          {props.notifications
+            ? props.notifications.map((type) => (
+                <ValueRow
+                  key={type.name}
+                  label={type.name}
+                  className={cs('dt-mb-1')}
+                >
+                  {type.detail}
+                </ValueRow>
+              ))
+            : 'No notification types supplied'}
+        </Accordion>
+        <P
+          className={cs(
+            textStyles.small,
+            'dt-opacity-50 dt-text-center dt-mb-5'
+          )}
         >
-          Privacy Policy
-        </A>
-      </P>
+          By enabling notifications you agree to our{' '}
+          <A
+            className="dt-underline"
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.dialect.to/tos"
+          >
+            Terms of Service
+          </A>{' '}
+          and{' '}
+          <A
+            className="dt-underline"
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.dialect.to/privacy"
+          >
+            Privacy Policy
+          </A>
+        </P>
+      </div>
+      <div>
+        <Footer />
+      </div>
     </>
   );
 }

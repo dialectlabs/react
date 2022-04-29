@@ -9,8 +9,9 @@ import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
 import { useTheme } from './ThemeProvider';
-import { ButtonBase, P } from './preflighted';
+import { A, ButtonBase, P } from './preflighted';
 import clsx from 'clsx';
+import { DialectLogo } from '../Icon';
 
 // TODO: separate these components to separate files
 export function Divider(props: { className?: string }): JSX.Element {
@@ -37,6 +38,31 @@ export function ValueRow(props: {
     >
       <span className={cs(textStyles.body)}>{props.label}</span>
       <span className={cs(textStyles.body)}>{props.children}</span>
+    </div>
+  );
+}
+
+export function Footer(): JSX.Element {
+  const { colors } = useTheme();
+
+  return (
+    <div className="dt-flex dt-justify-center dt-py-3">
+      <div
+        className={cs(
+          'dt-px-3 dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-uppercase dt-rounded-full dt-text-[10px]',
+          colors.highlightSolid
+        )}
+      >
+        Powered by{' '}
+        <A
+          href="https://dialect.to"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:dt-text-inherit"
+        >
+          <DialectLogo className="dt-ml-[3px] -dt-mt-[1px]" />
+        </A>
+      </div>
     </div>
   );
 }
