@@ -13,6 +13,7 @@ import {
   Button,
   Centered,
   Divider,
+  Footer,
   NetworkBadge,
   useBalance,
   ValueRow,
@@ -305,6 +306,7 @@ function Settings(props: {
           Privacy Policy
         </A>
       </P>
+      <Footer />
     </>
   );
 }
