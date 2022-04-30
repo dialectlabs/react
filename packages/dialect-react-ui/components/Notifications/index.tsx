@@ -202,6 +202,7 @@ export default function Notifications(props: {
   } = useApi();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
 
   const toggleSettings = useCallback(
     () => setSettingsOpen(!isSettingsOpen),
@@ -235,7 +236,7 @@ export default function Notifications(props: {
         <span className="dt-opacity-60">Wallet not connected</span>
       </Centered>
     );
-  } else if (isSettingsOpen || !isDialectAvailable || !walletObj?.enabled) {
+  } else if (isSettingsOpen || !isWalletEnabled) {
     content = (
       <Settings
         toggleSettings={toggleSettings}
