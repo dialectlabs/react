@@ -44,7 +44,10 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
   } = useTheme();
   const { balance } = useBalance();
   // Support for threads created before address registry launch
-  const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
+  const isWalletEnabled =
+    (walletObj ? walletObj?.enabled : isDialectAvailable) ||
+    isDialectCreating ||
+    isDialectDeleting;
 
   const deleteWallet = useCallback(async () => {
     if (!walletObj) return;
@@ -76,12 +79,17 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
   );
 
   useEffect(() => {
-    if (!isDialectAvailable && walletObj) {
-      //   sync state in case of errors
-      deleteAddress(wallet, {
-        addressId: walletObj?.addressId,
-      });
-    }
+    if (
+      isDialectAvailable ||
+      !walletObj ||
+      isDialectCreating ||
+      isDialectDeleting
+    )
+      return;
+    //   sync state in case of errors
+    deleteAddress(wallet, {
+      addressId: walletObj?.addressId,
+    });
   }, [isDialectAvailable, wallet, walletObj, walletObj?.addressId]);
 
   const isAdmin =
@@ -227,9 +235,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
       title="💬  Web3 wallet notifications"
       enabled={isWalletEnabled}
       onChange={async (nextValue) => {
-        if (isDialectAvailable && walletObj) {
-          await updateWalletEnabled(nextValue);
-        }
+        await updateWalletEnabled(nextValue);
       }}
     >
       {content}

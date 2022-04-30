@@ -192,6 +192,8 @@ export default function Notifications(props: {
   const {
     isWalletConnected,
     isDialectAvailable,
+    isDialectCreating,
+    isDialectDeleting,
     isNoMessages,
     messages,
     disconnectedFromChain,
@@ -236,7 +238,12 @@ export default function Notifications(props: {
         <span className="dt-opacity-60">Wallet not connected</span>
       </Centered>
     );
-  } else if (isSettingsOpen || !isWalletEnabled) {
+  } else if (
+    isSettingsOpen ||
+    !isWalletEnabled ||
+    isDialectCreating ||
+    isDialectDeleting
+  ) {
     content = (
       <Settings
         toggleSettings={toggleSettings}
