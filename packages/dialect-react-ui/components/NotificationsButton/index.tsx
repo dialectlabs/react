@@ -20,7 +20,7 @@ import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
 
-type PropTypes = {
+export type PropTypes = {
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -31,9 +31,10 @@ type PropTypes = {
   bellStyle?: object;
   notifications: NotificationType[];
   channels?: Channel[];
+  onBackClick?: () => void;
 };
 
-function useOutsideAlerter(
+export function useOutsideAlerter(
   ref: React.MutableRefObject<null>,
   bellRef: React.MutableRefObject<null>,
   setOpen: CallableFunction

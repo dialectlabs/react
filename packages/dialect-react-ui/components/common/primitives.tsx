@@ -207,6 +207,7 @@ export function Accordion(props: {
   children: React.ReactNode;
   className?: string;
   defaultExpanded?: boolean;
+  backButton?: React.ReactNode;
 }) {
   const { textStyles, colors, icons } = useTheme();
   const [isExpanded, setExpanded] = useState(props.defaultExpanded);
@@ -216,9 +217,10 @@ export function Accordion(props: {
       <div
         className={cs(
           textStyles.bigText,
-          'dt-w-full dt-flex dt-justify-between dt-mb-1'
+          'dt-w-full dt-flex dt-justify-start dt-mb-1'
         )}
       >
+        {props.backButton}
         {props.title}
         {/* <IconButton
           icon={<icons.chevron />}

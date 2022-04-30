@@ -36,6 +36,7 @@ function Header(props: {
   isSettingsOpen: boolean;
   onModalClose: () => void;
   toggleSettings: () => void;
+  onBackClick?: () => void;
 }) {
   const { isDialectAvailable } = useDialect();
   const { colors, textStyles, header, icons } = useTheme();
@@ -45,6 +46,7 @@ function Header(props: {
 
   return (
     <>
+      <IconButton icon={<icons.back />} onClick={() => {}} />
       <div
         className={cs(
           'dt-flex dt-flex-row dt-items-center dt-justify-between',
@@ -225,8 +227,9 @@ function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
   channels: Channel[];
+  onBackClick?: () => void;
 }) {
-  const { textStyles } = useTheme();
+  const { textStyles, icons } = useTheme();
 
   const channelsOptions = useMemo(
     () =>
@@ -237,35 +240,60 @@ function Settings(props: {
     [props.channels]
   );
 
+  const firstChannelOption = channelsOptions.web3
+    ? 'web3'
+    : channelsOptions.email
+    ? 'email'
+    : channelsOptions.sms
+    ? 'sms'
+    : null;
+
+  console.log('FirstChannelOption: ', firstChannelOption);
+
+  const BackButton = () => props?.onBackClick != null ? (
+    <span className="pt-1 mr-1">
+      <IconButton icon={<icons.back />} onClick={props.onBackClick} />
+    </span>
+  ): null;
+
   return (
     <>
       <div className="dt-flex-1">
         {channelsOptions.web3 && (
-          <Accordion
-            className="dt-mb-6"
-            defaultExpanded
-            title="Web3 notifications"
-          >
-            <Wallet onThreadDelete={props.toggleSettings} />
-          </Accordion>
+          <div className="dt-flex">
+            <Accordion
+              className="dt-mb-6"
+              defaultExpanded
+              title="Web3 notifications"
+              backButton={firstChannelOption === 'web3' ? <BackButton/> : null}
+            >
+              <Wallet onThreadDelete={props.toggleSettings} />
+            </Accordion>
+          </div>
         )}
         {channelsOptions.email && (
-          <Accordion
-            className="dt-mb-6"
-            defaultExpanded
-            title="Email notifications"
-          >
-            <EmailForm />
-          </Accordion>
+          <div className="dt-flex">
+            <Accordion
+              className="dt-mb-6"
+              defaultExpanded
+              title="Email notifications"
+              backButton={firstChannelOption === 'email' ? <BackButton/> : null}
+            >
+              <EmailForm />
+            </Accordion>
+          </div>
         )}
         {channelsOptions.sms && (
-          <Accordion
-            className="dt-mb-6"
-            defaultExpanded
-            title="SMS notifications"
-          >
-            <SmsForm />
-          </Accordion>
+          <div className="dt-flex">
+            <Accordion
+              className="dt-mb-6"
+              defaultExpanded
+              title="SMS notifications"
+              backButton={firstChannelOption === 'sms' ? <BackButton/> : null}
+            >
+              <SmsForm />
+            </Accordion>
+          </div>
         )}
         <Accordion
           className="dt-mb-6"
@@ -324,6 +352,7 @@ export default function Notifications(props: {
   onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
+  onBackClick?: () => void;
 }): JSX.Element {
   const {
     isWalletConnected,
@@ -344,29 +373,43 @@ export default function Notifications(props: {
   const { colors, modal, icons, notificationsDivider, scrollbar } = useTheme();
 
   let content: JSX.Element;
+  const BackButton = () => props?.onBackClick != null ? (
+    <span className="pt-1 mr-1">
+      <IconButton icon={<icons.back />} onClick={props.onBackClick} />
+    </span>
+  ): null;
 
   if (disconnectedFromChain) {
     content = (
-      <Centered>
-        <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
-        <span className="dt-opacity-60">
-          Lost connection to Solana blockchain
-        </span>
-      </Centered>
+      <div>
+        <BackButton />
+        <Centered>
+          <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+          <span className="dt-opacity-60">
+            Lost connection to Solana blockchain
+          </span>
+        </Centered>
+      </div>
     );
   } else if (cannotDecryptDialect) {
     content = (
-      <Centered>
-        <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
-        <span className="dt-opacity-60">Cannot decrypt messages</span>
-      </Centered>
+      <div>
+        <BackButton />
+        <Centered>
+          <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+          <span className="dt-opacity-60">Cannot decrypt messages</span>
+        </Centered>
+      </div>
     );
   } else if (!isWalletConnected) {
     content = (
-      <Centered>
-        <icons.notConnected className="dt-mb-6 dt-opacity-60" />
-        <span className="dt-opacity-60">Wallet not connected</span>
-      </Centered>
+      <div>
+        <BackButton />
+        <Centered>
+          <icons.notConnected className="dt-mb-6 dt-opacity-60" />
+          <span className="dt-opacity-60">Wallet not connected</span>
+        </Centered>
+      </div>
     );
   } else if (isSettingsOpen || !isDialectAvailable) {
     content = (
@@ -374,15 +417,19 @@ export default function Notifications(props: {
         toggleSettings={toggleSettings}
         notifications={props.notifications || []}
         channels={props.channels || []}
+        onBackClick={props?.onBackClick}
       />
     );
   } else if (isNoMessages) {
     content = (
-      <Centered>
-        <icons.noNotifications className="dt-mb-6" />
-        {/* TODO: use some textstyle */}
-        <span className="dt-opacity-60">No notifications yet</span>
-      </Centered>
+      <div>
+        <BackButton />
+        <Centered>
+          <icons.noNotifications className="dt-mb-6" />
+          {/* TODO: use some textstyle */}
+          <span className="dt-opacity-60">No notifications yet</span>
+        </Centered>
+      </div>
     );
   } else {
     content = (
@@ -416,6 +463,7 @@ export default function Notifications(props: {
           isSettingsOpen={isSettingsOpen}
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
+          onBackClick={props.onBackClick}
         />
         <div
           className={cs(

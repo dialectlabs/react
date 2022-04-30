@@ -3,6 +3,7 @@ import Chat from './components/Chat';
 import ChatButton from './components/ChatButton';
 import Notifications from './components/Notifications';
 import NotificationsButton from './components/NotificationsButton';
+import NotificationsModal from './components/NotificationsModal';
 import Inbox from './components/Inbox';
 import {
   defaultVariables,
@@ -22,6 +23,7 @@ export {
   Chat,
   ChatButton,
   NotificationsButton,
+  NotificationsModal,
   Notifications,
   Inbox,
   defaultVariables,
