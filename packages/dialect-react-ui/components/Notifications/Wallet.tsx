@@ -10,7 +10,8 @@ import {
   ValueRow,
 } from '../common';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
-import { display } from '@dialectlabs/web3';
+import { display, isDialectAdmin } from '@dialectlabs/web3';
+import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -22,8 +23,10 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     addresses: { wallet: walletObj },
     saveAddress,
     updateAddress,
+    deleteAddress,
   } = useApi();
   const {
+    dialect,
     createDialect,
     isDialectCreating,
     isDialectAvailable,
@@ -40,7 +43,20 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     secondaryDangerButtonLoading,
   } = useTheme();
   const { balance } = useBalance();
-  const isEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
+  // Support for threads created before address registry launch
+  const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
+
+  useEffect(() => {
+    if (!isDialectAvailable && walletObj) {
+      //   sync state in case of errors
+      deleteAddress(wallet, {
+        addressId: walletObj?.addressId,
+      });
+    }
+  }, [isDialectAvailable, wallet, walletObj, walletObj?.addressId]);
+
+  const isAdmin =
+    dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet.publicKey);
 
   let content = (
     <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
@@ -66,15 +82,22 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
       <Button
         className="dt-mb-2"
         onClick={async () => {
-          createDialect()
-            .then(() => {
-              saveAddress(wallet, {
+          if (!walletObj) {
+            await saveAddress(wallet, {
+              type: 'wallet',
+              value: wallet?.publicKey,
+              enabled: true,
+            });
+          }
+          createDialect().catch(() => {
+            if (walletObj) {
+              updateAddress(wallet, {
                 type: 'wallet',
                 value: wallet?.publicKey,
-                enabled: true,
+                enabled: false,
               });
-            })
-            .catch(noop);
+            }
+          });
         }}
         loading={isDialectCreating}
       >
@@ -101,7 +124,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     </div>
   );
 
-  if (isDialectAvailable) {
+  if ((isWalletEnabled && !isDialectCreating) || isDialectDeleting) {
     content = (
       <div>
         {isDialectAvailable && dialectAddress ? (
@@ -134,19 +157,35 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
         ) : null}
         {isDialectAvailable && dialectAddress ? (
           <>
-            <Button
-              className="dt-w-full"
-              defaultStyle={secondaryDangerButton}
-              loadingStyle={secondaryDangerButtonLoading}
-              onClick={async () => {
-                await deleteDialect().catch(noop);
-                // TODO: properly wait for the deletion
-                props?.onThreadDelete?.();
-              }}
-              loading={isDialectDeleting}
-            >
-              Withdraw rent & delete history
-            </Button>
+            {isAdmin ? (
+              <Button
+                className="dt-w-full"
+                defaultStyle={secondaryDangerButton}
+                loadingStyle={secondaryDangerButtonLoading}
+                onClick={async () => {
+                  if (walletObj) {
+                    // Support for threads created before address registry launch
+                    deleteAddress(wallet, {
+                      addressId: walletObj?.addressId,
+                    }).catch(noop);
+                  }
+                  await deleteDialect().catch(() => {
+                    if (!walletObj) {
+                      saveAddress(wallet, {
+                        type: 'wallet',
+                        value: wallet?.publicKey,
+                        enabled: true,
+                      });
+                    }
+                  });
+                  // TODO: properly wait for the deletion
+                  props?.onThreadDelete?.();
+                }}
+                loading={isDialectDeleting}
+              >
+                Withdraw rent & delete history
+              </Button>
+            ) : null}
             {deletionError &&
             deletionError.type !== 'DISCONNECTED_FROM_CHAIN' ? (
               <P
@@ -178,13 +217,10 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     <ToggleSection
       className="dt-mb-6"
       title="💬  Web3 wallet notifications"
-      enabled={isEnabled}
-      onChange={(nextValue) => {
-        if (
-          (isDialectAvailable && !nextValue) ||
-          (isDialectAvailable && nextValue)
-        ) {
-          updateAddress(wallet, {
+      enabled={isWalletEnabled}
+      onChange={async (nextValue) => {
+        if (isDialectAvailable && walletObj) {
+          await updateAddress(wallet, {
             ...walletObj,
             value: wallet?.publicKey,
             enabled: nextValue,

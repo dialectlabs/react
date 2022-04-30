@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useDialect, useApi } from '@dialectlabs/react';
 import type { MessageType } from '@dialectlabs/react';
@@ -29,7 +29,7 @@ function Header(props: {
   const {
     addresses: { wallet: walletObj },
   } = useApi();
-  // Support threads created before address registry launch
+  // Support for threads created before address registry launch
   const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
 
   if (!isWalletEnabled) {
@@ -206,6 +206,9 @@ export default function Notifications(props: {
   );
 
   const { colors, modal, icons, notificationsDivider, scrollbar } = useTheme();
+  useEffect(() => {
+    console.log('updatesettingsopen', isDialectAvailable, walletObj?.enabled);
+    // setSettingsOpen(!isDialectAvailable || !walletObj?.enabled);
 
   let content: JSX.Element;
 

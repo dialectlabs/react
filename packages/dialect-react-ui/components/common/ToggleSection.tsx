@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Toggle, ValueRow } from '../common';
 import { useTheme } from './ThemeProvider';
@@ -20,6 +20,10 @@ export default function ToggleSection({
   const [isEnabled, setEnabled] = useState(enabled);
   const { section } = useTheme();
 
+  useEffect(() => {
+    setEnabled(enabled);
+  }, [enabled]);
+
   return (
     <div className={clsx(section)}>
       <ValueRow className={clsx(isEnabled && 'dt-mb-2')} label={title}>
@@ -29,7 +33,7 @@ export default function ToggleSection({
           onClick={async () => {
             const nextValue = !isEnabled;
             await onChange?.(nextValue);
-            setEnabled(!isEnabled);
+            setEnabled(nextValue);
           }}
         />
       </ValueRow>
