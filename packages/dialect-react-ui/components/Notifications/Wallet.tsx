@@ -11,7 +11,7 @@ import {
 } from '../common';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import { display, isDialectAdmin } from '@dialectlabs/web3';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -45,6 +45,35 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
   const { balance } = useBalance();
   // Support for threads created before address registry launch
   const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
+
+  const deleteWallet = useCallback(async () => {
+    if (!walletObj) return;
+    await deleteAddress(wallet, {
+      addressId: walletObj?.addressId,
+    }).catch(noop);
+  }, [deleteAddress, wallet, walletObj]);
+
+  const saveWallet = useCallback(async () => {
+    if (walletObj) return;
+    await saveAddress(wallet, {
+      type: 'wallet',
+      value: wallet?.publicKey,
+      enabled: true,
+    }).catch(noop);
+  }, [saveAddress, wallet, walletObj]);
+
+  const updateWalletEnabled = useCallback(
+    async (enabled: boolean) => {
+      if (!walletObj) return;
+      await updateAddress(wallet, {
+        ...walletObj,
+        type: 'wallet',
+        value: wallet?.publicKey,
+        enabled,
+      }).catch(noop);
+    },
+    [updateAddress, walletObj, wallet]
+  );
 
   useEffect(() => {
     if (!isDialectAvailable && walletObj) {
@@ -82,21 +111,9 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
       <Button
         className="dt-mb-2"
         onClick={async () => {
-          if (!walletObj) {
-            await saveAddress(wallet, {
-              type: 'wallet',
-              value: wallet?.publicKey,
-              enabled: true,
-            });
-          }
-          createDialect().catch(() => {
-            if (walletObj) {
-              updateAddress(wallet, {
-                type: 'wallet',
-                value: wallet?.publicKey,
-                enabled: false,
-              });
-            }
+          await saveWallet();
+          createDialect().catch(async () => {
+            await updateWalletEnabled(false);
           });
         }}
         loading={isDialectCreating}
@@ -163,20 +180,11 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
                 defaultStyle={secondaryDangerButton}
                 loadingStyle={secondaryDangerButtonLoading}
                 onClick={async () => {
-                  if (walletObj) {
-                    // Support for threads created before address registry launch
-                    deleteAddress(wallet, {
-                      addressId: walletObj?.addressId,
-                    }).catch(noop);
-                  }
+                  // TODO: refactor: save the signature and wait for deletion before firing
+                  deleteWallet();
                   await deleteDialect().catch(() => {
-                    if (!walletObj) {
-                      saveAddress(wallet, {
-                        type: 'wallet',
-                        value: wallet?.publicKey,
-                        enabled: true,
-                      });
-                    }
+                    // If deletion failed — save wallet again
+                    saveWallet();
                   });
                   // TODO: properly wait for the deletion
                   props?.onThreadDelete?.();
@@ -220,11 +228,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
       enabled={isWalletEnabled}
       onChange={async (nextValue) => {
         if (isDialectAvailable && walletObj) {
-          await updateAddress(wallet, {
-            ...walletObj,
-            value: wallet?.publicKey,
-            enabled: nextValue,
-          });
+          await updateWalletEnabled(nextValue);
         }
       }}
     >

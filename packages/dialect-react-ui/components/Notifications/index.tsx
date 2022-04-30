@@ -206,9 +206,6 @@ export default function Notifications(props: {
   );
 
   const { colors, modal, icons, notificationsDivider, scrollbar } = useTheme();
-  useEffect(() => {
-    console.log('updatesettingsopen', isDialectAvailable, walletObj?.enabled);
-    // setSettingsOpen(!isDialectAvailable || !walletObj?.enabled);
 
   let content: JSX.Element;
 
