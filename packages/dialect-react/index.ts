@@ -4,27 +4,10 @@ import type { MessageType, DialectAccount } from './components/DialectContext';
 import type { AddressType } from './api';
 import type { ParsedErrorData } from './utils/errors';
 
-export { ApiProvider, useApi, getWalletName } from './components/ApiContext';
-export { DialectProvider, useDialect } from './components/DialectContext';
+export * from './components/ApiContext';
+export * from './components/DialectContext';
 export { connected } from './utils/helpers';
-export {
-  formatTimestamp,
-  getDialectAddressForMemberPubkeys,
-  getDialectAddressWithOtherMember,
-  createDialectForMembers,
-  createMetadata,
-  deleteAddress,
-  deleteDialect,
-  fetchDialectForMembers,
-  fetchDialect,
-  fetchDialects,
-  deleteMetadata,
-  fetchAddressesForDapp,
-  fetchMetadata,
-  saveAddress,
-  updateAddress,
-  sendMessage,
-} from './api';
+export * from './api';
 
 export { DialectErrors };
 

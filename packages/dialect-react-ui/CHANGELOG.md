@@ -1,11 +1,37 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+
+## [0.7.3] - 2022-04-29
+
+- feat: revert powered by footer
+
+## [0.7.2] - 2022-04-28
+
+- chore: remove wallet identity provider from notifications button
+
+## [0.7.1] - 2022-04-28
+
+- chore: bump @dialectlabs/web3
+
+## [0.7.0] - 2022-04-27
+
+- feat: add ability to configure animation props
+- fix: theme's defaultVariables are no longer mutable
+- chore: bump @dialectlabs/web3
+
+## [0.6.11] - 2022-04-26
+
 - feat: added UI in notification for email verification
 - feat: added UI in notification for sms verification
 - Add client-side address or twitter handle validation.
 - Allow thread creation using twitter handle.
 - Only show delete thread button to dialect admins.
+- chore: reintroduce wildcard exports
+
+## [0.6.10] - 2022-04-23
+
+- Bump `@dialectlabs/react` package version
 
 ## [0.6.9] - 2022-04-22
 

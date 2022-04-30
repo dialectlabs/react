@@ -2,8 +2,25 @@
 
 ## [UNRELEASED]
 
-- feat: added API for code verification + resend code 
-– fix: import Message type from '@dialectlabs/web3'
+## [0.4.11] - 2022-04-28
+
+- chore: bump @dialectlabs/web3
+
+## [0.4.10] - 2022-04-27
+
+- chore: bump @dialectlabs/web3
+
+## [0.4.9] - 2022-04-26
+
+- feat: added API for code verification + resend code
+  – fix: import Message type from '@dialectlabs/web3'
+- chore: reintroduce wildcard exports
+- fix: error types
+- fix: safe way to get wallet type
+
+## [0.4.8] - 2022-04-23
+
+- fix: downgrade solana to 1.38.0 re: https://github.com/solana-labs/solana/issues/24462.
 
 ## [0.4.7] - 2022-04-22
 

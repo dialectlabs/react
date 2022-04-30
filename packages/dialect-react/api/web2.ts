@@ -32,6 +32,51 @@ const signPayload = async (wallet: WalletContextState, payload: Uint8Array) => {
   };
 };
 
+const generateToken = async (wallet: WalletType): Promise<string> => {
+  const tokenTTLMinutes = 180;
+  const now = new Date().getTime();
+
+  const expirationTime = now + tokenTTLMinutes * 60000;
+  const dateEncoded = new TextEncoder().encode(
+    btoa(JSON.stringify(expirationTime))
+  );
+
+  const { signature } = await signPayload(
+    wallet as WalletContextState,
+    dateEncoded
+  );
+
+  const base64Signature = btoa(
+    String.fromCharCode.apply(null, signature as unknown as number[])
+  );
+
+  return `${expirationTime}.${base64Signature}`;
+}
+
+const saveToken = (token: string) => {
+  if (!window) return;
+  window.sessionStorage.setItem("token", token)
+}
+
+export const removeToken = () => {
+  if (!window) return;
+  window.sessionStorage.removeItem("token");
+}
+
+const getTokenFromStorage = (): string | undefined => {
+  if (!window) return;
+  const token =  window.sessionStorage.getItem("token");
+
+  if (!token) return;
+  return token
+}
+
+const isTokenExpired = (token: string) => {
+  const expirationTime = token.split('.')[0];
+  if (!expirationTime) return false;
+  return +expirationTime < new Date().getTime();
+}
+
 export const fetchJSON = async (
   wallet: WalletType,
   url: string,
@@ -44,21 +89,16 @@ export const fetchJSON = async (
     options?.method === 'PUT' ||
     options?.method === 'DELETE'
   ) {
-    const tokenTTLMinutes = 5;
-    const now = new Date().getTime();
-    const expirationTime = now + tokenTTLMinutes * 60;
-    const dateEncoded = new TextEncoder().encode(
-      btoa(JSON.stringify(expirationTime))
-    );
-    const { signature } = await signPayload(
-      wallet as WalletContextState,
-      dateEncoded
-    );
-    const base64Signature = btoa(
-      String.fromCharCode.apply(null, signature as unknown as number[])
-    );
+    
+    let token = getTokenFromStorage();
+
+    if (!token || isTokenExpired(token)) {
+      token = await generateToken(wallet);
+      saveToken(token);
+    }
+
     headers = {
-      Authorization: `Bearer ${expirationTime}.${base64Signature}`,
+      Authorization: `Bearer ${token}`,
     };
   }
 

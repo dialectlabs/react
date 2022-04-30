@@ -64,6 +64,21 @@ export type ThemeIcons =
   | 'offline'
   | 'x';
 
+export type TransitionProps = {
+  enter: string;
+  enterFrom: string;
+  enterTo: string;
+  leave: string;
+  leaveFrom: string;
+  leaveTo: string;
+};
+
+export type IncomingCommonThemeVariables = {
+  animations?: {
+    popup?: TransitionProps;
+  };
+};
+
 export type IncomingThemeValues = {
   colors?: {
     [key in ThemeColors]?: string;
@@ -108,7 +123,7 @@ export type IncomingThemeValues = {
 };
 
 export type IncomingThemeVariables = Partial<
-  Record<ThemeType, IncomingThemeValues>
+  Record<ThemeType, IncomingThemeValues> & IncomingCommonThemeVariables
 >;
 
 export type ThemeValues = Required<
@@ -119,7 +134,25 @@ export type ThemeValues = Required<
   }
 >;
 
-export const defaultVariables: Record<ThemeType, ThemeValues> = {
+// Required common values
+export type CommonThemeValues = {
+  animations: {
+    popup: TransitionProps;
+  };
+};
+
+export const defaultVariables: Record<ThemeType, ThemeValues> &
+  CommonThemeValues = {
+  animations: {
+    popup: {
+      enter: 'dt-transition-opacity dt-duration-300',
+      enterFrom: 'dt-opacity-0',
+      enterTo: 'dt-opacity-100',
+      leave: 'dt-transition-opacity dt-duration-100',
+      leaveFrom: 'dt-opacity-100',
+      leaveTo: 'dt-opacity-0',
+    },
+  },
   light: {
     // TODO: either put all colors in the theme or define as css-custom-properties to simplify overriding
     colors: {
@@ -314,19 +347,36 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
 function mergeWithDefault(
   values: IncomingThemeVariables,
   theme: ThemeType
-): ThemeValues {
+): ThemeValues & CommonThemeValues {
   const defaultThemeValues: IncomingThemeValues = defaultVariables[theme];
   const currentThemeValues: IncomingThemeValues = values[theme] ?? {};
 
-  const result = deepMerge(defaultThemeValues, currentThemeValues);
+  // Extracting only common values
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const {
+    dark: defaultDark,
+    light: defaultLight,
+    ...defaultCommon
+  } = defaultVariables;
+  const { dark, light, ...common } = values;
+  /* eslint-enable */
 
-  return (result ?? {}) as ThemeValues;
+  const result = deepMerge(
+    {},
+    defaultThemeValues,
+    currentThemeValues,
+    defaultCommon,
+    common
+  );
+
+  return (result ?? {}) as ThemeValues & CommonThemeValues;
 }
 
 export const ThemeContext = React.createContext<
-  | (ThemeValues & {
-      theme: ThemeType;
-    })
+  | (ThemeValues &
+      CommonThemeValues & {
+        theme: ThemeType;
+      })
   | null
 >(null);
 

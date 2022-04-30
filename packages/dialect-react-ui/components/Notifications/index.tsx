@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import clsx from 'clsx';
+import { useCallback, useMemo, useState } from 'react';
 import { useDialect, useApi } from '@dialectlabs/react';
 import type { MessageType } from '@dialectlabs/react';
+import clsx from 'clsx';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { A, P } from '../common/preflighted';
 import type { Channel } from '../common/types';
-import { Centered, Divider, Section, ValueRow } from '../common';
+import { Centered, Divider, Footer, Section, ValueRow } from '../common';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
 import { Wallet } from './Wallet';
@@ -177,6 +177,9 @@ function Settings(props: {
           Privacy Policy
         </A>
       </P>
+      <div>
+        <Footer />
+      </div>
     </>
   );
 }
