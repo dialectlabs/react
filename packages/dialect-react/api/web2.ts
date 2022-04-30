@@ -51,31 +51,31 @@ const generateToken = async (wallet: WalletType): Promise<string> => {
   );
 
   return `${expirationTime}.${base64Signature}`;
-}
+};
 
 const saveToken = (token: string) => {
   if (!window) return;
-  window.sessionStorage.setItem("token", token)
-}
+  window.sessionStorage.setItem('token', token);
+};
 
 export const removeToken = () => {
   if (!window) return;
-  window.sessionStorage.removeItem("token");
-}
+  window.sessionStorage.removeItem('token');
+};
 
 const getTokenFromStorage = (): string | undefined => {
   if (!window) return;
-  const token =  window.sessionStorage.getItem("token");
+  const token = window.sessionStorage.getItem('token');
 
   if (!token) return;
-  return token
-}
+  return token;
+};
 
 const isTokenExpired = (token: string) => {
   const expirationTime = token.split('.')[0];
   if (!expirationTime) return false;
   return +expirationTime < new Date().getTime();
-}
+};
 
 export const fetchJSON = async (
   wallet: WalletType,
@@ -89,7 +89,6 @@ export const fetchJSON = async (
     options?.method === 'PUT' ||
     options?.method === 'DELETE'
   ) {
-    
     let token = getTokenFromStorage();
 
     if (!token || isTokenExpired(token)) {
