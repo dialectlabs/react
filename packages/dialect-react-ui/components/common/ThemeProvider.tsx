@@ -31,7 +31,7 @@ export type ThemeColors =
   | 'highlightSolid'
   | 'toggleThumb'
   | 'toggleBackground'
-  | 'toggleBackgroundActive'
+  | 'toggleBackgroundActive';
 
 export type ThemeTextStyles =
   | 'h1'
@@ -63,6 +63,21 @@ export type ThemeIcons =
   | 'trash'
   | 'offline'
   | 'x';
+
+export type TransitionProps = {
+  enter: string;
+  enterFrom: string;
+  enterTo: string;
+  leave: string;
+  leaveFrom: string;
+  leaveTo: string;
+};
+
+export type IncomingCommonThemeVariables = {
+  animations?: {
+    popup?: TransitionProps;
+  };
+};
 
 export type IncomingThemeValues = {
   colors?: {
@@ -105,7 +120,7 @@ export type IncomingThemeValues = {
 };
 
 export type IncomingThemeVariables = Partial<
-  Record<ThemeType, IncomingThemeValues>
+  Record<ThemeType, IncomingThemeValues> & IncomingCommonThemeVariables
 >;
 
 export type ThemeValues = Required<
@@ -116,7 +131,25 @@ export type ThemeValues = Required<
   }
 >;
 
-export const defaultVariables: Record<ThemeType, ThemeValues> = {
+// Required common values
+export type CommonThemeValues = {
+  animations: {
+    popup: TransitionProps;
+  };
+};
+
+export const defaultVariables: Record<ThemeType, ThemeValues> &
+  CommonThemeValues = {
+  animations: {
+    popup: {
+      enter: 'dt-transition-opacity dt-duration-300',
+      enterFrom: 'dt-opacity-0',
+      enterTo: 'dt-opacity-100',
+      leave: 'dt-transition-opacity dt-duration-100',
+      leaveFrom: 'dt-opacity-100',
+      leaveTo: 'dt-opacity-0',
+    },
+  },
   light: {
     // TODO: either put all colors in the theme or define as css-custom-properties to simplify overriding
     colors: {
@@ -190,13 +223,14 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
     buttonLoading:
-      'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 !dt-text-black !dt-bg-transparent',
+      'dt-min-h-[42px] dt-border dt-border-black !dt-opacity-20 !dt-text-black !dt-bg-transparent',
     secondaryButton:
       'dt-bg-transparent dt-text-black dt-border dt-border-black hover:dt-bg-black/10',
     secondaryButtonLoading: '',
     secondaryDangerButton:
       'dt-bg-transparent dt-text-error-day dt-border dt-border-error-day hover:dt-bg-error-day/10',
-    secondaryDangerButtonLoading: 'dt-min-h-[42px] dt-text-error-day/40',
+    secondaryDangerButtonLoading:
+      'dt-min-h-[42px] dt-text-error-day/40 !dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-10 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
     scrollbar: 'dt-light-scrollbar',
@@ -204,7 +238,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 dt-bg-transparent',
-    disabledButton: 'dt-bg-[#ABABAB]/20 dt-text-black/20 dt-border dt-border-white/20 hover:dt-bg-black/10'
+    disabledButton:
+      'dt-bg-[#ABABAB]/20 dt-text-black/20 dt-border dt-border-white/20 hover:dt-bg-black/10',
   },
   dark: {
     colors: {
@@ -278,14 +313,14 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     buttonLoading:
-      'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
+      'dt-min-h-[42px] dt-border dt-border-white dt-bg-transparent !dt-opacity-20 !dt-text-white',
     secondaryButton:
       'dt-bg-transparent dt-text-white dt-border dt-border-white hover:dt-bg-white/10',
     secondaryButtonLoading: '',
     secondaryDangerButton:
       'dt-bg-transparent dt-text-error-night dt-border dt-border-error-night hover:dt-bg-error-night/10',
     secondaryDangerButtonLoading:
-      'dt-min-h-[42px] dt-text-error-night/10 dt-opacity-20',
+      'dt-min-h-[42px] dt-text-error-night dt-opacity-20 !dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-30 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
     scrollbar: 'dt-dark-scrollbar',
@@ -293,26 +328,44 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
-    disabledButton: 'dt-bg-[#ABABAB]/20 dt-text-white/20 dt-border dt-border-white/20 hover:dt-bg-white/10'
+    disabledButton:
+      'dt-bg-[#ABABAB]/20 dt-text-white/20 dt-border dt-border-white/20 hover:dt-bg-white/10',
   },
 };
 
 function mergeWithDefault(
   values: IncomingThemeVariables,
   theme: ThemeType
-): ThemeValues {
+): ThemeValues & CommonThemeValues {
   const defaultThemeValues: IncomingThemeValues = defaultVariables[theme];
   const currentThemeValues: IncomingThemeValues = values[theme] ?? {};
 
-  const result = deepMerge(defaultThemeValues, currentThemeValues);
+  // Extracting only common values
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const {
+    dark: defaultDark,
+    light: defaultLight,
+    ...defaultCommon
+  } = defaultVariables;
+  const { dark, light, ...common } = values;
+  /* eslint-enable */
 
-  return (result ?? {}) as ThemeValues;
+  const result = deepMerge(
+    {},
+    defaultThemeValues,
+    currentThemeValues,
+    defaultCommon,
+    common
+  );
+
+  return (result ?? {}) as ThemeValues & CommonThemeValues;
 }
 
 export const ThemeContext = React.createContext<
-  | (ThemeValues & {
-      theme: ThemeType;
-    })
+  | (ThemeValues &
+      CommonThemeValues & {
+        theme: ThemeType;
+      })
   | null
 >(null);
 

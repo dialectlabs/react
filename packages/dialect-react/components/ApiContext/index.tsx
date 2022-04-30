@@ -18,13 +18,19 @@ import {
   fetchAddressesForDapp,
   saveAddress,
   updateAddress,
+  removeToken,
   verifyCode,
   resendCode,
 } from '../../api';
 import type { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
-import { connected, isAnchorWallet } from '../../utils/helpers';
+import {
+  connected,
+  extractWalletAdapter,
+  isAnchorWallet,
+} from '../../utils/helpers';
 import type { WalletName } from '@solana/wallet-adapter-base';
+import type { WalletAdapter } from '@saberhq/use-solana';
 
 const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {
   // TODO: Move to protocol/web3
@@ -38,7 +44,13 @@ type PropsType = {
   dapp?: string; // base58 public key format
 };
 
-export type WalletType = WalletContextState | AnchorWallet | null | undefined;
+export type WalletType =
+  | WalletContextState
+  | AnchorWallet
+  | WalletAdapter
+  | null
+  | undefined;
+
 export type ProgramType = anchor.Program | null;
 
 export const getWalletName = (wallet: WalletType): WalletName | null => {
@@ -50,7 +62,7 @@ export const getWalletName = (wallet: WalletType): WalletName | null => {
     return 'Anchor' as WalletName;
   }
 
-  return wallet.wallet?.adapter.name ?? null;
+  return extractWalletAdapter(wallet)?.name ?? null;
 };
 
 type ValueType = {
@@ -141,6 +153,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
       );
       setProgram(program);
     } else {
+      removeToken();
       setProgram(null);
     }
   }, [wallet, isWalletConnected, network, rpcUrl]);

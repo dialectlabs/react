@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDialect, useApi } from '@dialectlabs/react';
 import type { MessageType } from '@dialectlabs/react';
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
@@ -241,33 +241,34 @@ function Settings(props: {
 
   return (
     <>
-      {channelsOptions.web3 && (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="Web3 notifications"
-        >
-          <Wallet onThreadDelete={props.toggleSettings} />
-        </Accordion>
-      )}
-      {channelsOptions.email && (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="Email notifications"
-        >
-          <EmailForm />
-        </Accordion>
-      )}
-      {channelsOptions.sms &&  (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="SMS notifications"
-        >
-         <SmsForm />
-       </Accordion>
-      )}
+      <div className="dt-flex-1">
+        {channelsOptions.web3 && (
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="Web3 notifications"
+          >
+            <Wallet onThreadDelete={props.toggleSettings} />
+          </Accordion>
+        )}
+        {channelsOptions.email && (
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="Email notifications"
+          >
+            <EmailForm />
+          </Accordion>
+        )}
+        {channelsOptions.sms && (
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="SMS notifications"
+          >
+            <SmsForm />
+          </Accordion>
+        )}
        {channelsOptions.telegram &&  (
         <Accordion
           className="dt-mb-6"
@@ -279,47 +280,55 @@ function Settings(props: {
          />
        </Accordion>
       )}
-      <Accordion className="dt-mb-6" defaultExpanded title="Notification types">
-        <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-          The following notification types are supported
-        </P>
-        {props.notifications
-          ? props.notifications.map((type) => (
-              <ValueRow
-                key={type.name}
-                label={type.name}
-                className={cs('dt-mb-1')}
-              >
-                {type.detail}
-              </ValueRow>
-            ))
-          : 'No notification types supplied'}
-      </Accordion>
-      <P
-        className={cs(
-          textStyles.small,
-          'dt-opacity-50 dt-text-center dt-mb-10'
-        )}
+      <Accordion
+        className="dt-mb-6"
+        defaultExpanded
+        title="Notification types"
       >
-        By enabling notifications you agree to our{' '}
-        <A
-          className="dt-underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/tos"
+          <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
+            The following notification types are supported
+          </P>
+          {props.notifications
+            ? props.notifications.map((type) => (
+                <ValueRow
+                  key={type.name}
+                  label={type.name}
+                  className={cs('dt-mb-1')}
+                >
+                  {type.detail}
+                </ValueRow>
+              ))
+            : 'No notification types supplied'}
+        </Accordion>
+        <P
+          className={cs(
+            textStyles.small,
+            'dt-opacity-50 dt-text-center dt-mb-5'
+          )}
         >
-          Terms of Service
-        </A>{' '}
-        and{' '}
-        <A
-          className="dt-underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/privacy"
-        >
-          Privacy Policy
-        </A>
-      </P>
+          By enabling notifications you agree to our{' '}
+          <A
+            className="dt-underline"
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.dialect.to/tos"
+          >
+            Terms of Service
+          </A>{' '}
+          and{' '}
+          <A
+            className="dt-underline"
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.dialect.to/privacy"
+          >
+            Privacy Policy
+          </A>
+        </P>
+      </div>
+      <div>
+        <Footer />
+      </div>
     </>
   );
 }

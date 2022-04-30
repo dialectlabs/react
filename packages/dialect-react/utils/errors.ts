@@ -5,7 +5,9 @@ export const ParsedErrorType = {
   UnknownError: 'UNKNOWN_ERROR',
   NoAccount: 'NO_ACCOUNT',
   IncorrectEmail: 'INCORRECT_EMAIL',
+  IncorrectSMSNumber: 'INCORRECT_SMS',
   NotSigned: 'NOT_SIGNED',
+  ThreadExists: 'THREAD_EXISTS',
 } as const;
 type ParsedErrorTypeKeys = keyof typeof ParsedErrorType;
 
@@ -53,14 +55,14 @@ export const noAccount: ParsedErrorData = {
 
 // TODO: move web2 errors, no need to parse them as web3
 export const incorrectEmail: ParsedErrorData = {
-  type: ParsedErrorType.NoAccount,
+  type: ParsedErrorType.IncorrectEmail,
   title: 'Error',
   message: 'Please enter a valid email',
   matchers: ['Incorrect email'],
 };
 
 export const incorrectSmsNumber: ParsedErrorData = {
-  type: ParsedErrorType.NoAccount,
+  type: ParsedErrorType.IncorrectSMSNumber,
   title: 'Error',
   message: 'Please enter a valid SMS number',
   matchers: ['Incorrect SMS number'],
@@ -71,6 +73,13 @@ export const notSigned: ParsedErrorData = {
   title: 'Error',
   message: 'You must sign the message to complete this action',
   matchers: ['User rejected the request'],
+};
+
+export const threadAlreadyExists: ParsedErrorData = {
+  type: ParsedErrorType.ThreadExists,
+  title: 'Error',
+  message: 'You already have chat with this address',
+  matchers: ['A raw constraint was violated'],
 };
 
 export const unknownError: ParsedErrorData = {
@@ -86,6 +95,7 @@ const errors: ParsedErrorData[] = [
   incorrectEmail,
   notSigned,
   noAccount,
+  threadAlreadyExists,
 ];
 
 const parseError = (error: Error) => {

@@ -23,7 +23,12 @@ import {
   ParsedErrorData,
   ParsedErrorType,
 } from '../../utils/errors';
-import { connected, isAnchorWallet } from '../../utils/helpers';
+import {
+  connected,
+  getMessageHash,
+  extractWalletAdapter,
+  isAnchorWallet,
+} from '../../utils/helpers';
 import type { Message } from '@dialectlabs/web3';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
@@ -100,8 +105,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [creating, setCreating] = React.useState(false);
   const [dialectAddress, setDialectAddress] = React.useState('');
 
-  const [fetchingError, setFetchingError] =
-    React.useState<ParsedErrorData | null>(null);
   const [metadataCreationError, setMetadataCreationError] =
     React.useState<ParsedErrorData | null>(null);
   const [creationError, setCreationError] =
@@ -139,8 +142,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         return encryptionProps;
       }
 
-      const adapter: BaseSolletWalletAdapter = wallet.wallet
-        ?.adapter as unknown as BaseSolletWalletAdapter;
+      const adapter: BaseSolletWalletAdapter = extractWalletAdapter(
+        wallet
+      ) as BaseSolletWalletAdapter;
 
       // TODO: needs to be improved with better tooling/solutions
       const solWalletAdapter: SolWalletAdapter =
@@ -179,9 +183,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     swrFetchMetadata,
     {
       refreshInterval: POLLING_INTERVAL_MS,
-      onError: (err) => {
-        setFetchingError(err as ParsedErrorData);
-      },
     }
   );
 
@@ -196,12 +197,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     swrFetchDialects,
     {
       refreshInterval: POLLING_INTERVAL_MS,
-      onError: (err) => {
-        if (err !== noAccount) {
-          console.log('Error fetching dialects', err);
-        }
-        setFetchingError(err as ParsedErrorData);
-      },
     }
   );
 
@@ -227,12 +222,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     swrFetchDialect,
     {
       refreshInterval: POLLING_INTERVAL_MS,
-      onError: (err) => {
-        if (err !== noAccount) {
-          console.log('Error fetching dialects', err);
-        }
-        setFetchingError(err as ParsedErrorData);
-      },
     }
   );
 
@@ -250,12 +239,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
   useEffect(() => {
     const existingErrorType =
-      fetchingError?.type ??
+      fetchDialectsError?.type ??
       fetchError?.type ??
       fetchMetadataError?.type ??
       creationError?.type ??
       deletionError?.type;
-
     setCannotDecryptDialect(
       existingErrorType === ParsedErrorType.CannotDecrypt
     );
@@ -263,7 +251,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       existingErrorType === ParsedErrorType.DisconnectedFromChain
     );
   }, [
-    fetchingError?.type,
+    fetchDialectsError?.type,
     fetchMetadataError?.type,
     creationError?.type,
     deletionError?.type,
@@ -274,11 +262,22 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     const hasNewMessage =
       wallet &&
       dialect?.dialect &&
-      messages.length !== dialect.dialect.messages.length;
+      (messages.length !== dialect.dialect.messages.length ||
+        // Could be there a performance issue to calc hash for long array?
+        // TODO: maybe refactor with clever mutateDialect
+        getMessageHash(dialect.dialect.messages) !== getMessageHash(messages));
     if (hasNewMessage) {
       setMessages(dialect.dialect.messages);
     }
-  }, [wallet, dialect?.dialect, messages.length]);
+  }, [wallet, dialect?.dialect, messages, messages.length]);
+
+  useEffect(() => {
+    // If there are some messages loaded, but wallet disconnected — erase them
+    if (!isWalletConnected && messages.length) {
+      setMessages([]);
+      return;
+    }
+  }, [isWalletConnected, messages.length]);
 
   const createMetadataWrapper = useCallback(async () => {
     if (!program || !isWalletConnected || !wallet?.publicKey) {
