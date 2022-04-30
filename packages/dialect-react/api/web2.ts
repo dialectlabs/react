@@ -6,10 +6,12 @@ import type { WalletType } from '../components/ApiContext';
 // TODO: make this customizable
 const DIALECT_BASE_URL = '/api';
 
+export type Address = 'wallet' | 'email' | 'sms' | 'telegram';
+
 export type AddressType = {
   id?: string;
   addressId?: string;
-  type?: 'email' | 'sms' | 'telegram';
+  type?: Address;
   verified?: boolean;
   value?: string;
   dapp?: string;
@@ -160,13 +162,13 @@ export const verifyCode = withErrorParsing(
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({code, addressId: address.addressId}),
+        body: JSON.stringify({ code, addressId: address.addressId }),
       }
     );
     const content = await rawResponse.json();
     return content;
   }
-)
+);
 
 export const resendCode = withErrorParsing(
   async (wallet: WalletType, dapp: string, address: AddressType) => {
@@ -186,4 +188,4 @@ export const resendCode = withErrorParsing(
     );
     return {};
   }
-)
+);

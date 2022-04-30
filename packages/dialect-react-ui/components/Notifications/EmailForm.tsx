@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
-import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { P } from '../common/preflighted';
 import { Button, ToggleSection } from '../common';
 import ResendIcon from '../Icon/Resend';
 
-function getEmailObj(addresses: AddressType[] | null): AddressType | null {
-  if (!addresses) return null;
-  return addresses.find((address) => address.type === 'email') || null;
-}
-
 export function EmailForm() {
   const {
     wallet,
-    addresses,
+    addresses: { email: emailObj },
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
@@ -29,7 +23,6 @@ export function EmailForm() {
     verifyCode,
     resendCode,
   } = useApi();
-  const emailObj = getEmailObj(addresses);
 
   const {
     textStyles,

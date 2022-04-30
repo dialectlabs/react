@@ -9,11 +9,11 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { idl, programs } from '@dialectlabs/web3';
 import {
-  AddressType,
   deleteAddress,
   fetchAddressesForDapp,
   saveAddress,
@@ -21,6 +21,7 @@ import {
   verifyCode,
   resendCode,
 } from '../../api';
+import type { Address, AddressType } from '../../api/web2';
 import type { ParsedErrorData } from '../../utils/errors';
 import useSWR from 'swr';
 import {
@@ -73,7 +74,7 @@ type ValueType = {
   rpcUrl: string | null;
   setRpcUrl: (_: string | null) => void;
   program: ProgramType;
-  addresses: AddressType[] | null;
+  addresses: Record<Address, AddressType> | Record<string, never>;
   fetchingAddressesError: ParsedErrorData | null;
   isSavingAddress: boolean;
   saveAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
@@ -263,6 +264,16 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     [dapp, isWalletConnected, mutateAddresses]
   );
 
+  // TODO: better naming or replace addresses
+  const addressesObj = useMemo(
+    () =>
+      Object.fromEntries(
+        // Since by default options everything is false, passed options are considered enabled
+        addresses ? addresses.map((address) => [address.type, address]) : []
+      ) as Record<Address, AddressType>,
+    [addresses]
+  );
+
   const value: ValueType = {
     wallet,
     walletName: getWalletName(wallet),
@@ -272,7 +283,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     rpcUrl,
     setRpcUrl,
     program,
-    addresses: addresses || [],
+    addresses: addressesObj || {},
     fetchingAddressesError: fetchingError,
     isSavingAddress,
     saveAddress: saveAddressWrapper,

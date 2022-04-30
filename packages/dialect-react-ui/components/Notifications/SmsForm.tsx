@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
-import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { P } from '../common/preflighted';
 import { Button, ToggleSection } from '../common';
 import ResendIcon from '../Icon/Resend';
 
-function getSmsObj(addresses: AddressType[] | null): AddressType | null {
-  if (!addresses) return null;
-  return addresses.find((address) => address.type === 'sms') || null;
-}
-
 export function SmsForm() {
   const {
     wallet,
-    addresses,
+    addresses: { sms: smsObj },
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
@@ -29,7 +23,6 @@ export function SmsForm() {
     verifyCode,
     resendCode,
   } = useApi();
-  const smsObj = getSmsObj(addresses);
 
   const {
     textStyles,
