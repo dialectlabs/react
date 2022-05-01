@@ -152,20 +152,39 @@ export const saveAddress = withErrorParsing(
 
 export const updateAddress = withErrorParsing(
   async (wallet: WalletType, dapp: string, address: AddressType) => {
-    const rawResponse = await fetchJSON(
-      wallet,
-      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
-        address?.id
-      }`,
-      {
-        method: 'PUT',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(address),
-      }
-    );
+    console.log("UPDATE ADDRESS:", address);
+    let rawResponse;
+    if (address?.id) {
+      console.log("ADDRESS>ID EXISTS");
+      rawResponse = await fetchJSON(
+        wallet,
+        `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
+          address?.id
+        }`,
+        {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(address),
+        }
+      );
+    } else {
+      console.log("ADDRESS>ID NOT existx");
+      rawResponse = await fetchJSON(
+        wallet,
+        `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toBase58()}/dapps/${dapp}/addresses`,
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(address),
+        }
+      );
+    }
     const content = await rawResponse.json();
     return content;
   }
