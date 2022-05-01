@@ -188,6 +188,8 @@ export function TelegramForm(props: TelegramFormProps) {
               await updateAddress(wallet, {
                 id: telegramObj.id,
                 enabled: nextValue,
+                type: 'telegram',
+                addressId: !telegramObj.id ? telegramObj?.addressId : undefined,
               });
             }
             setEnabled(!isEnabled);

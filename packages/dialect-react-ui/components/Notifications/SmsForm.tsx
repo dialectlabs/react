@@ -183,6 +183,8 @@ export function SmsForm() {
               await updateAddress(wallet, {
                 id: smsObj.id,
                 enabled: nextValue,
+                type: 'sms',
+                addressId: !smsObj.id ? smsObj?.addressId : undefined,
               });
             }
             setEnabled(!isEnabled);

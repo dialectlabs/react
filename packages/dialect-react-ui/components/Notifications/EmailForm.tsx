@@ -72,7 +72,6 @@ export function EmailForm() {
   const updateEmail = async () => {
     // TODO: validate & save email
     if (emailError) return;
-
     await updateAddress(wallet, {
       type: 'email',
       value: email,
@@ -183,6 +182,8 @@ export function EmailForm() {
               await updateAddress(wallet, {
                 id: emailObj.id,
                 enabled: nextValue,
+                type: 'email',
+                addressId: !emailObj.id ? emailObj?.addressId : undefined,
               });
             }
             setEnabled(!isEnabled);
