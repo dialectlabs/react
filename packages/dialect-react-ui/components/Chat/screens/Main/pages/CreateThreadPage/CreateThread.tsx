@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as anchor from '@project-serum/anchor';
+import { display } from '@dialectlabs/web3';
 import {
   getDialectAddressWithOtherMember,
   ParsedErrorData,
@@ -7,7 +8,6 @@ import {
   useDialect,
 } from '@dialectlabs/react';
 import clsx from 'clsx';
-import IconButton from '../../../../../IconButton';
 import { A, H1, Input, P } from '../../../../../common/preflighted';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import {
@@ -19,8 +19,8 @@ import {
   ValueRow,
 } from '../../../../../common';
 import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
-import { display } from '@dialectlabs/web3';
 import { Lock, NoLock } from '../../../../../Icon';
+import IconButton from '../../../../../IconButton';
 
 interface CreateThreadProps {
   inbox?: boolean;
@@ -59,12 +59,18 @@ function ActionCaption({
   encrypted: boolean;
   creationError: ParsedErrorData | null;
 }) {
-  const { textStyles } = useTheme();
-  const { walletName, program } = useApi();
+  const { textStyles, xPaddedText } = useTheme();
+  const { walletName } = useApi();
 
   if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2 dt-px-2')}>
+      <P
+        className={clsx(
+          textStyles.small,
+          xPaddedText,
+          'dt-text-red-500 dt-mt-2'
+        )}
+      >
         {creationError.message}
       </P>
     );
@@ -72,7 +78,9 @@ function ActionCaption({
 
   if (walletName !== 'Sollet') {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
+      <P
+        className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
+      >
         Use{' '}
         <A
           href="https://www.sollet.io/"
@@ -88,7 +96,9 @@ function ActionCaption({
 
   if (encrypted) {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-left dt-mt-2 dt-px-2')}>
+      <P
+        className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
+      >
         ⚠️ Sollet.io encryption standards in the browser are experimental. Do
         not connect a wallet with significant funds in it.
       </P>
