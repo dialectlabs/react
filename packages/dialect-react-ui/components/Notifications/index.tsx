@@ -32,21 +32,26 @@ export type NotificationType = {
 const noop = () => {};
 
 function Header(props: {
+  showHeader: boolean;
   isReady: boolean;
   isSettingsOpen: boolean;
   onModalClose: () => void;
   toggleSettings: () => void;
   onBackClick?: () => void;
 }) {
-  const { isDialectAvailable } = useDialect();
   const { colors, textStyles, header, icons } = useTheme();
-  const isMobile = useMobile();
 
-  if (!isDialectAvailable && !isMobile) return null;
+  if (!props.showHeader) return null;
+
+  const BackButton = () =>
+    props?.onBackClick != null ? (
+      <span className="pt-1 mr-1">
+        <IconButton icon={<icons.back />} onClick={props.onBackClick} />
+      </span>
+    ) : null;
 
   return (
     <>
-      <IconButton icon={<icons.back />} onClick={() => {}} />
       <div
         className={cs(
           'dt-flex dt-flex-row dt-items-center dt-justify-between',
@@ -54,9 +59,12 @@ function Header(props: {
         )}
       >
         {!props.isSettingsOpen ? (
-          <span className={cs(textStyles.header, colors.accent)}>
-            Notifications
-          </span>
+          <>
+            <BackButton />
+            <span className={cs(textStyles.header, colors.accent)}>
+              Notifications
+            </span>
+          </>
         ) : (
           <div className="dt-flex">
             <IconButton
@@ -228,6 +236,7 @@ function Settings(props: {
   notifications: NotificationType[];
   channels: Channel[];
   onBackClick?: () => void;
+  isDialectAvailable: boolean;
 }) {
   const { textStyles, icons } = useTheme();
 
@@ -240,7 +249,9 @@ function Settings(props: {
     [props.channels]
   );
 
-  const firstChannelOption = channelsOptions.web3
+  const firstChannelOption = props.isDialectAvailable
+    ? ''
+    : channelsOptions.web3
     ? 'web3'
     : channelsOptions.email
     ? 'email'
@@ -248,52 +259,45 @@ function Settings(props: {
     ? 'sms'
     : null;
 
-  console.log('FirstChannelOption: ', firstChannelOption);
-
-  const BackButton = () => props?.onBackClick != null ? (
-    <span className="pt-1 mr-1">
-      <IconButton icon={<icons.back />} onClick={props.onBackClick} />
-    </span>
-  ): null;
+  const BackButton = () =>
+    props?.onBackClick != null ? (
+      <span className="pt-1 mr-1">
+        <IconButton icon={<icons.back />} onClick={props.onBackClick} />
+      </span>
+    ) : null;
 
   return (
     <>
       <div className="dt-flex-1">
         {channelsOptions.web3 && (
-          <div className="dt-flex">
-            <Accordion
-              className="dt-mb-6"
-              defaultExpanded
-              title="Web3 notifications"
-              backButton={firstChannelOption === 'web3' ? <BackButton/> : null}
-            >
-              <Wallet onThreadDelete={props.toggleSettings} />
-            </Accordion>
-          </div>
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="Web3 notifications"
+            backButton={firstChannelOption === 'web3' ? <BackButton /> : null}
+          >
+            <Wallet onThreadDelete={props.toggleSettings} />
+          </Accordion>
         )}
         {channelsOptions.email && (
-          <div className="dt-flex">
-            <Accordion
-              className="dt-mb-6"
-              defaultExpanded
-              title="Email notifications"
-              backButton={firstChannelOption === 'email' ? <BackButton/> : null}
-            >
-              <EmailForm />
-            </Accordion>
-          </div>
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="Email notifications"
+            backButton={firstChannelOption === 'email' ? <BackButton /> : null}
+          >
+            <EmailForm />
+          </Accordion>
         )}
         {channelsOptions.sms && (
-          <div className="dt-flex">
-            <Accordion
-              className="dt-mb-6"
-              defaultExpanded
-              title="SMS notifications"
-              backButton={firstChannelOption === 'sms' ? <BackButton/> : null}
-            >
-              <SmsForm />
-            </Accordion>
-          </div>
+          <Accordion
+            className="dt-mb-6"
+            defaultExpanded
+            title="SMS notifications"
+            backButton={firstChannelOption === 'sms' ? <BackButton /> : null}
+          >
+            <SmsForm />
+          </Accordion>
         )}
         <Accordion
           className="dt-mb-6"
@@ -372,12 +376,16 @@ export default function Notifications(props: {
 
   const { colors, modal, icons, notificationsDivider, scrollbar } = useTheme();
 
+  const isMobile = useMobile();
+  const showHeader = isDialectAvailable || isMobile;
+
   let content: JSX.Element;
-  const BackButton = () => props?.onBackClick != null ? (
-    <span className="pt-1 mr-1">
-      <IconButton icon={<icons.back />} onClick={props.onBackClick} />
-    </span>
-  ): null;
+  const BackButton = () =>
+    props?.onBackClick != null && !showHeader ? (
+      <span className="pt-1 mr-1">
+        <IconButton icon={<icons.back />} onClick={props.onBackClick} />
+      </span>
+    ) : null;
 
   if (disconnectedFromChain) {
     content = (
@@ -418,6 +426,7 @@ export default function Notifications(props: {
         notifications={props.notifications || []}
         channels={props.channels || []}
         onBackClick={props?.onBackClick}
+        isDialectAvailable={isDialectAvailable}
       />
     );
   } else if (isNoMessages) {
@@ -459,6 +468,7 @@ export default function Notifications(props: {
         )}
       >
         <Header
+          showHeader={showHeader}
           isReady={isDialectAvailable}
           isSettingsOpen={isSettingsOpen}
           onModalClose={props.onModalClose}
