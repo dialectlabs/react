@@ -4,7 +4,7 @@ import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { P } from '../common/preflighted';
-import { Button, Toggle, ValueRow } from '../common';
+import { Button, Toggle, ToggleSection, ValueRow } from '../common';
 import ResendIcon from '../Icon/Resend';
 
 export interface TelegramFormProps {
@@ -19,7 +19,7 @@ function getTelegramObj(addresses: AddressType[] | null): AddressType | null {
 export function TelegramForm(props: TelegramFormProps) {
   const {
     wallet,
-    addresses,
+    addresses: { telegram: telegramObj },
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
@@ -33,7 +33,6 @@ export function TelegramForm(props: TelegramFormProps) {
     verifyCode,
     resendCode
   } = useApi();
-  const telegramObj = getTelegramObj(addresses);
 
   const {
     textStyles,
@@ -68,7 +67,6 @@ export function TelegramForm(props: TelegramFormProps) {
 
   useEffect(() => {
     // Update state if addresses updated
-    setEnabled(Boolean(telegramObj?.enabled));
     setTelegramUsername(telegramObj?.value || '');
     setTelegramUsernameEditing(!telegramObj?.enabled);
   }, [telegramObj]);
@@ -90,7 +88,7 @@ export function TelegramForm(props: TelegramFormProps) {
   const saveTelegram = async () => {
     if (telegramError) return;
 
-    let value = telegramUsername.replace('@', '');
+    let value = telegramUsername?.replace('@', '');
 
     await saveAddress(wallet, {
       type: 'telegram',
@@ -172,31 +170,23 @@ export function TelegramForm(props: TelegramFormProps) {
 
   return (
     <div>
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-        {isTelegramSaved && isVerified
-          ? 'Telegram notifications are now enabled. Telegram username are stored securely off-chain.'
-          : 'Receive notifications to your telegram. Telegram are stored securely off-chain.'}
-      </P>
-      <ValueRow className="dt-mb-2" label="Enable Telegram notifications">
-        <Toggle
-          type="checkbox"
-          checked={isEnabled}
-          onClick={async () => {
-            const nextValue = !isEnabled;
-            if (telegramObj && telegramObj.enabled !== nextValue) {
-              // TODO: handle error
-              await updateAddress(wallet, {
-                id: telegramObj.id,
-                enabled: nextValue,
-                type: 'telegram',
-                addressId: !telegramObj.id ? telegramObj?.addressId : undefined,
-              });
-            }
-            setEnabled(!isEnabled);
-          }}
-        />
-      </ValueRow>
-      {isEnabled && (
+      <ToggleSection
+        className="dt-mb-6"
+        title="📡  Telegram notifications"
+        onChange={async (nextValue) => {
+          if (telegramObj && telegramObj.enabled !== nextValue) {
+            // TODO: handle error
+            await updateAddress(wallet, {
+              id: telegramObj.id,
+              enabled: nextValue,
+              type: 'telegram',
+              addressId: !telegramObj.id ? telegramObj?.addressId : undefined,
+            });
+          }
+          setEnabled(!isEnabled);
+        }}
+        enabled={Boolean(telegramObj?.enabled)}
+      > 
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
@@ -263,13 +253,13 @@ export function TelegramForm(props: TelegramFormProps) {
                     </a>   
                 </div> 
                 <div className="dt-flex dt-flex-row dt-space-x-2">
-                    <P className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendCodeVerification}>
+                    <div className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendCodeVerification}>
                         <span className='dt-opacity-50'> Check your telegram bot for a verification code.</span>
                         <div className='dt-inline-block dt-cursor-pointer'>
                             <ResendIcon className='dt-px-1 dt-inline-block' height={18} width={18} /> 
                             Resend code
                         </div>
-                    </P>
+                    </div>
                 </div>
               </>
             ) : null}
@@ -309,7 +299,7 @@ export function TelegramForm(props: TelegramFormProps) {
             </P>
           ) : null}
         </form>
-      )}
+      </ToggleSection>
       {currentError && (
         <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
           {currentError.message}

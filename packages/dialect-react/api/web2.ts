@@ -6,10 +6,12 @@ import type { WalletType } from '../components/ApiContext';
 // TODO: make this customizable
 const DIALECT_BASE_URL = '/api';
 
+export type Address = 'wallet' | 'email' | 'sms' | 'telegram';
+
 export type AddressType = {
   id?: string;
   addressId?: string;
-  type?: 'email' | 'sms' | 'telegram';
+  type?: Address;
   verified?: boolean;
   value?: string;
   dapp?: string;
@@ -49,31 +51,31 @@ const generateToken = async (wallet: WalletType): Promise<string> => {
   );
 
   return `${expirationTime}.${base64Signature}`;
-}
+};
 
 const saveToken = (token: string) => {
   if (!window) return;
-  window.sessionStorage.setItem("token", token)
-}
+  window.sessionStorage.setItem('token', token);
+};
 
 export const removeToken = () => {
   if (!window) return;
-  window.sessionStorage.removeItem("token");
-}
+  window.sessionStorage.removeItem('token');
+};
 
 const getTokenFromStorage = (): string | undefined => {
   if (!window) return;
-  const token =  window.sessionStorage.getItem("token");
+  const token = window.sessionStorage.getItem('token');
 
   if (!token) return;
-  return token
-}
+  return token;
+};
 
 const isTokenExpired = (token: string) => {
   const expirationTime = token.split('.')[0];
   if (!expirationTime) return false;
   return +expirationTime < new Date().getTime();
-}
+};
 
 export const fetchJSON = async (
   wallet: WalletType,
@@ -87,7 +89,6 @@ export const fetchJSON = async (
     options?.method === 'PUT' ||
     options?.method === 'DELETE'
   ) {
-    
     let token = getTokenFromStorage();
 
     if (!token || isTokenExpired(token)) {
@@ -219,13 +220,13 @@ export const verifyCode = withErrorParsing(
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({code, addressId: address.addressId}),
+        body: JSON.stringify({ code, addressId: address.addressId }),
       }
     );
     const content = await rawResponse.json();
     return content;
   }
-)
+);
 
 export const resendCode = withErrorParsing(
   async (wallet: WalletType, dapp: string, address: AddressType) => {
@@ -245,4 +246,4 @@ export const resendCode = withErrorParsing(
     );
     return {};
   }
-)
+);

@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
-import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { P } from '../common/preflighted';
-import { Button, Toggle, ValueRow } from '../common';
+import { Button, ToggleSection } from '../common';
 import ResendIcon from '../Icon/Resend';
-
-function getEmailObj(addresses: AddressType[] | null): AddressType | null {
-  if (!addresses) return null;
-  return addresses.find((address) => address.type === 'email') || null;
-}
 
 export function EmailForm() {
   const {
     wallet,
-    addresses,
+    addresses: { email: emailObj },
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
@@ -27,9 +21,8 @@ export function EmailForm() {
     verificationCodeError,
     isSendingCode,
     verifyCode,
-    resendCode
+    resendCode,
   } = useApi();
-  const emailObj = getEmailObj(addresses);
 
   const {
     textStyles,
@@ -41,15 +34,14 @@ export function EmailForm() {
     secondaryDangerButtonLoading,
     highlighted,
     disabledButton,
-    button
+    button,
   } = useTheme();
 
   const [email, setEmail] = useState(emailObj?.value);
-  const [isEnabled, setEnabled] = useState(Boolean(emailObj?.enabled));
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
 
-  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState('');
 
   const isEmailSaved = Boolean(emailObj);
   const isChanging = emailObj && isEmailEditing;
@@ -59,12 +51,11 @@ export function EmailForm() {
     emailError ||
     fetchingAddressesError ||
     savingAddressError ||
-    deletingAddressError || 
+    deletingAddressError ||
     verificationCodeError;
 
   useEffect(() => {
     // Update state if addresses updated
-    setEnabled(Boolean(emailObj?.enabled));
     setEmail(emailObj?.value || '');
     setEmailEditing(!emailObj?.enabled);
   }, [emailObj]);
@@ -105,98 +96,90 @@ export function EmailForm() {
       value: email,
       enabled: true,
       id: emailObj?.id,
-      addressId: emailObj?.addressId})
+      addressId: emailObj?.addressId,
+    });
   };
 
   const sendCode = async () => {
-    await verifyCode(wallet, {
-      type: 'email',
-      value: email,
-      enabled: true,
-      id: emailObj?.id,
-      addressId: emailObj?.addressId,
-    }, verificationCode);
+    await verifyCode(
+      wallet,
+      {
+        type: 'email',
+        value: email,
+        enabled: true,
+        id: emailObj?.id,
+        addressId: emailObj?.addressId,
+      },
+      verificationCode
+    );
 
-    setVerificationCode("")
-  }
+    setVerificationCode('');
+  };
 
   const renderVerifiedState = () => {
     return (
       <div className={cs(highlighted, textStyles.body, colors.highlight)}>
         <span className="dt-opacity-40">🔗 Email submitted</span>
-     </div>
-    )
-  }
+      </div>
+    );
+  };
 
   const renderVerificationCode = () => {
     return (
-      <div className='dt-flex dt-flex-row dt-space-x-2'>
-       <input
-          className={cs(
-            'dt-w-full',
-            outlinedInput,
-          )}
+      <div className="dt-flex dt-flex-row dt-space-x-2">
+        <input
+          className={cs('dt-w-full', outlinedInput)}
           placeholder="Enter verification code"
-          type="text"  
+          type="text"
           value={verificationCode}
           onChange={(e) => setVerificationCode(e.target.value)}
-          />
-          <Button
-            className="dt-basis-1/4"
-            onClick={sendCode}
-            defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
-            disabled={verificationCode.length !== 6}
-            loading={isSendingCode}
-          >
-              {isSendingCode ? 'Sending code...' : 'Submit'}
-          </Button>
-          <Button
-            className="dt-basis-1/4"
-            onClick={deleteEmail}
-            defaultStyle={secondaryButton}
-            loadingStyle={secondaryButtonLoading}
-            loading={isDeletingAddress}
-          >
-              {isDeletingAddress ? 'Deleting...' : 'Cancel'}
-          </Button>
+        />
+        <Button
+          className="dt-basis-1/4"
+          onClick={sendCode}
+          defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
+          disabled={verificationCode.length !== 6}
+          loading={isSendingCode}
+        >
+          {isSendingCode ? 'Sending code...' : 'Submit'}
+        </Button>
+        <Button
+          className="dt-basis-1/4"
+          onClick={deleteEmail}
+          defaultStyle={secondaryButton}
+          loadingStyle={secondaryButtonLoading}
+          loading={isDeletingAddress}
+        >
+          {isDeletingAddress ? 'Deleting...' : 'Cancel'}
+        </Button>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div>
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-        {isEmailSaved && isVerified
-          ? 'Email notifications are now enabled. Emails are stored securely off-chain.'
-          
-          : 'Receive notifications to your email. Emails are stored securely off-chain.'}
-      </P>
-      <ValueRow className="dt-mb-2" label="Enable email notifications">
-        <Toggle
-          type="checkbox"
-          checked={isEnabled}
-          onClick={async () => {
-            const nextValue = !isEnabled;
-            if (emailObj && emailObj.enabled !== nextValue) {
-              // TODO: handle error
-              await updateAddress(wallet, {
-                id: emailObj.id,
-                enabled: nextValue,
-                type: 'email',
-                addressId: !emailObj.id ? emailObj?.addressId : undefined,
-              });
-            }
-            setEnabled(!isEnabled);
-          }}
-        />
-      </ValueRow>
-      {isEnabled && (
+      <ToggleSection
+        className="dt-mb-6"
+        title="📩  Email notifications"
+        onChange={async (nextValue) => {
+          if (emailObj && emailObj.enabled !== nextValue) {
+            // TODO: handle error
+            await updateAddress(wallet, {
+              id: emailObj.id,
+              enabled: nextValue,
+            });
+          }
+        }}
+        enabled={Boolean(emailObj?.enabled)}
+      >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
               {isEmailSaved && !isEmailEditing ? (
                 <>
-                  {isVerified ? renderVerifiedState() : renderVerificationCode()}
+                  {isVerified
+                    ? renderVerifiedState()
+                    : renderVerificationCode()}
                 </>
               ) : (
                 <input
@@ -257,14 +240,28 @@ export function EmailForm() {
             ) : null}
 
             {!isEmailEditing && !isVerified ? (
-               <div className="dt-flex dt-flex-row dt-space-x-2">
-                   <div className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendEmailCode}>
-                      <span className='dt-opacity-50'> Check your email for a verification code.</span>
-                      <div className='dt-inline-block dt-cursor-pointer'>
-                        <ResendIcon className='dt-px-1 dt-inline-block' height={18} width={18} /> 
-                        Resend code
-                      </div>
+              <div className="dt-flex dt-flex-row dt-space-x-2">
+                <div
+                  className={cs(
+                    textStyles.small,
+                    'display: inline-flex',
+                    'dt-mb-1'
+                  )}
+                  onClick={resendEmailCode}
+                >
+                  <span className="dt-opacity-50">
+                    {' '}
+                    Check your email for a verification code.
+                  </span>
+                  <div className="dt-inline-block dt-cursor-pointer">
+                    <ResendIcon
+                      className="dt-px-1 dt-inline-block"
+                      height={18}
+                      width={18}
+                    />
+                    Resend code
                   </div>
+                </div>
               </div>
             ) : null}
 
@@ -303,7 +300,7 @@ export function EmailForm() {
             </P>
           ) : null}
         </form>
-      )}
+      </ToggleSection>
       {currentError && (
         <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
           {currentError.message}

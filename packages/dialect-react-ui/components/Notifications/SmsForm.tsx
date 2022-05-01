@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
-import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { P } from '../common/preflighted';
-import { Button, Toggle, ValueRow } from '../common';
+import { Button, ToggleSection } from '../common';
 import ResendIcon from '../Icon/Resend';
-
-function getSmsObj(addresses: AddressType[] | null): AddressType | null {
-  if (!addresses) return null;
-  return addresses.find((address) => address.type === 'sms') || null;
-}
 
 export function SmsForm() {
   const {
     wallet,
-    addresses,
+    addresses: { sms: smsObj },
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
@@ -27,9 +21,8 @@ export function SmsForm() {
     verificationCodeError,
     isSendingCode,
     verifyCode,
-    resendCode
+    resendCode,
   } = useApi();
-  const smsObj = getSmsObj(addresses);
 
   const {
     textStyles,
@@ -41,15 +34,16 @@ export function SmsForm() {
     secondaryDangerButtonLoading,
     highlighted,
     disabledButton,
-    button
+    button,
   } = useTheme();
 
   const [smsNumber, setSmsNumber] = useState(smsObj?.value);
-  const [isEnabled, setEnabled] = useState(Boolean(smsObj?.enabled));
   const [isSmsNumberEditing, setSmsNumberEditing] = useState(!smsObj?.enabled);
-  const [smsNumberError, setSmsNumberError] = useState<ParsedErrorData | null>(null);
+  const [smsNumberError, setSmsNumberError] = useState<ParsedErrorData | null>(
+    null
+  );
 
-  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState('');
 
   const isSmsNumberSaved = Boolean(smsObj);
   const isChanging = smsObj && isSmsNumberEditing;
@@ -59,12 +53,11 @@ export function SmsForm() {
     smsNumberError ||
     fetchingAddressesError ||
     savingAddressError ||
-    deletingAddressError || 
+    deletingAddressError ||
     verificationCodeError;
 
   useEffect(() => {
     // Update state if addresses updated
-    setEnabled(Boolean(smsObj?.enabled));
     setSmsNumber(smsObj?.value || '');
     setSmsNumberEditing(!smsObj?.enabled);
   }, [smsObj]);
@@ -106,98 +99,91 @@ export function SmsForm() {
       value: smsNumber,
       enabled: true,
       id: smsObj?.id,
-      addressId: smsObj?.addressId})
+      addressId: smsObj?.addressId,
+    });
   };
 
   const sendCode = async () => {
     // TODO verifyEmail should just be verifyAddress
-    await verifyCode(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-      id: smsObj?.id,
-      addressId: smsObj?.addressId,
-    }, verificationCode);
+    await verifyCode(
+      wallet,
+      {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+        id: smsObj?.id,
+        addressId: smsObj?.addressId,
+      },
+      verificationCode
+    );
 
-    setVerificationCode("")
-  }
+    setVerificationCode('');
+  };
 
   const renderVerifiedState = () => {
     return (
       <div className={cs(highlighted, textStyles.body, colors.highlight)}>
         <span className="dt-opacity-40">🔗 Phone number submitted</span>
-     </div>
-    )
-  }
+      </div>
+    );
+  };
 
   const renderVerificationCode = () => {
     return (
-      <div className='dt-flex dt-flex-row dt-space-x-2'>
-       <input
-          className={cs(
-            'dt-w-full',
-            outlinedInput,
-          )}
+      <div className="dt-flex dt-flex-row dt-space-x-2">
+        <input
+          className={cs('dt-w-full', outlinedInput)}
           placeholder="Enter verification code"
-          type="text"  
+          type="text"
           value={verificationCode}
           onChange={(e) => setVerificationCode(e.target.value)}
-          />
-          <Button
-            className="dt-basis-1/4"
-            onClick={sendCode}
-            defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
-            disabled={verificationCode.length !== 6}
-            loading={isSendingCode}
-          >
-              {isSendingCode ? 'Sending code...' : 'Submit'}
-          </Button>
-          <Button
-            className="dt-basis-1/4"
-            onClick={deleteSmsNumber}
-            defaultStyle={secondaryButton}
-            loadingStyle={secondaryButtonLoading}
-            loading={isDeletingAddress}
-          >
-              {isDeletingAddress ? 'Deleting...' : 'Cancel'}
-          </Button>
+        />
+        <Button
+          className="dt-basis-1/4"
+          onClick={sendCode}
+          defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
+          disabled={verificationCode.length !== 6}
+          loading={isSendingCode}
+        >
+          {isSendingCode ? 'Sending code...' : 'Submit'}
+        </Button>
+        <Button
+          className="dt-basis-1/4"
+          onClick={deleteSmsNumber}
+          defaultStyle={secondaryButton}
+          loadingStyle={secondaryButtonLoading}
+          loading={isDeletingAddress}
+        >
+          {isDeletingAddress ? 'Deleting...' : 'Cancel'}
+        </Button>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div>
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-        {isSmsNumberSaved && isVerified
-          ? 'SMS notifications are now enabled. Phone numbers are stored securely off-chain.'
-          : 'Receive notifications to your phone. Phone numbers are stored securely off-chain.'}
-      </P>
-      <ValueRow className="dt-mb-2" label="Enable SMS notifications">
-        <Toggle
-          type="checkbox"
-          checked={isEnabled}
-          onClick={async () => {
-            const nextValue = !isEnabled;
-            if (smsObj && smsObj.enabled !== nextValue) {
-              // TODO: handle error
-              await updateAddress(wallet, {
-                id: smsObj.id,
-                enabled: nextValue,
-                type: 'sms',
-                addressId: !smsObj.id ? smsObj?.addressId : undefined,
-              });
-            }
-            setEnabled(!isEnabled);
-          }}
-        />
-      </ValueRow>
-      {isEnabled && (
+      <ToggleSection
+        className="dt-mb-6"
+        title="📶  SMS notifications"
+        onChange={async (nextValue) => {
+          if (smsObj && smsObj.enabled !== nextValue) {
+            // TODO: handle error
+            await updateAddress(wallet, {
+              id: smsObj.id,
+              enabled: nextValue,
+            });
+          }
+        }}
+        enabled={Boolean(smsObj?.enabled)}
+      > 
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
               {isSmsNumberSaved && !isSmsNumberEditing ? (
                 <>
-                  {isVerified ? renderVerifiedState() : renderVerificationCode()}
+                  {isVerified
+                    ? renderVerifiedState()
+                    : renderVerificationCode()}
                 </>
               ) : (
                 <input
@@ -219,7 +205,7 @@ export function SmsForm() {
                     e.preventDefault();
                     setSmsNumberError(DialectErrors.incorrectSmsNumber);
                   }}
-                 // pattern="^\S+@\S+\.\S+$"
+                  // pattern="^\S+@\S+\.\S+$"
                   disabled={isSmsNumberSaved && !isSmsNumberEditing}
                 />
               )}
@@ -258,14 +244,28 @@ export function SmsForm() {
             ) : null}
 
             {!isSmsNumberEditing && !isVerified ? (
-               <div className="dt-flex dt-flex-row dt-space-x-2">
-                   <P className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendSmsVerificationCode}>
-                      <span className='dt-opacity-50'> Check your phone for a verification code.</span>
-                      <div className='dt-inline-block dt-cursor-pointer'>
-                        <ResendIcon className='dt-px-1 dt-inline-block' height={18} width={18} /> 
-                        Resend code
-                      </div>
-                  </P>
+              <div className="dt-flex dt-flex-row dt-space-x-2">
+                <P
+                  className={cs(
+                    textStyles.small,
+                    'display: inline-flex',
+                    'dt-mb-1'
+                  )}
+                  onClick={resendSmsVerificationCode}
+                >
+                  <span className="dt-opacity-50">
+                    {' '}
+                    Check your phone for a verification code.
+                  </span>
+                  <div className="dt-inline-block dt-cursor-pointer">
+                    <ResendIcon
+                      className="dt-px-1 dt-inline-block"
+                      height={18}
+                      width={18}
+                    />
+                    Resend code
+                  </div>
+                </P>
               </div>
             ) : null}
 
@@ -298,13 +298,13 @@ export function SmsForm() {
           ) : null}
           {!currentError && isChanging ? (
             <P className={cs(textStyles.small, 'dt-mb-1')}>
-              ⚠️ Changing or deleting your SMS number is a global setting across all
-              dapps. You will be prompted to sign with your wallet, this action
-              is free.
+              ⚠️ Changing or deleting your SMS number is a global setting across
+              all dapps. You will be prompted to sign with your wallet, this
+              action is free.
             </P>
           ) : null}
         </form>
-      )}
+      </ToggleSection>
       {currentError && (
         <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
           {currentError.message}

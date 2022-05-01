@@ -177,9 +177,10 @@ export function Toggle({
         type="checkbox"
         className="dt-input dt-appearance-none dt-opacity-0 dt-w-0 dt-h-0"
         checked={checked}
-        onChange={() => {
-          setChecked((prev) => !prev);
-          onClick();
+        onChange={async () => {
+          const nextValue = !checked;
+          await onClick();
+          setChecked(nextValue);
         }}
         {...props}
       />
@@ -193,45 +194,12 @@ export function Toggle({
       {/* Thumb */}
       <span
         className={cs(
-          'dt-absolute dt-top-0.5 dt-left-0.5 dt-rounded-full dt-h-4 dt-w-4 dt-transition dt-shadow-sm',
+          'dt-absolute dt-top-1 dt-left-1 dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
           colors.toggleThumb,
-          isChecked ? 'dt-translate-x-[120%]' : ''
+          isChecked ? 'dt-translate-x-[160%]' : ''
         )}
       />
     </label>
-  );
-}
-
-export function Accordion(props: {
-  title: React.ReactNode | string;
-  children: React.ReactNode;
-  className?: string;
-  defaultExpanded?: boolean;
-}) {
-  const { textStyles, colors, icons } = useTheme();
-  const [isExpanded, setExpanded] = useState(props.defaultExpanded);
-
-  return (
-    <div className={props?.className}>
-      <div
-        className={cs(
-          textStyles.bigText,
-          'dt-w-full dt-flex dt-justify-between dt-mb-1'
-        )}
-      >
-        {props.title}
-        {/* <IconButton
-          icon={<icons.chevron />}
-          className={cs(
-            'rounded-full w-6 h-6 flex items-center justify-center',
-            colors.highlight,
-            !isExpanded && 'rotate-180'
-          )}
-        /> */}
-      </div>
-      <Divider className="dt-mb-2" />
-      {isExpanded ? props.children : null}
-    </div>
   );
 }
 

@@ -1,25 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useDialect, useApi } from '@dialectlabs/react';
 import type { MessageType } from '@dialectlabs/react';
-import { getExplorerAddress } from '../../utils/getExplorerAddress';
-import useMobile from '../../utils/useMobile';
+import clsx from 'clsx';
 import cs from '../../utils/classNames';
-import { display } from '@dialectlabs/web3';
 import { useTheme } from '../common/ThemeProvider';
 import { A, P } from '../common/preflighted';
 import type { Channel } from '../common/types';
-import {
-  Accordion,
-  Button,
-  Centered,
-  Divider,
-  Footer,
-  NetworkBadge,
-  useBalance,
-  ValueRow,
-} from '../common';
+import { Centered, Divider, Footer, Section, ValueRow } from '../common';
 import IconButton from '../IconButton';
 import { Notification } from './Notification';
+import { Wallet } from './Wallet';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
@@ -29,9 +19,6 @@ export type NotificationType = {
   detail: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
-
 function Header(props: {
   isReady: boolean;
   isSettingsOpen: boolean;
@@ -40,9 +27,29 @@ function Header(props: {
 }) {
   const { isDialectAvailable } = useDialect();
   const { colors, textStyles, header, icons } = useTheme();
-  const isMobile = useMobile();
+  const {
+    addresses: { wallet: walletObj },
+  } = useApi();
+  // Support for threads created before address registry launch
+  const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
 
-  if (!isDialectAvailable && !isMobile) return null;
+  if (!isWalletEnabled) {
+    return (
+      <>
+        <div
+          className={cs(
+            'dt-flex dt-flex-row dt-items-center dt-justify-between',
+            header
+          )}
+        >
+          <span className={cs(textStyles.header, colors.accent)}>
+            Setup Notifications
+          </span>
+        </div>
+        <Divider />
+      </>
+    );
+  }
 
   return (
     <>
@@ -80,139 +87,8 @@ function Header(props: {
           </div>
         </div>
       </div>
-      <Divider className="dt-mx-2" />
+      <Divider />
     </>
-  );
-}
-
-function Wallet(props: { onThreadDelete?: () => void }) {
-  const { wallet, network } = useApi();
-  const {
-    createDialect,
-    isDialectCreating,
-    isDialectAvailable,
-    dialectAddress,
-    deleteDialect,
-    isDialectDeleting,
-    deletionError,
-    creationError,
-  } = useDialect();
-  const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
-    useTheme();
-  const { balance } = useBalance();
-
-  if (isDialectAvailable) {
-    return (
-      <div>
-        <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-          Web3 notifications to your wallet are now enabled
-        </P>
-        {isDialectAvailable && dialectAddress ? (
-          <ValueRow
-            label={
-              <>
-                <P className={cs(textStyles.small, 'dt-opacity-60')}>
-                  Notifications account address
-                </P>
-                <P>
-                  <A
-                    target="_blank"
-                    href={getExplorerAddress(dialectAddress, network)}
-                    rel="noreferrer"
-                  >
-                    {display(dialectAddress)}↗
-                  </A>
-                </P>
-              </>
-            }
-            className="dt-mt-1 dt-mb-2"
-          >
-            <span className="dt-text-right">
-              <P className={cs(textStyles.small, 'dt-opacity-60')}>
-                Deposited Rent
-              </P>
-              <P>0.058 SOL</P>
-            </span>
-          </ValueRow>
-        ) : null}
-        {isDialectAvailable && dialectAddress ? (
-          <>
-            <Button
-              className="dt-w-full"
-              defaultStyle={secondaryDangerButton}
-              loadingStyle={secondaryDangerButtonLoading}
-              onClick={async () => {
-                await deleteDialect().catch(noop);
-                // TODO: properly wait for the deletion
-                props?.onThreadDelete?.();
-              }}
-              loading={isDialectDeleting}
-            >
-              Withdraw rent & delete history
-            </Button>
-            {deletionError &&
-            deletionError.type !== 'DISCONNECTED_FROM_CHAIN' ? (
-              <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
-                {deletionError.message}
-              </P>
-            ) : (
-              <P className={cs(textStyles.small, 'dt-opacity-50 dt-mt-2')}>
-                Notification history will be lost forever
-              </P>
-            )}
-          </>
-        ) : null}
-      </div>
-    );
-  }
-
-  return (
-    <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-        Receive notifications directly to your wallet
-      </P>
-      {wallet ? (
-        <ValueRow
-          label={
-            <>
-              Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}){' '}
-              <NetworkBadge network={network} />
-            </>
-          }
-          className="dt-mb-2"
-        >
-          <span className="dt-text-right">{balance || 0} SOL</span>
-        </ValueRow>
-      ) : null}
-      <ValueRow
-        label="Rent Deposit (recoverable)"
-        className={cs('dt-w-full dt-mb-3')}
-      >
-        0.058 SOL
-      </ValueRow>
-      <P className={cs(textStyles.small, 'dt-opacity-50 dt-text-left dt-mb-3')}>
-        To start this notifications thread, you&apos;ll need to deposit a small
-        amount of rent, since messages are stored on-chain.
-      </P>
-      <Button
-        onClick={() => createDialect().catch(noop)}
-        loading={isDialectCreating}
-      >
-        {isDialectCreating ? 'Enabling...' : 'Enable notifications'}
-      </Button>
-      {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
-      {/* TODO: move red color to the theme */}
-      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <P
-          className={cs(
-            textStyles.small,
-            'dt-text-red-500 dt-text-left dt-mt-2'
-          )}
-        >
-          {creationError.message}
-        </P>
-      )}
-    </div>
   );
 }
 
@@ -228,7 +104,7 @@ function Settings(props: {
   notifications: NotificationType[];
   channels: Channel[];
 }) {
-  const { textStyles } = useTheme();
+  const { textStyles, xPaddedText } = useTheme();
 
   const channelsOptions = useMemo(
     () =>
@@ -241,91 +117,74 @@ function Settings(props: {
 
   return (
     <>
-      <div className="dt-flex-1">
+      <div className={clsx('dt-py-2', xPaddedText)}>
         {channelsOptions.web3 && (
-          <Accordion
-            className="dt-mb-6"
-            defaultExpanded
-            title="Web3 notifications"
-          >
+          <div className="dt-mb-2">
             <Wallet onThreadDelete={props.toggleSettings} />
-          </Accordion>
+          </div>
         )}
         {channelsOptions.email && (
-          <Accordion
-            className="dt-mb-6"
-            defaultExpanded
-            title="Email notifications"
-          >
+          <div className="dt-mb-2">
             <EmailForm />
-          </Accordion>
+          </div>
         )}
         {channelsOptions.sms && (
-          <Accordion
-            className="dt-mb-6"
-            defaultExpanded
-            title="SMS notifications"
-          >
+          <div className="dt-mb-2">
             <SmsForm />
-          </Accordion>
+          </div>
         )}
        {channelsOptions.telegram &&  (
-        <Accordion
-          className="dt-mb-6"
-          defaultExpanded
-          title="Telegram"
-        >
-         <TelegramForm
-            botURL="https://telegram.me/DialectNotificationsbot"
-         />
-       </Accordion>
-      )}
-      <Accordion
-        className="dt-mb-6"
-        defaultExpanded
-        title="Notification types"
-      >
-          <P className={cs(textStyles.small, 'dt-opacity-50 dt-mb-3')}>
-            The following notification types are supported
-          </P>
-          {props.notifications
-            ? props.notifications.map((type) => (
-                <ValueRow
-                  key={type.name}
-                  label={type.name}
-                  className={cs('dt-mb-1')}
-                >
-                  {type.detail}
-                </ValueRow>
-              ))
-            : 'No notification types supplied'}
-        </Accordion>
-        <P
-          className={cs(
-            textStyles.small,
-            'dt-opacity-50 dt-text-center dt-mb-5'
-          )}
-        >
-          By enabling notifications you agree to our{' '}
-          <A
-            className="dt-underline"
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.dialect.to/tos"
-          >
-            Terms of Service
-          </A>{' '}
-          and{' '}
-          <A
-            className="dt-underline"
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.dialect.to/privacy"
-          >
-            Privacy Policy
-          </A>
-        </P>
+         <div className='dt-mb-2'>
+            <TelegramForm
+              botURL="https://telegram.me/DialectNotificationsbot"
+            />
+          </div>
+        )}
       </div>
+      <Section className="dt-mb-" title="Notification types">
+        <P
+          className={cs(textStyles.small, xPaddedText, 'dt-opacity-50 dt-mb-3')}
+        >
+          The following notification types are supported
+        </P>
+        {props.notifications
+          ? props.notifications.map((type) => (
+              <ValueRow
+                key={type.name}
+                label={type.name}
+                className={cs('dt-mb-1')}
+              >
+                {type.detail}
+              </ValueRow>
+            ))
+          : 'No notification types supplied'}
+      </Section>
+      <P
+        className={cs(
+          textStyles.small,
+          xPaddedText,
+          'dt-opacity-50 dt-text-center'
+        )}
+      >
+        By enabling notifications you agree to our{' '}
+        <A
+          className="dt-underline"
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.dialect.to/tos"
+        >
+          Terms of Service
+        </A>{' '}
+        and{' '}
+        <A
+          className="dt-underline"
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.dialect.to/privacy"
+        >
+          Privacy Policy
+        </A>
+      </P>
       <div>
         <Footer />
       </div>
@@ -341,13 +200,19 @@ export default function Notifications(props: {
   const {
     isWalletConnected,
     isDialectAvailable,
+    isDialectCreating,
+    isDialectDeleting,
     isNoMessages,
     messages,
     disconnectedFromChain,
     cannotDecryptDialect,
   } = useDialect();
+  const {
+    addresses: { wallet: walletObj },
+  } = useApi();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
 
   const toggleSettings = useCallback(
     () => setSettingsOpen(!isSettingsOpen),
@@ -381,7 +246,12 @@ export default function Notifications(props: {
         <span className="dt-opacity-60">Wallet not connected</span>
       </Centered>
     );
-  } else if (isSettingsOpen || !isDialectAvailable) {
+  } else if (
+    isSettingsOpen ||
+    !isWalletEnabled ||
+    isDialectCreating ||
+    isDialectDeleting
+  ) {
     content = (
       <Settings
         toggleSettings={toggleSettings}
@@ -399,7 +269,7 @@ export default function Notifications(props: {
     );
   } else {
     content = (
-      <>
+      <div className={'dt-px-4'}>
         {messages.map((message: MessageType) => (
           <>
             <Notification
@@ -410,7 +280,7 @@ export default function Notifications(props: {
             <Divider className={notificationsDivider} />
           </>
         ))}
-      </>
+      </div>
     );
   }
 
@@ -430,12 +300,7 @@ export default function Notifications(props: {
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
         />
-        <div
-          className={cs(
-            'dt-h-full dt-py-2 dt-px-4 dt-overflow-y-auto',
-            scrollbar
-          )}
-        >
+        <div className={cs('dt-h-full dt-overflow-y-auto', scrollbar)}>
           {content}
         </div>
       </div>
