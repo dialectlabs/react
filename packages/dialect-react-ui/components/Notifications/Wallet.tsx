@@ -79,17 +79,15 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
   );
 
   useEffect(() => {
-    if (
-      isDialectAvailable ||
-      !walletObj ||
-      isDialectCreating ||
-      isDialectDeleting
-    )
-      return;
+    if (isDialectCreating || isDialectDeleting) return;
+
     //   sync state in case of errors
-    deleteAddress(wallet, {
-      addressId: walletObj?.addressId,
-    });
+
+    if (isDialectAvailable || !walletObj) {
+      saveWallet();
+    } else {
+      deleteWallet();
+    }
   }, [isDialectAvailable, wallet, walletObj, walletObj?.addressId]);
 
   const isAdmin =
