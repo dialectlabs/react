@@ -39,22 +39,14 @@ export function SmsForm() {
 
   const [smsNumber, setSmsNumber] = useState(smsObj?.value);
   const [isSmsNumberEditing, setSmsNumberEditing] = useState(!smsObj?.enabled);
-  const [smsNumberError, setSmsNumberError] = useState<ParsedErrorData | null>(
-    null
-  );
-
+  const [error, setError] = useState<Error | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
 
   const isSmsNumberSaved = Boolean(smsObj);
   const isChanging = smsObj && isSmsNumberEditing;
   const isVerified = smsObj?.verified;
 
-  const currentError =
-    smsNumberError ||
-    fetchingAddressesError ||
-    savingAddressError ||
-    deletingAddressError ||
-    verificationCodeError;
+  const currentError = error || fetchingAddressesError;
 
   useEffect(() => {
     // Update state if addresses updated
@@ -64,60 +56,79 @@ export function SmsForm() {
 
   const updateSmsNumber = async () => {
     // TODO: validate & save sms number
-    if (smsNumberError) return;
+    if (error) return;
 
-    await updateAddress(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-      id: smsObj?.id,
-      addressId: smsObj?.addressId,
-    });
-
-    setSmsNumberEditing(false);
-  };
-
-  const saveSmsNumber = async () => {
-    if (smsNumberError) return;
-
-    await saveAddress(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-    });
-  };
-
-  const deleteSmsNumber = async () => {
-    await deleteAddress(wallet, {
-      addressId: smsObj?.addressId,
-    });
-  };
-
-  const resendSmsVerificationCode = async () => {
-    await resendCode(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-      id: smsObj?.id,
-      addressId: smsObj?.addressId,
-    });
-  };
-
-  const sendCode = async () => {
-    // TODO verifyEmail should just be verifyAddress
-    await verifyCode(
-      wallet,
-      {
+    try {
+      await updateAddress(wallet, {
         type: 'sms',
         value: smsNumber,
         enabled: true,
         id: smsObj?.id,
         addressId: smsObj?.addressId,
-      },
-      verificationCode
-    );
+      });
+    } catch (e) {
+      setError(e)
+    } finally {
+      setSmsNumberEditing(false);
+    }
+  };
 
-    setVerificationCode('');
+  const saveSmsNumber = async () => {
+    if (error) return;
+
+    try {
+      await saveAddress(wallet, {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+      });
+    } catch (e) {
+      setError(e)
+    }
+  };
+
+  const deleteSmsNumber = async () => {
+    try {
+      await deleteAddress(wallet, {
+        addressId: smsObj?.addressId,
+      });
+    } catch (e) {
+      setError(e)
+    }
+  };
+
+  const resendSmsVerificationCode = async () => {
+    try {
+      await resendCode(wallet, {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+        id: smsObj?.id,
+        addressId: smsObj?.addressId,
+      });
+    } catch (e) {
+      setError(e)
+    }
+  };
+
+  const sendCode = async () => {
+    try {
+      await verifyCode(
+          wallet,
+          {
+            type: 'sms',
+            value: smsNumber,
+            enabled: true,
+            id: smsObj?.id,
+            addressId: smsObj?.addressId,
+          },
+          verificationCode
+      );
+    } catch (e) {
+      setError(e)
+    } finally {
+      setVerificationCode('');
+    }
   };
 
   const renderVerifiedState = () => {
@@ -175,7 +186,7 @@ export function SmsForm() {
           }
         }}
         enabled={Boolean(smsObj?.enabled)}
-      > 
+      >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
@@ -189,7 +200,7 @@ export function SmsForm() {
                 <input
                   className={cs(
                     outlinedInput,
-                    smsNumberError && '!dt-border-red-500 !dt-text-red-500',
+                    error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
                   )}
                   placeholder="+15554443333 (+1 required, US only)"
@@ -198,12 +209,12 @@ export function SmsForm() {
                   onChange={(e) => setSmsNumber(e.target.value)}
                   onBlur={(e) =>
                     e.target.checkValidity()
-                      ? setSmsNumberError(null)
-                      : setSmsNumberError(DialectErrors.incorrectSmsNumber)
+                      ? setError(null)
+                      : setError({name: "incorrectSmsNumber", message: "Please enter a valid SMS number"})
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setSmsNumberError(DialectErrors.incorrectSmsNumber);
+                    setError({name: "incorrectSmsNumber", message: "Please enter a valid SMS number"})
                   }}
                   // pattern="^\S+@\S+\.\S+$"
                   disabled={isSmsNumberSaved && !isSmsNumberEditing}

@@ -23,12 +23,9 @@ export function TelegramForm(props: TelegramFormProps) {
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
-    savingAddressError,
     updateAddress,
     deleteAddress,
     isDeletingAddress,
-    deletingAddressError,
-    verificationCodeError,
     isSendingCode,
     verifyCode,
     resendCode
@@ -50,7 +47,7 @@ export function TelegramForm(props: TelegramFormProps) {
   const [telegramUsername, setTelegramUsername] = useState(telegramObj?.value);
   const [isEnabled, setEnabled] = useState(Boolean(telegramObj?.enabled));
   const [isTelegramUsernameEditing, setTelegramUsernameEditing] = useState(!telegramObj?.enabled);
-  const [telegramError, setTelegramError] = useState<ParsedErrorData | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const [verificationCode, setVerificationCode] = useState("");
 
@@ -58,12 +55,7 @@ export function TelegramForm(props: TelegramFormProps) {
   const isChanging = telegramObj && isTelegramUsernameEditing;
   const isVerified = telegramObj?.verified;
 
-  const currentError =
-    telegramError ||
-    fetchingAddressesError ||
-    savingAddressError ||
-    deletingAddressError || 
-    verificationCodeError;
+  const currentError = error || fetchingAddressesError;
 
   useEffect(() => {
     // Update state if addresses updated
@@ -72,58 +64,76 @@ export function TelegramForm(props: TelegramFormProps) {
   }, [telegramObj]);
 
   const updateTelegram = async () => {
-    if (telegramError) return;
+    if (error) return;
 
-    await updateAddress(wallet, {
-      type: 'telegram',
-      value: telegramUsername,
-      enabled: true,
-      id: telegramObj?.id,
-      addressId: telegramObj?.addressId,
-    });
-
-    setTelegramUsernameEditing(false);
+    try {
+      await updateAddress(wallet, {
+        type: 'telegram',
+        value: telegramUsername,
+        enabled: true,
+        id: telegramObj?.id,
+        addressId: telegramObj?.addressId,
+      });
+    } catch (e) {
+      setError(e)
+    } finally {
+      setTelegramUsernameEditing(false);
+    }
   };
 
   const saveTelegram = async () => {
-    if (telegramError) return;
+    if (error) return;
 
-    let value = telegramUsername?.replace('@', '');
-
-    await saveAddress(wallet, {
-      type: 'telegram',
-      value: value,
-      enabled: true,
-    });
+    try {
+      let value = telegramUsername?.replace('@', '');
+      await saveAddress(wallet, {
+        type: 'telegram',
+        value: value,
+        enabled: true,
+      });
+    } catch (e) {
+      setError(e);
+    }
   };
 
   const deleteTelegram = async () => {
-    await deleteAddress(wallet, {
-      addressId: telegramObj?.addressId,
-    });
+    try {
+      await deleteAddress(wallet, {
+        addressId: telegramObj?.addressId,
+      });
+    } catch (e) {
+      setError(e)
+    }
   };
 
   const resendCodeVerification = async () => {
-    await resendCode(wallet, {
-      type: 'telegram',
-      value: telegramUsername,
-      enabled: true,
-      id: telegramObj?.id,
-      addressId: telegramObj?.addressId})
+    try {
+      await resendCode(wallet, {
+        type: 'telegram',
+        value: telegramUsername,
+        enabled: true,
+        id: telegramObj?.id,
+        addressId: telegramObj?.addressId})
+    } catch (e) {
+      setError(e)
+    }
   };
 
   const sendCode = async () => {
-    // TODO verifyEmail should just be verifyAddress
-    await verifyCode(wallet, {
-      type: 'telegram',
-      value: telegramUsername,
-      enabled: true,
-      id: telegramObj?.id,
-      addressId: telegramObj?.addressId,
-    }, verificationCode);
-
-    setVerificationCode("")
-  }
+    try {
+      await verifyCode(wallet, {
+        type: 'telegram',
+        value: telegramUsername,
+        enabled: true,
+        id: telegramObj?.id,
+        addressId: telegramObj?.addressId,
+      }, verificationCode);
+    } catch (e) {
+      setError(e)
+    } finally {
+      setVerificationCode("")
+    }
+  };
 
   const renderVerifiedState = () => {
     return (
@@ -131,7 +141,7 @@ export function TelegramForm(props: TelegramFormProps) {
         <span className="dt-opacity-40">🔗 Telegram submitted</span>
      </div>
     )
-  }
+  };
 
   const renderVerificationCode = () => {
     return (
@@ -142,7 +152,7 @@ export function TelegramForm(props: TelegramFormProps) {
             outlinedInput,
           )}
           placeholder="Enter verification code"
-          type="text"  
+          type="text"
           value={verificationCode}
           onChange={(e) => setVerificationCode(e.target.value)}
           />
@@ -186,7 +196,7 @@ export function TelegramForm(props: TelegramFormProps) {
           setEnabled(!isEnabled);
         }}
         enabled={Boolean(telegramObj?.enabled)}
-      > 
+      >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
@@ -198,7 +208,7 @@ export function TelegramForm(props: TelegramFormProps) {
                 <input
                   className={cs(
                     outlinedInput,
-                    telegramError && '!dt-border-red-500 !dt-text-red-500',
+                    error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
                   )}
                   placeholder="Enter telegram username"
@@ -246,17 +256,17 @@ export function TelegramForm(props: TelegramFormProps) {
                <>
                 <div className={cs(textStyles.small, "dt-flex dt-flex-row dt-space-x-2")}>
                     <a className={cs(textStyles.small)} href={props.botURL} target="_blank">
-                        🤖 
+                        🤖
                         <span className='dt-opacity-50'> Get verification code by starting </span>
-                        <span className='dt-underline'>this bot </span> 
+                        <span className='dt-underline'>this bot </span>
                         <span className='dt-opacity-50'>with command: /start</span>
-                    </a>   
-                </div> 
+                    </a>
+                </div>
                 <div className="dt-flex dt-flex-row dt-space-x-2">
                     <div className={cs(textStyles.small, 'display: inline-flex', 'dt-mb-1')} onClick={resendCodeVerification}>
                         <span className='dt-opacity-50'> Check your telegram bot for a verification code.</span>
                         <div className='dt-inline-block dt-cursor-pointer'>
-                            <ResendIcon className='dt-px-1 dt-inline-block' height={18} width={18} /> 
+                            <ResendIcon className='dt-px-1 dt-inline-block' height={18} width={18} />
                             Resend code
                         </div>
                     </div>

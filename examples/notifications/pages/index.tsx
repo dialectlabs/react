@@ -73,7 +73,7 @@ function AuthedHome() {
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <NotificationsButton
           wallet={wallet}
-          network={'devnet'}
+          network={'localnet'}
           publicKey={DIALECT_PUBLIC_KEY}
           theme={theme}
           variables={themeVariables}

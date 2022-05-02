@@ -13,12 +13,9 @@ export function EmailForm() {
     fetchingAddressesError,
     saveAddress,
     isSavingAddress,
-    savingAddressError,
     updateAddress,
     deleteAddress,
     isDeletingAddress,
-    deletingAddressError,
-    verificationCodeError,
     isSendingCode,
     verifyCode,
     resendCode,
@@ -39,20 +36,15 @@ export function EmailForm() {
 
   const [email, setEmail] = useState(emailObj?.value);
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
-  const [emailError, setEmailError] = useState<ParsedErrorData | null>(null);
-
   const [verificationCode, setVerificationCode] = useState('');
+
+  const [error, setError] = useState<Error | null>(null);
 
   const isEmailSaved = Boolean(emailObj);
   const isChanging = emailObj && isEmailEditing;
   const isVerified = emailObj?.verified;
 
-  const currentError =
-    emailError ||
-    fetchingAddressesError ||
-    savingAddressError ||
-    deletingAddressError ||
-    verificationCodeError;
+  const currentError = error || fetchingAddressesError;
 
   useEffect(() => {
     // Update state if addresses updated
@@ -62,58 +54,78 @@ export function EmailForm() {
 
   const updateEmail = async () => {
     // TODO: validate & save email
-    if (emailError) return;
-    await updateAddress(wallet, {
-      type: 'email',
-      value: email,
-      enabled: true,
-      id: emailObj?.id,
-      addressId: emailObj?.addressId,
-    });
-
-    setEmailEditing(false);
-  };
-
-  const saveEmail = async () => {
-    if (emailError) return;
-
-    await saveAddress(wallet, {
-      type: 'email',
-      value: email,
-      enabled: true,
-    });
-  };
-
-  const deleteEmail = async () => {
-    await deleteAddress(wallet, {
-      addressId: emailObj?.addressId,
-    });
-  };
-
-  const resendEmailCode = async () => {
-    await resendCode(wallet, {
-      type: 'email',
-      value: email,
-      enabled: true,
-      id: emailObj?.id,
-      addressId: emailObj?.addressId,
-    });
-  };
-
-  const sendCode = async () => {
-    await verifyCode(
-      wallet,
-      {
+    if (error) return;
+    try {
+      await updateAddress(wallet, {
         type: 'email',
         value: email,
         enabled: true,
         id: emailObj?.id,
         addressId: emailObj?.addressId,
-      },
-      verificationCode
-    );
+      });
+    } catch (e) {
+      setError(e);
+    } finally {
+      setEmailEditing(false);
+    }
+  };
 
-    setVerificationCode('');
+  const saveEmail = async () => {
+    if (error) return;
+
+    try {
+      await saveAddress(wallet, {
+        type: 'email',
+        value: email,
+        enabled: true,
+      });
+    } catch (e) {
+      setError(e)
+    }
+  };
+
+  const deleteEmail = async () => {
+    try {
+      await deleteAddress(wallet, {
+        addressId: emailObj?.addressId,
+      });
+    } catch (e) {
+      setError(e);
+    }
+  };
+
+  const resendEmailCode = async () => {
+    try {
+      await resendCode(wallet, {
+        type: 'email',
+        value: email,
+        enabled: true,
+        id: emailObj?.id,
+        addressId: emailObj?.addressId,
+      });
+    } catch (e) {
+      setError(e);
+    }
+  };
+
+  const sendCode = async () => {
+    try {
+      await verifyCode(
+          wallet,
+          {
+            type: 'email',
+            value: email,
+            enabled: true,
+            id: emailObj?.id,
+            addressId: emailObj?.addressId,
+          },
+          verificationCode
+      );
+    } catch (e) {
+      setError(e)
+    } finally {
+      setVerificationCode('');
+    }
   };
 
   const renderVerifiedState = () => {
@@ -194,12 +206,12 @@ export function EmailForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={(e) =>
                     e.target.checkValidity()
-                      ? setEmailError(null)
-                      : setEmailError(DialectErrors.incorrectEmail)
+                      ? setError(null)
+                      : setError({name: "incorrectEmail", message: "Please enter a valid email"})
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setEmailError(DialectErrors.incorrectEmail);
+                    setError({name: "incorrectEmail", message: "Please enter a valid email"})
                   }}
                   pattern="^\S+@\S+\.\S+$"
                   disabled={isEmailSaved && !isEmailEditing}
