@@ -79,13 +79,18 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
   );
 
   useEffect(() => {
-    if (isDialectCreating || isDialectDeleting) return;
+    if (
+      isDialectCreating ||
+      isDialectDeleting ||
+      (isDialectAvailable && walletObj)
+    )
+      return;
 
     //   sync state in case of errors
 
-    if (isDialectAvailable || !walletObj) {
+    if (isDialectAvailable && !walletObj) {
       saveWallet();
-    } else {
+    } else if (!isDialectAvailable && walletObj) {
       deleteWallet();
     }
   }, [isDialectAvailable, wallet, walletObj, walletObj?.addressId]);
