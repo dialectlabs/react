@@ -86,14 +86,24 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     )
       return;
 
-    //   sync state in case of errors
-
+    // Sync state in case of errors
     if (isDialectAvailable && !walletObj) {
+      // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
       saveWallet();
     } else if (!isDialectAvailable && walletObj) {
+      // In case the wallet isn't in web2 db, but the actual thread was created
       deleteWallet();
     }
-  }, [isDialectAvailable, wallet, walletObj, walletObj?.addressId]);
+  }, [
+    isDialectAvailable,
+    isDialectCreating,
+    isDialectDeleting,
+    wallet,
+    deleteWallet,
+    saveWallet,
+    walletObj,
+    walletObj?.addressId,
+  ]);
 
   const isAdmin =
     dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet.publicKey);
