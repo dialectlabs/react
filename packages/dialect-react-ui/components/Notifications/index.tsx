@@ -76,7 +76,7 @@ function Header(props: {
             </span>
           </>
         ) : (
-          <div className="dt-flex">
+          <div className="dt-flex dt-flex-row dt-items-center">
             <IconButton
               icon={<icons.back />}
               onClick={props.toggleSettings}
