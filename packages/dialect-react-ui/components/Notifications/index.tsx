@@ -129,13 +129,6 @@ function Settings(props: {
     [props.channels]
   );
 
-  const BackButton = () =>
-    props?.onBackClick != null ? (
-      <span className="pt-1 mr-1">
-        <IconButton icon={<icons.back />} onClick={props.onBackClick} />
-      </span>
-    ) : null;
-
   return (
     <>
       <div className={clsx('dt-py-2', xPaddedText)}>
