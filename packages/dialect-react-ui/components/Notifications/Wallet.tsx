@@ -78,6 +78,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     [updateAddress, walletObj, wallet]
   );
 
+  // TODO: move to the Notifications/index.tsx component
   useEffect(() => {
     if (
       isDialectCreating ||
