@@ -1,1 +1,1 @@
-export type Channel = 'web3' | 'email' | 'sms';
+export type Channel = 'web3' | 'email' | 'sms' | 'telegram';

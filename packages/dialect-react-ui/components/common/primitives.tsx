@@ -177,9 +177,10 @@ export function Toggle({
         type="checkbox"
         className="dt-input dt-appearance-none dt-opacity-0 dt-w-0 dt-h-0"
         checked={checked}
-        onChange={() => {
-          setChecked((prev) => !prev);
-          onClick();
+        onChange={async () => {
+          const nextValue = !checked;
+          await onClick();
+          setChecked(nextValue);
         }}
         {...props}
       />
@@ -193,9 +194,9 @@ export function Toggle({
       {/* Thumb */}
       <span
         className={cs(
-          'dt-absolute dt-top-0.5 dt-left-0.5 dt-rounded-full dt-h-4 dt-w-4 dt-transition dt-shadow-sm',
+          'dt-absolute dt-top-1 dt-left-1 dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
           colors.toggleThumb,
-          isChecked ? 'dt-translate-x-[120%]' : ''
+          isChecked ? 'dt-translate-x-[160%]' : ''
         )}
       />
     </label>
