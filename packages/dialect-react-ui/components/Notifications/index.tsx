@@ -24,12 +24,20 @@ function Header(props: {
   isSettingsOpen: boolean;
   onModalClose: () => void;
   toggleSettings: () => void;
+  onBackClick?: () => void;
 }) {
-  const { isDialectAvailable } = useDialect();
   const { colors, textStyles, header, icons } = useTheme();
+
+  const BackButton = () =>
+    props?.onBackClick != null ? (
+      <span className="pt-1 mr-1">
+        <IconButton icon={<icons.back />} onClick={props.onBackClick} />
+      </span>
+    ) : null;
   const {
     addresses: { wallet: walletObj },
   } = useApi();
+  const { isDialectAvailable } = useDialect();
   // Support for threads created before address registry launch
   const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
 
@@ -38,10 +46,11 @@ function Header(props: {
       <>
         <div
           className={cs(
-            'dt-flex dt-flex-row dt-items-center dt-justify-between',
+            'dt-flex dt-flex-row dt-items-start dt-justify-items-start',
             header
           )}
         >
+          <BackButton />
           <span className={cs(textStyles.header, colors.accent)}>
             Setup Notifications
           </span>
@@ -60,11 +69,14 @@ function Header(props: {
         )}
       >
         {!props.isSettingsOpen ? (
-          <span className={cs(textStyles.header, colors.accent)}>
-            Notifications
-          </span>
+          <>
+            <BackButton />
+            <span className={cs(textStyles.header, colors.accent)}>
+              Notifications
+            </span>
+          </>
         ) : (
-          <div className="dt-flex">
+          <div className="dt-flex dt-flex-row dt-items-center">
             <IconButton
               icon={<icons.back />}
               onClick={props.toggleSettings}
@@ -133,11 +145,9 @@ function Settings(props: {
             <SmsForm />
           </div>
         )}
-       {channelsOptions.telegram &&  (
-         <div className='dt-mb-2'>
-            <TelegramForm
-              botURL="https://telegram.me/DialectNotificationsbot"
-            />
+        {channelsOptions.telegram && (
+          <div className="dt-mb-2">
+            <TelegramForm botURL="https://telegram.me/DialectNotificationsbot" />
           </div>
         )}
       </div>
@@ -196,6 +206,7 @@ export default function Notifications(props: {
   onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
+  onBackClick?: () => void;
 }): JSX.Element {
   const {
     isWalletConnected,
@@ -299,6 +310,7 @@ export default function Notifications(props: {
           isSettingsOpen={isSettingsOpen}
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
+          onBackClick={props.onBackClick}
         />
         <div className={cs('dt-h-full dt-overflow-y-auto', scrollbar)}>
           {content}
