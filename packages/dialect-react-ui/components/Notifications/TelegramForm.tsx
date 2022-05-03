@@ -22,11 +22,8 @@ export function TelegramForm(props: TelegramFormProps) {
     addresses: { telegram: telegramObj },
     fetchingAddressesError,
     saveAddress,
-    isSavingAddress,
     updateAddress,
     deleteAddress,
-    isDeletingAddress,
-    isSendingCode,
     verifyCode,
     resendCode
   } = useApi();
@@ -48,6 +45,7 @@ export function TelegramForm(props: TelegramFormProps) {
   const [isEnabled, setEnabled] = useState(Boolean(telegramObj?.enabled));
   const [isTelegramUsernameEditing, setTelegramUsernameEditing] = useState(!telegramObj?.enabled);
   const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const [verificationCode, setVerificationCode] = useState("");
 
@@ -67,6 +65,7 @@ export function TelegramForm(props: TelegramFormProps) {
     if (error) return;
 
     try {
+      setLoading(true);
       await updateAddress(wallet, {
         type: 'telegram',
         value: telegramUsername,
@@ -77,6 +76,7 @@ export function TelegramForm(props: TelegramFormProps) {
     } catch (e) {
       setError(e)
     } finally {
+      setLoading(false);
       setTelegramUsernameEditing(false);
     }
   };
@@ -85,6 +85,7 @@ export function TelegramForm(props: TelegramFormProps) {
     if (error) return;
 
     try {
+      setLoading(true);
       let value = telegramUsername?.replace('@', '');
       await saveAddress(wallet, {
         type: 'telegram',
@@ -93,21 +94,27 @@ export function TelegramForm(props: TelegramFormProps) {
       });
     } catch (e) {
       setError(e);
+    } finally {
+      setLoading(false);
     }
   };
 
   const deleteTelegram = async () => {
     try {
+      setLoading(true);
       await deleteAddress(wallet, {
         addressId: telegramObj?.addressId,
       });
     } catch (e) {
       setError(e)
+    } finally {
+      setLoading(false);
     }
   };
 
   const resendCodeVerification = async () => {
     try {
+      setLoading(true);
       await resendCode(wallet, {
         type: 'telegram',
         value: telegramUsername,
@@ -116,11 +123,14 @@ export function TelegramForm(props: TelegramFormProps) {
         addressId: telegramObj?.addressId})
     } catch (e) {
       setError(e)
+    } finally {
+      setLoading(false);
     }
   };
 
   const sendCode = async () => {
     try {
+      setLoading(true)
       await verifyCode(wallet, {
         type: 'telegram',
         value: telegramUsername,
@@ -131,6 +141,7 @@ export function TelegramForm(props: TelegramFormProps) {
     } catch (e) {
       setError(e)
     } finally {
+      setLoading(false);
       setVerificationCode("")
     }
   };
@@ -161,31 +172,31 @@ export function TelegramForm(props: TelegramFormProps) {
             onClick={sendCode}
             defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
             disabled={verificationCode.length !== 6}
-            loading={isSendingCode}
+            loading={loading}
           >
-              {isSendingCode ? 'Sending code...' : 'Submit'}
+              {loading ? 'Sending code...' : 'Submit'}
           </Button>
           <Button
             className="dt-basis-1/4"
             onClick={deleteTelegram}
             defaultStyle={secondaryButton}
             loadingStyle={secondaryButtonLoading}
-            loading={isDeletingAddress}
+            loading={loading}
           >
-              {isDeletingAddress ? 'Deleting...' : 'Cancel'}
+              {loading ? 'Deleting...' : 'Cancel'}
           </Button>
       </div>
     )
-  }
+  };
 
   return (
-    <div>
+    <div key="telegram">
       <ToggleSection
         className="dt-mb-6"
         title="📡  Telegram notifications"
         onChange={async (nextValue) => {
+          setError(null);
           if (telegramObj && telegramObj.enabled !== nextValue) {
-            // TODO: handle error
             await updateAddress(wallet, {
               id: telegramObj.id,
               enabled: nextValue,
@@ -216,7 +227,22 @@ export function TelegramForm(props: TelegramFormProps) {
                   value={telegramUsername}
                   onChange={(e) => setTelegramUsername(e.target.value)}
                   disabled={isTelegramSaved && !isTelegramUsernameEditing}
+                  onBlur={(e) =>
+                      e.target.checkValidity()
+                          ? setError(null)
+                          : setError({name: "incorrectTelegramNumber", message: "Please enter a valid telegram number"})
+                  }
+                  onInvalid={(e) => {
+                    e.preventDefault();
+                    setError({name: "incorrectTelegramNumber", message: "Please enter a valid telegram number"})
+                  }
+                  }
                 />
+              )}
+              {currentError && (
+                  <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                    {currentError.message}
+                  </P>
               )}
             </div>
 
@@ -234,9 +260,9 @@ export function TelegramForm(props: TelegramFormProps) {
                   className="dt-basis-1/2"
                   disabled={telegramUsername === ''}
                   onClick={updateTelegram}
-                  loading={isSavingAddress}
+                  loading={loading}
                 >
-                  {isSavingAddress ? 'Saving...' : 'Submit telegram'}
+                  {loading ? 'Saving...' : 'Submit telegram'}
                 </Button>
               </div>
             )}
@@ -246,9 +272,9 @@ export function TelegramForm(props: TelegramFormProps) {
                 className="dt-basis-full"
                 disabled={telegramUsername === ''}
                 onClick={saveTelegram}
-                loading={isSavingAddress}
+                loading={loading}
               >
-                {isSavingAddress ? 'Saving...' : 'Submit telegram'}
+                {loading ? 'Saving...' : 'Submit telegram'}
               </Button>
             ) : null}
 
@@ -279,7 +305,7 @@ export function TelegramForm(props: TelegramFormProps) {
                 <Button
                   className="dt-basis-1/2"
                   onClick={() => setTelegramUsernameEditing(true)}
-                  loading={isSavingAddress}
+                  loading={loading}
                 >
                   Change
                 </Button>
@@ -288,9 +314,9 @@ export function TelegramForm(props: TelegramFormProps) {
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
                   onClick={deleteTelegram}
-                  loading={isDeletingAddress}
+                  loading={loading}
                 >
-                  {isDeletingAddress ? 'Deleting...' : 'Delete telegram'}
+                  {loading ? 'Deleting...' : 'Delete telegram'}
                 </Button>
               </div>
             ) : null}
@@ -310,11 +336,6 @@ export function TelegramForm(props: TelegramFormProps) {
           ) : null}
         </form>
       </ToggleSection>
-      {currentError && (
-        <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
-          {currentError.message}
-        </P>
-      )}
     </div>
   );
 }

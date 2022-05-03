@@ -12,14 +12,8 @@ export function SmsForm() {
     addresses: { sms: smsObj },
     fetchingAddressesError,
     saveAddress,
-    isSavingAddress,
-    savingAddressError,
     updateAddress,
     deleteAddress,
-    isDeletingAddress,
-    deletingAddressError,
-    verificationCodeError,
-    isSendingCode,
     verifyCode,
     resendCode,
   } = useApi();
@@ -41,6 +35,7 @@ export function SmsForm() {
   const [isSmsNumberEditing, setSmsNumberEditing] = useState(!smsObj?.enabled);
   const [error, setError] = useState<Error | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const isSmsNumberSaved = Boolean(smsObj);
   const isChanging = smsObj && isSmsNumberEditing;
@@ -59,6 +54,7 @@ export function SmsForm() {
     if (error) return;
 
     try {
+      setLoading(true);
       await updateAddress(wallet, {
         type: 'sms',
         value: smsNumber,
@@ -69,6 +65,7 @@ export function SmsForm() {
     } catch (e) {
       setError(e)
     } finally {
+      setLoading(false);
       setSmsNumberEditing(false);
     }
   };
@@ -77,6 +74,7 @@ export function SmsForm() {
     if (error) return;
 
     try {
+      setLoading(true);
       await saveAddress(wallet, {
         type: 'sms',
         value: smsNumber,
@@ -84,21 +82,27 @@ export function SmsForm() {
       });
     } catch (e) {
       setError(e)
+    } finally {
+      setLoading(false);
     }
   };
 
   const deleteSmsNumber = async () => {
     try {
+      setLoading(true);
       await deleteAddress(wallet, {
         addressId: smsObj?.addressId,
       });
     } catch (e) {
       setError(e)
+    } finally {
+      setLoading(false)
     }
   };
 
   const resendSmsVerificationCode = async () => {
     try {
+      setLoading(true)
       await resendCode(wallet, {
         type: 'sms',
         value: smsNumber,
@@ -108,11 +112,14 @@ export function SmsForm() {
       });
     } catch (e) {
       setError(e)
+    } finally {
+      setLoading(false)
     }
   };
 
   const sendCode = async () => {
     try {
+      setLoading(true);
       await verifyCode(
           wallet,
           {
@@ -127,6 +134,7 @@ export function SmsForm() {
     } catch (e) {
       setError(e)
     } finally {
+      setLoading(false);
       setVerificationCode('');
     }
   };
@@ -154,18 +162,18 @@ export function SmsForm() {
           onClick={sendCode}
           defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
           disabled={verificationCode.length !== 6}
-          loading={isSendingCode}
+          loading={loading}
         >
-          {isSendingCode ? 'Sending code...' : 'Submit'}
+          {loading ? 'Sending code...' : 'Submit'}
         </Button>
         <Button
           className="dt-basis-1/4"
           onClick={deleteSmsNumber}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
-          loading={isDeletingAddress}
+          loading={loading}
         >
-          {isDeletingAddress ? 'Deleting...' : 'Cancel'}
+          {loading ? 'Deleting...' : 'Cancel'}
         </Button>
       </div>
     );
@@ -177,6 +185,7 @@ export function SmsForm() {
         className="dt-mb-6"
         title="📶  SMS notifications"
         onChange={async (nextValue) => {
+          setError(null);
           if (smsObj && smsObj.enabled !== nextValue) {
             // TODO: handle error
             await updateAddress(wallet, {
@@ -220,6 +229,11 @@ export function SmsForm() {
                   disabled={isSmsNumberSaved && !isSmsNumberEditing}
                 />
               )}
+              {currentError && (
+                  <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                    {currentError.message}
+                  </P>
+              )}
             </div>
 
             {isChanging && (
@@ -236,9 +250,9 @@ export function SmsForm() {
                   className="dt-basis-1/2"
                   disabled={smsNumber === ''}
                   onClick={updateSmsNumber}
-                  loading={isSavingAddress}
+                  loading={loading}
                 >
-                  {isSavingAddress ? 'Saving...' : 'Submit number'}
+                  {loading ? 'Saving...' : 'Submit number'}
                 </Button>
               </div>
             )}
@@ -248,9 +262,9 @@ export function SmsForm() {
                 className="dt-basis-full"
                 disabled={smsNumber === ''}
                 onClick={saveSmsNumber}
-                loading={isSavingAddress}
+                loading={loading}
               >
-                {isSavingAddress ? 'Saving...' : 'Submit number'}
+                {loading ? 'Saving...' : 'Submit number'}
               </Button>
             ) : null}
 
@@ -285,7 +299,7 @@ export function SmsForm() {
                 <Button
                   className="dt-basis-1/2"
                   onClick={() => setSmsNumberEditing(true)}
-                  loading={isSavingAddress}
+                  loading={loading}
                 >
                   Change
                 </Button>
@@ -294,9 +308,9 @@ export function SmsForm() {
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
                   onClick={deleteSmsNumber}
-                  loading={isDeletingAddress}
+                  loading={loading}
                 >
-                  {isDeletingAddress ? 'Deleting...' : 'Delete number'}
+                  {loading ? 'Deleting...' : 'Delete number'}
                 </Button>
               </div>
             ) : null}
@@ -316,11 +330,6 @@ export function SmsForm() {
           ) : null}
         </form>
       </ToggleSection>
-      {currentError && (
-        <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
-          {currentError.message}
-        </P>
-      )}
     </div>
   );
 }

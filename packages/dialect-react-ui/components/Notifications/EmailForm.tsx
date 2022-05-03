@@ -12,11 +12,8 @@ export function EmailForm() {
     addresses: { email: emailObj },
     fetchingAddressesError,
     saveAddress,
-    isSavingAddress,
     updateAddress,
     deleteAddress,
-    isDeletingAddress,
-    isSendingCode,
     verifyCode,
     resendCode,
   } = useApi();
@@ -37,6 +34,7 @@ export function EmailForm() {
   const [email, setEmail] = useState(emailObj?.value);
   const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
   const [verificationCode, setVerificationCode] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState<Error | null>(null);
 
@@ -56,6 +54,7 @@ export function EmailForm() {
     // TODO: validate & save email
     if (error) return;
     try {
+      setLoading(true);
       await updateAddress(wallet, {
         type: 'email',
         value: email,
@@ -66,6 +65,7 @@ export function EmailForm() {
     } catch (e) {
       setError(e);
     } finally {
+      setLoading(false);
       setEmailEditing(false);
     }
   };
@@ -74,28 +74,35 @@ export function EmailForm() {
     if (error) return;
 
     try {
+      setLoading(true);
       await saveAddress(wallet, {
         type: 'email',
         value: email,
         enabled: true,
       });
     } catch (e) {
-      setError(e)
+      setError(e);
+    } finally {
+      setLoading(false)
     }
   };
 
   const deleteEmail = async () => {
     try {
+      setLoading(true);
       await deleteAddress(wallet, {
         addressId: emailObj?.addressId,
       });
     } catch (e) {
       setError(e);
+    } finally {
+      setLoading(false);
     }
   };
 
   const resendEmailCode = async () => {
     try {
+      setLoading(true);
       await resendCode(wallet, {
         type: 'email',
         value: email,
@@ -105,11 +112,14 @@ export function EmailForm() {
       });
     } catch (e) {
       setError(e);
+    } finally {
+      setLoading(false);
     }
   };
 
   const sendCode = async () => {
     try {
+      setLoading(true);
       await verifyCode(
           wallet,
           {
@@ -124,6 +134,7 @@ export function EmailForm() {
     } catch (e) {
       setError(e)
     } finally {
+      setLoading(false)
       setVerificationCode('');
     }
   };
@@ -151,18 +162,18 @@ export function EmailForm() {
           onClick={sendCode}
           defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
           disabled={verificationCode.length !== 6}
-          loading={isSendingCode}
+          loading={loading}
         >
-          {isSendingCode ? 'Sending code...' : 'Submit'}
+          {loading ? 'Sending code...' : 'Submit'}
         </Button>
         <Button
           className="dt-basis-1/4"
           onClick={deleteEmail}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
-          loading={isDeletingAddress}
+          loading={loading}
         >
-          {isDeletingAddress ? 'Deleting...' : 'Cancel'}
+          {loading ? 'Deleting...' : 'Cancel'}
         </Button>
       </div>
     );
@@ -175,7 +186,7 @@ export function EmailForm() {
         title="📩  Email notifications"
         onChange={async (nextValue) => {
           if (emailObj && emailObj.enabled !== nextValue) {
-            // TODO: handle error
+            setError(null);
             await updateAddress(wallet, {
               id: emailObj.id,
               enabled: nextValue,
@@ -197,7 +208,7 @@ export function EmailForm() {
                 <input
                   className={cs(
                     outlinedInput,
-                    emailError && '!dt-border-red-500 !dt-text-red-500',
+                    error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
                   )}
                   placeholder="Enter email"
@@ -217,6 +228,11 @@ export function EmailForm() {
                   disabled={isEmailSaved && !isEmailEditing}
                 />
               )}
+              {currentError && (
+                  <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                    {currentError.message}
+                  </P>
+              )}
             </div>
 
             {isChanging && (
@@ -233,9 +249,9 @@ export function EmailForm() {
                   className="dt-basis-1/2"
                   disabled={email === ''}
                   onClick={updateEmail}
-                  loading={isSavingAddress}
+                  loading={loading}
                 >
-                  {isSavingAddress ? 'Saving...' : 'Submit email'}
+                  {loading ? 'Saving...' : 'Submit email'}
                 </Button>
               </div>
             )}
@@ -245,9 +261,9 @@ export function EmailForm() {
                 className="dt-basis-full"
                 disabled={email === ''}
                 onClick={saveEmail}
-                loading={isSavingAddress}
+                loading={loading}
               >
-                {isSavingAddress ? 'Saving...' : 'Submit email'}
+                {loading ? 'Saving...' : 'Submit email'}
               </Button>
             ) : null}
 
@@ -282,7 +298,7 @@ export function EmailForm() {
                 <Button
                   className="dt-basis-1/2"
                   onClick={() => setEmailEditing(true)}
-                  loading={isSavingAddress}
+                  loading={loading}
                 >
                   Change email
                 </Button>
@@ -291,9 +307,9 @@ export function EmailForm() {
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
                   onClick={deleteEmail}
-                  loading={isDeletingAddress}
+                  loading={loading}
                 >
-                  {isDeletingAddress ? 'Deleting...' : 'Delete email'}
+                  {loading ? 'Deleting...' : 'Delete email'}
                 </Button>
               </div>
             ) : null}
@@ -313,11 +329,6 @@ export function EmailForm() {
           ) : null}
         </form>
       </ToggleSection>
-      {currentError && (
-        <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
-          {currentError.message}
-        </P>
-      )}
     </div>
   );
 }

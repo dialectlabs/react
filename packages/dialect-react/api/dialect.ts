@@ -124,40 +124,25 @@ export const fetchDialectForMembers = withErrorParsing(
   }
 );
 
-export const fetchDialect = (
+export const fetchDialect = withErrorParsing(
   async (
     program: anchor.Program,
     address: string,
     encryptionProps?: EncryptionProps | null
   ) => {
-    try {
-      console.log(address);
-      const result = await getDialect(
-          program,
-          new anchor.web3.PublicKey(address),
-          encryptionProps
-      );
-      console.log("ASD")
-      console.log(result);
-      return result
-    } catch (e) {
-      console.log(e);
-    }
+    return await getDialect(
+        program,
+        new anchor.web3.PublicKey(address),
+        encryptionProps
+    );
   }
 );
 
-export const fetchDialects = (
+export const fetchDialects = withErrorParsing(
   async (program: anchor.Program, user: string) => {
-    try {
-      const result = await findDialects(program, {
-        userPk: new anchor.web3.PublicKey(user),
+      return await findDialects(program, {
+        userPk: new anchor.web3.PublicKey(user)
       });
-      console.log("ASD");
-      console.log(result);
-      return result
-    } catch (e) {
-      console.log(e);
-    }
   }
 );
 

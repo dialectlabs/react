@@ -77,17 +77,14 @@ type ValueType = {
   program: ProgramType;
   addresses: Record<Address, AddressType> | Record<string, never>;
   fetchingAddressesError: ParsedErrorData | null;
-  isSavingAddress: boolean;
   saveAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   updateAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
-  isDeletingAddress: boolean;
   deleteAddress: (wallet: WalletType, address: AddressType) => Promise<void>;
   verifyCode: (
     wallet: WalletType,
     address: AddressType,
     code: string
   ) => Promise<void>;
-  isSendingCode: boolean;
   resendCode: (wallet: WalletType, address: AddressType) => Promise<void>;
 };
 
@@ -98,10 +95,6 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const [program, setProgram] = useState<ProgramType>(null);
   const [network, setNetwork] = useState<string | null>('devnet');
   const [rpcUrl, setRpcUrl] = useState<string | null>(URLS.devnet);
-
-  const [isSavingAddress, setSavingAddress] = React.useState(false);
-  const [isDeletingAddress, setDeletingAddress] = React.useState(false);
-  const [isSendingCode, setSendingCode] = React.useState(false);
 
   const [fetchingError, setFetchingError] =
     React.useState<ParsedErrorData | null>(null);
@@ -151,14 +144,11 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const saveAddressWrapper = useCallback(
     async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected || !dapp) return;
-      setSavingAddress(true);
       try {
         const data = await saveAddress(wallet, dapp, address);
         await mutateAddresses([data]);
       } catch (e) {
         throw e as Error;
-      } finally {
-        setSavingAddress(false);
       }
     },
     [dapp, isWalletConnected, mutateAddresses]
@@ -168,15 +158,11 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected || !dapp) return;
 
-      setSavingAddress(true);
-
       try {
         const data = await updateAddress(wallet, dapp, address);
         await mutateAddresses([data]);
       } catch (e) {
         throw e as Error;
-      } finally {
-        setSavingAddress(false);
       }
     },
     [dapp, isWalletConnected, mutateAddresses]
@@ -186,15 +172,11 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected) return;
 
-      setDeletingAddress(true);
-
       try {
         await deleteAddress(wallet, address);
         await mutateAddresses([]);
       } catch (e) {
         throw e as Error;
-      } finally {
-        setDeletingAddress(false);
       }
     },
     [isWalletConnected, mutateAddresses]
@@ -203,15 +185,11 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const verifyCodeWrapper = useCallback(
     async (wallet: WalletType, address: AddressType, code: string) => {
       if (!isWalletConnected || !dapp) return;
-      setSendingCode(true);
       try {
         const data = await verifyCode(wallet, dapp, address, code);
         await mutateAddresses([data]);
-        setSendingCode(false);
       } catch (err) {
         throw err as Error;
-      } finally {
-        setSendingCode(false);
       }
     },
     [dapp, isWalletConnected, mutateAddresses]
@@ -220,14 +198,10 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   const resendCodeWrapper = useCallback(
     async (wallet: WalletType, address: AddressType) => {
       if (!isWalletConnected || !dapp) return;
-      setSendingCode(true);
       try {
         await resendCode(wallet, dapp, address);
-        setSendingCode(false);
       } catch (err) {
         throw err as Error;
-      } finally {
-        setSendingCode(false);
       }
     },
     [dapp, isWalletConnected, mutateAddresses]
@@ -254,14 +228,11 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     program,
     addresses: addressesObj || {},
     fetchingAddressesError: fetchingError,
-    isSavingAddress,
     saveAddress: saveAddressWrapper,
     updateAddress: updateAddressWrapper,
-    isDeletingAddress,
     deleteAddress: deleteAddressWrapper,
     verifyCode: verifyCodeWrapper,
     resendCode: resendCodeWrapper,
-    isSendingCode,
   };
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
