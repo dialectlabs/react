@@ -241,12 +241,12 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     section:
       'dt-p-2 dt-rounded-2xl dt-bg-dark-day dt-border dt-border-outline-day',
     xPaddedText: 'dt-px-2',
+    disabledButton:
+      'dt-bg-subtle-day dt-text-black/40 dt-border dt-border-outline-day',
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 dt-bg-transparent',
-    disabledButton:
-      'dt-bg-[#ABABAB]/20 dt-text-black/20 dt-border dt-border-white/20 hover:dt-bg-black/10',
   },
   dark: {
     colors: {
@@ -335,12 +335,12 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     section:
       'dt-p-2 dt-rounded-2xl dt-bg-dark-night dt-border dt-border-outline-night',
     xPaddedText: 'dt-px-2',
+    disabledButton:
+      'dt-bg-subtle-night dt-text-white/40 dt-border dt-border-outline-night',
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
-    disabledButton:
-      'dt-bg-[#ABABAB]/20 dt-text-white/20 dt-border dt-border-white/20 hover:dt-bg-white/10',
   },
 };
 
