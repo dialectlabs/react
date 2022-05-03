@@ -81,7 +81,7 @@ export function EmailForm() {
     } catch (e) {
       setError(e);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -119,20 +119,20 @@ export function EmailForm() {
     try {
       setLoading(true);
       await verifyCode(
-          wallet,
-          {
-            type: 'email',
-            value: email,
-            enabled: true,
-            id: emailObj?.id,
-            addressId: emailObj?.addressId,
-          },
-          verificationCode
+        wallet,
+        {
+          type: 'email',
+          value: email,
+          enabled: true,
+          id: emailObj?.id,
+          addressId: emailObj?.addressId,
+        },
+        verificationCode
       );
     } catch (e) {
-      setError(e)
+      setError(e);
     } finally {
-      setLoading(false)
+      setLoading(false);
       setVerificationCode('');
     }
   };
@@ -215,20 +215,26 @@ export function EmailForm() {
                   onBlur={(e) =>
                     e.target.checkValidity()
                       ? setError(null)
-                      : setError({name: "incorrectEmail", message: "Please enter a valid email"})
+                      : setError({
+                          name: 'incorrectEmail',
+                          message: 'Please enter a valid email',
+                        })
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setError({name: "incorrectEmail", message: "Please enter a valid email"})
+                    setError({
+                      name: 'incorrectEmail',
+                      message: 'Please enter a valid email',
+                    });
                   }}
                   pattern="^\S+@\S+\.\S+$"
                   disabled={isEmailSaved && !isEmailEditing}
                 />
               )}
               {currentError && (
-                  <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
-                    {currentError.message}
-                  </P>
+                <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                  {currentError.message}
+                </P>
               )}
             </div>
 
