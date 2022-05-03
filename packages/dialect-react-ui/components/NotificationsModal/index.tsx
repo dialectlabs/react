@@ -8,7 +8,6 @@ import {
   DialectProvider,
   useApi,
 } from '@dialectlabs/react';
-import useMobile from '../../utils/useMobile';
 import {
   ThemeProvider,
 } from '../common/ThemeProvider';
@@ -45,16 +44,6 @@ function Modal({
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const isMobile = useMobile();
-
-  useEffect(() => {
-    // Prevent scrolling of backdrop content on mobile
-    document.documentElement.classList[open && isMobile ? 'add' : 'remove'](
-      'dt-overflow-hidden',
-      'dt-static',
-      'sm:dt-overflow-auto'
-    );
-  }, [open, isMobile]);
   return (
     <div
       ref={wrapperRef}
