@@ -37,8 +37,6 @@ export function TelegramForm(props: TelegramFormProps) {
     secondaryDangerButton,
     secondaryDangerButtonLoading,
     highlighted,
-    disabledButton,
-    button
   } = useTheme();
 
   const [telegramUsername, setTelegramUsername] = useState(telegramObj?.value);
@@ -170,7 +168,6 @@ export function TelegramForm(props: TelegramFormProps) {
           <Button
             className="dt-basis-1/4"
             onClick={sendCode}
-            defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
             disabled={verificationCode.length !== 6}
             loading={loading}
           >

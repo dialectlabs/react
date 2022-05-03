@@ -27,8 +27,6 @@ export function EmailForm() {
     secondaryDangerButton,
     secondaryDangerButtonLoading,
     highlighted,
-    disabledButton,
-    button,
   } = useTheme();
 
   const [email, setEmail] = useState(emailObj?.value);
@@ -160,7 +158,6 @@ export function EmailForm() {
         <Button
           className="dt-basis-1/4"
           onClick={sendCode}
-          defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
           disabled={verificationCode.length !== 6}
           loading={loading}
         >
