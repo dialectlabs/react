@@ -115,10 +115,8 @@ function Settings(props: {
   toggleSettings: () => void;
   notifications: NotificationType[];
   channels: Channel[];
-  onBackClick?: () => void;
-  isDialectAvailable: boolean;
 }) {
-  const { textStyles, icons, xPaddedText } = useTheme();
+  const { textStyles, xPaddedText } = useTheme();
 
   const channelsOptions = useMemo(
     () =>
@@ -270,8 +268,6 @@ export default function Notifications(props: {
         toggleSettings={toggleSettings}
         notifications={props.notifications || []}
         channels={props.channels || []}
-        onBackClick={props?.onBackClick}
-        isDialectAvailable={isDialectAvailable}
       />
     );
   } else if (isNoMessages) {

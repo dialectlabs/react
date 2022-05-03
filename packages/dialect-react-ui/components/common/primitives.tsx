@@ -203,41 +203,6 @@ export function Toggle({
   );
 }
 
-export function Accordion(props: {
-  title: React.ReactNode | string;
-  children: React.ReactNode;
-  className?: string;
-  defaultExpanded?: boolean;
-  backButton?: React.ReactNode;
-}) {
-  const { textStyles, colors, icons } = useTheme();
-  const [isExpanded, setExpanded] = useState(props.defaultExpanded);
-
-  return (
-    <div className={props?.className}>
-      <div
-        className={cs(
-          textStyles.bigText,
-          'dt-w-full dt-flex dt-justify-start dt-mb-1'
-        )}
-      >
-        {props.backButton}
-        {props.title}
-        {/* <IconButton
-          icon={<icons.chevron />}
-          className={cs(
-            'rounded-full w-6 h-6 flex items-center justify-center',
-            colors.highlight,
-            !isExpanded && 'rotate-180'
-          )}
-        /> */}
-      </div>
-      <Divider className="dt-mb-2" />
-      {isExpanded ? props.children : null}
-    </div>
-  );
-}
-
 export const useBalance = () => {
   const { wallet, program } = useApi();
 
