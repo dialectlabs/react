@@ -73,8 +73,9 @@ export function TelegramForm(props: TelegramFormProps) {
         id: telegramObj?.id,
         addressId: telegramObj?.addressId,
       });
+      setError(null);
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false);
       setTelegramUsernameEditing(false);
@@ -92,8 +93,9 @@ export function TelegramForm(props: TelegramFormProps) {
         value: value,
         enabled: true,
       });
+      setError(null);
     } catch (e) {
-      setError(e);
+      setError(e as Error);
     } finally {
       setLoading(false);
     }
@@ -105,8 +107,9 @@ export function TelegramForm(props: TelegramFormProps) {
       await deleteAddress(wallet, {
         addressId: telegramObj?.addressId,
       });
+      setError(null);
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false);
     }
@@ -120,9 +123,10 @@ export function TelegramForm(props: TelegramFormProps) {
         value: telegramUsername,
         enabled: true,
         id: telegramObj?.id,
-        addressId: telegramObj?.addressId})
+        addressId: telegramObj?.addressId});
+      setError(null);
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false);
     }
@@ -138,8 +142,9 @@ export function TelegramForm(props: TelegramFormProps) {
         id: telegramObj?.id,
         addressId: telegramObj?.addressId,
       }, verificationCode);
+      setError(null);
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false);
       setVerificationCode("")

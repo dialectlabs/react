@@ -62,8 +62,9 @@ export function SmsForm() {
         id: smsObj?.id,
         addressId: smsObj?.addressId,
       });
+      setError(null);
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false);
       setSmsNumberEditing(false);
@@ -80,8 +81,9 @@ export function SmsForm() {
         value: smsNumber,
         enabled: true,
       });
+      setError(null);
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false);
     }
@@ -93,8 +95,9 @@ export function SmsForm() {
       await deleteAddress(wallet, {
         addressId: smsObj?.addressId,
       });
+      setError(null);
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false)
     }
@@ -102,7 +105,7 @@ export function SmsForm() {
 
   const resendSmsVerificationCode = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       await resendCode(wallet, {
         type: 'sms',
         value: smsNumber,
@@ -110,8 +113,9 @@ export function SmsForm() {
         id: smsObj?.id,
         addressId: smsObj?.addressId,
       });
+      setError(null)
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false)
     }
@@ -131,8 +135,9 @@ export function SmsForm() {
           },
           verificationCode
       );
+      setError(null);
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false);
       setVerificationCode('');

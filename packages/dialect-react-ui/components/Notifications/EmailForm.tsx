@@ -62,8 +62,9 @@ export function EmailForm() {
         id: emailObj?.id,
         addressId: emailObj?.addressId,
       });
+      setError(null);
     } catch (e) {
-      setError(e);
+      setError(e as Error);
     } finally {
       setLoading(false);
       setEmailEditing(false);
@@ -80,8 +81,9 @@ export function EmailForm() {
         value: email,
         enabled: true,
       });
+      setError(null);
     } catch (e) {
-      setError(e);
+      setError(e as Error);
     } finally {
       setLoading(false)
     }
@@ -93,8 +95,9 @@ export function EmailForm() {
       await deleteAddress(wallet, {
         addressId: emailObj?.addressId,
       });
+      setError(null);
     } catch (e) {
-      setError(e);
+      setError(e as Error);
     } finally {
       setLoading(false);
     }
@@ -110,8 +113,9 @@ export function EmailForm() {
         id: emailObj?.id,
         addressId: emailObj?.addressId,
       });
+      setError(null)
     } catch (e) {
-      setError(e);
+      setError(e as Error);
     } finally {
       setLoading(false);
     }
@@ -131,8 +135,9 @@ export function EmailForm() {
           },
           verificationCode
       );
+      setError(null)
     } catch (e) {
-      setError(e)
+      setError(e as Error)
     } finally {
       setLoading(false)
       setVerificationCode('');
