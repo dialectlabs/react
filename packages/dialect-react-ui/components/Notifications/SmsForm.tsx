@@ -27,8 +27,6 @@ export function SmsForm() {
     secondaryDangerButton,
     secondaryDangerButtonLoading,
     highlighted,
-    disabledButton,
-    button,
   } = useTheme();
 
   const [smsNumber, setSmsNumber] = useState(smsObj?.value);
@@ -165,7 +163,6 @@ export function SmsForm() {
         <Button
           className="dt-basis-1/4"
           onClick={sendCode}
-          defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
           disabled={verificationCode.length !== 6}
           loading={loading}
         >
@@ -195,6 +192,7 @@ export function SmsForm() {
             // TODO: handle error
             await updateAddress(wallet, {
               id: smsObj.id,
+              type: smsObj.type,
               enabled: nextValue,
             });
           }
