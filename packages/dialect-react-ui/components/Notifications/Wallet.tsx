@@ -78,19 +78,33 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     [updateAddress, walletObj, wallet]
   );
 
+  // TODO: move to the Notifications/index.tsx component
   useEffect(() => {
     if (
-      isDialectAvailable ||
-      !walletObj ||
       isDialectCreating ||
-      isDialectDeleting
+      isDialectDeleting ||
+      (isDialectAvailable && walletObj)
     )
       return;
-    //   sync state in case of errors
-    deleteAddress(wallet, {
-      addressId: walletObj?.addressId,
-    });
-  }, [isDialectAvailable, wallet, walletObj, walletObj?.addressId]);
+
+    // Sync state in case of errors
+    if (isDialectAvailable && !walletObj) {
+      // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
+      saveWallet();
+    } else if (!isDialectAvailable && walletObj) {
+      // In case the wallet isn't in web2 db, but the actual thread was created
+      deleteWallet();
+    }
+  }, [
+    isDialectAvailable,
+    isDialectCreating,
+    isDialectDeleting,
+    wallet,
+    deleteWallet,
+    saveWallet,
+    walletObj,
+    walletObj?.addressId,
+  ]);
 
   const isAdmin =
     dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet.publicKey);

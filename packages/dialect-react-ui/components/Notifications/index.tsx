@@ -306,7 +306,7 @@ export default function Notifications(props: {
         )}
       >
         <Header
-          isReady={isDialectAvailable}
+          isReady={isDialectAvailable || walletObj?.enabled}
           isSettingsOpen={isSettingsOpen}
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
