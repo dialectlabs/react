@@ -114,6 +114,16 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     }
   );
 
+  const mergeAddress = useCallback(
+    (data) =>
+      addresses
+        ? addresses.map((add: AddressType) =>
+            add.type === data.type ? data : add
+          )
+        : [data],
+    [addresses]
+  );
+
   const isWalletConnected = connected(wallet);
 
   useEffect(() => {
@@ -146,12 +156,12 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
       if (!isWalletConnected || !dapp) return;
       try {
         const data = await saveAddress(wallet, dapp, address);
-        await mutateAddresses([data]);
+        await mutateAddresses(mergeAddress(data));
       } catch (e) {
         throw e as Error;
       }
     },
-    [dapp, isWalletConnected, mutateAddresses]
+    [dapp, mergeAddress, isWalletConnected, mutateAddresses]
   );
 
   const updateAddressWrapper = useCallback(
@@ -160,12 +170,12 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
 
       try {
         const data = await updateAddress(wallet, dapp, address);
-        await mutateAddresses([data]);
+        await mutateAddresses(mergeAddress(data));
       } catch (e) {
         throw e as Error;
       }
     },
-    [dapp, isWalletConnected, mutateAddresses]
+    [dapp, mergeAddress, isWalletConnected, mutateAddresses]
   );
 
   const deleteAddressWrapper = useCallback(
@@ -174,12 +184,15 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
 
       try {
         await deleteAddress(wallet, address);
-        await mutateAddresses([]);
+        const nextAddresses = addresses
+          ? addresses.filter((add) => add.type !== address.type)
+          : [];
+        await mutateAddresses(nextAddresses);
       } catch (e) {
         throw e as Error;
       }
     },
-    [isWalletConnected, mutateAddresses]
+    [addresses, isWalletConnected, mutateAddresses]
   );
 
   const verifyCodeWrapper = useCallback(
@@ -187,12 +200,12 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
       if (!isWalletConnected || !dapp) return;
       try {
         const data = await verifyCode(wallet, dapp, address, code);
-        await mutateAddresses([data]);
+        await mutateAddresses(mergeAddress(data));
       } catch (err) {
         throw err as Error;
       }
     },
-    [dapp, isWalletConnected, mutateAddresses]
+    [dapp, mergeAddress, isWalletConnected, mutateAddresses]
   );
 
   const resendCodeWrapper = useCallback(
@@ -204,7 +217,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
         throw err as Error;
       }
     },
-    [dapp, isWalletConnected, mutateAddresses]
+    [dapp, isWalletConnected]
   );
 
   // TODO: better naming or replace addresses

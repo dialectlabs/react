@@ -187,6 +187,7 @@ export function SmsForm() {
             // TODO: handle error
             await updateAddress(wallet, {
               id: smsObj.id,
+              type: smsObj.type,
               enabled: nextValue,
             });
           }

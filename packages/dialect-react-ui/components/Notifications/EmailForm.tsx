@@ -186,6 +186,7 @@ export function EmailForm() {
             setError(null);
             await updateAddress(wallet, {
               id: emailObj.id,
+              type: emailObj.type,
               enabled: nextValue,
             });
           }
