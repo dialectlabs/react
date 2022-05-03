@@ -134,8 +134,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
   const sendCode = async () => {
     try {
-<<<<<<< HEAD
-      setLoading(true)
+      setLoading(true);
       await verifyCode(wallet, {
         type: 'telegram',
         value: telegramUsername,
