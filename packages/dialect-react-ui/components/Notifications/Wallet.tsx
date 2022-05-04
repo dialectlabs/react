@@ -233,7 +233,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
   return (
     <ToggleSection
       className="dt-mb-6"
-      title="💬  Web3 wallet notifications"
+      title="💬  Wallet notifications"
       enabled={isWalletEnabled}
       onChange={async (nextValue) => {
         await updateWalletEnabled(nextValue);
