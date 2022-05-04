@@ -2,8 +2,9 @@ import fetch from 'unfetch';
 import type { WalletContextState } from '@solana/wallet-adapter-react';
 import type { WalletType } from '../components/ApiContext';
 
-// TODO: make this customizable
-const DIALECT_BASE_URL = '/api';
+// Change to localhost for localdev
+// TODO: make this customizable via env
+const DIALECT_BASE_URL = 'https://dialectapi.to/api';
 
 export type Address = 'wallet' | 'email' | 'sms' | 'telegram';
 
