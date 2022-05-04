@@ -444,6 +444,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     metadataDeletionError,
     metadata: metadata || null, // TODO: Fix type
     isDialectAvailable,
+    // TODO: handle if targeting cluster with no deployed program
     createDialect: createDialectWrapper,
     isDialectCreating: creating,
     creationError,
