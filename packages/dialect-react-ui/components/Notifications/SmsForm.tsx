@@ -273,7 +273,7 @@ export function SmsForm() {
 
             {!isSmsNumberEditing && !isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
-                <P
+                <div
                   className={cs(
                     textStyles.small,
                     'display: inline-flex',
@@ -293,7 +293,7 @@ export function SmsForm() {
                     />
                     Resend code
                   </div>
-                </P>
+                </div>
               </div>
             ) : null}
 
