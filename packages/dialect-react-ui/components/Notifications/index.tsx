@@ -51,6 +51,7 @@ function Header(props: {
     );
   }
 
+  console.log(props.isReady);
   return (
     <>
       <div
@@ -295,7 +296,7 @@ export default function Notifications(props: {
         )}
       >
         <Header
-          isReady={isDialectAvailable}
+          isReady={isDialectAvailable || walletObj}
           isSettingsOpen={isSettingsOpen}
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}
