@@ -4,7 +4,7 @@ import type { WalletType } from '../components/ApiContext';
 
 // Change to localhost for localdev
 // TODO: make this customizable via env
-const DIALECT_BASE_URL = 'https://dialectapi.to/api';
+const DIALECT_BASE_URL = 'https://dialectapi.to';
 
 export type Address = 'wallet' | 'email' | 'sms' | 'telegram';
 

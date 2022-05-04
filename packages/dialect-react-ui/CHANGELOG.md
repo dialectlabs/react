@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [0.8.1] - 2022-05-04
+
+- Bump `@dialectlabs/react` package version
+
 ## [0.8.0] - 2022-05-04
 
 - feat: bring telegram, sms, email and wallet as toggle sections

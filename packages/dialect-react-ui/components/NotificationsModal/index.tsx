@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import type { PropTypes } from "../NotificationsButton";
-import { useOutsideAlerter } from "../NotificationsButton";
+import type { PropTypes } from '../NotificationsButton';
+import { useOutsideAlerter } from '../NotificationsButton';
 import type { WalletType } from '@dialectlabs/react';
 import {
   ApiProvider,
@@ -8,9 +8,7 @@ import {
   DialectProvider,
   useApi,
 } from '@dialectlabs/react';
-import {
-  ThemeProvider,
-} from '../common/ThemeProvider';
+import { ThemeProvider } from '../common/ThemeProvider';
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 
@@ -23,10 +21,7 @@ type ModalProps = {
   onBackClick?: () => void;
 };
 
-function Modal({
-  channels = ['web3'],
-  ...props
-}: ModalProps): JSX.Element {
+function Modal({ channels = ['web3'], ...props }: ModalProps): JSX.Element {
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
   const [open, setOpen] = useState(false);

@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [0.5.1] - 2022-05-04
+
+- fix: wallet-refistry url
+
 ## [0.5.0] - 2022-05-04
 
 - feat: bring telegram, sms, email and wallet saving in wallet-registry
