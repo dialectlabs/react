@@ -2,6 +2,11 @@
 
 ## [UNRELEASED]
 
+## [0.5.0] - 2022-05-04
+
+- feat: bring telegram, sms, email and wallet saving in wallet-registry
+- refactor: remove web2 error handling from ApiContext
+
 ## [0.4.11] - 2022-04-28
 
 - chore: bump @dialectlabs/web3

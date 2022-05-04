@@ -2,8 +2,12 @@
 
 ## [UNRELEASED]
 
-- Exposed the notification modal
-- Added optional back button for the modal
+## [0.8.0] - 2022-05-04
+
+- feat: bring telegram, sms, email and wallet as toggle sections
+- refactor: web2 error handling, show exact error messages
+- feat: Expose the notification modal
+- feat: Add optional back button for the modal
 
 ## [0.7.3] - 2022-04-29
 
