@@ -230,8 +230,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       getDialectAddressWithOtherMember(
         program as anchor.Program,
         props.publicKey
-      ).then(([address, _]: [anchor.web3.PublicKey, number]) =>
-        setDialectAddress(address.toBase58())
+      ).then(([address, _]: [anchor.web3.PublicKey, number]) => {
+            setDialectAddress(address.toBase58())
+          }
       );
     }
     return;

@@ -96,18 +96,16 @@ export function Button(props: {
   loading?: boolean;
   children: React.ReactNode;
 }): JSX.Element {
-  const { button, buttonLoading, textStyles } = useTheme();
+  const { button, buttonLoading, disabledButton, textStyles } = useTheme();
   const defaultClassName = props.defaultStyle || button;
   const loadingClassName = props.loadingStyle || buttonLoading;
-  const disabledClassName =
-    'dt-bg-white dt-text-black dt-border dt-border-white dt-opacity-40';
 
   return (
     <ButtonBase
       className={cs(
         'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
-        props.disabled ? disabledClassName : defaultClassName,
+        props.disabled ? disabledButton : defaultClassName,
         props.loading && loadingClassName,
         props.className
       )}

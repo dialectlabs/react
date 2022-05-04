@@ -112,47 +112,40 @@ export const fetchJSON = async (
   if (response.ok) {
     return response;
   } else {
-    const error = new Error(
-      response.statusText || `Response status: ${response.status}`
-    );
-    error.response = response;
-    throw error;
+      const data = await response.json();
+      throw new Error(data.message);
   }
 };
 
-export const fetchAddressesForDapp = withErrorParsing(
-  async (wallet: WalletType, dapp: string) => {
+export const fetchAddressesForDapp = async (wallet: WalletType, dapp: string) => {
     const rawResponse = await fetchJSON(
       wallet,
       `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses`
     );
     const content = await rawResponse.json();
     return content;
-  }
-);
+};
+
 
 // Save email, phone or other address along with wallet address
-export const saveAddress = withErrorParsing(
-  async (wallet: WalletType, dapp: string, address: AddressType) => {
-    const rawResponse = await fetchJSON(
-      wallet,
-      `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toBase58()}/dapps/${dapp}/addresses`,
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(address),
-      }
-    );
-    const content = await rawResponse.json();
-    return content;
+export const saveAddress = async (wallet: WalletType, dapp: string, address: AddressType) => {
+const rawResponse = await fetchJSON(
+  wallet,
+  `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toBase58()}/dapps/${dapp}/addresses`,
+  {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(address),
   }
 );
+const content = await rawResponse.json();
+return content;
+};
 
-export const updateAddress = withErrorParsing(
-  async (wallet: WalletType, dapp: string, address: AddressType) => {
+export const updateAddress = async (wallet: WalletType, dapp: string, address: AddressType) => {
     console.log("UPDATE ADDRESS:", address);
     let rawResponse;
     if (address?.id) {
@@ -188,13 +181,11 @@ export const updateAddress = withErrorParsing(
     }
     const content = await rawResponse.json();
     return content;
-  }
-);
+  };
 
 // Save email, phone or other address along with wallet address
-export const deleteAddress = withErrorParsing(
-  async (wallet: WalletType, address: AddressType) => {
-    const rawResponse = await fetchJSON(
+export const deleteAddress = async (wallet: WalletType, address: AddressType) => {
+    await fetchJSON(
       wallet,
       `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/addresses/${
         address.addressId
@@ -203,12 +194,9 @@ export const deleteAddress = withErrorParsing(
         method: 'DELETE',
       }
     );
-    return {};
-  }
-);
+  };
 
-export const verifyCode = withErrorParsing(
-  async (wallet: WalletType, dapp: string, address: AddressType, code) => {
+export const verifyCode = async (wallet: WalletType, dapp: string, address: AddressType, code: string) => {
     const rawResponse = await fetchJSON(
       wallet,
       `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
@@ -225,11 +213,9 @@ export const verifyCode = withErrorParsing(
     );
     const content = await rawResponse.json();
     return content;
-  }
-);
+  };
 
-export const resendCode = withErrorParsing(
-  async (wallet: WalletType, dapp: string, address: AddressType) => {
+export const resendCode = async (wallet: WalletType, dapp: string, address: AddressType) => {
     await fetchJSON(
       wallet,
       `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
@@ -244,6 +230,4 @@ export const resendCode = withErrorParsing(
         body: JSON.stringify(address),
       }
     );
-    return {};
-  }
-);
+  };

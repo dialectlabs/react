@@ -80,7 +80,7 @@ function Header(props: {
             <IconButton
               icon={<icons.back />}
               onClick={props.toggleSettings}
-              className="dt-mr-2"
+              className="dt-mr-2 dt-py-1"
             />
             <span className={cs(textStyles.header, colors.accent)}>
               Settings
@@ -280,7 +280,7 @@ export default function Notifications(props: {
     );
   } else {
     content = (
-      <div className={'dt-px-4'}>
+      <div className='dt-px-4 dt-py-4'>
         {messages.map((message: MessageType) => (
           <>
             <Notification

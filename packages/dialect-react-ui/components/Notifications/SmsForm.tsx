@@ -12,14 +12,8 @@ export function SmsForm() {
     addresses: { sms: smsObj },
     fetchingAddressesError,
     saveAddress,
-    isSavingAddress,
-    savingAddressError,
     updateAddress,
     deleteAddress,
-    isDeletingAddress,
-    deletingAddressError,
-    verificationCodeError,
-    isSendingCode,
     verifyCode,
     resendCode,
   } = useApi();
@@ -33,28 +27,19 @@ export function SmsForm() {
     secondaryDangerButton,
     secondaryDangerButtonLoading,
     highlighted,
-    disabledButton,
-    button,
   } = useTheme();
 
   const [smsNumber, setSmsNumber] = useState(smsObj?.value);
   const [isSmsNumberEditing, setSmsNumberEditing] = useState(!smsObj?.enabled);
-  const [smsNumberError, setSmsNumberError] = useState<ParsedErrorData | null>(
-    null
-  );
-
+  const [error, setError] = useState<Error | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const isSmsNumberSaved = Boolean(smsObj);
   const isChanging = smsObj && isSmsNumberEditing;
   const isVerified = smsObj?.verified;
 
-  const currentError =
-    smsNumberError ||
-    fetchingAddressesError ||
-    savingAddressError ||
-    deletingAddressError ||
-    verificationCodeError;
+  const currentError = error || fetchingAddressesError;
 
   useEffect(() => {
     // Update state if addresses updated
@@ -64,60 +49,97 @@ export function SmsForm() {
 
   const updateSmsNumber = async () => {
     // TODO: validate & save sms number
-    if (smsNumberError) return;
+    if (error) return;
 
-    await updateAddress(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-      id: smsObj?.id,
-      addressId: smsObj?.addressId,
-    });
-
-    setSmsNumberEditing(false);
-  };
-
-  const saveSmsNumber = async () => {
-    if (smsNumberError) return;
-
-    await saveAddress(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-    });
-  };
-
-  const deleteSmsNumber = async () => {
-    await deleteAddress(wallet, {
-      addressId: smsObj?.addressId,
-    });
-  };
-
-  const resendSmsVerificationCode = async () => {
-    await resendCode(wallet, {
-      type: 'sms',
-      value: smsNumber,
-      enabled: true,
-      id: smsObj?.id,
-      addressId: smsObj?.addressId,
-    });
-  };
-
-  const sendCode = async () => {
-    // TODO verifyEmail should just be verifyAddress
-    await verifyCode(
-      wallet,
-      {
+    try {
+      setLoading(true);
+      await updateAddress(wallet, {
         type: 'sms',
         value: smsNumber,
         enabled: true,
         id: smsObj?.id,
         addressId: smsObj?.addressId,
-      },
-      verificationCode
-    );
+      });
+      setError(null);
+    } catch (e) {
+      setError(e as Error)
+    } finally {
+      setLoading(false);
+      setSmsNumberEditing(false);
+    }
+  };
 
-    setVerificationCode('');
+  const saveSmsNumber = async () => {
+    if (error) return;
+
+    try {
+      setLoading(true);
+      await saveAddress(wallet, {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+      });
+      setError(null);
+    } catch (e) {
+      setError(e as Error)
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteSmsNumber = async () => {
+    try {
+      setLoading(true);
+      await deleteAddress(wallet, {
+        addressId: smsObj?.addressId,
+      });
+      setError(null);
+    } catch (e) {
+      setError(e as Error)
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const resendSmsVerificationCode = async () => {
+    try {
+      setLoading(true);
+      await resendCode(wallet, {
+        type: 'sms',
+        value: smsNumber,
+        enabled: true,
+        id: smsObj?.id,
+        addressId: smsObj?.addressId,
+      });
+      setError(null)
+    } catch (e) {
+      setError(e as Error)
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const sendCode = async () => {
+    try {
+      setLoading(true);
+      await verifyCode(
+          wallet,
+          {
+            type: 'sms',
+            value: smsNumber,
+            enabled: true,
+            id: smsObj?.id,
+            addressId: smsObj?.addressId,
+          },
+          verificationCode
+      );
+      setError(null);
+    } catch (e) {
+      setError(e as Error)
+    } finally {
+      setLoading(false);
+      setVerificationCode('');
+    }
   };
 
   const renderVerifiedState = () => {
@@ -141,20 +163,19 @@ export function SmsForm() {
         <Button
           className="dt-basis-1/4"
           onClick={sendCode}
-          defaultStyle={verificationCode.length !== 6 ? disabledButton : button}
           disabled={verificationCode.length !== 6}
-          loading={isSendingCode}
+          loading={loading}
         >
-          {isSendingCode ? 'Sending code...' : 'Submit'}
+          {loading ? 'Sending code...' : 'Submit'}
         </Button>
         <Button
           className="dt-basis-1/4"
           onClick={deleteSmsNumber}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
-          loading={isDeletingAddress}
+          loading={loading}
         >
-          {isDeletingAddress ? 'Deleting...' : 'Cancel'}
+          {loading ? 'Deleting...' : 'Cancel'}
         </Button>
       </div>
     );
@@ -166,16 +187,18 @@ export function SmsForm() {
         className="dt-mb-6"
         title="📶  SMS notifications"
         onChange={async (nextValue) => {
+          setError(null);
           if (smsObj && smsObj.enabled !== nextValue) {
             // TODO: handle error
             await updateAddress(wallet, {
               id: smsObj.id,
+              type: smsObj.type,
               enabled: nextValue,
             });
           }
         }}
         enabled={Boolean(smsObj?.enabled)}
-      > 
+      >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
@@ -189,7 +212,7 @@ export function SmsForm() {
                 <input
                   className={cs(
                     outlinedInput,
-                    smsNumberError && '!dt-border-red-500 !dt-text-red-500',
+                    error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
                   )}
                   placeholder="+15554443333 (+1 required, US only)"
@@ -198,16 +221,21 @@ export function SmsForm() {
                   onChange={(e) => setSmsNumber(e.target.value)}
                   onBlur={(e) =>
                     e.target.checkValidity()
-                      ? setSmsNumberError(null)
-                      : setSmsNumberError(DialectErrors.incorrectSmsNumber)
+                      ? setError(null)
+                      : setError({name: "incorrectSmsNumber", message: "Please enter a valid SMS number"})
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setSmsNumberError(DialectErrors.incorrectSmsNumber);
+                    setError({name: "incorrectSmsNumber", message: "Please enter a valid SMS number"})
                   }}
                   // pattern="^\S+@\S+\.\S+$"
                   disabled={isSmsNumberSaved && !isSmsNumberEditing}
                 />
+              )}
+              {currentError && (
+                  <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                    {currentError.message}
+                  </P>
               )}
             </div>
 
@@ -225,9 +253,9 @@ export function SmsForm() {
                   className="dt-basis-1/2"
                   disabled={smsNumber === ''}
                   onClick={updateSmsNumber}
-                  loading={isSavingAddress}
+                  loading={loading}
                 >
-                  {isSavingAddress ? 'Saving...' : 'Submit number'}
+                  {loading ? 'Saving...' : 'Submit number'}
                 </Button>
               </div>
             )}
@@ -237,15 +265,15 @@ export function SmsForm() {
                 className="dt-basis-full"
                 disabled={smsNumber === ''}
                 onClick={saveSmsNumber}
-                loading={isSavingAddress}
+                loading={loading}
               >
-                {isSavingAddress ? 'Saving...' : 'Submit number'}
+                {loading ? 'Saving...' : 'Submit number'}
               </Button>
             ) : null}
 
             {!isSmsNumberEditing && !isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
-                <P
+                <div
                   className={cs(
                     textStyles.small,
                     'display: inline-flex',
@@ -265,7 +293,7 @@ export function SmsForm() {
                     />
                     Resend code
                   </div>
-                </P>
+                </div>
               </div>
             ) : null}
 
@@ -274,7 +302,7 @@ export function SmsForm() {
                 <Button
                   className="dt-basis-1/2"
                   onClick={() => setSmsNumberEditing(true)}
-                  loading={isSavingAddress}
+                  loading={loading}
                 >
                   Change
                 </Button>
@@ -283,9 +311,9 @@ export function SmsForm() {
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
                   onClick={deleteSmsNumber}
-                  loading={isDeletingAddress}
+                  loading={loading}
                 >
-                  {isDeletingAddress ? 'Deleting...' : 'Delete number'}
+                  {loading ? 'Deleting...' : 'Delete number'}
                 </Button>
               </div>
             ) : null}
@@ -305,11 +333,6 @@ export function SmsForm() {
           ) : null}
         </form>
       </ToggleSection>
-      {currentError && (
-        <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
-          {currentError.message}
-        </P>
-      )}
     </div>
   );
 }

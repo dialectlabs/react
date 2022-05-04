@@ -131,18 +131,18 @@ export const fetchDialect = withErrorParsing(
     encryptionProps?: EncryptionProps | null
   ) => {
     return await getDialect(
-      program,
-      new anchor.web3.PublicKey(address),
-      encryptionProps
+        program,
+        new anchor.web3.PublicKey(address),
+        encryptionProps
     );
   }
 );
 
 export const fetchDialects = withErrorParsing(
   async (program: anchor.Program, user: string) => {
-    return await findDialects(program, {
-      userPk: new anchor.web3.PublicKey(user),
-    });
+      return await findDialects(program, {
+        userPk: new anchor.web3.PublicKey(user)
+      });
   }
 );
 
