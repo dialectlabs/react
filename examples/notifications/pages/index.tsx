@@ -80,7 +80,7 @@ function AuthedHome() {
           notifications={[
             { name: 'Welcome message', detail: 'On thread creation' },
           ]}
-          channels={['web3', 'email', "sms", "telegram"]}
+          channels={['web3', 'email', 'sms', 'telegram']}
         />
         <WalletButton />
       </div>
