@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- Exposed the notification modal
+- Added optional back button for the modal
+
 ## [0.7.3] - 2022-04-29
 
 - feat: revert powered by footer
