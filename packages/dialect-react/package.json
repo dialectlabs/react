@@ -4,6 +4,7 @@
   "description": "React wrappers for Dialect's web3 notifications",
   "license": "MIT",
   "private": false,
+  "sideEffects": false,
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",
@@ -30,7 +31,6 @@
     "@dialectlabs/web3": "^0.3.1",
     "@project-serum/anchor": "^0.23.0",
     "object-hash": "^3.0.0",
-    "@solana/web3.js": "1.38.0",
     "swr": "^0.5.6",
     "unfetch": "^4.2.0"
   },
@@ -43,6 +43,7 @@
     "react": ">=17",
     "@saberhq/use-solana": "^1.12.62",
     "@solana/wallet-adapter-react": "^0.15.4",
-    "@solana/wallet-adapter-base": "^0.9.5"
+    "@solana/wallet-adapter-base": "^0.9.5",
+    "@solana/web3.js": "1.x"
   }
 }

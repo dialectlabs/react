@@ -4,6 +4,7 @@
   "description": "Dialect's react UI components",
   "license": "MIT",
   "private": false,
+  "sideEffects": false,
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",
