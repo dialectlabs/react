@@ -1,7 +1,7 @@
 import React, { KeyboardEvent, FormEvent, useState, useEffect } from 'react';
 import { useApi, useDialect, formatTimestamp } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
-import { LinkifiedText } from '../../../../../common';
+import { MessageContent } from '../../../../../common';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import cs from '../../../../../../utils/classNames';
 import Avatar from '../../../../../Avatar';
@@ -83,7 +83,7 @@ export default function Thread() {
                         'dt-break-words dt-whitespace-pre-wrap dt-text-sm dt-text-right'
                       }
                     >
-                      <LinkifiedText>{message.text}</LinkifiedText>
+                      <MessageContent message={message} />
                     </div>
                     <div className={''}>
                       <div className={'dt-opacity-50 dt-text-xs'}>
@@ -113,7 +113,7 @@ export default function Thread() {
                       'dt-text-sm dt-break-words dt-whitespace-pre-wrap'
                     }
                   >
-                    <LinkifiedText>{message.text}</LinkifiedText>
+                    <MessageContent message={message} />
                   </div>
                   <div className={'dt-items-end'}>
                     <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>
