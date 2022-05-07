@@ -147,7 +147,7 @@ function Settings(props: {
         )}
         {channelsOptions.telegram && (
           <div className="dt-mb-2">
-            <TelegramForm botURL="https://telegram.me/DialectNotificationsbot" />
+            <TelegramForm botURL="https://telegram.me/DialectLabsBot" />
           </div>
         )}
       </div>
