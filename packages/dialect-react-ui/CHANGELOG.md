@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [0.8.3] - 2022-05-08
+
+- Fix render loop caused by default theme variable
+
 ## [0.8.1] - 2022-05-04
 
 - Bump `@dialectlabs/react` package version
