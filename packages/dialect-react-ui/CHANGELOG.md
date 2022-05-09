@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- mark library as side effect free
+
 ## [0.8.3] - 2022-05-08
 
 - Fix render loop caused by default theme variable

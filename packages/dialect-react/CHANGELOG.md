@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- mark library as side effect free
+
 ## [0.5.1] - 2022-05-04
 
 - fix: wallet-refistry url
