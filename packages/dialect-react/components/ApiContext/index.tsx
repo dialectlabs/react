@@ -30,7 +30,7 @@ import {
   extractWalletAdapter,
   isAnchorWallet,
 } from '../../utils/helpers';
-import type { WalletName } from '@solana/wallet-adapter-base';
+import type { Adapter, WalletName } from '@solana/wallet-adapter-base';
 import type { WalletAdapter } from '@saberhq/use-solana';
 
 const URLS: Record<'mainnet' | 'devnet' | 'localnet', string> = {
@@ -45,10 +45,12 @@ type PropsType = {
   dapp?: string; // base58 public key format
 };
 
+// TODO: this needs to be revisited...
 export type WalletType =
   | WalletContextState
   | AnchorWallet
   | WalletAdapter
+  | Adapter
   | null
   | undefined;
 
@@ -231,7 +233,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
   );
 
   const value: ValueType = {
-    wallet,
+    wallet: extractWalletAdapter(wallet),
     walletName: getWalletName(wallet),
     setWallet,
     network,

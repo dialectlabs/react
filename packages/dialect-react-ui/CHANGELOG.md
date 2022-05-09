@@ -2,6 +2,7 @@
 
 ## [UNRELEASED]
 
+- better use-solana compatability
 - mark library as side effect free
 
 ## [0.8.3] - 2022-05-08
