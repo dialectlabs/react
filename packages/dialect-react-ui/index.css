@@ -532,6 +532,10 @@
   scrollbar-width: none; /* Firefox */
 }
 
+.dt-label {
+  margin: 0;
+}
+
 .dialect *,
 .dialect ::before,
 .dialect ::after {
@@ -582,6 +586,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbar if not scrolling when supported to avoid width flickering */
 @supports (overflow: overlay) {
   .dt-overflow-y-auto {
     overflow-y: overlay;
