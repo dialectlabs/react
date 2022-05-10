@@ -55,6 +55,8 @@ export const extractWalletAdapter = (
   const isSaberUseSolana = Boolean(wallet?.adapter?.adapter);
   if (isSaberUseSolana) {
     return wallet.adapter.adapter;
+  } else if (wallet?.adapter) {
+    return wallet.adapter;
   }
-  return wallet.adapter;
+  return wallet;
 };
