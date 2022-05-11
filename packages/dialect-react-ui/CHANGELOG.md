@@ -2,6 +2,11 @@
 
 ## [UNRELEASED]
 
+## [0.8.6] - 2022-05-11
+
+- Bump `@dialectlabs/react` package version
+- Fix: label margin
+
 ## [0.8.5] - 2022-05-11
 
 - chore: remove unnecessary console.logs
