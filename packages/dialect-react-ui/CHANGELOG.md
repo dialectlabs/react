@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: remove unnecessary console.logs
+
 ## [0.8.4] - 2022-05-09
 
 - better use-solana compatability

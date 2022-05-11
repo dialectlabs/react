@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: remove unnecessary console.logs 
+
 ## [0.5.2] - 2022-05-09
 
 - mark library as side effect free

@@ -220,9 +220,8 @@ export default function CreateThread({
         onNewThreadCreated?.(da.toBase58());
         onCloseRequest?.();
       })
-      .catch((err) => {
-        console.log('error creating dialect', err);
-      });
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .catch(() => {});
   };
 
   const onAddressChange = (addr: string) => {
