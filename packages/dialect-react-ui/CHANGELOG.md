@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [0.8.5] - 2022-05-11
+
 - chore: remove unnecessary console.logs
 
 ## [0.8.4] - 2022-05-09
