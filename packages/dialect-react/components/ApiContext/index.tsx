@@ -110,7 +110,6 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     fetchAddressesForDapp,
     {
       onError: (err) => {
-        console.log('Error fetching web2 addresses', err);
         setFetchingError(err as ParsedErrorData);
       },
     }
