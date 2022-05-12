@@ -2,6 +2,24 @@
 
 ## [UNRELEASED]
 
+## [0.8.6] - 2022-05-11
+
+- Bump `@dialectlabs/react` package version
+- Fix: label margin
+
+## [0.8.5] - 2022-05-11
+
+- chore: remove unnecessary console.logs
+
+## [0.8.4] - 2022-05-09
+
+- better use-solana compatability
+- mark library as side effect free
+
+## [0.8.3] - 2022-05-08
+
+- Fix render loop caused by default theme variable
+
 ## [0.8.1] - 2022-05-04
 
 - Bump `@dialectlabs/react` package version

@@ -4,13 +4,13 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import clsx from 'clsx';
 import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
 import { useTheme } from './ThemeProvider';
-import { A, ButtonBase, P } from './preflighted';
-import clsx from 'clsx';
+import { A, ButtonBase, Label, P } from './preflighted';
 import { DialectLogo } from '../Icon';
 
 // TODO: separate these components to separate files
@@ -165,7 +165,7 @@ export function Toggle({
   useEffect(() => setChecked(checked), [checked]);
 
   return (
-    <label
+    <Label
       className={clsx(
         props.disabled ? 'dt-cursor-not-allowed' : 'dt-cursor-pointer',
         'dt-flex dt-items-center dt-relative dt-h-5 dt-w-10'
@@ -197,7 +197,7 @@ export function Toggle({
           isChecked ? 'dt-translate-x-[160%]' : ''
         )}
       />
-    </label>
+    </Label>
   );
 }
 

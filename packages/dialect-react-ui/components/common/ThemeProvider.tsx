@@ -344,12 +344,14 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
   },
 };
 
+const empty = Object.freeze({});
+
 function mergeWithDefault(
   values: IncomingThemeVariables,
   theme: ThemeType
 ): ThemeValues & CommonThemeValues {
   const defaultThemeValues: IncomingThemeValues = defaultVariables[theme];
-  const currentThemeValues: IncomingThemeValues = values[theme] ?? {};
+  const currentThemeValues: IncomingThemeValues = values[theme] ?? empty;
 
   // Extracting only common values
   /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -369,7 +371,7 @@ function mergeWithDefault(
     common
   );
 
-  return (result ?? {}) as ThemeValues & CommonThemeValues;
+  return (result ?? empty) as ThemeValues & CommonThemeValues;
 }
 
 export const ThemeContext = React.createContext<
@@ -388,7 +390,7 @@ type PropsType = {
 
 export const ThemeProvider = ({
   theme = 'light',
-  variables = {},
+  variables = empty,
   children,
 }: PropsType): JSX.Element => {
   const [selectedVariables, setVariables] = useState(

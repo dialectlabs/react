@@ -156,10 +156,8 @@ export const updateAddress = async (
   dapp: string,
   address: AddressType
 ) => {
-  console.log('UPDATE ADDRESS:', address);
   let rawResponse;
   if (address?.id) {
-    console.log('ADDRESS>ID EXISTS');
     rawResponse = await fetchJSON(
       wallet,
       `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses/${
@@ -175,7 +173,6 @@ export const updateAddress = async (
       }
     );
   } else {
-    console.log('ADDRESS>ID NOT existx');
     rawResponse = await fetchJSON(
       wallet,
       `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toBase58()}/dapps/${dapp}/addresses`,

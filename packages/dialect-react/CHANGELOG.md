@@ -2,6 +2,18 @@
 
 ## [UNRELEASED]
 
+## [0.5.4] - 2022-05-11
+
+- fix: allow to pass wallet adapter to ApiContext
+
+## [0.5.3] - 2022-05-11
+
+- chore: remove unnecessary console.logs
+
+## [0.5.2] - 2022-05-09
+
+- mark library as side effect free
+
 ## [0.5.1] - 2022-05-04
 
 - fix: wallet-refistry url
