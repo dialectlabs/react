@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import BigNumber from 'bignumber.js';
 import LinkifiedText from './LinkifiedText';
-// import type { Message } from '@dialectlabs/web3';
 import QRCodeStyling from '@solana/qr-code-styling';
-import { createQROptions, findReference } from '@solana/pay';
+import { createQROptions, createTransfer, findReference } from '@solana/pay';
 import useSWR from 'swr';
 import { MessageType, useApi } from '@dialectlabs/react';
 import { PublicKey } from '@solana/web3.js';
@@ -13,8 +13,9 @@ type PropsType = {
 
 type SolanaPropType = {
   href: string;
-  amount: number;
-  reference: string;
+  amount: BigNumber;
+  recipient: PublicKey;
+  reference: PublicKey;
   icon: string;
 };
 
@@ -26,9 +27,10 @@ export function parseSolanaPayUrl(str: string): SolanaPropType | undefined {
     const url = new URL(match[0]);
     return {
       href: url.href,
-      amount: parseFloat(url.searchParams.get('reference') || ''),
-      reference: url.searchParams.get('reference') || '',
+      amount: new BigNumber(parseFloat(url.searchParams.get('amount') || '')),
+      reference: new PublicKey(url.searchParams.get('reference') || ''),
       icon: 'https://cryptologos.cc/logos/solana-sol-logo.png',
+      recipient: new PublicKey(url.pathname),
     };
   } catch (e) {
     console.log('not solana pay');
@@ -40,12 +42,12 @@ export function SolanaPayWidget({
   amount,
   reference,
   icon,
+  recipient,
 }: SolanaPropType) {
-  const { program } = useApi();
-  console.log('SolanaPayWidget render');
+  const { program, wallet } = useApi();
+  const connection = program!.provider.connection;
 
   const ref = useRef<HTMLElement & SVGSVGElement>(null);
-  const size = 480;
   const options = createQROptions(href, undefined, 'transparent', 'white');
 
   const qr = useMemo(() => new QRCodeStyling(), []);
@@ -60,7 +62,7 @@ export function SolanaPayWidget({
 
   const fetchReference = async (url: string, referenceString: string) => {
     const refff = await findReference(
-      program!.provider.connection,
+      connection,
       new PublicKey(referenceString),
       { finality: 'confirmed' }
     );
@@ -80,6 +82,20 @@ export function SolanaPayWidget({
       },
     }
   );
+
+  const handleTransfer = useCallback(async () => {
+    if (!wallet || !wallet?.publicKey || !wallet?.sendTransaction) return;
+
+    const transaction = await createTransfer(connection, wallet?.publicKey, {
+      recipient: recipient,
+      amount,
+      // splToken,
+      reference,
+      // memo,
+    });
+
+    wallet?.sendTransaction(transaction, connection);
+  }, []);
 
   return (
     <div className="dt-my-2 dt-flex flex-col dt-border dt-border-neutral-700 dt-rounded dt-p-1">
@@ -106,10 +122,10 @@ export function SolanaPayWidget({
         </div>
       </div>
       <button
-        onClick={() => console.log('clicked')}
+        onClick={handleTransfer}
         className="dt-bg-neutral-700 dt-rounded-sm dt-py-2 dt-font-bold"
       >
-        Send {amount} ◎
+        Send {amount.toNumber()} ◎
       </button>
     </div>
   );
