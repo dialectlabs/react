@@ -16,3 +16,5 @@ export { default as Resend } from './Resend';
 export { default as Spinner } from './Spinner';
 export { default as Trash } from './Trash';
 export { default as X } from './X';
+export { default as SolanaPay } from './SolanaPay';
+export { default as QRCodeDone } from './QRCodeDone';

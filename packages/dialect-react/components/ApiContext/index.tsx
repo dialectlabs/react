@@ -134,7 +134,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
           ? (network as 'mainnet' | 'devnet' | 'localnet')
           : 'devnet';
       const u = rpcUrl || URLS[n]; // TODO: Move to protocol/web3
-      const connection = new Connection(u, 'recent');
+      const connection = new Connection(u, 'confirmed');
       const provider = new anchor.Provider(
         connection,
         wallet as anchor.Wallet, // TODO: Check that this cast is acceptable
