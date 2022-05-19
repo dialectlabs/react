@@ -95,7 +95,7 @@ const SolanaName = ({
   loadingName,
   dimensionClassName = '',
 }: {
-  address: PublicKey | undefined;
+  address?: PublicKey;
   displayName: string;
   loadingName: boolean;
   dimensionClassName?: string;
