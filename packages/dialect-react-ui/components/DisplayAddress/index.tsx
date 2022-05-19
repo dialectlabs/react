@@ -2,7 +2,7 @@ import { useAddressName } from '@cardinal/namespaces-components';
 import { getNameEntry } from '@cardinal/namespaces';
 import { TwitterIcon } from '../Icon/Twitter';
 import type { Connection, PublicKey } from '@solana/web3.js';
-import { SolanaNameServiceName } from '../common';
+import { Loader, SolanaNameServiceName } from '../common';
 import { useApi } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { A } from '../common/preflighted';
@@ -189,5 +189,10 @@ export function DisplayAddress({
     );
   }
 
-  return <>{display(publicKey)}</>;
+  return (
+    <span className="dt-flex dt-items-center">
+      {display(publicKey)}
+      {loadingSolanaName && <Loader className="dt-ml-1" />}
+    </span>
+  );
 }

@@ -82,9 +82,9 @@ export function Centered(props: { children: React.ReactNode }): JSX.Element {
   );
 }
 
-export function Loader() {
+export function Loader(props: { className?: string }) {
   const { icons } = useTheme();
-  return <icons.spinner className="dt-animate-spin" />;
+  return <icons.spinner className={clsx('dt-animate-spin', props.className)} />;
 }
 
 export function Button(props: {
