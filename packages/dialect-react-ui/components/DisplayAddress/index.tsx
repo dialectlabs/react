@@ -2,11 +2,12 @@ import { useAddressName } from '@cardinal/namespaces-components';
 import { getNameEntry } from '@cardinal/namespaces';
 import { TwitterIcon } from '../Icon/Twitter';
 import type { Connection, PublicKey } from '@solana/web3.js';
-import { Loader, SolanaNameServiceName } from '../common';
+import { Loader, fetchSolanaNameServiceName } from '../common';
 import { useApi } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { A } from '../common/preflighted';
 import { display, Member } from '@dialectlabs/web3';
+import useSWR from 'swr';
 
 const formatTwitterLink = (
   handle: string | undefined,
@@ -158,10 +159,7 @@ export function DisplayAddress({
   const { displayName, loadingName } = useAddressName(connection, publicKey);
   const showTwitterIcon = displayName?.includes('@');
 
-  const { solanaDomain, loadingSolanaName } = SolanaNameServiceName(
-    connection,
-    publicKey
-  );
+  const { data } = useSWR([connection, publicKey], fetchSolanaNameServiceName);
 
   if (connection && showTwitterIcon) {
     return (
@@ -179,12 +177,12 @@ export function DisplayAddress({
         )}
       </div>
     );
-  } else if (connection && (loadingSolanaName || solanaDomain)) {
+  } else if (connection && (!data || data?.solanaDomain)) {
     return (
       <SolanaName
         address={publicKey}
-        displayName={solanaDomain ?? ''}
-        loadingName={loadingSolanaName}
+        displayName={data?.solanaDomain ?? ''}
+        loadingName={!data}
       />
     );
   }
@@ -192,7 +190,7 @@ export function DisplayAddress({
   return (
     <span className="dt-flex dt-items-center">
       {display(publicKey)}
-      {loadingSolanaName && <Loader className="dt-ml-1" />}
+      {!data && <Loader className="dt-ml-1" />}
     </span>
   );
 }
