@@ -367,6 +367,7 @@ export default function MessageContent(props: PropsType) {
 
   const transferUrl = findTransferUrl(props.message.text);
   const transactionUrl = findTransactionUrl(props.message.text);
+  let provider;
   if (transactionUrl) {
     provider = transactionUrl.hostname;
   }
