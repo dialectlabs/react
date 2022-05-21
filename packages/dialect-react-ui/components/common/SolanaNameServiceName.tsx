@@ -1,8 +1,10 @@
 import type { Connection } from '@solana/web3.js';
 import { PublicKey } from '@solana/web3.js';
-import { useMemo, useState } from 'react';
 import { FavouriteDomain, NAME_OFFERS_ID } from '@bonfida/name-offers';
-import { NAME_PROGRAM_ID, performReverseLookup } from '@bonfida/spl-name-service';
+import {
+  NAME_PROGRAM_ID,
+  performReverseLookup,
+} from '@bonfida/spl-name-service';
 
 async function findOwnedNameAccountsForUser(
   connection: Connection,
@@ -16,12 +18,9 @@ async function findOwnedNameAccountsForUser(
       },
     },
   ];
-  const accounts = await connection.getProgramAccounts(
-    NAME_PROGRAM_ID,
-    {
-      filters,
-    }
-  );
+  const accounts = await connection.getProgramAccounts(NAME_PROGRAM_ID, {
+    filters,
+  });
   return accounts.map((a) => a.pubkey);
 }
 
@@ -48,41 +47,29 @@ const findFavoriteDomainName = async (
   }
 };
 
-export const SolanaNameServiceName = (
+export const fetchSolanaNameServiceName = async (
   connection: Connection,
   address: PublicKey | undefined
-): { solanaDomain: string | undefined; loadingSolanaName: boolean } => {
-  const [solanaDomain, setSolanaDomain] = useState<string | undefined>();
-  const [loadingSolanaName, setLoadingSolanaName] = useState<boolean>(true);
-
-  useMemo(() => {
-    const fetchSolanaNameServiceName = async () => {
-      try {
-        if (address) {
-          let domainName = await findFavoriteDomainName(connection, address);
-          if (!domainName || domainName == '') {
-            const domainKeys = await findOwnedNameAccountsForUser(
-              connection,
-              address
-            );
-            domainKeys.sort();
-            if (domainKeys.length > 0 && domainKeys[0]) {
-              domainName = await performReverseLookup(
-                connection,
-                domainKeys[0]
-              );
-            }
-          }
-
-          setSolanaDomain(domainName);
+): Promise<{ solanaDomain: string | undefined }> => {
+  try {
+    if (address) {
+      let domainName = await findFavoriteDomainName(connection, address);
+      if (!domainName || domainName == '') {
+        const domainKeys = await findOwnedNameAccountsForUser(
+          connection,
+          address
+        );
+        domainKeys.sort();
+        if (domainKeys.length > 0 && domainKeys[0]) {
+          domainName = await performReverseLookup(connection, domainKeys[0]);
         }
-      } finally {
-        setLoadingSolanaName(false);
       }
-    };
 
-    fetchSolanaNameServiceName();
-  }, [connection, address]);
+      return { solanaDomain: domainName };
+    }
+  } catch (err) {
+    console.log(err);
+  }
 
-  return { solanaDomain, loadingSolanaName };
+  return { solanaDomain: undefined };
 };
