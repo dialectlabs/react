@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 import { useDialect } from '@dialectlabs/react';
-import { useTheme } from '../../../common/ThemeProvider';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import IconButton from '../../../IconButton';
 import CreateThread from './pages/CreateThreadPage/CreateThread';
 import ThreadPage from './pages/ThreadPage/';

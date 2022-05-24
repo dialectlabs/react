@@ -8,7 +8,7 @@ import {
   DialectProvider,
   useApi,
 } from '@dialectlabs/react';
-import { ThemeProvider } from '../common/ThemeProvider';
+import { DialectThemeProvider } from '../common/providers/DialectThemeProvider';
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 
@@ -67,7 +67,7 @@ export default function NotificationModal({
     <div className="dialect dt-w-full dt-h-full">
       <ApiProvider dapp={props.publicKey.toBase58()}>
         <DialectProvider publicKey={props.publicKey}>
-          <ThemeProvider theme={theme} variables={variables}>
+          <DialectThemeProvider theme={theme} variables={variables}>
             <Modal
               channels={channels}
               notifications={props?.notifications}
@@ -76,7 +76,7 @@ export default function NotificationModal({
               rpcUrl={props?.rpcUrl}
               onBackClick={props?.onBackClick}
             />
-          </ThemeProvider>
+          </DialectThemeProvider>
         </DialectProvider>
       </ApiProvider>
     </div>

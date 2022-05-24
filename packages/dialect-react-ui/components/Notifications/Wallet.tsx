@@ -1,6 +1,6 @@
 import { useApi, useDialect } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import { A, P } from '../common/preflighted';
 import {
   Button,
@@ -197,35 +197,35 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
         {isDialectAvailable && dialectAddress ? (
           <>
             {isAdmin ? (
-                <div>
-                  <Button
-                      className="dt-w-full"
-                      defaultStyle={secondaryDangerButton}
-                      loadingStyle={secondaryDangerButtonLoading}
-                      onClick={async () => {
-                        // TODO: refactor: save the signature and wait for deletion before firing
-                        deleteWallet();
-                        await deleteDialect().catch(() => {
-                          // If deletion failed — save wallet again
-                          saveWallet();
-                        });
-                        // TODO: properly wait for the deletion
-                        props?.onThreadDelete?.();
-                      }}
-                      loading={isDialectDeleting}
-                  >
-                    Withdraw rent & delete history
-                  </Button>
-                  <P
-                      className={cs(
-                          textStyles.small,
-                          xPaddedText,
-                          'dt-opacity-50 dt-mt-2'
-                      )}
-                  >
-                    Notification history will be lost forever
-                  </P>
-                </div>
+              <div>
+                <Button
+                  className="dt-w-full"
+                  defaultStyle={secondaryDangerButton}
+                  loadingStyle={secondaryDangerButtonLoading}
+                  onClick={async () => {
+                    // TODO: refactor: save the signature and wait for deletion before firing
+                    deleteWallet();
+                    await deleteDialect().catch(() => {
+                      // If deletion failed — save wallet again
+                      saveWallet();
+                    });
+                    // TODO: properly wait for the deletion
+                    props?.onThreadDelete?.();
+                  }}
+                  loading={isDialectDeleting}
+                >
+                  Withdraw rent & delete history
+                </Button>
+                <P
+                  className={cs(
+                    textStyles.small,
+                    xPaddedText,
+                    'dt-opacity-50 dt-mt-2'
+                  )}
+                >
+                  Notification history will be lost forever
+                </P>
+              </div>
             ) : null}
             {deletionError &&
             deletionError.type !== 'DISCONNECTED_FROM_CHAIN' ? (
@@ -238,7 +238,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
               >
                 {deletionError.message}
               </P>
-            ) : (null)}
+            ) : null}
           </>
         ) : null}
       </div>

@@ -4,7 +4,7 @@ import { useApi, useDialect } from '@dialectlabs/react';
 import type { DialectAccount } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import { DisplayAddress } from '../../../../../DisplayAddress';
-import { useTheme } from '../../../../../common/ThemeProvider';
+import { useTheme } from '../../../../../common/providers/DialectThemeProvider';
 import { P } from '../../../../../common/preflighted';
 import IconButton from '../../../../../IconButton';
 import Settings from './Settings';

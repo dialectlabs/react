@@ -1,7 +1,7 @@
 import React from 'react';
 import cs from '../../utils/classNames';
 import { ButtonBase } from '../common/preflighted';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 
 type IconButtonPropsType = {
   icon: JSX.Element;

@@ -2,7 +2,7 @@ import { KeyboardEvent, FormEvent, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useApi, useDialect } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
-import { useTheme } from '../../../../../common/ThemeProvider';
+import { useTheme } from '../../../../../common/providers/DialectThemeProvider';
 import cs from '../../../../../../utils/classNames';
 import MessageInput from './MessageInput';
 import hash from 'object-hash';

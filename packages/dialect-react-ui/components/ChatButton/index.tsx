@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import {
   ApiProvider,
   connected,
@@ -9,11 +9,11 @@ import {
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
 import {
-  ThemeProvider,
+  DialectThemeProvider,
   ThemeType,
   IncomingThemeVariables,
   useTheme,
-} from '../common/ThemeProvider';
+} from '../common/providers/DialectThemeProvider';
 import Chat from '../Chat';
 import IconButton from '../IconButton';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
@@ -29,8 +29,8 @@ type PropTypes = {
 };
 
 function useOutsideAlerter(
-  ref: React.MutableRefObject<null>,
-  bellRef: React.MutableRefObject<null>,
+  ref: MutableRefObject<null>,
+  bellRef: MutableRefObject<null>,
   setOpen: CallableFunction
 ) {
   useEffect(() => {
@@ -104,7 +104,7 @@ function WrappedChatButton(
           // className="dt-w-full dt-h-full bg-white/10"
           // style={{ backdropFilter: 'blur(132px)' }}
         >
-          <Chat onModalClose={() => setOpen(false)} />
+          <Chat onChatClose={() => setOpen(false)} />
         </div>
       </Transition>
     </div>
@@ -121,9 +121,9 @@ export default function ChatButton({
       <ApiProvider>
         <DialectProvider>
           <WalletIdentityProvider>
-            <ThemeProvider theme={theme} variables={variables}>
+            <DialectThemeProvider theme={theme} variables={variables}>
               <WrappedChatButton {...props} />
-            </ThemeProvider>
+            </DialectThemeProvider>
           </WalletIdentityProvider>
         </DialectProvider>
       </ApiProvider>

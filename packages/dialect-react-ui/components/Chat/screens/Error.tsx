@@ -1,6 +1,6 @@
 import cs from '../../../utils/classNames';
 import { Centered } from '../../common';
-import { useTheme } from '../../common/ThemeProvider';
+import { useTheme } from '../../common/providers/DialectThemeProvider';
 import IconButton from '../../IconButton';
 
 type PropsType = {

@@ -9,7 +9,7 @@ import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from './providers/DialectThemeProvider';
 import { A, ButtonBase, Label, P } from './preflighted';
 import { DialectLogo } from '../Icon';
 

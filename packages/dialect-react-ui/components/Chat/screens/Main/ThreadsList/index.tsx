@@ -3,7 +3,7 @@ import { DialectAccount, useDialect } from '@dialectlabs/react';
 import { useApi, Wallets } from '@dialectlabs/react';
 import MessagePreview from './MessagePreview';
 import { Centered } from '../../../../common';
-import { useTheme } from '../../../../common/ThemeProvider';
+import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
 
 interface ThreadsListProps {

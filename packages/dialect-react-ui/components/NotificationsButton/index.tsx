@@ -12,11 +12,11 @@ import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
 import useMobile from '../../utils/useMobile';
 import {
-  ThemeProvider,
+  DialectThemeProvider,
   ThemeType,
   IncomingThemeVariables,
   useTheme,
-} from '../common/ThemeProvider';
+} from '../common/providers/DialectThemeProvider';
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
@@ -173,9 +173,9 @@ export default function NotificationsButton({
           pollingInterval={props.pollingInterval}
           publicKey={props.publicKey}
         >
-          <ThemeProvider theme={theme} variables={variables}>
+          <DialectThemeProvider theme={theme} variables={variables}>
             <WrappedNotificationsButton channels={channels} {...props} />
-          </ThemeProvider>
+          </DialectThemeProvider>
         </DialectProvider>
       </ApiProvider>
     </div>

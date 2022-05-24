@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import { P } from '../common/preflighted';
 import { Button, ToggleSection } from '../common';
 import ResendIcon from '../Icon/Resend';
@@ -62,7 +62,7 @@ export function SmsForm() {
       });
       setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
       setLoading(false);
       setSmsNumberEditing(false);
@@ -81,7 +81,7 @@ export function SmsForm() {
       });
       setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
       setLoading(false);
     }
@@ -95,9 +95,9 @@ export function SmsForm() {
       });
       setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -111,11 +111,11 @@ export function SmsForm() {
         id: smsObj?.id,
         addressId: smsObj?.addressId,
       });
-      setError(null)
+      setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -123,19 +123,19 @@ export function SmsForm() {
     try {
       setLoading(true);
       await verifyCode(
-          wallet,
-          {
-            type: 'sms',
-            value: smsNumber,
-            enabled: true,
-            id: smsObj?.id,
-            addressId: smsObj?.addressId,
-          },
-          verificationCode
+        wallet,
+        {
+          type: 'sms',
+          value: smsNumber,
+          enabled: true,
+          id: smsObj?.id,
+          addressId: smsObj?.addressId,
+        },
+        verificationCode
       );
       setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
       setLoading(false);
       setVerificationCode('');
@@ -222,20 +222,26 @@ export function SmsForm() {
                   onBlur={(e) =>
                     e.target.checkValidity()
                       ? setError(null)
-                      : setError({name: "incorrectSmsNumber", message: "Please enter a valid SMS number"})
+                      : setError({
+                          name: 'incorrectSmsNumber',
+                          message: 'Please enter a valid SMS number',
+                        })
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setError({name: "incorrectSmsNumber", message: "Please enter a valid SMS number"})
+                    setError({
+                      name: 'incorrectSmsNumber',
+                      message: 'Please enter a valid SMS number',
+                    });
                   }}
                   // pattern="^\S+@\S+\.\S+$"
                   disabled={isSmsNumberSaved && !isSmsNumberEditing}
                 />
               )}
               {currentError && (
-                  <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
-                    {currentError.message}
-                  </P>
+                <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                  {currentError.message}
+                </P>
               )}
             </div>
 

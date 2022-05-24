@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, SVGProps } from 'react';
-import deepMerge from '../../utils/deepMerge';
+import deepMerge from '../../../utils/deepMerge';
 import {
   ArrowClockwise,
   ArrowSmRight,
@@ -17,7 +17,7 @@ import {
   Trash,
   Offline,
   X,
-} from '../Icon';
+} from '../../Icon';
 
 export type ThemeType = 'dark' | 'light';
 
@@ -143,6 +143,7 @@ export type ThemeValues = Required<
 export type CommonThemeValues = {
   animations: {
     popup: TransitionProps;
+    bottomSlide: TransitionProps;
   };
 };
 
@@ -156,6 +157,14 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       leave: 'dt-transition-opacity dt-duration-100',
       leaveFrom: 'dt-opacity-100',
       leaveTo: 'dt-opacity-0',
+    },
+    bottomSlide: {
+      enter: 'dt-transition-transform dt-duration-300',
+      enterFrom: 'dt-translate-y-14',
+      enterTo: 'dt-translate-y-full',
+      leave: 'dt-transition-transform dt-duration-100',
+      leaveFrom: 'dt-translate-y-full',
+      leaveTo: 'dt-translate-y-14',
     },
   },
   light: {
@@ -399,7 +408,7 @@ type PropsType = {
   children: JSX.Element;
 };
 
-export const ThemeProvider = ({
+export const DialectThemeProvider = ({
   theme = 'light',
   variables = empty,
   children,
@@ -427,7 +436,7 @@ export const ThemeProvider = ({
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within an ThemeProvider');
+    throw new Error('useTheme must be used within an DialectThemeProvider');
   }
   return context;
 }

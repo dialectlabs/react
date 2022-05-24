@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Toggle, ValueRow } from '../common';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from './providers/DialectThemeProvider';
 
 type PropsType = {
   title: string | React.ReactNode;
