@@ -2,7 +2,7 @@ import { KeyboardEvent, FormEvent } from 'react';
 import clsx from 'clsx';
 import type { ParsedErrorData } from '@dialectlabs/react';
 import { ButtonBase, Textarea } from '../../../../../common/preflighted';
-import { useTheme } from '../../../../../common/ThemeProvider';
+import { useTheme } from '../../../../../common/providers/DialectThemeProvider';
 import { Loader } from '../../../../../common';
 
 type PropsType = {

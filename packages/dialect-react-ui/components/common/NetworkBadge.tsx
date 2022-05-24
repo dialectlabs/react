@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from './providers/DialectThemeProvider';
 import cs from '../../utils/classNames';
 
 export default function NetworkBadge({

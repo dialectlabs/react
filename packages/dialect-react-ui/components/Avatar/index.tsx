@@ -3,7 +3,7 @@ import { useApi } from '@dialectlabs/react';
 import type { Connection, PublicKey } from '@solana/web3.js';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import { fetchSolanaNameServiceName } from '../common';
 import { Img } from '../common/preflighted';
 import useAddressImage from '../../hooks/useAddressImage';

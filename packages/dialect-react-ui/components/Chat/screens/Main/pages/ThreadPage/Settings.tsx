@@ -4,7 +4,7 @@ import { useApi, useDialect } from '@dialectlabs/react';
 import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../../../utils/getExplorerAddress';
 import { A, P } from '../../../../../common/preflighted';
-import { useTheme } from '../../../../../common/ThemeProvider';
+import { useTheme } from '../../../../../common/providers/DialectThemeProvider';
 import { Button, ValueRow } from '../../../../../common';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function

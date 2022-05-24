@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
 import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import { P } from '../common/preflighted';
 import { Button, Toggle, ToggleSection, ValueRow } from '../common';
 import ResendIcon from '../Icon/Resend';
@@ -75,7 +75,7 @@ export function TelegramForm(props: TelegramFormProps) {
       });
       setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
       setLoading(false);
       setTelegramUsernameEditing(false);
@@ -87,7 +87,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
     try {
       setLoading(true);
-      let value = telegramUsername?.replace('@', '');
+      const value = telegramUsername?.replace('@', '');
       await saveAddress(wallet, {
         type: 'telegram',
         value: value,
@@ -109,7 +109,7 @@ export function TelegramForm(props: TelegramFormProps) {
       });
       setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
       setLoading(false);
     }
@@ -123,10 +123,11 @@ export function TelegramForm(props: TelegramFormProps) {
         value: telegramUsername,
         enabled: true,
         id: telegramObj?.id,
-        addressId: telegramObj?.addressId});
+        addressId: telegramObj?.addressId,
+      });
       setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
       setLoading(false);
     }
@@ -135,16 +136,20 @@ export function TelegramForm(props: TelegramFormProps) {
   const sendCode = async () => {
     try {
       setLoading(true);
-      await verifyCode(wallet, {
-        type: 'telegram',
-        value: telegramUsername,
-        enabled: true,
-        id: telegramObj?.id,
-        addressId: telegramObj?.addressId,
-      }, verificationCode);
+      await verifyCode(
+        wallet,
+        {
+          type: 'telegram',
+          value: telegramUsername,
+          enabled: true,
+          id: telegramObj?.id,
+          addressId: telegramObj?.addressId,
+        },
+        verificationCode
+      );
       setError(null);
     } catch (e) {
-      setError(e as Error)
+      setError(e as Error);
     } finally {
       setLoading(false);
       setVerificationCode('');
@@ -298,6 +303,7 @@ export function TelegramForm(props: TelegramFormProps) {
                     className={cs(textStyles.small)}
                     href={props.botURL}
                     target="_blank"
+                    rel="noreferrer"
                   >
                     🤖
                     <span className="dt-opacity-50">

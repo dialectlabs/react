@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDialect } from '@dialectlabs/react';
 import clsx from 'clsx';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import Error from './screens/Error';
 import Main from './screens/Main';
 
@@ -15,14 +15,16 @@ interface ChatProps {
   inbox?: boolean;
   wrapperClassName?: string;
   contentWrapperClassName?: string;
-  onModalClose?: () => void;
+  onChatClose?: () => void;
+  onChatOpen?: () => void;
 }
 
 export default function Chat({
   inbox,
   wrapperClassName,
   contentWrapperClassName,
-  onModalClose,
+  onChatClose,
+  onChatOpen,
 }: ChatProps): JSX.Element {
   const { disconnectedFromChain, isWalletConnected } = useDialect();
   const [activeRoute, setActiveRoute] = useState<Routes>(Routes.NoConnection);
@@ -44,12 +46,12 @@ export default function Chat({
 
   const routes: Record<Routes, React.ReactNode> = {
     [Routes.NoConnection]: (
-      <Error type="NoConnection" onModalClose={onModalClose} inbox={inbox} />
+      <Error type="NoConnection" onModalClose={onChatClose} inbox={inbox} />
     ),
     [Routes.NoWallet]: (
-      <Error type="NoWallet" onModalClose={onModalClose} inbox={inbox} />
+      <Error type="NoWallet" onModalClose={onChatClose} inbox={inbox} />
     ),
-    [Routes.Main]: <Main onModalClose={onModalClose} inbox={inbox} />,
+    [Routes.Main]: <Main onModalClose={onChatClose} inbox={inbox} />,
   };
 
   return (

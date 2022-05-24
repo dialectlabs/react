@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from './providers/DialectThemeProvider';
 import { Divider } from './primitives';
 
 export default function Section(props: {

@@ -18,7 +18,7 @@ import {
 } from '@bonfida/spl-name-service';
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
 import { A, H1, Input, P } from '../../../../../common/preflighted';
-import { useTheme } from '../../../../../common/ThemeProvider';
+import { useTheme } from '../../../../../common/providers/DialectThemeProvider';
 import {
   Button,
   Footer,
