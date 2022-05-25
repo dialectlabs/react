@@ -58,7 +58,10 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { program } = useApi();
 
   const connection = program?.provider.connection;
-  const { data } = useSWR([connection, publicKey.toBase58()], fetchSolanaNameServiceName);
+  const { data } = useSWR(
+    [connection, publicKey.toBase58()],
+    fetchSolanaNameServiceName
+  );
 
   return (
     <div
@@ -74,6 +77,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
             className="dt-h-full"
             connection={connection}
             address={publicKey}
+            // TODO: refactor the CardinalAvatar to separate out SNS logic
             placeholder={
               data?.solanaDomain
                 ? data.solanaDomain.substr(0, 1)
