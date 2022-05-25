@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { DialectAccount } from '@dialectlabs/react';
+import { DialectAccount, useDialect } from '@dialectlabs/react';
 import { useApi, Wallets } from '@dialectlabs/react';
 import MessagePreview from './MessagePreview';
 import { Centered } from '../../../../common';
@@ -13,6 +13,7 @@ interface ThreadsListProps {
 
 const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
   const { walletName } = useApi();
+  const { dialectAddress } = useDialect();
   const isNotSollet = walletName !== 'Sollet';
   const hasEncryptedMessages = useMemo(
     () => chatThreads.some((subscription) => subscription.dialect.encrypted),
@@ -32,7 +33,7 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
   return (
     <div
       className={clsx(
-        'dt-flex dt-flex-1 dt-flex-col dt-space-y-2 dt-py-2 dt-overflow-y-auto',
+        'dt-flex dt-flex-1 dt-flex-col dt-overflow-y-auto',
         scrollbar
       )}
     >
@@ -50,14 +51,17 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
         </div>
       )}
       {chatThreads.map((subscription) => (
-        <MessagePreview
-          key={subscription.publicKey.toBase58()}
-          dialect={subscription}
-          disabled={isNotSollet && subscription.dialect.encrypted}
-          onClick={() => {
-            onThreadClick?.(subscription);
-          }}
-        />
+        <>
+          <MessagePreview
+            key={subscription.publicKey.toBase58()}
+            dialect={subscription}
+            disabled={isNotSollet && subscription.dialect.encrypted}
+            onClick={() => {
+              onThreadClick?.(subscription);
+            }}
+            selected={dialectAddress === subscription.publicKey?.toString()}
+          />
+        </>
       ))}
     </div>
   );
