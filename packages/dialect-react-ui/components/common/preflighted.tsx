@@ -64,6 +64,20 @@ export const Textarea = ({
   return <textarea className={cs('dt-textarea', className)} {...props} />;
 };
 
+export const Img = ({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'img'> & { className?: string }) => {
+  return <img className={cs('dt-img', className)} {...props} />;
+};
+
+export const Label = ({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'label'> & { className?: string }) => {
+  return <label className={cs('dt-label', className)} {...props} />;
+};
+
 type ButtonProps = React.ComponentPropsWithoutRef<'button'> & {
   className?: string;
 };

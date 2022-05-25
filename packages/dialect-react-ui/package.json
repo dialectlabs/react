@@ -1,9 +1,10 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "0.5.2",
+  "version": "0.8.6",
   "description": "Dialect's react UI components",
   "license": "MIT",
   "private": false,
+  "sideEffects": false,
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",
@@ -28,7 +29,10 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@dialectlabs/web3": "^0.2.0",
+    "@bonfida/name-offers": "^0.0.1",
+    "@bonfida/spl-name-service": "^0.1.31",
+    "@cardinal/namespaces-components": "2.5.0",
+    "@dialectlabs/web3": "^0.3.1",
     "@headlessui/react": "^1.2.0",
     "@project-serum/anchor": "^0.23.0",
     "clsx": "^1.1.1",
@@ -39,7 +43,7 @@
   },
   "devDependencies": {
     "@svgr/cli": "^6.2.1",
-    "@types/react": "^17.0.34",
+    "@types/react": "^17.0.44",
     "@types/react-linkify": "^1.0.1",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.5",
@@ -47,7 +51,7 @@
     "tailwindcss": "^3.0.18"
   },
   "peerDependencies": {
-    "@dialectlabs/react": "^0.4.0",
+    "@dialectlabs/react": "^0.5.4",
     "react": ">=17"
   },
   "repository": {

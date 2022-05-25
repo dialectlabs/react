@@ -16,6 +16,7 @@ import {
 } from '../common/ThemeProvider';
 import Chat from '../Chat';
 import IconButton from '../IconButton';
+import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 
 type PropTypes = {
   wallet: WalletType;
@@ -76,7 +77,7 @@ function WrappedChatButton(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const { colors, bellButton, icons, modalWrapper } = useTheme();
+  const { colors, bellButton, icons, modalWrapper, animations } = useTheme();
 
   return (
     <div
@@ -95,16 +96,7 @@ function WrappedChatButton(
         icon={<icons.chat className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={() => setOpen(!open)}
       ></IconButton>
-      <Transition
-        className={modalWrapper}
-        show={open}
-        enter="dt-transition-opacity dt-duration-300"
-        enterFrom="dt-opacity-0"
-        enterTo="dt-opacity-100"
-        leave="dt-transition-opacity dt-duration-100"
-        leaveFrom="dt-opacity-100"
-        leaveTo="dt-opacity-0"
-      >
+      <Transition className={modalWrapper} show={open} {...animations.popup}>
         <div
           ref={wrapperRef}
           className="dt-w-full dt-h-full"
@@ -128,9 +120,11 @@ export default function ChatButton({
     <div className="dialect">
       <ApiProvider>
         <DialectProvider>
-          <ThemeProvider theme={theme} variables={variables}>
-            <WrappedChatButton {...props} />
-          </ThemeProvider>
+          <WalletIdentityProvider>
+            <ThemeProvider theme={theme} variables={variables}>
+              <WrappedChatButton {...props} />
+            </ThemeProvider>
+          </WalletIdentityProvider>
         </DialectProvider>
       </ApiProvider>
     </div>

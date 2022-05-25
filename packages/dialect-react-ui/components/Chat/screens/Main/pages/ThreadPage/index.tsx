@@ -7,6 +7,7 @@ import { P } from '../../../../../common/preflighted';
 import IconButton from '../../../../../IconButton';
 import Settings from './Settings';
 import Thread from './Thread';
+import { DisplayAddress } from '../../../../../DisplayAddress';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
@@ -19,9 +20,9 @@ const ThreadPage = ({
   onNewThreadClick,
   onModalClose,
 }: ThreadPageProps) => {
-  const { wallet } = useApi();
+  const { wallet, program } = useApi();
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
-  const { icons } = useTheme();
+  const { icons, xPaddedText } = useTheme();
 
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
@@ -40,6 +41,10 @@ const ThreadPage = ({
     },
     [dialect]
   );
+
+  useEffect(() => {
+    setDialectAddress('');
+  }, [wallet]);
 
   if (!dialectAddress) {
     if (!inbox) {
@@ -60,7 +65,8 @@ const ThreadPage = ({
   }
 
   return (
-    <div className="dt-flex dt-flex-col dt-flex-1">
+    <div className="dt-flex dt-flex-col dt-flex-1 dt-min-w-[0px]">
+      {/* ↑ The min-width: 0 is used to prevent the column from overflow the container. Explanation: https://makandracards.com/makandra/66994-css-flex-and-min-width */}
       <div className="dt-px-4 dt-py-1 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-items-center">
         {/* TODO: replace with IconButton to be sematic */}
         <div
@@ -76,8 +82,16 @@ const ThreadPage = ({
           <icons.back />
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
-          <span className="dt-text-base dt-font-medium dt-text-white">
-            {dialect ? display(otherMemberStr) : 'Loading...'}
+          <span className="dt-text-base dt-font-medium dt-text">
+            {dialect ? (
+              <DisplayAddress
+                connection={program?.provider.connection}
+                dialectMembers={dialect?.dialect.members}
+                isLinkable={true}
+              />
+            ) : (
+              'Loading...'
+            )}
           </span>
           {dialect?.dialect.encrypted ? (
             <span className="dt-text-xs dt-opacity-50">encrypted</span>
@@ -102,7 +116,7 @@ const ThreadPage = ({
           )}
         </div>
       </div>
-      <div className="dt-flex-1 dt-px-2 dt-overflow-y-auto">
+      <div className={clsx(xPaddedText, 'dt-flex-1 dt-overflow-y-auto')}>
         {settingsOpen ? <Settings /> : <Thread />}
       </div>
     </div>

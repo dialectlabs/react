@@ -34,7 +34,9 @@
 
 /* Since we couldn't use preflight for border, define default border style for every side */
 /* https://github.com/tailwindlabs/tailwindcss/issues/938 */
-.dt-border {
+/* TODO: find a way to list all borders */
+.dt-border,
+.dt-border-2 {
   border-style: solid;
 }
 .dt-border-t {
@@ -51,7 +53,8 @@
 }
 
 @media screen(sm) {
-  .sm\:dt-border {
+  .sm\:dt-border,
+  .sm\:dt-border-2 {
     border-style: solid;
   }
   .sm\:dt-border-t {
@@ -69,7 +72,8 @@
 }
 
 @media screen(md) {
-  .md\:dt-border {
+  .md\:dt-border,
+  .md\:dt-border-2 {
     border-style: solid;
   }
   .md\:dt-border-t {
@@ -87,7 +91,8 @@
 }
 
 @media screen(lg) {
-  .lg\:dt-border {
+  .lg\:dt-border,
+  .lg\:dt-border-2 {
     border-style: solid;
   }
   .lg\:dt-border-t {
@@ -105,7 +110,8 @@
 }
 
 @media screen(xl) {
-  .xl\:dt-border {
+  .xl\:dt-border,
+  .xl\:dt-border-2 {
     border-style: solid;
   }
   .xl\:dt-border-t {
@@ -123,7 +129,8 @@
 }
 
 @media screen(2xl) {
-  .\2xl\:dt-border {
+  .\2xl\:dt-border,
+  .\2xl\:dt-border-2 {
     border-style: solid;
   }
   .\2xl\:dt-border-t {
@@ -470,8 +477,10 @@
 }
 
 .dialect *::-webkit-scrollbar {
-  width: 12px; /* Mostly for vertical scrollbars */
-  height: 12px; /* Mostly for horizontal scrollbars */
+  /* Mostly for vertical scrollbars */
+  width: 12px;
+  /* Mostly for horizontal scrollbars */
+  height: 12px;
 }
 .dialect *::-webkit-scrollbar-track {
   /* Background */
@@ -480,6 +489,8 @@
 .dt-light-scrollbar {
   /* Firefox: Foreground, Background */
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  /* TODO: add scrollbar-gutter to remove flicker on scroll */
+  /* scrollbar-gutter: stable; */
 }
 .dt-light-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 9999px;
@@ -495,6 +506,8 @@
 .dt-dark-scrollbar {
   /* Firefox: Foreground, Background */
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  /* TODO: add scrollbar-gutter to remove flicker on scroll */
+  /* scrollbar-gutter: stable; */
 }
 .dt-dark-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 9999px;
@@ -519,5 +532,63 @@
   scrollbar-width: none; /* Firefox */
 }
 
+.dt-label {
+  margin: 0;
+}
+
+.dialect *,
+.dialect ::before,
+.dialect ::after {
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
+}
+
 @tailwind components;
 @tailwind utilities;
+
+/* Hide scrollbar if not scrolling when supported to avoid width flickering */
+@supports (overflow: overlay) {
+  .dt-overflow-y-auto {
+    overflow-y: overlay;
+  }
+}

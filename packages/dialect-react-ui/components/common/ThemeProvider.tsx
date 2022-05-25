@@ -64,6 +64,21 @@ export type ThemeIcons =
   | 'offline'
   | 'x';
 
+export type TransitionProps = {
+  enter: string;
+  enterFrom: string;
+  enterTo: string;
+  leave: string;
+  leaveFrom: string;
+  leaveTo: string;
+};
+
+export type IncomingCommonThemeVariables = {
+  animations?: {
+    popup?: TransitionProps;
+  };
+};
+
 export type IncomingThemeValues = {
   colors?: {
     [key in ThemeColors]?: string;
@@ -76,6 +91,7 @@ export type IncomingThemeValues = {
   };
   avatar?: string;
   header?: string;
+  sectionHeader?: string;
   input?: string;
   outlinedInput?: string;
   textArea?: string;
@@ -98,13 +114,16 @@ export type IncomingThemeValues = {
   divider?: string;
   highlighted?: string;
   scrollbar?: string;
+  section?: string;
+  xPaddedText?: string;
   // TODO: Deprecate BigButton
   bigButton?: string;
   bigButtonLoading?: string;
+  disabledButton?: string;
 };
 
 export type IncomingThemeVariables = Partial<
-  Record<ThemeType, IncomingThemeValues>
+  Record<ThemeType, IncomingThemeValues> & IncomingCommonThemeVariables
 >;
 
 export type ThemeValues = Required<
@@ -115,7 +134,25 @@ export type ThemeValues = Required<
   }
 >;
 
-export const defaultVariables: Record<ThemeType, ThemeValues> = {
+// Required common values
+export type CommonThemeValues = {
+  animations: {
+    popup: TransitionProps;
+  };
+};
+
+export const defaultVariables: Record<ThemeType, ThemeValues> &
+  CommonThemeValues = {
+  animations: {
+    popup: {
+      enter: 'dt-transition-opacity dt-duration-300',
+      enterFrom: 'dt-opacity-0',
+      enterTo: 'dt-opacity-100',
+      leave: 'dt-transition-opacity dt-duration-100',
+      leaveFrom: 'dt-opacity-100',
+      leaveTo: 'dt-opacity-0',
+    },
+  },
   light: {
     // TODO: either put all colors in the theme or define as css-custom-properties to simplify overriding
     colors: {
@@ -170,7 +207,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     iconButton:
       'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60',
     sendButton: 'dt-h-5 dt-w-5 dt-text-white dt-rounded-full dt-bg-black',
-    header: 'dt-px-4 dt-py-3',
+    header: 'dt-py-3 dt-px-4',
+    sectionHeader: 'dt-px-4',
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0 disabled:dt-text-neutral-700/50',
     outlinedInput:
@@ -189,16 +227,22 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
     buttonLoading:
-      'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 !dt-text-black !dt-bg-transparent',
+      'dt-min-h-[42px] dt-border dt-border-black !dt-opacity-20 !dt-text-black !dt-bg-transparent',
     secondaryButton:
       'dt-bg-transparent dt-text-black dt-border dt-border-black hover:dt-bg-black/10',
     secondaryButtonLoading: '',
     secondaryDangerButton:
       'dt-bg-transparent dt-text-error-day dt-border dt-border-error-day hover:dt-bg-error-day/10',
-    secondaryDangerButtonLoading: 'dt-min-h-[42px] dt-text-error-day/40',
+    secondaryDangerButtonLoading:
+      'dt-min-h-[42px] dt-text-error-day/40 !dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-10 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
     scrollbar: 'dt-light-scrollbar',
+    section:
+      'dt-p-2 dt-rounded-2xl dt-bg-dark-day dt-border dt-border-outline-day',
+    xPaddedText: 'dt-px-2',
+    disabledButton:
+      'dt-bg-subtle-day dt-text-black/40 dt-border dt-border-outline-day',
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
@@ -215,9 +259,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       accentSolid: 'dt-text-white',
       highlight: 'dt-bg-subtle-night',
       highlightSolid: 'dt-bg-[#262626]',
-      toggleBackground: 'dt-bg-[#5B5B5B]',
+      toggleBackground: 'dt-bg-white/60',
       toggleBackgroundActive: 'dt-bg-[#25BC3B]',
-      toggleThumb: 'dt-bg-[#111111]',
+      toggleThumb: 'dt-bg-[#363636]',
     },
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
@@ -228,7 +272,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
       bigText: 'dt-font-inter dt-text-lg dt-font-medium',
-      header: 'dt-font-inter dt-text-base dt-font-medium',
+      header: 'dt-font-inter dt-text-lg dt-font-medium',
       buttonText: 'dt-font-inter dt-text-base',
       bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-white',
       bigButtonSubtle: 'dt-font-inter dt-font-medium dt-text-sm dt-text-white',
@@ -256,7 +300,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     iconButton:
       'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60',
     sendButton: 'dt-h-5 dt-w-5 dt-text-black dt-rounded-full dt-bg-white',
-    header: 'dt-px-4 dt-py-3',
+    header: 'dt-py-3 dt-px-4',
+    sectionHeader: 'dt-px-4',
     input:
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white disabled:dt-text-white/50',
     outlinedInput:
@@ -276,17 +321,22 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     buttonLoading:
-      'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
+      'dt-min-h-[42px] dt-border dt-border-white dt-bg-transparent !dt-opacity-20 !dt-text-white',
     secondaryButton:
       'dt-bg-transparent dt-text-white dt-border dt-border-white hover:dt-bg-white/10',
     secondaryButtonLoading: '',
     secondaryDangerButton:
       'dt-bg-transparent dt-text-error-night dt-border dt-border-error-night hover:dt-bg-error-night/10',
     secondaryDangerButtonLoading:
-      'dt-min-h-[42px] dt-text-error-night/10 dt-opacity-20',
+      'dt-min-h-[42px] dt-text-error-night dt-opacity-20 !dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-30 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
     scrollbar: 'dt-dark-scrollbar',
+    section:
+      'dt-p-2 dt-rounded-2xl dt-bg-dark-night dt-border dt-border-outline-night',
+    xPaddedText: 'dt-px-2',
+    disabledButton:
+      'dt-bg-subtle-night dt-text-white/40 dt-border dt-border-outline-night',
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
@@ -294,22 +344,41 @@ export const defaultVariables: Record<ThemeType, ThemeValues> = {
   },
 };
 
+const empty = Object.freeze({});
+
 function mergeWithDefault(
   values: IncomingThemeVariables,
   theme: ThemeType
-): ThemeValues {
+): ThemeValues & CommonThemeValues {
   const defaultThemeValues: IncomingThemeValues = defaultVariables[theme];
-  const currentThemeValues: IncomingThemeValues = values[theme] ?? {};
+  const currentThemeValues: IncomingThemeValues = values[theme] ?? empty;
 
-  const result = deepMerge(defaultThemeValues, currentThemeValues);
+  // Extracting only common values
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const {
+    dark: defaultDark,
+    light: defaultLight,
+    ...defaultCommon
+  } = defaultVariables;
+  const { dark, light, ...common } = values;
+  /* eslint-enable */
 
-  return (result ?? {}) as ThemeValues;
+  const result = deepMerge(
+    {},
+    defaultThemeValues,
+    currentThemeValues,
+    defaultCommon,
+    common
+  );
+
+  return (result ?? empty) as ThemeValues & CommonThemeValues;
 }
 
 export const ThemeContext = React.createContext<
-  | (ThemeValues & {
-      theme: ThemeType;
-    })
+  | (ThemeValues &
+      CommonThemeValues & {
+        theme: ThemeType;
+      })
   | null
 >(null);
 
@@ -321,7 +390,7 @@ type PropsType = {
 
 export const ThemeProvider = ({
   theme = 'light',
-  variables = {},
+  variables = empty,
   children,
 }: PropsType): JSX.Element => {
   const [selectedVariables, setVariables] = useState(

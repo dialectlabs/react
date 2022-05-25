@@ -1,8 +1,8 @@
-import React from 'react';
 import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
 import clsx from 'clsx';
+import { DisplayAddress } from '../../../../DisplayAddress';
 
 type PropsType = {
   dialect: DialectAccount;
@@ -42,14 +42,10 @@ export default function MessagePreview({
   onClick,
   disabled = false,
 }: PropsType): JSX.Element {
-  const { wallet } = useApi();
+  const { wallet, program } = useApi();
   const otherMembers = dialect?.dialect.members.filter(
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
   );
-  const otherMembersStrs = otherMembers.map((member) =>
-    display(member.publicKey)
-  );
-  const otherMemberStr = otherMembersStrs[0];
 
   return (
     <div
@@ -64,7 +60,12 @@ export default function MessagePreview({
       </div>
       <div className="dt-flex dt-grow dt-border-b dt-border-neutral-600 dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
-          {dialect?.dialect.members.length > 0 && <div>{otherMemberStr}</div>}
+          {
+            <DisplayAddress
+              connection={program?.provider.connection}
+              dialectMembers={dialect?.dialect.members}
+            />
+          }
           <FirstMessage dialect={dialect} />
         </div>
         <div className="dt-text-xs dt-opacity-30">

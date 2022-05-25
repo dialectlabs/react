@@ -20,7 +20,7 @@ import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
 
-type PropTypes = {
+export type PropTypes = {
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -31,9 +31,10 @@ type PropTypes = {
   bellStyle?: object;
   notifications: NotificationType[];
   channels?: Channel[];
+  onBackClick?: () => void;
 };
 
-function useOutsideAlerter(
+export function useOutsideAlerter(
   ref: React.MutableRefObject<null>,
   bellRef: React.MutableRefObject<null>,
   setOpen: CallableFunction
@@ -93,7 +94,7 @@ function WrappedNotificationsButton(
     );
   }, [open, isMobile]);
 
-  const { colors, bellButton, icons, modalWrapper } = useTheme();
+  const { colors, bellButton, icons, modalWrapper, animations } = useTheme();
 
   return (
     <div
@@ -112,16 +113,7 @@ function WrappedNotificationsButton(
         icon={<icons.bell className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={() => setOpen(!open)}
       />
-      <Transition
-        className={modalWrapper}
-        show={open}
-        enter="dt-transition-opacity dt-duration-300"
-        enterFrom="dt-opacity-0"
-        enterTo="dt-opacity-100"
-        leave="dt-transition-opacity dt-duration-100"
-        leaveFrom="dt-opacity-100"
-        leaveTo="dt-opacity-0"
-      >
+      <Transition className={modalWrapper} show={open} {...animations.popup}>
         <div
           ref={wrapperRef}
           className="dt-w-full dt-h-full"

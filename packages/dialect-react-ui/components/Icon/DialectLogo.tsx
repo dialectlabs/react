@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { SVGProps } from 'react';
 
 const SvgDialectLogo = (props: SVGProps<SVGSVGElement>) => (
@@ -7,6 +6,8 @@ const SvgDialectLogo = (props: SVGProps<SVGSVGElement>) => (
     height={16}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 44 16"
+    preserveAspectRatio="xMidYMid meet"
     {...props}
   >
     <path
