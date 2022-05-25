@@ -10,6 +10,11 @@ import {
   defaultVariables,
   DialectThemeProvider,
 } from './components/common/providers/DialectThemeProvider';
+import {
+  DialectUiManagementProvider,
+  useDialectUi,
+  useDialectUiId,
+} from './components/common/providers/DialectUiManagementProvider';
 
 import type {
   ThemeType,
@@ -30,6 +35,9 @@ export {
   Inbox,
   defaultVariables,
   DialectThemeProvider,
+  DialectUiManagementProvider,
+  useDialectUi,
+  useDialectUiId,
 };
 
 export type {

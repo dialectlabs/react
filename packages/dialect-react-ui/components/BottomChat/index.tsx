@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   ApiProvider,
   connected,
@@ -15,8 +15,10 @@ import {
 import Chat from '../Chat';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 import clsx from 'clsx';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 
 type PropTypes = {
+  id: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -29,7 +31,7 @@ type PropTypes = {
 function WrappedBottomChat(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
-  const [open, setOpen] = useState(false);
+  const { ui, open, close } = useDialectUiId(props.id);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
 
@@ -50,12 +52,14 @@ function WrappedBottomChat(
       className={clsx(
         // TODO: move to theme, also this styling is not very intuitive and breaks the thought process, a lot.
         'dt-fixed sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-14',
-        open ? animations.bottomSlide.enter : animations.bottomSlide.leave,
-        open ? animations.bottomSlide.leaveTo : animations.bottomSlide.enterTo
+        ui?.open ? animations.bottomSlide.enter : animations.bottomSlide.leave,
+        ui?.open
+          ? animations.bottomSlide.leaveTo
+          : animations.bottomSlide.enterTo
       )}
     >
       <div className="dt-w-full dt-h-full">
-        <Chat onChatClose={() => setOpen(false)} />
+        <Chat onChatClose={close} />
       </div>
     </div>
   );

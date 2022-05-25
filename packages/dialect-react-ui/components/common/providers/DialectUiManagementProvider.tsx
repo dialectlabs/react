@@ -3,6 +3,8 @@ import {
   FunctionComponent,
   useCallback,
   useContext,
+  useEffect,
+  useMemo,
   useState,
 } from 'react';
 import produce from 'immer';
@@ -80,4 +82,21 @@ export const useDialectUi = () => {
     );
   }
   return context;
+};
+
+export const useDialectUiId = (id: string) => {
+  const {
+    ui: uis,
+    open: mainOpen,
+    close: mainClose,
+    register,
+  } = useDialectUi();
+
+  const ui = useMemo(() => uis[id], [uis, id]);
+  const open = useCallback(() => mainOpen(id), [mainOpen, id]);
+  const close = useCallback(() => mainClose(id), [mainClose, id]);
+
+  useEffect(() => register(id), [register, id]);
+
+  return { ui, open, close };
 };
