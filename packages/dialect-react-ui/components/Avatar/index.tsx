@@ -6,8 +6,9 @@ import type { Connection, PublicKey } from '@solana/web3.js';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
-import { Img } from '../common/preflighted';
 import { fetchTwitterHandleFromAddress } from '../DisplayAddress';
+import { fetchSolanaNameServiceName } from '../common';
+import { Img } from '../common/preflighted';
 
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
@@ -80,6 +81,12 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
   const { program } = useApi();
 
+  const connection = program?.provider.connection;
+  const { data } = useSWR(
+    [connection, publicKey.toBase58()],
+    fetchSolanaNameServiceName
+  );
+
   return (
     <div
       className={cs(
@@ -89,12 +96,17 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
       )}
     >
       <div className={`${textStyleMap[size]}`}>
-        {program?.provider.connection ? (
+        {connection ? (
           <CardinalAvatar
             className="dt-h-full"
-            connection={program?.provider.connection}
+            connection={connection}
             address={publicKey}
-            placeholder={publicKey.toString().substr(0, 1)}
+            // TODO: refactor the CardinalAvatar to separate out SNS logic
+            placeholder={
+              data?.solanaDomain
+                ? data.solanaDomain.substr(0, 1)
+                : publicKey.toString().substr(0, 1)
+            }
           />
         ) : (
           publicKey.toString().substr(0, 1)
