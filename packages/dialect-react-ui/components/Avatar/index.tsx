@@ -58,7 +58,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { program } = useApi();
 
   const connection = program?.provider.connection;
-  const { data } = useSWR([connection, publicKey], fetchSolanaNameServiceName);
+  const { data } = useSWR([connection, publicKey.toBase58()], fetchSolanaNameServiceName);
 
   return (
     <div
