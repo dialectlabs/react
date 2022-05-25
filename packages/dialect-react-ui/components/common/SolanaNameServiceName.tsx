@@ -49,15 +49,15 @@ const findFavoriteDomainName = async (
 
 export const fetchSolanaNameServiceName = async (
   connection: Connection,
-  address: PublicKey | undefined
+  address: string | undefined
 ): Promise<{ solanaDomain: string | undefined }> => {
   try {
     if (address) {
-      let domainName = await findFavoriteDomainName(connection, address);
+      let domainName = await findFavoriteDomainName(connection, new PublicKey(address));
       if (!domainName || domainName == '') {
         const domainKeys = await findOwnedNameAccountsForUser(
           connection,
-          address
+          new PublicKey(address)
         );
         domainKeys.sort();
         if (domainKeys.length > 0 && domainKeys[0]) {
