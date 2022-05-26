@@ -35,7 +35,7 @@ interface CreateThreadProps {
   onModalClose?: () => void;
 }
 
-export const SOL_TLD_AUTHORITY = new anchor.web3.PublicKey(
+const SOL_TLD_AUTHORITY = new anchor.web3.PublicKey(
   '58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx'
 );
 
