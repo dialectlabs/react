@@ -29,7 +29,7 @@ import {
   extractWalletAdapter,
   isAnchorWallet,
 } from '../../utils/helpers';
-import type { Message } from '@dialectlabs/web3';
+import type { Message, Member } from '@dialectlabs/web3';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
 import type { EncryptionProps } from '@dialectlabs/web3/lib/es/api/text-serde';
@@ -92,6 +92,7 @@ type DialectContextType = {
   sendMessage: (text: string, encrypted?: boolean) => Promise<void>;
   sendingMessage: boolean;
   sendMessageError: ParsedErrorData | null;
+  isWritable: boolean;
 };
 
 const DialectContext = createContext<DialectContextType | null>(null);
@@ -428,6 +429,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   );
 
   // const messages = mockMessages;
+  const isWritable = dialect?.dialect.members.some(
+    (m: Member) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1] // is not admin but does have write privilages
+  );
   const isDialectAvailable = Boolean(dialect);
   const isMetadataAvailable = Boolean(metadata);
 
@@ -450,6 +454,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     creationError,
     deleteDialect: deleteDialectWrapper,
     isDialectDeleting: deleting,
+    isWritable,
     deletionError,
     messages,
     dialect,

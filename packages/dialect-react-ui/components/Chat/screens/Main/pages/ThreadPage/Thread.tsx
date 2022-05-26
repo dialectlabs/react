@@ -8,14 +8,20 @@ import Avatar from '../../../../../Avatar';
 import MessageInput from './MessageInput';
 
 export default function Thread() {
-  const { isDialectCreating, dialect, messages, sendMessage, sendingMessage } =
-    useDialect();
+  const {
+    isDialectCreating,
+    dialect,
+    messages,
+    sendMessage,
+    sendingMessage,
+    isWritable: youCanWrite,
+  } = useDialect();
+
   const { wallet } = useApi();
   const { messageBubble, otherMessageBubble, scrollbar } = useTheme();
 
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<ParsedErrorData | null | undefined>();
-  const [youCanWrite, setYouCanWrite] = useState<boolean>(false);
 
   const handleError = (err: ParsedErrorData) => {
     setError(err);
@@ -36,15 +42,6 @@ export default function Thread() {
         .catch(handleError);
     }
   };
-
-  useEffect(() => {
-    const membersContainCurrentKey = dialect?.dialect.members.some(
-      (m) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1] // is not admin but does have write privilages
-    );
-    if (membersContainCurrentKey) {
-      setYouCanWrite(membersContainCurrentKey);
-    }
-  }, [dialect?.dialect]);
 
   const disableSendButton =
     text.length <= 0 ||
