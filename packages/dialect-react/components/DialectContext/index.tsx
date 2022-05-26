@@ -108,7 +108,12 @@ const mergeMessageToDialect = (
   ...dialect,
   dialect: {
     ...dialect.dialect,
-    messages: [message, ...dialect.dialect.messages],
+    messages: [
+      message,
+      ...dialect.dialect.messages.filter(
+        (message: Message) => !message.isSending
+      ),
+    ],
   },
 });
 
@@ -234,6 +239,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     swrFetchDialect,
     {
       refreshInterval: POLLING_INTERVAL_MS,
+      isPaused: () => sendingMessage,
     }
   );
 
@@ -398,6 +404,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       await deleteDialect(program, dialect, wallet.publicKey?.toString());
 
       await mutateDialect(null);
+      await mutateDialects(
+        dialects?.filter(
+          (d) => dialect?.publicKey.toBase58() === d?.publicKey.toBase58()
+        )
+      );
+
       setDeletionError(null);
     } catch (e) {
       // TODO: implement safer error handling
@@ -418,6 +430,14 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
 
       try {
         // TODO: optimistic ui show message before actually sent
+        await mutateDialect(
+          mergeMessageToDialect(dialect, {
+            text,
+            owner: wallet?.publicKey,
+            isSending: true,
+          }),
+          false
+        );
 
         const newMessage = await sendMessage(
           program,
