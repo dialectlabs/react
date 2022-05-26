@@ -29,7 +29,7 @@ import {
   extractWalletAdapter,
   isAnchorWallet,
 } from '../../utils/helpers';
-import type { Message } from '@dialectlabs/web3';
+import type { Message, Member } from '@dialectlabs/web3';
 import type SolWalletAdapter from '@project-serum/sol-wallet-adapter';
 import type { BaseSolletWalletAdapter } from '@solana/wallet-adapter-sollet';
 import type { EncryptionProps } from '@dialectlabs/web3/lib/es/api/text-serde';
@@ -92,6 +92,7 @@ type DialectContextType = {
   sendMessage: (text: string, encrypted?: boolean) => Promise<void>;
   sendingMessage: boolean;
   sendMessageError: ParsedErrorData | null;
+  isWritable: boolean;
 };
 
 const DialectContext = createContext<DialectContextType | null>(null);
@@ -99,6 +100,22 @@ const DialectContext = createContext<DialectContextType | null>(null);
 const POLLING_INTERVAL_MS = 1000;
 
 const getNull = () => null;
+
+const mergeMessageToDialect = (
+  dialect: DialectAccount,
+  message: MessageType
+) => ({
+  ...dialect,
+  dialect: {
+    ...dialect.dialect,
+    messages: [
+      message,
+      ...dialect.dialect.messages.filter(
+        (message: Message) => !message.isSending
+      ),
+    ],
+  },
+});
 
 export const DialectProvider = (props: PropsType): JSX.Element => {
   const [metadataCreating, setMetadataCreating] = React.useState(false);
@@ -222,6 +239,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     swrFetchDialect,
     {
       refreshInterval: POLLING_INTERVAL_MS,
+      isPaused: () => sendingMessage,
     }
   );
 
@@ -231,9 +249,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         program as anchor.Program,
         props.publicKey
       ).then(([address, _]: [anchor.web3.PublicKey, number]) => {
-            setDialectAddress(address.toBase58())
-          }
-      );
+        setDialectAddress(address.toBase58());
+      });
     }
     return;
   }, [program, props.publicKey]);
@@ -387,6 +404,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       await deleteDialect(program, dialect, wallet.publicKey?.toString());
 
       await mutateDialect(null);
+      await mutateDialects(
+        dialects?.filter(
+          (d) => dialect?.publicKey.toBase58() === d?.publicKey.toBase58()
+        )
+      );
+
       setDeletionError(null);
     } catch (e) {
       // TODO: implement safer error handling
@@ -406,14 +429,24 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       setSendingMessage(true);
 
       try {
-        await sendMessage(
+        // TODO: optimistic ui show message before actually sent
+        await mutateDialect(
+          mergeMessageToDialect(dialect, {
+            text,
+            owner: wallet?.publicKey,
+            isSending: true,
+          }),
+          false
+        );
+
+        const newMessage = await sendMessage(
           program,
           dialect,
           text,
           encrypted ? await getEncryptionProps() : null
         );
 
-        await mutateDialect(null);
+        await mutateDialect(mergeMessageToDialect(dialect, newMessage), false);
       } catch (e) {
         // TODO: implement safer error handling
         setSendMessageError(e as ParsedErrorData);
@@ -428,6 +461,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   );
 
   // const messages = mockMessages;
+  const isWritable = dialect?.dialect.members.some(
+    (m: Member) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1] // is not admin but does have write privilages
+  );
   const isDialectAvailable = Boolean(dialect);
   const isMetadataAvailable = Boolean(metadata);
 
@@ -450,13 +486,18 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     creationError,
     deleteDialect: deleteDialectWrapper,
     isDialectDeleting: deleting,
+    isWritable,
     deletionError,
     messages,
     dialect,
     dialects: dialects || [],
     isNoMessages: messages?.length === 0,
     dialectAddress,
-    setDialectAddress,
+    setDialectAddress: (address: string) => {
+      setDialectAddress(address);
+      // reset messages on thread select to avoid weird animation
+      setMessages([]);
+    },
     sendMessage: sendMessageWrapper,
     sendingMessage,
     sendMessageError,
