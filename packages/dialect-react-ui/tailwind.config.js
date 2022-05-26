@@ -16,25 +16,6 @@ module.exports = {
         'error-night': '#DE5454',
         'utility-active': '#25BC3B',
       },
-      keyframes: {
-        'grow-and-slide': {
-          '0%': {
-            transform: 'translateY(100%)',
-            maxHeight: 0,
-          },
-          '80%': {
-            transform: 'translateY(0%)',
-            maxHeight: '80%',
-          },
-          '100%': {
-            transform: 'translateY(0%)',
-            maxHeight: '100%',
-          },
-        },
-      },
-      animation: {
-        'message-appear': 'grow-and-slide 200ms ease-in-out',
-      },
     },
   },
   variants: {

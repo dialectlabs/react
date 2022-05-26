@@ -101,6 +101,17 @@ const POLLING_INTERVAL_MS = 1000;
 
 const getNull = () => null;
 
+const mergeMessageToDialect = (
+  dialect: DialectAccount,
+  message: MessageType
+) => ({
+  ...dialect,
+  dialect: {
+    ...dialect.dialect,
+    messages: [message, ...dialect.dialect.messages],
+  },
+});
+
 export const DialectProvider = (props: PropsType): JSX.Element => {
   const [metadataCreating, setMetadataCreating] = React.useState(false);
   const [creating, setCreating] = React.useState(false);
@@ -232,9 +243,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         program as anchor.Program,
         props.publicKey
       ).then(([address, _]: [anchor.web3.PublicKey, number]) => {
-            setDialectAddress(address.toBase58())
-          }
-      );
+        setDialectAddress(address.toBase58());
+      });
     }
     return;
   }, [program, props.publicKey]);
@@ -407,14 +417,16 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       setSendingMessage(true);
 
       try {
-        await sendMessage(
+        // TODO: optimistic ui show message before actually sent
+
+        const newMessage = await sendMessage(
           program,
           dialect,
           text,
           encrypted ? await getEncryptionProps() : null
         );
 
-        await mutateDialect(null);
+        await mutateDialect(mergeMessageToDialect(dialect, newMessage), false);
       } catch (e) {
         // TODO: implement safer error handling
         setSendMessageError(e as ParsedErrorData);
@@ -461,7 +473,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     dialects: dialects || [],
     isNoMessages: messages?.length === 0,
     dialectAddress,
-    setDialectAddress,
+    setDialectAddress: (address: string) => {
+      setDialectAddress(address);
+      // reset messages on thread select to avoid weird animation
+      setMessages([]);
+    },
     sendMessage: sendMessageWrapper,
     sendingMessage,
     sendMessageError,

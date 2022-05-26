@@ -1,4 +1,11 @@
-import React, { KeyboardEvent, FormEvent, useState, useEffect } from 'react';
+import {
+  KeyboardEvent,
+  FormEvent,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useApi, useDialect, formatTimestamp } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
 import { LinkifiedText } from '../../../../../common';
@@ -6,6 +13,7 @@ import { useTheme } from '../../../../../common/ThemeProvider';
 import cs from '../../../../../../utils/classNames';
 import Avatar from '../../../../../Avatar';
 import MessageInput from './MessageInput';
+import hash from 'object-hash';
 
 export default function Thread() {
   const {
@@ -60,73 +68,104 @@ export default function Thread() {
           scrollbar
         )}
       >
-        {messages.map((message, idx) => {
-          const isYou =
-            message.owner.toString() === wallet?.publicKey?.toString();
-          const key = message.timestamp + idx;
+        {messages.length ? (
+          <TransitionGroup component={null}>
+            {messages.map((message, idx) => {
+              const isYou =
+                message.owner.toString() === wallet?.publicKey?.toString();
+              /* TODO: more efficient key */
+              const key = hash(message.text) + idx;
 
-          if (isYou) {
-            return (
-              <div
-                key={key}
-                className={
-                  'dt-ml-10 dt-flex dt-flex-row dt-items-center dt-mb-2 dt-justify-end dt-animate-message-appear'
-                }
-              >
-                <div className={cs(messageBubble, 'dt-max-w-full dt-flex-row')}>
-                  <div className={'dt-items-end'}>
+              if (isYou) {
+                return (
+                  <CSSTransition
+                    key={key}
+                    timeout={200}
+                    classNames={{
+                      // TODO: move to theme
+                      enter: 'dt-translate-y-full',
+                      enterActive:
+                        'dt-translate-y-0 dt-transition-transform dt-duration-200 dt-ease-in-out',
+                    }}
+                  >
                     <div
                       className={
-                        'dt-break-words dt-whitespace-pre-wrap dt-text-sm dt-text-right'
+                        'dt-ml-10 dt-flex dt-flex-row dt-items-center dt-mb-2 dt-justify-end'
                       }
                     >
-                      <LinkifiedText>{message.text}</LinkifiedText>
+                      <div
+                        className={cs(
+                          messageBubble,
+                          'dt-max-w-full dt-flex-row'
+                        )}
+                      >
+                        <div className={'dt-items-end'}>
+                          <div
+                            className={
+                              'dt-break-words dt-whitespace-pre-wrap dt-text-sm dt-text-right'
+                            }
+                          >
+                            <LinkifiedText>{message.text}</LinkifiedText>
+                          </div>
+                          <div className={''}>
+                            <div className={'dt-opacity-50 dt-text-xs'}>
+                              {message.isSending
+                                ? 'Sending...'
+                                : formatTimestamp(message.timestamp)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </CSSTransition>
+                );
+              }
+
+              return (
+                <CSSTransition
+                  key={key}
+                  timeout={200}
+                  classNames={{
+                    enter: 'dt-translate-y-full',
+                    enterActive:
+                      'dt-translate-y-0 dt-transition-transform dt-duration-200 dt-ease-in-out',
+                  }}
+                >
+                  <div className={'dt-flex dt-flex-row dt-mb-2'}>
                     <div className={''}>
-                      <div className={'dt-opacity-50 dt-text-xs'}>
-                        {formatTimestamp(message.timestamp)}
+                      <Avatar size="small" publicKey={message.owner} />
+                    </div>
+                    <div
+                      className={cs(
+                        otherMessageBubble,
+                        'dt-max-w-xs dt-flex-row dt-flex-shrink dt-ml-1'
+                      )}
+                    >
+                      <div className={'dt-text-left'}>
+                        <div
+                          className={
+                            'dt-text-sm dt-break-words dt-whitespace-pre-wrap'
+                          }
+                        >
+                          <LinkifiedText>{message.text}</LinkifiedText>
+                        </div>
+                        <div className={'dt-items-end'}>
+                          <div
+                            className={'dt-opacity-50 dt-text-xs dt-text-right'}
+                          >
+                            {message.isSending
+                              ? 'Sending...'
+                              : formatTimestamp(message.timestamp)}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            );
-          }
-
-          return (
-            <div
-              key={key}
-              className={
-                'dt-flex dt-flex-row dt-mb-2 dt-animate-message-appear'
-              }
-            >
-              <div className={''}>
-                <Avatar size="small" publicKey={message.owner} />
-              </div>
-              <div
-                className={cs(
-                  otherMessageBubble,
-                  'dt-max-w-xs dt-flex-row dt-flex-shrink dt-ml-1'
-                )}
-              >
-                <div className={'dt-text-left'}>
-                  <div
-                    className={
-                      'dt-text-sm dt-break-words dt-whitespace-pre-wrap'
-                    }
-                  >
-                    <LinkifiedText>{message.text}</LinkifiedText>
-                  </div>
-                  <div className={'dt-items-end'}>
-                    <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>
-                      {formatTimestamp(message.timestamp)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+                </CSSTransition>
+              );
+            })}
+          </TransitionGroup>
+        ) : null}
       </div>
       {youCanWrite && (
         <MessageInput
