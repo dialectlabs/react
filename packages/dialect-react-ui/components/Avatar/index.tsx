@@ -1,13 +1,14 @@
-import cs from '../../utils/classNames';
-import type { PublicKey } from '@project-serum/anchor';
-import { useTheme } from '../common/ThemeProvider';
-import { fetchSolanaNameServiceName } from '../common';
-import { useApi } from '@dialectlabs/react';
-import type { Connection } from '@solana/web3.js';
-import { useAddressImage } from '@cardinal/namespaces-components';
+import { tryGetImageUrl } from '@cardinal/namespaces-components';
+import { breakName } from '@cardinal/namespaces';
 import { HiUserCircle } from 'react-icons/hi';
-import { Img } from '../common/preflighted';
+import { useApi } from '@dialectlabs/react';
+import type { Connection, PublicKey } from '@solana/web3.js';
 import useSWR from 'swr';
+import cs from '../../utils/classNames';
+import { useTheme } from '../common/ThemeProvider';
+import { fetchTwitterHandleFromAddress } from '../DisplayAddress';
+import { fetchSolanaNameServiceName } from '../common';
+import { Img } from '../common/preflighted';
 
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
@@ -24,6 +25,23 @@ type PropTypes = {
   size: 'regular' | 'small';
 };
 
+export const fetchImageUrlFromAddress = async (
+  connection: Connection,
+  publicKeyString: string
+) => {
+  try {
+    const displayName = await fetchTwitterHandleFromAddress(
+      connection,
+      publicKeyString
+    );
+    const [_namespace, handle] = displayName ? breakName(displayName) : [];
+    if (!handle) return;
+    return await tryGetImageUrl(handle);
+  } catch (e) {
+    return;
+  }
+};
+
 const CardinalAvatar = ({
   connection,
   address,
@@ -35,10 +53,16 @@ const CardinalAvatar = ({
   placeholder?: React.ReactNode;
   className?: string;
 }) => {
-  const { addressImage, loadingImage } = useAddressImage(connection, address);
+  const { data: addressImage, error } = useSWR(
+    address ? [connection, address.toString(), 'avatar'] : null,
+    fetchImageUrlFromAddress
+  );
+
+  const isLoading = typeof addressImage === 'undefined' && !error;
 
   if (!address) return <></>;
-  return loadingImage ? (
+
+  return isLoading ? (
     <div className={cs(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
       <>{placeholder}</>
     </div>

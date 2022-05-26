@@ -95,7 +95,7 @@ const ThreadPage = ({
                 isLinkable={true}
               />
             ) : (
-              'Loading...'
+              'Loading thread...'
             )}
           </span>
           {dialect?.dialect.encrypted ? (
