@@ -477,8 +477,10 @@
 }
 
 .dialect *::-webkit-scrollbar {
-  width: 12px; /* Mostly for vertical scrollbars */
-  height: 12px; /* Mostly for horizontal scrollbars */
+  /* Mostly for vertical scrollbars */
+  width: 12px;
+  /* Mostly for horizontal scrollbars */
+  height: 12px;
 }
 .dialect *::-webkit-scrollbar-track {
   /* Background */
@@ -487,6 +489,8 @@
 .dt-light-scrollbar {
   /* Firefox: Foreground, Background */
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  /* TODO: add scrollbar-gutter to remove flicker on scroll */
+  /* scrollbar-gutter: stable; */
 }
 .dt-light-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 9999px;
@@ -502,6 +506,8 @@
 .dt-dark-scrollbar {
   /* Firefox: Foreground, Background */
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  /* TODO: add scrollbar-gutter to remove flicker on scroll */
+  /* scrollbar-gutter: stable; */
 }
 .dt-dark-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 9999px;
@@ -524,6 +530,10 @@
 .dt-no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+.dt-label {
+  margin: 0;
 }
 
 .dialect *,
@@ -575,3 +585,10 @@
 
 @tailwind components;
 @tailwind utilities;
+
+/* Hide scrollbar if not scrolling when supported to avoid width flickering */
+@supports (overflow: overlay) {
+  .dt-overflow-y-auto {
+    overflow-y: overlay;
+  }
+}

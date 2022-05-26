@@ -4,14 +4,14 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import clsx from 'clsx';
 import { ownerFetcher } from '@dialectlabs/web3';
 import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
-import { DialectLogo } from '../Icon';
 import { useTheme } from './ThemeProvider';
-import { A, ButtonBase, P } from './preflighted';
-import clsx from 'clsx';
+import { A, ButtonBase, Label, P } from './preflighted';
+import { DialectLogo } from '../Icon';
 
 // TODO: separate these components to separate files
 export function Divider(props: { className?: string }): JSX.Element {
@@ -46,22 +46,23 @@ export function Footer(): JSX.Element {
   const { colors } = useTheme();
 
   return (
-    <div
-      className={cs(
-        'dt-w-[8.5rem] dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-absolute dt-bottom-3 dt-left-0 dt-right-0 dt-mx-auto dt-uppercase dt-rounded-full',
-        colors.highlightSolid
-      )}
-      style={{ fontSize: '10px' }}
-    >
-      Powered by{' '}
-      <A
-        href="https://dialect.to"
-        target="_blank"
-        rel="noreferrer"
-        className="hover:dt-text-inherit"
+    <div className="dt-flex dt-justify-center dt-py-3">
+      <div
+        className={cs(
+          'dt-px-3 dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-uppercase dt-rounded-full dt-text-[10px]',
+          colors.highlightSolid
+        )}
       >
-        <DialectLogo className="-dt-mr-1 -dt-mt-1 dt-ml-[3px]" />
-      </A>
+        Powered by{' '}
+        <A
+          href="https://dialect.to"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:dt-text-inherit"
+        >
+          <DialectLogo className="dt-ml-[3px] -dt-mt-[1px]" />
+        </A>
+      </div>
     </div>
   );
 }
@@ -81,9 +82,9 @@ export function Centered(props: { children: React.ReactNode }): JSX.Element {
   );
 }
 
-export function Loader() {
+export function Loader(props: { className?: string }) {
   const { icons } = useTheme();
-  return <icons.spinner className="dt-animate-spin" />;
+  return <icons.spinner className={clsx('dt-animate-spin', props.className)} />;
 }
 
 export function Button(props: {
@@ -95,7 +96,7 @@ export function Button(props: {
   loading?: boolean;
   children: React.ReactNode;
 }): JSX.Element {
-  const { button, buttonLoading, textStyles } = useTheme();
+  const { button, buttonLoading, disabledButton, textStyles } = useTheme();
   const defaultClassName = props.defaultStyle || button;
   const loadingClassName = props.loadingStyle || buttonLoading;
 
@@ -104,7 +105,7 @@ export function Button(props: {
       className={cs(
         'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
-        defaultClassName,
+        props.disabled ? disabledButton : defaultClassName,
         props.loading && loadingClassName,
         props.className
       )}
@@ -164,7 +165,7 @@ export function Toggle({
   useEffect(() => setChecked(checked), [checked]);
 
   return (
-    <label
+    <Label
       className={clsx(
         props.disabled ? 'dt-cursor-not-allowed' : 'dt-cursor-pointer',
         'dt-flex dt-items-center dt-relative dt-h-5 dt-w-10'
@@ -174,9 +175,10 @@ export function Toggle({
         type="checkbox"
         className="dt-input dt-appearance-none dt-opacity-0 dt-w-0 dt-h-0"
         checked={checked}
-        onChange={() => {
-          setChecked((prev) => !prev);
-          onClick();
+        onChange={async () => {
+          const nextValue = !checked;
+          await onClick();
+          setChecked(nextValue);
         }}
         {...props}
       />
@@ -190,46 +192,12 @@ export function Toggle({
       {/* Thumb */}
       <span
         className={cs(
-          'dt-absolute dt-top-0.5 dt-left-0.5 dt-rounded-full dt-h-4 dt-w-4 dt-transition dt-shadow-sm',
+          'dt-absolute dt-top-1 dt-left-1 dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
           colors.toggleThumb,
-          isChecked ? 'dt-translate-x-[120%]' : ''
+          isChecked ? 'dt-translate-x-[160%]' : ''
         )}
       />
-    </label>
-  );
-}
-
-export function Accordion(props: {
-  title: React.ReactNode | string;
-  children: React.ReactNode;
-  className?: string;
-  defaultExpanded?: boolean;
-}) {
-  const { textStyles, colors, icons } = useTheme();
-  const [isExpanded, setExpanded] = useState(props.defaultExpanded);
-
-  return (
-    <div className={props?.className}>
-      <div
-        // onClick={() => setExpanded((prev) => !prev)}
-        className={cs(
-          textStyles.bigText,
-          'dt-w-full dt-flex dt-justify-between dt-mb-1'
-        )}
-      >
-        {props.title}
-        {/* <IconButton
-          icon={<icons.chevron />}
-          className={cs(
-            'rounded-full w-6 h-6 flex items-center justify-center',
-            colors.highlight,
-            !isExpanded && 'rotate-180'
-          )}
-        /> */}
-      </div>
-      <Divider className="dt-mb-2" />
-      {isExpanded ? props.children : null}
-    </div>
+    </Label>
   );
 }
 

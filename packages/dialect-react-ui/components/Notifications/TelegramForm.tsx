@@ -1,15 +1,25 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
+import type { AddressType } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
 import { P } from '../common/preflighted';
-import { Button, ToggleSection } from '../common';
+import { Button, Toggle, ToggleSection, ValueRow } from '../common';
 import ResendIcon from '../Icon/Resend';
 
-export function EmailForm() {
+export interface TelegramFormProps {
+  botURL?: string;
+}
+
+function getTelegramObj(addresses: AddressType[] | null): AddressType | null {
+  if (!addresses) return null;
+  return addresses.find((address) => address.type === 'telegram') || null;
+}
+
+export function TelegramForm(props: TelegramFormProps) {
   const {
     wallet,
-    addresses: { email: emailObj },
+    addresses: { telegram: telegramObj },
     fetchingAddressesError,
     saveAddress,
     updateAddress,
@@ -29,54 +39,58 @@ export function EmailForm() {
     highlighted,
   } = useTheme();
 
-  const [email, setEmail] = useState(emailObj?.value);
-  const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
-  const [verificationCode, setVerificationCode] = useState('');
+  const [telegramUsername, setTelegramUsername] = useState(telegramObj?.value);
+  const [isEnabled, setEnabled] = useState(Boolean(telegramObj?.enabled));
+  const [isTelegramUsernameEditing, setTelegramUsernameEditing] = useState(
+    !telegramObj?.enabled
+  );
+  const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const [error, setError] = useState<Error | null>(null);
+  const [verificationCode, setVerificationCode] = useState('');
 
-  const isEmailSaved = Boolean(emailObj);
-  const isChanging = emailObj && isEmailEditing;
-  const isVerified = emailObj?.verified;
+  const isTelegramSaved = Boolean(telegramObj);
+  const isChanging = telegramObj && isTelegramUsernameEditing;
+  const isVerified = telegramObj?.verified;
 
   const currentError = error || fetchingAddressesError;
 
   useEffect(() => {
     // Update state if addresses updated
-    setEmail(emailObj?.value || '');
-    setEmailEditing(!emailObj?.enabled);
-  }, [emailObj]);
+    setTelegramUsername(telegramObj?.value || '');
+    setTelegramUsernameEditing(!telegramObj?.enabled);
+  }, [telegramObj]);
 
-  const updateEmail = async () => {
-    // TODO: validate & save email
+  const updateTelegram = async () => {
     if (error) return;
+
     try {
       setLoading(true);
       await updateAddress(wallet, {
-        type: 'email',
-        value: email,
+        type: 'telegram',
+        value: telegramUsername,
         enabled: true,
-        id: emailObj?.id,
-        addressId: emailObj?.addressId,
+        id: telegramObj?.id,
+        addressId: telegramObj?.addressId,
       });
       setError(null);
     } catch (e) {
-      setError(e as Error);
+      setError(e as Error)
     } finally {
       setLoading(false);
-      setEmailEditing(false);
+      setTelegramUsernameEditing(false);
     }
   };
 
-  const saveEmail = async () => {
+  const saveTelegram = async () => {
     if (error) return;
 
     try {
       setLoading(true);
+      let value = telegramUsername?.replace('@', '');
       await saveAddress(wallet, {
-        type: 'email',
-        value: email,
+        type: 'telegram',
+        value: value,
         enabled: true,
       });
       setError(null);
@@ -87,33 +101,32 @@ export function EmailForm() {
     }
   };
 
-  const deleteEmail = async () => {
+  const deleteTelegram = async () => {
     try {
       setLoading(true);
       await deleteAddress(wallet, {
-        addressId: emailObj?.addressId,
+        addressId: telegramObj?.addressId,
       });
       setError(null);
     } catch (e) {
-      setError(e as Error);
+      setError(e as Error)
     } finally {
       setLoading(false);
     }
   };
 
-  const resendEmailCode = async () => {
+  const resendCodeVerification = async () => {
     try {
       setLoading(true);
       await resendCode(wallet, {
-        type: 'email',
-        value: email,
+        type: 'telegram',
+        value: telegramUsername,
         enabled: true,
-        id: emailObj?.id,
-        addressId: emailObj?.addressId,
-      });
-      setError(null)
+        id: telegramObj?.id,
+        addressId: telegramObj?.addressId});
+      setError(null);
     } catch (e) {
-      setError(e as Error);
+      setError(e as Error)
     } finally {
       setLoading(false);
     }
@@ -122,18 +135,14 @@ export function EmailForm() {
   const sendCode = async () => {
     try {
       setLoading(true);
-      await verifyCode(
-        wallet,
-        {
-          type: 'email',
-          value: email,
-          enabled: true,
-          id: emailObj?.id,
-          addressId: emailObj?.addressId,
-        },
-        verificationCode
-      );
-      setError(null)
+      await verifyCode(wallet, {
+        type: 'telegram',
+        value: telegramUsername,
+        enabled: true,
+        id: telegramObj?.id,
+        addressId: telegramObj?.addressId,
+      }, verificationCode);
+      setError(null);
     } catch (e) {
       setError(e as Error)
     } finally {
@@ -145,7 +154,7 @@ export function EmailForm() {
   const renderVerifiedState = () => {
     return (
       <div className={cs(highlighted, textStyles.body, colors.highlight)}>
-        <span className="dt-opacity-40">🔗 Email submitted</span>
+        <span className="dt-opacity-40">🔗 Telegram submitted</span>
       </div>
     );
   };
@@ -170,7 +179,7 @@ export function EmailForm() {
         </Button>
         <Button
           className="dt-basis-1/4"
-          onClick={deleteEmail}
+          onClick={deleteTelegram}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
           loading={loading}
@@ -182,26 +191,28 @@ export function EmailForm() {
   };
 
   return (
-    <div>
+    <div key="telegram">
       <ToggleSection
         className="dt-mb-6"
-        title="📩  Email notifications"
+        title="📡  Telegram notifications"
         onChange={async (nextValue) => {
-          if (emailObj && emailObj.enabled !== nextValue) {
-            setError(null);
+          setError(null);
+          if (telegramObj && telegramObj.enabled !== nextValue) {
             await updateAddress(wallet, {
-              id: emailObj.id,
-              type: emailObj.type,
+              id: telegramObj.id,
               enabled: nextValue,
+              type: 'telegram',
+              addressId: !telegramObj.id ? telegramObj?.addressId : undefined,
             });
           }
+          setEnabled(!isEnabled);
         }}
-        enabled={Boolean(emailObj?.enabled)}
+        enabled={Boolean(telegramObj?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
-              {isEmailSaved && !isEmailEditing ? (
+              {isTelegramSaved && !isTelegramUsernameEditing ? (
                 <>
                   {isVerified
                     ? renderVerifiedState()
@@ -214,27 +225,26 @@ export function EmailForm() {
                     error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
                   )}
-                  placeholder="Enter email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter telegram username"
+                  type="text"
+                  value={telegramUsername}
+                  onChange={(e) => setTelegramUsername(e.target.value)}
+                  disabled={isTelegramSaved && !isTelegramUsernameEditing}
                   onBlur={(e) =>
                     e.target.checkValidity()
                       ? setError(null)
                       : setError({
-                          name: 'incorrectEmail',
-                          message: 'Please enter a valid email',
+                          name: 'incorrectTelegramNumber',
+                          message: 'Please enter a valid telegram number',
                         })
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
                     setError({
-                      name: 'incorrectEmail',
-                      message: 'Please enter a valid email',
+                      name: 'incorrectTelegramNumber',
+                      message: 'Please enter a valid telegram number',
                     });
                   }}
-                  pattern="^\S+@\S+\.\S+$"
-                  disabled={isEmailSaved && !isEmailEditing}
                 />
               )}
               {currentError && (
@@ -250,80 +260,102 @@ export function EmailForm() {
                   defaultStyle={secondaryButton}
                   loadingStyle={secondaryButtonLoading}
                   className="dt-basis-1/2"
-                  onClick={() => setEmailEditing(false)}
+                  onClick={() => setTelegramUsernameEditing(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   className="dt-basis-1/2"
-                  disabled={email === ''}
-                  onClick={updateEmail}
+                  disabled={telegramUsername === ''}
+                  onClick={updateTelegram}
                   loading={loading}
                 >
-                  {loading ? 'Saving...' : 'Submit email'}
+                  {loading ? 'Saving...' : 'Submit telegram'}
                 </Button>
               </div>
             )}
 
-            {!isChanging && isEmailEditing ? (
+            {!isChanging && isTelegramUsernameEditing ? (
               <Button
                 className="dt-basis-full"
-                disabled={email === ''}
-                onClick={saveEmail}
+                disabled={telegramUsername === ''}
+                onClick={saveTelegram}
                 loading={loading}
               >
-                {loading ? 'Saving...' : 'Submit email'}
+                {loading ? 'Saving...' : 'Submit telegram'}
               </Button>
             ) : null}
 
-            {!isEmailEditing && !isVerified ? (
-              <div className="dt-flex dt-flex-row dt-space-x-2">
+            {!isTelegramUsernameEditing && !isVerified ? (
+              <>
                 <div
                   className={cs(
                     textStyles.small,
-                    'display: inline-flex',
-                    'dt-mb-1'
+                    'dt-flex dt-flex-row dt-space-x-2'
                   )}
-                  onClick={resendEmailCode}
                 >
-                  <span className="dt-opacity-50">
-                    {' '}
-                    Check your email for a verification code.
-                  </span>
-                  <div className="dt-inline-block dt-cursor-pointer">
-                    <ResendIcon
-                      className="dt-px-1 dt-inline-block"
-                      height={18}
-                      width={18}
-                    />
-                    Resend code
+                  <a
+                    className={cs(textStyles.small)}
+                    href={props.botURL}
+                    target="_blank"
+                  >
+                    🤖
+                    <span className="dt-opacity-50">
+                      {' '}
+                      Get verification code by starting{' '}
+                    </span>
+                    <span className="dt-underline">this bot </span>
+                    <span className="dt-opacity-50">with command: /start</span>
+                  </a>
+                </div>
+                <div className="dt-flex dt-flex-row dt-space-x-2">
+                  <div
+                    className={cs(
+                      textStyles.small,
+                      'display: inline-flex',
+                      'dt-mb-1'
+                    )}
+                    onClick={resendCodeVerification}
+                  >
+                    <span className="dt-opacity-50">
+                      {' '}
+                      Check your telegram bot for a verification code.
+                    </span>
+                    <div className="dt-inline-block dt-cursor-pointer">
+                      <ResendIcon
+                        className="dt-px-1 dt-inline-block"
+                        height={18}
+                        width={18}
+                      />
+                      Resend code
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             ) : null}
 
-            {!isEmailEditing && isVerified ? (
+            {!isTelegramUsernameEditing && isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   className="dt-basis-1/2"
-                  onClick={() => setEmailEditing(true)}
+                  onClick={() => setTelegramUsernameEditing(true)}
                   loading={loading}
                 >
-                  Change email
+                  Change
                 </Button>
                 <Button
                   className="dt-basis-1/2"
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
-                  onClick={deleteEmail}
+                  onClick={deleteTelegram}
                   loading={loading}
                 >
-                  {loading ? 'Deleting...' : 'Delete email'}
+                  {loading ? 'Deleting...' : 'Delete telegram'}
                 </Button>
               </div>
             ) : null}
           </div>
-          {!currentError && !isChanging && isEmailEditing ? (
+          {!currentError && !isChanging && isTelegramUsernameEditing ? (
             <P className={cs(textStyles.small, 'dt-mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
@@ -331,9 +363,9 @@ export function EmailForm() {
           ) : null}
           {!currentError && isChanging ? (
             <P className={cs(textStyles.small, 'dt-mb-1')}>
-              ⚠️ Changing or deleting your email is a global setting across all
-              dapps. You will be prompted to sign with your wallet, this action
-              is free.
+              ⚠️ Changing or deleting your Telegram username is a global setting
+              across all dapps. You will be prompted to sign with your wallet,
+              this action is free.
             </P>
           ) : null}
         </form>

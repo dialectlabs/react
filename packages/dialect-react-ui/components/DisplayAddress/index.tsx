@@ -1,12 +1,13 @@
 import { useAddressName } from '@cardinal/namespaces-components';
+import { getNameEntry } from '@cardinal/namespaces';
 import { TwitterIcon } from '../Icon/Twitter';
-import type { Connection } from '@project-serum/anchor';
-import type { PublicKey } from '@solana/web3.js';
+import type { Connection, PublicKey } from '@solana/web3.js';
+import { Loader, fetchSolanaNameServiceName } from '../common';
 import { useApi } from '@dialectlabs/react';
-import clsx from 'clsx';
 import cs from '../../utils/classNames';
 import { A } from '../common/preflighted';
 import { display, Member } from '@dialectlabs/web3';
+import useSWR from 'swr';
 
 const formatTwitterLink = (
   handle: string | undefined,
@@ -82,6 +83,59 @@ const TwitterHandle = ({
   );
 };
 
+const formatSolanaDomain = (domain: string): string => {
+  if (domain.length <= 6) {
+    return domain;
+  }
+  return `${domain.slice(0, 4)}...${domain.slice(domain.length - 2)}`;
+};
+
+const SolanaName = ({
+  address,
+  displayName,
+  loadingName,
+  dimensionClassName = '',
+}: {
+  address?: PublicKey;
+  displayName: string;
+  loadingName: boolean;
+  dimensionClassName?: string;
+  colorClassName?: string;
+  className?: string;
+  isLinkable?: boolean;
+}) => {
+  if (!address) return <></>;
+  if (loadingName) {
+    return (
+      <div className={cs(dimensionClassName, 'dt-overflow-hidden')}>
+        Loading...
+      </div>
+    );
+  }
+  return (
+    <div className="dt-flex dt-gap-1.5">
+      {`${formatSolanaDomain(displayName)}.sol`}
+    </div>
+  );
+};
+
+export const fetchAddressFromTwitterHandle = async (
+  connection: Connection,
+  handle: string
+) => {
+  const NAMESPACE = 'twitter';
+  try {
+    const { parsed, pubkey } = await getNameEntry(
+      connection,
+      NAMESPACE,
+      handle
+    );
+    return { result: { parsed, pubkey } };
+  } catch (e) {
+    return { result: null };
+  }
+};
+
 export function DisplayAddress({
   connection,
   dialectMembers,
@@ -105,21 +159,38 @@ export function DisplayAddress({
   const { displayName, loadingName } = useAddressName(connection, publicKey);
   const showTwitterIcon = displayName?.includes('@');
 
-  return connection ? (
-    <div className="dt-flex dt-inline-flex items-center">
-      <TwitterHandle
+  const { data } = useSWR([connection, publicKey], fetchSolanaNameServiceName);
+
+  if (connection && showTwitterIcon) {
+    return (
+      <div className="dt-flex dt-inline-flex items-center">
+        <TwitterHandle
+          address={publicKey}
+          displayName={displayName}
+          loadingName={loadingName}
+          isLinkable={isLinkable}
+        />
+        {showTwitterIcon && (
+          <div className="dt-flex dt-items-center dt-px-1">
+            <TwitterIcon height={18} width={18} />
+          </div>
+        )}
+      </div>
+    );
+  } else if (connection && (!data || data?.solanaDomain)) {
+    return (
+      <SolanaName
         address={publicKey}
-        displayName={displayName}
-        loadingName={loadingName}
-        isLinkable={isLinkable}
+        displayName={data?.solanaDomain ?? ''}
+        loadingName={!data}
       />
-      {showTwitterIcon && (
-        <div className="dt-flex dt-items-center dt-px-1">
-          <TwitterIcon height={18} width={18} />
-        </div>
-      )}
-    </div>
-  ) : (
-    <>{display(publicKey)}</>
+    );
+  }
+
+  return (
+    <span className="dt-flex dt-items-center">
+      {display(publicKey)}
+      {!data && <Loader className="dt-ml-1" />}
+    </span>
   );
 }

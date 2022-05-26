@@ -6,10 +6,10 @@ import { P } from '../common/preflighted';
 import { Button, ToggleSection } from '../common';
 import ResendIcon from '../Icon/Resend';
 
-export function EmailForm() {
+export function SmsForm() {
   const {
     wallet,
-    addresses: { email: emailObj },
+    addresses: { sms: smsObj },
     fetchingAddressesError,
     saveAddress,
     updateAddress,
@@ -29,93 +29,93 @@ export function EmailForm() {
     highlighted,
   } = useTheme();
 
-  const [email, setEmail] = useState(emailObj?.value);
-  const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
+  const [smsNumber, setSmsNumber] = useState(smsObj?.value);
+  const [isSmsNumberEditing, setSmsNumberEditing] = useState(!smsObj?.enabled);
+  const [error, setError] = useState<Error | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [error, setError] = useState<Error | null>(null);
-
-  const isEmailSaved = Boolean(emailObj);
-  const isChanging = emailObj && isEmailEditing;
-  const isVerified = emailObj?.verified;
+  const isSmsNumberSaved = Boolean(smsObj);
+  const isChanging = smsObj && isSmsNumberEditing;
+  const isVerified = smsObj?.verified;
 
   const currentError = error || fetchingAddressesError;
 
   useEffect(() => {
     // Update state if addresses updated
-    setEmail(emailObj?.value || '');
-    setEmailEditing(!emailObj?.enabled);
-  }, [emailObj]);
+    setSmsNumber(smsObj?.value || '');
+    setSmsNumberEditing(!smsObj?.enabled);
+  }, [smsObj]);
 
-  const updateEmail = async () => {
-    // TODO: validate & save email
+  const updateSmsNumber = async () => {
+    // TODO: validate & save sms number
     if (error) return;
+
     try {
       setLoading(true);
       await updateAddress(wallet, {
-        type: 'email',
-        value: email,
+        type: 'sms',
+        value: smsNumber,
         enabled: true,
-        id: emailObj?.id,
-        addressId: emailObj?.addressId,
+        id: smsObj?.id,
+        addressId: smsObj?.addressId,
       });
       setError(null);
     } catch (e) {
-      setError(e as Error);
+      setError(e as Error)
     } finally {
       setLoading(false);
-      setEmailEditing(false);
+      setSmsNumberEditing(false);
     }
   };
 
-  const saveEmail = async () => {
+  const saveSmsNumber = async () => {
     if (error) return;
 
     try {
       setLoading(true);
       await saveAddress(wallet, {
-        type: 'email',
-        value: email,
+        type: 'sms',
+        value: smsNumber,
         enabled: true,
       });
       setError(null);
     } catch (e) {
-      setError(e as Error);
+      setError(e as Error)
     } finally {
       setLoading(false);
     }
   };
 
-  const deleteEmail = async () => {
+  const deleteSmsNumber = async () => {
     try {
       setLoading(true);
       await deleteAddress(wallet, {
-        addressId: emailObj?.addressId,
+        addressId: smsObj?.addressId,
       });
       setError(null);
     } catch (e) {
-      setError(e as Error);
+      setError(e as Error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
-  const resendEmailCode = async () => {
+  const resendSmsVerificationCode = async () => {
     try {
       setLoading(true);
       await resendCode(wallet, {
-        type: 'email',
-        value: email,
+        type: 'sms',
+        value: smsNumber,
         enabled: true,
-        id: emailObj?.id,
-        addressId: emailObj?.addressId,
+        id: smsObj?.id,
+        addressId: smsObj?.addressId,
       });
       setError(null)
     } catch (e) {
-      setError(e as Error);
+      setError(e as Error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -123,17 +123,17 @@ export function EmailForm() {
     try {
       setLoading(true);
       await verifyCode(
-        wallet,
-        {
-          type: 'email',
-          value: email,
-          enabled: true,
-          id: emailObj?.id,
-          addressId: emailObj?.addressId,
-        },
-        verificationCode
+          wallet,
+          {
+            type: 'sms',
+            value: smsNumber,
+            enabled: true,
+            id: smsObj?.id,
+            addressId: smsObj?.addressId,
+          },
+          verificationCode
       );
-      setError(null)
+      setError(null);
     } catch (e) {
       setError(e as Error)
     } finally {
@@ -145,7 +145,7 @@ export function EmailForm() {
   const renderVerifiedState = () => {
     return (
       <div className={cs(highlighted, textStyles.body, colors.highlight)}>
-        <span className="dt-opacity-40">🔗 Email submitted</span>
+        <span className="dt-opacity-40">🔗 Phone number submitted</span>
       </div>
     );
   };
@@ -170,7 +170,7 @@ export function EmailForm() {
         </Button>
         <Button
           className="dt-basis-1/4"
-          onClick={deleteEmail}
+          onClick={deleteSmsNumber}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
           loading={loading}
@@ -185,23 +185,24 @@ export function EmailForm() {
     <div>
       <ToggleSection
         className="dt-mb-6"
-        title="📩  Email notifications"
+        title="📶  SMS notifications"
         onChange={async (nextValue) => {
-          if (emailObj && emailObj.enabled !== nextValue) {
-            setError(null);
+          setError(null);
+          if (smsObj && smsObj.enabled !== nextValue) {
+            // TODO: handle error
             await updateAddress(wallet, {
-              id: emailObj.id,
-              type: emailObj.type,
+              id: smsObj.id,
+              type: smsObj.type,
               enabled: nextValue,
             });
           }
         }}
-        enabled={Boolean(emailObj?.enabled)}
+        enabled={Boolean(smsObj?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
-              {isEmailSaved && !isEmailEditing ? (
+              {isSmsNumberSaved && !isSmsNumberEditing ? (
                 <>
                   {isVerified
                     ? renderVerifiedState()
@@ -214,33 +215,27 @@ export function EmailForm() {
                     error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
                   )}
-                  placeholder="Enter email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="+15554443333 (+1 required, US only)"
+                  type="sms"
+                  value={smsNumber}
+                  onChange={(e) => setSmsNumber(e.target.value)}
                   onBlur={(e) =>
                     e.target.checkValidity()
                       ? setError(null)
-                      : setError({
-                          name: 'incorrectEmail',
-                          message: 'Please enter a valid email',
-                        })
+                      : setError({name: "incorrectSmsNumber", message: "Please enter a valid SMS number"})
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
-                    setError({
-                      name: 'incorrectEmail',
-                      message: 'Please enter a valid email',
-                    });
+                    setError({name: "incorrectSmsNumber", message: "Please enter a valid SMS number"})
                   }}
-                  pattern="^\S+@\S+\.\S+$"
-                  disabled={isEmailSaved && !isEmailEditing}
+                  // pattern="^\S+@\S+\.\S+$"
+                  disabled={isSmsNumberSaved && !isSmsNumberEditing}
                 />
               )}
               {currentError && (
-                <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
-                  {currentError.message}
-                </P>
+                  <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                    {currentError.message}
+                  </P>
               )}
             </div>
 
@@ -250,33 +245,33 @@ export function EmailForm() {
                   defaultStyle={secondaryButton}
                   loadingStyle={secondaryButtonLoading}
                   className="dt-basis-1/2"
-                  onClick={() => setEmailEditing(false)}
+                  onClick={() => setSmsNumberEditing(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   className="dt-basis-1/2"
-                  disabled={email === ''}
-                  onClick={updateEmail}
+                  disabled={smsNumber === ''}
+                  onClick={updateSmsNumber}
                   loading={loading}
                 >
-                  {loading ? 'Saving...' : 'Submit email'}
+                  {loading ? 'Saving...' : 'Submit number'}
                 </Button>
               </div>
             )}
 
-            {!isChanging && isEmailEditing ? (
+            {!isChanging && isSmsNumberEditing ? (
               <Button
                 className="dt-basis-full"
-                disabled={email === ''}
-                onClick={saveEmail}
+                disabled={smsNumber === ''}
+                onClick={saveSmsNumber}
                 loading={loading}
               >
-                {loading ? 'Saving...' : 'Submit email'}
+                {loading ? 'Saving...' : 'Submit number'}
               </Button>
             ) : null}
 
-            {!isEmailEditing && !isVerified ? (
+            {!isSmsNumberEditing && !isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <div
                   className={cs(
@@ -284,11 +279,11 @@ export function EmailForm() {
                     'display: inline-flex',
                     'dt-mb-1'
                   )}
-                  onClick={resendEmailCode}
+                  onClick={resendSmsVerificationCode}
                 >
                   <span className="dt-opacity-50">
                     {' '}
-                    Check your email for a verification code.
+                    Check your phone for a verification code.
                   </span>
                   <div className="dt-inline-block dt-cursor-pointer">
                     <ResendIcon
@@ -302,28 +297,28 @@ export function EmailForm() {
               </div>
             ) : null}
 
-            {!isEmailEditing && isVerified ? (
+            {!isSmsNumberEditing && isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   className="dt-basis-1/2"
-                  onClick={() => setEmailEditing(true)}
+                  onClick={() => setSmsNumberEditing(true)}
                   loading={loading}
                 >
-                  Change email
+                  Change
                 </Button>
                 <Button
                   className="dt-basis-1/2"
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
-                  onClick={deleteEmail}
+                  onClick={deleteSmsNumber}
                   loading={loading}
                 >
-                  {loading ? 'Deleting...' : 'Delete email'}
+                  {loading ? 'Deleting...' : 'Delete number'}
                 </Button>
               </div>
             ) : null}
           </div>
-          {!currentError && !isChanging && isEmailEditing ? (
+          {!currentError && !isChanging && isSmsNumberEditing ? (
             <P className={cs(textStyles.small, 'dt-mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
@@ -331,9 +326,9 @@ export function EmailForm() {
           ) : null}
           {!currentError && isChanging ? (
             <P className={cs(textStyles.small, 'dt-mb-1')}>
-              ⚠️ Changing or deleting your email is a global setting across all
-              dapps. You will be prompted to sign with your wallet, this action
-              is free.
+              ⚠️ Changing or deleting your SMS number is a global setting across
+              all dapps. You will be prompted to sign with your wallet, this
+              action is free.
             </P>
           ) : null}
         </form>

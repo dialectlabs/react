@@ -1,5 +1,5 @@
 import React from 'react';
-import { display } from '@dialectlabs/web3';
+import { display, isDialectAdmin } from '@dialectlabs/web3';
 import { useApi, useDialect } from '@dialectlabs/react';
 import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../../../utils/getExplorerAddress';
@@ -15,8 +15,9 @@ interface SettingsProps {
 }
 
 const Settings = ({ onCloseRequest }: SettingsProps) => {
-  const { network } = useApi();
+  const { wallet, network } = useApi();
   const {
+    dialect,
     dialectAddress,
     deleteDialect,
     isDialectDeleting,
@@ -25,6 +26,8 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
   } = useDialect();
   const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
     useTheme();
+  const isAdmin =
+    dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet.publicKey);
 
   return (
     <>
@@ -57,20 +60,22 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
             </div>
           </ValueRow>
         ) : null}
-        <Button
-          className="dt-w-full"
-          defaultStyle={secondaryDangerButton}
-          loadingStyle={secondaryDangerButtonLoading}
-          onClick={async () => {
-            await deleteDialect().catch(noop);
-            // TODO: properly wait for the deletion
-            onCloseRequest?.();
-            setDialectAddress('');
-          }}
-          loading={isDialectDeleting}
-        >
-          Withdraw rent & delete history
-        </Button>
+        {isAdmin && (
+          <Button
+            className="dt-w-full"
+            defaultStyle={secondaryDangerButton}
+            loadingStyle={secondaryDangerButtonLoading}
+            onClick={async () => {
+              await deleteDialect().catch(noop);
+              // TODO: properly wait for the deletion
+              onCloseRequest?.();
+              setDialectAddress('');
+            }}
+            loading={isDialectDeleting}
+          >
+            Withdraw rent & delete history
+          </Button>
+        )}
         {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
           <P
             className={clsx(
