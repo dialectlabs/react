@@ -114,7 +114,7 @@ const SolanaName = ({
   }
   return (
     <div className="dt-flex dt-gap-1.5">
-      {`${formatSolanaDomain(displayName)}.sol`}
+      {`${formatSolanaDomain(displayName)}.sol ◎`}
     </div>
   );
 };
