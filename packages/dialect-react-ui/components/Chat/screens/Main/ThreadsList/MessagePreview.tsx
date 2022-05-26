@@ -3,11 +3,14 @@ import { display } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
 import clsx from 'clsx';
 import { DisplayAddress } from '../../../../DisplayAddress';
+import { useTheme } from '../../../../common/ThemeProvider';
+import { Divider } from '../../../../common';
 
 type PropsType = {
   dialect: DialectAccount;
   onClick: () => void;
   disabled?: boolean;
+  selected?: boolean;
 };
 
 function FirstMessage({ dialect }: { dialect: DialectAccount }) {
@@ -41,8 +44,10 @@ export default function MessagePreview({
   dialect,
   onClick,
   disabled = false,
+  selected = false,
 }: PropsType): JSX.Element {
   const { wallet, program } = useApi();
+  const { colors } = useTheme();
   const otherMembers = dialect?.dialect.members.filter(
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
   );
@@ -51,14 +56,15 @@ export default function MessagePreview({
     <div
       className={clsx(
         disabled ? 'dt-cursor-not-allowed' : 'dt-cursor-pointer',
-        'dt-flex dt-space-x-2 dt-items-center dt-w-full'
+        'dt-flex dt-space-x-2 dt-items-center dt-w-full dt-px-4 dt-py-2 dt-border-b dt-border-neutral-800',
+        selected ? colors.highlight : ' '
       )}
       onClick={!disabled ? onClick : undefined}
     >
       <div className="dt-flex">
         <Avatar publicKey={otherMembers[0].publicKey} size="regular" />
       </div>
-      <div className="dt-flex dt-grow dt-border-b dt-border-neutral-600 dt-justify-between dt-truncate dt-pr-2">
+      <div className="dt-flex dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {
             <DisplayAddress
