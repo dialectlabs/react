@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { KeyboardEvent } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { display } from '@dialectlabs/web3';
 import {
@@ -216,14 +217,19 @@ export default function CreateThread({
           program,
           new anchor.web3.PublicKey(finalAddress)
         );
-        setTimeout(() => {
-          setDialectAddress(da.toBase58());
-          onNewThreadCreated?.(da.toBase58());
-        }, 0);
+        setDialectAddress(da.toBase58());
+        onNewThreadCreated?.(da.toBase58());
         onCloseRequest?.();
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {});
+  };
+
+  const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && e.shiftKey == false) {
+      e.preventDefault();
+      await createThread();
+    }
   };
 
   const onAddressChange = (addr: string) => {
@@ -308,6 +314,7 @@ export default function CreateThread({
           type="text"
           value={address}
           onChange={(e) => onAddressChange(e.target.value)}
+          onKeyDown={onEnterPress}
         />
         {!isTyping
           ? showAddressInputStatus(validAddress, address, cardinalAddress)

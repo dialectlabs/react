@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useApi, useDialect } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
@@ -24,6 +24,9 @@ const ThreadPage = ({
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons, xPaddedText } = useTheme();
 
+  const publicKey = wallet?.publicKey;
+  const prevPublicKey = useRef(publicKey);
+
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
   const otherMembers = dialect?.dialect.members.filter(
@@ -43,8 +46,10 @@ const ThreadPage = ({
   );
 
   useEffect(() => {
+    if (publicKey == prevPublicKey.current) return;
     setDialectAddress('');
-  }, [wallet]);
+    prevPublicKey.current = publicKey;
+  }, [publicKey]);
 
   if (!dialectAddress) {
     if (!inbox) {
