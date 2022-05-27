@@ -18,6 +18,7 @@ import {
   Toggle,
   useBalance,
   ValueRow,
+  fetchSolanaNameServiceName,
 } from '../../../../../common';
 import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
 import { Lock, NoLock } from '../../../../../Icon';
@@ -27,6 +28,7 @@ import {
   getNameAccountKey,
   NameRegistryState,
 } from '@bonfida/spl-name-service';
+import { tryGetName } from '@cardinal/namespaces';
 
 interface CreateThreadProps {
   inbox?: boolean;
@@ -123,6 +125,8 @@ const showAddressResult = (
   address: string,
   cardinalAddress: string,
   snsAddress: string,
+  twitterHandle: string,
+  snsDomain: string
 ) => {
   const { textStyles } = useTheme();
 
@@ -137,6 +141,16 @@ const showAddressResult = (
         className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
       >
         {snsAddress}
+      </P>
+    );
+  }
+
+  if (valid && twitterHandle != '' && snsDomain != '') {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        {`SNS domain: ${snsDomain}.sol / Twitter handle: ${twitterHandle}`}
       </P>
     );
   }
@@ -200,10 +214,7 @@ const fetchSNSDomain = async (
     SOL_TLD_AUTHORITY
   );
 
-  const { registry } = await NameRegistryState.retrieve(
-    connection,
-    domainKey
-  );
+  const { registry } = await NameRegistryState.retrieve(connection, domainKey);
 
   return registry?.owner;
 };
@@ -228,6 +239,8 @@ export default function CreateThread({
   const [address, setAddress] = useState('');
   const [cardinalAddress, setCardinalAddress] = useState('');
   const [snsAddress, setSNSAddress] = useState('');
+  const [twitterHandle, setTwitterHandle] = useState('');
+  const [snsDomain, setSNSDomain] = useState('');
   const [encrypted, setEncrypted] = useState(false);
   const [validAddress, setValidAddress] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -307,6 +320,28 @@ export default function CreateThread({
         } catch (e) {
           await tryFetchAddressFromTwitterHandle(address);
         }
+      } else if (address) {
+        try {
+          if (program?.provider.connection) {
+            const pubKey = new anchor.web3.PublicKey(address);
+
+            const fetchPromises = [
+              tryGetName(program?.provider.connection, pubKey),
+              fetchSolanaNameServiceName(program?.provider.connection, address),
+            ];
+
+            // TODO: Fix typing on promise result
+            const result: any = await Promise.all(fetchPromises);
+
+            if (result[0] && result[1]) {
+              setTwitterHandle(result[0]);
+              setSNSDomain(result[1].solanaDomain);
+              setValidAddress(true);
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
       } else {
         const handle = address.substring(1, address.length);
         await tryFetchAddressFromTwitterHandle(handle);
@@ -359,7 +394,14 @@ export default function CreateThread({
           onChange={(e) => onAddressChange(e.target.value)}
         />
         {!isTyping
-          ? showAddressResult(validAddress, address, cardinalAddress, snsAddress)
+          ? showAddressResult(
+              validAddress,
+              address,
+              cardinalAddress,
+              snsAddress,
+              twitterHandle,
+              snsDomain
+            )
           : CardinalCTA()}
         <ValueRow
           label={
