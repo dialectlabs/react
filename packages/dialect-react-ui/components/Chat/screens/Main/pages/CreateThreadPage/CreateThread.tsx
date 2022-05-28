@@ -41,6 +41,8 @@ const SOL_TLD_AUTHORITY = new anchor.web3.PublicKey(
   '58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx'
 );
 
+const SNS_DOMAIN_EXT = '.sol';
+
 function CardinalCTA() {
   const { textStyles } = useTheme();
   return (
@@ -133,7 +135,7 @@ const showAddressResult = (
   if (!address) return CardinalCTA();
 
   const isTwitter = address.charAt(0) === '@';
-  const isSNS = address.slice(address.length - 4) === '.sol';
+  const isSNS = address.match(SNS_DOMAIN_EXT);
 
   if (isSNS && valid && snsAddress) {
     return (
@@ -304,7 +306,7 @@ export default function CreateThread({
     const delayDebounceFn = setTimeout(async () => {
       if (address.length === 0) {
         setValidAddress(false);
-      } else if (address.slice(address.length - 4) === '.sol') {
+      } else if (address.match(SNS_DOMAIN_EXT)) {
         try {
           if (program?.provider.connection) {
             const snsDomain = await fetchSNSDomain(
