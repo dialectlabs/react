@@ -325,17 +325,15 @@ export default function CreateThread({
           if (program?.provider.connection) {
             const pubKey = new anchor.web3.PublicKey(address);
 
-            const fetchPromises = [
+            // TODO: Fix typing on promise result
+            const [twitterName, snsName]: any = await Promise.all([
               tryGetName(program?.provider.connection, pubKey),
               fetchSolanaNameServiceName(program?.provider.connection, address),
-            ];
+            ]);
 
-            // TODO: Fix typing on promise result
-            const result: any = await Promise.all(fetchPromises);
-
-            if (result[0] && result[1]) {
-              setTwitterHandle(result[0]);
-              setSNSDomain(result[1].solanaDomain);
+            if (twitterName && snsName) {
+              setTwitterHandle(twitterName);
+              setSNSDomain(snsName.solanaDomain);
               setValidAddress(true);
             }
           }
