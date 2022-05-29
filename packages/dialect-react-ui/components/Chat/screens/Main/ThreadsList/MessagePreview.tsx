@@ -1,5 +1,11 @@
-import { useApi, DialectAccount, formatTimestamp } from '@dialectlabs/react';
+import {
+  useApi,
+  DialectAccount,
+  formatTimestamp,
+  useDialect,
+} from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
+import { Message } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
 import clsx from 'clsx';
 import { DisplayAddress } from '../../../../DisplayAddress';
@@ -13,11 +19,16 @@ type PropsType = {
   selected?: boolean;
 };
 
-function FirstMessage({ dialect }: { dialect: DialectAccount }) {
+function FirstMessage({
+  isEncrypted,
+  firstMessage,
+}: {
+  isEncrypted: boolean;
+  firstMessage: Message;
+}) {
   const { wallet } = useApi();
-  const messages = dialect.dialect.messages || [];
 
-  if (dialect.dialect.encrypted) {
+  if (isEncrypted) {
     return (
       <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2">
         Encrypted message
@@ -25,13 +36,13 @@ function FirstMessage({ dialect }: { dialect: DialectAccount }) {
     );
   }
 
-  return messages && messages?.length > 0 ? (
+  return firstMessage ? (
     <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-truncate">
       <span className="dt-opacity-50">
-        {messages[0].owner.toString() === wallet?.publicKey?.toString() &&
+        {firstMessage.owner.toString() === wallet?.publicKey?.toString() &&
           'You:'}
       </span>{' '}
-      {messages[0].text}
+      {firstMessage.text}
     </div>
   ) : (
     <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2">
@@ -51,6 +62,19 @@ export default function MessagePreview({
   const otherMembers = dialect?.dialect.members.filter(
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
   );
+  const { sendingMessagesMap } = useDialect();
+  const sendingMessages = sendingMessagesMap[dialect?.publicKey.toBase58()];
+  const messages = [].concat(
+    sendingMessages?.reverse() || [],
+    dialect.dialect.messages || []
+  );
+  const firstMessage = messages && messages?.length > 0 && messages[0];
+  let timestamp = formatTimestamp(dialect.dialect.lastMessageTimestamp);
+  if (firstMessage.isSending) {
+    timestamp = 'Sending...';
+  } else if (firstMessage.error) {
+    timestamp = <span className="dt-text-red-500">Error</span>;
+  }
 
   return (
     <div
@@ -72,11 +96,12 @@ export default function MessagePreview({
               dialectMembers={dialect?.dialect.members}
             />
           }
-          <FirstMessage dialect={dialect} />
+          <FirstMessage
+            isEncrypted={dialect.dialect.encrypted}
+            firstMessage={firstMessage}
+          />
         </div>
-        <div className="dt-text-xs dt-opacity-30">
-          {formatTimestamp(dialect.dialect.lastMessageTimestamp)}
-        </div>
+        <div className="dt-text-xs dt-opacity-30">{timestamp}</div>
       </div>
     </div>
   );

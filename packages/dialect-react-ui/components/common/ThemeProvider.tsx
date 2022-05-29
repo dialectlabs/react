@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState, SVGProps } from 'react';
 import deepMerge from '../../utils/deepMerge';
 import {
+  ArrowClockwise,
   ArrowNarrowRight,
   ArrowSmRight,
   Bell as BellIcon,
@@ -49,6 +50,7 @@ export type ThemeTextStyles =
   | 'link';
 
 export type ThemeIcons =
+  | 'arrowclockwise'
   | 'arrownarrowright'
   | 'arrowsmright'
   | 'bell'
@@ -186,6 +188,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       link: 'dt-underline dt-decoration-1 dt-break-words',
     },
     icons: {
+      arrowclockwise: ArrowClockwise,
       arrownarrowright: ArrowNarrowRight,
       arrowsmright: ArrowSmRight,
       bell: BellIcon,
@@ -279,6 +282,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       link: 'dt-underline decoration-1 dt-break-words',
     },
     icons: {
+      arrowclockwise: ArrowClockwise,
       arrownarrowright: ArrowNarrowRight,
       arrowsmright: ArrowSmRight,
       bell: BellIcon,

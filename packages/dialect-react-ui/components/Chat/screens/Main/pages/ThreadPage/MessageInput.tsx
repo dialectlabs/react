@@ -76,21 +76,23 @@ export default function MessageInput({
           </div>
         </form>
         <div className="dt-flex dt-justify-between">
-          <div className="dt-flex dt-space-x-3">
-            {error ? (
+          <div className="dt-flex dt-mt-1 dt-space-x-3">
+            {/* {error ? (
               <div className="dt-text-xs dt-pl-1 dt-text-red-500">
                 Error: {error.message}
               </div>
-            ) : (
-              <div className="dt-text-xs dt-pl-1">{text.length}/280</div>
-            )}
+            ) : ( */}
+            <div className="dt-text-xs dt-pl-1 dt-opacity-50">
+              {text.length}/280
+            </div>
+            {/* )} */}
 
             {/* <div className="dt-text-xs">⊙ {0 || '–'}</div> */}
           </div>
           {!disableSendButton && (
-            <div className="dt-flex dt-text-xs dt-items-center dt-pr-1">
-              enter
-              <icons.arrownarrowright className="dt-h-4 dt-w-4" />
+            <div className="dt-flex dt-text-xs dt-items-center dt-opacity-50 dt-pr-1">
+              enter ⏎
+              {/* <icons.arrownarrowright className="dt-h-4 dt-w-4" /> */}
             </div>
           )}
         </div>
