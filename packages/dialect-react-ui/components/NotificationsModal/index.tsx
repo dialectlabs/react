@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import type { PropTypes } from '../NotificationsButton';
-import { useOutsideAlerter } from '../NotificationsButton';
 import type { WalletType } from '@dialectlabs/react';
 import {
   ApiProvider,
@@ -11,8 +10,11 @@ import {
 import { DialectThemeProvider } from '../common/providers/DialectThemeProvider';
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
+import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 
 type ModalProps = {
+  id: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -21,11 +23,15 @@ type ModalProps = {
   onBackClick?: () => void;
 };
 
+// TODO: deprecate or reuse?
 function Modal({ channels = ['web3'], ...props }: ModalProps): JSX.Element {
+  const { close } = useDialectUiId(props.id);
+
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  useOutsideAlerter(wrapperRef, bellRef, setOpen);
+
+  useOutsideAlerter(wrapperRef, bellRef, close);
+
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
 
@@ -50,7 +56,7 @@ function Modal({ channels = ['web3'], ...props }: ModalProps): JSX.Element {
       <Notifications
         channels={channels}
         notifications={props?.notifications}
-        onModalClose={() => {}}
+        onModalClose={close}
         onBackClick={props?.onBackClick}
       />
     </div>
@@ -68,14 +74,7 @@ export default function NotificationModal({
       <ApiProvider dapp={props.publicKey.toBase58()}>
         <DialectProvider publicKey={props.publicKey}>
           <DialectThemeProvider theme={theme} variables={variables}>
-            <Modal
-              channels={channels}
-              notifications={props?.notifications}
-              wallet={props?.wallet}
-              network={props?.network}
-              rpcUrl={props?.rpcUrl}
-              onBackClick={props?.onBackClick}
-            />
+            <Modal channels={channels} {...props} />
           </DialectThemeProvider>
         </DialectProvider>
       </ApiProvider>
