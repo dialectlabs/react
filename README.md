@@ -126,6 +126,7 @@ For example you want to make changes in `dialect-react` library
 Run
 ```shell
 yarn dev:react
+yarn dev:react-ui
 ````
 
 All of the above changes require restarting the next server and clearing cache (just in case), if you've already started it.
