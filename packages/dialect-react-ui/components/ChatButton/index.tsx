@@ -1,4 +1,4 @@
-import { useEffect, useRef, RefObject } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   ApiProvider,
   connected,
@@ -18,6 +18,7 @@ import Chat from '../Chat';
 import IconButton from '../IconButton';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 
 type PropTypes = {
   id: string;
@@ -29,35 +30,6 @@ type PropTypes = {
   bellClassName?: string;
   bellStyle?: object;
 };
-
-function useOutsideAlerter(
-  wrapperRef: RefObject<HTMLDivElement>,
-  bellRef: RefObject<HTMLButtonElement>,
-  close: CallableFunction
-) {
-  useEffect(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node) &&
-        bellRef.current &&
-        !bellRef.current.contains(event.target as Node)
-      ) {
-        close();
-      }
-    }
-
-    // Bind the event listener
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [wrapperRef, bellRef, close]);
-}
 
 function WrappedChatButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
