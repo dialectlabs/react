@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import type * as anchor from '@project-serum/anchor';
 import {
   ApiProvider,
@@ -20,9 +20,12 @@ import {
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
+import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import clsx from 'clsx';
 
 export type PropTypes = {
+  id: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -37,44 +40,18 @@ export type PropTypes = {
   pollingInterval?: number;
 };
 
-export function useOutsideAlerter(
-  ref: React.MutableRefObject<null>,
-  bellRef: React.MutableRefObject<null>,
-  setOpen: CallableFunction
-) {
-  useEffect(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        ref.current &&
-        !ref.current.contains(event.target) &&
-        bellRef.current &&
-        !bellRef.current.contains(event.target)
-      ) {
-        setOpen(false);
-      }
-    }
-
-    // Bind the event listener
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [ref, bellRef, setOpen]);
-}
-
 function WrappedNotificationsButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
-  const wrapperRef = useRef(null);
-  const bellRef = useRef(null);
-  const [open, setOpen] = useState(false);
+  const { ui, open, close } = useDialectUiId(props.id);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const bellRef = useRef<HTMLButtonElement>(null);
+
   const [hasNewMessages, setHasNewMessages] = useState(false);
 
-  useOutsideAlerter(wrapperRef, bellRef, setOpen);
+  useOutsideAlerter(wrapperRef, bellRef, close);
+
   const { setWallet, setNetwork, setRpcUrl, saveLastReadMessage } = useApi();
   const isWalletConnected = connected(props.wallet);
 
@@ -107,12 +84,12 @@ function WrappedNotificationsButton(
 
   useEffect(() => {
     // Prevent scrolling of backdrop content on mobile
-    document.documentElement.classList[open && isMobile ? 'add' : 'remove'](
+    document.documentElement.classList[ui?.open && isMobile ? 'add' : 'remove'](
       'dt-overflow-hidden',
       'dt-static',
       'sm:dt-overflow-auto'
     );
-  }, [open, isMobile]);
+  }, [ui?.open, isMobile]);
 
   const { colors, bellButton, icons, modalWrapper, animations } = useTheme();
 
@@ -139,9 +116,13 @@ function WrappedNotificationsButton(
           bellButton
         )}
         icon={<icons.bell className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
-        onClick={() => setOpen(!open)}
+        onClick={ui?.open ? close : open}
       />
-      <Transition className={modalWrapper} show={open} {...animations.popup}>
+      <Transition
+        className={modalWrapper}
+        show={ui?.open ?? false}
+        {...animations.popup}
+      >
         <div
           ref={wrapperRef}
           className="dt-w-full dt-h-full"
@@ -152,7 +133,7 @@ function WrappedNotificationsButton(
           <Notifications
             channels={props.channels}
             notifications={props?.notifications}
-            onModalClose={() => setOpen(false)}
+            onModalClose={close}
           />
         </div>
       </Transition>
