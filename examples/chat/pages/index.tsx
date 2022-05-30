@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-import { ChatButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
+import {
+  ChatButton,
+  DialectUiManagementProvider,
+  IncomingThemeVariables,
+} from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { defaultVariables } from '@dialectlabs/react-ui';
@@ -80,6 +84,7 @@ function AuthedHome() {
       <div className="flex flex-col h-screen bg-white dark:bg-black">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <ChatButton
+            id="dialect-chat"
             wallet={wallet}
             network={'localnet'}
             theme={theme}
@@ -105,7 +110,9 @@ function AuthedHome() {
 export default function Home(): JSX.Element {
   return (
     <WalletContext>
-      <AuthedHome />
+      <DialectUiManagementProvider>
+        <AuthedHome />
+      </DialectUiManagementProvider>
     </WalletContext>
   );
 }

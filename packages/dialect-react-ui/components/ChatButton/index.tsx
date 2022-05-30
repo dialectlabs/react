@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, RefObject } from 'react';
 import {
   ApiProvider,
   connected,
@@ -17,8 +17,10 @@ import {
 import Chat from '../Chat';
 import IconButton from '../IconButton';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 
 type PropTypes = {
+  id: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -29,9 +31,9 @@ type PropTypes = {
 };
 
 function useOutsideAlerter(
-  ref: MutableRefObject<null>,
-  bellRef: MutableRefObject<null>,
-  setOpen: CallableFunction
+  wrapperRef: RefObject<HTMLDivElement>,
+  bellRef: RefObject<HTMLButtonElement>,
+  close: CallableFunction
 ) {
   useEffect(() => {
     /**
@@ -39,12 +41,12 @@ function useOutsideAlerter(
      */
     function handleClickOutside(event: MouseEvent) {
       if (
-        ref.current &&
-        !ref.current.contains(event.target) &&
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node) &&
         bellRef.current &&
-        !bellRef.current.contains(event.target)
+        !bellRef.current.contains(event.target as Node)
       ) {
-        setOpen(false);
+        close();
       }
     }
 
@@ -54,16 +56,18 @@ function useOutsideAlerter(
       // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [ref, bellRef, setOpen]);
+  }, [wrapperRef, bellRef, close]);
 }
 
 function WrappedChatButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
-  const wrapperRef = useRef(null);
-  const bellRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  useOutsideAlerter(wrapperRef, bellRef, setOpen);
+  const { ui, open, close } = useDialectUiId(props.id);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const bellRef = useRef<HTMLButtonElement>(null);
+  useOutsideAlerter(wrapperRef, bellRef, close);
+
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
 
@@ -94,17 +98,15 @@ function WrappedChatButton(
           bellButton
         )}
         icon={<icons.chat className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
-        onClick={() => setOpen(!open)}
+        onClick={ui?.open ? close : open}
       ></IconButton>
-      <Transition className={modalWrapper} show={open} {...animations.popup}>
-        <div
-          ref={wrapperRef}
-          className="dt-w-full dt-h-full"
-          // TODO: investigate blur
-          // className="dt-w-full dt-h-full bg-white/10"
-          // style={{ backdropFilter: 'blur(132px)' }}
-        >
-          <Chat onChatClose={() => setOpen(false)} />
+      <Transition
+        className={modalWrapper}
+        show={ui?.open ?? false}
+        {...animations.popup}
+      >
+        <div ref={wrapperRef} className="dt-w-full dt-h-full">
+          <Chat onChatClose={close} />
         </div>
       </Transition>
     </div>
