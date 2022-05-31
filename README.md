@@ -64,6 +64,31 @@ The component above is a self-contained button that opens a notifications modal 
 2. `publicKey` – The public key associated with your project's messaging keypair. All notifications sent to your users are signed and written on-chain using this keypair.
 3. `network` – Which network to target. `localnet`, `devnet`, & `mainnet-beta` are supported.
 
+### Embed a full inbox view in your website
+
+```typescript
+import '@dialectlabs/react-ui/index.css';
+
+import { Inbox } from '@dialectlabs/react-ui';
+import { useWallet } from '@solana/wallet-adapter-react';
+
+// ...
+const wallet = useWallet();
+
+return <Inbox 
+  wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600" 
+  wallet={wallet} 
+/>;
+
+// ...
+```
+
+The component above contains a wallet's current inbox of current chats/notifications. From this inbox a user can create chats, browse chats, and send messages. Props are outlined as follows.
+
+1. `wallet` – your user's wallet, used by Dialect to identify relevant messages and sign transactions.
+2. `wrapperClassName` – *optional* - a string representation of the class attribute on the inbox's *container* view, both augments and overrides Dialect styling.
+3. `contentWrapperClassName` – *optional* - a string representation of the class attribute on the inbox's *content* view, augments Dialect styling.
+
 ### Embed wallet-to-wallet chat in your navbar
 
 ```typescript
