@@ -124,9 +124,10 @@ Choose one of the `examples/` apps you'd like to do development from and then ma
 For example you want to make changes in `dialect-react` library
 
 Run
+
 ```shell
 yarn dev:react
-````
+```
 
 All of the above changes require restarting the next server and clearing cache (just in case), if you've already started it.
 
@@ -149,11 +150,14 @@ Now you have a hot reload of the packages in the workspace.
 For example you want to make changes in `dialect-react` library and see changes in another project
 
 1. Link `dialect-react` library
+
 ```shell
 cd packages/dialect-react
 yarn link
 ```
+
 2. Link `react` and `react-dom` libraries. This is necessary since you shouldn't have two different react libraries in one project
+
 ```shell
 cd node_modules/react
 yarn link
@@ -161,14 +165,18 @@ yarn link
 cd node_modules/react-dom
 yarn link
 ```
+
 3. Go to your project and link libraries
+
 ```shell
 cd my-project
 yarn link @dialectlabs/react
 yarn link react
 yarn link react-dom
 ```
+
 4. Run library bundler in dev mode
+
 ```shell
 yarn dev:react
 ```
@@ -181,8 +189,9 @@ We use `svgr` to manage a minimal set of svg icons for Dialect's `dialect-react-
 
 Store original svgs in `Icon/source/`, then run inside `Icon` directory to convert:
 
-```
-  npx @svgr/cli --typescript --out-dir . -- source
+```shell
+  cd packages/dialect-react-ui/components/Icon/
+  npx @svgr/cli --typescript --out-dir .  --ignore-existing -- source
 ```
 
 Import Icon as a React Component from `Icon`, e.g. (`import {BackArrow} from '/Icon/'`). See [SVGR Command Line guide](https://react-svgr.com/docs/cli/) for more details.

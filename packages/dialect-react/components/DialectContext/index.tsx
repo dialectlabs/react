@@ -432,6 +432,43 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     }
   }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
+  const pushOrUpdateSending = useCallback(
+    (dialectAddress, id, payload) => {
+      setSendingMessagesMap((prev) => {
+        const next = { ...prev };
+        let thread = next[dialectAddress];
+        if (thread?.length) {
+          if (payload === null) {
+            thread = thread.filter((m: Message) => m.id !== id);
+          } else {
+            const isExists = thread.find((m: Message) => m.id === id);
+            if (isExists) {
+              thread = thread.map((m: Message) =>
+                m.id === id ? { ...m, ...payload } : m
+              );
+            } else {
+              thread = [...thread, payload];
+            }
+          }
+        } else {
+          if (payload !== null) {
+            thread = [payload];
+          }
+        }
+        next[dialectAddress] = thread;
+        return next;
+      });
+    },
+    [setSendingMessagesMap]
+  );
+
+  const cancelSendingMessage = useCallback(
+    (id: number) => {
+      pushOrUpdateSending(dialectAddress, id, null);
+    },
+    [setSendingMessagesMap, dialectAddress]
+  );
+
   const sendMessageWrapper = useCallback(
     async (text: string, encrypted = false, messageId?: number) => {
       if (!program || !isWalletConnected || !dialect) return;
@@ -443,15 +480,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       try {
         // TODO: optimistic ui show message before actually sent
         if (messageId) {
-          setSendingMessagesMap((prev) => {
-            prev[dialectAddress]?.length
-              ? (prev[dialectAddress] = prev[dialectAddress].map((m: Message) =>
-                  m.id === messageId
-                    ? { ...m, error: undefined, isSending: true }
-                    : m
-                ))
-              : (prev[dialectAddress] = [messageMock]);
-            return prev;
+          pushOrUpdateSending(dialectAddress, id, {
+            error: undefined,
+            isSending: true,
           });
         } else {
           const messageMock = {
@@ -460,12 +491,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
             owner: wallet?.publicKey,
             isSending: true,
           };
-          setSendingMessagesMap((prev) => {
-            prev[dialectAddress]?.length
-              ? prev[dialectAddress].push(messageMock)
-              : (prev[dialectAddress] = [messageMock]);
-            return prev;
-          });
+          pushOrUpdateSending(dialectAddress, id, messageMock);
         }
 
         const newMessage = await sendMessage(
@@ -476,26 +502,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         );
 
         await mutateDialect(mergeMessageToDialect(dialect, newMessage), false);
-        setSendingMessagesMap((prev) => {
-          prev[dialectAddress]?.length
-            ? (prev[dialectAddress] = prev[dialectAddress].filter(
-                (m: Message) => m.id !== id
-              ))
-            : (prev[dialectAddress] = []);
-          return prev;
-        });
+        pushOrUpdateSending(dialectAddress, id, null);
       } catch (e) {
         // TODO: implement safer error handling
         setSendMessageError(e as ParsedErrorData);
 
-        setSendingMessagesMap((prev) => {
-          prev[dialectAddress]?.length
-            ? (prev[dialectAddress] = prev[dialectAddress].map((m: Message) => {
-                return m.id === id ? { ...m, isSending: false, error: e } : m;
-              }))
-            : (prev[dialectAddress] = []);
-          return prev;
-        });
+        pushOrUpdateSending(dialectAddress, id, { isSending: false, error: e });
 
         // Passing through the error, in case for additional UI error handling
         throw e;
@@ -504,21 +516,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       }
     },
     [getEncryptionProps, isWalletConnected, program, dialect, mutateDialect]
-  );
-
-  const cancelSendingMessage = useCallback(
-    (id: number) => {
-      setSendingMessagesMap((prev) => {
-        const next = { ...prev };
-        next[dialectAddress]?.length
-          ? (next[dialectAddress] = next[dialectAddress].filter(
-              (m: Message) => m.id !== id
-            ))
-          : (next[dialectAddress] = []);
-        return next;
-      });
-    },
-    [setSendingMessagesMap, dialectAddress]
   );
 
   // const messages = mockMessages;

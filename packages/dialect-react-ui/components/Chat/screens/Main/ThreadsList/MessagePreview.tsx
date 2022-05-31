@@ -4,13 +4,14 @@ import {
   formatTimestamp,
   useDialect,
 } from '@dialectlabs/react';
-import { display } from '@dialectlabs/web3';
-import { Message } from '@dialectlabs/web3';
-import Avatar from '../../../../Avatar';
 import clsx from 'clsx';
-import { DisplayAddress } from '../../../../DisplayAddress';
+import { display } from '@dialectlabs/web3';
+import type { Message } from '@dialectlabs/web3';
+import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/ThemeProvider';
+import { DisplayAddress } from '../../../../DisplayAddress';
 import { Divider } from '../../../../common';
+import MessageStatus from '../../../MessageStatus';
 
 type PropsType = {
   dialect: DialectAccount;
@@ -63,17 +64,16 @@ export default function MessagePreview({
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
   );
   const { sendingMessagesMap } = useDialect();
-  const sendingMessages = sendingMessagesMap[dialect?.publicKey.toBase58()];
+  const sendingMessages =
+    sendingMessagesMap[dialect?.publicKey.toBase58()] || [];
   const messages = [].concat(
-    sendingMessages?.reverse() || [],
+    [...sendingMessages].reverse() || [],
     dialect.dialect.messages || []
   );
   const firstMessage = messages && messages?.length > 0 && messages[0];
   let timestamp = formatTimestamp(dialect.dialect.lastMessageTimestamp);
-  if (firstMessage.isSending) {
-    timestamp = 'Sending...';
-  } else if (firstMessage.error) {
-    timestamp = <span className="dt-text-red-500">Error</span>;
+  if (firstMessage?.isSending || firstMessage?.error) {
+    timestamp = null;
   }
 
   return (
@@ -101,7 +101,16 @@ export default function MessagePreview({
             firstMessage={firstMessage}
           />
         </div>
-        <div className="dt-text-xs dt-opacity-30">{timestamp}</div>
+        <div className="dt-text-xs dt-opacity-30">
+          {timestamp ? (
+            timestamp
+          ) : (
+            <MessageStatus
+              isSending={firstMessage?.isSending}
+              error={firstMessage?.error}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

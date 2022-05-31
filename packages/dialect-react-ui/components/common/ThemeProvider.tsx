@@ -8,6 +8,8 @@ import {
   BackArrow,
   ChatBubble,
   Chevron,
+  Checkmark,
+  Error as ErrorIcon,
   Compose,
   Gear,
   NotConnected,
@@ -57,6 +59,8 @@ export type ThemeIcons =
   | 'back'
   | 'chat'
   | 'chevron'
+  | 'checkmark'
+  | 'error'
   | 'compose'
   | 'settings'
   | 'notConnected'
@@ -196,6 +200,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       chat: ChatBubble,
       compose: Compose,
       chevron: Chevron,
+      checkmark: Checkmark,
+      error: ErrorIcon,
       settings: Gear,
       notConnected: NotConnected,
       noNotifications: NoNotifications,
@@ -288,6 +294,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
+      checkmark: Checkmark,
+      error: ErrorIcon,
       chevron: Chevron,
       compose: Compose,
       settings: Gear,
