@@ -83,7 +83,7 @@ return <Inbox
 // ...
 ```
 
-The component above contains a wallet's current inbox of current chats/notifications. From this inbox, a user can create, browse, and send chats of their own. Props are outlined as follows.
+The component above contains a wallet's current inbox of current chats/notifications. From this inbox a user can create chats, browse chats, and send messages. Props are outlined as follows.
 
 1. `wallet` – your user's wallet, used by Dialect to identify relevant messages and sign transactions.
 2. `wrapperClassName` – *optional* - a string representation of the class attribute on the inbox's *container* view, both augments and overrides Dialect styling.
