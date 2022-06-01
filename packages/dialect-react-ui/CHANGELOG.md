@@ -1,6 +1,13 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+
+## [0.8.8] - 2022-06-01
+
+- Fix published version build
+
+## [0.8.7] - 2022-06-01
+
 - Add solana name service support
 
 ## [0.8.6] - 2022-05-11
