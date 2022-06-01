@@ -1,35 +1,22 @@
-import cs from '../../../utils/classNames';
 import { Centered } from '../../common';
 import { useTheme } from '../../common/providers/DialectThemeProvider';
-import IconButton from '../../IconButton';
+import { Header } from '../../Header';
 
-type PropsType = {
+interface Props {
   type: 'NoConnection' | 'NoWallet';
   inbox?: boolean;
-  onModalClose?: () => void;
-};
+  onChatClose?: () => void;
+  onChatOpen?: () => void;
+}
 
-const Error = ({ inbox, type, onModalClose }: PropsType) => {
-  const { header, icons } = useTheme();
+const Error = ({ inbox, type, onChatClose, onChatOpen }: Props) => {
+  const { icons } = useTheme();
 
   if (!type) return null;
 
   return (
     <>
-      {!inbox && onModalClose ? (
-        <div className="sm:dt-hidden">
-          <div
-            className={cs(
-              'dt-flex dt-flex-row dt-items-center dt-justify-end',
-              header
-            )}
-          >
-            <div className="dt-ml-3">
-              <IconButton icon={<icons.x />} onClick={onModalClose} />
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <Header inbox={inbox} onClose={onChatClose} onHeaderClick={onChatOpen} />
       {type === 'NoConnection' && (
         <Centered>
           <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />

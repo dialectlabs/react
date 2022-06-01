@@ -46,12 +46,24 @@ export default function Chat({
 
   const routes: Record<Routes, React.ReactNode> = {
     [Routes.NoConnection]: (
-      <Error type="NoConnection" onModalClose={onChatClose} inbox={inbox} />
+      <Error
+        type="NoConnection"
+        onChatClose={onChatClose}
+        onChatOpen={onChatOpen}
+        inbox={inbox}
+      />
     ),
     [Routes.NoWallet]: (
-      <Error type="NoWallet" onModalClose={onChatClose} inbox={inbox} />
+      <Error
+        type="NoWallet"
+        onChatClose={onChatClose}
+        onChatOpen={onChatOpen}
+        inbox={inbox}
+      />
     ),
-    [Routes.Main]: <Main onModalClose={onChatClose} inbox={inbox} />,
+    [Routes.Main]: (
+      <Main onChatClose={onChatClose} onChatOpen={onChatOpen} inbox={inbox} />
+    ),
   };
 
   return (
