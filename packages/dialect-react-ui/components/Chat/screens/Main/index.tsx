@@ -2,17 +2,18 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { useDialect } from '@dialectlabs/react';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import IconButton from '../../../IconButton';
 import CreateThread from './pages/CreateThreadPage/CreateThread';
 import ThreadPage from './pages/ThreadPage/';
 import ThreadsList from './ThreadsList';
+import { Header } from '../../../Header';
 
 interface MainProps {
   inbox?: boolean;
-  onModalClose?: () => void;
+  onChatClose?: () => void;
+  onChatOpen?: () => void;
 }
 
-const Main = ({ inbox, onModalClose }: MainProps) => {
+const Main = ({ inbox, onChatClose, onChatOpen }: MainProps) => {
   const { dialectAddress, dialects, setDialectAddress } = useDialect();
 
   const { icons } = useTheme();
@@ -30,25 +31,12 @@ const Main = ({ inbox, onModalClose }: MainProps) => {
           }
         )}
       >
-        <div className="dt-px-4 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold">
-          Messages
-          <div className="dt-flex">
-            {/* TODO: replace with IconButton to be sematic */}
-            <div
-              className="dt-cursor-pointer dt-inline-flex"
-              onClick={() => {
-                setNewThreadOpen(true);
-              }}
-            >
-              <icons.compose />
-            </div>
-            {!inbox && onModalClose && (
-              <div className="sm:dt-hidden dt-ml-3">
-                <IconButton icon={<icons.x />} onClick={onModalClose} />
-              </div>
-            )}
-          </div>
-        </div>
+        <Header inbox={inbox} onClose={onChatClose} onHeaderClick={onChatOpen}>
+          <Header.Icon
+            icon={<icons.compose />}
+            onClick={() => setNewThreadOpen(true)}
+          />
+        </Header>
         <ThreadsList
           chatThreads={dialects}
           onThreadClick={(dialectAccount) => {
@@ -60,7 +48,7 @@ const Main = ({ inbox, onModalClose }: MainProps) => {
       {newThreadOpen ? (
         <CreateThread
           inbox={inbox}
-          onModalClose={onModalClose}
+          onModalClose={onChatClose}
           onCloseRequest={() => {
             setNewThreadOpen(false);
           }}
@@ -68,7 +56,7 @@ const Main = ({ inbox, onModalClose }: MainProps) => {
       ) : (
         <ThreadPage
           inbox={inbox}
-          onModalClose={onModalClose}
+          onModalClose={onChatClose}
           onNewThreadClick={() => setNewThreadOpen(true)}
         />
       )}

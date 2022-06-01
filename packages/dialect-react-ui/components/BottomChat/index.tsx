@@ -59,7 +59,7 @@ function WrappedBottomChat(
       )}
     >
       <div className="dt-w-full dt-h-full">
-        <Chat onChatClose={close} />
+        <Chat onChatClose={close} onChatOpen={open} />
       </div>
     </div>
   );
