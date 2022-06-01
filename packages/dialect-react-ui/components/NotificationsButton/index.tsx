@@ -5,6 +5,7 @@ import {
   connected,
   useApi,
   DialectProvider,
+  useDialect,
 } from '@dialectlabs/react';
 import type { WalletType } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
@@ -32,12 +33,14 @@ export type PropTypes = {
   notifications: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
+  pollingInterval?: number;
 };
 
 export function useOutsideAlerter(
   ref: React.MutableRefObject<null>,
   bellRef: React.MutableRefObject<null>,
-  setOpen: CallableFunction
+  setOpen: CallableFunction,
+  onStateChange?: CallableFunction,
 ) {
   useEffect(() => {
     /**
@@ -72,6 +75,10 @@ function WrappedNotificationsButton(
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
+
+  const { setWeb3PollingInterval } = useDialect();
+
+  props.pollingInterval && setWeb3PollingInterval(props.pollingInterval);
 
   useEffect(
     () => setWallet(connected(props.wallet) ? props.wallet : null),

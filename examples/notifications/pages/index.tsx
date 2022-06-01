@@ -80,6 +80,7 @@ function AuthedHome() {
           notifications={[
             { name: 'Welcome message', detail: 'On thread creation' },
           ]}
+          pollingInterval={15000}
           channels={['web3', 'email', 'sms', 'telegram']}
         />
         <WalletButton />
