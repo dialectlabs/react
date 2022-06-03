@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useApi, useDialect } from '@dialectlabs/react';
 import type { DialectAccount } from '@dialectlabs/react';
@@ -6,9 +6,9 @@ import { display } from '@dialectlabs/web3';
 import { DisplayAddress } from '../../../../../DisplayAddress';
 import { useTheme } from '../../../../../common/providers/DialectThemeProvider';
 import { P } from '../../../../../common/preflighted';
-import IconButton from '../../../../../IconButton';
 import Settings from './Settings';
 import Thread from './Thread';
+import { Header } from '../../../../../Header';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
@@ -83,56 +83,48 @@ const ThreadPage = ({
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1 dt-min-w-[0px]">
-      {/* ↑ The min-width: 0 is used to prevent the column from overflow the container. Explanation: https://makandracards.com/makandra/66994-css-flex-and-min-width */}
-      <div className="dt-px-4 dt-py-1 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-items-center">
-        {/* TODO: replace with IconButton to be sematic */}
-        <div
-          className={clsx('dt-cursor-pointer')}
-          onClick={() => {
-            if (settingsOpen) {
-              setSettingsOpen(false);
-              return;
-            }
-            setDialectAddress('');
-          }}
-        >
-          <icons.back />
-        </div>
-        <div className="dt-flex dt-flex-col dt-items-center">
-          <span className="dt-text-base dt-font-medium dt-text">
-            {dialectFromList && connection ? (
-              <DisplayAddress
-                connection={connection}
-                dialectMembers={dialectFromList?.dialect.members}
-                isLinkable={true}
-              />
+      <Header inbox={inbox} onClose={onModalClose}>
+        <Header.Icons containerOnly position="left">
+          <Header.Icon
+            className={clsx('dt-cursor-pointer')}
+            icon={<icons.back />}
+            onClick={() => {
+              if (settingsOpen) {
+                setSettingsOpen(false);
+                return;
+              }
+              setDialectAddress('');
+            }}
+          />
+        </Header.Icons>
+        <Header.Title align="center">
+          <div className="dt-flex dt-flex-col dt-items-center">
+            <span className="dt-text-base dt-font-medium dt-text">
+              {dialectFromList && connection ? (
+                <DisplayAddress
+                  connection={connection}
+                  dialectMembers={dialectFromList?.dialect.members}
+                  isLinkable={true}
+                />
+              ) : (
+                'Loading thread...'
+              )}
+            </span>
+            {dialect ? (
+              <span className="dt-text-xs dt-opacity-50">{threadType}</span>
             ) : (
-              'Loading thread...'
+              <span className="dt-text-xs dt-opacity-50">Loading thread...</span>
             )}
-          </span>
-          {dialect ? (
-            <span className="dt-text-xs dt-opacity-50">{threadType}</span>
-          ) : (
-            <span className="dt-text-xs dt-opacity-50">Loading thread...</span>
-          )}
-        </div>
-        <div className="dt-flex">
-          {/* TODO: replace with IconButton to be sematic */}
-          <div
-            className={clsx('dt-cursor-pointer', {
-              'dt-invisible': settingsOpen,
-            })}
-            onClick={() => setSettingsOpen((prev) => !prev)}
-          >
-            <icons.settings />
           </div>
-          {!inbox && onModalClose && (
-            <div className="sm:dt-hidden dt-ml-3">
-              <IconButton icon={<icons.x />} onClick={onModalClose} />
-            </div>
-          )}
-        </div>
-      </div>
+        </Header.Title>
+        <Header.Icons>
+          <Header.Icon
+            className={clsx('dt-cursor-pointer', { 'dt-invisible': settingsOpen })}
+            icon={<icons.settings />}
+            onClick={() => setSettingsOpen((prev) => !prev)}
+          />
+        </Header.Icons>
+      </Header>
       <div className={clsx(xPaddedText, 'dt-flex-1 dt-overflow-y-auto')}>
         {settingsOpen ? <Settings /> : <Thread />}
       </div>
