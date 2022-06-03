@@ -32,10 +32,13 @@ const Main = ({ inbox, onChatClose, onChatOpen }: MainProps) => {
         )}
       >
         <Header inbox={inbox} onClose={onChatClose} onHeaderClick={onChatOpen}>
-          <Header.Icon
-            icon={<icons.compose />}
-            onClick={() => setNewThreadOpen(true)}
-          />
+          <Header.Title>Messages</Header.Title>
+          <Header.Icons>
+            <Header.Icon
+              icon={<icons.compose />}
+              onClick={() => setNewThreadOpen(true)}
+            />
+          </Header.Icons>
         </Header>
         <ThreadsList
           chatThreads={dialects}

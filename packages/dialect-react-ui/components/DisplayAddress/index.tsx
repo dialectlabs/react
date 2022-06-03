@@ -142,7 +142,7 @@ export function DisplayAddress({
   isLinkable = false,
 }: {
   connection: Connection;
-  dialectMembers: Member[] | undefined;
+  dialectMembers: Member[];
   isLinkable?: boolean;
 }) {
   const { wallet } = useApi();

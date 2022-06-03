@@ -16,7 +16,10 @@ const Error = ({ inbox, type, onChatClose, onChatOpen }: Props) => {
 
   return (
     <>
-      <Header inbox={inbox} onClose={onChatClose} onHeaderClick={onChatOpen} />
+      <Header inbox={inbox} onClose={onChatClose} onHeaderClick={onChatOpen}>
+        <Header.Title>Messages</Header.Title>
+        <Header.Icons />
+      </Header>
       {type === 'NoConnection' && (
         <Centered>
           <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />

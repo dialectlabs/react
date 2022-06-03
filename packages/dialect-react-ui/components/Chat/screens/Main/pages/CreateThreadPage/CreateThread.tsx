@@ -30,8 +30,8 @@ import {
 } from '../../../../../common';
 import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
 import { Lock, NoLock } from '../../../../../Icon';
-import IconButton from '../../../../../IconButton';
 import debounce from '../../../../../../utils/debounce';
+import { Header } from '../../../../../Header';
 
 interface CreateThreadProps {
   inbox?: boolean;
@@ -464,25 +464,16 @@ export default function CreateThread({
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
-      <div className="dt-px-4 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold dt-items-center">
-        {/* TODO: replace with IconButton to be sematic */}
-        <div
-          className="dt-cursor-pointer"
-          onClick={() => {
-            onCloseRequest?.();
-          }}
-        >
-          <icons.back />
-        </div>
-        Send Message
-        <div>
-          {!inbox && onModalClose && (
-            <div className="sm:dt-hidden dt-ml-3">
-              <IconButton icon={<icons.x />} onClick={onModalClose} />
-            </div>
-          )}
-        </div>
-      </div>
+      <Header inbox={inbox} onClose={onModalClose}>
+        <Header.Icons containerOnly position="left">
+          <Header.Icon
+            icon={<icons.back />}
+            onClick={() => onCloseRequest?.()}
+          />
+        </Header.Icons>
+        <Header.Title>Send Message</Header.Title>
+        <Header.Icons />
+      </Header>
 
       <div className="dt-flex-1 dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col">
         <H1
