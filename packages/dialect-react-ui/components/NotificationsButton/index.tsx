@@ -5,6 +5,7 @@ import {
   connected,
   useApi,
   DialectProvider,
+  useDialect,
 } from '@dialectlabs/react';
 import type { WalletType } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
@@ -69,9 +70,40 @@ function WrappedNotificationsButton(
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [hasNewMessages, setHasNewMessage] = useState(false);
+
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
+
+  const { messages } = useDialect();
+
+  useEffect(() => {
+    if (!window) return;
+
+    const lastMsgTimestampStorage = window.localStorage.getItem('lastMsg');
+    const lastMsgDialect = messages?.[0];
+
+    if (!open) {
+      if (lastMsgTimestampStorage !== lastMsgDialect?.timestamp.toString()) {
+        setHasNewMessage(true);
+      } else {
+        setHasNewMessage(false);
+      }
+    }
+
+    if (!lastMsgDialect) {
+      setHasNewMessage(false);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (!window) return;
+    if (messages.length !== 0 && open) {
+      window.localStorage.setItem('lastMsg', messages[0].timestamp);
+      setHasNewMessage(false);
+    }
+  }, [open]);
 
   useEffect(
     () => setWallet(connected(props.wallet) ? props.wallet : null),
@@ -103,6 +135,14 @@ function WrappedNotificationsButton(
         colors.primary
       )}
     >
+      {hasNewMessages && (
+        <div
+          className={cs(
+            'dt-absolute dt-h-3 dt-w-3 dt-z-50 dt-rounded-full',
+            colors.notificationBadgeColor
+          )}
+        ></div>
+      )}
       <IconButton
         ref={bellRef}
         className={cs(
