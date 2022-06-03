@@ -20,6 +20,7 @@ import {
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
+import clsx from 'clsx';
 
 export type PropTypes = {
   wallet: WalletType;
@@ -116,14 +117,14 @@ function WrappedNotificationsButton(
 
   return (
     <div
-      className={cs(
+      className={clsx(
         'dt-flex dt-flex-col dt-items-end dt-relative',
         colors.primary
       )}
     >
       {hasNewMessages && (
         <div
-          className={cs(
+          className={clsx(
             'dt-absolute dt-h-3 dt-w-3 dt-z-50 dt-rounded-full',
             colors.notificationBadgeColor
           )}
@@ -131,7 +132,7 @@ function WrappedNotificationsButton(
       )}
       <IconButton
         ref={bellRef}
-        className={cs(
+        className={clsx(
           'dt-flex dt-items-center dt-justify-center dt-rounded-full focus:dt-outline-none dt-shadow-md',
           colors.bg,
           bellButton
