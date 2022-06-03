@@ -88,6 +88,11 @@ type ValueType = {
     code: string
   ) => Promise<void>;
   resendCode: (wallet: WalletType, address: AddressType) => Promise<void>;
+  getLastReadMessage: (threadId: string) => string | null;
+  saveLastReadMessage: (
+    threadId: string,
+    timestamp: string | undefined
+  ) => void;
 };
 
 const ApiContext = createContext<ValueType | null>(null);
@@ -221,6 +226,43 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     [dapp, isWalletConnected]
   );
 
+  const getLastReadMessageWrapper = (threadId: string) => {
+    if (!window) return;
+    const dialectReadReceipts = window.localStorage.getItem(
+      'dialectReadReceipts'
+    );
+
+    if (!dialectReadReceipts) return null;
+
+    const dialectReadReceiptsJSON = JSON.parse(dialectReadReceipts);
+    return dialectReadReceiptsJSON[threadId] || null;
+  };
+
+  const saveLastReadMessageWrapper = (
+    threadId: string,
+    timestamp: string | undefined
+  ) => {
+    if (!window || !timestamp) return;
+
+    const dialectReadReceipts = window.localStorage.getItem(
+      'dialectReadReceipts'
+    );
+
+    let dialectReadReceiptsObj: any = {};
+
+    if (!dialectReadReceipts) {
+      dialectReadReceiptsObj[threadId] = timestamp;
+    } else {
+      dialectReadReceiptsObj = JSON.parse(dialectReadReceipts);
+      dialectReadReceiptsObj[threadId] = timestamp;
+    }
+
+    window.localStorage.setItem(
+      'dialectReadReceipts',
+      JSON.stringify(dialectReadReceiptsObj)
+    );
+  };
+
   // TODO: better naming or replace addresses
   const addressesObj = useMemo(
     () =>
@@ -247,6 +289,8 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     deleteAddress: deleteAddressWrapper,
     verifyCode: verifyCodeWrapper,
     resendCode: resendCodeWrapper,
+    getLastReadMessage: getLastReadMessageWrapper,
+    saveLastReadMessage: saveLastReadMessageWrapper,
   };
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;

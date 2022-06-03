@@ -70,38 +70,24 @@ function WrappedNotificationsButton(
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [hasNewMessages, setHasNewMessage] = useState(false);
+  const [hasNewMessages, setHasNewMessages] = useState(false);
 
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
-  const { setWallet, setNetwork, setRpcUrl } = useApi();
+  const { setWallet, setNetwork, setRpcUrl, saveLastReadMessage } = useApi();
   const isWalletConnected = connected(props.wallet);
 
-  const { messages } = useDialect();
+  const { messages, checkUnreadMessages } = useDialect();
 
   useEffect(() => {
-    if (!window) return;
-
-    const lastMsgTimestampStorage = window.localStorage.getItem('lastMsg');
-    const lastMsgDialect = messages?.[0];
-
     if (!open) {
-      if (lastMsgTimestampStorage !== lastMsgDialect?.timestamp.toString()) {
-        setHasNewMessage(true);
-      } else {
-        setHasNewMessage(false);
-      }
-    }
-
-    if (!lastMsgDialect) {
-      setHasNewMessage(false);
+      setHasNewMessages(checkUnreadMessages('notifications'));
     }
   }, [messages]);
 
   useEffect(() => {
-    if (!window) return;
-    if (messages.length !== 0 && open) {
-      window.localStorage.setItem('lastMsg', messages[0].timestamp);
-      setHasNewMessage(false);
+    if (open) {
+      saveLastReadMessage('notifications', messages[0]?.timestamp);
+      setHasNewMessages(checkUnreadMessages('notifications'));
     }
   }, [open]);
 

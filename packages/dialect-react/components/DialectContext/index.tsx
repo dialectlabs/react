@@ -18,11 +18,7 @@ import {
   getDialectAddressWithOtherMember,
   sendMessage,
 } from '../../api';
-import {
-  noAccount,
-  ParsedErrorData,
-  ParsedErrorType,
-} from '../../utils/errors';
+import { ParsedErrorData, ParsedErrorType } from '../../utils/errors';
 import {
   connected,
   getMessageHash,
@@ -92,6 +88,7 @@ type DialectContextType = {
   sendMessage: (text: string, encrypted?: boolean) => Promise<void>;
   sendingMessage: boolean;
   sendMessageError: ParsedErrorData | null;
+  checkUnreadMessages: (threadId: string) => boolean;
 };
 
 const DialectContext = createContext<DialectContextType | null>(null);
@@ -124,7 +121,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [sendMessageError, setSendMessageError] =
     React.useState<ParsedErrorData | null>(null);
 
-  const { wallet, program, walletName } = useApi();
+  const { wallet, program, walletName, getLastReadMessage } = useApi();
   const isWalletConnected = connected(wallet);
   const [messages, setMessages] = React.useState<Message[]>([]);
 
@@ -231,9 +228,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         program as anchor.Program,
         props.publicKey
       ).then(([address, _]: [anchor.web3.PublicKey, number]) => {
-            setDialectAddress(address.toBase58())
-          }
-      );
+        setDialectAddress(address.toBase58());
+      });
     }
     return;
   }, [program, props.publicKey]);
@@ -427,6 +423,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     [getEncryptionProps, isWalletConnected, program, dialect, mutateDialect]
   );
 
+  const checkUnreadMessages = (threadId: string) => {
+    const lastReadMessage = getLastReadMessage(threadId);
+    return lastReadMessage !== messages[0]?.timestamp && messages.length > 0;
+  };
+
   // const messages = mockMessages;
   const isDialectAvailable = Boolean(dialect);
   const isMetadataAvailable = Boolean(metadata);
@@ -460,6 +461,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     sendMessage: sendMessageWrapper,
     sendingMessage,
     sendMessageError,
+    checkUnreadMessages,
   };
 
   return (
