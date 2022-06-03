@@ -39,8 +39,7 @@ export type PropTypes = {
 export function useOutsideAlerter(
   ref: React.MutableRefObject<null>,
   bellRef: React.MutableRefObject<null>,
-  setOpen: CallableFunction,
-  onStateChange?: CallableFunction,
+  setOpen: CallableFunction
 ) {
   useEffect(() => {
     /**
@@ -75,10 +74,6 @@ function WrappedNotificationsButton(
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
-
-  const { setWeb3PollingInterval } = useDialect();
-
-  props.pollingInterval && setWeb3PollingInterval(props.pollingInterval);
 
   useEffect(
     () => setWallet(connected(props.wallet) ? props.wallet : null),
@@ -148,7 +143,10 @@ export default function NotificationsButton({
   return (
     <div className="dialect">
       <ApiProvider dapp={props.publicKey.toBase58()}>
-        <DialectProvider publicKey={props.publicKey}>
+        <DialectProvider
+          pollingInterval={props.pollingInterval}
+          publicKey={props.publicKey}
+        >
           <ThemeProvider theme={theme} variables={variables}>
             <WrappedNotificationsButton channels={channels} {...props} />
           </ThemeProvider>

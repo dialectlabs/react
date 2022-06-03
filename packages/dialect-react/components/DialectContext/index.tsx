@@ -56,6 +56,7 @@ const swrFetchMetadata = (
 type PropsType = {
   children: JSX.Element;
   publicKey?: anchor.web3.PublicKey;
+  pollingInterval?: number;
 };
 
 // TODO: revisit api functions and errors to be moved out from context
@@ -92,7 +93,6 @@ type DialectContextType = {
   sendMessage: (text: string, encrypted?: boolean) => Promise<void>;
   sendingMessage: boolean;
   sendMessageError: ParsedErrorData | null;
-  setWeb3PollingInterval: (ms: number) => void;
 };
 
 const DialectContext = createContext<DialectContextType | null>(null);
@@ -132,7 +132,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [encryptionProps, setEncryptionProps] =
     React.useState<EncryptionProps | null>(null);
 
-  const [pollingIntervalMS, setPollingIntervalMS] = React.useState<number>(POLLING_INTERVAL_MS);  
+  const pollingInterval = props.pollingInterval || POLLING_INTERVAL_MS;
 
   const getEncryptionProps =
     useCallback(async (): Promise<EncryptionProps | null> => {
@@ -185,7 +185,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     false && wallet && program ? ['metadata', program] : null,
     swrFetchMetadata,
     {
-      refreshInterval: pollingIntervalMS,
+      refreshInterval: pollingInterval,
     }
   );
 
@@ -199,7 +199,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       : null,
     swrFetchDialects,
     {
-      refreshInterval: pollingIntervalMS,
+      refreshInterval: pollingInterval,
     }
   );
 
@@ -224,7 +224,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       : null,
     swrFetchDialect,
     {
-      refreshInterval: pollingIntervalMS,
+      refreshInterval: pollingInterval,
     }
   );
 
@@ -234,9 +234,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         program as anchor.Program,
         props.publicKey
       ).then(([address, _]: [anchor.web3.PublicKey, number]) => {
-            setDialectAddress(address.toBase58())
-          }
-      );
+        setDialectAddress(address.toBase58());
+      });
     }
     return;
   }, [program, props.publicKey]);
@@ -430,10 +429,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     [getEncryptionProps, isWalletConnected, program, dialect, mutateDialect]
   );
 
-  const setWeb3PollingInterval = (ms: number) => {
-    setPollingIntervalMS(ms);
-  };
-
   // const messages = mockMessages;
   const isDialectAvailable = Boolean(dialect);
   const isMetadataAvailable = Boolean(metadata);
@@ -467,7 +462,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     sendMessage: sendMessageWrapper,
     sendingMessage,
     sendMessageError,
-    setWeb3PollingInterval
   };
 
   return (
