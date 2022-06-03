@@ -1,6 +1,5 @@
 import type { KeyboardEvent } from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import * as anchor from '@project-serum/anchor';
 import { display } from '@dialectlabs/web3';
 import type { Member } from '@dialectlabs/web3';
 import {
@@ -32,6 +31,7 @@ import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
 import { Lock, NoLock } from '../../../../../Icon';
 import debounce from '../../../../../../utils/debounce';
 import { Header } from '../../../../../Header';
+import { Connection, PublicKey } from '@solana/web3.js';
 
 interface CreateThreadProps {
   inbox?: boolean;
@@ -40,7 +40,7 @@ interface CreateThreadProps {
   onModalClose?: () => void;
 }
 
-const SOL_TLD_AUTHORITY = new anchor.web3.PublicKey(
+const SOL_TLD_AUTHORITY = new PublicKey(
   '58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx'
 );
 
@@ -234,10 +234,7 @@ const parseSNSDomain = (domainString: string): string | undefined => {
   return domainName;
 };
 
-const tryFetchSNSDomain = async (
-  connection: anchor.web3.Connection,
-  domainName: string
-): Promise<anchor.web3.PublicKey | null> => {
+const tryFetchSNSDomain = async (connection: Connection, domainName: string): Promise<anchor.web3.PublicKey | null> => {
   try {
     const hashedName = await getHashedName(domainName);
 
