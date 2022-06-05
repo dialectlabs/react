@@ -10,6 +10,11 @@
 - [Low level hooks](#low-level-hooks)
 - [High level hooks](#high-level-hooks)
 
+### tbd
+
+- thread preview
+- dialect cloud api(crud addresses, code verify/resend)
+
 ## Context initialization
 
 ### Minimal context setup
@@ -86,23 +91,6 @@ const sdk = useDialectSdk();
 const threads = await sdk.threads.findAll();
 ```
 
-#### useMessaging
-
-```ts
-const messaging = useMessaging();
-
-await messaging.create({
-  me: {
-    scopes: [DialectMemberScope.WRITE],
-  },
-  otherMember: {
-    publicKey: Keypair.generate().publicKey,
-    scopes: [DialectMemberScope.ADMIN],
-  },
-  encrypted: false,
-});
-```
-
 #### useThreads
 
 ```ts
@@ -114,16 +102,23 @@ interface UseThreadsParams {
 interface UseThreadsValue {
   // sdk
   threads: Thread[];
+  create(command: CreateDialectCommand): Promise<Thread>;
   // react-lib
   isFetchingThreads: boolean;
-  errorFetchingThreads: DialectSdkError;
+  errorFetchingThreads: DialectSdkError | null;
+  isCreatingThread: boolean;
+  errorCreatingThread: DialectSdkError | null;
 }
 
 const useThreads: (params?: UseThreadsParams) => UseThreadsValue;
 
 // example
 const { threads } = useThreads();
-const { threads } = useThreads({ refreshInterval: 3000 });
+const { threads, create, isCreatingThread } = useThreads({
+  refreshInterval: 3000,
+});
+
+create(params);
 ```
 
 #### useThread
@@ -210,10 +205,16 @@ const messages = useThreadMessages({
 #### setActiveThread
 
 ```ts
+// definition
 interface SetActiveThreadParams {
-  address: PublicKey;
+  address: PublicKey | null;
 }
-const setActiveThread: (params: UseThreadParams) => void;
+
+const setActiveThread: (params: SetActiveThreadParams) => void;
+
+// example
+const { address } = useThread({ sns: 'dialect.sol' });
+setActiveThread({ address: 'D1ALECT' });
 ```
 
 #### useActiveThread
@@ -226,6 +227,7 @@ interface ActiveThread {
   otherMember: DialectMember;
   encryptionEnabled: boolean;
   canBeDecrypted: boolean;
+  messages: Message[];
 
   send(command: SendMessageCommand): Promise<void>;
   delete(): Promise<void>;
@@ -237,11 +239,9 @@ interface ActiveThread {
   errorSendingMessage: DialectSdkError | null;
   isDeletingThread: boolean;
   errorDeletingThread: DialectSdkError | null;
+  isFetchingMessages: boolean;
+  errorFetchingMessages: DialectSdkError | null;
 }
 
 const thread = useActiveThread();
 ```
-
-// todo:
-
-- working with active thread?
