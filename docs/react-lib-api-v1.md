@@ -35,7 +35,7 @@ const walletAdapter: DialectWalletAdapter = {
 </DialectContext>;
 ```
 
-### Possible context configuration
+### Full context configuration
 
 ```ts
 import type { DialectWalletAdapter } from '@dialectlabs/sdk';
@@ -65,15 +65,12 @@ const walletAdapter: DialectWalletAdapter = {
 
 ## Hooks
 
-### Low level hooks
-
-Low level hooks are mainly exposes the initialized `@dialect/sdk` api.
-
-- [useDialectSdk](#usedialectsdk) - exposes a low level, imperative dialect sdk from the context
-- [useMessaging](#usemessaging) - exposes `Messaging` interface from dialect sdk
+- [useDialectSdk](#usedialectsdk) - exposes a low level, imperative dialect sdk
 - [useThreads](#usethreads) - lists all available threads
 - [useThread](#usethread) - finds thread
-- [useThreadMessages](#usethreadmessages) - finds thread messages
+- [useThreadMessages](#usethreadmessages) - lists thread messages
+- [setActiveThread](#setactivethread) - sets active dialect thread
+- [useActiveThread](#useactivethread) - returns active dialect thread
 
 #### useDialectSdk
 
@@ -196,11 +193,6 @@ const messages = useThreadMessages({
   refreshInterval: 3000,
 });
 ```
-
-### High level hooks
-
-- [setActiveThread](#setactivethread) - sets active thread
-- [useActiveThread](#useactivethread) - returns data from thread
 
 #### setActiveThread
 
