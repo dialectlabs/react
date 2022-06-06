@@ -226,7 +226,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
     [dapp, isWalletConnected]
   );
 
-  const getLastReadMessageWrapper = (threadId: string) => {
+  const getLastReadMessageWrapper = useCallback((threadId: string) => {
     if (!window) return;
     const dialectReadReceipts = window.localStorage.getItem(
       'dialectReadReceipts'
@@ -236,7 +236,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
 
     const dialectReadReceiptsJSON = JSON.parse(dialectReadReceipts);
     return dialectReadReceiptsJSON[threadId] || null;
-  };
+  }, []);
 
   const saveLastReadMessageWrapper = (
     threadId: string,
@@ -248,7 +248,7 @@ export const ApiProvider = ({ dapp, children }: PropsType): JSX.Element => {
       'dialectReadReceipts'
     );
 
-    let dialectReadReceiptsObj: any = {};
+    let dialectReadReceiptsObj: { [key: string]: string } = {};
 
     if (!dialectReadReceipts) {
       dialectReadReceiptsObj[threadId] = timestamp;
