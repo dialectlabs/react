@@ -3,12 +3,8 @@
 ### Context initialization
 
 - [Minimal context setup](#minimal-context-setup)
-- [Possible context configuration](#possible-context-configuration)
-
-### Hooks
-
-- [Low level hooks](#low-level-hooks)
-- [High level hooks](#high-level-hooks)
+- [Full context setup](#full-context-setup)
+- [Hooks](#hooks)
 
 ### tbd
 
@@ -35,7 +31,7 @@ const walletAdapter: DialectWalletAdapter = {
 </DialectContext>;
 ```
 
-### Full context configuration
+### Full context setup
 
 ```ts
 import type { DialectWalletAdapter } from '@dialectlabs/sdk';
@@ -58,6 +54,7 @@ const walletAdapter: DialectWalletAdapter = {
     url: "http://localhost:8080",
     tokenStore: new InMemoryTokenStore()
   }}
+  preferableMessagingBackend={MessagingBackend.Solana}
 >
   ...
 </DialectContext>;
@@ -122,7 +119,7 @@ create(params);
 
 ```ts
 type ThreadSearchParams =
-  | { publicKey: PublicKey }
+  | { address: PublicKey }
   | { twitterHandle: string }
   | { sns: string };
 
@@ -150,7 +147,7 @@ interface UseThreadValue {
 
 const useThread: (params: UseThreadParams) => UseThreadValue;
 
-const thread = useThread({ publicKey: 'D1ALECT' });
+const thread = useThread({ address: 'D1ALECT' });
 const thread = useThread({ twitterHandle: '@saydialect' });
 const thread = useThread({ sns: 'dialect.sol' });
 ```
@@ -172,9 +169,11 @@ interface UseThreadMessagesValue {
   errorFetchingMessages: DialectSdkError | null;
 }
 
-const { address } = useThread({ publicKey: 'D1ALECT' });
+const { address } = useThread({ address: 'D1ALECT' });
 const { messages } = useThreadMessages({ address, refreshInterval: 3000 });
 ```
+
+#### general example
 
 ```ts
 const threads = useThreads();
@@ -192,48 +191,4 @@ const messages = useThreadMessages({
   address: thread.address,
   refreshInterval: 3000,
 });
-```
-
-#### setActiveThread
-
-```ts
-// definition
-interface SetActiveThreadParams {
-  address: PublicKey | null;
-}
-
-const setActiveThread: (params: SetActiveThreadParams) => void;
-
-// example
-const { address } = useThread({ sns: 'dialect.sol' });
-setActiveThread({ address: 'D1ALECT' });
-```
-
-#### useActiveThread
-
-```ts
-interface ActiveThread {
-  // sdk
-  address: PublicKey;
-  me: DialectMember;
-  otherMember: DialectMember;
-  encryptionEnabled: boolean;
-  canBeDecrypted: boolean;
-  messages: Message[];
-
-  send(command: SendMessageCommand): Promise<void>;
-  delete(): Promise<void>;
-
-  // react-lib
-  isFetchingThread: boolean;
-  errorFetchingThread: DialectSdkError | null;
-  isSendingMessage: boolean;
-  errorSendingMessage: DialectSdkError | null;
-  isDeletingThread: boolean;
-  errorDeletingThread: DialectSdkError | null;
-  isFetchingMessages: boolean;
-  errorFetchingMessages: DialectSdkError | null;
-}
-
-const thread = useActiveThread();
 ```
