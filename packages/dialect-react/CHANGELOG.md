@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- featute: added logic to handle new undread messages state
+
 ## [0.5.4] - 2022-05-11
 
 - fix: allow to pass wallet adapter to ApiContext

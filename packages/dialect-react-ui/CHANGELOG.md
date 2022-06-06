@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- added logic to notfication ui to display new notification badge
+
 ## [0.8.9] - 2022-06-07
 
 - fix: add missing cardinal dependency
