@@ -10,6 +10,8 @@
 
 - thread preview
 - dialect cloud api(crud addresses, code verify/resend)
+- error handling
+- group threads member api
 
 ## Context initialization
 
