@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useDialect } from '@dialectlabs/react';
 import clsx from 'clsx';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import Error from './screens/Error';
 import Main from './screens/Main';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import { ChatContext } from './provider';
 
 enum Routes {
   Main = 'main',
@@ -11,8 +13,11 @@ enum Routes {
   NoWallet = 'no_wallet',
 }
 
+type ChatType = 'inbox' | 'popup' | 'vertical-slider';
+
 interface ChatProps {
-  inbox?: boolean;
+  id: string;
+  type: ChatType;
   wrapperClassName?: string;
   contentWrapperClassName?: string;
   onChatClose?: () => void;
@@ -20,14 +25,17 @@ interface ChatProps {
 }
 
 export default function Chat({
-  inbox,
+  id,
+  type,
   wrapperClassName,
   contentWrapperClassName,
   onChatClose,
   onChatOpen,
 }: ChatProps): JSX.Element {
+  const mgmt = useDialectUiId(id);
   const { disconnectedFromChain, isWalletConnected } = useDialect();
   const [activeRoute, setActiveRoute] = useState<Routes>(Routes.NoConnection);
+  const inbox = type === 'inbox';
 
   useEffect(
     function pickRoute() {
@@ -44,46 +52,34 @@ export default function Chat({
 
   const { colors, modal } = useTheme();
 
-  const routes: Record<Routes, React.ReactNode> = {
-    [Routes.NoConnection]: (
-      <Error
-        type="NoConnection"
-        onChatClose={onChatClose}
-        onChatOpen={onChatOpen}
-        inbox={inbox}
-      />
-    ),
-    [Routes.NoWallet]: (
-      <Error
-        type="NoWallet"
-        onChatClose={onChatClose}
-        onChatOpen={onChatOpen}
-        inbox={inbox}
-      />
-    ),
+  const routes: Record<Routes, ReactNode> = {
+    [Routes.NoConnection]: <Error type="NoConnection" />,
+    [Routes.NoWallet]: <Error type="NoWallet" />,
     [Routes.Main]: (
       <Main onChatClose={onChatClose} onChatOpen={onChatOpen} inbox={inbox} />
     ),
   };
 
   return (
-    <div
-      className={clsx(
-        'dialect',
-        wrapperClassName ? wrapperClassName : 'dt-h-full'
-      )}
-    >
+    <ChatContext.Provider value={{ type, onChatOpen, onChatClose }}>
       <div
         className={clsx(
-          'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
-          colors.primary,
-          colors.bg,
-          contentWrapperClassName,
-          { [modal]: !inbox }
+          'dialect',
+          wrapperClassName ? wrapperClassName : 'dt-h-full'
         )}
       >
-        <div className="dt-h-full">{routes[activeRoute]}</div>
+        <div
+          className={clsx(
+            'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
+            colors.primary,
+            colors.bg,
+            contentWrapperClassName,
+            { [modal]: !inbox }
+          )}
+        >
+          <div className="dt-h-full">{routes[activeRoute]}</div>
+        </div>
       </div>
-    </div>
+    </ChatContext.Provider>
   );
 }
