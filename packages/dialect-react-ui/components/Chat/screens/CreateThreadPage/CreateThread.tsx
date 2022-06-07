@@ -16,8 +16,8 @@ import {
   NameRegistryState,
 } from '@bonfida/spl-name-service';
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
-import { A, H1, Input, P } from '../../../../../common/preflighted';
-import { useTheme } from '../../../../../common/providers/DialectThemeProvider';
+import { A, H1, Input, P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import {
   Button,
   Footer,
@@ -26,11 +26,11 @@ import {
   useBalance,
   ValueRow,
   fetchSolanaNameServiceName,
-} from '../../../../../common';
-import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
-import { Lock, NoLock } from '../../../../../Icon';
+} from '../../../common';
+import { fetchAddressFromTwitterHandle } from '../../../DisplayAddress';
+import { Lock, NoLock } from '../../../Icon';
 import debounce from '../../../../../../utils/debounce';
-import { Header } from '../../../../../Header';
+import { Header } from '../../../Header';
 import { Connection, PublicKey } from '@solana/web3.js';
 
 interface CreateThreadProps {
@@ -100,7 +100,7 @@ function ActionCaption({
       >
         Use{' '}
         <A
-          href="https://www.sollet.io/"
+          href="components/Chat/screens/CreateThreadPage/CreateThread"
           target="_blank"
           className="dt-underline"
         >
