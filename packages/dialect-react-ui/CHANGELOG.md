@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: add missing cardinal dependency
+
 ## [0.8.8] - 2022-06-01
 
 - Fix published version build
