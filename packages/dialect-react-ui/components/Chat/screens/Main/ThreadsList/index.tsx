@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { DialectAccount, useDialect } from '@dialectlabs/react';
-import { useApi, Wallets } from '@dialectlabs/react';
+import { useApi } from '@dialectlabs/react';
 import MessagePreview from './MessagePreview';
 import { Centered } from '../../../../common';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
