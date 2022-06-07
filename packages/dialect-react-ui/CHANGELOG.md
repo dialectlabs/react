@@ -2,6 +2,7 @@
 
 ## [UNRELEASED]
 - Add solana name service support
+- Add polling props to notfication button
 
 ## [0.8.6] - 2022-05-11
 
