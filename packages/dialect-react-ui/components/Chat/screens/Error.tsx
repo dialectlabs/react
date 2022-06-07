@@ -1,22 +1,25 @@
 import { Centered } from '../../common';
 import { useTheme } from '../../common/providers/DialectThemeProvider';
 import { Header } from '../../Header';
+import { useChatInternal } from '../provider';
 
 interface Props {
   type: 'NoConnection' | 'NoWallet';
-  inbox?: boolean;
-  onChatClose?: () => void;
-  onChatOpen?: () => void;
 }
 
-const Error = ({ inbox, type, onChatClose, onChatOpen }: Props) => {
+const Error = ({ type }: Props) => {
+  const { type: chatType, onChatOpen, onChatClose } = useChatInternal();
   const { icons } = useTheme();
 
   if (!type) return null;
 
   return (
     <>
-      <Header inbox={inbox} onClose={onChatClose} onHeaderClick={onChatOpen}>
+      <Header
+        inbox={chatType === 'inbox'}
+        onClose={onChatClose}
+        onHeaderClick={onChatOpen}
+      >
         <Header.Title>Messages</Header.Title>
         <Header.Icons />
       </Header>
