@@ -161,7 +161,7 @@ const AddressResult = ({
   if (isSNS && !valid) {
     return (
       <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Couldn't find this Solana Name Service domain
+        Couldn't find this SNS domain
       </P>
     );
   }
@@ -169,7 +169,7 @@ const AddressResult = ({
   if (!isTwitterHandle && !isSNS && !valid) {
     return (
       <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Invalid address, Twitter handle or Solana Name Service domain
+        Invalid address, Twitter handle or SNS domain
       </P>
     );
   }
@@ -197,6 +197,16 @@ const AddressResult = ({
     );
   }
 
+  if (valid && snsDomain) {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        SNS domain: {snsDomain}.sol
+      </P>
+    );
+  }
+
   if (valid && twitterHandle) {
     return (
       <P
@@ -215,6 +225,7 @@ const AddressResult = ({
 };
 
 const parseSNSDomain = (domainString: string) => {
+  domainString = domainString.trim();
   const isSNSDomain = domainString.match(SNS_DOMAIN_EXT);
   const domainName = domainString.slice(0, domainString.length - 4);
   if (!isSNSDomain || !domainName) return;
@@ -244,6 +255,7 @@ const tryFetchSNSDomain = async (
 };
 
 const parseTwitterHandle = (handleString: string) => {
+  handleString = handleString.trim();
   const isTwitter = handleString.startsWith('@');
   const handle = handleString.substring(1, handleString.length);
   if (!isTwitter || !handle) return;
@@ -308,16 +320,11 @@ export default function CreateThread({
         (member) =>
           member.publicKey.toString() !== wallet?.publicKey?.toString()
       );
-      console.log(
-        actualAddress?.toBase58(),
-        otherMemebers[0]?.publicKey.toString()
-      );
       return (
         otherMemebers.length == 1 &&
         actualAddress?.toBase58() == otherMemebers[0]?.publicKey.toString()
       );
     });
-    console.log({ actualAddress, currentChatWithAddress });
     if (currentChatWithAddress) {
       const currentThreadWithAddress =
         currentChatWithAddress.publicKey.toBase58();
@@ -403,26 +410,26 @@ export default function CreateThread({
         return;
       }
 
-      const [twitterName, snsName]: any = await Promise.all(
-        [
-          // No need to reverse fetch twitter handle if user entered it
-          !isTwitterHandle && tryGetTwitterHandle(connection, actualAddress),
-          // No need to reverse fetch sns domain if user entered it
-          !isSNS &&
-            fetchSolanaNameServiceName(connection, actualAddress?.toBase58()),
-        ].filter(Boolean)
-      ).catch((e) => {
-        setTwitterHandle('');
-        setSNSDomain('');
-      });
+      const twitterName =
+        !isTwitterHandle &&
+        (await tryGetTwitterHandle(connection, actualAddress));
+      const snsName =
+        !isSNS &&
+        (await fetchSolanaNameServiceName(
+          connection,
+          actualAddress?.toBase58()
+        ));
 
-      if (twitterName && snsName) {
-        setTwitterHandle(twitterName);
-        setSNSDomain(snsName.solanaDomain);
-      }
+      setTwitterHandle(twitterName ? twitterName : '');
+      console.log(
+        snsName && snsName?.solanaDomain ? snsName?.solanaDomain : ''
+      );
+      setSNSDomain(
+        snsName && snsName?.solanaDomain ? snsName?.solanaDomain : ''
+      );
     };
     fetchReverse();
-  }, [actualAddress, isSNS, isTwitterHandle]);
+  }, [actualAddress?.toBase58(), isSNS, isTwitterHandle]);
 
   const disabled = !address || (!isTyping && !isValidAddress);
 
