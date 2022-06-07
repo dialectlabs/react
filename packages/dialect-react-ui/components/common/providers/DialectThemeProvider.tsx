@@ -230,7 +230,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     sendButton: 'dt-h-5 dt-w-5 dt-text-white dt-rounded-full dt-bg-black',
     linkButton:
       'dt-inline-flex dt-items-center dt-transition-opacity dt-cursor-pointer hover:dt-opacity-50',
-    header: 'dt-py-3 dt-px-4',
+    header: 'dt-px-4',
     sectionHeader: 'dt-px-4',
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0 disabled:dt-text-neutral-700/50',
@@ -329,7 +329,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     sendButton: 'dt-h-5 dt-w-5 dt-text-black dt-rounded-full dt-bg-white',
     linkButton:
       'dt-inline-flex dt-items-center dt-transition-opacity dt-cursor-pointer hover:dt-opacity-50',
-    header: 'dt-py-3 dt-px-4',
+    header: 'dt-px-4',
     sectionHeader: 'dt-px-4',
     input:
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white disabled:dt-text-white/50',

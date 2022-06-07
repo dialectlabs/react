@@ -1,6 +1,6 @@
 import IconButton from '../IconButton';
 import { useTheme } from '../common/providers/DialectThemeProvider';
-import type { ComponentProps, PropsWithChildren, ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import clsx from 'clsx';
 import { H3 } from '../common/preflighted';
 import { createContext, useContext } from 'react';
@@ -53,15 +53,15 @@ export const Header = ({
 
   return (
     <HeaderContext.Provider value={{ inbox, onClose }}>
-      <div
+      <header
         className={clsx(
-          'dt-px-2 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-items-center dt-border-b dt-border-neutral-900',
+          'dt-max-h-[3.5rem] dt-min-h-[3.5rem] dt-px-2 dt-h-full dt-flex dt-justify-between dt-items-center dt-border-b dt-border-neutral-900',
           header
         )}
         onClick={onHeaderClick}
       >
         {children}
-      </div>
+      </header>
     </HeaderContext.Provider>
   );
 };
