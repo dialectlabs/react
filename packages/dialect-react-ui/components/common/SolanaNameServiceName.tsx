@@ -43,7 +43,7 @@ const findFavoriteDomainName = async (
 
     return reverse;
   } catch (err) {
-    console.log(err);
+    // console.log('Error finding favorite domain name', err);
   }
 };
 
@@ -53,7 +53,10 @@ export const fetchSolanaNameServiceName = async (
 ): Promise<{ solanaDomain: string | undefined }> => {
   try {
     if (address) {
-      let domainName = await findFavoriteDomainName(connection, new PublicKey(address));
+      let domainName = await findFavoriteDomainName(
+        connection,
+        new PublicKey(address)
+      );
       if (!domainName || domainName == '') {
         const domainKeys = await findOwnedNameAccountsForUser(
           connection,
@@ -68,7 +71,7 @@ export const fetchSolanaNameServiceName = async (
       return { solanaDomain: domainName };
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 
   return { solanaDomain: undefined };

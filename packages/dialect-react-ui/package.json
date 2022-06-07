@@ -34,7 +34,8 @@
   "dependencies": {
     "@bonfida/name-offers": "^0.0.1",
     "@bonfida/spl-name-service": "^0.1.31",
-    "@cardinal/namespaces-components": "2.5.0",
+    "@cardinal/namespaces": "^3.2.0",
+    "@cardinal/namespaces-components": "^3.1.0",
     "@dialectlabs/web3": "^0.3.1",
     "@headlessui/react": "^1.2.0",
     "@project-serum/anchor": "^0.23.0",
