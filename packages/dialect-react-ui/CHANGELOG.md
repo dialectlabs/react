@@ -6,6 +6,7 @@
 - fix: open thread if user entered address with whom thread already exists
 - fix: do not fetch handles and avatars twice
 - feat: a bunch of UX improvements such as Optimistic UI
+- fix: solana name service support
 
 ## [0.8.9] - 2022-06-07
 

@@ -43,7 +43,7 @@ const findFavoriteDomainName = async (
 
     return reverse;
   } catch (err) {
-    console.log(err);
+    // console.log('Error finding favorite domain name', err);
   }
 };
 
@@ -69,7 +69,7 @@ export const fetchSolanaNameServiceName = async (
       return { solanaDomain: domainName };
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 
   return { solanaDomain: undefined };
