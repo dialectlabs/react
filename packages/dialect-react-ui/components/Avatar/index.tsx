@@ -1,13 +1,12 @@
+import { HiUserCircle } from 'react-icons/hi';
+import { useApi } from '@dialectlabs/react';
+import type { Connection, PublicKey } from '@solana/web3.js';
+import useSWR from 'swr';
 import cs from '../../utils/classNames';
-import type { PublicKey } from '@project-serum/anchor';
 import { useTheme } from '../common/ThemeProvider';
 import { fetchSolanaNameServiceName } from '../common';
-import { useApi } from '@dialectlabs/react';
-import type { Connection } from '@solana/web3.js';
-import { useAddressImage } from '@cardinal/namespaces-components';
-import { HiUserCircle } from 'react-icons/hi';
 import { Img } from '../common/preflighted';
-import useSWR from 'swr';
+import useAddressImage from '../../hooks/useAddressImage';
 
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
@@ -35,10 +34,11 @@ const CardinalAvatar = ({
   placeholder?: React.ReactNode;
   className?: string;
 }) => {
-  const { addressImage, loadingImage } = useAddressImage(connection, address);
+  const { src: addressImage, isLoading } = useAddressImage(connection, address);
 
   if (!address) return <></>;
-  return loadingImage ? (
+
+  return isLoading ? (
     <div className={cs(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
       <>{placeholder}</>
     </div>
@@ -59,7 +59,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
 
   const connection = program?.provider.connection;
   const { data } = useSWR(
-    [connection, publicKey.toBase58()],
+    [connection, publicKey.toBase58(), 'sns'],
     fetchSolanaNameServiceName
   );
 

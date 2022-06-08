@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useApi, useDialect } from '@dialectlabs/react';
+import type { DialectAccount } from '@dialectlabs/react';
 import { display } from '@dialectlabs/web3';
+import { DisplayAddress } from '../../../../../DisplayAddress';
 import { useTheme } from '../../../../../common/ThemeProvider';
 import { P } from '../../../../../common/preflighted';
 import IconButton from '../../../../../IconButton';
 import Settings from './Settings';
 import Thread from './Thread';
-import { DisplayAddress } from '../../../../../DisplayAddress';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
@@ -21,7 +22,7 @@ const ThreadPage = ({
   onModalClose,
 }: ThreadPageProps) => {
   const { wallet, program } = useApi();
-  const { dialect, dialectAddress, setDialectAddress } = useDialect();
+  const { dialects, dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons, xPaddedText } = useTheme();
 
   const publicKey = wallet?.publicKey;
@@ -34,6 +35,14 @@ const ThreadPage = ({
   );
   const otherMembersStrs = otherMembers?.map((member) =>
     display(member.publicKey)
+  );
+
+  const dialectFromList = useMemo(
+    () =>
+      dialects?.find(
+        (d: DialectAccount) => d.publicKey.toBase58() === dialectAddress
+      ),
+    [dialects, dialectAddress]
   );
 
   const otherMemberStr = otherMembersStrs?.[0];
@@ -69,6 +78,8 @@ const ThreadPage = ({
     );
   }
 
+  const threadType = dialect?.dialect.encrypted ? 'encrypted' : 'unencrypted';
+
   return (
     <div className="dt-flex dt-flex-col dt-flex-1 dt-min-w-[0px]">
       {/* ↑ The min-width: 0 is used to prevent the column from overflow the container. Explanation: https://makandracards.com/makandra/66994-css-flex-and-min-width */}
@@ -88,20 +99,20 @@ const ThreadPage = ({
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
           <span className="dt-text-base dt-font-medium dt-text">
-            {dialect ? (
+            {dialectFromList ? (
               <DisplayAddress
                 connection={program?.provider.connection}
-                dialectMembers={dialect?.dialect.members}
+                dialectMembers={dialectFromList?.dialect.members}
                 isLinkable={true}
               />
             ) : (
-              'Loading...'
+              'Loading thread...'
             )}
           </span>
-          {dialect?.dialect.encrypted ? (
-            <span className="dt-text-xs dt-opacity-50">encrypted</span>
+          {dialect ? (
+            <span className="dt-text-xs dt-opacity-50">{threadType}</span>
           ) : (
-            <span className="dt-text-xs dt-opacity-50">unencrypted</span>
+            <span className="dt-text-xs dt-opacity-50">Loading thread...</span>
           )}
         </div>
         <div className="dt-flex">

@@ -1,13 +1,13 @@
-import { useAddressName } from '@cardinal/namespaces-components';
-import { getNameEntry } from '@cardinal/namespaces';
-import { TwitterIcon } from '../Icon/Twitter';
-import type { Connection, PublicKey } from '@solana/web3.js';
-import { Loader, fetchSolanaNameServiceName } from '../common';
+import { getNameEntry, tryGetName } from '@cardinal/namespaces';
 import { useApi } from '@dialectlabs/react';
+import { display, Member } from '@dialectlabs/web3';
+import { Connection, PublicKey } from '@solana/web3.js';
+import useSWR from 'swr';
+import { TwitterIcon } from '../Icon/Twitter';
+import { Loader, fetchSolanaNameServiceName } from '../common';
 import cs from '../../utils/classNames';
 import { A } from '../common/preflighted';
-import { display, Member } from '@dialectlabs/web3';
-import useSWR from 'swr';
+import useTwitterHandle from '../../hooks/useTwitterHandle';
 
 const formatTwitterLink = (
   handle: string | undefined,
@@ -147,23 +147,33 @@ export function DisplayAddress({
 }) {
   const { wallet } = useApi();
 
-  if (!dialectMembers.length) {
-    return null;
-  }
+  const isMemberExist = dialectMembers && dialectMembers.length;
 
-  const otherMembers = dialectMembers.filter(
-    (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
-  );
+  const otherMembers = isMemberExist
+    ? dialectMembers.filter(
+        (member) =>
+          member.publicKey.toString() !== wallet?.publicKey?.toString()
+      )
+    : [];
 
   const publicKey = otherMembers[0].publicKey;
-  const { displayName, loadingName } = useAddressName(connection, publicKey);
+  const { data: displayName, error } = useTwitterHandle(
+    connection,
+    isMemberExist && publicKey?.toString()
+  );
+  const loadingName = !displayName && !error;
   const showTwitterIcon = displayName?.includes('@');
 
-  const { data } = useSWR([connection, publicKey], fetchSolanaNameServiceName);
+  const { data } = useSWR(
+    isMemberExist ? [connection, publicKey.toString(), 'sns'] : null,
+    fetchSolanaNameServiceName
+  );
+
+  if (!isMemberExist) return null;
 
   if (connection && showTwitterIcon) {
     return (
-      <div className="dt-flex dt-inline-flex items-center">
+      <div className="dt-inline-flex items-center">
         <TwitterHandle
           address={publicKey}
           displayName={displayName}
