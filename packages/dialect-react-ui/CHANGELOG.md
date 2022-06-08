@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- Fix solana name service support
+
 ## [0.8.9] - 2022-06-07
 
 - fix: add missing cardinal dependency
