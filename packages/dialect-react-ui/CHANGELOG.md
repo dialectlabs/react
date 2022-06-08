@@ -3,6 +3,8 @@
 ## [UNRELEASED]
 
 - added logic to notfication ui to display new notification badge
+- fix: open thread if user entered address with whom thread already exists
+
 
 ## [0.8.9] - 2022-06-07
 
@@ -15,6 +17,7 @@
 ## [0.8.7] - 2022-06-01
 
 - Add solana name service support
+- Add polling props to notfication button
 
 ## [0.8.6] - 2022-05-11
 

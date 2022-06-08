@@ -52,6 +52,7 @@ const swrFetchMetadata = (
 type PropsType = {
   children: JSX.Element;
   publicKey?: anchor.web3.PublicKey;
+  pollingInterval?: number;
 };
 
 // TODO: revisit api functions and errors to be moved out from context
@@ -128,6 +129,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [encryptionProps, setEncryptionProps] =
     React.useState<EncryptionProps | null>(null);
 
+  const pollingInterval = props.pollingInterval || POLLING_INTERVAL_MS;
+
   const getEncryptionProps =
     useCallback(async (): Promise<EncryptionProps | null> => {
       if (!wallet || isAnchorWallet(wallet) || walletName !== 'Sollet') {
@@ -179,7 +182,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     false && wallet && program ? ['metadata', program] : null,
     swrFetchMetadata,
     {
-      refreshInterval: POLLING_INTERVAL_MS,
+      refreshInterval: pollingInterval,
     }
   );
 
@@ -193,7 +196,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       : null,
     swrFetchDialects,
     {
-      refreshInterval: POLLING_INTERVAL_MS,
+      refreshInterval: pollingInterval,
     }
   );
 
@@ -218,7 +221,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       : null,
     swrFetchDialect,
     {
-      refreshInterval: POLLING_INTERVAL_MS,
+      refreshInterval: pollingInterval,
     }
   );
 
