@@ -2,7 +2,6 @@ import React, { useEffect, useContext, useState, SVGProps } from 'react';
 import deepMerge from '../../utils/deepMerge';
 import {
   ArrowClockwise,
-  ArrowNarrowRight,
   ArrowSmRight,
   Bell as BellIcon,
   BackArrow,
@@ -54,7 +53,6 @@ export type ThemeTextStyles =
 
 export type ThemeIcons =
   | 'arrowclockwise'
-  | 'arrownarrowright'
   | 'arrowsmright'
   | 'bell'
   | 'back'
@@ -195,7 +193,6 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     },
     icons: {
       arrowclockwise: ArrowClockwise,
-      arrownarrowright: ArrowNarrowRight,
       arrowsmright: ArrowSmRight,
       bell: BellIcon,
       back: BackArrow,
@@ -292,7 +289,6 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     },
     icons: {
       arrowclockwise: ArrowClockwise,
-      arrownarrowright: ArrowNarrowRight,
       arrowsmright: ArrowSmRight,
       bell: BellIcon,
       back: BackArrow,

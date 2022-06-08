@@ -92,7 +92,6 @@ export default function MessageInput({
           {!disableSendButton && (
             <div className="dt-flex dt-text-xs dt-items-center dt-opacity-50 dt-pr-1">
               enter ⏎
-              {/* <icons.arrownarrowright className="dt-h-4 dt-w-4" /> */}
             </div>
           )}
         </div>
