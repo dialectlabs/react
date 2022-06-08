@@ -20,6 +20,7 @@ import {
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
 import IconButton from '../IconButton';
+import clsx from 'clsx';
 
 export type PropTypes = {
   wallet: WalletType;
@@ -71,9 +72,26 @@ function WrappedNotificationsButton(
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [hasNewMessages, setHasNewMessages] = useState(false);
+
   useOutsideAlerter(wrapperRef, bellRef, setOpen);
-  const { setWallet, setNetwork, setRpcUrl } = useApi();
+  const { setWallet, setNetwork, setRpcUrl, saveLastReadMessage } = useApi();
   const isWalletConnected = connected(props.wallet);
+
+  const { messages, checkUnreadMessages } = useDialect();
+
+  useEffect(() => {
+    if (!open) {
+      setHasNewMessages(checkUnreadMessages('notifications'));
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (open) {
+      saveLastReadMessage('notifications', messages[0]?.timestamp);
+      setHasNewMessages(checkUnreadMessages('notifications'));
+    }
+  }, [open]);
 
   useEffect(
     () => setWallet(connected(props.wallet) ? props.wallet : null),
@@ -100,14 +118,22 @@ function WrappedNotificationsButton(
 
   return (
     <div
-      className={cs(
+      className={clsx(
         'dt-flex dt-flex-col dt-items-end dt-relative',
         colors.primary
       )}
     >
+      {hasNewMessages && (
+        <div
+          className={clsx(
+            'dt-absolute dt-h-3 dt-w-3 dt-z-50 dt-rounded-full',
+            colors.notificationBadgeColor
+          )}
+        ></div>
+      )}
       <IconButton
         ref={bellRef}
-        className={cs(
+        className={clsx(
           'dt-flex dt-items-center dt-justify-center dt-rounded-full focus:dt-outline-none dt-shadow-md',
           colors.bg,
           bellButton

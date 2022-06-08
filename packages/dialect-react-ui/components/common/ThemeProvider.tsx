@@ -31,7 +31,8 @@ export type ThemeColors =
   | 'highlightSolid'
   | 'toggleThumb'
   | 'toggleBackground'
-  | 'toggleBackgroundActive';
+  | 'toggleBackgroundActive'
+  | 'notificationBadgeColor';
 
 export type ThemeTextStyles =
   | 'h1'
@@ -168,6 +169,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       toggleBackground: 'dt-bg-[#D6D6D6]',
       toggleBackgroundActive: 'dt-bg-[#25BC3B]',
       toggleThumb: 'dt-bg-[#EEEEEE]',
+      notificationBadgeColor: 'dt-bg-red-500',
     },
     // TODO: simplify setting just font-family
     textStyles: {
@@ -262,6 +264,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       toggleBackground: 'dt-bg-white/60',
       toggleBackgroundActive: 'dt-bg-[#25BC3B]',
       toggleThumb: 'dt-bg-[#363636]',
+      notificationBadgeColor: 'dt-bg-red-500',
     },
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
