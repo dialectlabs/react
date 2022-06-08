@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { KeyboardEvent } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { display } from '@dialectlabs/web3';
 import {
@@ -282,6 +283,13 @@ export default function CreateThread({
       .catch(() => {});
   };
 
+  const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && e.shiftKey == false) {
+      e.preventDefault();
+      await createThread();
+    }
+  };
+
   const onAddressChange = (addr: string) => {
     setAddress(addr);
     setIsTyping(true);
@@ -392,6 +400,7 @@ export default function CreateThread({
           type="text"
           value={address}
           onChange={(e) => onAddressChange(e.target.value)}
+          onKeyDown={onEnterPress}
         />
         {!isTyping
           ? showAddressResult(

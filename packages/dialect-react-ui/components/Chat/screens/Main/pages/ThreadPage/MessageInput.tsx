@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, FormEvent } from 'react';
+import { KeyboardEvent, FormEvent } from 'react';
 import clsx from 'clsx';
 import type { ParsedErrorData } from '@dialectlabs/react';
 import { ButtonBase, Textarea } from '../../../../../common/preflighted';
