@@ -87,7 +87,7 @@ export default function Thread() {
                     <MessageBubble
                       {...message}
                       isYou={isYou}
-                      showStatus={isLast}
+                      showStatus={isYou && isLast}
                       onSendMessage={handleSendMessage}
                       onCancelMessage={cancelSendingMessage}
                     />
