@@ -73,6 +73,7 @@ export default function Thread() {
                 const key = message?.id || hash(message.text) + idx;
                 const isLast = idx === messages.length - 1;
 
+                // TODO: fix transition after message is sent (e.g. key/props shouldn't change)
                 return (
                   <CSSTransition
                     key={key}
