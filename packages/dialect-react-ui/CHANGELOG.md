@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - fix: open thread if user entered address with whom thread already exists
+- fix: do not fetch handles and avatars twice
 
 ## [0.8.9] - 2022-06-07
 
