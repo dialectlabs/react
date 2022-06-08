@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import type { KeyboardEvent } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { display } from '@dialectlabs/web3';
 import {
+  connected,
   getDialectAddressWithOtherMember,
   ParsedErrorData,
   useApi,
@@ -17,10 +19,17 @@ import {
   Toggle,
   useBalance,
   ValueRow,
+  fetchSolanaNameServiceName,
 } from '../../../../../common';
 import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
 import { Lock, NoLock } from '../../../../../Icon';
 import IconButton from '../../../../../IconButton';
+import {
+  getHashedName,
+  getNameAccountKey,
+  NameRegistryState,
+} from '@bonfida/spl-name-service';
+import { tryGetName } from '@cardinal/namespaces';
 
 interface CreateThreadProps {
   inbox?: boolean;
@@ -28,6 +37,12 @@ interface CreateThreadProps {
   onCloseRequest?: () => void;
   onModalClose?: () => void;
 }
+
+const SOL_TLD_AUTHORITY = new anchor.web3.PublicKey(
+  '58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx'
+);
+
+const SNS_DOMAIN_EXT = '.sol';
 
 function CardinalCTA() {
   const { textStyles } = useTheme();
@@ -108,16 +123,40 @@ function ActionCaption({
   return null;
 }
 
-const showAddressInputStatus = (
+const showAddressResult = (
   valid: boolean,
   address: string,
-  cardinalAddress: string
+  cardinalAddress: string,
+  snsAddress: string,
+  twitterHandle: string,
+  snsDomain: string
 ) => {
   const { textStyles } = useTheme();
 
   if (!address) return CardinalCTA();
 
   const isTwitter = address.charAt(0) === '@';
+  const isSNS = address.match(SNS_DOMAIN_EXT);
+
+  if (isSNS && valid && snsAddress) {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        {snsAddress}
+      </P>
+    );
+  }
+
+  if (valid && twitterHandle != '' && snsDomain != '') {
+    return (
+      <P
+        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
+      >
+        {`SNS domain: ${snsDomain}.sol / Twitter handle: ${twitterHandle}`}
+      </P>
+    );
+  }
 
   if (isTwitter && valid && cardinalAddress) {
     return (
@@ -166,6 +205,23 @@ const showAddressInputStatus = (
   }
 };
 
+const fetchSNSDomain = async (
+  connection: anchor.web3.Connection,
+  domainName: string
+) => {
+  const hashedName = await getHashedName(domainName);
+
+  const domainKey = await getNameAccountKey(
+    hashedName,
+    undefined,
+    SOL_TLD_AUTHORITY
+  );
+
+  const { registry } = await NameRegistryState.retrieve(connection, domainKey);
+
+  return registry?.owner;
+};
+
 export default function CreateThread({
   inbox,
   onNewThreadCreated,
@@ -185,6 +241,9 @@ export default function CreateThread({
 
   const [address, setAddress] = useState('');
   const [cardinalAddress, setCardinalAddress] = useState('');
+  const [snsAddress, setSNSAddress] = useState('');
+  const [twitterHandle, setTwitterHandle] = useState('');
+  const [snsDomain, setSNSDomain] = useState('');
   const [encrypted, setEncrypted] = useState(false);
   const [validAddress, setValidAddress] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -224,6 +283,13 @@ export default function CreateThread({
       .catch(() => {});
   };
 
+  const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && e.shiftKey == false) {
+      e.preventDefault();
+      await createThread();
+    }
+  };
+
   const onAddressChange = (addr: string) => {
     setAddress(addr);
     setIsTyping(true);
@@ -248,13 +314,41 @@ export default function CreateThread({
     const delayDebounceFn = setTimeout(async () => {
       if (address.length === 0) {
         setValidAddress(false);
-      } else if (address.charAt(0) != '@') {
+      } else if (address.match(SNS_DOMAIN_EXT)) {
         try {
-          new anchor.web3.PublicKey(address);
-          setValidAddress(true);
-          setCardinalAddress('');
+          if (program?.provider.connection) {
+            const snsDomain = await fetchSNSDomain(
+              program?.provider.connection,
+              address.slice(0, address.length - 4)
+            );
+
+            if (snsDomain) {
+              setValidAddress(true);
+              setSNSAddress(snsDomain?.toString());
+            }
+          }
         } catch (e) {
           await tryFetchAddressFromTwitterHandle(address);
+        }
+      } else if (address) {
+        try {
+          if (program?.provider.connection) {
+            const pubKey = new anchor.web3.PublicKey(address);
+
+            // TODO: Fix typing on promise result
+            const [twitterName, snsName]: any = await Promise.all([
+              tryGetName(program?.provider.connection, pubKey),
+              fetchSolanaNameServiceName(program?.provider.connection, address),
+            ]);
+
+            if (twitterName && snsName) {
+              setTwitterHandle(twitterName);
+              setSNSDomain(snsName.solanaDomain);
+              setValidAddress(true);
+            }
+          }
+        } catch (e) {
+          console.log(e);
         }
       } else {
         const handle = address.substring(1, address.length);
@@ -306,9 +400,17 @@ export default function CreateThread({
           type="text"
           value={address}
           onChange={(e) => onAddressChange(e.target.value)}
+          onKeyDown={onEnterPress}
         />
         {!isTyping
-          ? showAddressInputStatus(validAddress, address, cardinalAddress)
+          ? showAddressResult(
+              validAddress,
+              address,
+              cardinalAddress,
+              snsAddress,
+              twitterHandle,
+              snsDomain
+            )
           : CardinalCTA()}
         <ValueRow
           label={

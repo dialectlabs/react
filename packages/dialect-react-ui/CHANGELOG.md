@@ -1,6 +1,19 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+
+- fix: open thread if user entered address with whom thread already exists
+
+## [0.8.9] - 2022-06-07
+
+- fix: add missing cardinal dependency
+
+## [0.8.8] - 2022-06-01
+
+- Fix published version build
+
+## [0.8.7] - 2022-06-01
+
 - Add solana name service support
 
 ## [0.8.6] - 2022-05-11

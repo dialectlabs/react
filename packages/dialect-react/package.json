@@ -8,6 +8,9 @@
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "build": "rm -rf lib && yarn build:cjs || yarn build:esm",
     "build:cjs": "tsc",
