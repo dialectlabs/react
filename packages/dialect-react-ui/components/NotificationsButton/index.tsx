@@ -5,6 +5,7 @@ import {
   connected,
   useApi,
   DialectProvider,
+  useDialect,
 } from '@dialectlabs/react';
 import type { WalletType } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
@@ -32,6 +33,7 @@ export type PropTypes = {
   notifications: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
+  pollingInterval?: number;
 };
 
 export function useOutsideAlerter(
@@ -141,7 +143,10 @@ export default function NotificationsButton({
   return (
     <div className="dialect">
       <ApiProvider dapp={props.publicKey.toBase58()}>
-        <DialectProvider publicKey={props.publicKey}>
+        <DialectProvider
+          pollingInterval={props.pollingInterval}
+          publicKey={props.publicKey}
+        >
           <ThemeProvider theme={theme} variables={variables}>
             <WrappedNotificationsButton channels={channels} {...props} />
           </ThemeProvider>

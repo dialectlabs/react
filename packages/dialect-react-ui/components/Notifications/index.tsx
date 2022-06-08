@@ -207,6 +207,7 @@ export default function Notifications(props: {
   notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
+  pollingInterval?: number
 }): JSX.Element {
   const {
     isWalletConnected,
