@@ -1,14 +1,12 @@
-import { tryGetImageUrl } from '@cardinal/namespaces-components';
-import { breakName } from '@cardinal/namespaces';
 import { HiUserCircle } from 'react-icons/hi';
 import { useApi } from '@dialectlabs/react';
 import type { Connection, PublicKey } from '@solana/web3.js';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/ThemeProvider';
-import { fetchTwitterHandleFromAddress } from '../DisplayAddress';
 import { fetchSolanaNameServiceName } from '../common';
 import { Img } from '../common/preflighted';
+import useAddressImage from '../../hooks/useAddressImage';
 
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
@@ -25,23 +23,6 @@ type PropTypes = {
   size: 'regular' | 'small';
 };
 
-export const fetchImageUrlFromAddress = async (
-  connection: Connection,
-  publicKeyString: string
-) => {
-  try {
-    const displayName = await fetchTwitterHandleFromAddress(
-      connection,
-      publicKeyString
-    );
-    const [_namespace, handle] = displayName ? breakName(displayName) : [];
-    if (!handle) return;
-    return await tryGetImageUrl(handle);
-  } catch (e) {
-    return;
-  }
-};
-
 const CardinalAvatar = ({
   connection,
   address,
@@ -53,12 +34,7 @@ const CardinalAvatar = ({
   placeholder?: React.ReactNode;
   className?: string;
 }) => {
-  const { data: addressImage, error } = useSWR(
-    address ? [connection, address.toString(), 'avatar'] : null,
-    fetchImageUrlFromAddress
-  );
-
-  const isLoading = typeof addressImage === 'undefined' && !error;
+  const { src: addressImage, isLoading } = useAddressImage(connection, address);
 
   if (!address) return <></>;
 
@@ -83,7 +59,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
 
   const connection = program?.provider.connection;
   const { data } = useSWR(
-    [connection, publicKey.toBase58()],
+    [connection, publicKey.toBase58(), 'sns'],
     fetchSolanaNameServiceName
   );
 
