@@ -51,17 +51,15 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
         </div>
       )}
       {chatThreads.map((subscription) => (
-        <>
-          <MessagePreview
-            key={subscription.publicKey.toBase58()}
-            dialect={subscription}
-            disabled={isNotSollet && subscription.dialect.encrypted}
-            onClick={() => {
-              onThreadClick?.(subscription);
-            }}
-            selected={dialectAddress === subscription.publicKey?.toString()}
-          />
-        </>
+        <MessagePreview
+          key={subscription.publicKey.toBase58()}
+          dialect={subscription}
+          disabled={isNotSollet && subscription.dialect.encrypted}
+          onClick={() => {
+            onThreadClick?.(subscription);
+          }}
+          selected={dialectAddress === subscription.publicKey?.toString()}
+        />
       ))}
     </div>
   );

@@ -55,6 +55,10 @@ type PropsType = {
   pollingInterval?: number;
 };
 
+type SendingMessagesMap = {
+  [key: string]: Message[];
+};
+
 // TODO: revisit api functions and errors to be moved out from context
 type DialectContextType = {
   disconnectedFromChain: boolean;
@@ -82,9 +86,7 @@ type DialectContextType = {
   deletionError: ParsedErrorData | null;
   isNoMessages: boolean;
   messages: Message[];
-  sendingMessagesMap: {
-    [key: string]: Message[];
-  };
+  sendingMessagesMap: SendingMessagesMap;
   sendingMessages: Message[];
   cancelSendingMessage: (id: number) => void;
   dialect: DialectAccount | undefined | null;
@@ -151,7 +153,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const { wallet, program, walletName, getLastReadMessage } = useApi();
   const isWalletConnected = connected(wallet);
   const [messages, setMessages] = React.useState<Message[]>([]);
-  const [sendingMessagesMap, setSendingMessagesMap] = React.useState({});
+  const [sendingMessagesMap, setSendingMessagesMap] =
+    React.useState<SendingMessagesMap>({});
 
   const [encryptionProps, setEncryptionProps] =
     React.useState<EncryptionProps | null>(null);
@@ -432,40 +435,48 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
   const pushOrUpdateSending = useCallback(
-    (dialectAddress, id, payload) => {
-      setSendingMessagesMap((prev) => {
-        const next = { ...prev };
-        let thread = next[dialectAddress];
-        if (thread?.length) {
-          if (payload === null) {
-            thread = thread.filter((m: Message) => m.id !== id);
-          } else {
-            const isExists = thread.find((m: Message) => m.id === id);
-            if (isExists) {
-              thread = thread.map((m: Message) =>
-                m.id === id ? { ...m, ...payload } : m
-              );
-            } else {
-              thread = [...thread, payload];
-            }
-          }
-        } else {
-          if (payload !== null) {
-            thread = [payload];
-          }
+    (dialectAddress: string, payload: Message | null, messageId?: number) => {
+      setSendingMessagesMap((map: SendingMessagesMap) => {
+        let thread = map[dialectAddress];
+
+        // If there's no messages sending and payload is not null — set sending list to this message
+        if (!thread || !thread?.length) {
+          return {
+            ...map,
+            [dialectAddress]: payload !== null ? [payload] : thread,
+          };
         }
-        next[dialectAddress] = thread;
-        return next;
+
+        // If message id passed and there is no payload, remove message with such id from sending list
+        if (messageId && payload == null) {
+          return {
+            ...map,
+            [dialectAddress]: thread.filter((m) => m.id !== messageId),
+          };
+        }
+
+        const isMessageExists = thread.find((m: Message) => m.id === messageId);
+
+        // If there is messsage with such id, merge payload with it
+        // If there is no message with such id, just append payload to sending list
+        return {
+          ...map,
+          [dialectAddress]: isMessageExists
+            ? thread.map((m: Message) =>
+                m.id === messageId ? { ...m, ...payload } : m
+              )
+            : [...thread, payload],
+        };
       });
     },
-    [setSendingMessagesMap]
+    []
   );
 
   const cancelSendingMessage = useCallback(
     (id: number) => {
-      pushOrUpdateSending(dialectAddress, id, null);
+      pushOrUpdateSending(dialectAddress, null, id);
     },
-    [setSendingMessagesMap, dialectAddress]
+    [pushOrUpdateSending, dialectAddress]
   );
 
   const sendMessageWrapper = useCallback(
@@ -479,10 +490,14 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       try {
         // TODO: optimistic ui show message before actually sent
         if (messageId) {
-          pushOrUpdateSending(dialectAddress, id, {
-            error: undefined,
-            isSending: true,
-          });
+          pushOrUpdateSending(
+            dialectAddress,
+            {
+              error: undefined,
+              isSending: true,
+            },
+            id
+          );
         } else {
           const messageMock = {
             id,
@@ -490,7 +505,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
             owner: wallet?.publicKey,
             isSending: true,
           };
-          pushOrUpdateSending(dialectAddress, id, messageMock);
+          pushOrUpdateSending(dialectAddress, messageMock, id);
         }
 
         const newMessage = await sendMessage(
@@ -501,12 +516,12 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         );
 
         await mutateDialect(mergeMessageToDialect(dialect, newMessage), false);
-        pushOrUpdateSending(dialectAddress, id, null);
+        pushOrUpdateSending(dialectAddress, null, id);
       } catch (e) {
         // TODO: implement safer error handling
         setSendMessageError(e as ParsedErrorData);
 
-        pushOrUpdateSending(dialectAddress, id, { isSending: false, error: e });
+        pushOrUpdateSending(dialectAddress, { isSending: false, error: e }, id);
 
         // Passing through the error, in case for additional UI error handling
         throw e;
@@ -514,8 +529,29 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
         setSendingMessage(false);
       }
     },
-    [getEncryptionProps, isWalletConnected, program, dialect, mutateDialect]
+    [
+      pushOrUpdateSending,
+      getEncryptionProps,
+      isWalletConnected,
+      program,
+      dialect,
+      mutateDialect,
+    ]
   );
+
+  const setDialectAddressWrapper = useCallback((address: string) => {
+    setDialectAddress(address);
+    // reset messages on thread select to avoid weird animation
+    setMessages([]);
+    setSendingMessage(false);
+    setDeleting(false);
+  }, []);
+
+  const sendingMessages =
+    messages.length && sendingMessagesMap[dialectAddress]
+      ? sendingMessagesMap[dialectAddress]
+      : [];
+
 
   const checkUnreadMessages = (threadId: string) => {
     const lastReadMessage = getLastReadMessage(threadId);
@@ -552,22 +588,13 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     deletionError,
     messages,
     sendingMessagesMap,
-    sendingMessages:
-      messages.length && sendingMessagesMap[dialectAddress]
-        ? sendingMessagesMap[dialectAddress]
-        : [],
+    sendingMessages,
     cancelSendingMessage,
     dialect,
     dialects: dialects || [],
     isNoMessages: messages?.length === 0,
     dialectAddress,
-    setDialectAddress: (address: string) => {
-      setDialectAddress(address);
-      // reset messages on thread select to avoid weird animation
-      setMessages([]);
-      setSendingMessage(false);
-      setDeleting(false);
-    },
+    setDialectAddress: setDialectAddressWrapper,
     sendMessage: sendMessageWrapper,
     sendingMessage,
     sendMessageError,

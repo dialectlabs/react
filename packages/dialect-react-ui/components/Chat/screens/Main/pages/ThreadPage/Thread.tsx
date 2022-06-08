@@ -30,9 +30,7 @@ export default function Thread() {
   };
 
   const handleSendMessage = async (messageText: string, id?: number) => {
-    sendMessage(messageText, dialect?.dialect.encrypted, id).catch((err) =>
-      handleError(err)
-    );
+    sendMessage(messageText, dialect?.dialect.encrypted, id).catch(handleError);
     setText('');
   };
 

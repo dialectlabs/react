@@ -5,12 +5,10 @@ import {
   useDialect,
 } from '@dialectlabs/react';
 import clsx from 'clsx';
-import { display } from '@dialectlabs/web3';
 import type { Message } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/ThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
-import { Divider } from '../../../../common';
 import MessageStatus from '../../../MessageStatus';
 
 type PropsType = {
@@ -63,6 +61,7 @@ export default function MessagePreview({
   const otherMembers = dialect?.dialect.members.filter(
     (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
   );
+  // TODO: refactor
   const { sendingMessagesMap } = useDialect();
   const sendingMessages =
     sendingMessagesMap[dialect?.publicKey.toBase58()] || [];
