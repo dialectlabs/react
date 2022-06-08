@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as anchor from '@project-serum/anchor';
 import { display } from '@dialectlabs/web3';
+import type { Member } from '@dialectlabs/web3';
 import {
-  connected,
   getDialectAddressWithOtherMember,
   ParsedErrorData,
   useApi,
   useDialect,
 } from '@dialectlabs/react';
+import type { DialectAccount } from '@dialectlabs/react';
 import clsx from 'clsx';
 import {
   getHashedName,
@@ -137,8 +138,8 @@ const AddressResult = ({
   isYou: boolean;
   isTwitterHandle: boolean;
   isSNS: boolean;
-  twitterHandle: string;
-  snsDomain: string;
+  twitterHandle: string | null;
+  snsDomain: string | null;
 }) => {
   const { textStyles } = useTheme();
 
@@ -224,7 +225,7 @@ const AddressResult = ({
   );
 };
 
-const parseSNSDomain = (domainString: string) => {
+const parseSNSDomain = (domainString: string): string | undefined => {
   domainString = domainString.trim();
   const isSNSDomain = domainString.match(SNS_DOMAIN_EXT);
   const domainName = domainString.slice(0, domainString.length - 4);
@@ -235,7 +236,7 @@ const parseSNSDomain = (domainString: string) => {
 const tryFetchSNSDomain = async (
   connection: anchor.web3.Connection,
   domainName: string
-) => {
+): Promise<anchor.web3.PublicKey | null> => {
   try {
     const hashedName = await getHashedName(domainName);
 
@@ -251,10 +252,12 @@ const tryFetchSNSDomain = async (
     );
 
     return registry?.owner;
-  } catch (e) {}
+  } catch (e) {
+    return null;
+  }
 };
 
-const parseTwitterHandle = (handleString: string) => {
+const parseTwitterHandle = (handleString: string): string | undefined => {
   handleString = handleString.trim();
   const isTwitter = handleString.startsWith('@');
   const handle = handleString.substring(1, handleString.length);
@@ -265,20 +268,22 @@ const parseTwitterHandle = (handleString: string) => {
 const tryFetchAddressFromTwitterHandle = async (
   connection: anchor.web3.Connection,
   handle: string
-) => {
+): Promise<anchor.web3.PublicKey | null> => {
   try {
     const { result } = await fetchAddressFromTwitterHandle(connection, handle);
 
     return result?.parsed.data;
-  } catch (e) {}
+  } catch (e) {
+    return null;
+  }
 };
 
-const tryPublicKey = (addressString: string) => {
-  let pubKey: anchor.web3.PublicKey | null = null;
+const tryPublicKey = (addressString: string): anchor.web3.PublicKey | null => {
   try {
-    pubKey = new anchor.web3.PublicKey(addressString);
-    return pubKey;
-  } catch (e) {}
+    return new anchor.web3.PublicKey(addressString);
+  } catch (e) {
+    return null;
+  }
 };
 
 export default function CreateThread({
@@ -306,8 +311,8 @@ export default function CreateThread({
   const [isTwitterHandle, setIsTwitterHandle] = useState(false);
   const [isSNS, setIsSNS] = useState(false);
 
-  const [twitterHandle, setTwitterHandle] = useState('');
-  const [snsDomain, setSNSDomain] = useState('');
+  const [twitterHandle, setTwitterHandle] = useState<string | null>(null);
+  const [snsDomain, setSNSDomain] = useState<string | null>(null);
 
   const [encrypted, setEncrypted] = useState(false);
   const [isValidAddress, setIsValidAddress] = useState(false);
@@ -315,16 +320,18 @@ export default function CreateThread({
 
   // TODO: useCallback
   const createThread = async () => {
-    const currentChatWithAddress = dialects.find((subscription) => {
-      const otherMemebers = subscription?.dialect.members.filter(
-        (member) =>
-          member.publicKey.toString() !== wallet?.publicKey?.toString()
-      );
-      return (
-        otherMemebers.length == 1 &&
-        actualAddress?.toBase58() == otherMemebers[0]?.publicKey.toString()
-      );
-    });
+    const currentChatWithAddress = dialects.find(
+      (subscription: DialectAccount) => {
+        const otherMembers = subscription?.dialect.members.filter(
+          (member: Member) =>
+            member.publicKey.toString() !== wallet?.publicKey?.toString()
+        );
+        return (
+          otherMembers.length == 1 &&
+          actualAddress?.toBase58() == otherMembers[0]?.publicKey.toString()
+        );
+      }
+    );
     if (currentChatWithAddress) {
       const currentThreadWithAddress =
         currentChatWithAddress.publicKey.toBase58();
@@ -379,15 +386,26 @@ export default function CreateThread({
     const twitterHandle = parseTwitterHandle(addressString);
     const snsDomain = parseSNSDomain(addressString);
 
-    // SNS DOMAIN, like sysy.sol
-    const addressFromSNS =
-      snsDomain && (await tryFetchSNSDomain(connection, snsDomain));
-    // Twitter Handle (via cardinal.so)
-    const addressFromTwitter =
-      twitterHandle &&
-      (await tryFetchAddressFromTwitterHandle(connection, twitterHandle));
-    // Just a base58 string
-    const addressFromBase58 = await tryPublicKey(addressString);
+    let addressFromSNS = null;
+    let addressFromTwitter = null;
+    let addressFromBase58 = null;
+
+    try {
+      // SNS DOMAIN, like sysy.sol
+      if (snsDomain)
+        addressFromSNS = await tryFetchSNSDomain(connection, snsDomain);
+
+      // Twitter Handle (via cardinal.so)
+      if (twitterHandle)
+        addressFromTwitter = await tryFetchAddressFromTwitterHandle(
+          connection,
+          twitterHandle
+        );
+      // Just a base58 string
+      addressFromBase58 = await tryPublicKey(addressString);
+    } catch (e) {
+      // console.log('Error parsing type of address');
+    }
 
     const actualAddress =
       addressFromSNS || addressFromTwitter || addressFromBase58;
@@ -410,22 +428,25 @@ export default function CreateThread({
         return;
       }
 
-      const twitterName =
-        !isTwitterHandle &&
-        (await tryGetTwitterHandle(connection, actualAddress));
-      const snsName =
-        !isSNS &&
-        (await fetchSolanaNameServiceName(
-          connection,
-          actualAddress?.toBase58()
-        ));
+      let twitterName = null;
+      let snsName = null;
 
-      setTwitterHandle(twitterName ? twitterName : '');
-      console.log(
-        snsName && snsName?.solanaDomain ? snsName?.solanaDomain : ''
-      );
+      try {
+        if (!isTwitterHandle)
+          twitterName = await tryGetTwitterHandle(connection, actualAddress);
+      } catch (e) {}
+
+      try {
+        if (!isSNS)
+          snsName = await fetchSolanaNameServiceName(
+            connection,
+            actualAddress?.toBase58()
+          );
+      } catch (e) {}
+
+      setTwitterHandle(twitterName ? twitterName : null);
       setSNSDomain(
-        snsName && snsName?.solanaDomain ? snsName?.solanaDomain : ''
+        snsName && snsName?.solanaDomain ? snsName?.solanaDomain : null
       );
     };
     fetchReverse();
