@@ -7,6 +7,7 @@ import { TwitterIcon } from '../Icon/Twitter';
 import { Loader, fetchSolanaNameServiceName } from '../common';
 import cs from '../../utils/classNames';
 import { A } from '../common/preflighted';
+import useTwitterHandle from '../../hooks/useTwitterHandle';
 
 const formatTwitterLink = (
   handle: string | undefined,
@@ -113,7 +114,7 @@ const SolanaName = ({
   }
   return (
     <div className="dt-flex dt-gap-1.5">
-      {`${formatSolanaDomain(displayName)}.sol`}
+      {`${formatSolanaDomain(displayName)}.sol ◎`}
     </div>
   );
 };
@@ -132,19 +133,6 @@ export const fetchAddressFromTwitterHandle = async (
     return { result: { parsed, pubkey } };
   } catch (e) {
     return { result: null };
-  }
-};
-
-export const fetchTwitterHandleFromAddress = async (
-  connection: Connection,
-  publicKeyString: string
-) => {
-  try {
-    const publicKey = new PublicKey(publicKeyString);
-    const displayName = await tryGetName(connection, publicKey);
-    return displayName;
-  } catch (e) {
-    return undefined;
   }
 };
 
@@ -169,9 +157,9 @@ export function DisplayAddress({
     : [];
 
   const publicKey = otherMembers[0].publicKey;
-  const { data: displayName, error } = useSWR(
-    isMemberExist ? [connection, publicKey.toString(), 'name'] : null,
-    fetchTwitterHandleFromAddress
+  const { data: displayName, error } = useTwitterHandle(
+    connection,
+    isMemberExist && publicKey?.toString()
   );
   const loadingName = !displayName && !error;
   const showTwitterIcon = displayName?.includes('@');

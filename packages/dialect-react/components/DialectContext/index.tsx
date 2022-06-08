@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
 } from 'react';
 import useSWR from 'swr';
 import { useApi } from '../ApiContext';
@@ -19,11 +18,7 @@ import {
   getDialectAddressWithOtherMember,
   sendMessage,
 } from '../../api';
-import {
-  noAccount,
-  ParsedErrorData,
-  ParsedErrorType,
-} from '../../utils/errors';
+import { ParsedErrorData, ParsedErrorType } from '../../utils/errors';
 import {
   connected,
   getMessageHash,
@@ -57,6 +52,7 @@ const swrFetchMetadata = (
 type PropsType = {
   children: JSX.Element;
   publicKey?: anchor.web3.PublicKey;
+  pollingInterval?: number;
 };
 
 // TODO: revisit api functions and errors to be moved out from context
@@ -103,6 +99,7 @@ type DialectContextType = {
   sendingMessage: boolean;
   sendMessageError: ParsedErrorData | null;
   isWritable: boolean;
+  checkUnreadMessages: (threadId: string) => boolean;
 };
 
 const DialectContext = createContext<DialectContextType | null>(null);
@@ -151,13 +148,15 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const [sendMessageError, setSendMessageError] =
     React.useState<ParsedErrorData | null>(null);
 
-  const { wallet, program, walletName } = useApi();
+  const { wallet, program, walletName, getLastReadMessage } = useApi();
   const isWalletConnected = connected(wallet);
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [sendingMessagesMap, setSendingMessagesMap] = React.useState({});
 
   const [encryptionProps, setEncryptionProps] =
     React.useState<EncryptionProps | null>(null);
+
+  const pollingInterval = props.pollingInterval || POLLING_INTERVAL_MS;
 
   const getEncryptionProps =
     useCallback(async (): Promise<EncryptionProps | null> => {
@@ -210,7 +209,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     false && wallet && program ? ['metadata', program] : null,
     swrFetchMetadata,
     {
-      refreshInterval: POLLING_INTERVAL_MS,
+      refreshInterval: pollingInterval,
     }
   );
 
@@ -224,7 +223,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       : null,
     swrFetchDialects,
     {
-      refreshInterval: POLLING_INTERVAL_MS,
+      refreshInterval: pollingInterval,
     }
   );
 
@@ -249,7 +248,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       : null,
     swrFetchDialect,
     {
-      refreshInterval: POLLING_INTERVAL_MS,
+      refreshInterval: pollingInterval,
     }
   );
 
@@ -518,6 +517,11 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     [getEncryptionProps, isWalletConnected, program, dialect, mutateDialect]
   );
 
+  const checkUnreadMessages = (threadId: string) => {
+    const lastReadMessage = getLastReadMessage(threadId);
+    return lastReadMessage !== messages[0]?.timestamp && messages.length > 0;
+  };
+
   // const messages = mockMessages;
   const isWritable = dialect?.dialect.members.some(
     (m: Member) => m.publicKey.equals(wallet?.publicKey) && m.scopes[1] // is not admin but does have write privilages
@@ -567,6 +571,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     sendMessage: sendMessageWrapper,
     sendingMessage,
     sendMessageError,
+    checkUnreadMessages,
   };
 
   return (
