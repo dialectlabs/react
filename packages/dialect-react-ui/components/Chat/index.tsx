@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDialect } from '@dialectlabs/react';
 import clsx from 'clsx';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -6,28 +6,8 @@ import Error from './screens/Error';
 import Main from './screens/Main';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { ChatProvider } from './provider';
-import { Header } from '../Header';
-import ThreadsList from './screens/Main/ThreadsList';
-import CreateThread from './screens/CreateThreadPage/CreateThread';
-import ThreadPage from './screens/ThreadPage';
-
-enum RouteName {
-  NoConnection = 'no_connection',
-  NoWallet = 'no_wallet',
-  CreateThread = 'create_thread',
-  Thread = 'threads_list',
-}
-
-interface Route<P extends Record<string, any> | undefined | null = undefined> {
-  params?: P;
-}
-
-interface Routes {
-  [RouteName.NoConnection]: Route;
-  [RouteName.NoWallet]: Route;
-  [RouteName.CreateThread]: Route<{ receiver?: string }>;
-  [RouteName.Thread]: Route<{ id?: string }>;
-}
+import { Route, Router, useRoute } from '../common/providers/Router';
+import { RouteName } from './constants';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -40,7 +20,7 @@ interface ChatProps {
   onChatOpen?: () => void;
 }
 
-export default function Chat({
+function InnerChat({
   id,
   type,
   wrapperClassName,
@@ -49,55 +29,26 @@ export default function Chat({
   onChatOpen,
 }: ChatProps): JSX.Element {
   const mgmt = useDialectUiId(id);
-  const {
-    dialectAddress,
-    dialects,
-    setDialectAddress,
-    disconnectedFromChain,
-    isWalletConnected,
-  } = useDialect();
-
-  const { icons } = useTheme();
+  const { disconnectedFromChain, isWalletConnected } = useDialect();
 
   const inbox = type === 'inbox';
 
-  const [activeRoute, setActiveRoute] = useState<RouteName>(
-    RouteName.NoConnection
-  );
+  const { navigate } = useRoute();
 
   useEffect(
     function pickRoute() {
       if (disconnectedFromChain) {
-        setActiveRoute(RouteName.NoConnection);
+        navigate(RouteName.NoConnection);
       } else if (!isWalletConnected) {
-        setActiveRoute(RouteName.NoWallet);
+        navigate(RouteName.NoWallet);
       } else {
-        setActiveRoute(RouteName.Thread);
+        navigate(RouteName.Main);
       }
     },
-    [disconnectedFromChain, isWalletConnected]
+    [navigate, disconnectedFromChain, isWalletConnected]
   );
 
   const { colors, modal } = useTheme();
-
-  const routes: Record<RouteName, ReactNode> = {
-    [RouteName.NoConnection]: <Error type="NoConnection" />,
-    [RouteName.NoWallet]: <Error type="NoWallet" />,
-    [RouteName.CreateThread]: (
-      <CreateThread
-        inbox={inbox}
-        onModalClose={onChatClose}
-        onCloseRequest={() => setActiveRoute(RouteName.Thread)}
-      />
-    ),
-    [RouteName.Thread]: (
-      <ThreadPage
-        inbox={inbox}
-        onModalClose={onChatClose}
-        onNewThreadClick={() => setActiveRoute(RouteName.CreateThread)}
-      />
-    ),
-  };
 
   return (
     <ChatProvider type={type} onChatOpen={onChatOpen} onChatClose={onChatClose}>
@@ -116,41 +67,25 @@ export default function Chat({
             { [modal]: !inbox }
           )}
         >
-          <div className="dt-h-full">
-            <div
-              className={clsx(
-                'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
-                {
-                  'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
-                  // TODO: until we have nested routing, we'll need to hack this
-                  'dt-hidden': activeRoute !== RouteName.Thread,
-                }
-              )}
-            >
-              <Header
-                inbox={inbox}
-                onClose={onChatClose}
-                onHeaderClick={onChatOpen}
-              >
-                <Header.Title>Messages</Header.Title>
-                <Header.Icons>
-                  <Header.Icon
-                    icon={<icons.compose />}
-                    onClick={() => setActiveRoute(RouteName.CreateThread)}
-                  />
-                </Header.Icons>
-              </Header>
-              <ThreadsList
-                chatThreads={dialects}
-                onThreadClick={(dialectAccount) => {
-                  setDialectAddress(dialectAccount.publicKey.toBase58());
-                }}
-              />
-            </div>
-            {routes[activeRoute]}
-          </div>
+          <Route name={RouteName.NoConnection}>
+            <Error type="NoConnection" />
+          </Route>
+          <Route name={RouteName.NoWallet}>
+            <Error type="NoWallet" />
+          </Route>
+          <Route name={RouteName.Main}>
+            <Main />
+          </Route>
         </div>
       </div>
     </ChatProvider>
+  );
+}
+
+export default function Chat(props: ChatProps) {
+  return (
+    <Router initialRoute={RouteName.NoConnection}>
+      <InnerChat {...props} />
+    </Router>
   );
 }

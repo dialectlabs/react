@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useApi, useDialect } from '@dialectlabs/react';
-import { display } from '@dialectlabs/web3';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { P } from '../../../common/preflighted';
 import Settings from './Settings';
 import Thread from './Thread';
 import { DisplayAddress } from '../../../DisplayAddress';
 import { Header } from '../../../Header';
+import { Route, Router, useRoute } from '../../../common/providers/Router';
+import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
@@ -20,27 +21,10 @@ const ThreadPage = ({
   onNewThreadClick,
   onModalClose,
 }: ThreadPageProps) => {
+  const { navigate, current } = useRoute();
   const { wallet, program } = useApi();
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons, xPaddedText } = useTheme();
-
-  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
-
-  const otherMembers = dialect?.dialect.members.filter(
-    (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
-  );
-  const otherMembersStrs = otherMembers?.map((member) =>
-    display(member.publicKey)
-  );
-
-  const otherMemberStr = otherMembersStrs?.[0];
-
-  useEffect(
-    function resetSettings() {
-      setSettingsOpen(false);
-    },
-    [dialect]
-  );
 
   useEffect(() => {
     setDialectAddress('');
@@ -72,8 +56,13 @@ const ThreadPage = ({
             <Header.Icon
               icon={<icons.back />}
               onClick={() => {
-                if (settingsOpen) {
-                  setSettingsOpen(false);
+                if (current?.sub?.name === ThreadRouteName.Settings) {
+                  navigate(RouteName.Main, {
+                    sub: {
+                      name: MainRouteName.Thread,
+                      sub: { name: ThreadRouteName.Messages },
+                    },
+                  });
                   return;
                 }
                 setDialectAddress('');
@@ -102,9 +91,18 @@ const ThreadPage = ({
           </Header.Title>
           <Header.Icons>
             <Header.Icon
-              className={clsx({ 'dt-invisible': settingsOpen })}
+              className={clsx({
+                'dt-invisible': current?.sub?.name === ThreadRouteName.Settings,
+              })}
               icon={<icons.settings />}
-              onClick={() => setSettingsOpen((prev) => !prev)}
+              onClick={() =>
+                navigate(RouteName.Main, {
+                  sub: {
+                    name: MainRouteName.Thread,
+                    sub: { name: ThreadRouteName.Settings },
+                  },
+                })
+              }
             />
           </Header.Icons>
         </Header>
@@ -114,7 +112,14 @@ const ThreadPage = ({
             'dt-flex-1 dt-h-full dt-overflow-y-auto'
           )}
         >
-          {settingsOpen ? <Settings /> : <Thread />}
+          <Router initialRoute={ThreadRouteName.Messages}>
+            <Route name={ThreadRouteName.Messages}>
+              <Thread />
+            </Route>
+            <Route name={ThreadRouteName.Settings}>
+              <Settings />
+            </Route>
+          </Router>
         </div>
       </div>
     </div>

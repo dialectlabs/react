@@ -1,17 +1,86 @@
-import ThreadPage from '../ThreadPage/';
+import clsx from 'clsx';
+import { useDialect } from '@dialectlabs/react';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import ThreadsList from './ThreadsList';
+import { Header } from '../../../Header';
+import CreateThread from '../CreateThreadPage/CreateThread';
+import ThreadPage from '../ThreadPage';
 import { useChatInternal } from '../../provider';
+import { Route, Router, useRoute } from '../../../common/providers/Router';
+import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 
 const Main = () => {
-  const { type, onChatClose } = useChatInternal();
+  const { navigate, current } = useRoute();
+  const { dialectAddress, dialects, setDialectAddress } = useDialect();
+  const { type, onChatClose, onChatOpen } = useChatInternal();
   const inbox = type === 'inbox';
+
+  const { icons } = useTheme();
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
-      <ThreadPage
-        inbox={inbox}
-        onModalClose={onChatClose}
-        onNewThreadClick={() => setNewThreadOpen(true)}
-      />
+      <div
+        className={clsx(
+          'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
+          {
+            'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
+            'dt-hidden':
+              dialectAddress ||
+              current?.sub?.name === MainRouteName.CreateThread, // TODO: ideally we should control this with routes and this causes a visual bug with route swaps
+          }
+        )}
+      >
+        <Header inbox={inbox} onClose={onChatClose} onHeaderClick={onChatOpen}>
+          <Header.Title>Messages</Header.Title>
+          <Header.Icons>
+            <Header.Icon
+              icon={<icons.compose />}
+              onClick={() =>
+                navigate(RouteName.Main, {
+                  sub: { name: MainRouteName.CreateThread },
+                })
+              }
+            />
+          </Header.Icons>
+        </Header>
+        <ThreadsList
+          chatThreads={dialects}
+          onThreadClick={(dialectAccount) => {
+            // TODO: move to route param
+            setDialectAddress(dialectAccount.publicKey.toBase58());
+            navigate(RouteName.Main, {
+              sub: {
+                name: MainRouteName.Thread,
+                sub: { name: ThreadRouteName.Messages },
+              },
+            });
+          }}
+        />
+      </div>
+      <Router>
+        <Route name={MainRouteName.CreateThread}>
+          <CreateThread
+            inbox={inbox}
+            onModalClose={onChatClose}
+            onCloseRequest={() => {
+              navigate(RouteName.Main, {
+                sub: { name: MainRouteName.Thread },
+              });
+            }}
+          />
+        </Route>
+        <Route name={MainRouteName.Thread}>
+          <ThreadPage
+            inbox={inbox}
+            onModalClose={onChatClose}
+            onNewThreadClick={() =>
+              navigate(RouteName.Main, {
+                sub: { name: MainRouteName.CreateThread },
+              })
+            }
+          />
+        </Route>
+      </Router>
     </div>
   );
 };
