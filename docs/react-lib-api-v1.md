@@ -98,7 +98,7 @@ interface UseThreadsParams {
 interface UseThreadsValue {
   // sdk
   threads: Thread[];
-  create(command: CreateDialectCommand): Promise<Thread>;
+  create(command: CreateThreadCommand): Promise<Thread>;
   // react-lib
   isFetchingThreads: boolean;
   errorFetchingThreads: DialectSdkError | null;
@@ -129,11 +129,7 @@ type UseThreadParams = ThreadSearchParams & {};
 
 interface UseThreadValue {
   // sdk
-  address: PublicKey;
-  me: DialectMember;
-  otherMember: DialectMember;
-  encryptionEnabled: boolean;
-  canBeDecrypted: boolean;
+  thread: Omit<Thread, 'messages' | 'send' | 'delete'> | null;
 
   send(command: SendMessageCommand): Promise<void>;
   delete(): Promise<void>;
