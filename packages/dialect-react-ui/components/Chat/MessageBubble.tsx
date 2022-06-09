@@ -3,7 +3,7 @@ import type { Message } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import Avatar from '../Avatar';
 import { LinkifiedText } from '../common';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
 
 type MessageBubbleProps = Message & {

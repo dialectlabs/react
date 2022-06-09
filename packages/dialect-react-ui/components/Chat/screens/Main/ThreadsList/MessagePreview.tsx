@@ -7,9 +7,9 @@ import {
 import clsx from 'clsx';
 import type { Message } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
-import { useTheme } from '../../../../common/ThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
 import MessageStatus from '../../../MessageStatus';
+import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 
 type PropsType = {
   dialect: DialectAccount;
@@ -69,7 +69,7 @@ export default function MessagePreview({
     [...sendingMessages].reverse() || [],
     dialect.dialect.messages || []
   );
-  const firstMessage = messages && messages?.length > 0 && messages[0];
+  const [firstMessage] = messages ?? [];
   let timestamp = formatTimestamp(dialect.dialect.lastMessageTimestamp);
   if (firstMessage?.isSending || firstMessage?.error) {
     timestamp = null;
