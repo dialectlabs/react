@@ -13,7 +13,7 @@ interface RouterContextValue<
   ActiveRouteParams extends RouteParams = undefined
 > {
   activeRoute: RouteType<ActiveRouteParams> | null;
-  navigate(to: string, args: Omit<RouteType, 'name'>): void;
+  navigate(to: string, args?: Omit<RouteType, 'name'>): void;
 }
 
 interface RouteType<P extends RouteParams = undefined> {
@@ -49,7 +49,6 @@ export const Router: FunctionComponent<RouterProps> = ({
 
   useEffect(() => {
     if (!parent) {
-      setActiveRoute(null);
       return;
     }
 
@@ -60,7 +59,11 @@ export const Router: FunctionComponent<RouterProps> = ({
   }, [parent]);
 
   return (
-    <RouterContext.Provider value={{ activeRoute, navigate }}>
+    <RouterContext.Provider
+      // If this is a nested router we want to have a single source of truth for the whole app, which is the parent router
+      // When we update the parent's active route, that will propagate to all nested Routers
+      value={{ activeRoute, navigate: parent ? parent.navigate : navigate }}
+    >
       {children}
     </RouterContext.Provider>
   );
@@ -69,7 +72,7 @@ export const Router: FunctionComponent<RouterProps> = ({
 export const Route: FunctionComponent<RouteProps> = ({ name, children }) => {
   const router = useContext(RouterContext);
 
-  return router?.activeRoute?.name === name ? children : null;
+  return router?.activeRoute?.name === name ? <>{children}</> : null;
 };
 
 export const useRoute = <P extends RouteParams = undefined>() => {
@@ -82,7 +85,9 @@ export const useRoute = <P extends RouteParams = undefined>() => {
   const { activeRoute, navigate } = context as RouterContextValue<P>;
 
   return {
+    current: activeRoute,
     params: activeRoute?.params ?? {},
+    name: activeRoute?.name || null,
     navigate,
   };
 };
