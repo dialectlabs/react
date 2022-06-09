@@ -29,9 +29,9 @@ import {
 } from '../../../common';
 import { fetchAddressFromTwitterHandle } from '../../../DisplayAddress';
 import { Lock, NoLock } from '../../../Icon';
-import debounce from '../../../../../../utils/debounce';
 import { Header } from '../../../Header';
 import { Connection, PublicKey } from '@solana/web3.js';
+import debounce from '../../../../utils/debounce';
 
 interface CreateThreadProps {
   inbox?: boolean;
@@ -234,7 +234,10 @@ const parseSNSDomain = (domainString: string): string | undefined => {
   return domainName;
 };
 
-const tryFetchSNSDomain = async (connection: Connection, domainName: string): Promise<anchor.web3.PublicKey | null> => {
+const tryFetchSNSDomain = async (
+  connection: Connection,
+  domainName: string
+): Promise<PublicKey | null> => {
   try {
     const hashedName = await getHashedName(domainName);
 
@@ -264,9 +267,9 @@ const parseTwitterHandle = (handleString: string): string | undefined => {
 };
 
 const tryFetchAddressFromTwitterHandle = async (
-  connection: anchor.web3.Connection,
+  connection: Connection,
   handle: string
-): Promise<anchor.web3.PublicKey | null> => {
+): Promise<PublicKey | null> => {
   try {
     const { result } = await fetchAddressFromTwitterHandle(connection, handle);
 
@@ -276,9 +279,9 @@ const tryFetchAddressFromTwitterHandle = async (
   }
 };
 
-const tryPublicKey = (addressString: string): anchor.web3.PublicKey | null => {
+const tryPublicKey = (addressString: string): PublicKey | null => {
   try {
-    return new anchor.web3.PublicKey(addressString);
+    return new PublicKey(addressString);
   } catch (e) {
     return null;
   }
@@ -303,8 +306,7 @@ export default function CreateThread({
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
   const [address, setAddress] = useState('');
-  const [actualAddress, setActualAddress] =
-    useState<anchor.web3.PublicKey | null>(null);
+  const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
 
   const [isTwitterHandle, setIsTwitterHandle] = useState(false);
   const [isSNS, setIsSNS] = useState(false);
@@ -371,10 +373,7 @@ export default function CreateThread({
     setIsTyping(true);
   };
 
-  const findAddress = async (
-    connection: anchor.web3.Connection,
-    addressString: string
-  ) => {
+  const findAddress = async (connection: Connection, addressString: string) => {
     if (!connection) {
       // TODO: set connection error
       return;
@@ -455,7 +454,7 @@ export default function CreateThread({
       );
     };
     fetchReverse();
-  }, [actualAddress?.toBase58(), isSNS, isTwitterHandle]);
+  }, [actualAddress, connection, isSNS, isTwitterHandle]);
 
   const disabled = !address || (!isTyping && !isValidAddress);
 
