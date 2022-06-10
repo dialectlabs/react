@@ -101,7 +101,7 @@ function AuthedHome() {
           </code>
           <div>
             <code className="shrink text-center text-transparent bg-clip-text bg-gradient-to-r from-[#B852DC] to-[#59C29D]">
-              examples/chat
+              examples/bottom-chat
             </code>
           </div>
         </div>

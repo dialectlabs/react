@@ -31,8 +31,6 @@ function InnerChat({
   const mgmt = useDialectUiId(id);
   const { disconnectedFromChain, isWalletConnected } = useDialect();
 
-  const inbox = type === 'inbox';
-
   const { navigate } = useRoute();
 
   useEffect(
@@ -69,7 +67,7 @@ function InnerChat({
             colors.primary,
             colors.bg,
             contentWrapperClassName,
-            { [modal]: !inbox }
+            { [modal]: type === 'popup' }
           )}
         >
           <Route name={RouteName.NoConnection}>
