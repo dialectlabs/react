@@ -45,13 +45,13 @@ function WrappedBottomChat(
   );
   useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
-  const { colors, bellButton, icons, modalWrapper, animations } = useTheme();
+  const { sliderWrapper, animations } = useTheme();
 
   return (
     <div
       className={clsx(
-        // TODO: move to theme, also this styling is not very intuitive and breaks the thought process, a lot.
-        'dt-fixed sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-14',
+        // TODO: styling is not very intuitive and breaks the thought process, a lot.
+        sliderWrapper,
         ui?.open ? animations.bottomSlide.enter : animations.bottomSlide.leave,
         ui?.open
           ? animations.bottomSlide.leaveTo

@@ -115,6 +115,7 @@ export type IncomingThemeValues = {
   linkButton?: string;
   modalWrapper?: string;
   modal?: string;
+  sliderWrapper?: string;
   button?: string;
   buttonLoading?: string;
   secondaryButton?: string;
@@ -250,6 +251,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
+    sliderWrapper:
+      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-14',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
     buttonLoading:
@@ -351,6 +354,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
+    sliderWrapper:
+      'dt-fixed dt-z-50 dt-top-auto dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-14',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     buttonLoading:

@@ -118,7 +118,7 @@ Header.Icons = function HeaderIconsContent({
           onClick={noPropagateEvent(isWindowOpen ? onClose : onOpen)}
         />
       )}
-      {!containerOnly && type !== 'inbox' && onClose && (
+      {!containerOnly && type === 'popup' && onClose && (
         <Header.Icon
           className="sm:dt-hidden"
           icon={<icons.x />}
