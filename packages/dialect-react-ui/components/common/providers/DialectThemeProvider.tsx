@@ -162,13 +162,14 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       leaveFrom: 'dt-opacity-100',
       leaveTo: 'dt-opacity-0',
     },
+    // Uses `react-transition-group
     bottomSlide: {
-      enter: 'dt-transition-transform dt-duration-300',
-      enterFrom: 'dt-translate-y-14',
-      enterTo: 'dt-translate-y-full',
-      leave: 'dt-transition-transform dt-duration-100',
-      leaveFrom: 'dt-translate-y-full',
-      leaveTo: 'dt-translate-y-14',
+      enter: 'dt-transition-transform dt-duration-300 dt-ease-in-out',
+      enterFrom: '-dt-translate-y-14',
+      enterTo: '-dt-translate-y-full',
+      leave: 'dt-transition-transform dt-duration-100 dt-ease-in-out',
+      leaveFrom: '-dt-translate-y-full',
+      leaveTo: '-dt-translate-y-14',
     },
   },
   light: {
@@ -247,7 +248,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
-      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-14',
+      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
@@ -348,7 +349,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
-      'dt-fixed dt-z-50 dt-top-auto dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-14',
+      'dt-fixed dt-z-50 dt-top-auto dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto -dt-translate-full',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
