@@ -30,7 +30,7 @@ interface UseThreadValue {
   isDeletingThread: boolean;
   errorDeletingThread: DialectSdkError | null;
 }
-
+// TODO: caching
 // TODO: refresh interval
 const useThread = ({ address }: UseThreadParams): UseThreadValue => {
   const { threads: threadsApi } = useDialectSdk();

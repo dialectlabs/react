@@ -17,7 +17,8 @@ interface UseThreadMessagesValue {
   errorFetchingMessages: DialectSdkError | null;
 }
 
-//TODO: polling
+// TODO: caching
+// TODO: polling
 const useThreadMessages = ({
   address,
 }: UseThreadMessagesParams): UseThreadMessagesValue => {
