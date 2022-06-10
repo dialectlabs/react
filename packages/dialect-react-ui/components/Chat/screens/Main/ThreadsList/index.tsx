@@ -43,7 +43,7 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
             colors.highlight,
             highlighted,
             textStyles.small,
-            'dt-px-4 dt-py-2 dt-mr-2'
+            'dt-px-4 dt-py-2 dt-mx-2 dt-mt-2'
           )}
         >
           ⚠ You have encrypted messages in your inbox. Connect the Sollet.io
