@@ -289,16 +289,21 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   ]);
 
   useEffect(() => {
+    if (!wallet || !dialect?.dialect) return;
+    const dialectMessages = dialect.dialect.messages;
+    const messagesWithoutIds = messages.map(({ id, ...m }) => m);
     const hasNewMessage =
-      wallet &&
-      dialect?.dialect &&
-      (messages.length !== dialect.dialect.messages.length ||
-        // Could be there a performance issue to calc hash for long array?
-        // TODO: maybe refactor with clever mutateDialect
-        getMessageHash(dialect.dialect.messages) !== getMessageHash(messages));
-    if (hasNewMessage) {
-      setMessages(dialect.dialect.messages);
-    }
+      // TODO: maybe refactor with clever mutateDialect, could be a perf issue with hash for long arrays?
+      messagesWithoutIds.length !== dialectMessages.length ||
+      getMessageHash(dialectMessages) !== getMessageHash(messagesWithoutIds);
+
+    if (!hasNewMessage) return;
+    // Set id on clients side to use in animations, because there is no id in message protocol right now. TODO: remove
+    const messagesWithIds = dialect.dialect.messages.map((m: Message) => ({
+      ...m,
+      id: getMessageHash(m.text),
+    }));
+    setMessages(messagesWithIds);
   }, [wallet, dialect?.dialect, messages, messages.length]);
 
   useEffect(() => {
@@ -535,6 +540,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       isWalletConnected,
       program,
       dialect,
+      dialectAddress,
+      wallet?.publicKey,
       mutateDialect,
     ]
   );
@@ -551,7 +558,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     messages.length && sendingMessagesMap[dialectAddress]
       ? sendingMessagesMap[dialectAddress]
       : [];
-
 
   const checkUnreadMessages = (threadId: string) => {
     const lastReadMessage = getLastReadMessage(threadId);

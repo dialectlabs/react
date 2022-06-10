@@ -32,7 +32,7 @@ export default function MessageBubble({
   return (
     <div
       className={clsx(
-        'dt-flex dt-flex-row dt-items-center dt-mb-2',
+        'dt-flex dt-flex-row dt-items-center',
         isYou && 'dt-ml-10 dt-justify-end'
       )}
     >
