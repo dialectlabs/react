@@ -2,13 +2,15 @@ import { Centered } from '../../common';
 import { useTheme } from '../../common/providers/DialectThemeProvider';
 import { Header } from '../../Header';
 import { useChatInternal } from '../provider';
+import { useDialectUiId } from '../../common/providers/DialectUiManagementProvider';
 
 interface Props {
   type: 'NoConnection' | 'NoWallet';
 }
 
 const Error = ({ type }: Props) => {
-  const { type: chatType, onChatOpen, onChatClose } = useChatInternal();
+  const { type: chatType, onChatOpen, onChatClose, id } = useChatInternal();
+  const { ui } = useDialectUiId(id);
   const { icons } = useTheme();
 
   if (!type) return null;
@@ -16,9 +18,11 @@ const Error = ({ type }: Props) => {
   return (
     <>
       <Header
-        inbox={chatType === 'inbox'}
+        type={chatType}
         onClose={onChatClose}
+        onOpen={onChatOpen}
         onHeaderClick={onChatOpen}
+        isWindowOpen={ui?.open}
       >
         <Header.Title>Messages</Header.Title>
         <Header.Icons />

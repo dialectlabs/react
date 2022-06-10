@@ -51,7 +51,12 @@ function InnerChat({
   const { colors, modal } = useTheme();
 
   return (
-    <ChatProvider type={type} onChatOpen={onChatOpen} onChatClose={onChatClose}>
+    <ChatProvider
+      id={id}
+      type={type}
+      onChatOpen={onChatOpen}
+      onChatClose={onChatClose}
+    >
       <div
         className={clsx(
           'dialect',

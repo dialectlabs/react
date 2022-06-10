@@ -78,7 +78,7 @@ function WrappedChatButton(
         {...animations.popup}
       >
         <div ref={wrapperRef} className="dt-w-full dt-h-full">
-          <Chat onChatClose={close} />
+          <Chat id={props.id} type="popup" onChatClose={close} />
         </div>
       </Transition>
     </div>

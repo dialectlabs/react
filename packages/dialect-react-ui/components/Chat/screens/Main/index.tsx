@@ -8,11 +8,13 @@ import ThreadPage from '../ThreadPage';
 import { useChatInternal } from '../../provider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 
 const Main = () => {
   const { navigate, current } = useRoute();
   const { dialectAddress, dialects, setDialectAddress } = useDialect();
-  const { type, onChatClose, onChatOpen } = useChatInternal();
+  const { type, onChatClose, onChatOpen, id } = useChatInternal();
+  const { ui } = useDialectUiId(id);
   const inbox = type === 'inbox';
 
   const { icons } = useTheme();
@@ -30,7 +32,13 @@ const Main = () => {
           }
         )}
       >
-        <Header inbox={inbox} onClose={onChatClose} onHeaderClick={onChatOpen}>
+        <Header
+          type={type}
+          onClose={onChatClose}
+          onOpen={onChatOpen}
+          onHeaderClick={onChatOpen}
+          isWindowOpen={ui?.open}
+        >
           <Header.Title>Messages</Header.Title>
           <Header.Icons>
             <Header.Icon
@@ -57,10 +65,9 @@ const Main = () => {
           }}
         />
       </div>
-      <Router>
+      <Router initialRoute={MainRouteName.Thread}>
         <Route name={MainRouteName.CreateThread}>
           <CreateThread
-            inbox={inbox}
             onModalClose={onChatClose}
             onCloseRequest={() => {
               navigate(RouteName.Main, {
@@ -71,7 +78,6 @@ const Main = () => {
         </Route>
         <Route name={MainRouteName.Thread}>
           <ThreadPage
-            inbox={inbox}
             onModalClose={onChatClose}
             onNewThreadClick={() =>
               navigate(RouteName.Main, {
