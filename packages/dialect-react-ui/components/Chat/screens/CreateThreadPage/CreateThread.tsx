@@ -34,6 +34,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import debounce from '../../../../utils/debounce';
 import { useChatInternal } from '../../provider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
+import { useRoute } from '../../../common/providers/Router';
 
 interface CreateThreadProps {
   onNewThreadCreated?: (addr: string) => void;
@@ -300,6 +301,9 @@ export default function CreateThread({
     creationError,
     setDialectAddress,
   } = useDialect();
+  const {
+    params: { receiver },
+  } = useRoute<{ receiver?: string }>();
   const { type, onChatOpen, id } = useChatInternal();
   const { ui } = useDialectUiId(id);
   const { program, network, wallet, walletName } = useApi();
@@ -307,7 +311,7 @@ export default function CreateThread({
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(receiver ?? '');
   const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
 
   const [isTwitterHandle, setIsTwitterHandle] = useState(false);
@@ -319,6 +323,12 @@ export default function CreateThread({
   const [encrypted, setEncrypted] = useState(false);
   const [isValidAddress, setIsValidAddress] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+
+  useEffect(() => {
+    if (receiver) {
+      setAddress(receiver);
+    }
+  }, [receiver]);
 
   // TODO: useCallback
   const createThread = async () => {
@@ -369,7 +379,6 @@ export default function CreateThread({
     }
   };
 
-  // TODO: useCallback
   const onAddressChange = (addr: string) => {
     setAddress(addr);
     setIsTyping(true);
@@ -425,6 +434,11 @@ export default function CreateThread({
   };
 
   const findAddressDebounced = useCallback(debounce(findAddress, 500), []);
+
+  useEffect(() => {
+    // When input address changes, we debounce
+    findAddressDebounced(connection, address);
+  }, [findAddressDebounced, connection, address]);
 
   useEffect(() => {
     const fetchReverse = async () => {
@@ -496,10 +510,6 @@ export default function CreateThread({
           value={address}
           onChange={(e) => {
             onAddressChange(e.target.value);
-            findAddressDebounced(connection, e.target.value);
-          }}
-          onKeyUp={() => {
-            findAddressDebounced(connection, address);
           }}
           onKeyDown={onEnterPress}
         />

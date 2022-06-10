@@ -28,10 +28,14 @@ function InnerChat({
   onChatClose,
   onChatOpen,
 }: ChatProps): JSX.Element {
-  const mgmt = useDialectUiId(id);
+  const { configure } = useDialectUiId(id);
   const { disconnectedFromChain, isWalletConnected } = useDialect();
 
   const { navigate } = useRoute();
+
+  useEffect(() => {
+    configure({ navigation: { navigate } });
+  }, [configure, navigate]);
 
   useEffect(
     function pickRoute() {
