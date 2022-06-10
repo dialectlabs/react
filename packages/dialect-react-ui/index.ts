@@ -15,6 +15,11 @@ import {
   useDialectUi,
   useDialectUiId,
 } from './components/common/providers/DialectUiManagementProvider';
+import {
+  RouteName as ChatRouteName,
+  MainRouteName as ChatMainRouteName,
+  ThreadRouteName as ChatThreadRouteName,
+} from './components/Chat/constants';
 
 import type {
   ThemeType,
@@ -38,6 +43,9 @@ export {
   DialectUiManagementProvider,
   useDialectUi,
   useDialectUiId,
+  ChatRouteName,
+  ChatThreadRouteName,
+  ChatMainRouteName,
 };
 
 export type {
