@@ -90,25 +90,6 @@ function WrappedBottomChat(
     </div>
   );
 }
-// <div
-//   className={clsx(
-//     // TODO: styling is not very intuitive and breaks the thought process, a lot.
-//     sliderWrapper,
-//     ui?.open ? animations.bottomSlide.enter : animations.bottomSlide.leave,
-//     ui?.open
-//       ? animations.bottomSlide.leaveTo
-//       : animations.bottomSlide.enterTo
-//   )}
-// >
-//   <div className="dt-w-full dt-h-full">
-//     <Chat
-//       id={props.id}
-//       type="vertical-slider"
-//       onChatClose={close}
-//       onChatOpen={open}
-//     />
-//   </div>
-// </div>
 
 export default function BottomChat({
   theme = 'dark',
