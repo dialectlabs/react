@@ -16,6 +16,7 @@ import Chat from '../Chat';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 import clsx from 'clsx';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import { CSSTransition } from 'react-transition-group';
 
 type PropTypes = {
   id: string;
@@ -48,27 +49,66 @@ function WrappedBottomChat(
   const { sliderWrapper, animations } = useTheme();
 
   return (
-    <div
-      className={clsx(
-        // TODO: styling is not very intuitive and breaks the thought process, a lot.
-        sliderWrapper,
-        ui?.open ? animations.bottomSlide.enter : animations.bottomSlide.leave,
-        ui?.open
-          ? animations.bottomSlide.leaveTo
-          : animations.bottomSlide.enterTo
-      )}
-    >
-      <div className="dt-w-full dt-h-full">
-        <Chat
-          id={props.id}
-          type="vertical-slider"
-          onChatClose={close}
-          onChatOpen={open}
-        />
-      </div>
+    <div className={sliderWrapper}>
+      {/* TODO: this transition is not fully working yet, will be adjusted. Leave animation is working, enter happens immediately */}
+      <CSSTransition
+        in={ui?.open ?? false}
+        timeout={{
+          enter: 300,
+          exit: 100,
+        }}
+        appear
+        classNames={{
+          enter: animations.bottomSlide.enterFrom,
+          enterActive: clsx(
+            animations.bottomSlide.enter,
+            animations.bottomSlide.enterTo
+          ),
+          enterDone: animations.bottomSlide.enterTo,
+          exit: animations.bottomSlide.leaveFrom,
+          exitActive: clsx(
+            animations.bottomSlide.leave,
+            animations.bottomSlide.leaveTo
+          ),
+          exitDone: animations.bottomSlide.leaveTo,
+        }}
+      >
+        <div
+          className={clsx(
+            'dt-w-full dt-h-full',
+            animations.bottomSlide.enterFrom
+          )}
+        >
+          <Chat
+            id={props.id}
+            type="vertical-slider"
+            onChatClose={close}
+            onChatOpen={open}
+          />
+        </div>
+      </CSSTransition>
     </div>
   );
 }
+// <div
+//   className={clsx(
+//     // TODO: styling is not very intuitive and breaks the thought process, a lot.
+//     sliderWrapper,
+//     ui?.open ? animations.bottomSlide.enter : animations.bottomSlide.leave,
+//     ui?.open
+//       ? animations.bottomSlide.leaveTo
+//       : animations.bottomSlide.enterTo
+//   )}
+// >
+//   <div className="dt-w-full dt-h-full">
+//     <Chat
+//       id={props.id}
+//       type="vertical-slider"
+//       onChatClose={close}
+//       onChatOpen={open}
+//     />
+//   </div>
+// </div>
 
 export default function BottomChat({
   theme = 'dark',
