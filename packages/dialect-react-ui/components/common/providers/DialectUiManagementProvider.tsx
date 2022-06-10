@@ -8,18 +8,33 @@ import {
   useState,
 } from 'react';
 import produce from 'immer';
+import type { RouteParams, RouterContextValue } from './Router';
 
 interface UiState {
   open: boolean;
+}
+
+interface Navigator<P extends RouteParams = undefined> {
+  navigate?: RouterContextValue<P>['navigate'];
+}
+
+interface ManagementConfig {
+  navigation?: Partial<{
+    navigate: Navigator['navigate'];
+  }>;
 }
 
 interface UiManagementContextType {
   ui: {
     [id: string]: UiState;
   };
+  navigation: {
+    [id: string]: Navigator;
+  };
   open(id: string): void;
   close(id: string): void;
   register(id: string): void;
+  configure(id: string, config: ManagementConfig): void;
 }
 
 export const DialectUiManagementContext =
@@ -29,6 +44,9 @@ export const DialectUiManagementProvider: FunctionComponent = ({
   children,
 }) => {
   const [ui, setUi] = useState<UiManagementContextType['ui']>({});
+  const [navigation, setNavigation] = useState<
+    UiManagementContextType['navigation']
+  >({});
 
   const register = useCallback(
     (id: string) =>
@@ -66,8 +84,24 @@ export const DialectUiManagementProvider: FunctionComponent = ({
     []
   );
 
+  // Extend for necessary configurations
+  const configure = useCallback((id: string, config: ManagementConfig) => {
+    setNavigation(
+      produce((draft) => {
+        const nav = draft[id] ?? {};
+        const { navigation } = config;
+
+        nav.navigate = navigation?.navigate;
+
+        draft[id] = nav;
+      })
+    );
+  }, []);
+
   return (
-    <DialectUiManagementContext.Provider value={{ ui, register, open, close }}>
+    <DialectUiManagementContext.Provider
+      value={{ ui, navigation, register, open, close, configure }}
+    >
       {children}
     </DialectUiManagementContext.Provider>
   );
@@ -87,16 +121,26 @@ export const useDialectUi = () => {
 export const useDialectUiId = (id: string) => {
   const {
     ui: uis,
+    navigation: navigations,
     open: mainOpen,
     close: mainClose,
     register,
+    configure: mainConfigure,
   } = useDialectUi();
 
   const ui = useMemo(() => uis[id], [uis, id]);
+  const navigation: Navigator<Record<string, any>> | undefined = useMemo(
+    () => navigations[id],
+    [navigations, id]
+  );
   const open = useCallback(() => mainOpen(id), [mainOpen, id]);
   const close = useCallback(() => mainClose(id), [mainClose, id]);
+  const configure = useCallback(
+    (config: ManagementConfig) => mainConfigure(id, config),
+    [mainConfigure, id]
+  );
 
   useEffect(() => register(id), [register, id]);
 
-  return { ui, open, close };
+  return { ui, navigation, open, close, configure };
 };

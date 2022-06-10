@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-import {
-  BottomChat,
-  IncomingThemeVariables,
-  useDialectUiId,
-} from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
 import {
   defaultVariables,
   DialectUiManagementProvider,
+  BottomChat,
+  IncomingThemeVariables,
+  useDialectUiId,
 } from '@dialectlabs/react-ui';
 import Head from 'next/head';
 // pink: #B852DC
@@ -51,7 +49,7 @@ function AuthedHome() {
   // const wallet = useAnchorWallet();
   const wallet = useWallet();
   const [theme, setTheme] = useState<ThemeType>('dark');
-  const { ui, open, close } = useDialectUiId('dialect-bottom-chat');
+  const { ui, open, close, navigation } = useDialectUiId('dialect-bottom-chat');
 
   useEffect(() => {
     if (
@@ -87,6 +85,22 @@ function AuthedHome() {
 
       <div className="flex flex-col h-screen bg-white dark:bg-black">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
+          <button
+            className="py-2 px-3 bg-black text-white rounded border border-white"
+            onClick={() => {
+              open();
+              // TODO: navigate needs better typing or documentation, since routes are internal.
+              navigation?.navigate?.('main', {
+                sub: {
+                  name: 'create_thread',
+                  // TODO: There is a problem with typing sub route params, and this needs to be improved, unfortunately
+                  params: { receiver: '@saydialect' } as any,
+                },
+              });
+            }}
+          >
+            Create Thread with Someone!
+          </button>
           <button
             className="py-2 px-3 bg-black text-white rounded border border-white"
             onClick={ui?.open ? close : open}

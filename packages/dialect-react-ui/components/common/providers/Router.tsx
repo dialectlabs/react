@@ -7,9 +7,9 @@ import {
   useState,
 } from 'react';
 
-type RouteParams = Record<string, any> | undefined | null;
+export type RouteParams = Record<string, any> | undefined | null;
 
-interface RouterContextValue<
+export interface RouterContextValue<
   ActiveRouteParams extends RouteParams = undefined
 > {
   activeRoute: RouteType<ActiveRouteParams> | null;
@@ -86,7 +86,7 @@ export const useRoute = <P extends RouteParams = undefined>() => {
 
   return {
     current: activeRoute,
-    params: activeRoute?.params ?? {},
+    params: activeRoute?.params ?? ({} as P),
     name: activeRoute?.name || null,
     navigate,
   };
