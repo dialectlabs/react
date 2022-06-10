@@ -18,3 +18,4 @@ export { default as Resend } from './Resend';
 export { default as Spinner } from './Spinner';
 export { default as Trash } from './Trash';
 export { default as X } from './X';
+export { default as MultiarrowVertical } from './MultiarrowVertical';

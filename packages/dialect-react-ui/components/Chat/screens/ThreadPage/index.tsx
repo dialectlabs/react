@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import clsx from 'clsx';
 import { useApi, useDialect } from '@dialectlabs/react';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -9,22 +9,22 @@ import { DisplayAddress } from '../../../DisplayAddress';
 import { Header } from '../../../Header';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
+import { useChatInternal } from '../../provider';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
-  inbox?: boolean;
   onModalClose?: () => void;
 }
 
-const ThreadPage = ({
-  inbox,
-  onNewThreadClick,
-  onModalClose,
-}: ThreadPageProps) => {
+const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
   const { navigate, current } = useRoute();
   const { wallet, program } = useApi();
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons, xPaddedText } = useTheme();
+  const { type, onChatOpen, id } = useChatInternal();
+  const { ui } = useDialectUiId(id);
+  const inbox = type === 'inbox';
 
   useEffect(() => {
     setDialectAddress('');
@@ -51,7 +51,13 @@ const ThreadPage = ({
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
       <div className="dt-flex dt-flex-col dt-flex-1 dt-min-w-[0px]">
-        <Header inbox={inbox} onClose={onModalClose}>
+        <Header
+          type={type}
+          onClose={onModalClose}
+          onOpen={onChatOpen}
+          onHeaderClick={onChatOpen}
+          isWindowOpen={ui?.open}
+        >
           <Header.Icons containerOnly position="left">
             <Header.Icon
               icon={<icons.back />}

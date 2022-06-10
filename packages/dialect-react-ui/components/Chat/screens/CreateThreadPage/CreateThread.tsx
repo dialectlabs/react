@@ -32,9 +32,10 @@ import { Lock, NoLock } from '../../../Icon';
 import { Header } from '../../../Header';
 import { Connection, PublicKey } from '@solana/web3.js';
 import debounce from '../../../../utils/debounce';
+import { useChatInternal } from '../../provider';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 
 interface CreateThreadProps {
-  inbox?: boolean;
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
   onModalClose?: () => void;
@@ -100,7 +101,7 @@ function ActionCaption({
       >
         Use{' '}
         <A
-          href="components/Chat/screens/CreateThreadPage/CreateThread"
+          href="https://www.sollet.io/"
           target="_blank"
           className="dt-underline"
         >
@@ -288,7 +289,6 @@ const tryPublicKey = (addressString: string): PublicKey | null => {
 };
 
 export default function CreateThread({
-  inbox,
   onNewThreadCreated,
   onCloseRequest,
   onModalClose,
@@ -300,6 +300,8 @@ export default function CreateThread({
     creationError,
     setDialectAddress,
   } = useDialect();
+  const { type, onChatOpen, id } = useChatInternal();
+  const { ui } = useDialectUiId(id);
   const { program, network, wallet, walletName } = useApi();
   const connection = program?.provider.connection;
   const { balance } = useBalance();
@@ -460,7 +462,13 @@ export default function CreateThread({
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
-      <Header inbox={inbox} onClose={onModalClose}>
+      <Header
+        type={type}
+        onClose={onModalClose}
+        onOpen={onChatOpen}
+        onHeaderClick={onChatOpen}
+        isWindowOpen={ui?.open}
+      >
         <Header.Icons containerOnly position="left">
           <Header.Icon
             icon={<icons.back />}
@@ -490,7 +498,7 @@ export default function CreateThread({
             onAddressChange(e.target.value);
             findAddressDebounced(connection, e.target.value);
           }}
-          onKeyUp={(e) => {
+          onKeyUp={() => {
             findAddressDebounced(connection, address);
           }}
           onKeyDown={onEnterPress}

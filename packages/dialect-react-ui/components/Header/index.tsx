@@ -4,12 +4,15 @@ import type { ComponentProps, ReactNode } from 'react';
 import clsx from 'clsx';
 import { H3 } from '../common/preflighted';
 import { createContext, useContext } from 'react';
+import { noPropagateEvent } from '../../utils/events';
 
 interface HeaderProps {
-  inbox?: boolean;
+  type?: 'inbox' | 'popup' | 'vertical-slider';
   onHeaderClick?: () => void;
   onClose?: () => void;
+  onOpen?: () => void;
   children?: ReactNode | ReactNode[];
+  isWindowOpen?: boolean;
 }
 
 interface IconProps extends ComponentProps<typeof IconButton> {
@@ -29,8 +32,10 @@ interface TitleProps {
 }
 
 const HeaderContext = createContext<{
-  inbox?: boolean;
+  type?: 'inbox' | 'popup' | 'vertical-slider';
+  isWindowOpen?: boolean;
   onClose?: () => void;
+  onOpen?: () => void;
 } | null>(null);
 
 const useHeader = () => {
@@ -43,16 +48,19 @@ const useHeader = () => {
   return context;
 };
 
+// TODO: Make Header more agnostic (so that can be used in Notifications as well)
 export const Header = ({
-  inbox,
+  type,
   children,
   onHeaderClick,
   onClose,
+  onOpen,
+  isWindowOpen,
 }: HeaderProps) => {
   const { header } = useTheme();
 
   return (
-    <HeaderContext.Provider value={{ inbox, onClose }}>
+    <HeaderContext.Provider value={{ type, onClose, onOpen, isWindowOpen }}>
       <header
         className={clsx(
           'dt-max-h-[3.5rem] dt-min-h-[3.5rem] dt-px-2 dt-h-full dt-flex dt-justify-between dt-items-center dt-border-b dt-border-neutral-900',
@@ -69,6 +77,7 @@ export const Header = ({
 Header.Icon = function HeaderIcon({
   children,
   className,
+  onClick,
   ...iconButtonProps
 }: IconProps) {
   if (children) {
@@ -78,7 +87,8 @@ Header.Icon = function HeaderIcon({
   return (
     <IconButton
       {...iconButtonProps}
-      className={clsx('not:first:dt-ml-3', className)}
+      onClick={onClick}
+      className={clsx('dt-ml-3 first:dt-ml-0', className)}
     />
   );
 };
@@ -88,7 +98,7 @@ Header.Icons = function HeaderIconsContent({
   position = 'right',
   containerOnly = false,
 }: IconsProps) {
-  const { inbox, onClose } = useHeader();
+  const { type, onClose, onOpen, isWindowOpen } = useHeader();
   const { icons } = useTheme();
 
   return (
@@ -99,10 +109,21 @@ Header.Icons = function HeaderIconsContent({
       })}
     >
       {children}
-      {!containerOnly && !inbox && onClose && (
-        <div className="sm:dt-hidden not:first:dt-ml-3">
-          <IconButton icon={<icons.x />} onClick={onClose} />
-        </div>
+      {!containerOnly && type === 'vertical-slider' && onClose && onOpen && (
+        <Header.Icon
+          className={clsx('dt-transition-transform dt-rotate-0', {
+            'dt-rotate-180': !isWindowOpen,
+          })}
+          icon={<icons.arrowvertical />}
+          onClick={noPropagateEvent(isWindowOpen ? onClose : onOpen)}
+        />
+      )}
+      {!containerOnly && type !== 'inbox' && onClose && (
+        <Header.Icon
+          className="sm:dt-hidden"
+          icon={<icons.x />}
+          onClick={onClose}
+        />
       )}
     </div>
   );
@@ -130,7 +151,15 @@ Header.Title = function HeaderTitle({
       )}
     >
       {typeof children === 'string' ? (
-        <H3 className={clsx(textStyles.header)}>{children}</H3>
+        <H3
+          className={clsx(textStyles.header, {
+            'dt-text-center': align === 'center',
+            'dt-text-left': align === 'left',
+            'dt-text-right': align === 'right',
+          })}
+        >
+          {children}
+        </H3>
       ) : (
         children
       )}

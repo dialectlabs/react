@@ -4,12 +4,14 @@ import { createContext, FunctionComponent, useContext } from 'react';
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
 interface ChatContextValue {
+  id: string;
   type: ChatType;
   onChatClose?: () => void;
   onChatOpen?: () => void;
 }
 
 interface ChatProviderProps {
+  id: string;
   type: ChatType;
   onChatClose?: () => void;
   onChatOpen?: () => void;

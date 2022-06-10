@@ -17,6 +17,7 @@ import {
   Trash,
   Offline,
   X,
+  MultiarrowVertical,
 } from '../../Icon';
 
 export type ThemeType = 'dark' | 'light';
@@ -54,6 +55,7 @@ export type ThemeTextStyles =
 export type ThemeIcons =
   | 'arrowclockwise'
   | 'arrowsmright'
+  | 'arrowvertical'
   | 'bell'
   | 'back'
   | 'chat'
@@ -203,6 +205,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     icons: {
       arrowclockwise: ArrowClockwise,
       arrowsmright: ArrowSmRight,
+      arrowvertical: MultiarrowVertical,
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
@@ -299,6 +302,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     icons: {
       arrowclockwise: ArrowClockwise,
       arrowsmright: ArrowSmRight,
+      arrowvertical: MultiarrowVertical,
       bell: BellIcon,
       back: BackArrow,
       chat: ChatBubble,
