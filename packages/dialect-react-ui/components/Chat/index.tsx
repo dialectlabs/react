@@ -46,7 +46,7 @@ function InnerChat({
     [navigate, disconnectedFromChain, isWalletConnected]
   );
 
-  const { colors, modal } = useTheme();
+  const { colors, modal, slider } = useTheme();
 
   return (
     <ChatProvider
@@ -67,7 +67,8 @@ function InnerChat({
             colors.primary,
             colors.bg,
             contentWrapperClassName,
-            { [modal]: type === 'popup' }
+            { [modal]: type === 'popup' },
+            { [slider]: type === 'vertical-slider' }
           )}
         >
           <Route name={RouteName.NoConnection}>

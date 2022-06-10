@@ -113,6 +113,7 @@ export type IncomingThemeValues = {
   modalWrapper?: string;
   modal?: string;
   sliderWrapper?: string;
+  slider?: string;
   button?: string;
   buttonLoading?: string;
   secondaryButton?: string;
@@ -247,6 +248,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-14',
+    slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
     buttonLoading:
@@ -347,6 +349,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
       'dt-fixed dt-z-50 dt-top-auto dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-14',
+    slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     buttonLoading:

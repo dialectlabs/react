@@ -24,14 +24,14 @@ export const themeVariables: IncomingThemeVariables = {
   dark: {
     bellButton:
       'w-12 h-12 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700',
-    modal:
-      'sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-neutral-800',
+    slider:
+      'sm:rounded-t-3xl shadow-xl shadow-neutral-900 sm:border-t sm:border-l sm:border-r border-neutral-800',
   },
   light: {
     bellButton:
       'w-12 h-12 shadow-md hover:shadow-lg shadow-neutral-300 hover:shadow-neutral-400 text-[#59C29D]',
-    modal:
-      'sm:border border-[#F0F0F0] shadow-lg shadow-neutral-300 sm:rounded-xl',
+    slider:
+      'sm:border-t sm:border-l sm:border-r border-[#F0F0F0] shadow-lg shadow-neutral-300 sm:rounded-t-3xl',
     colors: {
       primary: 'text-[#353535]',
     },
