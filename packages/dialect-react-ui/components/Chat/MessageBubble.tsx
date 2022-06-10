@@ -1,8 +1,9 @@
 import { formatTimestamp } from '@dialectlabs/react';
 import type { Message } from '@dialectlabs/web3';
+import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import Avatar from '../Avatar';
-import { LinkifiedText } from '../common';
+import { ButtonLink, LinkifiedText } from '../common';
 import { useTheme } from '../common/ThemeProvider';
 import MessageStatus from './MessageStatus';
 
@@ -76,29 +77,53 @@ export default function MessageBubble({
           </div>
         </div>
 
-        {error ? (
-          <div className="dt-flex dt-flex-col dt-mt-1 dt-pr-9">
-            <div className="dt-text-xs dt-flex dt-items-center dt-justify-end">
-              <a
-                className="dt-inline-flex dt-items-center hover:dt-opacity-50 dt-transition-opacity dt-cursor-pointer"
-                onClick={() => {
-                  onSendMessage(text, id);
-                }}
-              >
-                <icons.arrowclockwise className="dt-mr-1" />
-                retry
-              </a>
-              <div className="dt-h-3 dt-w-[1px] dt-mx-1 dt-bg-current dt-opacity-50" />
-              <a
-                className="dt-inline-flex dt-items-center hover:dt-opacity-50 dt-transition-opacity dt-cursor-pointer"
-                onClick={() => onCancelMessage(id)}
-              >
-                <icons.x className="dt-h-4 dt-w-4" />
-                cancel
-              </a>
+        <CSSTransition in={error} timeout={300} unmountOnExit>
+          {(state) => (
+            <div
+              className={clsx(
+                'dt-overflow-hidden',
+                state === 'entering' && 'dt-max-h-0',
+                state === 'entered' &&
+                  'dt-max-h-[20px] dt-transition-[max-height] dt-duration-300'
+              )}
+            >
+              <div className="dt-flex dt-flex-col dt-mt-1 dt-pr-9">
+                <div className="dt-text-xs dt-flex dt-items-center dt-justify-end">
+                  <ButtonLink
+                    className={clsx(
+                      state === 'entering' && 'dt-opacity-0 dt-scale-75',
+                      state === 'entered' &&
+                        'dt-opacity-100 dt-scale-100 dt-transition-transform dt-duration-300'
+                    )}
+                    onClick={() => onSendMessage(text, id)}
+                  >
+                    <icons.arrowclockwise className="dt-h-3 dt-w-3 dt-mr-0.5" />
+                    <span>retry</span>
+                  </ButtonLink>
+                  <div
+                    className={clsx(
+                      'dt-h-3 dt-w-[1px] dt-ml-2 dt-mr-1 dt-bg-current dt-opacity-30',
+                      state === 'entering' && 'dt-opacity-0',
+                      state === 'entered' &&
+                        'dt-opacity-30 dt-transition dt-delay-100'
+                    )}
+                  />
+                  <ButtonLink
+                    className={clsx(
+                      state === 'entering' && 'dt-opacity-0 dt-scale-75',
+                      state === 'entered' &&
+                        'dt-opacity-100 dt-scale-100 dt-transition-transform dt-duration-300'
+                    )}
+                    onClick={() => onCancelMessage(id)}
+                  >
+                    <icons.cancel className="dt-h-3 dt-w-3 dt-mr-0.5" />
+                    <span>cancel</span>
+                  </ButtonLink>
+                </div>
+              </div>
             </div>
-          </div>
-        ) : null}
+          )}
+        </CSSTransition>
       </div>
     </div>
   );
