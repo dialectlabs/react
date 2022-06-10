@@ -8,6 +8,8 @@ import {
   BottomChat,
   IncomingThemeVariables,
   useDialectUiId,
+  ChatRouteName,
+  ChatMainRouteName,
 } from '@dialectlabs/react-ui';
 import Head from 'next/head';
 // pink: #B852DC
@@ -90,9 +92,9 @@ function AuthedHome() {
             onClick={() => {
               open();
               // TODO: navigate needs better typing or documentation, since routes are internal.
-              navigation?.navigate?.('main', {
+              navigation?.navigate?.(ChatRouteName.Main, {
                 sub: {
-                  name: 'create_thread',
+                  name: ChatMainRouteName.CreateThread,
                   // TODO: There is a problem with typing sub route params, and this needs to be improved, unfortunately
                   params: { receiver: '@saydialect' } as any,
                 },
