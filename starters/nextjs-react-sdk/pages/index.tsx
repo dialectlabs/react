@@ -10,7 +10,7 @@ import { PublicKey } from '@solana/web3.js';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
 const walletToDialectWallet = (
@@ -23,7 +23,8 @@ const walletToDialectWallet = (
 });
 
 const ThreadDetails = ({ address }: { address: PublicKey }) => {
-  const { thread } = useThread({ findParams: { address } });
+  const findParams = useMemo(() => ({ address }), [address]);
+  const { thread } = useThread({ findParams });
   const { messages } = useThreadMessages({ address: address });
 
   return (

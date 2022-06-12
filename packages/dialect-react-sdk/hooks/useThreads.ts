@@ -1,5 +1,6 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
+import { EMPTY_OBJ } from '../utils';
 import useDialectSdk from './useDialectSdk';
 
 interface UseThreadsParams {
@@ -18,7 +19,7 @@ interface UseThreadsValue {
 }
 
 // TODO: refresh interval
-const useThreads = (params?: UseThreadsParams): UseThreadsValue => {
+const useThreads = (params: UseThreadsParams = EMPTY_OBJ): UseThreadsValue => {
   const { threads: threadsApi } = useDialectSdk();
 
   const [threads, setThreads] = useState<Thread[]>([]);

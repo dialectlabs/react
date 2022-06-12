@@ -60,8 +60,6 @@ const walletAdapter: DialectWalletAdapter = {
 - [useThreads](#usethreads) - lists all available threads
 - [useThread](#usethread) - finds thread
 - [useThreadMessages](#usethreadmessages) - lists thread messages
-- [setActiveThread](#setactivethread) - sets active dialect thread
-- [useActiveThread](#useactivethread) - returns active dialect thread
 
 #### useDialectContext
 
@@ -125,10 +123,12 @@ create(params);
 ```ts
 type ThreadSearchParams =
   | { address: PublicKey }
+  | { otherMembers: PublicKey[] }
+  // TODO
   | { twitterHandle: string }
   | { sns: string };
 
-type UseThreadParams = ThreadSearchParams & {};
+type UseThreadParams = { findParams: ThreadSearchParams };
 
 interface UseThreadValue {
   // sdk
@@ -148,9 +148,9 @@ interface UseThreadValue {
 
 const useThread: (params: UseThreadParams) => UseThreadValue;
 
-const thread = useThread({ address: 'D1ALECT' });
-const thread = useThread({ twitterHandle: '@saydialect' });
-const thread = useThread({ sns: 'dialect.sol' });
+const thread = useThread({ findParams: { address: 'D1ALECT' } });
+const thread = useThread({ findParams: { twitterHandle: '@saydialect' } });
+const thread = useThread({ findParams: { sns: 'dialect.sol' } });
 ```
 
 #### useThreadMessages
@@ -179,14 +179,10 @@ const { messages } = useThreadMessages({ address, refreshInterval: 3000 });
 ```ts
 const threads = useThreads();
 
-const thread = useThread({ publicKey: 'pubKey' });
-const thread = useThread({ twitterHandle: '@saydialect' });
-const thread = useThread({ sns: 'dialect.sol' });
+const { thread, delete, send} = useThread({ findParams: { address: 'D1ALECT' } });
 
-await thread.delete();
-await thread.send({ text: 'smth' });
-
-const messages = useThreadMessages(thread);
+await delete();
+await send({ text: 'smth' });
 
 const messages = useThreadMessages({
   address: thread.address,
