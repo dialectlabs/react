@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useDialectSdk from './useDialectSdk';
 
 // TODO
-type ThreadSearchParams = { address: PublicKey };
+type ThreadSearchParams = { address?: PublicKey | null };
 // | { twitterHandle: string }
 // | { sns: string };
 
@@ -48,6 +48,9 @@ const useThread = ({ address }: UseThreadParams): UseThreadValue => {
     useState<DialectSdkError | null>(null);
 
   const fetchThread = useCallback(async () => {
+    if (!address) {
+      return;
+    }
     setIsFetchingThread(true);
     setErrorFetchingThread(null);
     try {

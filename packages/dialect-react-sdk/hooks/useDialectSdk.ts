@@ -1,12 +1,9 @@
-import { useContext } from 'react';
-import { DialectContext } from '../context/DialectContext';
+import type { DialectSdk } from '@dialectlabs/sdk';
+import useDialectContext from './useDialectContext';
 
-const useDialectSdk = () => {
-  const ctx = useContext(DialectContext);
-  if (!ctx) {
-    throw new Error('useDialectSdk must be used within a DialectContext');
-  }
-  return ctx.sdk;
+const useDialectSdk = (): DialectSdk => {
+  const { sdk } = useDialectContext();
+  return sdk;
 };
 
 export default useDialectSdk;

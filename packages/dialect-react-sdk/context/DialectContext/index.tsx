@@ -1,15 +1,24 @@
 import { Config, Dialect, DialectSdk } from '@dialectlabs/sdk';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-interface DialectContextType {
+interface DialectConnectionInfo {
+  wallet: boolean;
+  solana: boolean;
+  dialectCloud: boolean;
+}
+
+export interface DialectContextType {
   sdk: DialectSdk;
+  connected: DialectConnectionInfo;
 }
 
 export const DialectContext = React.createContext<DialectContextType>(
   {} as DialectContextType
 );
 
-const DialectContextProvider: React.FC<Config> = ({
+type DialectContextProviderProps = Config;
+
+const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   environment,
   wallet,
   solana,
@@ -18,30 +27,43 @@ const DialectContextProvider: React.FC<Config> = ({
   backends,
   children,
 }) => {
-  const [ctxValue, setCtxValue] = useState<DialectContextType>(() => ({
-    sdk: Dialect.sdk({
-      environment,
-      wallet,
-      solana,
-      dialectCloud,
-      encryptionKeysStore,
-      backends,
-    }),
-  }));
-
-  useEffect(
-    function init() {
-      const sdk = Dialect.sdk({
+  const sdk = useCallback(
+    () =>
+      Dialect.sdk({
         environment,
         wallet,
         solana,
         dialectCloud,
         encryptionKeysStore,
         backends,
-      });
-      setCtxValue({ sdk });
-    },
+      }),
     [environment, wallet, solana, dialectCloud, encryptionKeysStore, backends]
+  );
+
+  const connectionInfo = useCallback(
+    (): DialectConnectionInfo => ({
+      wallet: Boolean(wallet.publicKey),
+      solana: false, // TODO
+      dialectCloud: false,
+    }),
+    [wallet]
+  );
+
+  const ctx = useMemo(
+    (): DialectContextType => ({
+      sdk: sdk(),
+      connected: connectionInfo(),
+    }),
+    [sdk, connectionInfo]
+  );
+
+  const [ctxValue, setCtxValue] = useState<DialectContextType>(ctx);
+
+  useEffect(
+    function initSdk() {
+      setCtxValue(ctx);
+    },
+    [ctx]
   );
 
   return (

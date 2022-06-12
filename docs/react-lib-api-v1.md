@@ -1,17 +1,8 @@
 ## ToC
 
-### Context initialization
-
 - [Minimal context setup](#minimal-context-setup)
 - [Full context setup](#full-context-setup)
 - [Hooks](#hooks)
-
-### tbd
-
-- thread preview
-- dialect cloud api(crud addresses, code verify/resend)
-- error handling
-- group threads member api
 
 ## Context initialization
 
@@ -64,6 +55,7 @@ const walletAdapter: DialectWalletAdapter = {
 
 ## Hooks
 
+- [useDialectContext](#useDialectContext) - returns a dialect context value
 - [useDialectSdk](#usedialectsdk) - exposes a low level, imperative dialect sdk
 - [useThreads](#usethreads) - lists all available threads
 - [useThread](#usethread) - finds thread
@@ -71,16 +63,27 @@ const walletAdapter: DialectWalletAdapter = {
 - [setActiveThread](#setactivethread) - sets active dialect thread
 - [useActiveThread](#useactivethread) - returns active dialect thread
 
+#### useDialectContext
+
+```ts
+interface DialectContext {
+  sdk: DialectSdk;
+  connected: {
+    wallet?: boolean;
+    solana?: boolean;
+    dialectCloud?: boolean;
+  };
+}
+
+const ctx = useDialectContext();
+```
+
 #### useDialectSdk
 
 ```ts
 interface DialectSdk {
   threads: Messaging;
-  connected: {
-    wallet: boolean;
-    solana?: boolean;
-    dialectCloud?: boolean;
-  };
+  compatibility: CompatibilityProps;
 }
 
 const sdk = useDialectSdk();

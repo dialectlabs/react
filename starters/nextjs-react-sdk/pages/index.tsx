@@ -4,41 +4,52 @@ import {
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
-import { PublicKey } from '@solana/web3.js';
 import { Backend, DialectWalletAdapter } from '@dialectlabs/sdk';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { PublicKey } from '@solana/web3.js';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
-// export const themeVariables: IncomingThemeVariables = {
-//   dark: {
-//     modal: styles.modal,
-//   },
-// };
+const walletToDialectWallet = (
+  wallet: WalletContextState
+): DialectWalletAdapter => ({
+  publicKey: wallet.publicKey || PublicKey.default, // TODO: should be fixed when sdk would allow publicKey as optional
+  signMessage: wallet.signMessage,
+  signTransaction: wallet.signTransaction,
+  signAllTransactions: wallet.signAllTransactions,
+});
 
-const Foo = () => {
+const Example = () => {
   const sdk = useDialectSdk();
-  const threads = useThreads();
-  console.log('render comp', sdk, threads);
-  return <div>test</div>;
+  const { threads } = useThreads();
+
+  const [selectedThreadAddress, selectThreadAddress] =
+    useState<PublicKey | null>(null);
+
+  const thread = useThread({ address: selectedThreadAddress });
+  return (
+    <div>
+      {threads.map((t, idx) => (
+        <p key={idx} onClick={() => selectThreadAddress(t.address)}>
+          {t.address.toString()}
+        </p>
+      ))}
+      {thread.thread?.backend}
+    </div>
+  );
 };
 
 const Home: NextPage = () => {
   const wallet = useWallet();
 
   const [dialectWalletAdapter, setDialectWalletAdapter] =
-    useState<DialectWalletAdapter>({} as DialectWalletAdapter);
+    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
 
   useEffect(() => {
-    setDialectWalletAdapter({
-      publicKey: wallet.publicKey!,
-      signMessage: wallet.signMessage,
-      signTransaction: wallet.signTransaction,
-      signAllTransactions: wallet.signAllTransactions,
-    });
+    setDialectWalletAdapter(walletToDialectWallet(wallet));
   }, [wallet]);
 
   return (
@@ -65,7 +76,7 @@ const Home: NextPage = () => {
               ),
             }}
           >
-            <Foo />
+            <Example />
           </DialectContext>
           {/* <ChatButton wallet={wallet} variables={themeVariables} /> */}
         </div>
