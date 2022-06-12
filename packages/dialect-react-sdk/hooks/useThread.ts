@@ -1,6 +1,6 @@
 import {
   DialectSdkError,
-  Message,
+  FindThreadQuery,
   SendMessageCommand,
   Thread,
 } from '@dialectlabs/sdk';
@@ -9,11 +9,25 @@ import { useCallback, useEffect, useState } from 'react';
 import useDialectSdk from './useDialectSdk';
 
 // TODO
-type ThreadSearchParams = { address?: PublicKey | null };
+type ThreadSearchParams =
+  | { address: PublicKey }
+  | { otherMembers: PublicKey[] };
 // | { twitterHandle: string }
 // | { sns: string };
 
-type UseThreadParams = ThreadSearchParams;
+const getFindThreadQuery = (
+  params: ThreadSearchParams
+): FindThreadQuery | null => {
+  if ('address' in params && params.address) {
+    return { address: params.address };
+  }
+  if ('otherMembers' in params && params.otherMembers) {
+    return { otherMembers: params.otherMembers };
+  }
+  return null;
+};
+
+type UseThreadParams = { findParams: ThreadSearchParams };
 
 interface UseThreadValue {
   // sdk
@@ -32,7 +46,7 @@ interface UseThreadValue {
 }
 // TODO: caching
 // TODO: refresh interval
-const useThread = ({ address }: UseThreadParams): UseThreadValue => {
+const useThread = ({ findParams }: UseThreadParams): UseThreadValue => {
   const { threads: threadsApi } = useDialectSdk();
 
   const [thread, setThread] = useState<Thread | null>(null);
@@ -48,13 +62,14 @@ const useThread = ({ address }: UseThreadParams): UseThreadValue => {
     useState<DialectSdkError | null>(null);
 
   const fetchThread = useCallback(async () => {
-    if (!address) {
+    const findParam = getFindThreadQuery(findParams);
+    if (!findParam) {
       return;
     }
     setIsFetchingThread(true);
     setErrorFetchingThread(null);
     try {
-      const thread = await threadsApi.find({ address });
+      const thread = await threadsApi.find(findParam);
       setThread(thread);
       return thread;
     } catch (e) {
@@ -65,7 +80,7 @@ const useThread = ({ address }: UseThreadParams): UseThreadValue => {
     } finally {
       setIsFetchingThread(false);
     }
-  }, [address, threadsApi]);
+  }, [findParams, threadsApi]);
 
   const deleteThread = useCallback(async () => {
     if (!thread) return;

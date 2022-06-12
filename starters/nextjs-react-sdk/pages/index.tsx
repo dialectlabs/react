@@ -1,7 +1,7 @@
 import {
   DialectContext,
-  useDialectSdk,
   useThread,
+  useThreadMessages,
   useThreads,
 } from '@dialectlabs/react-sdk';
 import { Backend, DialectWalletAdapter } from '@dialectlabs/sdk';
@@ -22,14 +22,26 @@ const walletToDialectWallet = (
   signAllTransactions: wallet.signAllTransactions,
 });
 
+const ThreadDetails = ({ address }: { address: PublicKey }) => {
+  const { thread } = useThread({ findParams: { address } });
+  const { messages } = useThreadMessages({ address: address });
+
+  return (
+    <div>
+      {thread?.backend}
+      {messages.map((it, idx) => (
+        <p key={idx}>{it.text}</p>
+      ))}
+    </div>
+  );
+};
+
 const Example = () => {
-  const sdk = useDialectSdk();
   const { threads } = useThreads();
 
   const [selectedThreadAddress, selectThreadAddress] =
     useState<PublicKey | null>(null);
 
-  const thread = useThread({ address: selectedThreadAddress });
   return (
     <div>
       {threads.map((t, idx) => (
@@ -37,7 +49,9 @@ const Example = () => {
           {t.address.toString()}
         </p>
       ))}
-      {thread.thread?.backend}
+      {selectedThreadAddress && (
+        <ThreadDetails address={selectedThreadAddress} />
+      )}
     </div>
   );
 };

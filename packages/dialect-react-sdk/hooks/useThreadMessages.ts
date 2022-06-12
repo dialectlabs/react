@@ -22,8 +22,12 @@ interface UseThreadMessagesValue {
 const useThreadMessages = ({
   address,
 }: UseThreadMessagesParams): UseThreadMessagesValue => {
-  const { thread } = useThread({ address });
-  const threadInternal = thread as Thread;
+  const { thread } = useThread({
+    findParams: {
+      address,
+    },
+  });
+  const threadInternal = thread as Thread | null;
 
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -32,6 +36,7 @@ const useThreadMessages = ({
     useState<DialectSdkError | null>(null);
 
   const fetchMessages = useCallback(async () => {
+    if (!threadInternal) return;
     setIsFetchingMessages(true);
     setErrorFetchingMessages(null);
     try {
