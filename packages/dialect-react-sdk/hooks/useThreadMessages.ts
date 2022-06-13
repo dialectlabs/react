@@ -1,11 +1,14 @@
-import { DialectSdkError, Message, Thread } from '@dialectlabs/sdk';
+import type { DialectSdkError, Message, Thread } from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
-import { useCallback, useEffect, useState } from 'react';
+import useSWR from 'swr';
+import { EMPTY_ARR } from '../utils';
 import useThread from './useThread';
+
+const CACHE_KEY = (addr: PublicKey) => `MESSAGES_${addr.toString()}`;
 
 interface UseThreadMessagesParams {
   address: PublicKey;
-  refreshInterval?: number | null;
+  refreshInterval?: number;
 }
 
 interface UseThreadMessagesValue {
@@ -17,10 +20,9 @@ interface UseThreadMessagesValue {
   errorFetchingMessages: DialectSdkError | null;
 }
 
-// TODO: caching
-// TODO: polling
 const useThreadMessages = ({
   address,
+  refreshInterval,
 }: UseThreadMessagesParams): UseThreadMessagesValue => {
   const { thread } = useThread({
     findParams: {
@@ -29,35 +31,14 @@ const useThreadMessages = ({
   });
   const threadInternal = thread as Thread | null;
 
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  const [isFetchingMessages, setIsFetchingMessages] = useState<boolean>(false);
-  const [errorFetchingMessages, setErrorFetchingMessages] =
-    useState<DialectSdkError | null>(null);
-
-  const fetchMessages = useCallback(async () => {
-    if (!threadInternal) return;
-    setIsFetchingMessages(true);
-    setErrorFetchingMessages(null);
-    try {
-      const messages = await threadInternal.messages();
-      setMessages(messages);
-      return messages;
-    } catch (e) {
-      if (e instanceof DialectSdkError) {
-        setErrorFetchingMessages(e);
-      }
-      throw e;
-    } finally {
-      setIsFetchingMessages(false);
-    }
-  }, [threadInternal]);
-
-  useEffect(
-    function loadMessages() {
-      fetchMessages();
-    },
-    [fetchMessages]
+  const {
+    data: messages = EMPTY_ARR,
+    isValidating: isFetchingMessages,
+    error: errorFetchingMessages,
+  } = useSWR(
+    threadInternal ? CACHE_KEY(threadInternal.address) : null,
+    () => threadInternal!.messages(),
+    { refreshInterval }
   );
 
   return {

@@ -1,12 +1,10 @@
-import {
-  DialectSdkError,
-  FindThreadQuery,
-  SendMessageCommand,
-  Thread,
-} from '@dialectlabs/sdk';
+import { DialectSdkError, SendMessageCommand, Thread } from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import useSWR from 'swr';
 import useDialectSdk from './useDialectSdk';
+
+const CACHE_KEY = 'THREAD';
 
 // TODO
 type ThreadSearchParams =
@@ -15,19 +13,10 @@ type ThreadSearchParams =
 // | { twitterHandle: string }
 // | { sns: string };
 
-const getFindThreadQuery = (
-  params: ThreadSearchParams
-): FindThreadQuery | null => {
-  if ('address' in params && params.address) {
-    return { address: params.address };
-  }
-  if ('otherMembers' in params && params.otherMembers) {
-    return { otherMembers: params.otherMembers };
-  }
-  return null;
+type UseThreadParams = {
+  findParams: ThreadSearchParams;
+  refreshInterval?: number;
 };
-
-type UseThreadParams = { findParams: ThreadSearchParams };
 
 interface UseThreadValue {
   // sdk
@@ -44,16 +33,13 @@ interface UseThreadValue {
   isDeletingThread: boolean;
   errorDeletingThread: DialectSdkError | null;
 }
-// TODO: caching
-// TODO: refresh interval
-const useThread = ({ findParams }: UseThreadParams): UseThreadValue => {
+
+const useThread = ({
+  findParams,
+  refreshInterval,
+}: UseThreadParams): UseThreadValue => {
   const { threads: threadsApi } = useDialectSdk();
 
-  const [thread, setThread] = useState<Thread | null>(null);
-
-  const [isFetchingThread, setIsFetchingThread] = useState<boolean>(false);
-  const [errorFetchingThread, setErrorFetchingThread] =
-    useState<DialectSdkError | null>(null);
   const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const [errorSendingMessage, setErrorSendingMessage] =
     useState<DialectSdkError | null>(null);
@@ -61,26 +47,17 @@ const useThread = ({ findParams }: UseThreadParams): UseThreadValue => {
   const [errorDeletingThread, setErrorDeletingThread] =
     useState<DialectSdkError | null>(null);
 
-  const fetchThread = useCallback(async () => {
-    const findParam = getFindThreadQuery(findParams);
-    if (!findParam) {
-      return;
+  const {
+    data: thread = null,
+    isValidating: isFetchingThread,
+    error: errorFetchingThread,
+  } = useSWR(
+    [CACHE_KEY, findParams],
+    (_, findParams) => threadsApi.find(findParams),
+    {
+      refreshInterval,
     }
-    setIsFetchingThread(true);
-    setErrorFetchingThread(null);
-    try {
-      const thread = await threadsApi.find(findParam);
-      setThread(thread);
-      return thread;
-    } catch (e) {
-      if (e instanceof DialectSdkError) {
-        setErrorFetchingThread(e);
-      }
-      throw e;
-    } finally {
-      setIsFetchingThread(false);
-    }
-  }, [findParams, threadsApi]);
+  );
 
   const deleteThread = useCallback(async () => {
     if (!thread) return;
@@ -115,13 +92,6 @@ const useThread = ({ findParams }: UseThreadParams): UseThreadValue => {
       }
     },
     [thread]
-  );
-
-  useEffect(
-    function loadThreads() {
-      fetchThread();
-    },
-    [fetchThread]
   );
 
   return {

@@ -1,7 +1,10 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
-import { EMPTY_OBJ } from '../utils';
+import useSWR from 'swr';
+import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import useDialectSdk from './useDialectSdk';
+
+const CACHE_KEY = 'THREADS';
 
 interface UseThreadsParams {
   refreshInterval?: number;
@@ -18,34 +21,30 @@ interface UseThreadsValue {
   errorCreatingThread: DialectSdkError | null;
 }
 
-// TODO: refresh interval
-const useThreads = (params: UseThreadsParams = EMPTY_OBJ): UseThreadsValue => {
+const useThreads = ({
+  refreshInterval,
+}: UseThreadsParams = EMPTY_OBJ): UseThreadsValue => {
   const { threads: threadsApi } = useDialectSdk();
 
-  const [threads, setThreads] = useState<Thread[]>([]);
-  const [isFetchingThreads, setIsFetchingThreads] = useState<boolean>(false);
-  const [errorFetchingThreads, setErrorFetchingThreads] =
-    useState<DialectSdkError | null>(null);
   const [isCreatingThread, setIsCreatingThread] = useState<boolean>(false);
   const [errorCreatingThread, setErrorCreatingThread] =
     useState<DialectSdkError | null>(null);
 
-  const fetchThreads = useCallback(async () => {
-    setIsFetchingThreads(true);
-    setErrorFetchingThreads(null);
-    try {
-      const threads = await threadsApi.findAll();
-      setThreads(threads);
-      return threads;
-    } catch (e) {
-      if (e instanceof DialectSdkError) {
-        setErrorFetchingThreads(e);
-      }
-      throw e;
-    } finally {
-      setIsFetchingThreads(false);
-    }
-  }, [threadsApi]);
+  const {
+    data: threads = EMPTY_ARR,
+    isValidating: isFetchingThreads,
+    error: errorFetchingThreads,
+    mutate,
+  } = useSWR(CACHE_KEY, () => threadsApi.findAll(), {
+    refreshInterval,
+  });
+
+  useEffect(
+    function invalidateThreads() {
+      mutate();
+    },
+    [threadsApi]
+  );
 
   const createThread = useCallback(
     async (cmd: CreateThreadCommand) => {
@@ -63,13 +62,6 @@ const useThreads = (params: UseThreadsParams = EMPTY_OBJ): UseThreadsValue => {
       }
     },
     [threadsApi]
-  );
-
-  useEffect(
-    function loadThreads() {
-      fetchThreads();
-    },
-    [fetchThreads]
   );
 
   return {
