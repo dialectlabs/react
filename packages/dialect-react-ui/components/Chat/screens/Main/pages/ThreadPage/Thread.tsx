@@ -9,6 +9,7 @@ import MessageBubble from '../../../../MessageBubble';
 
 export default function Thread() {
   const {
+    showMessages,
     isDialectCreating,
     dialect,
     messages,
@@ -62,7 +63,7 @@ export default function Thread() {
           scrollbar
         )}
       >
-        {allMessages.length ? (
+        {showMessages ? (
           <TransitionGroup component={null}>
             {allMessages.map((message, idx) => {
               const isYou =
@@ -87,7 +88,7 @@ export default function Thread() {
                   }}
                 >
                   {/* additional div wrapper is needed to avoid paddings /margins interfere with animation */}
-                  <div>
+                  <div data-key={key}>
                     <MessageBubble
                       {...message}
                       isYou={isYou}

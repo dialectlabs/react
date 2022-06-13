@@ -30,7 +30,7 @@ export const isWalletContextState = (
 export const isAnchorWallet = (wallet: WalletType): wallet is AnchorWallet =>
   !!wallet && !('connected' in wallet);
 
-export const getMessageHash = (messages: Message[]) => {
+export const getMessageHash = (messages: Message[] | string) => {
   return hash(messages);
 };
 

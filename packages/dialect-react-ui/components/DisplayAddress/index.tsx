@@ -171,7 +171,7 @@ export function DisplayAddress({
 
   if (!isMemberExist) return null;
 
-  if (connection && showTwitterIcon) {
+  if (showTwitterIcon) {
     return (
       <div className="dt-inline-flex items-center">
         <TwitterHandle
@@ -187,7 +187,7 @@ export function DisplayAddress({
         )}
       </div>
     );
-  } else if (connection && (!data || data?.solanaDomain)) {
+  } else if (!data || data?.solanaDomain) {
     return (
       <SolanaName
         address={publicKey}

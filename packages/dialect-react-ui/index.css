@@ -595,14 +595,14 @@
 
 .dt-message-enter {
   max-height: 0;
-  transform: translateY(50%) scale(0.9);
+  transform: translateY(50%) scale(0.95);
   transform-origin: bottom right;
 }
 
 .dt-message-enter-active,
 .dt-message-enter-done {
   max-height: 100%;
-  transform: translateY(20%) scale(0.95);
+  transform: translateY(0%) scale(1);
   transform-origin: bottom right;
   transition: max-height 400ms ease-in-out, transform 300ms ease-in-out;
 }

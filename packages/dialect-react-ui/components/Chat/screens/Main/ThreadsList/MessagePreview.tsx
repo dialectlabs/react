@@ -74,12 +74,13 @@ export default function MessagePreview({
   if (firstMessage?.isSending || firstMessage?.error) {
     timestamp = null;
   }
+  const connection = program?.provider.connection;
 
   return (
     <div
       className={clsx(
         disabled ? 'dt-cursor-not-allowed' : 'dt-cursor-pointer',
-        'dt-flex dt-space-x-2 dt-items-center dt-w-full dt-px-4 dt-py-2 dt-border-b dt-border-neutral-800',
+        'dt-flex dt-space-x-2 dt-items-center dt-w-full dt-px-4 dt-py-2 dt-border-b dt-border-neutral-800 dt-select-none',
         selected ? colors.highlight : ' '
       )}
       onClick={!disabled ? onClick : undefined}
@@ -89,12 +90,12 @@ export default function MessagePreview({
       </div>
       <div className="dt-flex dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
-          {
+          {connection ? (
             <DisplayAddress
-              connection={program?.provider.connection}
+              connection={connection}
               dialectMembers={dialect?.dialect.members}
             />
-          }
+          ) : null}
           <FirstMessage
             isEncrypted={dialect.dialect.encrypted}
             firstMessage={firstMessage}

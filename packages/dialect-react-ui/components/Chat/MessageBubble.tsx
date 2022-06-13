@@ -77,14 +77,17 @@ export default function MessageBubble({
           </div>
         </div>
 
-        <CSSTransition in={error} timeout={300} unmountOnExit>
+        <CSSTransition in={error} timeout={300}>
           {(state) => (
             <div
               className={clsx(
                 'dt-overflow-hidden',
                 state === 'entering' && 'dt-max-h-0',
                 state === 'entered' &&
-                  'dt-max-h-[20px] dt-transition-[max-height] dt-duration-300'
+                  'dt-max-h-[20px] dt-transition-[max-height] dt-duration-300',
+                state === 'exiting' && 'dt-max-h-[20px]',
+                state === 'exited' &&
+                  'dt-max-h-0 dt-transition-[max-height] dt-duration-300'
               )}
             >
               <div className="dt-flex dt-flex-col dt-mt-1 dt-pr-9">
