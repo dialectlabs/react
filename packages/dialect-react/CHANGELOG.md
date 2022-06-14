@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [0.5.6] - 2022-06-14
+
+- refactor: introduce `isMessages Ready` flag, and assign ids for every message for purposes of improving animation
+
 ## [0.5.5] - 2022-06-14
 
 - featute: added logic to handle new undread messages state

@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [0.8.11] - 2022-06-14
+
+- fix: animation of sending and appearing message
+
 ## [0.8.10] - 2022-06-14
 
 - added logic to notfication ui to display new notification badge

@@ -1,4 +1,3 @@
-import React from 'react';
 import type { WalletType } from '@dialectlabs/react';
 import Chat from '../Chat';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
