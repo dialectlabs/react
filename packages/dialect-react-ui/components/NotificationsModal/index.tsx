@@ -14,7 +14,7 @@ import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 
 type ModalProps = {
-  id: string;
+  dialectId: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -25,7 +25,7 @@ type ModalProps = {
 
 // TODO: deprecate or reuse?
 function Modal({ channels = ['web3'], ...props }: ModalProps): JSX.Element {
-  const { close } = useDialectUiId(props.id);
+  const { close } = useDialectUiId(props.dialectId);
 
   const wrapperRef = useRef(null);
   const bellRef = useRef(null);

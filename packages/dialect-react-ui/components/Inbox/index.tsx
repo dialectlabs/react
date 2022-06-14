@@ -3,7 +3,7 @@ import Chat from '../Chat';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 
 interface InboxProps {
-  id: string;
+  dialectId: string;
   wallet: WalletType;
   contentClassName?: string;
   wrapperClassName?: string;

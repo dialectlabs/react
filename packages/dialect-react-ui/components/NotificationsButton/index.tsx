@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type * as anchor from '@project-serum/anchor';
 import {
   ApiProvider,
@@ -25,7 +25,7 @@ import { useDialectUiId } from '../common/providers/DialectUiManagementProvider'
 import clsx from 'clsx';
 
 export type PropTypes = {
-  id: string;
+  dialectId: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -43,7 +43,7 @@ export type PropTypes = {
 function WrappedNotificationsButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
-  const { ui, open, close } = useDialectUiId(props.id);
+  const { ui, open, close } = useDialectUiId(props.dialectId);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
@@ -58,17 +58,17 @@ function WrappedNotificationsButton(
   const { messages, checkUnreadMessages } = useDialect();
 
   useEffect(() => {
-    if (!open) {
+    if (!ui?.open) {
       setHasNewMessages(checkUnreadMessages('notifications'));
     }
-  }, [messages]);
+  }, [checkUnreadMessages, messages, ui?.open]);
 
   useEffect(() => {
-    if (open) {
+    if (ui?.open) {
       saveLastReadMessage('notifications', messages[0]?.timestamp);
       setHasNewMessages(checkUnreadMessages('notifications'));
     }
-  }, [open]);
+  }, [checkUnreadMessages, messages, saveLastReadMessage, ui?.open]);
 
   useEffect(
     () => setWallet(connected(props.wallet) ? props.wallet : null),

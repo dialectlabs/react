@@ -19,7 +19,7 @@ import { useDialectUiId } from '../common/providers/DialectUiManagementProvider'
 import { CSSTransition } from 'react-transition-group';
 
 type PropTypes = {
-  id: string;
+  dialectId: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -32,7 +32,7 @@ type PropTypes = {
 function WrappedBottomChat(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
-  const { ui, open, close } = useDialectUiId(props.id);
+  const { ui, open, close } = useDialectUiId(props.dialectId);
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
 
@@ -80,7 +80,7 @@ function WrappedBottomChat(
           )}
         >
           <Chat
-            id={props.id}
+            dialectId={props.dialectId}
             type="vertical-slider"
             onChatClose={close}
             onChatOpen={open}

@@ -12,7 +12,7 @@ import { RouteName } from './constants';
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
 interface ChatProps {
-  id: string;
+  dialectId: string;
   type: ChatType;
   wrapperClassName?: string;
   contentWrapperClassName?: string;
@@ -21,14 +21,14 @@ interface ChatProps {
 }
 
 function InnerChat({
-  id,
+  dialectId,
   type,
   wrapperClassName,
   contentWrapperClassName,
   onChatClose,
   onChatOpen,
 }: ChatProps): JSX.Element {
-  const { configure } = useDialectUiId(id);
+  const { configure } = useDialectUiId(dialectId);
   const { disconnectedFromChain, isWalletConnected } = useDialect();
 
   const { navigate } = useRoute();
@@ -54,7 +54,7 @@ function InnerChat({
 
   return (
     <ChatProvider
-      id={id}
+      dialectId={dialectId}
       type={type}
       onChatOpen={onChatOpen}
       onChatClose={onChatClose}

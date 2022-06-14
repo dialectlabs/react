@@ -122,7 +122,7 @@ function AuthedHome() {
           </div>
         </div>
         <BottomChat
-          id="dialect-bottom-chat"
+          dialectId="dialect-bottom-chat"
           wallet={wallet}
           network={'localnet'}
           theme={theme}

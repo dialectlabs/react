@@ -4,6 +4,7 @@ import * as anchor from '@project-serum/anchor';
 import {
   NotificationsButton,
   IncomingThemeVariables,
+  DialectUiManagementProvider,
 } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
@@ -119,6 +120,7 @@ function AuthedHome() {
       <div className={`flex flex-col h-screen bg-${theme}`}>
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <NotificationsButton
+            dialectId="dialect-jet-notifications"
             wallet={wallet}
             network={'localnet'}
             publicKey={JET_PUBLIC_KEY}
@@ -149,7 +151,9 @@ function AuthedHome() {
 export default function Home(): JSX.Element {
   return (
     <WalletContext>
-      <AuthedHome />
+      <DialectUiManagementProvider>
+        <AuthedHome />
+      </DialectUiManagementProvider>
     </WalletContext>
   );
 }
