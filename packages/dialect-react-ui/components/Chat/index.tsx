@@ -8,6 +8,13 @@ import { useDialectUiId } from '../common/providers/DialectUiManagementProvider'
 import { ChatProvider } from './provider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import { RouteName } from './constants';
+import type { ChatNavigationHelpers } from './types';
+import {
+  showCreateThread,
+  showMain,
+  showThread,
+  showThreadSettings,
+} from './navigation';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -34,7 +41,17 @@ function InnerChat({
   const { navigate } = useRoute();
 
   useEffect(() => {
-    configure({ navigation: { navigate } });
+    configure<ChatNavigationHelpers>({
+      navigation: {
+        navigate,
+        showCreateThread: (receiver?: string) =>
+          showCreateThread(navigate, receiver),
+        showMain: () => showMain(navigate),
+        showThread: (threadId: string) => showThread(navigate, threadId),
+        showThreadSettings: (threadId: string) =>
+          showThreadSettings(navigate, threadId),
+      },
+    });
   }, [configure, navigate]);
 
   useEffect(

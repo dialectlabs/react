@@ -29,6 +29,7 @@ import type {
   IncomingThemeVariables,
   IncomingThemeValues,
 } from './components/common/providers/DialectThemeProvider';
+import type { ChatNavigationHelpers } from './components/Chat/types';
 
 const ThemeProvider = DialectThemeProvider;
 
@@ -58,4 +59,5 @@ export type {
   ThemeTextStyles,
   IncomingThemeVariables,
   IncomingThemeValues,
+  ChatNavigationHelpers,
 };
