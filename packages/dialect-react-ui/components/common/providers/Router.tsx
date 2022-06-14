@@ -13,7 +13,10 @@ export interface RouterContextValue<
   ActiveRouteParams extends RouteParams = undefined
 > {
   activeRoute: RouteType<ActiveRouteParams> | null;
-  navigate(to: string, args?: Omit<RouteType, 'name'>): void;
+  navigate(
+    to: string,
+    args?: Omit<RouteType<Record<string, any>>, 'name'>
+  ): void;
 }
 
 interface RouteType<P extends RouteParams = undefined> {
