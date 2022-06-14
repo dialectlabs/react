@@ -56,6 +56,8 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
           dialect={subscription}
           disabled={isNotSollet && subscription.dialect.encrypted}
           onClick={() => {
+            // Do not trigger open if this thread already opened
+            if (dialectAddress === subscription.publicKey?.toString()) return;
             onThreadClick?.(subscription);
           }}
           selected={dialectAddress === subscription.publicKey?.toString()}

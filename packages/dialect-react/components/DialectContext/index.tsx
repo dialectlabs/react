@@ -55,9 +55,7 @@ type PropsType = {
   pollingInterval?: number;
 };
 
-type SendingMessagesMap = {
-  [key: string]: Message[];
-};
+type SendingMessagesMap = Record<string, Message[]> | Record<string, never>;
 
 // TODO: revisit api functions and errors to be moved out from context
 type DialectContextType = {
@@ -88,7 +86,7 @@ type DialectContextType = {
   messages: Message[];
   sendingMessagesMap: SendingMessagesMap;
   sendingMessages: Message[];
-  cancelSendingMessage: (id: number) => void;
+  cancelSendingMessage: (id: string) => void;
   dialect: DialectAccount | undefined | null;
   dialects: DialectAccount[];
   setDialectAddress: (dialectAddress: string) => void;
@@ -99,6 +97,7 @@ type DialectContextType = {
     id?: number
   ) => Promise<void>;
   sendingMessage: boolean;
+  isMessagesReady: boolean;
   sendMessageError: ParsedErrorData | null;
   isWritable: boolean;
   checkUnreadMessages: (threadId: string) => boolean;
@@ -153,6 +152,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const { wallet, program, walletName, getLastReadMessage } = useApi();
   const isWalletConnected = connected(wallet);
   const [messages, setMessages] = React.useState<Message[]>([]);
+  // Using isMessagesReady flag to show the correct messages after they fetched for selected thread
+  const [isMessagesReady, setIsMessagesReady] = React.useState(false);
   const [sendingMessagesMap, setSendingMessagesMap] =
     React.useState<SendingMessagesMap>({});
 
@@ -289,16 +290,27 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   ]);
 
   useEffect(() => {
+    if (!wallet || !dialect?.dialect) return;
+    const dialectMessages = dialect.dialect.messages;
+    const messagesWithoutIds = messages.map(({ id, ...m }) => m);
     const hasNewMessage =
-      wallet &&
-      dialect?.dialect &&
-      (messages.length !== dialect.dialect.messages.length ||
-        // Could be there a performance issue to calc hash for long array?
-        // TODO: maybe refactor with clever mutateDialect
-        getMessageHash(dialect.dialect.messages) !== getMessageHash(messages));
-    if (hasNewMessage) {
-      setMessages(dialect.dialect.messages);
-    }
+      // TODO: maybe refactor with clever mutateDialect, could be a perf issue with hash for long arrays?
+      messagesWithoutIds.length !== dialectMessages.length ||
+      getMessageHash(dialectMessages) !== getMessageHash(messagesWithoutIds);
+
+    setIsMessagesReady(true);
+
+    if (!hasNewMessage) return;
+    // Set id on clients side to use in animations, because there is no id in message protocol right now. TODO: remove
+    const messagesWithIds = dialect.dialect.messages.map(
+      (m: Message, idx: number) => ({
+        ...m,
+        id:
+          // Using anti-index to avoid updating id every time new message appears, cause we use reverted order
+          getMessageHash(m.text) + (dialect.dialect.messages.length - 1 - idx),
+      })
+    );
+    setMessages(messagesWithIds);
   }, [wallet, dialect?.dialect, messages, messages.length]);
 
   useEffect(() => {
@@ -435,9 +447,9 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   }, [dialect, mutateDialect, program, wallet?.publicKey, isWalletConnected]);
 
   const pushOrUpdateSending = useCallback(
-    (dialectAddress: string, payload: Message | null, messageId?: number) => {
+    (dialectAddress: string, payload: Message | null, messageId?: string) => {
       setSendingMessagesMap((map: SendingMessagesMap) => {
-        let thread = map[dialectAddress];
+        const thread = map[dialectAddress] || [];
 
         // If there's no messages sending and payload is not null — set sending list to this message
         if (!thread || !thread?.length) {
@@ -473,22 +485,21 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   );
 
   const cancelSendingMessage = useCallback(
-    (id: number) => {
+    (id: string) => {
       pushOrUpdateSending(dialectAddress, null, id);
     },
     [pushOrUpdateSending, dialectAddress]
   );
 
   const sendMessageWrapper = useCallback(
-    async (text: string, encrypted = false, messageId?: number) => {
+    async (text: string, encrypted = false, messageId?: string) => {
       if (!program || !isWalletConnected || !dialect) return;
 
       setSendingMessage(true);
       // TODO: pure id
-      const id = messageId || new Date().getTime();
+      const id = messageId || getMessageHash(text) + messages.length;
 
       try {
-        // TODO: optimistic ui show message before actually sent
         if (messageId) {
           pushOrUpdateSending(
             dialectAddress,
@@ -535,23 +546,25 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       isWalletConnected,
       program,
       dialect,
+      dialectAddress,
+      wallet?.publicKey,
       mutateDialect,
+      messages,
     ]
   );
 
   const setDialectAddressWrapper = useCallback((address: string) => {
     setDialectAddress(address);
-    // reset messages on thread select to avoid weird animation
+    // Hide messages on selecting another thread to avoid weird animation
     setMessages([]);
     setSendingMessage(false);
+    setIsMessagesReady(false);
     setDeleting(false);
   }, []);
 
-  const sendingMessages =
-    messages.length && sendingMessagesMap[dialectAddress]
-      ? sendingMessagesMap[dialectAddress]
-      : [];
-
+  const sendingMessages = sendingMessagesMap[dialectAddress]
+    ? sendingMessagesMap[dialectAddress]
+    : [];
 
   const checkUnreadMessages = (threadId: string) => {
     const lastReadMessage = getLastReadMessage(threadId);
@@ -586,6 +599,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     isDialectDeleting: deleting,
     isWritable,
     deletionError,
+    isMessagesReady,
     messages,
     sendingMessagesMap,
     sendingMessages,

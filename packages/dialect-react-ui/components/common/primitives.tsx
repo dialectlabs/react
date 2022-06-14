@@ -87,6 +87,18 @@ export function Loader(props: { className?: string }) {
   return <icons.spinner className={clsx('dt-animate-spin', props.className)} />;
 }
 
+export function ButtonLink({
+  className,
+  ...props
+}: { className?: string } & React.ComponentPropsWithoutRef<'button'>) {
+  const { linkButton } = useTheme();
+  return (
+    <button className={clsx(linkButton, className)} {...props}>
+      {props.children}
+    </button>
+  );
+}
+
 export function Button(props: {
   defaultStyle?: string;
   loadingStyle?: string;

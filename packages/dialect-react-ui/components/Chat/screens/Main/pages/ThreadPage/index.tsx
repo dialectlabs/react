@@ -26,6 +26,7 @@ const ThreadPage = ({
   const { icons, xPaddedText } = useTheme();
 
   const publicKey = wallet?.publicKey;
+  const connection = program?.provider.connection;
   const prevPublicKey = useRef(publicKey);
 
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
@@ -51,7 +52,7 @@ const ThreadPage = ({
     function resetSettings() {
       setSettingsOpen(false);
     },
-    [dialect]
+    [dialectAddress]
   );
 
   useEffect(() => {
@@ -99,9 +100,9 @@ const ThreadPage = ({
         </div>
         <div className="dt-flex dt-flex-col dt-items-center">
           <span className="dt-text-base dt-font-medium dt-text">
-            {dialectFromList ? (
+            {dialectFromList && connection ? (
               <DisplayAddress
-                connection={program?.provider.connection}
+                connection={connection}
                 dialectMembers={dialectFromList?.dialect.members}
                 isLinkable={true}
               />

@@ -2,6 +2,7 @@ export { default as ArrowClockwise } from './ArrowClockwise';
 export { default as ArrowSmRight } from './ArrowSmRight';
 export { default as BackArrow } from './BackArrow';
 export { default as Bell } from './Bell';
+export { default as Cancel } from './Cancel';
 export { default as ChatBubble } from './ChatBubble';
 export { default as Chevron } from './Chevron';
 export { default as Checkmark } from './Checkmark';
