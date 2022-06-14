@@ -33,9 +33,9 @@ function AuthedHome() {
   return (
     <div className="dialect">
       <div className="flex flex-col h-screen bg-black">
-        <div className="flex flex-row-reverse">
+        <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <button
-            className="py-2 px-3 bg-black text-white rounded border border-white"
+            className="btn-primary"
             onClick={() => {
               open();
               // TODO: navigate needs better typing or documentation, since routes are internal.

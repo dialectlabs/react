@@ -21,7 +21,7 @@ import { useDialectUiId } from '../common/providers/DialectUiManagementProvider'
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 
 type PropTypes = {
-  id: string;
+  dialectId: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -34,7 +34,7 @@ type PropTypes = {
 function WrappedChatButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
-  const { ui, open, close } = useDialectUiId(props.id);
+  const { ui, open, close } = useDialectUiId(props.dialectId);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
