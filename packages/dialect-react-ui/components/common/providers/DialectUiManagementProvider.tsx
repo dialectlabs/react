@@ -30,12 +30,12 @@ interface UiManagementContextType {
     [id: string]: UiState;
   };
   navigation: {
-    [id: string]: Navigator;
+    [id: string]: Navigator | null;
   };
   open(id: string): void;
   close(id: string): void;
   register(id: string): void;
-  configure<N>(id: string, config: ManagementConfig<N>): void;
+  configure<N>(id: string, config: ManagementConfig<N> | null): void;
 }
 
 export const DialectUiManagementContext =
@@ -87,9 +87,17 @@ export const DialectUiManagementProvider: FunctionComponent = ({
 
   // Extend for necessary configurations
   const configure = useCallback(
-    <N extends Record<any, any>>(id: string, config: ManagementConfig<N>) => {
+    <N extends Record<any, any>>(
+      id: string,
+      config: ManagementConfig<N> | null
+    ) => {
       setNavigation(
         produce((draft) => {
+          if (!config) {
+            draft[id] = null;
+            return;
+          }
+
           const { navigation } = config;
 
           // Also, this is not great probably in terms of immer usage
@@ -142,7 +150,7 @@ export const useDialectUiId = <
   const open = useCallback(() => mainOpen(id), [mainOpen, id]);
   const close = useCallback(() => mainClose(id), [mainClose, id]);
   const configure = useCallback(
-    <N extends Record<any, any>>(config: ManagementConfig<N>) =>
+    <N extends Record<any, any>>(config: ManagementConfig<N> | null) =>
       mainConfigure(id, config),
     [mainConfigure, id]
   );

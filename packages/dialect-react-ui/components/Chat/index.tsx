@@ -41,6 +41,11 @@ function InnerChat({
   const { navigate } = useRoute();
 
   useEffect(() => {
+    if (disconnectedFromChain || !isWalletConnected) {
+      configure(null);
+      return;
+    }
+
     configure<ChatNavigationHelpers>({
       navigation: {
         navigate,
@@ -52,7 +57,7 @@ function InnerChat({
           showThreadSettings(navigate, threadId),
       },
     });
-  }, [configure, navigate]);
+  }, [configure, disconnectedFromChain, isWalletConnected, navigate]);
 
   useEffect(
     function pickRoute() {
