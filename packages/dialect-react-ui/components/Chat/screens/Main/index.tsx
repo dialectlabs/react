@@ -9,15 +9,25 @@ import { useChatInternal } from '../../provider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
+import { useLayoutEffect, useState } from 'react';
 
 const Main = () => {
   const { navigate, current } = useRoute();
-  const { dialectAddress, dialects, setDialectAddress } = useDialect();
+  const { dialects } = useDialect();
   const { type, onChatClose, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
+  const [hideList, setHideList] = useState(false);
   const inbox = type === 'inbox';
 
   const { icons } = useTheme();
+
+  useLayoutEffect(() => {
+    const shouldHideList =
+      current?.sub?.name === MainRouteName.CreateThread ||
+      current?.sub?.params?.threadId;
+
+    setHideList(shouldHideList);
+  }, [current?.sub?.name, current?.sub?.params]);
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
@@ -26,9 +36,7 @@ const Main = () => {
           'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
           {
             'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
-            'dt-hidden':
-              dialectAddress ||
-              current?.sub?.name === MainRouteName.CreateThread, // TODO: ideally we should control this with routes and this causes a visual bug with route swaps
+            'dt-hidden': hideList,
           }
         )}
       >
@@ -54,11 +62,10 @@ const Main = () => {
         <ThreadsList
           chatThreads={dialects}
           onThreadClick={(dialectAccount) => {
-            // TODO: move to route param
-            setDialectAddress(dialectAccount.publicKey.toBase58());
             navigate(RouteName.Main, {
               sub: {
                 name: MainRouteName.Thread,
+                params: { threadId: dialectAccount.publicKey.toBase58() },
                 sub: { name: ThreadRouteName.Messages },
               },
             });
