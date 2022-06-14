@@ -19,7 +19,7 @@ export interface RouterContextValue<
 interface RouteType<P extends RouteParams = undefined> {
   name: string;
   params?: P;
-  sub?: RouteType;
+  sub?: RouteType<Record<string, any>>;
 }
 
 interface RouterProps {
@@ -30,19 +30,21 @@ interface RouteProps {
   name: string;
 }
 
-const RouterContext = createContext<RouterContextValue | null>(null);
+const RouterContext = createContext<RouterContextValue<
+  Record<string, any>
+> | null>(null);
 
 export const Router: FunctionComponent<RouterProps> = ({
   children,
   initialRoute,
 }) => {
   const parent = useContext(RouterContext);
-  const [activeRoute, setActiveRoute] = useState<RouteType | null>(
-    initialRoute ? { name: initialRoute } : null
-  );
+  const [activeRoute, setActiveRoute] = useState<RouteType<
+    Record<string, any>
+  > | null>(initialRoute ? { name: initialRoute } : null);
 
   const navigate = useCallback(
-    (to: string, args: Omit<RouteType, 'name'> = {}) =>
+    (to: string, args: Omit<RouteType<Record<string, any>>, 'name'> = {}) =>
       setActiveRoute({ name: to, ...args }),
     []
   );

@@ -18,19 +18,30 @@ interface ThreadPageProps {
 }
 
 const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
-  const { navigate, current } = useRoute();
+  const {
+    navigate,
+    current,
+    params: { threadId },
+  } = useRoute<{ threadId?: string }>();
   const { wallet, program } = useApi();
-  const { dialect, dialectAddress, setDialectAddress } = useDialect();
+  const { dialect, setDialectAddress } = useDialect();
   const { icons, xPaddedText } = useTheme();
   const { type, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const inbox = type === 'inbox';
 
   useEffect(() => {
+    // In case wallet changes, we reset dialect address and navigate to main
     setDialectAddress('');
+
+    navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
   }, [wallet]);
 
-  if (!dialectAddress) {
+  useEffect(() => {
+    setDialectAddress(threadId ?? '');
+  }, [setDialectAddress, threadId]);
+
+  if (!threadId) {
     if (!inbox) {
       return null;
     }
@@ -66,12 +77,17 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
                   navigate(RouteName.Main, {
                     sub: {
                       name: MainRouteName.Thread,
+                      params: { threadId },
                       sub: { name: ThreadRouteName.Messages },
                     },
                   });
                   return;
                 }
+
                 setDialectAddress('');
+                navigate(RouteName.Main, {
+                  sub: { name: MainRouteName.Thread },
+                });
               }}
             />
           </Header.Icons>
@@ -105,6 +121,7 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
                 navigate(RouteName.Main, {
                   sub: {
                     name: MainRouteName.Thread,
+                    params: { threadId },
                     sub: { name: ThreadRouteName.Settings },
                   },
                 })
