@@ -9,7 +9,7 @@ import MessageBubble from '../../../../MessageBubble';
 
 export default function Thread() {
   const {
-    showMessages,
+    isMessagesReady,
     isDialectCreating,
     dialect,
     messages,
@@ -63,7 +63,7 @@ export default function Thread() {
           scrollbar
         )}
       >
-        {showMessages ? (
+        {isMessagesReady ? (
           <TransitionGroup component={null}>
             {allMessages.map((message, idx) => {
               const isYou =

@@ -97,6 +97,7 @@ type DialectContextType = {
     id?: number
   ) => Promise<void>;
   sendingMessage: boolean;
+  isMessagesReady: boolean;
   sendMessageError: ParsedErrorData | null;
   isWritable: boolean;
   checkUnreadMessages: (threadId: string) => boolean;
@@ -151,7 +152,8 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
   const { wallet, program, walletName, getLastReadMessage } = useApi();
   const isWalletConnected = connected(wallet);
   const [messages, setMessages] = React.useState<Message[]>([]);
-  const [showMessages, setShowMessages] = React.useState(false);
+  // Using isMessagesReady flag to show the correct messages after they fetched for selected thread
+  const [isMessagesReady, setIsMessagesReady] = React.useState(false);
   const [sendingMessagesMap, setSendingMessagesMap] =
     React.useState<SendingMessagesMap>({});
 
@@ -296,7 +298,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       messagesWithoutIds.length !== dialectMessages.length ||
       getMessageHash(dialectMessages) !== getMessageHash(messagesWithoutIds);
 
-    setShowMessages(true);
+    setIsMessagesReady(true);
 
     if (!hasNewMessage) return;
     // Set id on clients side to use in animations, because there is no id in message protocol right now. TODO: remove
@@ -556,7 +558,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     // Hide messages on selecting another thread to avoid weird animation
     setMessages([]);
     setSendingMessage(false);
-    setShowMessages(false);
+    setIsMessagesReady(false);
     setDeleting(false);
   }, []);
 
@@ -597,7 +599,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
     isDialectDeleting: deleting,
     isWritable,
     deletionError,
-    showMessages,
+    isMessagesReady,
     messages,
     sendingMessagesMap,
     sendingMessages,
