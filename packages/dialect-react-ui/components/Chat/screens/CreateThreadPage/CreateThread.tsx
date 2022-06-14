@@ -349,9 +349,8 @@ export default function CreateThread({
     if (currentChatWithAddress) {
       const currentThreadWithAddress =
         currentChatWithAddress.publicKey.toBase58();
-      setDialectAddress(currentThreadWithAddress);
+
       onNewThreadCreated?.(currentThreadWithAddress);
-      onCloseRequest?.();
       return;
     }
 
@@ -366,9 +365,7 @@ export default function CreateThread({
           program,
           actualAddress
         );
-        setDialectAddress(da.toBase58());
         onNewThreadCreated?.(da.toBase58());
-        onCloseRequest?.();
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {});

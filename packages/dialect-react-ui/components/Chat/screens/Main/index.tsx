@@ -78,6 +78,15 @@ const Main = () => {
         <Route name={MainRouteName.CreateThread}>
           <CreateThread
             onModalClose={onChatClose}
+            onNewThreadCreated={(threadId) => {
+              navigate(RouteName.Main, {
+                sub: {
+                  name: MainRouteName.Thread,
+                  params: { threadId },
+                  sub: { name: ThreadRouteName.Messages },
+                },
+              });
+            }}
             onCloseRequest={() => {
               navigate(RouteName.Main, {
                 sub: { name: MainRouteName.Thread },
