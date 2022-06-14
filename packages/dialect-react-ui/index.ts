@@ -30,6 +30,8 @@ import type {
   IncomingThemeValues,
 } from './components/common/providers/DialectThemeProvider';
 
+const ThemeProvider = DialectThemeProvider;
+
 export {
   Chat,
   ChatButton,
@@ -39,6 +41,7 @@ export {
   Notifications,
   Inbox,
   defaultVariables,
+  ThemeProvider,
   DialectThemeProvider,
   DialectUiManagementProvider,
   useDialectUi,

@@ -21,6 +21,8 @@ const Main = () => {
 
   const { icons } = useTheme();
 
+  // TODO: Consider changing this to `useIsomorphicLayoutEffect`
+  // Running this inside useLayoutEffect in order to make necessary style changes, since otherwise there is a visual bug
   useLayoutEffect(() => {
     const shouldHideList =
       current?.sub?.name === MainRouteName.CreateThread ||
