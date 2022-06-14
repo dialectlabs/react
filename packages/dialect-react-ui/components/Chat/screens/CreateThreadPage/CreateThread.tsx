@@ -327,9 +327,8 @@ export default function CreateThread({
 
   useEffect(() => {
     // Accessing current here, since we need to set the address if the reference to `current` has changed (route has changed)
-    if (current && receiver) {
-      setAddress(receiver);
-    }
+    if (!current || !receiver) return;
+    setAddress(receiver);
   }, [current, receiver]);
 
   // TODO: useCallback

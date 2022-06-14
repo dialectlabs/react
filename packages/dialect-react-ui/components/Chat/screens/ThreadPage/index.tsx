@@ -33,11 +33,11 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
 
   useEffect(() => {
     // In case wallet changes, we reset dialect address and navigate to main
-    if (!wallet) {
-      setDialectAddress('');
+    if (wallet) return;
 
-      navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
-    }
+    setDialectAddress('');
+
+    navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
   }, [navigate, setDialectAddress, wallet]);
 
   useEffect(() => {
