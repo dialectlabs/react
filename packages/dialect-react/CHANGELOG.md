@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [0.5.5] - 2022-06-14
+
 - featute: added logic to handle new undread messages state
 - added polling interval to context. Can be changed from UI
 

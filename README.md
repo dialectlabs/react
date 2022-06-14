@@ -225,17 +225,19 @@ Import Icon as a React Component from `Icon`, e.g. (`import {BackArrow} from '/I
 
 ## Publishing
 
-```bash
+1.
+
+```shell
+yarn build:all
 pushd packages/dialect-react/
-yarn build
 npm publish --access public
 popd
-
 pushd packages/dialect-react-ui/
-yarn build
 npm publish --access public
 popd
 ```
+
+2. Update all versions of packages to the new one(e.g. bump react, react-ui version in examples, starters folder)
 
 ## Know-hows
 

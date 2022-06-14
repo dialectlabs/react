@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [0.8.10] - 2022-06-14
+
 - added logic to notfication ui to display new notification badge
 - fix: open thread if user entered address with whom thread already exists
 - fix: do not fetch handles and avatars twice
