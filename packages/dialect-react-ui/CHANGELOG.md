@@ -16,6 +16,9 @@
 - fix: do not fetch handles and avatars twice
 - feat: a bunch of UX improvements such as Optimistic UI
 - fix: solana name service support
+- feat: add bottom chat component and example
+- feat: [BREAKING] add ui management provider to control dialect related UIs
+- styles: adjust header styles for Chat and implement as a reusable component
 
 ## [0.8.9] - 2022-06-07
 
