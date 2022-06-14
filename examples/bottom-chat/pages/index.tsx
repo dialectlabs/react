@@ -87,28 +87,6 @@ function AuthedHome() {
 
       <div className="flex flex-col h-screen bg-white dark:bg-black">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <button
-            className="py-2 px-3 bg-black text-white rounded border border-white"
-            onClick={() => {
-              open();
-              // TODO: navigate needs better typing or documentation, since routes are internal.
-              navigation?.navigate?.(ChatRouteName.Main, {
-                sub: {
-                  name: ChatMainRouteName.CreateThread,
-                  // TODO: There is a problem with typing sub route params, and this needs to be improved, unfortunately
-                  params: { receiver: '@saydialect' } as any,
-                },
-              });
-            }}
-          >
-            Create Thread with Someone!
-          </button>
-          <button
-            className="py-2 px-3 bg-black text-white rounded border border-white"
-            onClick={ui?.open ? close : open}
-          >
-            {ui?.open ? 'Close' : 'Open'}
-          </button>
           <WalletButton />
         </div>
         <div className="h-full text-2xl flex flex-col justify-center items-center">
@@ -116,9 +94,30 @@ function AuthedHome() {
             @dialectlabs/react
           </code>
           <div>
-            <code className="shrink text-center text-transparent bg-clip-text bg-gradient-to-r from-[#B852DC] to-[#59C29D]">
+            <code className="shrink text-center text-transparent bg-clip-text bg-gradient-to-r from-[#B852DC] to-[#59C29D] mb-2 block">
               examples/bottom-chat
             </code>
+            <div className="text-sm space-x-2 flex justify-center">
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  open();
+                  // TODO: navigate needs better typing or documentation, since routes are internal.
+                  navigation?.navigate?.(ChatRouteName.Main, {
+                    sub: {
+                      name: ChatMainRouteName.CreateThread,
+                      // TODO: There is a problem with typing sub route params, and this needs to be improved, unfortunately
+                      params: { receiver: '@saydialect' } as any,
+                    },
+                  });
+                }}
+              >
+                Chat with @saydialect
+              </button>
+              <button className="btn-primary" onClick={ui?.open ? close : open}>
+                {ui?.open ? 'Close' : 'Open'}
+              </button>
+            </div>
           </div>
         </div>
         <BottomChat
