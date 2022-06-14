@@ -1,4 +1,3 @@
-import React from 'react';
 import CreateThread from './CreateThread';
 
 const CreateThreadPage = () => {

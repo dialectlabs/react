@@ -2,10 +2,10 @@ import { KeyboardEvent, FormEvent, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useApi, useDialect } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
-import { useTheme } from '../../../../../common/ThemeProvider';
-import cs from '../../../../../../utils/classNames';
 import MessageInput from './MessageInput';
-import MessageBubble from '../../../../MessageBubble';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import clsx from 'clsx';
+import MessageBubble from '../../MessageBubble';
 
 export default function Thread() {
   const {
@@ -58,7 +58,7 @@ export default function Thread() {
     <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">
       {/* TODO: fix messages which stretch the entire messaging col */}
       <div
-        className={cs(
+        className={clsx(
           'dt-flex dt-flex-auto dt-flex-col-reverse dt-overflow-y-auto dt-py-2 dt-space-y-2 dt-space-y-reverse',
           scrollbar
         )}

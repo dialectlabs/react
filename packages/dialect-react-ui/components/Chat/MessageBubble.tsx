@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import Avatar from '../Avatar';
 import { ButtonLink, LinkifiedText } from '../common';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
 
 type MessageBubbleProps = Message & {

@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@layer components {
+  .wallet-adapter-button.dialect-wallet-button {
+    border: 1px solid white;
+    @apply flex items-center transition ease-in-out duration-300 text-black dark:text-white border dark:border-neutral-600 rounded-md py-2 px-6 bg-white dark:bg-transparent shadow-md shadow-neutral-300 dark:shadow-neutral-800 text-[#353535];
+  }
+  .wallet-adapter-button.dialect-wallet-button:hover,
+  .wallet-adapter-button.dialect-wallet-button:not([disabled]):hover {
+    @apply bg-none shadow-lg shadow-neutral-400 dark:shadow-neutral-700;
+  }
+
+  .btn-primary {
+    @apply flex items-center transition ease-in-out duration-300 dark:text-white border dark:border-neutral-600 rounded-md py-2 px-6 bg-white dark:bg-transparent shadow-md shadow-neutral-300 dark:shadow-neutral-800 text-[#353535] hover:bg-none hover:shadow-lg hover:shadow-neutral-400 hover:dark:shadow-neutral-700;
+  }
+}

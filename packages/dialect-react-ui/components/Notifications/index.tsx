@@ -3,7 +3,7 @@ import { useDialect, useApi } from '@dialectlabs/react';
 import type { MessageType } from '@dialectlabs/react';
 import clsx from 'clsx';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import { A, P } from '../common/preflighted';
 import type { Channel } from '../common/types';
 import { Centered, Divider, Footer, Section, ValueRow } from '../common';
@@ -46,7 +46,7 @@ function Header(props: {
       <>
         <div
           className={cs(
-            'dt-flex dt-flex-row dt-items-start dt-justify-items-start',
+            'dt-flex dt-flex-row dt-items-center dt-justify-items-start',
             header
           )}
         >
@@ -207,7 +207,7 @@ export default function Notifications(props: {
   notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
-  pollingInterval?: number
+  pollingInterval?: number;
 }): JSX.Element {
   const {
     isWalletConnected,
@@ -281,7 +281,7 @@ export default function Notifications(props: {
     );
   } else {
     content = (
-      <div className='dt-px-4 dt-py-4'>
+      <div className="dt-px-4 dt-py-4">
         {messages.map((message: MessageType) => (
           <>
             <Notification

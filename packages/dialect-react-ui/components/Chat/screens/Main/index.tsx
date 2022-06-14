@@ -1,23 +1,35 @@
-import React, { useState } from 'react';
 import clsx from 'clsx';
 import { useDialect } from '@dialectlabs/react';
-import { useTheme } from '../../../common/ThemeProvider';
-import IconButton from '../../../IconButton';
-import CreateThread from './pages/CreateThreadPage/CreateThread';
-import ThreadPage from './pages/ThreadPage/';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ThreadsList from './ThreadsList';
+import { Header } from '../../../Header';
+import CreateThread from '../CreateThreadPage/CreateThread';
+import ThreadPage from '../ThreadPage';
+import { useChatInternal } from '../../provider';
+import { Route, Router, useRoute } from '../../../common/providers/Router';
+import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
+import { useState } from 'react';
+import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect';
 
-interface MainProps {
-  inbox?: boolean;
-  onModalClose?: () => void;
-}
-
-const Main = ({ inbox, onModalClose }: MainProps) => {
-  const { dialectAddress, dialects, setDialectAddress } = useDialect();
+const Main = () => {
+  const { navigate, current } = useRoute();
+  const { dialects } = useDialect();
+  const { type, onChatClose, onChatOpen, dialectId } = useChatInternal();
+  const { ui } = useDialectUiId(dialectId);
+  const [hideList, setHideList] = useState(false);
+  const inbox = type === 'inbox';
 
   const { icons } = useTheme();
 
-  const [newThreadOpen, setNewThreadOpen] = useState(false);
+  // Running this inside useLayoutEffect in order to make necessary style changes, since otherwise there is a visual bug
+  useIsomorphicLayoutEffect(() => {
+    const shouldHideList =
+      current?.sub?.name === MainRouteName.CreateThread ||
+      current?.sub?.params?.threadId;
+
+    setHideList(shouldHideList);
+  }, [current?.sub?.name, current?.sub?.params]);
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
@@ -26,52 +38,73 @@ const Main = ({ inbox, onModalClose }: MainProps) => {
           'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
           {
             'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
-            'dt-hidden': dialectAddress || newThreadOpen,
+            'dt-hidden': hideList,
           }
         )}
       >
-        <div className="dt-px-4 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold">
-          Messages
-          <div className="dt-flex">
-            {/* TODO: replace with IconButton to be sematic */}
-            <div
-              className="dt-cursor-pointer dt-inline-flex"
-              onClick={() => {
-                setNewThreadOpen(true);
-              }}
-            >
-              <icons.compose />
-            </div>
-            {!inbox && onModalClose && (
-              <div className="sm:dt-hidden dt-ml-3">
-                <IconButton icon={<icons.x />} onClick={onModalClose} />
-              </div>
-            )}
-          </div>
-        </div>
+        <Header
+          type={type}
+          onClose={onChatClose}
+          onOpen={onChatOpen}
+          onHeaderClick={onChatOpen}
+          isWindowOpen={ui?.open}
+        >
+          <Header.Title>Messages</Header.Title>
+          <Header.Icons>
+            <Header.Icon
+              icon={<icons.compose />}
+              onClick={() =>
+                navigate(RouteName.Main, {
+                  sub: { name: MainRouteName.CreateThread },
+                })
+              }
+            />
+          </Header.Icons>
+        </Header>
         <ThreadsList
           chatThreads={dialects}
           onThreadClick={(dialectAccount) => {
-            setDialectAddress(dialectAccount.publicKey.toBase58());
-            setNewThreadOpen(false);
+            navigate(RouteName.Main, {
+              sub: {
+                name: MainRouteName.Thread,
+                params: { threadId: dialectAccount.publicKey.toBase58() },
+                sub: { name: ThreadRouteName.Messages },
+              },
+            });
           }}
         />
       </div>
-      {newThreadOpen ? (
-        <CreateThread
-          inbox={inbox}
-          onModalClose={onModalClose}
-          onCloseRequest={() => {
-            setNewThreadOpen(false);
-          }}
-        />
-      ) : (
-        <ThreadPage
-          inbox={inbox}
-          onModalClose={onModalClose}
-          onNewThreadClick={() => setNewThreadOpen(true)}
-        />
-      )}
+      <Router initialRoute={MainRouteName.Thread}>
+        <Route name={MainRouteName.CreateThread}>
+          <CreateThread
+            onModalClose={onChatClose}
+            onNewThreadCreated={(threadId) => {
+              navigate(RouteName.Main, {
+                sub: {
+                  name: MainRouteName.Thread,
+                  params: { threadId },
+                  sub: { name: ThreadRouteName.Messages },
+                },
+              });
+            }}
+            onCloseRequest={() => {
+              navigate(RouteName.Main, {
+                sub: { name: MainRouteName.Thread },
+              });
+            }}
+          />
+        </Route>
+        <Route name={MainRouteName.Thread}>
+          <ThreadPage
+            onModalClose={onChatClose}
+            onNewThreadClick={() =>
+              navigate(RouteName.Main, {
+                sub: { name: MainRouteName.CreateThread },
+              })
+            }
+          />
+        </Route>
+      </Router>
     </div>
   );
 };

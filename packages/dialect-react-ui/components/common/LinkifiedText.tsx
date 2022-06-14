@@ -1,7 +1,7 @@
 import type React from 'react';
 import Linkify from 'react-linkify';
 import { A } from './preflighted';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from './providers/DialectThemeProvider';
 
 // Similar to twitter
 const MAX_LINK_TEXT_LENGTH = 32;

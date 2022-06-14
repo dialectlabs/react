@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, SVGProps } from 'react';
-import deepMerge from '../../utils/deepMerge';
+import deepMerge from '../../../utils/deepMerge';
 import {
   ArrowClockwise,
   ArrowSmRight,
@@ -17,8 +17,9 @@ import {
   Trash,
   Offline,
   X,
+  MultiarrowVertical,
   Cancel,
-} from '../Icon';
+} from '../../Icon';
 
 export type ThemeType = 'dark' | 'light';
 
@@ -55,6 +56,7 @@ export type ThemeTextStyles =
 export type ThemeIcons =
   | 'arrowclockwise'
   | 'arrowsmright'
+  | 'arrowvertical'
   | 'bell'
   | 'back'
   | 'cancel'
@@ -113,6 +115,8 @@ export type IncomingThemeValues = {
   linkButton?: string;
   modalWrapper?: string;
   modal?: string;
+  sliderWrapper?: string;
+  slider?: string;
   button?: string;
   buttonLoading?: string;
   secondaryButton?: string;
@@ -146,6 +150,7 @@ export type ThemeValues = Required<
 export type CommonThemeValues = {
   animations: {
     popup: TransitionProps;
+    bottomSlide: TransitionProps;
   };
 };
 
@@ -159,6 +164,15 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       leave: 'dt-transition-opacity dt-duration-100',
       leaveFrom: 'dt-opacity-100',
       leaveTo: 'dt-opacity-0',
+    },
+    // Uses `react-transition-group
+    bottomSlide: {
+      enter: 'dt-transition-transform dt-duration-300 dt-ease-in-out',
+      enterFrom: '-dt-translate-y-14',
+      enterTo: '-dt-translate-y-full',
+      leave: 'dt-transition-transform dt-duration-100 dt-ease-in-out',
+      leaveFrom: '-dt-translate-y-full',
+      leaveTo: '!-dt-translate-y-14',
     },
   },
   light: {
@@ -197,6 +211,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     icons: {
       arrowclockwise: ArrowClockwise,
       arrowsmright: ArrowSmRight,
+      arrowvertical: MultiarrowVertical,
       bell: BellIcon,
       back: BackArrow,
       cancel: Cancel,
@@ -221,7 +236,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     sendButton: 'dt-h-5 dt-w-5 dt-text-white dt-rounded-full dt-bg-black',
     linkButton:
       'dt-inline-flex dt-items-center dt-transition-opacity dt-cursor-pointer hover:dt-opacity-50',
-    header: 'dt-py-3 dt-px-4',
+    header: 'dt-max-h-[3.5rem] dt-min-h-[3.5rem] dt-px-2',
     sectionHeader: 'dt-px-4',
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0 disabled:dt-text-neutral-700/50',
@@ -238,6 +253,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
+    sliderWrapper:
+      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
+    slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
     buttonLoading:
@@ -296,6 +314,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     icons: {
       arrowclockwise: ArrowClockwise,
       arrowsmright: ArrowSmRight,
+      arrowvertical: MultiarrowVertical,
       bell: BellIcon,
       back: BackArrow,
       cancel: Cancel,
@@ -320,7 +339,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     sendButton: 'dt-h-5 dt-w-5 dt-text-black dt-rounded-full dt-bg-white',
     linkButton:
       'dt-inline-flex dt-items-center dt-transition-opacity dt-cursor-pointer hover:dt-opacity-50',
-    header: 'dt-py-3 dt-px-4',
+    header: 'dt-max-h-[3.5rem] dt-min-h-[3.5rem] dt-px-4',
     sectionHeader: 'dt-px-4',
     input:
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white disabled:dt-text-white/50',
@@ -338,6 +357,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
+    sliderWrapper:
+      'dt-fixed dt-z-50 dt-top-auto dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',
+    slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     buttonLoading:
@@ -408,7 +430,7 @@ type PropsType = {
   children: JSX.Element;
 };
 
-export const ThemeProvider = ({
+export const DialectThemeProvider = ({
   theme = 'light',
   variables = empty,
   children,
@@ -436,7 +458,7 @@ export const ThemeProvider = ({
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within an ThemeProvider');
+    throw new Error('useTheme must be used within an DialectThemeProvider');
   }
   return context;
 }

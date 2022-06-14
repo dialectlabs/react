@@ -3,6 +3,7 @@ import Chat from '../Chat';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 
 interface InboxProps {
+  dialectId: string;
   wallet: WalletType;
   contentClassName?: string;
   wrapperClassName?: string;
@@ -11,7 +12,7 @@ interface InboxProps {
 const Inbox = (props: InboxProps) => {
   return (
     <WalletIdentityProvider>
-      <Chat inbox {...props} />
+      <Chat type="inbox" {...props} />
     </WalletIdentityProvider>
   );
 };

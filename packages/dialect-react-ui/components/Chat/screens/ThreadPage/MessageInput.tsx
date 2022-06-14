@@ -1,9 +1,9 @@
-import { KeyboardEvent, FormEvent } from 'react';
+import type { KeyboardEvent, FormEvent } from 'react';
 import clsx from 'clsx';
 import type { ParsedErrorData } from '@dialectlabs/react';
-import { ButtonBase, Textarea } from '../../../../../common/preflighted';
-import { useTheme } from '../../../../../common/ThemeProvider';
-import { Loader } from '../../../../../common';
+import { ButtonBase, Textarea } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { Loader } from '../../../common';
 
 type PropsType = {
   text: string;
@@ -35,7 +35,7 @@ export default function MessageInput({
   //   ? data.lamports / 1e9
   //   : undefined;
   return (
-    <div className="dialect">
+    <div>
       <div className="dt-flex dt-flex-col dt-pb-2 dt-mb-2">
         <form onSubmit={onSubmit}>
           <div className="dt-relative">

@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { ChatButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
+// TODO: retire this example?
+
+import {
+  ChatButton,
+  DialectUiManagementProvider,
+  IncomingThemeVariables,
+} from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { defaultVariables } from '@dialectlabs/react-ui';
@@ -18,13 +24,13 @@ export const themeVariables: IncomingThemeVariables = {
     bellButton:
       'w-12 h-12 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700',
     modal:
-      'p-2 sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-neutral-800',
+      'sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-neutral-800',
   },
   light: {
     bellButton:
       'w-12 h-12 shadow-md hover:shadow-lg shadow-neutral-300 hover:shadow-neutral-400 text-[#59C29D]',
     modal:
-      'p-2 sm:border border-[#F0F0F0] shadow-lg shadow-neutral-300 sm:rounded-xl',
+      'sm:border border-[#F0F0F0] shadow-lg shadow-neutral-300 sm:rounded-xl',
     colors: {
       primary: 'text-[#353535]',
     },
@@ -80,6 +86,7 @@ function AuthedHome() {
       <div className="flex flex-col h-screen bg-white dark:bg-black">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <ChatButton
+            dialectId="dialect-chat"
             wallet={wallet}
             network={'localnet'}
             theme={theme}
@@ -105,7 +112,9 @@ function AuthedHome() {
 export default function Home(): JSX.Element {
   return (
     <WalletContext>
-      <AuthedHome />
+      <DialectUiManagementProvider>
+        <AuthedHome />
+      </DialectUiManagementProvider>
     </WalletContext>
   );
 }

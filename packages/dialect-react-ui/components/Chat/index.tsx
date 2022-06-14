@@ -1,75 +1,121 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDialect } from '@dialectlabs/react';
 import clsx from 'clsx';
-import { useTheme } from '../common/ThemeProvider';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import Error from './screens/Error';
 import Main from './screens/Main';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import { ChatProvider } from './provider';
+import { Route, Router, useRoute } from '../common/providers/Router';
+import { MainRouteName, RouteName } from './constants';
+import type { ChatNavigationHelpers } from './types';
+import {
+  showCreateThread,
+  showMain,
+  showThread,
+  showThreadSettings,
+} from './navigation';
 
-enum Routes {
-  Main = 'main',
-  NoConnection = 'no_connection',
-  NoWallet = 'no_wallet',
-}
+type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
 interface ChatProps {
-  inbox?: boolean;
+  dialectId: string;
+  type: ChatType;
   wrapperClassName?: string;
   contentWrapperClassName?: string;
-  onModalClose?: () => void;
+  onChatClose?: () => void;
+  onChatOpen?: () => void;
 }
 
-export default function Chat({
-  inbox,
+function InnerChat({
+  dialectId,
+  type,
   wrapperClassName,
   contentWrapperClassName,
-  onModalClose,
+  onChatClose,
+  onChatOpen,
 }: ChatProps): JSX.Element {
+  const { configure } = useDialectUiId(dialectId);
   const { disconnectedFromChain, isWalletConnected } = useDialect();
-  const [activeRoute, setActiveRoute] = useState<Routes>(Routes.NoConnection);
+
+  const { navigate } = useRoute();
+
+  useEffect(() => {
+    if (disconnectedFromChain || !isWalletConnected) {
+      configure(null);
+      return;
+    }
+
+    configure<ChatNavigationHelpers>({
+      navigation: {
+        navigate,
+        showCreateThread: (receiver?: string) =>
+          showCreateThread(navigate, receiver),
+        showMain: () => showMain(navigate),
+        showThread: (threadId: string) => showThread(navigate, threadId),
+        showThreadSettings: (threadId: string) =>
+          showThreadSettings(navigate, threadId),
+      },
+    });
+  }, [configure, disconnectedFromChain, isWalletConnected, navigate]);
 
   useEffect(
     function pickRoute() {
       if (disconnectedFromChain) {
-        setActiveRoute(Routes.NoConnection);
+        navigate(RouteName.NoConnection);
       } else if (!isWalletConnected) {
-        setActiveRoute(Routes.NoWallet);
+        navigate(RouteName.NoWallet);
       } else {
-        setActiveRoute(Routes.Main);
+        navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
       }
     },
-    [disconnectedFromChain, isWalletConnected]
+    [navigate, disconnectedFromChain, isWalletConnected]
   );
 
-  const { colors, modal } = useTheme();
-
-  const routes: Record<Routes, React.ReactNode> = {
-    [Routes.NoConnection]: (
-      <Error type="NoConnection" onModalClose={onModalClose} inbox={inbox} />
-    ),
-    [Routes.NoWallet]: (
-      <Error type="NoWallet" onModalClose={onModalClose} inbox={inbox} />
-    ),
-    [Routes.Main]: <Main onModalClose={onModalClose} inbox={inbox} />,
-  };
+  const { colors, modal, slider } = useTheme();
 
   return (
-    <div
-      className={clsx(
-        'dialect',
-        wrapperClassName ? wrapperClassName : 'dt-h-full'
-      )}
+    <ChatProvider
+      dialectId={dialectId}
+      type={type}
+      onChatOpen={onChatOpen}
+      onChatClose={onChatClose}
     >
       <div
         className={clsx(
-          'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
-          colors.primary,
-          colors.bg,
-          contentWrapperClassName,
-          { [modal]: !inbox }
+          'dialect',
+          wrapperClassName ? wrapperClassName : 'dt-h-full'
         )}
       >
-        <div className="dt-h-full">{routes[activeRoute]}</div>
+        <div
+          className={clsx(
+            'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
+            colors.primary,
+            colors.bg,
+            contentWrapperClassName,
+            { [modal]: type === 'popup' },
+            { [slider]: type === 'vertical-slider' }
+          )}
+        >
+          <Route name={RouteName.NoConnection}>
+            <Error type="NoConnection" />
+          </Route>
+          <Route name={RouteName.NoWallet}>
+            <Error type="NoWallet" />
+          </Route>
+          <Route name={RouteName.Main}>
+            <Main />
+          </Route>
+        </div>
       </div>
-    </div>
+    </ChatProvider>
+  );
+}
+
+export default function Chat(props: ChatProps) {
+  return (
+    <Router initialRoute={RouteName.NoConnection}>
+      <InnerChat {...props} />
+    </Router>
   );
 }

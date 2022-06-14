@@ -54,7 +54,10 @@ export const fetchSolanaNameServiceName = async (
   try {
     if (publicKeyString) {
       const address = new PublicKey(publicKeyString);
-      let domainName = await findFavoriteDomainName(connection, address);
+      let domainName = await findFavoriteDomainName(
+        connection,
+        address)
+      ;
       if (!domainName || domainName == '') {
         const domainKeys = await findOwnedNameAccountsForUser(
           connection,

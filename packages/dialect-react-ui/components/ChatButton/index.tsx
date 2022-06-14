@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   ApiProvider,
   connected,
@@ -9,16 +9,19 @@ import {
 import { Transition } from '@headlessui/react';
 import cs from '../../utils/classNames';
 import {
-  ThemeProvider,
+  DialectThemeProvider,
   ThemeType,
   IncomingThemeVariables,
   useTheme,
-} from '../common/ThemeProvider';
+} from '../common/providers/DialectThemeProvider';
 import Chat from '../Chat';
 import IconButton from '../IconButton';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 
 type PropTypes = {
+  dialectId: string;
   wallet: WalletType;
   network?: string;
   rpcUrl?: string;
@@ -28,42 +31,15 @@ type PropTypes = {
   bellStyle?: object;
 };
 
-function useOutsideAlerter(
-  ref: React.MutableRefObject<null>,
-  bellRef: React.MutableRefObject<null>,
-  setOpen: CallableFunction
-) {
-  useEffect(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        ref.current &&
-        !ref.current.contains(event.target) &&
-        bellRef.current &&
-        !bellRef.current.contains(event.target)
-      ) {
-        setOpen(false);
-      }
-    }
-
-    // Bind the event listener
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [ref, bellRef, setOpen]);
-}
-
 function WrappedChatButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
-  const wrapperRef = useRef(null);
-  const bellRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  useOutsideAlerter(wrapperRef, bellRef, setOpen);
+  const { ui, open, close } = useDialectUiId(props.dialectId);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const bellRef = useRef<HTMLButtonElement>(null);
+  useOutsideAlerter(wrapperRef, bellRef, close);
+
   const { setWallet, setNetwork, setRpcUrl } = useApi();
   const isWalletConnected = connected(props.wallet);
 
@@ -94,17 +70,15 @@ function WrappedChatButton(
           bellButton
         )}
         icon={<icons.chat className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
-        onClick={() => setOpen(!open)}
+        onClick={ui?.open ? close : open}
       ></IconButton>
-      <Transition className={modalWrapper} show={open} {...animations.popup}>
-        <div
-          ref={wrapperRef}
-          className="dt-w-full dt-h-full"
-          // TODO: investigate blur
-          // className="dt-w-full dt-h-full bg-white/10"
-          // style={{ backdropFilter: 'blur(132px)' }}
-        >
-          <Chat onModalClose={() => setOpen(false)} />
+      <Transition
+        className={modalWrapper}
+        show={ui?.open ?? false}
+        {...animations.popup}
+      >
+        <div ref={wrapperRef} className="dt-w-full dt-h-full">
+          <Chat dialectId={props.id} type="popup" onChatClose={close} />
         </div>
       </Transition>
     </div>
@@ -121,9 +95,9 @@ export default function ChatButton({
       <ApiProvider>
         <DialectProvider>
           <WalletIdentityProvider>
-            <ThemeProvider theme={theme} variables={variables}>
+            <DialectThemeProvider theme={theme} variables={variables}>
               <WrappedChatButton {...props} />
-            </ThemeProvider>
+            </DialectThemeProvider>
           </WalletIdentityProvider>
         </DialectProvider>
       </ApiProvider>

@@ -22,18 +22,18 @@ yarn add @dialectlabs/react @dialectlabs/react-ui
 
 Dialect's react components library is best learned by example. This section describes how to use Dialect in your app by showing you how it has been embedded in various example apps in the `examples/` folder of this repository. Follow along in this section, & refer to the code in those examples.
 
-1. `examples/chat/` -- A wallet-to-wallet chat example.
-2. `examples/inbox/` -- A full page wallet-to-wallet chat example.
-3. `examples/notifications/` -- A dapp notifications example. Note that to receive dapp messages to this UI component, you'll need to also run a monitoring service from Dialect's examples. That example can be found in `@dialectlabs/monitor.git`.
+1. `examples/bottom-chat/` -- A wallet-to-wallet chat box anchored to bottom.
+2. `examples/inbox/` -- A full page wallet-to-wallet chat.
+3. `examples/notifications/` -- A dapp notifications example. Note that to receive dapp messages to this UI component, you'll need to also run a monitoring service from Dialect's examples. That example can be found in [`@dialectlabs/monitor`](https://github.com/dialectlabs/monitor).
 
 If you're interested in developing on Dialect while making live changes to the library, see the Development section below.
 
 ### Embed a notifications modal in your navbar
 
-```typescript
+```typescript jsx
 import '@dialectlabs/react-ui/index.css';
 
-import { NotificationsButton } from '@dialectlabs/react-ui';
+import { NotificationsButton, DialectUiManagementProvider } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 
@@ -43,16 +43,18 @@ const theme: 'dark' | 'light' = 'dark';
 const YOUR_PROJECT_PUBLIC_KEY = new PublicKey('8cqm...quvHK');
 
 return (
-  <NotificationsButton
-    wallet={wallet}
-    publicKey={YOUR_PROJECT_PUBLIC_KEY}
-    network={'devnet'}
-    theme={theme}
-    notifications={[
-      { name: 'Welcome message on thread creation', detail: 'Event' },
-      { name: 'Collateral health', detail: 'Below 130%' },
-    ]}
-  />
+  <DialectUiManagementProvider>
+    <NotificationsButton
+      wallet={wallet}
+      publicKey={YOUR_PROJECT_PUBLIC_KEY}
+      network={'devnet'}
+      theme={theme}
+      notifications={[
+        { name: 'Welcome message on thread creation', detail: 'Event' },
+        { name: 'Collateral health', detail: 'Below 130%' },
+      ]}
+    />
+  </DialectUiManagementProvider>
 );
 
 // ...
@@ -66,20 +68,27 @@ The component above is a self-contained button that opens a notifications modal 
 
 ### Embed a full inbox view in your website
 
-```typescript
+```typescript jsx
 import '@dialectlabs/react-ui/index.css';
 
-import { Inbox } from '@dialectlabs/react-ui';
+// You can also use the `DialectThemeProvider` instead
+import { Inbox, ThemeProvider, DialectUiManagementProvider } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 // ...
 const wallet = useWallet();
+const theme: 'dark' | 'light' = 'dark';
 
 return (
-  <Inbox
-    wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
-    wallet={wallet}
-  />
+  <ThemeProvider theme={theme}>
+    <DialectUiManagementProvider>
+      <Inbox
+        wallet={wallet}
+        dialectId="dialect-inbox"
+        wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
+      />
+    </DialectUiManagementProvider>
+  </ThemeProvider>
 );
 
 // ...
@@ -88,27 +97,43 @@ return (
 The component above contains a wallet's current inbox of current chats/notifications. From this inbox a user can create chats, browse chats, and send messages. Props are outlined as follows.
 
 1. `wallet` – your user's wallet, used by Dialect to identify relevant messages and sign transactions.
-2. `wrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _container_ view, both augments and overrides Dialect styling.
-3. `contentWrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _content_ view, augments Dialect styling.
+2. `dialectId` — a custom id for each dialect component, e.g. 'dialect-inbox' or 'marketplace-bottom-chat'
+3. `wrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _container_ view, both augments and overrides Dialect styling.
+4. `contentWrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _content_ view, augments Dialect styling.
 
 ### Embed wallet-to-wallet chat in your navbar
 
-```typescript
+```typescript jsx
 import '@dialectlabs/react-ui/index.css';
 
-import { ChatButton } from '@dialectlabs/react-ui';
+import { ChatButton, DialectUiManagementProvider } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 // ...
 const wallet = useWallet();
 const theme: 'dark' | 'light' = 'dark';
 
-return <ChatButton wallet={wallet} network={'devnet'} theme={theme} />;
+return (
+  <DialectUiManagementProvider>
+    <ChatButton
+      wallet={wallet}
+      dialectId="header-chat-button"
+      network={'devnet'}
+      theme={theme}
+    />
+  </DialectUiManagementProvider>
+);
 
 // ...
 ```
 
-### Embed specific Dialect React components throughout your dapp
+### DialectUiManagementProvider
+
+DialectUiManagementProvider is the provider to control all Dialect related UIs in your dApp. Import `useDialectUiId` hook to gain access to a certain window, and be able to open popup, close popup or navigate through different pages (only for Chat) externally. 
+
+Please see `examples/bottom-chat` for more clarity and usage examples. 
+
+### Embed specific Dialect React components throughout your dApp
 
 In addition to out-of-the-box button and modal support, you can also import subcomponents of Dialect's component library – messages lists, settings & configurations, etc. – directly into your project.
 

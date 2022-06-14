@@ -1,6 +1,5 @@
 import type { KeyboardEvent } from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import * as anchor from '@project-serum/anchor';
 import { display } from '@dialectlabs/web3';
 import type { Member } from '@dialectlabs/web3';
 import {
@@ -17,8 +16,8 @@ import {
   NameRegistryState,
 } from '@bonfida/spl-name-service';
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
-import { A, H1, Input, P } from '../../../../../common/preflighted';
-import { useTheme } from '../../../../../common/ThemeProvider';
+import { A, H1, Input, P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import {
   Button,
   Footer,
@@ -27,20 +26,23 @@ import {
   useBalance,
   ValueRow,
   fetchSolanaNameServiceName,
-} from '../../../../../common';
-import { fetchAddressFromTwitterHandle } from '../../../../../DisplayAddress';
-import { Lock, NoLock } from '../../../../../Icon';
-import IconButton from '../../../../../IconButton';
-import debounce from '../../../../../../utils/debounce';
+} from '../../../common';
+import { fetchAddressFromTwitterHandle } from '../../../DisplayAddress';
+import { Lock, NoLock } from '../../../Icon';
+import { Header } from '../../../Header';
+import { Connection, PublicKey } from '@solana/web3.js';
+import debounce from '../../../../utils/debounce';
+import { useChatInternal } from '../../provider';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
+import { useRoute } from '../../../common/providers/Router';
 
 interface CreateThreadProps {
-  inbox?: boolean;
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
   onModalClose?: () => void;
 }
 
-const SOL_TLD_AUTHORITY = new anchor.web3.PublicKey(
+const SOL_TLD_AUTHORITY = new PublicKey(
   '58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx'
 );
 
@@ -235,9 +237,9 @@ const parseSNSDomain = (domainString: string): string | undefined => {
 };
 
 const tryFetchSNSDomain = async (
-  connection: anchor.web3.Connection,
+  connection: Connection,
   domainName: string
-): Promise<anchor.web3.PublicKey | null> => {
+): Promise<PublicKey | null> => {
   try {
     const hashedName = await getHashedName(domainName);
 
@@ -267,9 +269,9 @@ const parseTwitterHandle = (handleString: string): string | undefined => {
 };
 
 const tryFetchAddressFromTwitterHandle = async (
-  connection: anchor.web3.Connection,
+  connection: Connection,
   handle: string
-): Promise<anchor.web3.PublicKey | null> => {
+): Promise<PublicKey | null> => {
   try {
     const { result } = await fetchAddressFromTwitterHandle(connection, handle);
 
@@ -279,35 +281,34 @@ const tryFetchAddressFromTwitterHandle = async (
   }
 };
 
-const tryPublicKey = (addressString: string): anchor.web3.PublicKey | null => {
+const tryPublicKey = (addressString: string): PublicKey | null => {
   try {
-    return new anchor.web3.PublicKey(addressString);
+    return new PublicKey(addressString);
   } catch (e) {
     return null;
   }
 };
 
 export default function CreateThread({
-  inbox,
   onNewThreadCreated,
   onCloseRequest,
   onModalClose,
 }: CreateThreadProps) {
+  const { createDialect, dialects, isDialectCreating, creationError } =
+    useDialect();
   const {
-    createDialect,
-    dialects,
-    isDialectCreating,
-    creationError,
-    setDialectAddress,
-  } = useDialect();
+    current,
+    params: { receiver },
+  } = useRoute<{ receiver?: string }>();
+  const { type, onChatOpen, dialectId } = useChatInternal();
+  const { ui } = useDialectUiId(dialectId);
   const { program, network, wallet, walletName } = useApi();
   const connection = program?.provider.connection;
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
-  const [address, setAddress] = useState('');
-  const [actualAddress, setActualAddress] =
-    useState<anchor.web3.PublicKey | null>(null);
+  const [address, setAddress] = useState<string | null>(receiver ?? null);
+  const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
 
   const [isTwitterHandle, setIsTwitterHandle] = useState(false);
   const [isSNS, setIsSNS] = useState(false);
@@ -318,6 +319,12 @@ export default function CreateThread({
   const [encrypted, setEncrypted] = useState(false);
   const [isValidAddress, setIsValidAddress] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+
+  useEffect(() => {
+    // Accessing current here, since we need to set the address if the reference to `current` has changed (route has changed)
+    if (!current || !receiver) return;
+    setAddress(receiver);
+  }, [current, receiver]);
 
   // TODO: useCallback
   const createThread = async () => {
@@ -336,9 +343,8 @@ export default function CreateThread({
     if (currentChatWithAddress) {
       const currentThreadWithAddress =
         currentChatWithAddress.publicKey.toBase58();
-      setDialectAddress(currentThreadWithAddress);
+
       onNewThreadCreated?.(currentThreadWithAddress);
-      onCloseRequest?.();
       return;
     }
 
@@ -353,9 +359,7 @@ export default function CreateThread({
           program,
           actualAddress
         );
-        setDialectAddress(da.toBase58());
         onNewThreadCreated?.(da.toBase58());
-        onCloseRequest?.();
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {});
@@ -368,16 +372,12 @@ export default function CreateThread({
     }
   };
 
-  // TODO: useCallback
   const onAddressChange = (addr: string) => {
     setAddress(addr);
     setIsTyping(true);
   };
 
-  const findAddress = async (
-    connection: anchor.web3.Connection,
-    addressString: string
-  ) => {
+  const findAddress = async (connection: Connection, addressString: string) => {
     if (!connection) {
       // TODO: set connection error
       return;
@@ -429,6 +429,11 @@ export default function CreateThread({
   const findAddressDebounced = useCallback(debounce(findAddress, 500), []);
 
   useEffect(() => {
+    // When input address changes, we debounce
+    findAddressDebounced(connection, address);
+  }, [findAddressDebounced, connection, address]);
+
+  useEffect(() => {
     const fetchReverse = async () => {
       if (!actualAddress || !connection) {
         setTwitterHandle('');
@@ -458,33 +463,30 @@ export default function CreateThread({
       );
     };
     fetchReverse();
-  }, [actualAddress?.toBase58(), isSNS, isTwitterHandle]);
+  }, [actualAddress, connection, isSNS, isTwitterHandle]);
 
   const disabled = !address || (!isTyping && !isValidAddress);
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
-      <div className="dt-px-4 dt-pt-2 dt-pb-4 dt-flex dt-justify-between dt-border-b dt-border-neutral-900 dt-font-bold dt-items-center">
-        {/* TODO: replace with IconButton to be sematic */}
-        <div
-          className="dt-cursor-pointer"
-          onClick={() => {
-            onCloseRequest?.();
-          }}
-        >
-          <icons.back />
-        </div>
-        Send Message
-        <div>
-          {!inbox && onModalClose && (
-            <div className="sm:dt-hidden dt-ml-3">
-              <IconButton icon={<icons.x />} onClick={onModalClose} />
-            </div>
-          )}
-        </div>
-      </div>
+      <Header
+        type={type}
+        onClose={onModalClose}
+        onOpen={onChatOpen}
+        onHeaderClick={onChatOpen}
+        isWindowOpen={ui?.open}
+      >
+        <Header.Icons containerOnly position="left">
+          <Header.Icon
+            icon={<icons.back />}
+            onClick={() => onCloseRequest?.()}
+          />
+        </Header.Icons>
+        <Header.Title>Send Message</Header.Title>
+        <Header.Icons />
+      </Header>
 
-      <div className="dt-flex-1 dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col">
+      <div className="dt-flex-1 dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-px-2">
         <H1
           className={clsx(
             textStyles.h1,
@@ -498,13 +500,9 @@ export default function CreateThread({
           className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
           placeholder="D1AL...DY5h, @saydialect or dialect.sol"
           type="text"
-          value={address}
+          value={address ?? ''}
           onChange={(e) => {
             onAddressChange(e.target.value);
-            findAddressDebounced(connection, e.target.value);
-          }}
-          onKeyUp={(e) => {
-            findAddressDebounced(connection, address);
           }}
           onKeyDown={onEnterPress}
         />

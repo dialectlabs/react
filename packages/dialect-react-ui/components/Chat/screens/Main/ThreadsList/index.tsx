@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { DialectAccount, useDialect } from '@dialectlabs/react';
-import { useApi, Wallets } from '@dialectlabs/react';
+import { useApi } from '@dialectlabs/react';
 import MessagePreview from './MessagePreview';
 import { Centered } from '../../../../common';
-import { useTheme } from '../../../../common/ThemeProvider';
+import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
 
 interface ThreadsListProps {
@@ -43,7 +43,7 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
             colors.highlight,
             highlighted,
             textStyles.small,
-            'dt-px-4 dt-py-2 dt-mr-2'
+            'dt-px-4 dt-py-2 dt-mx-2 dt-mt-2'
           )}
         >
           ⚠ You have encrypted messages in your inbox. Connect the Sollet.io
