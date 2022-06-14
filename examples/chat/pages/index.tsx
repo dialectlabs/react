@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+// TODO: retire this example?
+
 import {
   ChatButton,
   DialectUiManagementProvider,
@@ -84,7 +86,7 @@ function AuthedHome() {
       <div className="flex flex-col h-screen bg-white dark:bg-black">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <ChatButton
-            id="dialect-chat"
+            dialectId="dialect-chat"
             wallet={wallet}
             network={'localnet'}
             theme={theme}
