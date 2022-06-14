@@ -7,6 +7,7 @@ import {
   ChatRouteName,
   ChatMainRouteName,
   ThemeProvider,
+  ChatNavigationHelpers,
 } from '@dialectlabs/react-ui';
 import {
   ApiProvider,
@@ -21,7 +22,7 @@ function AuthedHome() {
   const isWalletConnected = connected(wallet);
 
   const { setNetwork, setRpcUrl, setWallet } = useApi();
-  const { navigation } = useDialectUiId('dialect-inbox');
+  const { navigation } = useDialectUiId<ChatNavigationHelpers>('dialect-inbox');
 
   useEffect(
     () => setWallet(connected(wallet) ? wallet : null),
@@ -37,25 +38,17 @@ function AuthedHome() {
           <button
             className="btn-primary"
             onClick={() => {
-              open();
-              // TODO: navigate needs better typing or documentation, since routes are internal.
-              navigation?.navigate?.(ChatRouteName.Main, {
-                sub: {
-                  name: ChatMainRouteName.CreateThread,
-                  // TODO: There is a problem with typing sub route params, and this needs to be improved, unfortunately
-                  params: { receiver: '@saydialect' } as any,
-                },
-              });
+              navigation?.showCreateThread('@saydialect');
             }}
           >
-            Message dialect
+            Message @saydialect
           </button>
           <Wallet />
         </div>
         <div className="w-full lg:max-w-[1048px] px-6 h-[calc(100vh-8rem)] mt-8 mx-auto">
           <DialectInbox
             dialectId="dialect-inbox"
-            wrapperClassName="py-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
+            wrapperClassName="h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
             wallet={wallet}
           />
         </div>

@@ -302,6 +302,7 @@ export default function CreateThread({
     setDialectAddress,
   } = useDialect();
   const {
+    current,
     params: { receiver },
   } = useRoute<{ receiver?: string }>();
   const { type, onChatOpen, dialectId } = useChatInternal();
@@ -325,10 +326,11 @@ export default function CreateThread({
   const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    if (receiver) {
+    // Accessing current here, since we need to set the address if the reference to `current` has changed (route has changed)
+    if (current && receiver) {
       setAddress(receiver);
     }
-  }, [receiver]);
+  }, [current, receiver]);
 
   // TODO: useCallback
   const createThread = async () => {
