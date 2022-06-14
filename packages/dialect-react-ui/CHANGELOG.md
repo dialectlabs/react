@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- feat: add bottom chat component and example
+- feat: [BREAKING] add ui management provider to control dialect related UIs
+- styles: adjust header styles for Chat and implement as a reusable component
 
 ## [0.8.11] - 2022-06-14
 
@@ -8,7 +11,7 @@
 
 ## [0.8.10] - 2022-06-14
 
-- added logic to notfication ui to display new notification badge
+- added logic to notification ui to display new notification badge
 - fix: open thread if user entered address with whom thread already exists
 - fix: do not fetch handles and avatars twice
 - feat: a bunch of UX improvements such as Optimistic UI
