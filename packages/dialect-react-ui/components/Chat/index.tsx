@@ -7,7 +7,7 @@ import Main from './screens/Main';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { ChatProvider } from './provider';
 import { Route, Router, useRoute } from '../common/providers/Router';
-import { RouteName } from './constants';
+import { MainRouteName, RouteName } from './constants';
 import type { ChatNavigationHelpers } from './types';
 import {
   showCreateThread,
@@ -66,7 +66,7 @@ function InnerChat({
       } else if (!isWalletConnected) {
         navigate(RouteName.NoWallet);
       } else {
-        navigate(RouteName.Main);
+        navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
       }
     },
     [navigate, disconnectedFromChain, isWalletConnected]
