@@ -304,6 +304,7 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       (m: Message, idx: number) => ({
         ...m,
         id:
+          // Using anti-index to avoid updating index every time new message appears
           getMessageHash(m.text) + (dialect.dialect.messages.length - 1 - idx),
       })
     );
