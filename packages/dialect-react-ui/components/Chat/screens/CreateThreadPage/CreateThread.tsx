@@ -304,8 +304,8 @@ export default function CreateThread({
   const {
     params: { receiver },
   } = useRoute<{ receiver?: string }>();
-  const { type, onChatOpen, id } = useChatInternal();
-  const { ui } = useDialectUiId(id);
+  const { type, onChatOpen, dialectId } = useChatInternal();
+  const { ui } = useDialectUiId(dialectId);
   const { program, network, wallet, walletName } = useApi();
   const connection = program?.provider.connection;
   const { balance } = useBalance();

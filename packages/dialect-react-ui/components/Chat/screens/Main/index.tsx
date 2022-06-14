@@ -13,8 +13,8 @@ import { useDialectUiId } from '../../../common/providers/DialectUiManagementPro
 const Main = () => {
   const { navigate, current } = useRoute();
   const { dialectAddress, dialects, setDialectAddress } = useDialect();
-  const { type, onChatClose, onChatOpen, id } = useChatInternal();
-  const { ui } = useDialectUiId(id);
+  const { type, onChatClose, onChatOpen, dialectId } = useChatInternal();
+  const { ui } = useDialectUiId(dialectId);
   const inbox = type === 'inbox';
 
   const { icons } = useTheme();

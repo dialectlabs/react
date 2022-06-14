@@ -22,8 +22,8 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
   const { wallet, program } = useApi();
   const { dialect, dialectAddress, setDialectAddress } = useDialect();
   const { icons, xPaddedText } = useTheme();
-  const { type, onChatOpen, id } = useChatInternal();
-  const { ui } = useDialectUiId(id);
+  const { type, onChatOpen, dialectId } = useChatInternal();
+  const { ui } = useDialectUiId(dialectId);
   const inbox = type === 'inbox';
 
   useEffect(() => {

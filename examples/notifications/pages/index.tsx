@@ -5,6 +5,7 @@ import {
   NotificationsButton,
   IncomingThemeVariables,
   defaultVariables,
+  DialectUiManagementProvider,
 } from '@dialectlabs/react-ui';
 import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -72,6 +73,7 @@ function AuthedHome() {
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <NotificationsButton
+          dialectId="dialect-notifications"
           wallet={wallet}
           network={'localnet'}
           publicKey={DIALECT_PUBLIC_KEY}
@@ -103,7 +105,9 @@ function AuthedHome() {
 export default function Home(): JSX.Element {
   return (
     <WalletContext>
-      <AuthedHome />
+      <DialectUiManagementProvider>
+        <AuthedHome />
+      </DialectUiManagementProvider>
     </WalletContext>
   );
 }

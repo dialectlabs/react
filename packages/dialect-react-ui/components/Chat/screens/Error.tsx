@@ -9,8 +9,13 @@ interface Props {
 }
 
 const Error = ({ type }: Props) => {
-  const { type: chatType, onChatOpen, onChatClose, id } = useChatInternal();
-  const { ui } = useDialectUiId(id);
+  const {
+    type: chatType,
+    onChatOpen,
+    onChatClose,
+    dialectId,
+  } = useChatInternal();
+  const { ui } = useDialectUiId(dialectId);
   const { icons } = useTheme();
 
   if (!type) return null;
