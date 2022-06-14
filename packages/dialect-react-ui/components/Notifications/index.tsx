@@ -46,7 +46,7 @@ function Header(props: {
       <>
         <div
           className={cs(
-            'dt-flex dt-flex-row dt-items-start dt-justify-items-start',
+            'dt-flex dt-flex-row dt-items-center dt-justify-items-start',
             header
           )}
         >
@@ -207,7 +207,7 @@ export default function Notifications(props: {
   notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
-  pollingInterval?: number
+  pollingInterval?: number;
 }): JSX.Element {
   const {
     isWalletConnected,

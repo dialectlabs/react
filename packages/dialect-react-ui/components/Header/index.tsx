@@ -63,7 +63,7 @@ export const Header = ({
     <HeaderContext.Provider value={{ type, onClose, onOpen, isWindowOpen }}>
       <header
         className={clsx(
-          'dt-max-h-[3.5rem] dt-min-h-[3.5rem] dt-px-2 dt-h-full dt-flex dt-justify-between dt-items-center dt-border-b dt-border-neutral-900',
+          'dt-h-full dt-flex dt-justify-between dt-items-center dt-border-b dt-border-neutral-900',
           header
         )}
         onClick={onHeaderClick}
