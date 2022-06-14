@@ -593,7 +593,7 @@
   }
 }
 
-/* Using the manual created classes instead of tailwind because there's no way to set different durations for different properties */
+/* Using the manualy created classes instead of tailwind because there's no way to set different durations for different properties */
 .dt-message-enter {
   max-height: 0;
   transform: translateY(50%) scale(0.95);
