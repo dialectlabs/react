@@ -21,7 +21,7 @@ function AuthedHome() {
   const isWalletConnected = connected(wallet);
 
   const { setNetwork, setRpcUrl, setWallet } = useApi();
-  const { open, navigation } = useDialectUiId('dialect-inbox');
+  const { navigation } = useDialectUiId('dialect-inbox');
 
   useEffect(
     () => setWallet(connected(wallet) ? wallet : null),

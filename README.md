@@ -22,9 +22,9 @@ yarn add @dialectlabs/react @dialectlabs/react-ui
 
 Dialect's react components library is best learned by example. This section describes how to use Dialect in your app by showing you how it has been embedded in various example apps in the `examples/` folder of this repository. Follow along in this section, & refer to the code in those examples.
 
-1. `examples/chat/` -- A wallet-to-wallet chat example.
-2. `examples/inbox/` -- A full page wallet-to-wallet chat example.
-3. `examples/notifications/` -- A dapp notifications example. Note that to receive dapp messages to this UI component, you'll need to also run a monitoring service from Dialect's examples. That example can be found in `@dialectlabs/monitor.git`.
+1. `examples/bottom-chat/` -- A wallet-to-wallet chat box anchored to bottom.
+2. `examples/inbox/` -- A full page wallet-to-wallet chat.
+3. `examples/notifications/` -- A dapp notifications example. Note that to receive dapp messages to this UI component, you'll need to also run a monitoring service from Dialect's examples. That example can be found in [`@dialectlabs/monitor`](https://github.com/dialectlabs/monitor).
 
 If you're interested in developing on Dialect while making live changes to the library, see the Development section below.
 
@@ -77,8 +77,9 @@ const wallet = useWallet();
 
 return (
   <Inbox
-    wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
     wallet={wallet}
+    dialectId="dialect-inbox"
+    wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
   />
 );
 
@@ -88,8 +89,9 @@ return (
 The component above contains a wallet's current inbox of current chats/notifications. From this inbox a user can create chats, browse chats, and send messages. Props are outlined as follows.
 
 1. `wallet` – your user's wallet, used by Dialect to identify relevant messages and sign transactions.
-2. `wrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _container_ view, both augments and overrides Dialect styling.
-3. `contentWrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _content_ view, augments Dialect styling.
+2. `dialectId` — a custom id for each dialect component, e.g. 'dialect-inbox' or 'marketplace-bottom-chat'
+3. `wrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _container_ view, both augments and overrides Dialect styling.
+4. `contentWrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _content_ view, augments Dialect styling.
 
 ### Embed wallet-to-wallet chat in your navbar
 
@@ -103,7 +105,14 @@ import { useWallet } from '@solana/wallet-adapter-react';
 const wallet = useWallet();
 const theme: 'dark' | 'light' = 'dark';
 
-return <ChatButton wallet={wallet} network={'devnet'} theme={theme} />;
+return (
+  <ChatButton
+    wallet={wallet}
+    dialectId="header-chat-button"
+    network={'devnet'}
+    theme={theme}
+  />
+);
 
 // ...
 ```
