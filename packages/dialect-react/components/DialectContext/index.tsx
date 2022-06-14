@@ -497,7 +497,6 @@ export const DialectProvider = (props: PropsType): JSX.Element => {
       const id = messageId || getMessageHash(text) + messages.length;
 
       try {
-        // TODO: optimistic ui show message before actually sent
         if (messageId) {
           pushOrUpdateSending(
             dialectAddress,
