@@ -29,13 +29,14 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
   const { type, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const inbox = type === 'inbox';
+  const connection = program?.provider.connection;
 
   useEffect(() => {
     // In case wallet changes, we reset dialect address and navigate to main
     setDialectAddress('');
 
     navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
-  }, [wallet]);
+  }, [navigate, setDialectAddress, wallet]);
 
   useEffect(() => {
     setDialectAddress(threadId ?? '');
@@ -94,10 +95,10 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
           <Header.Title align="center">
             <div className="dt-flex dt-flex-col dt-items-center">
               <span className="dt-text-base dt-font-medium dt-text">
-                {dialect && program ? (
+                {dialect && connection ? (
                   <DisplayAddress
-                    connection={program?.provider.connection}
-                    dialectMembers={dialect?.dialect.members}
+                    connection={connection}
+                    dialectMembers={dialect.dialect.members}
                     isLinkable={true}
                   />
                 ) : (
