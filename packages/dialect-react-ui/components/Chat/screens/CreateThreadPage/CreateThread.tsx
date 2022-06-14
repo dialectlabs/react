@@ -294,13 +294,8 @@ export default function CreateThread({
   onCloseRequest,
   onModalClose,
 }: CreateThreadProps) {
-  const {
-    createDialect,
-    dialects,
-    isDialectCreating,
-    creationError,
-    setDialectAddress,
-  } = useDialect();
+  const { createDialect, dialects, isDialectCreating, creationError } =
+    useDialect();
   const {
     current,
     params: { receiver },
@@ -312,7 +307,7 @@ export default function CreateThread({
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
-  const [address, setAddress] = useState(receiver ?? '');
+  const [address, setAddress] = useState<string | null>(receiver ?? null);
   const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
 
   const [isTwitterHandle, setIsTwitterHandle] = useState(false);
@@ -505,7 +500,7 @@ export default function CreateThread({
           className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
           placeholder="D1AL...DY5h, @saydialect or dialect.sol"
           type="text"
-          value={address}
+          value={address ?? ''}
           onChange={(e) => {
             onAddressChange(e.target.value);
           }}

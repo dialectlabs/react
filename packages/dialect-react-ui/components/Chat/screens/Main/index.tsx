@@ -9,7 +9,8 @@ import { useChatInternal } from '../../provider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
+import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect';
 
 const Main = () => {
   const { navigate, current } = useRoute();
@@ -21,9 +22,8 @@ const Main = () => {
 
   const { icons } = useTheme();
 
-  // TODO: Consider changing this to `useIsomorphicLayoutEffect`
   // Running this inside useLayoutEffect in order to make necessary style changes, since otherwise there is a visual bug
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const shouldHideList =
       current?.sub?.name === MainRouteName.CreateThread ||
       current?.sub?.params?.threadId;
