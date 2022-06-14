@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import {
   Inbox as DialectInbox,
-  DialectThemeProvider as ThemeProvider,
   DialectUiManagementProvider,
   useDialectUiId,
   ChatRouteName,
   ChatMainRouteName,
+  ThemeProvider,
 } from '@dialectlabs/react-ui';
 import {
   ApiProvider,
