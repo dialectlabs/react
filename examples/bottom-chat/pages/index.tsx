@@ -8,8 +8,7 @@ import {
   BottomChat,
   IncomingThemeVariables,
   useDialectUiId,
-  ChatRouteName,
-  ChatMainRouteName,
+  ChatNavigationHelpers,
 } from '@dialectlabs/react-ui';
 import Head from 'next/head';
 // pink: #B852DC
@@ -51,7 +50,9 @@ function AuthedHome() {
   // const wallet = useAnchorWallet();
   const wallet = useWallet();
   const [theme, setTheme] = useState<ThemeType>('dark');
-  const { ui, open, close, navigation } = useDialectUiId('dialect-bottom-chat');
+  const { ui, open, close, navigation } = useDialectUiId<ChatNavigationHelpers>(
+    'dialect-bottom-chat'
+  );
 
   useEffect(() => {
     if (
@@ -102,14 +103,8 @@ function AuthedHome() {
                 className="btn-primary"
                 onClick={() => {
                   open();
-                  // TODO: navigate needs better typing or documentation, since routes are internal.
-                  navigation?.navigate?.(ChatRouteName.Main, {
-                    sub: {
-                      name: ChatMainRouteName.CreateThread,
-                      // TODO: There is a problem with typing sub route params, and this needs to be improved, unfortunately
-                      params: { receiver: '@saydialect' } as any,
-                    },
-                  });
+
+                  navigation?.showCreateThread('@saydialect');
                 }}
               >
                 Chat with @saydialect

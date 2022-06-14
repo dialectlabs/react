@@ -8,20 +8,21 @@ import {
   useState,
 } from 'react';
 import produce from 'immer';
-import type { RouteParams, RouterContextValue } from './Router';
+import type { RouterContextValue } from './Router';
 
 interface UiState {
   open: boolean;
 }
 
-interface Navigator<P extends RouteParams = undefined> {
-  navigate?: RouterContextValue<P>['navigate'];
-}
+type Navigator<N extends Record<string, any> = Record<string, never>> = N & {
+  navigate?: RouterContextValue['navigate'];
+};
 
-interface ManagementConfig {
+interface ManagementConfig<N extends Record<string, any>> {
   navigation?: Partial<{
     navigate: Navigator['navigate'];
-  }>;
+  }> &
+    N;
 }
 
 interface UiManagementContextType {
@@ -34,7 +35,7 @@ interface UiManagementContextType {
   open(id: string): void;
   close(id: string): void;
   register(id: string): void;
-  configure(id: string, config: ManagementConfig): void;
+  configure<N>(id: string, config: ManagementConfig<N>): void;
 }
 
 export const DialectUiManagementContext =
@@ -85,18 +86,19 @@ export const DialectUiManagementProvider: FunctionComponent = ({
   );
 
   // Extend for necessary configurations
-  const configure = useCallback((id: string, config: ManagementConfig) => {
-    setNavigation(
-      produce((draft) => {
-        const nav = draft[id] ?? {};
-        const { navigation } = config;
+  const configure = useCallback(
+    <N extends Record<any, any>>(id: string, config: ManagementConfig<N>) => {
+      setNavigation(
+        produce((draft) => {
+          const { navigation } = config;
 
-        nav.navigate = navigation?.navigate;
-
-        draft[id] = nav;
-      })
-    );
-  }, []);
+          // Also, this is not great probably in terms of immer usage
+          draft[id] = { ...draft[id], ...navigation } as any; // FIXME: types...
+        })
+      );
+    },
+    []
+  );
 
   return (
     <DialectUiManagementContext.Provider
@@ -118,7 +120,11 @@ export const useDialectUi = () => {
   return context;
 };
 
-export const useDialectUiId = (id: string) => {
+export const useDialectUiId = <
+  N extends Record<string, any> = Record<string, never>
+>(
+  id: string
+) => {
   const {
     ui: uis,
     navigation: navigations,
@@ -129,14 +135,15 @@ export const useDialectUiId = (id: string) => {
   } = useDialectUi();
 
   const ui = useMemo(() => uis[id], [uis, id]);
-  const navigation: Navigator<Record<string, any>> | undefined = useMemo(
-    () => navigations[id],
+  const navigation: Navigator<N> | undefined = useMemo(
+    () => navigations[id] as Navigator<N> | undefined,
     [navigations, id]
   );
   const open = useCallback(() => mainOpen(id), [mainOpen, id]);
   const close = useCallback(() => mainClose(id), [mainClose, id]);
   const configure = useCallback(
-    (config: ManagementConfig) => mainConfigure(id, config),
+    <N extends Record<any, any>>(config: ManagementConfig<N>) =>
+      mainConfigure(id, config),
     [mainConfigure, id]
   );
 
