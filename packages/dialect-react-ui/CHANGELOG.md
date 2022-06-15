@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [0.9.1] - 2022-06-15
+
 - fix: type error with initial address state of create thread page
 - fix: bottom chat positioning
 
