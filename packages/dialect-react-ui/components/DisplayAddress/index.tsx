@@ -153,12 +153,10 @@ export function DisplayAddress({
   const loadingName = !displayName && !error;
   const showTwitterIcon = displayName?.includes('@');
 
-  // const { data } = useSWR(
-  //   isMemberExist ? [connection, publicKey.toString(), 'sns'] : null,
-  //   fetchSolanaNameServiceName
-  // );
-
-  const data = { solanaDomain: 'verylongsolanadomain' };
+  const { data } = useSWR(
+    isMemberExist ? [connection, publicKey.toString(), 'sns'] : null,
+    fetchSolanaNameServiceName
+  );
 
   if (!isMemberExist) return null;
 
