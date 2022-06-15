@@ -88,7 +88,7 @@ export default function MessagePreview({
       <div className="dt-flex">
         <Avatar publicKey={otherMembers[0].publicKey} size="regular" />
       </div>
-      <div className="dt-flex dt-grow dt-justify-between dt-truncate dt-pr-2">
+      <div className="dt-flex dt-items-baseline dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {connection ? (
             <DisplayAddress
