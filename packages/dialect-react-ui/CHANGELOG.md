@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - fix: type error with initial address state of create thread page
+- fix: bottom chat positioning
 
 ## [0.9.0] - 2022-06-14
 
