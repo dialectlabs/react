@@ -1,6 +1,7 @@
 import type { DialectSdkError, Message, Thread } from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
 import useSWR from 'swr';
+import { useDialectErrorsHandler } from '../context/DialectContext/errors';
 import { EMPTY_ARR } from '../utils';
 import useThread from './useThread';
 
@@ -38,8 +39,10 @@ const useThreadMessages = ({
   } = useSWR(
     threadInternal ? CACHE_KEY(threadInternal.address) : null,
     () => threadInternal!.messages(),
-    { refreshInterval }
+    { refreshInterval, refreshWhenOffline: true }
   );
+
+  useDialectErrorsHandler(errorFetchingMessages);
 
   return {
     messages,

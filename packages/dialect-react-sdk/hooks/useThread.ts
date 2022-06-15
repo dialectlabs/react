@@ -2,6 +2,7 @@ import { DialectSdkError, SendMessageCommand, Thread } from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
+import { useDialectErrorsHandler } from '../context/DialectContext/errors';
 import useDialectSdk from './useDialectSdk';
 
 const CACHE_KEY = 'THREAD';
@@ -57,6 +58,12 @@ const useThread = ({
     {
       refreshInterval,
     }
+  );
+
+  useDialectErrorsHandler(
+    errorFetchingThread,
+    errorSendingMessage,
+    errorDeletingThread
   );
 
   const deleteThread = useCallback(async () => {
