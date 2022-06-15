@@ -2,7 +2,11 @@
 
 ## [UNRELEASED]
 
+- fix: type error with initial address state of create thread page
+- fix: bottom chat positioning
+
 ## [0.9.0] - 2022-06-14
+
 - feat: add bottom chat component and example
 - feat: [BREAKING] add ui management provider to control dialect related UIs
 - styles: adjust header styles for Chat and implement as a reusable component
