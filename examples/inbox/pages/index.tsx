@@ -40,11 +40,8 @@ function AuthedHome() {
     () => setWallet(connected(wallet) ? wallet : null),
     [setWallet, wallet, isWalletConnected]
   );
-  useEffect(() => setNetwork('mainnet'), [setNetwork]);
-  useEffect(
-    () => setRpcUrl('https://nyc60.rpcpool.com/036994d5bbec2f542085aded6d8d'),
-    [setRpcUrl]
-  );
+  useEffect(() => setNetwork('localnet'), [setNetwork]);
+  useEffect(() => setRpcUrl(null), [setRpcUrl]);
 
   const [dialectWalletAdapter, setDialectWalletAdapter] =
     useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
