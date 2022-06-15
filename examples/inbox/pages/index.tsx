@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import React, { useEffect, useState } from 'react';
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { PublicKey } from '@solana/web3.js';
 import {
   Inbox as DialectInbox,
   DialectUiManagementProvider,
@@ -16,6 +17,17 @@ import {
   useApi,
 } from '@dialectlabs/react';
 import { Wallet, WalletContext } from '../components/Wallet';
+import { DialectContext } from '@dialectlabs/react-sdk';
+import { Backend, DialectWalletAdapter } from '@dialectlabs/sdk';
+
+const walletToDialectWallet = (
+  wallet: WalletContextState
+): DialectWalletAdapter => ({
+  publicKey: wallet.publicKey || PublicKey.default, // TODO: should be fixed when sdk would allow publicKey as optional
+  signMessage: wallet.signMessage,
+  signTransaction: wallet.signTransaction,
+  signAllTransactions: wallet.signAllTransactions,
+});
 
 function AuthedHome() {
   const wallet = useWallet();
@@ -28,32 +40,54 @@ function AuthedHome() {
     () => setWallet(connected(wallet) ? wallet : null),
     [setWallet, wallet, isWalletConnected]
   );
-  useEffect(() => setNetwork('localnet'), [setNetwork]);
-  useEffect(() => setRpcUrl(null), [setRpcUrl]);
+  useEffect(() => setNetwork('mainnet'), [setNetwork]);
+  useEffect(
+    () => setRpcUrl('https://nyc60.rpcpool.com/036994d5bbec2f542085aded6d8d'),
+    [setRpcUrl]
+  );
+
+  const [dialectWalletAdapter, setDialectWalletAdapter] =
+    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
+
+  useEffect(() => {
+    setDialectWalletAdapter(walletToDialectWallet(wallet));
+  }, [wallet]);
 
   return (
-    <div className="dialect">
-      <div className="flex flex-col h-screen bg-black">
-        <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <button
-            className="btn-primary"
-            onClick={() => {
-              navigation?.showCreateThread('@saydialect');
-            }}
-          >
-            Message @saydialect
-          </button>
-          <Wallet />
-        </div>
-        <div className="w-full lg:max-w-[1048px] px-6 h-[calc(100vh-8rem)] mt-8 mx-auto">
-          <DialectInbox
-            dialectId="dialect-inbox"
-            wrapperClassName="h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
-            wallet={wallet}
-          />
+    <DialectContext
+      wallet={dialectWalletAdapter}
+      environment="production"
+      backends={[Backend.Solana]}
+      solana={{
+        rpcUrl: 'https://nyc60.rpcpool.com/036994d5bbec2f542085aded6d8d',
+        dialectProgramId: new PublicKey(
+          '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
+        ),
+      }}
+    >
+      <div className="dialect">
+        <div className="flex flex-col h-screen bg-black">
+          <div className="flex flex-row justify-end p-2 items-center space-x-2">
+            <button
+              className="btn-primary"
+              onClick={() => {
+                navigation?.showCreateThread('@saydialect');
+              }}
+            >
+              Message @saydialect
+            </button>
+            <Wallet />
+          </div>
+          <div className="w-full lg:max-w-[1048px] px-6 h-[calc(100vh-8rem)] mt-8 mx-auto">
+            <DialectInbox
+              dialectId="dialect-inbox"
+              wrapperClassName="h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
+              wallet={wallet}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </DialectContext>
   );
 }
 

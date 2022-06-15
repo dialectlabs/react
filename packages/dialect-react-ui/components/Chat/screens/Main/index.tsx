@@ -14,7 +14,6 @@ import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayout
 
 const Main = () => {
   const { navigate, current } = useRoute();
-  const { dialects } = useDialect();
   const { type, onChatClose, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const [hideList, setHideList] = useState(false);
@@ -62,7 +61,6 @@ const Main = () => {
           </Header.Icons>
         </Header>
         <ThreadsList
-          chatThreads={dialects}
           onThreadClick={(dialectAccount) => {
             navigate(RouteName.Main, {
               sub: {

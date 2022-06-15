@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { DialectAccount, useDialect } from '@dialectlabs/react';
 import { useApi } from '@dialectlabs/react';
+import { useThreads } from '@dialectlabs/react-sdk';
 import MessagePreview from './MessagePreview';
 import { Centered } from '../../../../common';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
@@ -11,18 +12,19 @@ interface ThreadsListProps {
   onThreadClick?: (dialectAccount: DialectAccount) => void;
 }
 
-const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
+const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
+  const { threads } = useThreads();
   const { walletName } = useApi();
   const { dialectAddress } = useDialect();
   const isNotSollet = walletName !== 'Sollet';
   const hasEncryptedMessages = useMemo(
-    () => chatThreads.some((subscription) => subscription.dialect.encrypted),
-    [chatThreads]
+    () => threads.some((thread) => thread.encryptionEnabled),
+    [threads]
   );
 
   const { colors, highlighted, textStyles, scrollbar } = useTheme();
 
-  if (!chatThreads.length) {
+  if (!threads.length) {
     return (
       <Centered>
         <span className="dt-opacity-60">No messages yet</span>
@@ -50,17 +52,17 @@ const ThreadsList = ({ chatThreads, onThreadClick }: ThreadsListProps) => {
           wallet to read them.
         </div>
       )}
-      {chatThreads.map((subscription) => (
+      {threads.map((thread) => (
         <MessagePreview
-          key={subscription.publicKey.toBase58()}
-          dialect={subscription}
-          disabled={isNotSollet && subscription.dialect.encrypted}
+          key={thread.address.toBase58()}
+          dialectAddress={thread.address}
+          disabled={isNotSollet && thread.encryptionEnabled}
           onClick={() => {
             // Do not trigger open if this thread already opened
-            if (dialectAddress === subscription.publicKey?.toString()) return;
-            onThreadClick?.(subscription);
+            if (dialectAddress === thread.address.toBase58()) return;
+            onThreadClick?.(thread);
           }}
-          selected={dialectAddress === subscription.publicKey?.toString()}
+          selected={dialectAddress === thread.address.toBase58()}
         />
       ))}
     </div>

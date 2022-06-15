@@ -4,15 +4,17 @@ import {
   formatTimestamp,
   useDialect,
 } from '@dialectlabs/react';
+import { useThread, useThreadMessages } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import type { Message } from '@dialectlabs/web3';
+import type { Message } from '@dialectlabs/sdk';
 import Avatar from '../../../../Avatar';
 import { DisplayAddress } from '../../../../DisplayAddress';
 import MessageStatus from '../../../MessageStatus';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
+import { useMemo } from 'react';
 
 type PropsType = {
-  dialect: DialectAccount;
+  dialectAddress: PublicKey;
   onClick: () => void;
   disabled?: boolean;
   selected?: boolean;
@@ -38,7 +40,7 @@ function FirstMessage({
   return firstMessage ? (
     <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-truncate">
       <span className="dt-opacity-50">
-        {firstMessage.owner.toString() === wallet?.publicKey?.toString() &&
+        {firstMessage.author.toString() === wallet?.publicKey?.toString() &&
           'You:'}
       </span>{' '}
       {firstMessage.text}
@@ -51,30 +53,28 @@ function FirstMessage({
 }
 
 export default function MessagePreview({
-  dialect,
+  dialectAddress,
   onClick,
   disabled = false,
   selected = false,
-}: PropsType): JSX.Element {
-  const { wallet, program } = useApi();
+}: PropsType): JSX.Element | null {
+  const { program } = useApi();
+  // TODO: improve use memo
+  const address = useMemo(() => dialectAddress, [dialectAddress]);
+  const findParams = useMemo(
+    () => ({ address: dialectAddress }),
+    [dialectAddress]
+  );
+  const { thread } = useThread({ findParams });
+  const { messages } = useThreadMessages({ address });
   const { colors } = useTheme();
-  const otherMembers = dialect?.dialect.members.filter(
-    (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
-  );
-  // TODO: refactor
-  const { sendingMessagesMap } = useDialect();
-  const sendingMessages =
-    sendingMessagesMap[dialect?.publicKey.toBase58()] || [];
-  const messages = [].concat(
-    [...sendingMessages].reverse() || [],
-    dialect.dialect.messages || []
-  );
   const [firstMessage] = messages ?? [];
-  let timestamp = formatTimestamp(dialect.dialect.lastMessageTimestamp);
-  if (firstMessage?.isSending || firstMessage?.error) {
-    timestamp = null;
-  }
   const connection = program?.provider.connection;
+  const recipient = thread?.otherMembers[0];
+
+  if (!thread || !recipient) return null;
+
+  let timestamp = formatTimestamp(thread.updatedAt.getTime());
 
   return (
     <div
@@ -86,18 +86,18 @@ export default function MessagePreview({
       onClick={!disabled ? onClick : undefined}
     >
       <div className="dt-flex">
-        <Avatar publicKey={otherMembers[0].publicKey} size="regular" />
+        <Avatar publicKey={recipient.publicKey} size="regular" />
       </div>
       <div className="dt-flex dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {connection ? (
             <DisplayAddress
               connection={connection}
-              dialectMembers={dialect?.dialect.members}
+              dialectMembers={thread.otherMembers}
             />
           ) : null}
           <FirstMessage
-            isEncrypted={dialect.dialect.encrypted}
+            isEncrypted={thread.encryptionEnabled}
             firstMessage={firstMessage}
           />
         </div>
