@@ -371,7 +371,10 @@ export default function CreateThread({
     setIsTyping(true);
   };
 
-  const findAddress = async (connection: Connection, addressString: string) => {
+  const findAddress = async (
+    connection: Connection | undefined,
+    addressString: string
+  ) => {
     if (!connection) {
       // TODO: set connection error
       return;
@@ -420,11 +423,12 @@ export default function CreateThread({
     setIsTyping(false);
   };
 
+  // TODO: Fix Eslint
   const findAddressDebounced = useCallback(debounce(findAddress, 500), []);
 
   useEffect(() => {
     // When input address changes, we debounce
-    findAddressDebounced(connection, address);
+    findAddressDebounced(connection, address ?? '');
   }, [findAddressDebounced, connection, address]);
 
   useEffect(() => {

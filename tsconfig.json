@@ -30,6 +30,7 @@
     "forceConsistentCasingInFileNames": true,
     "noErrorTruncation": true,
     "importsNotUsedAsValues": "error",
+    "strictNullChecks": true,
     // sources
     "sourceMap": true,
     "declaration": true,
