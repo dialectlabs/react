@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
-import { DialectAccount, useDialect } from '@dialectlabs/react';
+import { useDialect } from '@dialectlabs/react';
 import { useApi } from '@dialectlabs/react';
 import { useThreads } from '@dialectlabs/react-sdk';
+import type { Thread } from '@dialectlabs/sdk';
 import MessagePreview from './MessagePreview';
 import { Centered } from '../../../../common';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
 
 interface ThreadsListProps {
-  chatThreads: DialectAccount[];
-  onThreadClick?: (dialectAccount: DialectAccount) => void;
+  onThreadClick?: (dialectAccount: Thread) => void;
 }
 
 const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {

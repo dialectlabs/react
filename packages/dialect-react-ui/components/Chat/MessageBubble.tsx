@@ -1,5 +1,5 @@
 import { formatTimestamp } from '@dialectlabs/react';
-import type { Message } from '@dialectlabs/web3';
+import type { Message } from '@dialectlabs/sdk';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import Avatar from '../Avatar';
@@ -8,17 +8,18 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
 
 type MessageBubbleProps = Message & {
+  id: string;
   isYou: boolean;
   isSending: boolean;
   error: string;
   showStatus: boolean;
-  onSendMessage: (text: string, id: number) => void;
-  onCancelMessage: (id: number) => void;
+  onSendMessage: (text: string, id: string) => void;
+  onCancelMessage: (id: string) => void;
 };
 
 export default function MessageBubble({
   id,
-  owner,
+  author,
   text,
   timestamp,
   isYou,
@@ -46,7 +47,7 @@ export default function MessageBubble({
         >
           {!isYou ? (
             <div className="dt-mr-1">
-              <Avatar size="small" publicKey={owner} />
+              <Avatar size="small" publicKey={author.publicKey} />
             </div>
           ) : null}
           <div
@@ -66,7 +67,9 @@ export default function MessageBubble({
                 <LinkifiedText>{text}</LinkifiedText>
               </div>
               <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>
-                {isSending ? 'Sending...' : formatTimestamp(timestamp)}
+                {isSending
+                  ? 'Sending...'
+                  : formatTimestamp(timestamp.getTime())}
               </div>
             </div>
           </div>

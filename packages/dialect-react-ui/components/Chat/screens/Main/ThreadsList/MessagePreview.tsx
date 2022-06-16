@@ -59,11 +59,11 @@ export default function MessagePreview({
   selected = false,
 }: PropsType): JSX.Element | null {
   const { program } = useApi();
-  // TODO: improve use memo
-  const address = useMemo(() => dialectAddress, [dialectAddress]);
+  // TODO: improve using of useMemo
+  const address = useMemo(() => dialectAddress, [dialectAddress?.toBase58()]);
   const findParams = useMemo(
     () => ({ address: dialectAddress }),
-    [dialectAddress]
+    [dialectAddress?.toBase58()]
   );
   const { thread } = useThread({ findParams });
   const { messages } = useThreadMessages({ address });

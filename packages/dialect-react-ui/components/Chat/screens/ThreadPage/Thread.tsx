@@ -1,23 +1,24 @@
 import { KeyboardEvent, FormEvent, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { useApi, useDialect } from '@dialectlabs/react';
+import { useApi } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
+import clsx from 'clsx';
+import type { PublicKey } from '@solana/web3.js';
 import MessageInput from './MessageInput';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import clsx from 'clsx';
-import MessageBubble from '../../MessageBubble';
 
-export default function Thread() {
-  const {
-    isMessagesReady,
-    isDialectCreating,
-    dialect,
-    messages,
-    sendMessage,
-    isWritable: youCanWrite,
-    sendingMessages,
-    cancelSendingMessage,
-  } = useDialect();
+import MessageBubble from '../../MessageBubble';
+import { useThread, useThreadMessages } from '@dialectlabs/react-sdk';
+
+type ThreadProps = {
+  threadAddress: PublicKey;
+};
+
+export default function Thread({ threadAddress }: ThreadProps) {
+  const { thread, send, isFetchingThread } = useThread({
+    findParams: { address: threadAddress },
+  });
+  const { messages } = useThreadMessages({ address: threadAddress });
 
   const { wallet } = useApi();
   const { scrollbar } = useTheme();
@@ -25,12 +26,21 @@ export default function Thread() {
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<ParsedErrorData | null | undefined>();
 
+  if (!thread) return null;
+
+  // TODO: replace with optimistic UI data from react-sdk
+  const isMessagesReady = true;
+  const cancelSendingMessage = () => {};
+
+  const isWritable = thread.me.scopes[1]; // is not admin but does have write privilages
+
   const handleError = (err: ParsedErrorData) => {
+    console.log(err);
     setError(err);
   };
 
-  const handleSendMessage = async (messageText: string, id?: number) => {
-    sendMessage(messageText, dialect?.dialect.encrypted, id).catch(handleError);
+  const handleSendMessage = async (messageText: string, id?: string) => {
+    send({ text: messageText }).catch(handleError);
     setText('');
   };
 
@@ -40,19 +50,16 @@ export default function Thread() {
   };
 
   const onEnterPress = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.keyCode == 13 && e.shiftKey == false) {
+    if (e.key === 'Enter' && e.shiftKey == false) {
       e.preventDefault();
       handleSendMessage(text);
     }
   };
 
   const disableSendButton =
-    text.length <= 0 || text.length > 280 || isDialectCreating;
+    text.length <= 0 || text.length > 280 || isFetchingThread;
 
-  const inputDisabled = isDialectCreating;
-
-  const sendingMessagesInReversedOrder = [...sendingMessages].reverse();
-  const allMessages = [...sendingMessagesInReversedOrder, ...messages];
+  const inputDisabled = isFetchingThread;
 
   return (
     <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">
@@ -65,9 +72,9 @@ export default function Thread() {
       >
         {isMessagesReady ? (
           <TransitionGroup component={null}>
-            {allMessages.map((message, idx) => {
+            {messages.map((message, idx) => {
               const isYou =
-                message.owner.toString() === wallet?.publicKey?.toString();
+                message.author.toString() === wallet?.publicKey?.toString();
               const key = message?.id;
               const isLast = idx === 0;
 
@@ -104,7 +111,7 @@ export default function Thread() {
         ) : null}
       </div>
 
-      {youCanWrite && (
+      {isWritable && (
         <MessageInput
           text={text}
           setText={setText}

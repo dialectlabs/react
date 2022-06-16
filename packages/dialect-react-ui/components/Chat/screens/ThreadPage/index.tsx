@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
+import { PublicKey } from '@solana/web3.js';
 import { useApi, useDialect } from '@dialectlabs/react';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { P } from '../../../common/preflighted';
@@ -44,6 +45,14 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
   useEffect(() => {
     setDialectAddress(threadId ?? '');
   }, [setDialectAddress, threadId]);
+
+  const threadAddress = useMemo(() => {
+    try {
+      return threadId ? new PublicKey(threadId) : null;
+    } catch (e) {
+      return null;
+    }
+  }, [threadId]);
 
   if (!threadId) {
     if (!inbox) {
@@ -141,7 +150,7 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
         >
           <Router initialRoute={ThreadRouteName.Messages}>
             <Route name={ThreadRouteName.Messages}>
-              <Thread />
+              {threadAddress ? <Thread threadAddress={threadAddress} /> : null}
             </Route>
             <Route name={ThreadRouteName.Settings}>
               <Settings />

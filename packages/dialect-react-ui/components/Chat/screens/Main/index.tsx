@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import clsx from 'clsx';
-import { useDialect } from '@dialectlabs/react';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ThreadsList from './ThreadsList';
 import { Header } from '../../../Header';
@@ -9,7 +9,6 @@ import { useChatInternal } from '../../provider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
-import { useState } from 'react';
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect';
 
 const Main = () => {
@@ -61,11 +60,11 @@ const Main = () => {
           </Header.Icons>
         </Header>
         <ThreadsList
-          onThreadClick={(dialectAccount) => {
+          onThreadClick={(thread) => {
             navigate(RouteName.Main, {
               sub: {
                 name: MainRouteName.Thread,
-                params: { threadId: dialectAccount.publicKey.toBase58() },
+                params: { threadId: thread.address.toBase58() },
                 sub: { name: ThreadRouteName.Messages },
               },
             });
