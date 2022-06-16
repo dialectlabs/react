@@ -3,6 +3,8 @@ import type { PublicKey } from '@solana/web3.js';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/errors';
+import { EMPTY_ARR } from '../utils';
+import { isAdminable, isWritable } from '../utils/scopes';
 import useDialectSdk from './useDialectSdk';
 
 const CACHE_KEY = 'THREAD';
@@ -33,6 +35,8 @@ interface UseThreadValue {
   errorSendingMessage: DialectSdkError | null;
   isDeletingThread: boolean;
   errorDeletingThread: DialectSdkError | null;
+  isWritable: boolean;
+  isAdminable: boolean;
 }
 
 const useThread = ({
@@ -114,6 +118,8 @@ const useThread = ({
     errorSendingMessage,
     isDeletingThread,
     errorDeletingThread,
+    isWritable: isWritable(thread?.me.scopes || EMPTY_ARR),
+    isAdminable: isAdminable(thread?.me.scopes || EMPTY_ARR),
   };
 };
 
