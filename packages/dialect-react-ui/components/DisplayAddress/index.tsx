@@ -83,13 +83,6 @@ const TwitterHandle = ({
   );
 };
 
-const formatSolanaDomain = (domain: string): string => {
-  if (domain.length <= 6) {
-    return domain;
-  }
-  return `${domain.slice(0, 4)}...${domain.slice(domain.length - 2)}`;
-};
-
 const SolanaName = ({
   address,
   displayName,
@@ -112,11 +105,7 @@ const SolanaName = ({
       </div>
     );
   }
-  return (
-    <div className="dt-flex dt-gap-1.5">
-      {`${formatSolanaDomain(displayName)}.sol ◎`}
-    </div>
-  );
+  return <div className="dt-truncate dt-mr-0.5">{`${displayName}.sol ◎`}</div>;
 };
 
 export const fetchAddressFromTwitterHandle = async (
