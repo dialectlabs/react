@@ -1,14 +1,11 @@
-import type { KeyboardEvent } from 'react';
+import { KeyboardEvent, useMemo } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { display } from '@dialectlabs/web3';
-import type { Member } from '@dialectlabs/web3';
-import {
-  getDialectAddressWithOtherMember,
-  ParsedErrorData,
-  useApi,
-  useDialect,
-} from '@dialectlabs/react';
-import type { DialectAccount } from '@dialectlabs/react';
+import { ThreadMemberScope } from '@dialectlabs/sdk';
+import { useThread, useThreads } from '@dialectlabs/react-sdk';
+import type { DialectSdkError } from '@dialectlabs/sdk';
+import { useApi } from '@dialectlabs/react';
+import { Connection, PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import {
   getHashedName,
@@ -30,7 +27,6 @@ import {
 import { fetchAddressFromTwitterHandle } from '../../../DisplayAddress';
 import { Lock, NoLock } from '../../../Icon';
 import { Header } from '../../../Header';
-import { Connection, PublicKey } from '@solana/web3.js';
 import debounce from '../../../../utils/debounce';
 import { useChatInternal } from '../../provider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
@@ -76,7 +72,7 @@ function ActionCaption({
   encrypted,
 }: {
   encrypted: boolean;
-  creationError: ParsedErrorData | null;
+  creationError: DialectSdkError | null;
 }) {
   const { textStyles, xPaddedText } = useTheme();
   const { walletName } = useApi();
@@ -294,8 +290,8 @@ export default function CreateThread({
   onCloseRequest,
   onModalClose,
 }: CreateThreadProps) {
-  const { createDialect, dialects, isDialectCreating, creationError } =
-    useDialect();
+  const { create, isCreatingThread, errorCreatingThread } = useThreads();
+
   const {
     current,
     params: { receiver },
@@ -307,7 +303,7 @@ export default function CreateThread({
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
-  const [address, setAddress] = useState<string | null>(receiver ?? null);
+  const [address, setAddress] = useState<string | null>(receiver ?? '');
   const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
 
   const [isTwitterHandle, setIsTwitterHandle] = useState(false);
@@ -320,6 +316,15 @@ export default function CreateThread({
   const [isValidAddress, setIsValidAddress] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
+  const findParams = useMemo(
+    () => ({ otherMembers: [actualAddress] }),
+    [actualAddress]
+  );
+  // TODO: figure out null address publickKey
+  const { thread: currentChatWithAddress } = useThread({
+    findParams,
+  });
+
   useEffect(() => {
     // Accessing current here, since we need to set the address if the reference to `current` has changed (route has changed)
     if (!current || !receiver) return;
@@ -328,38 +333,27 @@ export default function CreateThread({
 
   // TODO: useCallback
   const createThread = async () => {
-    const currentChatWithAddress = dialects.find(
-      (subscription: DialectAccount) => {
-        const otherMembers = subscription?.dialect.members.filter(
-          (member: Member) =>
-            member.publicKey.toString() !== wallet?.publicKey?.toString()
-        );
-        return (
-          otherMembers.length == 1 &&
-          actualAddress?.toBase58() == otherMembers[0]?.publicKey.toString()
-        );
-      }
-    );
+    if (!actualAddress) {
+      return;
+    }
+
     if (currentChatWithAddress) {
       const currentThreadWithAddress =
-        currentChatWithAddress.publicKey.toBase58();
+        currentChatWithAddress.address.toBase58();
 
       onNewThreadCreated?.(currentThreadWithAddress);
       return;
     }
 
-    createDialect(
-      actualAddress?.toBase58(),
-      [true, true],
-      [false, true],
-      encrypted
-    )
-      .then(async () => {
-        const [da, _] = await getDialectAddressWithOtherMember(
-          program,
-          actualAddress
-        );
-        onNewThreadCreated?.(da.toBase58());
+    create({
+      me: { scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE] },
+      otherMembers: [
+        { publicKey: actualAddress, scopes: [ThreadMemberScope.WRITE] },
+      ],
+      encrypted,
+    })
+      .then(async (thread) => {
+        onNewThreadCreated?.(thread.address.toBase58());
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {});
@@ -572,13 +566,16 @@ export default function CreateThread({
           </ValueRow>
           <Button
             onClick={createThread}
-            loading={isDialectCreating}
+            loading={isCreatingThread}
             disabled={disabled}
           >
-            {isDialectCreating ? 'Creating...' : 'Create thread'}
+            {isCreatingThread ? 'Creating...' : 'Create thread'}
           </Button>
         </div>
-        <ActionCaption encrypted={encrypted} creationError={creationError} />
+        <ActionCaption
+          encrypted={encrypted}
+          creationError={errorCreatingThread}
+        />
       </div>
 
       <div>
