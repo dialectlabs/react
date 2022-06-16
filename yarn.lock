@@ -1484,22 +1484,6 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@dialectlabs/sdk@^0.1.0":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.1.3.tgz#7b7fe8898d655a58fe27923568a4c3e49a7344e9"
-  integrity sha512-GmY5BpSj47Id2kOUQnUNp3MtXHhLRE6QH2EkjW86V8ec8RAPKTcWqwyW4x5V1lUIRgF505bwNHS9+WtCv9ePzQ==
-  dependencies:
-    "@dialectlabs/web3" "^0.3.2"
-    "@project-serum/anchor" "0.23.0"
-    "@solana/wallet-adapter-base" "^0.9.5"
-    "@solana/web3.js" "^1.22.0"
-    "@stablelib/base64" "^1.0.1"
-    axios "^0.27.2"
-    ed2curve "^0.3.0"
-    luxon "^2.4.0"
-    tweetnacl "^1.0.3"
-    uuid "^8.3.2"
-
 "@dialectlabs/sdk@https://github.com/dialectlabs/sdk":
   version "0.1.0"
   resolved "https://github.com/dialectlabs/sdk#00665008eb6a38158b7f319ae1d04f5332e59ef1"

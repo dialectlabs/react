@@ -83,11 +83,10 @@ const Home: NextPage = () => {
         <div className={styles.walletButtons}>
           <DialectContext
             wallet={dialectWalletAdapter}
-            environment="production"
+            environment="local-development"
             backends={[Backend.Solana]}
             solana={{
-              rpcUrl: 'https://nyc60.rpcpool.com/036994d5bbec2f542085aded6d8d',
-              dialectProgramId: new PublicKey(
+              dialectProgramAddress: new PublicKey(
                 '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
               ),
             }}

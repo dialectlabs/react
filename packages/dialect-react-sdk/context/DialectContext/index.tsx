@@ -1,4 +1,11 @@
-import { Config, Dialect, DialectSdk } from '@dialectlabs/sdk';
+import {
+  Config,
+  Dialect,
+  DialectCloudUnreachableError,
+  DialectSdk,
+  DialectSdkError,
+  DisconnectedFromChainError,
+} from '@dialectlabs/sdk';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface DialectConnectionInfo {
@@ -10,6 +17,10 @@ interface DialectConnectionInfo {
 export interface DialectContextType {
   sdk: DialectSdk;
   connected: DialectConnectionInfo;
+
+  _updateConnectionInfo(
+    fn: (prevInfo: DialectConnectionInfo) => DialectConnectionInfo
+  ): void;
 }
 
 export const DialectContext = React.createContext<DialectContextType>(
@@ -40,19 +51,19 @@ const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
     [environment, wallet, solana, dialectCloud, encryptionKeysStore, backends]
   );
 
-  const connectionInfo = useCallback(
-    (): DialectConnectionInfo => ({
+  const [connectionInfo, setConnectionInfo] = useState<DialectConnectionInfo>(
+    () => ({
       wallet: Boolean(wallet.publicKey),
-      solana: false, // TODO
+      solana: false,
       dialectCloud: false,
-    }),
-    [wallet]
+    })
   );
 
   const ctx = useMemo(
     (): DialectContextType => ({
       sdk: sdk(),
-      connected: connectionInfo(),
+      connected: connectionInfo,
+      _updateConnectionInfo: setConnectionInfo,
     }),
     [sdk, connectionInfo]
   );

@@ -1,6 +1,7 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
+import { useDialectErrorsHandler } from '../context/DialectContext/errors';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import useDialectSdk from './useDialectSdk';
 
@@ -43,8 +44,10 @@ const useThreads = ({
     function invalidateThreads() {
       mutate();
     },
-    [threadsApi]
+    [mutate, threadsApi]
   );
+
+  useDialectErrorsHandler(errorFetchingThreads, errorCreatingThread);
 
   const createThread = useCallback(
     async (cmd: CreateThreadCommand) => {
