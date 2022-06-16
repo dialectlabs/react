@@ -1,11 +1,30 @@
-import type { DialectSdkError, Message, Thread } from '@dialectlabs/sdk';
+import {
+  DialectSdkError,
+  Message,
+  SendMessageCommand as DialectSdkSendMessageCommand,
+  Thread,
+} from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
+import { nanoid } from 'nanoid';
+import { useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/errors';
+import {
+  LocalMessage,
+  LocalMessages,
+} from '../context/DialectContext/LocalMessages';
 import { EMPTY_ARR } from '../utils';
 import useThread from './useThread';
 
 const CACHE_KEY = (addr: PublicKey) => `MESSAGES_${addr.toString()}`;
+
+interface SendMessageCommand extends DialectSdkSendMessageCommand {
+  id?: string;
+}
+
+interface CancelMessageCommand {
+  id: string;
+}
 
 interface UseThreadMessagesParams {
   address: PublicKey;
@@ -17,8 +36,13 @@ interface UseThreadMessagesValue {
   messages: Message[];
 
   // react-lib
+  send(command: SendMessageCommand): Promise<void>;
+  cancel(cmd: CancelMessageCommand): Promise<void>;
+
   isFetchingMessages: boolean;
   errorFetchingMessages: DialectSdkError | null;
+  isSendingMessage: boolean;
+  errorSendingMessage: DialectSdkError | null;
 }
 
 const useThreadMessages = ({
@@ -32,23 +56,89 @@ const useThreadMessages = ({
   });
   const threadInternal = thread as Thread | null;
 
+  const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
+  const [errorSendingMessage, setErrorSendingMessage] =
+    useState<DialectSdkError | null>(null);
+
+  const { localMessages, putLocalMessage, deleteLocalMessage } =
+    LocalMessages.useContainer();
+
   const {
-    data: messages = EMPTY_ARR,
+    data: remoteMessages = EMPTY_ARR,
     isValidating: isFetchingMessages,
-    error: errorFetchingMessages,
-  } = useSWR(
+    error: errorFetchingMessages = null,
+    mutate,
+  } = useSWR<Message[], DialectSdkError>(
     threadInternal ? CACHE_KEY(threadInternal.address) : null,
     () => threadInternal!.messages(),
     { refreshInterval, refreshWhenOffline: true }
   );
 
-  useDialectErrorsHandler(errorFetchingMessages);
+  const messages = useMemo(() => {
+    return [
+      ...remoteMessages,
+      ...(thread
+        ? localMessages[thread.address.toString()] || EMPTY_ARR
+        : EMPTY_ARR),
+    ].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }, [remoteMessages, thread, localMessages]);
+
+  console.log({ localMessages });
+
+  const sendMessage = useCallback(
+    async (cmd: SendMessageCommand) => {
+      if (!threadInternal) return;
+      setIsSendingMessage(true);
+      setErrorSendingMessage(null);
+      const threadAddr = threadInternal.address.toString();
+      const optimisticMessage: LocalMessage = {
+        id: cmd.id || nanoid(),
+        text: cmd.text,
+        timestamp: new Date(),
+        author: threadInternal.me,
+        isSending: true,
+      };
+      try {
+        putLocalMessage(threadAddr, optimisticMessage);
+        await threadInternal.send(cmd);
+        deleteLocalMessage(threadAddr, optimisticMessage.id);
+        mutate();
+      } catch (e) {
+        if (e instanceof DialectSdkError) {
+          setErrorSendingMessage(e);
+          putLocalMessage(threadAddr, {
+            ...optimisticMessage,
+            isSending: false,
+            error: e,
+          });
+        }
+        throw e;
+      } finally {
+        setIsSendingMessage(false);
+      }
+    },
+    [messages, mutate, threadInternal]
+  );
+
+  const cancelMessage = useCallback(
+    async ({ id }: CancelMessageCommand) => {
+      if (!thread) return;
+      deleteLocalMessage(thread.address.toString(), id);
+    },
+    [thread, deleteLocalMessage]
+  );
+
+  useDialectErrorsHandler(errorFetchingMessages, errorSendingMessage);
 
   return {
     messages,
+    send: sendMessage,
+    cancel: cancelMessage,
 
     isFetchingMessages,
     errorFetchingMessages,
+    isSendingMessage,
+    errorSendingMessage,
   };
 };
 

@@ -25,7 +25,7 @@ const walletToDialectWallet = (
 const ThreadDetails = ({ address }: { address: PublicKey }) => {
   const findParams = useMemo(() => ({ address }), [address]);
   const { thread } = useThread({ findParams });
-  const { messages } = useThreadMessages({ address: address });
+  const { messages, send } = useThreadMessages({ address: address });
 
   return (
     <div>
@@ -33,6 +33,13 @@ const ThreadDetails = ({ address }: { address: PublicKey }) => {
       {messages.map((it, idx) => (
         <p key={idx}>{it.text}</p>
       ))}
+      <input
+        onKeyDown={(it) => {
+          if (it.key === 'Enter') {
+            send({ text: it.currentTarget.value });
+          }
+        }}
+      />
     </div>
   );
 };
