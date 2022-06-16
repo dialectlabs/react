@@ -1,17 +1,13 @@
-import {
-  useApi,
-  DialectAccount,
-  formatTimestamp,
-  useDialect,
-} from '@dialectlabs/react';
+import { useMemo } from 'react';
+import { useApi, formatTimestamp } from '@dialectlabs/react';
 import { useThread, useThreadMessages } from '@dialectlabs/react-sdk';
-import clsx from 'clsx';
 import type { Message } from '@dialectlabs/sdk';
+import clsx from 'clsx';
+import type { PublicKey } from '@solana/web3.js';
 import Avatar from '../../../../Avatar';
 import { DisplayAddress } from '../../../../DisplayAddress';
 import MessageStatus from '../../../MessageStatus';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
-import { useMemo } from 'react';
 
 type PropsType = {
   dialectAddress: PublicKey;
@@ -74,7 +70,7 @@ export default function MessagePreview({
 
   if (!thread || !recipient) return null;
 
-  let timestamp = formatTimestamp(thread.updatedAt.getTime());
+  const timestamp = formatTimestamp(thread.updatedAt.getTime());
 
   return (
     <div
@@ -90,10 +86,10 @@ export default function MessagePreview({
       </div>
       <div className="dt-flex dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
-          {connection ? (
+          {connection && thread.otherMembers ? (
             <DisplayAddress
               connection={connection}
-              dialectMembers={thread.otherMembers}
+              otherMembers={thread.otherMembers}
             />
           ) : null}
           <FirstMessage

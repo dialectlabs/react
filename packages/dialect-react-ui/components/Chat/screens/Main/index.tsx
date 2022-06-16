@@ -30,48 +30,48 @@ const Main = () => {
   }, [current?.sub?.name, current?.sub?.params]);
 
   return (
-    <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
-      <div
-        className={clsx(
-          'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
-          {
-            'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
-            'dt-hidden': hideList,
-          }
-        )}
-      >
-        <Header
-          type={type}
-          onClose={onChatClose}
-          onOpen={onChatOpen}
-          onHeaderClick={onChatOpen}
-          isWindowOpen={ui?.open}
+    <Router initialRoute={MainRouteName.Thread}>
+      <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
+        <div
+          className={clsx(
+            'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
+            {
+              'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
+              'dt-hidden': hideList,
+            }
+          )}
         >
-          <Header.Title>Messages</Header.Title>
-          <Header.Icons>
-            <Header.Icon
-              icon={<icons.compose />}
-              onClick={() =>
-                navigate(RouteName.Main, {
-                  sub: { name: MainRouteName.CreateThread },
-                })
-              }
-            />
-          </Header.Icons>
-        </Header>
-        <ThreadsList
-          onThreadClick={(thread) => {
-            navigate(RouteName.Main, {
-              sub: {
-                name: MainRouteName.Thread,
-                params: { threadId: thread.address.toBase58() },
-                sub: { name: ThreadRouteName.Messages },
-              },
-            });
-          }}
-        />
-      </div>
-      <Router initialRoute={MainRouteName.Thread}>
+          <Header
+            type={type}
+            onClose={onChatClose}
+            onOpen={onChatOpen}
+            onHeaderClick={onChatOpen}
+            isWindowOpen={ui?.open}
+          >
+            <Header.Title>Messages</Header.Title>
+            <Header.Icons>
+              <Header.Icon
+                icon={<icons.compose />}
+                onClick={() =>
+                  navigate(RouteName.Main, {
+                    sub: { name: MainRouteName.CreateThread },
+                  })
+                }
+              />
+            </Header.Icons>
+          </Header>
+          <ThreadsList
+            onThreadClick={(thread) => {
+              navigate(RouteName.Main, {
+                sub: {
+                  name: MainRouteName.Thread,
+                  params: { threadId: thread.address.toBase58() },
+                  sub: { name: ThreadRouteName.Messages },
+                },
+              });
+            }}
+          />
+        </div>
         <Route name={MainRouteName.CreateThread}>
           <CreateThread
             onModalClose={onChatClose}
@@ -101,8 +101,8 @@ const Main = () => {
             }
           />
         </Route>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 };
 

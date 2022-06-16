@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { PublicKey } from '@solana/web3.js';
-import { useApi, useDialect } from '@dialectlabs/react';
+import { useApi } from '@dialectlabs/react';
+import { useThread } from '@dialectlabs/react-sdk';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { P } from '../../../common/preflighted';
 import Settings from './Settings';
@@ -25,7 +26,6 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
     params: { threadId },
   } = useRoute<{ threadId?: string }>();
   const { wallet, program } = useApi();
-  const { dialect, setDialectAddress } = useDialect();
   const { icons, xPaddedText } = useTheme();
   const { type, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
@@ -38,13 +38,8 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
     }
 
     // In case wallet resets, we reset dialect address and navigate to main
-    setDialectAddress('');
     navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
-  }, [navigate, setDialectAddress, wallet]);
-
-  useEffect(() => {
-    setDialectAddress(threadId ?? '');
-  }, [setDialectAddress, threadId]);
+  }, [navigate, wallet]);
 
   const threadAddress = useMemo(() => {
     try {
@@ -53,6 +48,8 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
       return null;
     }
   }, [threadId]);
+
+  const { thread } = useThread({ findParams: { address: threadAddress } });
 
   if (!threadId) {
     if (!inbox) {
@@ -97,7 +94,6 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
                   return;
                 }
 
-                setDialectAddress('');
                 navigate(RouteName.Main, {
                   sub: { name: MainRouteName.Thread },
                 });
@@ -107,17 +103,17 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
           <Header.Title align="center">
             <div className="dt-flex dt-flex-col dt-items-center">
               <span className="dt-text-base dt-font-medium dt-text">
-                {dialect && connection ? (
+                {connection && thread?.otherMembers.length ? (
                   <DisplayAddress
                     connection={connection}
-                    dialectMembers={dialect.dialect.members}
+                    otherMembers={thread.otherMembers}
                     isLinkable={true}
                   />
                 ) : (
                   'Loading...'
                 )}
               </span>
-              {dialect?.dialect.encrypted ? (
+              {thread?.encryptionEnabled ? (
                 <span className="dt-text-xs dt-opacity-50">encrypted</span>
               ) : (
                 <span className="dt-text-xs dt-opacity-50">unencrypted</span>

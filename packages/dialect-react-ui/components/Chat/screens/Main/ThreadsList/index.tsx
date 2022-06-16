@@ -7,12 +7,16 @@ import MessagePreview from './MessagePreview';
 import { Centered } from '../../../../common';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
+import { useRoute } from '../../../../common/providers/Router';
 
 interface ThreadsListProps {
   onThreadClick?: (dialectAccount: Thread) => void;
 }
 
 const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
+  const {
+    params: { threadId },
+  } = useRoute<{ threadId?: string }>();
   const { threads } = useThreads();
   const { walletName } = useApi();
   const { dialectAddress } = useDialect();
@@ -45,7 +49,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
             colors.highlight,
             highlighted,
             textStyles.small,
-            'dt-px-4 dt-py-2 dt-mx-2 dt-mt-2'
+            'dt-px-4 dt-py-2 dt-mx-2 dt-my-2'
           )}
         >
           ⚠ You have encrypted messages in your inbox. Connect the Sollet.io
@@ -62,7 +66,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
             if (dialectAddress === thread.address.toBase58()) return;
             onThreadClick?.(thread);
           }}
-          selected={dialectAddress === thread.address.toBase58()}
+          selected={threadId === thread.address.toBase58()}
         />
       ))}
     </div>
