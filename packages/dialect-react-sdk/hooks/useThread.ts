@@ -61,6 +61,7 @@ const useThread = ({
     (_, findParams) => threadsApi.find(findParams),
     {
       refreshInterval,
+      refreshWhenOffline: true,
     }
   );
 
