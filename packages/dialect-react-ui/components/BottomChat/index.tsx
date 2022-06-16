@@ -75,6 +75,7 @@ function WrappedBottomChat(
       >
         <div
           className={clsx(
+            // Enable pointer-events here to allow
             'dt-w-full dt-h-full dt-pointer-events-auto',
             animations.bottomSlide.enterFrom
           )}
