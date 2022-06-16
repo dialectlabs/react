@@ -2,13 +2,13 @@ import { KeyboardEvent, FormEvent, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useApi } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
+import { useThread, useThreadMessages } from '@dialectlabs/react-sdk';
+import { ThreadMemberScope } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import type { PublicKey } from '@solana/web3.js';
 import MessageInput from './MessageInput';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-
 import MessageBubble from '../../MessageBubble';
-import { useThread, useThreadMessages } from '@dialectlabs/react-sdk';
 
 type ThreadProps = {
   threadAddress: PublicKey;
@@ -32,10 +32,11 @@ export default function Thread({ threadAddress }: ThreadProps) {
   const isMessagesReady = true;
   const cancelSendingMessage = () => {};
 
-  const isWritable = thread.me.scopes[1]; // is not admin but does have write privilages
+  const isWritable = thread.me.scopes.find(
+    (scope) => scope === ThreadMemberScope.WRITE
+  ); // is not admin but does have write privilages
 
   const handleError = (err: ParsedErrorData) => {
-    console.log(err);
     setError(err);
   };
 
