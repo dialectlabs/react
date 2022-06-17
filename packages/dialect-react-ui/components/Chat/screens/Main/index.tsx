@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ThreadsList from './ThreadsList';
@@ -19,14 +19,6 @@ const Main = () => {
   const inbox = type === 'inbox';
 
   const { icons } = useTheme();
-
-  const navigateToCreateThread = useCallback(
-    () =>
-      navigate(RouteName.Main, {
-        sub: { name: MainRouteName.CreateThread },
-      }),
-    [navigate]
-  );
 
   // Running this inside useLayoutEffect in order to make necessary style changes, since otherwise there is a visual bug
   useIsomorphicLayoutEffect(() => {
@@ -100,10 +92,7 @@ const Main = () => {
           />
         </Route>
         <Route name={MainRouteName.Thread}>
-          <ThreadPage
-            onModalClose={onChatClose}
-            onNewThreadClick={navigateToCreateThread}
-          />
+          <ThreadPage />
         </Route>
       </div>
     </Router>
