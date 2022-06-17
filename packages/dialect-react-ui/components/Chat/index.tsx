@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDialect } from '@dialectlabs/react';
+import { useDialectContext, useThreads } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import Error from './screens/Error';
@@ -36,12 +36,20 @@ function InnerChat({
   onChatOpen,
 }: ChatProps): JSX.Element {
   const { configure } = useDialectUiId(dialectId);
-  const { disconnectedFromChain, isWalletConnected } = useDialect();
+  const {
+    connected: {
+      wallet: isWalletConnected,
+      solana: isSolanaConnected,
+      dialectCloud: isCloudConnected,
+    },
+  } = useDialectContext();
+  // Trigger updating connection info
+  const { threads: _threads } = useThreads();
 
   const { navigate } = useRoute();
 
   useEffect(() => {
-    if (disconnectedFromChain || !isWalletConnected) {
+    if (!isSolanaConnected || !isWalletConnected) {
       configure(null);
       return;
     }
@@ -57,11 +65,11 @@ function InnerChat({
           showThreadSettings(navigate, threadId),
       },
     });
-  }, [configure, disconnectedFromChain, isWalletConnected, navigate]);
+  }, [configure, isSolanaConnected, isWalletConnected, navigate]);
 
   useEffect(
     function pickRoute() {
-      if (disconnectedFromChain) {
+      if (!isSolanaConnected) {
         navigate(RouteName.NoConnection);
       } else if (!isWalletConnected) {
         navigate(RouteName.NoWallet);
@@ -69,7 +77,7 @@ function InnerChat({
         navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
       }
     },
-    [navigate, disconnectedFromChain, isWalletConnected]
+    [navigate, isSolanaConnected, isWalletConnected]
   );
 
   const { colors, modal, slider } = useTheme();
@@ -100,6 +108,7 @@ function InnerChat({
           <Route name={RouteName.NoConnection}>
             <Error type="NoConnection" />
           </Route>
+          {/* TODO: add error if off-chain messages enabled but dialectCloud is unreachable */}
           <Route name={RouteName.NoWallet}>
             <Error type="NoWallet" />
           </Route>

@@ -4,7 +4,7 @@ import { DialectContext, DialectContextType } from '../context/DialectContext';
 const useDialectContext = (): DialectContextType => {
   const ctx = useContext(DialectContext);
   if (!ctx) {
-    throw new Error('useDialectSdk must be used within a DialectContext');
+    throw new Error('useDialectContext must be used within a DialectContext');
   }
   return ctx;
 };

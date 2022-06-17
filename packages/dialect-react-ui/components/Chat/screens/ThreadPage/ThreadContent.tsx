@@ -9,7 +9,7 @@ import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useChatInternal } from '../../provider';
 import { useApi } from '@dialectlabs/react';
-import useMemoThread from '../../../../hooks/useMemoThread';
+import useThread from '../../../../hooks/useThread';
 
 type ThreadContentProps = {
   threadId: string;
@@ -17,7 +17,7 @@ type ThreadContentProps = {
 
 const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const { current, navigate } = useRoute();
-  const { thread } = useMemoThread(threadId);
+  const { thread } = useThread(threadId);
   const { program } = useApi();
   const { icons, xPaddedText } = useTheme();
   const { type, onChatOpen, onChatClose, dialectId } = useChatInternal();

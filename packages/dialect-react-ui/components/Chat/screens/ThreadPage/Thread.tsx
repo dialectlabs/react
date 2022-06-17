@@ -3,20 +3,19 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useApi } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
 import { useThreadMessages } from '@dialectlabs/react-sdk';
-import { ThreadMemberScope } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { PublicKey } from '@solana/web3.js';
 import MessageInput from './MessageInput';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import MessageBubble from '../../MessageBubble';
-import useMemoThread from '../../../../hooks/useMemoThread';
+import useThread from '../../../../hooks/useThread';
 
 type ThreadProps = {
   threadId: string;
 };
 
 export default function Thread({ threadId }: ThreadProps) {
-  const { thread, isFetchingThread } = useMemoThread(threadId);
+  const { thread, isWritable, isFetchingThread } = useThread(threadId);
   const { messages, send, cancel } = useThreadMessages({
     address: thread?.address,
   });
@@ -34,10 +33,6 @@ export default function Thread({ threadId }: ThreadProps) {
   const cancelSendingMessage = (id: number) => {
     cancel({ id });
   };
-
-  const isWritable = thread.me.scopes.find(
-    (scope) => scope === ThreadMemberScope.WRITE
-  ); // is not admin but does have write privilages
 
   const handleError = (err: ParsedErrorData) => {
     setError(err);

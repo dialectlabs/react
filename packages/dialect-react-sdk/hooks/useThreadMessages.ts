@@ -19,11 +19,11 @@ import useThread from './useThread';
 const CACHE_KEY = (addr: PublicKey) => `MESSAGES_${addr.toString()}`;
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
-  id?: string;
+  id?: number;
 }
 
 interface CancelMessageCommand {
-  id: string;
+  id: number;
 }
 
 interface UseThreadMessagesParams {

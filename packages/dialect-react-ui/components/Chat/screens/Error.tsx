@@ -36,7 +36,7 @@ const Error = ({ type }: Props) => {
         <Centered>
           <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
           <span className="dt-opacity-60">
-            Lost connection to Solana blockchain
+            Waiting for connection to Solana blockchain
           </span>
         </Centered>
       )}
