@@ -59,7 +59,7 @@ export default function Thread({ threadId }: ThreadProps) {
   const disableSendButton =
     text.length <= 0 || text.length > 280 || isFetchingThread;
 
-  const inputDisabled = isFetchingThread;
+  const inputDisabled = !thread;
 
   return (
     <div className="dt-flex dt-flex-col dt-h-full dt-justify-between">

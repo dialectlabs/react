@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useDialect } from '@dialectlabs/react';
+import { useEffect, useMemo } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useApi } from '@dialectlabs/react';
 import { useThreads } from '@dialectlabs/react-sdk';
 import type { Thread } from '@dialectlabs/sdk';
@@ -27,14 +27,6 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
 
   const { colors, highlighted, textStyles, scrollbar } = useTheme();
 
-  if (!threads.length) {
-    return (
-      <Centered>
-        <span className="dt-opacity-60">No messages yet</span>
-      </Centered>
-    );
-  }
-
   return (
     <div
       className={clsx(
@@ -55,19 +47,34 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
           wallet to read them.
         </div>
       )}
-      {threads.map((thread) => (
-        <MessagePreview
-          key={thread.address.toBase58()}
-          dialectAddress={thread.address}
-          disabled={isNotSollet && thread.encryptionEnabled}
-          onClick={() => {
-            // Do not trigger open if this thread already opened
-            if (threadId === thread.address.toBase58()) return;
-            onThreadClick?.(thread);
-          }}
-          selected={threadId === thread.address.toBase58()}
-        />
-      ))}
+      {!threads.length ? (
+        <Centered>
+          <span className="dt-opacity-60">No messages yet</span>
+        </Centered>
+      ) : null}
+      <TransitionGroup component={null}>
+        {/* FIXME: enter animation isn't working */}
+        {threads.map((thread) => (
+          <CSSTransition
+            key={thread.address.toBase58()}
+            timeout={400}
+            classNames="dt-thread"
+          >
+            <div className="dt-overflow-hidden">
+              <MessagePreview
+                dialectAddress={thread.address}
+                disabled={isNotSollet && thread.encryptionEnabled}
+                onClick={() => {
+                  // Do not trigger open if this thread already opened
+                  if (threadId === thread.address.toBase58()) return;
+                  onThreadClick?.(thread);
+                }}
+                selected={threadId === thread.address.toBase58()}
+              />
+            </div>
+          </CSSTransition>
+        ))}
+      </TransitionGroup>
     </div>
   );
 };

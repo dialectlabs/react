@@ -612,11 +612,31 @@
   max-height: 100%;
   transform: translateY(0%) scale(1);
   transform-origin: bottom right;
-  transition: max-height 200ms ease-in-out, transform 150ms ease-in-out;
 }
 
 .dt-message-exit-active {
   max-height: 0;
   transform: translateY(50%) scale(0.95);
   transform-origin: bottom right;
+  transition: max-height 200ms ease-in-out, transform 150ms ease-in-out;
+}
+
+/*  */
+.dt-thread-enter {
+  max-height: 0;
+}
+
+.dt-thread-enter-active,
+.dt-thread-enter-done {
+  max-height: 80px;
+  transition: max-height 400ms ease-in-out;
+}
+
+.dt-thread-exit {
+  max-height: 80px;
+}
+
+.dt-thread-exit-active {
+  max-height: 0;
+  transition: max-height 200ms ease-in-out;
 }

@@ -100,6 +100,7 @@ const useThreadMessages = ({
         putLocalMessage(threadAddr, optimisticMessage);
         await threadInternal.send(cmd);
         // Await mutate to delete localmessage only after remoteMessages were updated
+        // FIXME: creates flickering because localmessage gets deleted with delay
         await mutate();
         deleteLocalMessage(threadAddr, optimisticMessage.id);
       } catch (e) {

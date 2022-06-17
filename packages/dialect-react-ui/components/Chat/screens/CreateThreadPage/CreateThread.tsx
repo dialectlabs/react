@@ -463,7 +463,7 @@ export default function CreateThread({
     fetchReverse();
   }, [actualAddress, connection, isSNS, isTwitterHandle]);
 
-  const disabled = !address || (!isTyping && !isValidAddress);
+  const disabled = !actualAddress || (!isTyping && !isValidAddress);
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
@@ -503,6 +503,7 @@ export default function CreateThread({
             onAddressChange(e.target.value);
           }}
           onKeyDown={onEnterPress}
+          disabled={isCreatingThread}
         />
         <div className="dt-mb-2">
           {isTyping || !address ? (
