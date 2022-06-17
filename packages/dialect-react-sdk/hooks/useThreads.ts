@@ -55,7 +55,9 @@ const useThreads = ({
       setIsCreatingThread(true);
       setErrorCreatingThread(null);
       try {
-        return await threadsApi.create(cmd);
+        const res = await threadsApi.create(cmd);
+        mutate();
+        return res;
       } catch (e) {
         if (e instanceof DialectSdkError) {
           setErrorCreatingThread(e);
@@ -65,7 +67,7 @@ const useThreads = ({
         setIsCreatingThread(false);
       }
     },
-    [threadsApi]
+    [threadsApi, mutate]
   );
 
   return {
