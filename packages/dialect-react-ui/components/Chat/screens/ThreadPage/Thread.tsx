@@ -31,7 +31,7 @@ export default function Thread({ threadId }: ThreadProps) {
 
   // TODO: replace with optimistic UI data from react-sdk
   const isMessagesReady = true;
-  const cancelSendingMessage = (id: string) => {
+  const cancelSendingMessage = (id: number) => {
     cancel({ id });
   };
 
@@ -43,7 +43,7 @@ export default function Thread({ threadId }: ThreadProps) {
     setError(err);
   };
 
-  const handleSendMessage = async (messageText: string, id?: string) => {
+  const handleSendMessage = async (messageText: string, id?: number) => {
     if (!id) id = messages.length;
     send({ text: messageText, id }).catch(handleError);
     setText('');
@@ -102,9 +102,9 @@ export default function Thread({ threadId }: ThreadProps) {
                   }}
                 >
                   {/* additional div wrapper is needed to avoid paddings /margins interfere with animation */}
-                  <div data-key={antiIdx}>
+                  <div data-key={reverseIdx}>
                     <MessageBubble
-                      id={antiIdx}
+                      id={reverseIdx}
                       {...message}
                       isYou={isYou}
                       showStatus={isYou && isLast}
