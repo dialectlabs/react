@@ -83,8 +83,6 @@ const useThreadMessages = ({
     ].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }, [remoteMessages, thread, localMessages]);
 
-  console.log({ localMessages });
-
   const sendMessage = useCallback(
     async (cmd: SendMessageCommand) => {
       if (!threadInternal) return;
@@ -101,8 +99,9 @@ const useThreadMessages = ({
       try {
         putLocalMessage(threadAddr, optimisticMessage);
         await threadInternal.send(cmd);
+        // Await mutate to delete localmessage only after remoteMessages were updated
+        await mutate();
         deleteLocalMessage(threadAddr, optimisticMessage.id);
-        mutate();
       } catch (e) {
         if (e instanceof DialectSdkError) {
           setErrorSendingMessage(e);
@@ -117,7 +116,7 @@ const useThreadMessages = ({
         setIsSendingMessage(false);
       }
     },
-    [messages, mutate, threadInternal]
+    [deleteLocalMessage, mutate, putLocalMessage, threadInternal]
   );
 
   const cancelMessage = useCallback(

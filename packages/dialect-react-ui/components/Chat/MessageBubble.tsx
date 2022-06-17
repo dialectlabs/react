@@ -8,13 +8,13 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
 
 type MessageBubbleProps = Message & {
-  id: string;
+  id: number;
   isYou: boolean;
   isSending: boolean;
-  error: string;
+  error: { message: string };
   showStatus: boolean;
-  onSendMessage: (text: string, id: string) => void;
-  onCancelMessage: (id: string) => void;
+  onSendMessage: (text: string, idx: number) => void;
+  onCancelMessage: (idx: number) => void;
 };
 
 export default function MessageBubble({
@@ -80,7 +80,7 @@ export default function MessageBubble({
           </div>
         </div>
 
-        <CSSTransition in={error} timeout={300}>
+        <CSSTransition in={Boolean(error)} timeout={300}>
           {(state) => (
             <div
               className={clsx(
