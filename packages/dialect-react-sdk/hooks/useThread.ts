@@ -1,11 +1,12 @@
 import { DialectSdkError, Thread } from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
 import { useCallback, useState } from 'react';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/errors';
 import { EMPTY_ARR } from '../utils';
 import { isAdminable, isWritable } from '../utils/scopes';
 import useDialectSdk from './useDialectSdk';
+import { CACHE_KEY as THREADS_CACHE_KEY } from './useThreads';
 
 const CACHE_KEY = 'THREAD';
 
@@ -40,6 +41,7 @@ const useThread = ({
   findParams,
   refreshInterval,
 }: UseThreadParams): UseThreadValue => {
+  const { mutate } = useSWRConfig();
   const { threads: threadsApi } = useDialectSdk();
 
   const [isDeletingThread, setIsDeletingThread] = useState<boolean>(false);
@@ -66,7 +68,10 @@ const useThread = ({
     setIsDeletingThread(true);
     setErrorDeletingThread(null);
     try {
-      return await thread.delete();
+      const result = await thread.delete();
+      mutate(CACHE_KEY);
+      mutate(THREADS_CACHE_KEY);
+      return result;
     } catch (e) {
       if (e instanceof DialectSdkError) {
         setErrorDeletingThread(e);
@@ -75,7 +80,7 @@ const useThread = ({
     } finally {
       setIsDeletingThread(false);
     }
-  }, [thread]);
+  }, [mutate, thread]);
 
   return {
     // sdk

@@ -5,7 +5,7 @@ import { useDialectErrorsHandler } from '../context/DialectContext/errors';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import useDialectSdk from './useDialectSdk';
 
-const CACHE_KEY = 'THREADS';
+export const CACHE_KEY = 'THREADS';
 
 interface UseThreadsParams {
   refreshInterval?: number;
