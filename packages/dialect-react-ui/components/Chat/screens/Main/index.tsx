@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ThreadsList from './ThreadsList';

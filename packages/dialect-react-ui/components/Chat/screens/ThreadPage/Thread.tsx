@@ -2,23 +2,21 @@ import { KeyboardEvent, FormEvent, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useApi } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
-import { useThread, useThreadMessages } from '@dialectlabs/react-sdk';
+import { useThreadMessages } from '@dialectlabs/react-sdk';
 import { ThreadMemberScope } from '@dialectlabs/sdk';
 import clsx from 'clsx';
-import type { PublicKey } from '@solana/web3.js';
 import MessageInput from './MessageInput';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import MessageBubble from '../../MessageBubble';
+import useMemoThread from '../../../../hooks/useCurrentThread';
 
 type ThreadProps = {
-  threadAddress: PublicKey;
+  threadId: string;
 };
 
-export default function Thread({ threadAddress }: ThreadProps) {
-  const { thread, send, isFetchingThread } = useThread({
-    findParams: { address: threadAddress },
-  });
-  const { messages } = useThreadMessages({ address: threadAddress });
+export default function Thread({ threadId }: ThreadProps) {
+  const { thread, send, isFetchingThread } = useMemoThread(threadId);
+  const { messages } = useThreadMessages({ address: thread?.address });
 
   const { wallet } = useApi();
   const { scrollbar } = useTheme();

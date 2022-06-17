@@ -1,37 +1,48 @@
-import { display, isDialectAdmin } from '@dialectlabs/web3';
-import { useApi, useDialect } from '@dialectlabs/react';
+import { display } from '@dialectlabs/web3';
+import { useApi } from '@dialectlabs/react';
+import { ThreadMemberScope } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
 import { A, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { Button, ValueRow } from '../../../common';
+import useMemoThread from '../../../../hooks/useMemoThread';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
 interface SettingsProps {
+  threadId: string;
   onCloseRequest?: () => void;
 }
 
-const Settings = ({ onCloseRequest }: SettingsProps) => {
-  const { wallet, network } = useApi();
+const Settings = ({ threadId, onCloseRequest }: SettingsProps) => {
+  const { network } = useApi();
   const {
-    dialect,
-    dialectAddress,
-    deleteDialect,
-    isDialectDeleting,
-    deletionError,
-    setDialectAddress,
-  } = useDialect();
+    thread,
+    delete: deleteDialect,
+    isDeletingThread,
+    errorDeletingThread,
+  } = useMemoThread(threadId);
+  // const {
+  //   dialect,
+  //   dialectAddress,
+  //   deleteDialect,
+  //   isDialectDeleting,
+  //   deletionError,
+  //   setDialectAddress,
+  // } = useDialect();
+
   const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
     useTheme();
-  const isAdmin =
-    dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet.publicKey);
+  const isAdmin = thread?.me?.scopes?.find(
+    (scope) => scope === ThreadMemberScope.ADMIN
+  );
 
   return (
     <>
       <div>
-        {dialectAddress ? (
+        {thread ? (
           <ValueRow
             label={
               <>
@@ -41,10 +52,13 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
                 <P>
                   <A
                     target="_blank"
-                    href={getExplorerAddress(dialectAddress, network)}
+                    href={getExplorerAddress(
+                      thread.address.toBase58(),
+                      network
+                    )}
                     rel="noreferrer"
                   >
-                    {display(dialectAddress)}↗
+                    {display(thread.address)}↗
                   </A>
                 </P>
               </>
@@ -68,23 +82,23 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
               await deleteDialect().catch(noop);
               // TODO: properly wait for the deletion
               onCloseRequest?.();
-              setDialectAddress('');
             }}
-            loading={isDialectDeleting}
+            loading={isDeletingThread}
           >
             Withdraw rent & delete history
           </Button>
         )}
-        {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-          <P
-            className={clsx(
-              textStyles.small,
-              'dt-text-red-500 dt-text-center dt-mt-2'
-            )}
-          >
-            {deletionError.message}
-          </P>
-        )}
+        {errorDeletingThread &&
+          errorDeletingThread.type !== 'DISCONNECTED_FROM_CHAIN' && (
+            <P
+              className={clsx(
+                textStyles.small,
+                'dt-text-red-500 dt-text-center dt-mt-2'
+              )}
+            >
+              {errorDeletingThread.message}
+            </P>
+          )}
       </div>
     </>
   );

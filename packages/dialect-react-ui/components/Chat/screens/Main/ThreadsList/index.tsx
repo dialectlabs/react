@@ -19,7 +19,6 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
   } = useRoute<{ threadId?: string }>();
   const { threads } = useThreads();
   const { walletName } = useApi();
-  const { dialectAddress } = useDialect();
   const isNotSollet = walletName !== 'Sollet';
   const hasEncryptedMessages = useMemo(
     () => threads.some((thread) => thread.encryptionEnabled),
@@ -63,7 +62,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
           disabled={isNotSollet && thread.encryptionEnabled}
           onClick={() => {
             // Do not trigger open if this thread already opened
-            if (dialectAddress === thread.address.toBase58()) return;
+            if (threadId === thread.address.toBase58()) return;
             onThreadClick?.(thread);
           }}
           selected={threadId === thread.address.toBase58()}

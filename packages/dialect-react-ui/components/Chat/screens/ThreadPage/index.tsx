@@ -1,8 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
-import { PublicKey } from '@solana/web3.js';
 import { useApi } from '@dialectlabs/react';
-import { useThread } from '@dialectlabs/react-sdk';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { P } from '../../../common/preflighted';
 import Settings from './Settings';
@@ -13,6 +11,8 @@ import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
+import useCurrentThread from '../../../../hooks/useCurrentThread';
+import useMemoThread from '../../../../hooks/useCurrentThread';
 
 interface ThreadPageProps {
   onNewThreadClick?: () => void;
@@ -41,15 +41,7 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
     navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
   }, [navigate, wallet]);
 
-  const threadAddress = useMemo(() => {
-    try {
-      return threadId ? new PublicKey(threadId) : null;
-    } catch (e) {
-      return null;
-    }
-  }, [threadId]);
-
-  const { thread } = useThread({ findParams: { address: threadAddress } });
+  const { thread } = useMemoThread(threadId);
 
   if (!threadId) {
     if (!inbox) {
@@ -103,7 +95,7 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
           <Header.Title align="center">
             <div className="dt-flex dt-flex-col dt-items-center">
               <span className="dt-text-base dt-font-medium dt-text">
-                {connection && thread?.otherMembers.length ? (
+                {connection && thread?.otherMembers ? (
                   <DisplayAddress
                     connection={connection}
                     otherMembers={thread.otherMembers}
@@ -146,10 +138,10 @@ const ThreadPage = ({ onNewThreadClick, onModalClose }: ThreadPageProps) => {
         >
           <Router initialRoute={ThreadRouteName.Messages}>
             <Route name={ThreadRouteName.Messages}>
-              {threadAddress ? <Thread threadAddress={threadAddress} /> : null}
+              <Thread threadId={threadId} />
             </Route>
             <Route name={ThreadRouteName.Settings}>
-              <Settings />
+              <Settings threadId={threadId} />
             </Route>
           </Router>
         </div>
