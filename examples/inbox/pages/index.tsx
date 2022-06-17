@@ -56,7 +56,7 @@ function AuthedHome() {
       environment="local-development"
       backends={[Backend.Solana]}
       solana={{
-        dialectProgramId: new PublicKey(
+        dialectProgramAddress: new PublicKey(
           '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
         ),
       }}

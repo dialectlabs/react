@@ -5,18 +5,21 @@ import type { ParsedErrorData } from '@dialectlabs/react';
 import { useThreadMessages } from '@dialectlabs/react-sdk';
 import { ThreadMemberScope } from '@dialectlabs/sdk';
 import clsx from 'clsx';
+import { PublicKey } from '@solana/web3.js';
 import MessageInput from './MessageInput';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import MessageBubble from '../../MessageBubble';
-import useMemoThread from '../../../../hooks/useCurrentThread';
+import useMemoThread from '../../../../hooks/useMemoThread';
 
 type ThreadProps = {
   threadId: string;
 };
 
 export default function Thread({ threadId }: ThreadProps) {
-  const { thread, send, isFetchingThread } = useMemoThread(threadId);
-  const { messages } = useThreadMessages({ address: thread?.address });
+  const { thread, isFetchingThread } = useMemoThread(threadId);
+  const { messages, send, cancel } = useThreadMessages({
+    address: thread?.address,
+  });
 
   const { wallet } = useApi();
   const { scrollbar } = useTheme();
@@ -28,7 +31,9 @@ export default function Thread({ threadId }: ThreadProps) {
 
   // TODO: replace with optimistic UI data from react-sdk
   const isMessagesReady = true;
-  const cancelSendingMessage = () => {};
+  const cancelSendingMessage = (id: string) => {
+    cancel({ id });
+  };
 
   const isWritable = thread.me.scopes.find(
     (scope) => scope === ThreadMemberScope.WRITE
@@ -39,7 +44,7 @@ export default function Thread({ threadId }: ThreadProps) {
   };
 
   const handleSendMessage = async (messageText: string, id?: string) => {
-    send({ text: messageText }).catch(handleError);
+    send({ text: messageText, id }).catch(handleError);
     setText('');
   };
 
@@ -72,8 +77,9 @@ export default function Thread({ threadId }: ThreadProps) {
         {isMessagesReady ? (
           <TransitionGroup component={null}>
             {messages.map((message, idx) => {
-              const isYou =
-                message.author.toString() === wallet?.publicKey?.toString();
+              const isYou = message.author.publicKey.equals(
+                wallet?.publicKey || PublicKey.default
+              );
               const key = message?.id;
               const isLast = idx === 0;
 

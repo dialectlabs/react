@@ -38,6 +38,7 @@ const useThreads = ({
     mutate,
   } = useSWR(CACHE_KEY, () => threadsApi.findAll(), {
     refreshInterval,
+    refreshWhenOffline: true,
   });
 
   useEffect(

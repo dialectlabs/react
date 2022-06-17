@@ -1,12 +1,6 @@
-import {
-  Config,
-  Dialect,
-  DialectCloudUnreachableError,
-  DialectSdk,
-  DialectSdkError,
-  DisconnectedFromChainError,
-} from '@dialectlabs/sdk';
+import { Config, Dialect, DialectSdk } from '@dialectlabs/sdk';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { LocalMessages } from './LocalMessages';
 
 interface DialectConnectionInfo {
   wallet: boolean;
@@ -79,7 +73,7 @@ const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
 
   return (
     <DialectContext.Provider value={ctxValue}>
-      {children}
+      <LocalMessages.Provider>{children}</LocalMessages.Provider>
     </DialectContext.Provider>
   );
 };
