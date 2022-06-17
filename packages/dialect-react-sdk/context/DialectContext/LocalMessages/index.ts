@@ -1,13 +1,7 @@
-import type { DialectSdkError, Message } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
+import type { LocalMessage } from '../../../types';
 import { NOOP } from '../../../utils';
 import { createContainer } from '../../../utils/container';
-
-export interface LocalMessage extends Message {
-  id: string;
-  isSending?: boolean;
-  error?: DialectSdkError | null;
-}
 
 interface LocalMessagesState {
   localMessages: Record<string, LocalMessage[]>;
@@ -40,8 +34,8 @@ function useLocalMessages(
         return {
           ...prev,
           [threadAddr]: [
-            ...threadMessages.filter((prevMsg) => prevMsg.id !== msg.id),
             msg,
+            ...threadMessages.filter((prevMsg) => prevMsg.id !== msg.id),
           ],
         };
       });
@@ -50,8 +44,6 @@ function useLocalMessages(
   );
 
   const deleteLocalMessage = useCallback((threadAddr: string, id: string) => {
-    console.log('delete local message');
-
     setLocalMessages((prev) => {
       const threadMessages = prev[threadAddr];
       if (!threadMessages) {

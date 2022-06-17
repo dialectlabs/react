@@ -1,29 +1,26 @@
 import {
   DialectSdkError,
-  Message,
+  Message as SdkMessage,
   SendMessageCommand as DialectSdkSendMessageCommand,
   Thread,
 } from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
-import { nanoid } from 'nanoid';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/errors';
-import {
-  LocalMessage,
-  LocalMessages,
-} from '../context/DialectContext/LocalMessages';
+import { LocalMessages } from '../context/DialectContext/LocalMessages';
+import type { LocalMessage, Message } from '../types';
 import { EMPTY_ARR } from '../utils';
 import useThread from './useThread';
 
 const CACHE_KEY = (addr: PublicKey) => `MESSAGES_${addr.toString()}`;
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
-  id?: number;
+  id?: string;
 }
 
 interface CancelMessageCommand {
-  id: number;
+  id: string;
 }
 
 interface UseThreadMessagesParams {
@@ -33,7 +30,7 @@ interface UseThreadMessagesParams {
 
 interface UseThreadMessagesValue {
   // sdk
-  messages: Message[];
+  messages: LocalMessage[];
 
   // react-lib
   send(command: SendMessageCommand): Promise<void>;
@@ -68,19 +65,38 @@ const useThreadMessages = ({
     isValidating: isFetchingMessages,
     error: errorFetchingMessages = null,
     mutate,
-  } = useSWR<Message[], DialectSdkError>(
+  } = useSWR<SdkMessage[], DialectSdkError>(
     threadInternal ? CACHE_KEY(threadInternal.address) : null,
     () => threadInternal!.messages(),
     { refreshInterval, refreshWhenOffline: true }
   );
 
-  const messages = useMemo(() => {
-    return [
+  const messages: Message[] = useMemo(() => {
+    if (!thread) {
+      return EMPTY_ARR;
+    }
+
+    let merged = false;
+    const localThreadMessages =
+      localMessages[thread.address.toString()] || EMPTY_ARR;
+    const [firstRemote] = remoteMessages;
+    const [firstLocal] = localThreadMessages;
+    // we check if we can replace last local message with the remote one
+    if (firstLocal?.text === firstRemote?.text && firstLocal?.isSending) {
+      deleteLocalMessage(thread.address.toString(), firstLocal.id);
+      merged = true;
+    }
+
+    const mergedMessages = [
       ...remoteMessages,
-      ...(thread
-        ? localMessages[thread.address.toString()] || EMPTY_ARR
-        : EMPTY_ARR),
-    ].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+      ...(merged ? localThreadMessages.slice(1) : localThreadMessages),
+    ]
+      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+      .map((msg, idx, arr) => ({
+        ...msg,
+        id: (arr.length - idx - 1).toString(),
+      }));
+    return mergedMessages;
   }, [remoteMessages, thread, localMessages]);
 
   const sendMessage = useCallback(
@@ -90,7 +106,7 @@ const useThreadMessages = ({
       setErrorSendingMessage(null);
       const threadAddr = threadInternal.address.toString();
       const optimisticMessage: LocalMessage = {
-        id: cmd.id || nanoid(),
+        id: cmd.id || messages.length.toString(),
         text: cmd.text,
         timestamp: new Date(),
         author: threadInternal.me,
@@ -99,10 +115,7 @@ const useThreadMessages = ({
       try {
         putLocalMessage(threadAddr, optimisticMessage);
         await threadInternal.send(cmd);
-        // Await mutate to delete localmessage only after remoteMessages were updated
-        // FIXME: creates flickering because localmessage gets deleted with delay
-        await mutate();
-        deleteLocalMessage(threadAddr, optimisticMessage.id);
+        mutate();
       } catch (e) {
         if (e instanceof DialectSdkError) {
           setErrorSendingMessage(e);
@@ -117,7 +130,7 @@ const useThreadMessages = ({
         setIsSendingMessage(false);
       }
     },
-    [deleteLocalMessage, mutate, putLocalMessage, threadInternal]
+    [deleteLocalMessage, mutate, putLocalMessage, threadInternal, messages]
   );
 
   const cancelMessage = useCallback(

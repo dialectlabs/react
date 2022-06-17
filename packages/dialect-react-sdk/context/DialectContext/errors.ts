@@ -19,14 +19,34 @@ export const useDialectErrorsHandler = (
 
   useEffect(() => {
     if (errors.some(solanaNetworkErrorMatcher)) {
-      updateConnectionInfo((prev) => ({ ...prev, solana: false }));
+      updateConnectionInfo((prev) => {
+        if (!prev.solana) {
+          return prev;
+        }
+        return { ...prev, solana: false };
+      });
     } else {
-      updateConnectionInfo((prev) => ({ ...prev, solana: true }));
+      updateConnectionInfo((prev) => {
+        if (prev.solana) {
+          return prev;
+        }
+        return { ...prev, solana: true };
+      });
     }
     if (errors.some(dialectCloudNetworkErrorMatcher)) {
-      updateConnectionInfo((prev) => ({ ...prev, dialectCloud: false }));
+      updateConnectionInfo((prev) => {
+        if (!prev.dialectCloud) {
+          return prev;
+        }
+        return { ...prev, dialectCloud: false };
+      });
     } else {
-      updateConnectionInfo((prev) => ({ ...prev, dialectCloud: true }));
+      updateConnectionInfo((prev) => {
+        if (prev.dialectCloud) {
+          return prev;
+        }
+        return { ...prev, dialectCloud: true };
+      });
     }
   }, errors);
 };

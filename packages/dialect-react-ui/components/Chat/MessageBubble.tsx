@@ -1,20 +1,19 @@
 import { formatTimestamp } from '@dialectlabs/react';
-import type { Message } from '@dialectlabs/sdk';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import Avatar from '../Avatar';
 import { ButtonLink, LinkifiedText } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
+import type { Message } from '@dialectlabs/react-sdk';
 
 type MessageBubbleProps = Message & {
-  id: number;
   isYou: boolean;
-  isSending: boolean;
-  error: { message: string };
+  isSending?: boolean;
+  error?: { message: string } | null;
   showStatus: boolean;
-  onSendMessage: (text: string, idx: number) => void;
-  onCancelMessage: (idx: number) => void;
+  onSendMessage: (text: string, id: string) => void;
+  onCancelMessage: (id: string) => void;
 };
 
 export default function MessageBubble({

@@ -27,13 +27,16 @@ const ThreadDetails = ({ address }: { address: PublicKey }) => {
   const { thread } = useThread({ findParams });
   const { messages, send } = useThreadMessages({ address: address });
 
+  const [msg, setMsg] = useState('');
+
   return (
     <div>
-      {thread?.backend}
       {messages.map((it, idx) => (
         <p key={idx}>{it.text}</p>
       ))}
       <input
+        value={msg}
+        onChange={(it) => setMsg(it.target.value)}
         onKeyDown={(it) => {
           if (it.key === 'Enter') {
             send({ text: it.currentTarget.value });
@@ -54,7 +57,7 @@ const Example = () => {
     <div>
       {threads.map((t, idx) => (
         <p key={idx} onClick={() => selectThreadAddress(t.address)}>
-          {t.address.toString()}
+          {t.address.toString()} - {t.backend}
         </p>
       ))}
       {selectedThreadAddress && (

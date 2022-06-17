@@ -30,7 +30,7 @@ export default function Thread({ threadId }: ThreadProps) {
 
   // TODO: replace with optimistic UI data from react-sdk
   const isMessagesReady = true;
-  const cancelSendingMessage = (id: number) => {
+  const cancelSendingMessage = (id: string) => {
     cancel({ id });
   };
 
@@ -38,8 +38,10 @@ export default function Thread({ threadId }: ThreadProps) {
     setError(err);
   };
 
-  const handleSendMessage = async (messageText: string, id?: number) => {
-    if (!id) id = messages.length;
+  const handleSendMessage = async (
+    messageText: string,
+    id: string = messages.length.toString()
+  ) => {
     send({ text: messageText, id }).catch(handleError);
     setText('');
   };
@@ -76,14 +78,12 @@ export default function Thread({ threadId }: ThreadProps) {
               const isYou = message.author.publicKey.equals(
                 wallet?.publicKey || PublicKey.default
               );
-              // Use reversed idx to avoid changing keys every time new meesage added, since we render messages in reverse order
-              const reverseIdx = messages.length - idx - 1;
               const isLast = idx === 0;
 
               // TODO: fix transition after message is sent (e.g. key/props shouldn't change)
               return (
                 <CSSTransition
-                  key={reverseIdx}
+                  key={message.id}
                   timeout={{
                     enter: 400,
                     exit: 200,
@@ -97,9 +97,8 @@ export default function Thread({ threadId }: ThreadProps) {
                   }}
                 >
                   {/* additional div wrapper is needed to avoid paddings /margins interfere with animation */}
-                  <div data-key={reverseIdx}>
+                  <div data-key={`message-${message.id}`}>
                     <MessageBubble
-                      id={reverseIdx}
                       {...message}
                       isYou={isYou}
                       showStatus={isYou && isLast}
