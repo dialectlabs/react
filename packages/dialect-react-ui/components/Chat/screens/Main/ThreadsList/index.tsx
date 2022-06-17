@@ -1,13 +1,12 @@
-import { useEffect, useMemo } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { useApi } from '@dialectlabs/react';
-import { useThreads } from '@dialectlabs/react-sdk';
+import { useDialectSdk, useThreads } from '@dialectlabs/react-sdk';
 import type { Thread } from '@dialectlabs/sdk';
-import MessagePreview from './MessagePreview';
+import clsx from 'clsx';
+import { useMemo } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Centered } from '../../../../common';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
-import clsx from 'clsx';
 import { useRoute } from '../../../../common/providers/Router';
+import MessagePreview from './MessagePreview';
 
 interface ThreadsListProps {
   onThreadClick?: (dialectAccount: Thread) => void;
@@ -18,12 +17,15 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
     params: { threadId },
   } = useRoute<{ threadId?: string }>();
   const { threads } = useThreads();
-  const { walletName } = useApi();
-  const isNotSollet = walletName !== 'Sollet';
+  const {
+    info: { apiAvailability },
+  } = useDialectSdk();
   const hasEncryptedMessages = useMemo(
     () => threads.some((thread) => thread.encryptionEnabled),
     [threads]
   );
+
+  console.log(threads);
 
   const { colors, highlighted, textStyles, scrollbar } = useTheme();
 
@@ -34,7 +36,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
         scrollbar
       )}
     >
-      {isNotSollet && hasEncryptedMessages && (
+      {!apiAvailability.canEncrypt && hasEncryptedMessages && (
         <div
           className={clsx(
             colors.highlight,
@@ -63,7 +65,9 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
             <div className="dt-overflow-hidden">
               <MessagePreview
                 dialectAddress={thread.address}
-                disabled={isNotSollet && thread.encryptionEnabled}
+                disabled={
+                  !apiAvailability.canEncrypt && thread.encryptionEnabled
+                }
                 onClick={() => {
                   // Do not trigger open if this thread already opened
                   if (threadId === thread.address.toBase58()) return;

@@ -1,11 +1,11 @@
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 import { display } from '@dialectlabs/web3';
-import { useApi } from '@dialectlabs/react';
 import clsx from 'clsx';
+import useThread from '../../../../hooks/useThread';
 import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
+import { Button, ValueRow } from '../../../common';
 import { A, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import { Button, ValueRow } from '../../../common';
-import useThread from '../../../../hooks/useThread';
 import { useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName } from '../../constants';
 
@@ -17,7 +17,11 @@ interface SettingsProps {
 }
 
 const Settings = ({ threadId }: SettingsProps) => {
-  const { network } = useApi();
+  const {
+    info: {
+      config: { solana },
+    },
+  } = useDialectSdk();
   const {
     thread,
     delete: deleteDialect,
@@ -45,7 +49,7 @@ const Settings = ({ threadId }: SettingsProps) => {
                     target="_blank"
                     href={getExplorerAddress(
                       thread.address.toBase58(),
-                      network
+                      solana?.network
                     )}
                     rel="noreferrer"
                   >

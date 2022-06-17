@@ -1,16 +1,18 @@
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 import { useEffect } from 'react';
-import { useApi } from '@dialectlabs/react';
 import { useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName } from '../../constants';
-import ThreadContent from './ThreadContent';
 import NoMessages from './NoMessages';
+import ThreadContent from './ThreadContent';
 
 const ThreadPage = () => {
   const {
     navigate,
     params: { threadId },
   } = useRoute<{ threadId?: string }>();
-  const { wallet } = useApi();
+  const {
+    info: { wallet },
+  } = useDialectSdk();
 
   useEffect(() => {
     if (wallet) {

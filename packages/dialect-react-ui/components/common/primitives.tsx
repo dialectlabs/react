@@ -1,17 +1,17 @@
+import { useDialectSdk } from '@dialectlabs/react-sdk';
+import { ownerFetcher } from '@dialectlabs/web3';
+import clsx from 'clsx';
 import React, {
   DetailedHTMLProps,
   InputHTMLAttributes,
   useEffect,
   useState,
 } from 'react';
-import clsx from 'clsx';
-import { ownerFetcher } from '@dialectlabs/web3';
-import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
 import cs from '../../utils/classNames';
-import { useTheme } from './providers/DialectThemeProvider';
-import { A, ButtonBase, Label, P } from './preflighted';
 import { DialectLogo } from '../Icon';
+import { A, ButtonBase, Label, P } from './preflighted';
+import { useTheme } from './providers/DialectThemeProvider';
 
 // TODO: separate these components to separate files
 export function Divider(props: { className?: string }): JSX.Element {
@@ -214,11 +214,16 @@ export function Toggle({
 }
 
 export const useBalance = () => {
-  const { wallet, program } = useApi();
+  const {
+    info: {
+      wallet,
+      solana: { dialectProgram },
+    },
+  } = useDialectSdk();
 
   const { data, error } = useSWR(
-    program?.provider.connection && wallet
-      ? ['/owner', wallet, program?.provider.connection]
+    dialectProgram?.provider.connection && wallet
+      ? ['/owner', wallet, dialectProgram?.provider.connection]
       : null,
     ownerFetcher
   );

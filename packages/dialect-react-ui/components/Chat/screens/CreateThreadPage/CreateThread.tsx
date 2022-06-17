@@ -1,36 +1,40 @@
-import { KeyboardEvent, useMemo } from 'react';
-import { useState, useEffect, useCallback } from 'react';
-import { display } from '@dialectlabs/web3';
-import { ThreadMemberScope } from '@dialectlabs/sdk';
-import { useThread, useThreads } from '@dialectlabs/react-sdk';
-import type { DialectSdkError } from '@dialectlabs/sdk';
-import { useApi } from '@dialectlabs/react';
-import { Connection, PublicKey } from '@solana/web3.js';
-import clsx from 'clsx';
 import {
   getHashedName,
   getNameAccountKey,
   NameRegistryState,
 } from '@bonfida/spl-name-service';
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
-import { A, H1, Input, P } from '../../../common/preflighted';
-import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { useDialectSdk, useThread, useThreads } from '@dialectlabs/react-sdk';
+import type { DialectSdkError } from '@dialectlabs/sdk';
+import { ThreadMemberScope } from '@dialectlabs/sdk';
+import { display } from '@dialectlabs/web3';
+import { Connection, PublicKey } from '@solana/web3.js';
+import clsx from 'clsx';
+import {
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import debounce from '../../../../utils/debounce';
 import {
   Button,
+  fetchSolanaNameServiceName,
   Footer,
   NetworkBadge,
   Toggle,
   useBalance,
   ValueRow,
-  fetchSolanaNameServiceName,
 } from '../../../common';
-import { fetchAddressFromTwitterHandle } from '../../../DisplayAddress';
-import { Lock, NoLock } from '../../../Icon';
-import { Header } from '../../../Header';
-import debounce from '../../../../utils/debounce';
-import { useChatInternal } from '../../provider';
+import { A, H1, Input, P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useRoute } from '../../../common/providers/Router';
+import { fetchAddressFromTwitterHandle } from '../../../DisplayAddress';
+import { Header } from '../../../Header';
+import { Lock, NoLock } from '../../../Icon';
+import { useChatInternal } from '../../provider';
 
 interface CreateThreadProps {
   onNewThreadCreated?: (addr: string) => void;
@@ -75,7 +79,9 @@ function ActionCaption({
   creationError: DialectSdkError | null;
 }) {
   const { textStyles, xPaddedText } = useTheme();
-  const { walletName } = useApi();
+  const {
+    info: { apiAvailability },
+  } = useDialectSdk();
 
   if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
     return (
@@ -91,7 +97,7 @@ function ActionCaption({
     );
   }
 
-  if (walletName !== 'Sollet') {
+  if (!apiAvailability.canEncrypt) {
     return (
       <P
         className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
@@ -298,8 +304,15 @@ export default function CreateThread({
   } = useRoute<{ receiver?: string }>();
   const { type, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
-  const { program, network, wallet, walletName } = useApi();
-  const connection = program?.provider.connection;
+  const {
+    info: {
+      wallet,
+      config: { solana },
+      solana: { dialectProgram },
+      apiAvailability: { canEncrypt },
+    },
+  } = useDialectSdk();
+  const connection = dialectProgram?.provider.connection;
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
@@ -526,7 +539,7 @@ export default function CreateThread({
           label={
             <>
               Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}){' '}
-              <NetworkBadge network={network} />
+              <NetworkBadge network={solana?.network} />
             </>
           }
           className={clsx('dt-w-full dt-mb-2')}
@@ -564,7 +577,7 @@ export default function CreateThread({
             <span className="dt-flex dt-items-center">
               <Toggle
                 checked={encrypted}
-                disabled={walletName !== 'Sollet'}
+                disabled={!canEncrypt}
                 onClick={() => setEncrypted((enc) => !enc)}
               />
             </span>

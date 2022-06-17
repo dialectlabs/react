@@ -27,6 +27,17 @@ const walletToDialectWallet = (
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
+  //@ts-ignore
+  diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
+    ? async (pubKey) => {
+        //@ts-ignore
+        const res = await wallet.wallet?.adapter?._wallet?.diffieHellman(
+          pubKey
+        );
+        console.log(res);
+        return res;
+      }
+    : undefined,
 });
 
 function AuthedHome() {

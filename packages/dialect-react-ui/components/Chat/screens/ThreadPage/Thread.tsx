@@ -1,14 +1,13 @@
-import { KeyboardEvent, FormEvent, useState } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { useApi } from '@dialectlabs/react';
 import type { ParsedErrorData } from '@dialectlabs/react';
-import { useThreadMessages } from '@dialectlabs/react-sdk';
-import clsx from 'clsx';
+import { useDialectSdk, useThreadMessages } from '@dialectlabs/react-sdk';
 import { PublicKey } from '@solana/web3.js';
-import MessageInput from './MessageInput';
+import clsx from 'clsx';
+import { FormEvent, KeyboardEvent, useState } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import useThread from '../../../../hooks/useThread';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import MessageBubble from '../../MessageBubble';
-import useThread from '../../../../hooks/useThread';
+import MessageInput from './MessageInput';
 
 type ThreadProps = {
   threadId: string;
@@ -20,7 +19,9 @@ export default function Thread({ threadId }: ThreadProps) {
     address: thread?.address,
   });
 
-  const { wallet } = useApi();
+  const {
+    info: { wallet },
+  } = useDialectSdk();
   const { scrollbar } = useTheme();
 
   const [text, setText] = useState<string>('');

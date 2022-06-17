@@ -1,13 +1,17 @@
-import { useMemo } from 'react';
-import { useApi, formatTimestamp } from '@dialectlabs/react';
-import { useThread, useThreadMessages } from '@dialectlabs/react-sdk';
+import { formatTimestamp } from '@dialectlabs/react';
+import {
+  useDialectSdk,
+  useThread,
+  useThreadMessages,
+} from '@dialectlabs/react-sdk';
 import type { Message } from '@dialectlabs/sdk';
-import clsx from 'clsx';
 import type { PublicKey } from '@solana/web3.js';
+import clsx from 'clsx';
+import { useMemo } from 'react';
 import Avatar from '../../../../Avatar';
+import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
 import MessageStatus from '../../../MessageStatus';
-import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 
 type PropsType = {
   dialectAddress: PublicKey;
@@ -21,9 +25,11 @@ function FirstMessage({
   firstMessage,
 }: {
   isEncrypted: boolean;
-  firstMessage: Message;
+  firstMessage?: Message;
 }) {
-  const { wallet } = useApi();
+  const {
+    info: { wallet },
+  } = useDialectSdk();
 
   if (isEncrypted) {
     return (
@@ -36,8 +42,7 @@ function FirstMessage({
   return firstMessage ? (
     <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-truncate">
       <span className="dt-opacity-50">
-        {firstMessage.author.toString() === wallet?.publicKey?.toString() &&
-          'You:'}
+        {firstMessage.author.publicKey.equals(wallet.publicKey!) && 'You:'}
       </span>{' '}
       {firstMessage.text}
     </div>
@@ -54,7 +59,11 @@ export default function MessagePreview({
   disabled = false,
   selected = false,
 }: PropsType): JSX.Element | null {
-  const { program } = useApi();
+  const {
+    info: {
+      solana: { dialectProgram },
+    },
+  } = useDialectSdk();
   // TODO: improve using of useMemo
   const address = useMemo(() => dialectAddress, [dialectAddress?.toBase58()]);
   const findParams = useMemo(
@@ -65,8 +74,10 @@ export default function MessagePreview({
   const { messages } = useThreadMessages({ address });
   const { colors } = useTheme();
   const [firstMessage] = messages ?? [];
-  const connection = program?.provider.connection;
+  const connection = dialectProgram?.provider.connection;
   const recipient = thread?.otherMembers[0];
+
+  console.log('message preview', thread, recipient);
 
   if (!thread || !recipient) return null;
 
@@ -103,7 +114,7 @@ export default function MessagePreview({
           ) : (
             <MessageStatus
               isSending={firstMessage?.isSending}
-              error={firstMessage?.error}
+              error={firstMessage?.error?.message}
             />
           )}
         </div>

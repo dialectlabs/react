@@ -1,9 +1,9 @@
+import { useApi } from '@dialectlabs/react';
 import { useEffect, useState } from 'react';
-import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/providers/DialectThemeProvider';
-import { P } from '../common/preflighted';
 import { Button, ToggleSection } from '../common';
+import { P } from '../common/preflighted';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import ResendIcon from '../Icon/Resend';
 
 export function EmailForm() {

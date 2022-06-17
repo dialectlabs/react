@@ -1,15 +1,15 @@
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
+import useThread from '../../../../hooks/useThread';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import Settings from './Settings';
-import Thread from './Thread';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
+import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { DisplayAddress } from '../../../DisplayAddress';
 import { Header } from '../../../Header';
-import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
-import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useChatInternal } from '../../provider';
-import { useApi } from '@dialectlabs/react';
-import useThread from '../../../../hooks/useThread';
+import Settings from './Settings';
+import Thread from './Thread';
 
 type ThreadContentProps = {
   threadId: string;
@@ -18,11 +18,15 @@ type ThreadContentProps = {
 const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const { current, navigate } = useRoute();
   const { thread } = useThread(threadId);
-  const { program } = useApi();
+  const {
+    info: {
+      solana: { dialectProgram },
+    },
+  } = useDialectSdk();
   const { icons, xPaddedText } = useTheme();
   const { type, onChatOpen, onChatClose, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
-  const connection = program?.provider.connection;
+  const connection = dialectProgram?.provider.connection;
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
