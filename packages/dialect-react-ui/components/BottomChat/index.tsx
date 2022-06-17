@@ -49,8 +49,8 @@ function WrappedBottomChat(
   const { sliderWrapper, animations } = useTheme();
 
   return (
-    <div className={sliderWrapper}>
-      {/* TODO: this transition is not fully working yet, will be adjusted. Leave animation is working, enter happens immediately */}
+    // Disable pointer-events to allow browse/select content behind the bottom chat box
+    <div className={clsx('dt-pointer-events-none', sliderWrapper)}>
       <CSSTransition
         in={ui?.open ?? false}
         timeout={{
@@ -75,7 +75,8 @@ function WrappedBottomChat(
       >
         <div
           className={clsx(
-            'dt-w-full dt-h-full',
+            // Enable pointer-events here to allow
+            'dt-w-full dt-h-full dt-pointer-events-auto',
             animations.bottomSlide.enterFrom
           )}
         >
