@@ -11,6 +11,7 @@ interface DialectConnectionInfo {
 export interface DialectContextType {
   sdk: DialectSdk;
   connected: DialectConnectionInfo;
+  dapp?: string;
 
   _updateConnectionInfo(
     fn: (prevInfo: DialectConnectionInfo) => DialectConnectionInfo
@@ -21,7 +22,9 @@ export const DialectContext = React.createContext<DialectContextType>(
   {} as DialectContextType
 );
 
-type DialectContextProviderProps = Config;
+type DialectContextProviderProps = Config & {
+  dapp?: string; // temporary until new dialect cloud api appear
+};
 
 const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   environment,
@@ -30,6 +33,7 @@ const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   dialectCloud,
   encryptionKeysStore,
   backends,
+  dapp,
   children,
 }) => {
   const sdk = useCallback(
@@ -57,9 +61,11 @@ const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
     (): DialectContextType => ({
       sdk: sdk(),
       connected: connectionInfo,
+      dapp: dapp,
+
       _updateConnectionInfo: setConnectionInfo,
     }),
-    [sdk, connectionInfo]
+    [sdk, connectionInfo, dapp]
   );
 
   const [ctxValue, setCtxValue] = useState<DialectContextType>(ctx);

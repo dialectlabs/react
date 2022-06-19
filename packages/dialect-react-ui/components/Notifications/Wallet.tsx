@@ -1,4 +1,4 @@
-import { useApi, useDialect } from '@dialectlabs/react';
+import { useDialect } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { A, P } from '../common/preflighted';
@@ -12,19 +12,24 @@ import {
 import { getExplorerAddress } from '../../utils/getExplorerAddress';
 import { display, isDialectAdmin } from '@dialectlabs/web3';
 import { useCallback, useEffect } from 'react';
+import { useDialectCloudApi, useDialectSdk } from '@dialectlabs/react-sdk';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
 export function Wallet(props: { onThreadDelete?: () => void }) {
   const {
-    wallet,
-    network,
+    info: {
+      wallet,
+      config: { solana: { network } = {} },
+    },
+  } = useDialectSdk();
+  const {
     addresses: { wallet: walletObj },
     saveAddress,
     updateAddress,
     deleteAddress,
-  } = useApi();
+  } = useDialectCloudApi();
   const {
     dialect,
     createDialect,
@@ -51,24 +56,24 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
 
   const deleteWallet = useCallback(async () => {
     if (!walletObj) return;
-    await deleteAddress(wallet, {
+    await deleteAddress({
       addressId: walletObj?.addressId,
     }).catch(noop);
-  }, [deleteAddress, wallet, walletObj]);
+  }, [deleteAddress, walletObj]);
 
   const saveWallet = useCallback(async () => {
     if (walletObj) return;
-    await saveAddress(wallet, {
+    await saveAddress({
       type: 'wallet',
       value: wallet?.publicKey,
       enabled: true,
     }).catch(noop);
-  }, [saveAddress, wallet, walletObj]);
+  }, [saveAddress, walletObj, wallet]);
 
   const updateWalletEnabled = useCallback(
     async (enabled: boolean) => {
       if (!walletObj) return;
-      await updateAddress(wallet, {
+      await updateAddress({
         ...walletObj,
         type: 'wallet',
         value: wallet?.publicKey,

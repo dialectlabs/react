@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useDialect, useApi } from '@dialectlabs/react';
+import { useDialect } from '@dialectlabs/react';
 import type { MessageType } from '@dialectlabs/react';
 import clsx from 'clsx';
 import cs from '../../utils/classNames';
@@ -13,6 +13,7 @@ import { Wallet } from './Wallet';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
+import { useDialectCloudApi } from '@dialectlabs/react-sdk';
 
 export type NotificationType = {
   name: string;
@@ -36,7 +37,7 @@ function Header(props: {
     ) : null;
   const {
     addresses: { wallet: walletObj },
-  } = useApi();
+  } = useDialectCloudApi();
   const { isDialectAvailable } = useDialect();
   // Support for threads created before address registry launch
   const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;
@@ -221,7 +222,7 @@ export default function Notifications(props: {
   } = useDialect();
   const {
     addresses: { wallet: walletObj },
-  } = useApi();
+  } = useDialectCloudApi();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const isWalletEnabled = walletObj ? walletObj?.enabled : isDialectAvailable;

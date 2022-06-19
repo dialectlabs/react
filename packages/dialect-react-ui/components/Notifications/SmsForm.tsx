@@ -1,14 +1,13 @@
+import { useDialectCloudApi } from '@dialectlabs/react-sdk';
 import { useEffect, useState } from 'react';
-import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/providers/DialectThemeProvider';
-import { P } from '../common/preflighted';
 import { Button, ToggleSection } from '../common';
+import { P } from '../common/preflighted';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import ResendIcon from '../Icon/Resend';
 
 export function SmsForm() {
   const {
-    wallet,
     addresses: { sms: smsObj },
     fetchingAddressesError,
     saveAddress,
@@ -16,7 +15,7 @@ export function SmsForm() {
     deleteAddress,
     verifyCode,
     resendCode,
-  } = useApi();
+  } = useDialectCloudApi();
 
   const {
     textStyles,
@@ -53,7 +52,7 @@ export function SmsForm() {
 
     try {
       setLoading(true);
-      await updateAddress(wallet, {
+      await updateAddress({
         type: 'sms',
         value: smsNumber,
         enabled: true,
@@ -74,7 +73,7 @@ export function SmsForm() {
 
     try {
       setLoading(true);
-      await saveAddress(wallet, {
+      await saveAddress({
         type: 'sms',
         value: smsNumber,
         enabled: true,
@@ -90,7 +89,7 @@ export function SmsForm() {
   const deleteSmsNumber = async () => {
     try {
       setLoading(true);
-      await deleteAddress(wallet, {
+      await deleteAddress({
         addressId: smsObj?.addressId,
       });
       setError(null);
@@ -104,7 +103,7 @@ export function SmsForm() {
   const resendSmsVerificationCode = async () => {
     try {
       setLoading(true);
-      await resendCode(wallet, {
+      await resendCode({
         type: 'sms',
         value: smsNumber,
         enabled: true,
@@ -123,7 +122,6 @@ export function SmsForm() {
     try {
       setLoading(true);
       await verifyCode(
-        wallet,
         {
           type: 'sms',
           value: smsNumber,
@@ -190,7 +188,7 @@ export function SmsForm() {
           setError(null);
           if (smsObj && smsObj.enabled !== nextValue) {
             // TODO: handle error
-            await updateAddress(wallet, {
+            await updateAddress({
               id: smsObj.id,
               type: smsObj.type,
               enabled: nextValue,

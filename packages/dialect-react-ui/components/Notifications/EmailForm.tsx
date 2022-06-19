@@ -1,4 +1,4 @@
-import { useApi } from '@dialectlabs/react';
+import { useDialectCloudApi } from '@dialectlabs/react-sdk';
 import { useEffect, useState } from 'react';
 import cs from '../../utils/classNames';
 import { Button, ToggleSection } from '../common';
@@ -8,7 +8,6 @@ import ResendIcon from '../Icon/Resend';
 
 export function EmailForm() {
   const {
-    wallet,
     addresses: { email: emailObj },
     fetchingAddressesError,
     saveAddress,
@@ -16,7 +15,7 @@ export function EmailForm() {
     deleteAddress,
     verifyCode,
     resendCode,
-  } = useApi();
+  } = useDialectCloudApi();
 
   const {
     textStyles,
@@ -53,7 +52,7 @@ export function EmailForm() {
     if (error) return;
     try {
       setLoading(true);
-      await updateAddress(wallet, {
+      await updateAddress({
         type: 'email',
         value: email,
         enabled: true,
@@ -74,7 +73,7 @@ export function EmailForm() {
 
     try {
       setLoading(true);
-      await saveAddress(wallet, {
+      await saveAddress({
         type: 'email',
         value: email,
         enabled: true,
@@ -90,7 +89,7 @@ export function EmailForm() {
   const deleteEmail = async () => {
     try {
       setLoading(true);
-      await deleteAddress(wallet, {
+      await deleteAddress({
         addressId: emailObj?.addressId,
       });
       setError(null);
@@ -104,7 +103,7 @@ export function EmailForm() {
   const resendEmailCode = async () => {
     try {
       setLoading(true);
-      await resendCode(wallet, {
+      await resendCode({
         type: 'email',
         value: email,
         enabled: true,
@@ -123,7 +122,6 @@ export function EmailForm() {
     try {
       setLoading(true);
       await verifyCode(
-        wallet,
         {
           type: 'email',
           value: email,
@@ -189,7 +187,7 @@ export function EmailForm() {
         onChange={async (nextValue) => {
           if (emailObj && emailObj.enabled !== nextValue) {
             setError(null);
-            await updateAddress(wallet, {
+            await updateAddress({
               id: emailObj.id,
               type: emailObj.type,
               enabled: nextValue,

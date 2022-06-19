@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
 import type { AddressType } from '@dialectlabs/react';
+import { useDialectCloudApi } from '@dialectlabs/react-sdk';
+import { useEffect, useState } from 'react';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/providers/DialectThemeProvider';
+import { Button, ToggleSection } from '../common';
 import { P } from '../common/preflighted';
-import { Button, Toggle, ToggleSection, ValueRow } from '../common';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 import ResendIcon from '../Icon/Resend';
 
 export interface TelegramFormProps {
@@ -18,7 +18,6 @@ function getTelegramObj(addresses: AddressType[] | null): AddressType | null {
 
 export function TelegramForm(props: TelegramFormProps) {
   const {
-    wallet,
     addresses: { telegram: telegramObj },
     fetchingAddressesError,
     saveAddress,
@@ -26,7 +25,7 @@ export function TelegramForm(props: TelegramFormProps) {
     deleteAddress,
     verifyCode,
     resendCode,
-  } = useApi();
+  } = useDialectCloudApi();
 
   const {
     textStyles,
@@ -66,7 +65,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
     try {
       setLoading(true);
-      await updateAddress(wallet, {
+      await updateAddress({
         type: 'telegram',
         value: telegramUsername,
         enabled: true,
@@ -88,7 +87,7 @@ export function TelegramForm(props: TelegramFormProps) {
     try {
       setLoading(true);
       const value = telegramUsername?.replace('@', '');
-      await saveAddress(wallet, {
+      await saveAddress({
         type: 'telegram',
         value: value,
         enabled: true,
@@ -104,7 +103,7 @@ export function TelegramForm(props: TelegramFormProps) {
   const deleteTelegram = async () => {
     try {
       setLoading(true);
-      await deleteAddress(wallet, {
+      await deleteAddress({
         addressId: telegramObj?.addressId,
       });
       setError(null);
@@ -118,7 +117,7 @@ export function TelegramForm(props: TelegramFormProps) {
   const resendCodeVerification = async () => {
     try {
       setLoading(true);
-      await resendCode(wallet, {
+      await resendCode({
         type: 'telegram',
         value: telegramUsername,
         enabled: true,
@@ -137,7 +136,6 @@ export function TelegramForm(props: TelegramFormProps) {
     try {
       setLoading(true);
       await verifyCode(
-        wallet,
         {
           type: 'telegram',
           value: telegramUsername,
@@ -203,7 +201,7 @@ export function TelegramForm(props: TelegramFormProps) {
         onChange={async (nextValue) => {
           setError(null);
           if (telegramObj && telegramObj.enabled !== nextValue) {
-            await updateAddress(wallet, {
+            await updateAddress({
               id: telegramObj.id,
               enabled: nextValue,
               type: 'telegram',
