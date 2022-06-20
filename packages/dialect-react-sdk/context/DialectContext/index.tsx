@@ -26,7 +26,7 @@ type DialectContextProviderProps = Config & {
   dapp?: string; // temporary until new dialect cloud api appear
 };
 
-const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
+export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   environment,
   wallet,
   solana,
@@ -83,5 +83,3 @@ const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
     </DialectContext.Provider>
   );
 };
-
-export default DialectContextProvider;

@@ -1,1 +1,1 @@
-export { default as DialectContext } from './DialectContext';
+export { DialectContextProvider } from './DialectContext';
