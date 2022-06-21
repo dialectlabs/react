@@ -1,15 +1,21 @@
-import { Config, Dialect, DialectSdk } from '@dialectlabs/sdk';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Backend, Config, Dialect, DialectSdk } from '@dialectlabs/sdk';
+import React, { useEffect, useMemo, useState } from 'react';
+import { EMPTY_ARR } from '../../utils';
 import { LocalMessages } from './LocalMessages';
 
+interface DialectBackendConnectionInfo {
+  connected: boolean;
+  shouldConnect: boolean;
+}
+
 interface DialectConnectionInfo {
-  wallet: boolean;
-  solana: boolean;
-  dialectCloud: boolean;
+  wallet: DialectBackendConnectionInfo;
+  solana: DialectBackendConnectionInfo;
+  dialectCloud: DialectBackendConnectionInfo;
 }
 
 export interface DialectContextType {
-  sdk: DialectSdk;
+  sdk?: DialectSdk | null;
   connected: DialectConnectionInfo;
   dapp?: string;
 
@@ -32,34 +38,62 @@ export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   solana,
   dialectCloud,
   encryptionKeysStore,
-  backends,
+  backends = EMPTY_ARR,
   dapp,
   children,
 }) => {
-  const sdk = useCallback(
-    () =>
-      Dialect.sdk({
-        environment,
-        wallet,
-        solana,
-        dialectCloud,
-        encryptionKeysStore,
-        backends,
-      }),
-    [environment, wallet, solana, dialectCloud, encryptionKeysStore, backends]
-  );
+  const sdk = useMemo(() => {
+    if (!wallet.publicKey) return null;
+    return Dialect.sdk({
+      environment,
+      wallet,
+      solana,
+      dialectCloud,
+      encryptionKeysStore,
+      backends,
+    });
+  }, [
+    environment,
+    wallet,
+    solana,
+    dialectCloud,
+    encryptionKeysStore,
+    backends,
+  ]);
 
   const [connectionInfo, setConnectionInfo] = useState<DialectConnectionInfo>(
     () => ({
-      wallet: Boolean(wallet.publicKey),
-      solana: false,
-      dialectCloud: false,
+      wallet: {
+        connected: Boolean(wallet.publicKey),
+        shouldConnect: true,
+      },
+      solana: {
+        connected: Boolean(backends.includes(Backend.Solana)),
+        shouldConnect: Boolean(backends.includes(Backend.Solana)),
+      },
+      dialectCloud: {
+        connected: Boolean(backends.includes(Backend.DialectCloud)),
+        shouldConnect: Boolean(backends.includes(Backend.DialectCloud)),
+      },
     })
+  );
+
+  useEffect(
+    function updateWalletConnectionInfo() {
+      setConnectionInfo((prev) => ({
+        ...prev,
+        wallet: {
+          ...prev.wallet,
+          connected: Boolean(wallet.publicKey),
+        },
+      }));
+    },
+    [wallet]
   );
 
   const ctx = useMemo(
     (): DialectContextType => ({
-      sdk: sdk(),
+      sdk: sdk,
       connected: connectionInfo,
       dapp: dapp,
 

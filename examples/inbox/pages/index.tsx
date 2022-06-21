@@ -6,16 +6,16 @@ import {
   ThemeProvider,
   useDialectUiId,
 } from '@dialectlabs/react-ui';
-import { Backend, DialectWalletAdapter } from '@dialectlabs/sdk';
+import { Backend, DialectWalletAdapter, SolanaConfig } from '@dialectlabs/sdk';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Wallet } from '../components/Wallet';
 
 const walletToDialectWallet = (
   wallet: WalletContextState
 ): DialectWalletAdapter => ({
-  publicKey: wallet.publicKey || PublicKey.default,
+  publicKey: wallet.publicKey!,
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
@@ -29,7 +29,6 @@ const walletToDialectWallet = (
 });
 
 function AuthedHome() {
-  const wallet = useWallet();
   const { navigation } = useDialectUiId<ChatNavigationHelpers>('dialect-inbox');
 
   return (
@@ -50,7 +49,6 @@ function AuthedHome() {
           <DialectInbox
             dialectId="dialect-inbox"
             wrapperClassName="h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
-            wallet={wallet}
           />
         </div>
       </div>
@@ -67,16 +65,24 @@ export default function Home(): JSX.Element {
     setDialectWalletAdapter(walletToDialectWallet(wallet));
   }, [wallet]);
 
+  const backends = useMemo(() => [Backend.DialectCloud], []);
+
+  const solanaConfig = useMemo(
+    (): SolanaConfig => ({
+      dialectProgramAddress: new PublicKey(
+        '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
+      ),
+    }),
+    []
+  );
+
+  // const cloudConfig = useMemo((): DialectCloudConfig => ({}), [])
+
   return (
     <DialectContextProvider
       wallet={dialectWalletAdapter}
       environment="local-development"
-      backends={[Backend.Solana]}
-      solana={{
-        dialectProgramAddress: new PublicKey(
-          '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
-        ),
-      }}
+      backends={backends}
     >
       <DialectUiManagementProvider>
         <ThemeProvider theme={'dark'}>

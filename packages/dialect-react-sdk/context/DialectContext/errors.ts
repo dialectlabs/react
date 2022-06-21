@@ -12,6 +12,7 @@ const dialectCloudNetworkErrorMatcher = (err: DialectSdkError | null) =>
 const solanaNetworkErrorMatcher = (err: DialectSdkError | null) =>
   err instanceof DisconnectedFromChainError;
 
+// TODO: should use some kind of health checks
 export const useDialectErrorsHandler = (
   ...errors: (DialectSdkError | null)[]
 ) => {
@@ -20,32 +21,38 @@ export const useDialectErrorsHandler = (
   useEffect(() => {
     if (errors.some(solanaNetworkErrorMatcher)) {
       updateConnectionInfo((prev) => {
-        if (!prev.solana) {
+        if (!prev.solana.connected) {
           return prev;
         }
-        return { ...prev, solana: false };
+        return { ...prev, solana: { ...prev.solana, connected: false } };
       });
     } else {
       updateConnectionInfo((prev) => {
-        if (prev.solana) {
+        if (prev.solana.connected) {
           return prev;
         }
-        return { ...prev, solana: true };
+        return { ...prev, solana: { ...prev.solana, connected: true } };
       });
     }
     if (errors.some(dialectCloudNetworkErrorMatcher)) {
       updateConnectionInfo((prev) => {
-        if (!prev.dialectCloud) {
+        if (!prev.dialectCloud.connected) {
           return prev;
         }
-        return { ...prev, dialectCloud: false };
+        return {
+          ...prev,
+          dialectCloud: { ...prev.dialectCloud, connected: false },
+        };
       });
     } else {
       updateConnectionInfo((prev) => {
-        if (prev.dialectCloud) {
+        if (prev.dialectCloud.connected) {
           return prev;
         }
-        return { ...prev, dialectCloud: true };
+        return {
+          ...prev,
+          dialectCloud: { ...prev.dialectCloud, connected: true },
+        };
       });
     }
   }, errors);

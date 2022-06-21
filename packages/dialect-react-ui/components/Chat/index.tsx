@@ -38,13 +38,17 @@ function InnerChat({
   const { configure } = useDialectUiId(dialectId);
   const {
     connected: {
-      wallet: isWalletConnected,
-      solana: isSolanaConnected,
-      dialectCloud: isCloudConnected,
+      wallet: { connected: isWalletConnected },
+      solana: {
+        connected: isSolanaConnected,
+        shouldConnect: isSolanaShouldConnect,
+      },
+      dialectCloud: {
+        connected: isDialectCloudConnected,
+        shouldConnect: isDialectCloudShouldConnect,
+      },
     },
   } = useDialectContext();
-  // Trigger updating connection info
-  const { threads: _threads } = useThreads();
 
   const { navigate } = useRoute();
 
@@ -67,9 +71,13 @@ function InnerChat({
     });
   }, [configure, isSolanaConnected, isWalletConnected, navigate]);
 
+  const someBackendConnected =
+    (isSolanaShouldConnect && isSolanaConnected) ||
+    (isDialectCloudShouldConnect && isDialectCloudConnected);
+
   useEffect(
     function pickRoute() {
-      if (!isSolanaConnected) {
+      if (!someBackendConnected) {
         navigate(RouteName.NoConnection);
       } else if (!isWalletConnected) {
         navigate(RouteName.NoWallet);
