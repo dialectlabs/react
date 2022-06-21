@@ -5,8 +5,9 @@ import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
 import { A, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { Button, ValueRow } from '../../../common';
-import { useRoute } from '../../../common/providers/Router';
-import { MainRouteName, RouteName } from '../../constants';
+import { useChatInternal } from '../../provider';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
+import type { ChatNavigationHelpers } from '../../types';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -29,7 +30,8 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
     useTheme();
   const isAdmin =
     dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet.publicKey);
-  const { navigate } = useRoute();
+  const { dialectId } = useChatInternal();
+  const { navigation } = useDialectUiId<ChatNavigationHelpers>(dialectId);
 
   return (
     <>
@@ -72,7 +74,7 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
               // TODO: properly wait for the deletion
               onCloseRequest?.();
               setDialectAddress('');
-              navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
+              navigation?.showMain();
             }}
             loading={isDialectDeleting}
           >
