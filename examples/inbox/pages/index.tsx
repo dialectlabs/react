@@ -72,6 +72,11 @@ export default function Home(): JSX.Element {
       wallet={dialectWalletAdapter}
       environment="local-development"
       backends={[Backend.Solana]}
+      solana={{
+        dialectProgramAddress: new PublicKey(
+          '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
+        ),
+      }}
     >
       <DialectUiManagementProvider>
         <ThemeProvider theme={'dark'}>
