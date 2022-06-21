@@ -65,18 +65,7 @@ export default function Home(): JSX.Element {
     setDialectWalletAdapter(walletToDialectWallet(wallet));
   }, [wallet]);
 
-  const backends = useMemo(() => [Backend.DialectCloud], []);
-
-  const solanaConfig = useMemo(
-    (): SolanaConfig => ({
-      dialectProgramAddress: new PublicKey(
-        '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
-      ),
-    }),
-    []
-  );
-
-  // const cloudConfig = useMemo((): DialectCloudConfig => ({}), [])
+  const backends = useMemo(() => [Backend.Solana, Backend.DialectCloud], []);
 
   return (
     <DialectContextProvider

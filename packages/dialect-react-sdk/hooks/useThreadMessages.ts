@@ -24,7 +24,7 @@ interface CancelMessageCommand {
 }
 
 interface UseThreadMessagesParams {
-  address: PublicKey;
+  address: PublicKey | string;
   refreshInterval?: number;
 }
 

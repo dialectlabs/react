@@ -1,5 +1,5 @@
 import { DialectSdkError, Thread } from '@dialectlabs/sdk';
-import type { PublicKey } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import { useCallback, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/errors';
@@ -12,7 +12,7 @@ const CACHE_KEY = 'THREAD';
 
 // TODO
 type ThreadSearchParams =
-  | { address: PublicKey }
+  | { address: PublicKey | string }
   | { otherMembers: PublicKey[] };
 // | { twitterHandle: string }
 // | { sns: string };
@@ -54,7 +54,14 @@ const useThread = ({
     error: errorFetchingThread,
   } = useSWR(
     [CACHE_KEY, findParams],
-    (_, findParams) => threadsApi.find(findParams),
+    (_, findParams) => {
+      if ('address' in findParams && typeof findParams.address === 'string') {
+        return threadsApi.find({ address: new PublicKey(findParams.address) });
+      }
+      // TODO: a bit better typing
+      //@ts-ignore
+      return threadsApi.find(findParams);
+    },
     {
       refreshInterval,
       refreshWhenOffline: true,
