@@ -2,8 +2,11 @@
 
 ## [UNRELEASED]
 
+## [0.9.2] - 2022-06-21
+
 - fix: show solana name service domain without middle truncating
 - fix: redirect after withdraw to threads list
+- fix: bottom chat covering makes part of the page un-clickable when closed
 
 ## [0.9.1] - 2022-06-15
 
