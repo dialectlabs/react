@@ -40,6 +40,9 @@ const walletToDialectWallet = (
     : undefined,
 });
 
+// Important: store backends and solana config in constants or memoize it to avoid sdk recreationg
+const BACKENDS = [Backend.DialectCloud, Backend.Solana];
+
 function AuthedHome() {
   const wallet = useWallet();
   const isWalletConnected = connected(wallet);
@@ -65,12 +68,7 @@ function AuthedHome() {
     <DialectContext
       wallet={dialectWalletAdapter}
       environment="local-development"
-      backends={[Backend.Solana]}
-      solana={{
-        dialectProgramAddress: new PublicKey(
-          '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
-        ),
-      }}
+      backends={BACKENDS}
     >
       <div className="dialect">
         <div className="flex flex-col h-screen bg-black">

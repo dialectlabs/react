@@ -1,6 +1,7 @@
 import { Config, Dialect, DialectSdk } from '@dialectlabs/sdk';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { LocalMessages } from './LocalMessages';
+import { PublicKey } from '@solana/web3.js';
 
 interface DialectConnectionInfo {
   wallet: boolean;
@@ -36,7 +37,7 @@ const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   dapp,
   children,
 }) => {
-  const sdk = useCallback(
+  const sdk = useMemo(
     () =>
       Dialect.sdk({
         environment,
@@ -46,7 +47,17 @@ const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
         encryptionKeysStore,
         backends,
       }),
-    [environment, wallet, solana, dialectCloud, encryptionKeysStore, backends]
+    // If wallet is really changed the publicKey would change, so we replace 'wallet' dep with 'wallet?.publicKey?.toBase58()'
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      environment,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      wallet?.publicKey?.toBase58(),
+      solana,
+      dialectCloud,
+      encryptionKeysStore,
+      backends,
+    ]
   );
 
   const [connectionInfo, setConnectionInfo] = useState<DialectConnectionInfo>(
@@ -59,7 +70,7 @@ const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
 
   const ctx = useMemo(
     (): DialectContextType => ({
-      sdk: sdk(),
+      sdk,
       connected: connectionInfo,
       dapp: dapp,
 

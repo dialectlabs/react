@@ -1484,10 +1484,10 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@dialectlabs/sdk@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.1.7.tgz#232dda66459232cdac0d30f7153af9666d54adbf"
-  integrity sha512-znmEkWzyH+DnbEHEmZONQNxmzRoZB2ytxG48tcZ5MjMpAzaC+nzWj0jyOeMMGF7+rbCOVyDeHtxyOdmFJtfmzg==
+"@dialectlabs/sdk@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.1.8.tgz#661d8025dd31e6b0060b0f7ed5b98289b6165fb3"
+  integrity sha512-Qy1twv4v+EQ5I6/ooKx+O2K2RnsiPjeqbd6eE6Fb49B9hTHi7xzTtwcVb+OQIbXUYYyh2gbQAYJBO8XZrb/8Pg==
   dependencies:
     "@dialectlabs/web3" "^0.3.2"
     "@project-serum/anchor" "0.23.0"
