@@ -39,7 +39,7 @@ export default function MessageInput({
       <div className="dt-flex dt-flex-col dt-pb-2 dt-mb-2">
         <form onSubmit={onSubmit}>
           <div className="dt-relative">
-            <div className="dt-text-sm dt-break-words dt-py-1 dt-pl-2 dt-pr-11">
+            <div className="dt-text-sm dt-break-words dt-py-1 dt-pl-2 dt-pr-11 dt-invisible">
               {text || 'h'}
             </div>
             <div className="dt-absolute dt-top-0 dt-w-full dt-h-full dt-flex dt-flex-grow dt-items-center">
