@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - fix: show solana name service domain without middle truncating
+- fix: redirect after withdraw to threads list
 
 ## [0.9.1] - 2022-06-15
 
