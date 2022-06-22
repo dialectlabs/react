@@ -1,5 +1,5 @@
 import { useDialectSdk, useThreads } from '@dialectlabs/react-sdk';
-import type { Thread } from '@dialectlabs/sdk';
+import type { Thread, ThreadId } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -12,10 +12,23 @@ interface ThreadsListProps {
   onThreadClick?: (dialectAccount: Thread) => void;
 }
 
+const isEqual = (threadIdA?: ThreadId, threadIdB?: ThreadId) => {
+  if (!threadIdA || !threadIdB) {
+    return false;
+  }
+  if (threadIdA.address.toBase58() !== threadIdB.address.toBase58()) {
+    return false;
+  }
+  if (threadIdA?.backend !== threadIdB?.backend) {
+    return false;
+  }
+  return true;
+};
+
 const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
   const {
     params: { threadId },
-  } = useRoute<{ threadId?: string }>();
+  } = useRoute<{ threadId?: ThreadId }>();
   const { threads } = useThreads();
   const {
     info: { apiAvailability },
@@ -68,10 +81,10 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
                 }
                 onClick={() => {
                   // Do not trigger open if this thread already opened
-                  if (threadId === thread.address.toBase58()) return;
+                  if (isEqual(threadId, thread.id)) return;
                   onThreadClick?.(thread);
                 }}
-                selected={threadId === thread.address.toBase58()}
+                selected={isEqual(threadId, thread.id)}
               />
             </div>
           </CSSTransition>
