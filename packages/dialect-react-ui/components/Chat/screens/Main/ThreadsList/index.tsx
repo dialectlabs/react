@@ -56,13 +56,13 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
         {/* FIXME: enter animation isn't working */}
         {threads.map((thread) => (
           <CSSTransition
-            key={thread.address.toBase58()}
+            key={thread.id.address.toBase58()}
             timeout={400}
             classNames="dt-thread"
           >
             <div className="dt-overflow-hidden">
               <MessagePreview
-                dialectAddress={thread.address}
+                dialectId={thread.id}
                 disabled={
                   !apiAvailability.canEncrypt && thread.encryptionEnabled
                 }

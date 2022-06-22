@@ -5,6 +5,7 @@ import {
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
+import type { ThreadId } from '@dialectlabs/sdk';
 import { ThreadMemberScope, Backend } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
@@ -19,6 +20,7 @@ import {
 import debounce from '../../../../utils/debounce';
 import {
   Button,
+  Divider,
   fetchSolanaNameServiceName,
   Footer,
   NetworkBadge,
@@ -43,12 +45,12 @@ import AddressResult from './AddressResult';
 import ActionCaption from './ActionCaption';
 
 interface CreateThreadProps {
-  onNewThreadCreated?: (addr: string) => void;
+  onNewThreadCreated?: (threadId: ThreadId) => void;
   onCloseRequest?: () => void;
   onModalClose?: () => void;
 }
 
-function CardinalCTA() {
+function LinkingCTA() {
   const { textStyles } = useTheme();
   return (
     <P
@@ -57,7 +59,7 @@ function CardinalCTA() {
         'dt-opacity-60 dt-text-white dt-text dt-mt-1 dt-px-2'
       )}
     >
-      {'Link your Twitter handle with '}
+      {'Link twitter '}
       <A
         href={'https://twitter.cardinal.so'}
         target="_blank"
@@ -66,7 +68,15 @@ function CardinalCTA() {
       >
         twitter.cardinal.so
       </A>
-      {'.'}
+      {' and domain '}
+      <A
+        href={'https://naming.bonfida.org'}
+        target="_blank"
+        rel="noreferrer"
+        className="dt-underline"
+      >
+        naming.bonfida.org
+      </A>
     </P>
   );
 }
@@ -147,8 +157,7 @@ export default function CreateThread({
     }
 
     if (currentChatWithAddress) {
-      const currentThreadWithAddress =
-        currentChatWithAddress.address.toBase58();
+      const currentThreadWithAddress = currentChatWithAddress.id;
 
       onNewThreadCreated?.(currentThreadWithAddress);
       return;
@@ -164,7 +173,7 @@ export default function CreateThread({
       backend,
     })
       .then(async (thread) => {
-        onNewThreadCreated?.(thread.address.toBase58());
+        onNewThreadCreated?.(thread.id);
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {});
@@ -295,7 +304,7 @@ export default function CreateThread({
         <Header.Icons />
       </Header>
 
-      <div className="dt-flex-1 dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-px-2">
+      <div className="dt-flex-1 dt-pb-8 dt-max-w-sm dt-min-w-[24rem] dt-m-auto dt-flex dt-flex-col dt-px-2">
         <H1
           className={clsx(
             textStyles.h1,
@@ -305,7 +314,7 @@ export default function CreateThread({
         >
           Create thread
         </H1>
-        <P className={clsx(textStyles.small, 'dt-mb-2')}>
+        <P className={clsx(textStyles.small, 'dt-mb-2 dt-px-2')}>
           Enter recipient address, SNS domain or linked Twitter handle
         </P>
         <Input
@@ -321,7 +330,7 @@ export default function CreateThread({
         />
         <div className="dt-mb-2">
           {isTyping || !address ? (
-            <CardinalCTA />
+            <LinkingCTA />
           ) : (
             <AddressResult
               isYou={
@@ -336,6 +345,7 @@ export default function CreateThread({
             />
           )}
         </div>
+        <Divider className="dt-my-2 dt-opacity-20" />
         {isBackendSelectable ? (
           <ValueRow
             className="dt-mb-2"
@@ -374,7 +384,7 @@ export default function CreateThread({
             >
               0.058 SOL
             </ValueRow>
-            <P className={clsx(textStyles.body, 'dt-text-center dt-my-4')}>
+            <P className={clsx(textStyles.small, 'dt-my-4 dt-px-2')}>
               All messages are stored on chain, so to start this message thread,
               you&apos;ll need to deposit a small amount of rent. This rent is
               recoverable.

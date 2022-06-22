@@ -1,20 +1,13 @@
 import { useMemo } from 'react';
-import { PublicKey } from '@solana/web3.js';
+import type { ThreadId } from '@dialectlabs/sdk';
 import { useThread as useThreadInternal } from '@dialectlabs/react-sdk';
 
-const useThread = (threadId: string) => {
-  const threadAddress = useMemo(() => {
-    try {
-      return threadId ? new PublicKey(threadId) : null;
-    } catch (e) {
-      return null;
-    }
-  }, [threadId]);
-
-  const findParams = useMemo(
-    () => ({ address: threadAddress }),
-    [threadAddress]
+const useThread = (threadId: ThreadId) => {
+  const id = useMemo(
+    () => threadId,
+    [threadId.address.toBase58(), threadId?.backend]
   );
+  const findParams = useMemo(() => ({ id }), [id]);
 
   // TODO: handle threadAddress null
   const threadContext = useThreadInternal({ findParams });

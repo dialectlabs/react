@@ -1,4 +1,5 @@
 import { useDialectSdk } from '@dialectlabs/react-sdk';
+import type { ThreadId } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import useThread from '../../../../hooks/useThread';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -12,7 +13,7 @@ import Settings from './Settings';
 import Thread from './Thread';
 
 type ThreadContentProps = {
-  threadId: string;
+  threadId: ThreadId;
 };
 
 const ThreadContent = ({ threadId }: ThreadContentProps) => {

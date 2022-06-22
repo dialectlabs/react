@@ -4,8 +4,7 @@ import {
   useThread,
   useThreadMessages,
 } from '@dialectlabs/react-sdk';
-import type { Message } from '@dialectlabs/sdk';
-import type { PublicKey } from '@solana/web3.js';
+import type { Message, ThreadId } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import Avatar from '../../../../Avatar';
@@ -14,7 +13,7 @@ import { DisplayAddress } from '../../../../DisplayAddress';
 import MessageStatus from '../../../MessageStatus';
 
 type PropsType = {
-  dialectAddress: PublicKey;
+  dialectId: ThreadId;
   onClick: () => void;
   disabled?: boolean;
   selected?: boolean;
@@ -54,7 +53,7 @@ function FirstMessage({
 }
 
 export default function MessagePreview({
-  dialectAddress,
+  dialectId,
   onClick,
   disabled = false,
   selected = false,
@@ -65,13 +64,9 @@ export default function MessagePreview({
     },
   } = useDialectSdk();
   // TODO: improve using of useMemo
-  const address = useMemo(() => dialectAddress, [dialectAddress?.toBase58()]);
-  const findParams = useMemo(
-    () => ({ address: dialectAddress }),
-    [dialectAddress?.toBase58()]
-  );
+  const findParams = useMemo(() => ({ id: dialectId }), [dialectId]);
   const { thread } = useThread({ findParams });
-  const { messages } = useThreadMessages({ address });
+  const { messages } = useThreadMessages({ id: dialectId });
   const { colors } = useTheme();
   const [firstMessage] = messages ?? [];
   const connection = dialectProgram?.provider.connection;

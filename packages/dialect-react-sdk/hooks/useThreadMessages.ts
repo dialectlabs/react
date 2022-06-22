@@ -3,6 +3,7 @@ import {
   Message as SdkMessage,
   SendMessageCommand as DialectSdkSendMessageCommand,
   Thread,
+  ThreadId,
 } from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
 import { useCallback, useMemo, useState } from 'react';
@@ -24,7 +25,7 @@ interface CancelMessageCommand {
 }
 
 interface UseThreadMessagesParams {
-  address: PublicKey | string;
+  id: ThreadId;
   refreshInterval?: number;
 }
 
@@ -43,12 +44,12 @@ interface UseThreadMessagesValue {
 }
 
 const useThreadMessages = ({
-  address,
+  id,
   refreshInterval,
 }: UseThreadMessagesParams): UseThreadMessagesValue => {
   const { thread } = useThread({
     findParams: {
-      address,
+      id,
     },
   });
   const threadInternal = thread as Thread | null;
@@ -66,7 +67,7 @@ const useThreadMessages = ({
     error: errorFetchingMessages = null,
     mutate,
   } = useSWR<SdkMessage[], DialectSdkError>(
-    threadInternal ? CACHE_KEY(threadInternal.address) : null,
+    threadInternal ? CACHE_KEY(threadInternal.id.address) : null,
     () => threadInternal!.messages(),
     { refreshInterval, refreshWhenOffline: true }
   );
@@ -78,12 +79,12 @@ const useThreadMessages = ({
 
     let merged = false;
     const localThreadMessages =
-      localMessages[thread.address.toString()] || EMPTY_ARR;
+      localMessages[thread.id.address.toString()] || EMPTY_ARR;
     const [firstRemote] = remoteMessages;
     const [firstLocal] = localThreadMessages;
     // we check if we can replace last local message with the remote one
     if (firstLocal?.text === firstRemote?.text && firstLocal?.isSending) {
-      deleteLocalMessage(thread.address.toString(), firstLocal.id);
+      deleteLocalMessage(thread.id.address.toString(), firstLocal.id);
       merged = true;
     }
 

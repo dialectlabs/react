@@ -65,7 +65,7 @@ const Main = () => {
               navigate(RouteName.Main, {
                 sub: {
                   name: MainRouteName.Thread,
-                  params: { threadId: thread.address.toBase58() },
+                  params: { threadId: thread.id },
                   sub: { name: ThreadRouteName.Messages },
                 },
               });

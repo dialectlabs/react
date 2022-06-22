@@ -67,7 +67,7 @@ export default function Home(): JSX.Element {
   const dialectConfig = useMemo(
     (): Config => ({
       wallet: dialectWalletAdapter,
-      backends: [Backend.Solana, Backend.DialectCloud],
+      backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'local-development',
     }),
     [dialectWalletAdapter]

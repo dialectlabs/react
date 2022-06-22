@@ -1,4 +1,5 @@
 import type { ParsedErrorData } from '@dialectlabs/react';
+import type { ThreadId } from '@dialectlabs/sdk';
 import {
   useDialectSdk,
   useThread,
@@ -13,15 +14,15 @@ import MessageBubble from '../../MessageBubble';
 import MessageInput from './MessageInput';
 
 type ThreadProps = {
-  threadId: string;
+  threadId: ThreadId;
 };
 
 export default function Thread({ threadId }: ThreadProps) {
   const { thread, isWritable, isFetchingThread } = useThread({
-    findParams: { address: threadId },
+    findParams: { id: threadId },
   });
   const { messages, send, cancel } = useThreadMessages({
-    address: threadId,
+    id: threadId,
   });
 
   const {

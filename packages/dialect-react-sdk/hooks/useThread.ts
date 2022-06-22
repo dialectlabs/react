@@ -1,4 +1,4 @@
-import { DialectSdkError, Thread } from '@dialectlabs/sdk';
+import { DialectSdkError, Thread, FindThreadQuery } from '@dialectlabs/sdk';
 import { PublicKey } from '@solana/web3.js';
 import { useCallback, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
@@ -11,9 +11,9 @@ import { CACHE_KEY as THREADS_CACHE_KEY } from './useThreads';
 const CACHE_KEY = 'THREAD';
 
 // TODO
-type ThreadSearchParams =
-  | { address: PublicKey | string }
-  | { otherMembers: PublicKey[] };
+type ThreadSearchParams = FindThreadQuery;
+// | { address: PublicKey | string }
+// | { otherMembers: PublicKey[] };
 // | { twitterHandle: string }
 // | { sns: string };
 
