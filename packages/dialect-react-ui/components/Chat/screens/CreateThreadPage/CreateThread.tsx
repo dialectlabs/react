@@ -156,7 +156,7 @@ export default function CreateThread({
       return;
     }
 
-    if (currentChatWithAddress) {
+    if (currentChatWithAddress && currentChatWithAddress.backend === backend) {
       const currentThreadWithAddress = currentChatWithAddress.id;
 
       onNewThreadCreated?.(currentThreadWithAddress);

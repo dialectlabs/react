@@ -1,4 +1,6 @@
 import { useDialectSdk } from '@dialectlabs/react-sdk';
+import type { ThreadId } from '@dialectlabs/sdk';
+import { Backend } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import useThread from '../../../../hooks/useThread';
@@ -13,7 +15,7 @@ import { MainRouteName, RouteName } from '../../constants';
 const noop = () => {};
 
 interface SettingsProps {
-  threadId: string;
+  threadId: ThreadId;
 }
 
 const Settings = ({ threadId }: SettingsProps) => {
@@ -33,11 +35,12 @@ const Settings = ({ threadId }: SettingsProps) => {
 
   const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
     useTheme();
+  const isOnChain = thread?.backend === Backend.Solana;
 
   return (
     <>
       <div className="dt-pt-1">
-        {thread ? (
+        {isOnChain ? (
           <ValueRow
             label={
               <>
@@ -48,12 +51,12 @@ const Settings = ({ threadId }: SettingsProps) => {
                   <A
                     target="_blank"
                     href={getExplorerAddress(
-                      thread.address.toBase58(),
+                      thread.id.address.toBase58(),
                       solana?.network
                     )}
                     rel="noreferrer"
                   >
-                    {display(thread.address)}↗
+                    {display(thread.id.address)}↗
                   </A>
                 </P>
               </>
@@ -81,7 +84,7 @@ const Settings = ({ threadId }: SettingsProps) => {
             }}
             loading={isDeletingThread}
           >
-            Withdraw rent & delete history
+            {isOnChain ? 'Withdraw rent & delete history' : 'Delete thread'}
           </Button>
         )}
         {errorDeletingThread &&

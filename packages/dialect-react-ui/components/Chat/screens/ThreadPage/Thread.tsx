@@ -12,6 +12,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import MessageBubble from '../../MessageBubble';
 import MessageInput from './MessageInput';
+import serializeThreadId from '../../../../utils/serializeThreadId';
 
 type ThreadProps = {
   threadId: ThreadId;
@@ -78,7 +79,7 @@ export default function Thread({ threadId }: ThreadProps) {
         )}
       >
         {/* Key added to prevent messages appearing animation while switching threads */}
-        <TransitionGroup component={null} key={thread?.address?.toBase58()}>
+        <TransitionGroup component={null} key={serializeThreadId(thread.id)}>
           {messages.map((message, idx) => {
             const isYou = message.author.publicKey.equals(
               wallet?.publicKey || PublicKey.default

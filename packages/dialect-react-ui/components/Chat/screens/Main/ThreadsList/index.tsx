@@ -3,6 +3,7 @@ import type { Thread, ThreadId } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import serializeThreadId from '../../../../../utils/serializeThreadId';
 import { Centered } from '../../../../common';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../../common/providers/Router';
@@ -69,7 +70,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
         {/* FIXME: enter animation isn't working */}
         {threads.map((thread) => (
           <CSSTransition
-            key={thread.id.address.toBase58()}
+            key={serializeThreadId(thread.id)}
             timeout={400}
             classNames="dt-thread"
           >
