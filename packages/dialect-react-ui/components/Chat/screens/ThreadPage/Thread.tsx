@@ -34,8 +34,6 @@ export default function Thread({ threadId }: ThreadProps) {
 
   if (!thread) return null;
 
-  // TODO: replace with optimistic UI data from react-sdk
-  const isMessagesReady = true;
   const cancelSendingMessage = (id: string) => {
     cancel({ id });
   };
@@ -78,45 +76,44 @@ export default function Thread({ threadId }: ThreadProps) {
           scrollbar
         )}
       >
-        {isMessagesReady ? (
-          <TransitionGroup component={null}>
-            {messages.map((message, idx) => {
-              const isYou = message.author.publicKey.equals(
-                wallet?.publicKey || PublicKey.default
-              );
-              const isLast = idx === 0;
+        {/* Key added to prevent messages appearing animation while switching threads */}
+        <TransitionGroup component={null} key={thread?.address?.toBase58()}>
+          {messages.map((message, idx) => {
+            const isYou = message.author.publicKey.equals(
+              wallet?.publicKey || PublicKey.default
+            );
+            const isLast = idx === 0;
 
-              // TODO: fix transition after message is sent (e.g. key/props shouldn't change)
-              return (
-                <CSSTransition
-                  key={message.id}
-                  timeout={{
-                    enter: 400,
-                    exit: 200,
-                  }}
-                  classNames={{
-                    // TODO: move transition settings to theme
-                    enter: 'dt-message-enter',
-                    enterActive: 'dt-message-enter-active',
-                    exit: 'dt-message-exit',
-                    exitActive: 'dt-message-exit-active',
-                  }}
-                >
-                  {/* additional div wrapper is needed to avoid paddings /margins interfere with animation */}
-                  <div data-key={`message-${message.id}`}>
-                    <MessageBubble
-                      {...message}
-                      isYou={isYou}
-                      showStatus={isYou && isLast}
-                      onSendMessage={handleSendMessage}
-                      onCancelMessage={cancelSendingMessage}
-                    />
-                  </div>
-                </CSSTransition>
-              );
-            })}
-          </TransitionGroup>
-        ) : null}
+            // TODO: fix transition after message is sent (e.g. key/props shouldn't change)
+            return (
+              <CSSTransition
+                key={message.id}
+                timeout={{
+                  enter: 400,
+                  exit: 200,
+                }}
+                classNames={{
+                  // TODO: move transition settings to theme
+                  enter: 'dt-message-enter',
+                  enterActive: 'dt-message-enter-active',
+                  exit: 'dt-message-exit',
+                  exitActive: 'dt-message-exit-active',
+                }}
+              >
+                {/* additional div wrapper is needed to avoid paddings /margins interfere with animation */}
+                <div data-key={`message-${message.id}`}>
+                  <MessageBubble
+                    {...message}
+                    isYou={isYou}
+                    showStatus={isYou && isLast}
+                    onSendMessage={handleSendMessage}
+                    onCancelMessage={cancelSendingMessage}
+                  />
+                </div>
+              </CSSTransition>
+            );
+          })}
+        </TransitionGroup>
       </div>
 
       {isWritable && (
