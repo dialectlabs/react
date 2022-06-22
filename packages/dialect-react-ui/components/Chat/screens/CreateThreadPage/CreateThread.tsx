@@ -1,6 +1,11 @@
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
-import { useDialectSdk, useThread, useThreads } from '@dialectlabs/react-sdk';
-import { ThreadMemberScope } from '@dialectlabs/sdk';
+import {
+  useDialectContext,
+  useDialectSdk,
+  useThread,
+  useThreads,
+} from '@dialectlabs/react-sdk';
+import { ThreadMemberScope, Backend } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import type { Connection, PublicKey } from '@solana/web3.js';
@@ -33,7 +38,7 @@ import {
   parseTwitterHandle,
   tryFetchAddressFromTwitterHandle,
 } from '../../../../utils/cardinalUtils';
-import { parseSNSDomain, tryFetchSNSDomain } from '../../../../utils/snsUtils';
+import { parseSNSDomain, tryFetchSNSDomain } from '../../../../utils/SNSUtils';
 import AddressResult from './AddressResult';
 import ActionCaption from './ActionCaption';
 
@@ -103,6 +108,22 @@ export default function CreateThread({
   const [encrypted, setEncrypted] = useState(false);
   const [isValidAddress, setIsValidAddress] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  // TODO: default to preferred backend
+  const {
+    connected: {
+      solana: { shouldConnect: isSolanaShouldConnect },
+      dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
+    },
+  } = useDialectContext();
+
+  const isBackendSelectable =
+    isSolanaShouldConnect && isDialectCloudShouldConnect;
+  const [isOffChain, setIsOffChain] = useState(isDialectCloudShouldConnect);
+
+  const backend =
+    !isOffChain && isSolanaShouldConnect
+      ? Backend.Solana
+      : Backend.DialectCloud;
 
   const findParams = useMemo(
     () => ({ otherMembers: [actualAddress] }),
@@ -139,6 +160,8 @@ export default function CreateThread({
         { publicKey: actualAddress, scopes: [ThreadMemberScope.WRITE] },
       ],
       encrypted,
+      // TODO: could select only if multiple provided
+      backend,
     })
       .then(async (thread) => {
         onNewThreadCreated?.(thread.address.toBase58());
@@ -277,11 +300,14 @@ export default function CreateThread({
           className={clsx(
             textStyles.h1,
             colors.primary,
-            'dt-text-center dt-mb-4 dt-mt-4'
+            'dt-text-center dt-mb-4 dt-mt-8'
           )}
         >
           Create thread
         </H1>
+        <P className={clsx(textStyles.small, 'dt-mb-2')}>
+          Enter recipient address, SNS domain or linked Twitter handle
+        </P>
         <Input
           className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
           placeholder="D1AL...DY5h, @saydialect or dialect.sol"
@@ -310,28 +336,51 @@ export default function CreateThread({
             />
           )}
         </div>
-        <ValueRow
-          label={
-            <>
-              Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}){' '}
-              <NetworkBadge network={solana?.network} />
-            </>
-          }
-          className={clsx('dt-w-full dt-mb-2')}
-        >
-          <span className="dt-text-right">{balance || 0} SOL</span>
-        </ValueRow>
-        <ValueRow
-          label="Rent Deposit (recoverable)"
-          className={clsx('dt-w-full')}
-        >
-          0.058 SOL
-        </ValueRow>
-        <P className={clsx(textStyles.body, 'dt-text-center dt-my-4')}>
-          All messages are stored on chain, so to start this message thread,
-          you&apos;ll need to deposit a small amount of rent. This rent is
-          recoverable.
-        </P>
+        {isBackendSelectable ? (
+          <ValueRow
+            className="dt-mb-2"
+            label={
+              isOffChain ? (
+                <span className="dt-flex dt-items-center">💬 Off-chain</span>
+              ) : (
+                <span className="dt-flex dt-items-center">⛓ On-chain</span>
+              )
+            }
+          >
+            <span className="dt-flex dt-items-center">
+              <Toggle
+                checked={isOffChain}
+                onClick={() => setIsOffChain((enc) => !enc)}
+              />
+            </span>
+          </ValueRow>
+        ) : null}
+        {!isOffChain ? (
+          <>
+            <ValueRow
+              label={
+                <>
+                  Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}
+                  ) <NetworkBadge network={solana?.network} />
+                </>
+              }
+              className={clsx('dt-w-full dt-mb-2')}
+            >
+              <span className="dt-text-right">{balance || 0} SOL</span>
+            </ValueRow>
+            <ValueRow
+              label="Rent Deposit (recoverable)"
+              className={clsx('dt-w-full')}
+            >
+              0.058 SOL
+            </ValueRow>
+            <P className={clsx(textStyles.body, 'dt-text-center dt-my-4')}>
+              All messages are stored on chain, so to start this message thread,
+              you&apos;ll need to deposit a small amount of rent. This rent is
+              recoverable.
+            </P>
+          </>
+        ) : null}
         <div className="dt-flex dt-flex-row dt-gap-x-2 dt-w-full">
           <ValueRow
             label={
