@@ -17,7 +17,7 @@ const isEqual = (threadIdA?: ThreadId, threadIdB?: ThreadId) => {
   if (!threadIdA || !threadIdB) {
     return false;
   }
-  if (threadIdA.address.toBase58() !== threadIdB.address.toBase58()) {
+  if (!threadIdA.address.equals(threadIdB.address)) {
     return false;
   }
   if (threadIdA?.backend !== threadIdB?.backend) {

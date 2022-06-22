@@ -1,5 +1,4 @@
-import { DialectSdkError, Thread, FindThreadQuery } from '@dialectlabs/sdk';
-import { PublicKey } from '@solana/web3.js';
+import { DialectSdkError, FindThreadQuery, Thread } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/errors';
@@ -10,12 +9,8 @@ import { CACHE_KEY as THREADS_CACHE_KEY } from './useThreads';
 
 const CACHE_KEY = 'THREAD';
 
-// TODO
+// TODO support multiple ways to resolve thread, eg. twitter, sns
 type ThreadSearchParams = FindThreadQuery;
-// | { address: PublicKey | string }
-// | { otherMembers: PublicKey[] };
-// | { twitterHandle: string }
-// | { sns: string };
 
 type UseThreadParams = {
   findParams: ThreadSearchParams;
@@ -54,14 +49,7 @@ const useThread = ({
     error: errorFetchingThread,
   } = useSWR(
     [CACHE_KEY, findParams],
-    (_, findParams) => {
-      if ('address' in findParams && typeof findParams.address === 'string') {
-        return threadsApi.find({ address: new PublicKey(findParams.address) });
-      }
-      // TODO: a bit better typing
-      //@ts-ignore
-      return threadsApi.find(findParams);
-    },
+    (_, findParams) => threadsApi.find(findParams),
     {
       refreshInterval,
       refreshWhenOffline: true,

@@ -105,7 +105,7 @@ const useThreadMessages = ({
       if (!threadInternal) return;
       setIsSendingMessage(true);
       setErrorSendingMessage(null);
-      const threadAddr = threadInternal.address.toString();
+      const threadAddr = threadInternal.id.address.toString();
       const optimisticMessage: LocalMessage = {
         id: cmd.id || messages.length.toString(),
         text: cmd.text,
@@ -137,7 +137,7 @@ const useThreadMessages = ({
   const cancelMessage = useCallback(
     async ({ id }: CancelMessageCommand) => {
       if (!thread) return;
-      deleteLocalMessage(thread.address.toString(), id);
+      deleteLocalMessage(thread.id.address.toString(), id);
     },
     [thread, deleteLocalMessage]
   );

@@ -1,5 +1,5 @@
 import {
-  Config,
+  ConfigProps,
   Dialect,
   DialectSdk as DialectSdkType,
 } from '@dialectlabs/sdk';
@@ -12,7 +12,9 @@ interface DialectSdkState {
   sdk: DialectSdkType | null;
 }
 
-function useDialectSdk(config: Omit<Config, 'wallet'> = {}): DialectSdkState {
+function useDialectSdk(
+  config: Omit<ConfigProps, 'wallet'> = {}
+): DialectSdkState {
   const {
     environment,
     solana,
