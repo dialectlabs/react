@@ -115,7 +115,7 @@ export function Button(props: {
   return (
     <ButtonBase
       className={cs(
-        'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
+        'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
         props.disabled ? disabledButton : defaultClassName,
         props.loading && loadingClassName,
@@ -144,7 +144,7 @@ export function BigButton(props: {
   return (
     <ButtonBase
       className={cs(
-        'dt-w-full dt-px-4 dt-py-3 dt-rounded-lg dt-transition-all',
+        'dt-w-full dt-px-4 dt-py-3 dt-rounded-lg dt-transition',
         !props.loading ? bigButton : bigButtonLoading,
         props.className
       )}

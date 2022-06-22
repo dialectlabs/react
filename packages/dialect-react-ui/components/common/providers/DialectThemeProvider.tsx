@@ -232,7 +232,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-rounded-full dt-items-center dt-justify-center dt-text-neutral-900 bg-neutral-100',
     bellButton: 'dt-w-12 dt-h-12 dt-border dt-border-gray-200 dt-shadow-md',
     iconButton:
-      'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60',
+      'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition hover:dt-opacity-60',
     sendButton: 'dt-h-5 dt-w-5 dt-text-white dt-rounded-full dt-bg-black',
     linkButton:
       'dt-inline-flex dt-items-center dt-transition-opacity dt-cursor-pointer hover:dt-opacity-50',
@@ -335,7 +335,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-rounded-full dt-items-center dt-justify-center dt-bg-neutral-900',
     bellButton: 'dt-w-12 dt-h-12 dt-shadow-md',
     iconButton:
-      'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition-all hover:dt-opacity-60',
+      'dt-w-9 dt-h-9 dt--m-2 dt-flex dt-items-center dt-justify-center dt-transition hover:dt-opacity-60',
     sendButton: 'dt-h-5 dt-w-5 dt-text-black dt-rounded-full dt-bg-white',
     linkButton:
       'dt-inline-flex dt-items-center dt-transition-opacity dt-cursor-pointer hover:dt-opacity-50',
