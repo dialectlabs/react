@@ -1,15 +1,9 @@
-import {
-  getHashedName,
-  getNameAccountKey,
-  NameRegistryState,
-} from '@bonfida/spl-name-service';
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
 import { useDialectSdk, useThread, useThreads } from '@dialectlabs/react-sdk';
-import type { DialectSdkError } from '@dialectlabs/sdk';
 import { ThreadMemberScope } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
-import { Connection, PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
+import type { Connection, PublicKey } from '@solana/web3.js';
 import {
   KeyboardEvent,
   useCallback,
@@ -31,22 +25,23 @@ import { A, H1, Input, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useRoute } from '../../../common/providers/Router';
-import { fetchAddressFromTwitterHandle } from '../../../DisplayAddress';
 import { Header } from '../../../Header';
 import { Lock, NoLock } from '../../../Icon';
 import { useChatInternal } from '../../provider';
+import tryPublicKey from '../../../../utils/tryPublicKey';
+import {
+  parseTwitterHandle,
+  tryFetchAddressFromTwitterHandle,
+} from '../../../../utils/cardinalUtils';
+import { parseSNSDomain, tryFetchSNSDomain } from '../../../../utils/snsUtils';
+import AddressResult from './AddressResult';
+import ActionCaption from './ActionCaption';
 
 interface CreateThreadProps {
   onNewThreadCreated?: (addr: string) => void;
   onCloseRequest?: () => void;
   onModalClose?: () => void;
 }
-
-const SOL_TLD_AUTHORITY = new PublicKey(
-  '58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx'
-);
-
-const SNS_DOMAIN_EXT = '.sol';
 
 function CardinalCTA() {
   const { textStyles } = useTheme();
@@ -70,226 +65,6 @@ function CardinalCTA() {
     </P>
   );
 }
-
-function ActionCaption({
-  creationError,
-  encrypted,
-}: {
-  encrypted: boolean;
-  creationError: DialectSdkError | null;
-}) {
-  const { textStyles, xPaddedText } = useTheme();
-  const {
-    info: { apiAvailability },
-  } = useDialectSdk();
-
-  if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
-    return (
-      <P
-        className={clsx(
-          textStyles.small,
-          xPaddedText,
-          'dt-text-red-500 dt-mt-2'
-        )}
-      >
-        {creationError.message}
-      </P>
-    );
-  }
-
-  if (!apiAvailability.canEncrypt) {
-    return (
-      <P
-        className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
-      >
-        Use{' '}
-        <A
-          href="https://www.sollet.io/"
-          target="_blank"
-          className="dt-underline"
-        >
-          Sollet.io
-        </A>{' '}
-        wallet to send encrypted messages.
-      </P>
-    );
-  }
-
-  if (encrypted) {
-    return (
-      <P
-        className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
-      >
-        ⚠️ Sollet.io encryption standards in the browser are experimental. Do
-        not connect a wallet with significant funds in it.
-      </P>
-    );
-  }
-
-  return null;
-}
-
-const AddressResult = ({
-  valid,
-  address,
-  isTwitterHandle,
-  isSNS,
-  isYou,
-  twitterHandle,
-  snsDomain,
-}: {
-  valid: boolean;
-  address?: string;
-  isYou: boolean;
-  isTwitterHandle: boolean;
-  isSNS: boolean;
-  twitterHandle: string | null;
-  snsDomain: string | null;
-}) => {
-  const { textStyles } = useTheme();
-
-  if (isYou) {
-    return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Sorry, you couldn't message yourself currently
-      </P>
-    );
-  }
-
-  if (isTwitterHandle && !valid) {
-    return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        No address is associated with this twitter handle
-      </P>
-    );
-  }
-
-  if (isSNS && !valid) {
-    return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Couldn't find this SNS domain
-      </P>
-    );
-  }
-
-  if (!isTwitterHandle && !isSNS && !valid) {
-    return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Invalid address, Twitter handle or SNS domain
-      </P>
-    );
-  }
-
-  // Valid states
-
-  // TODO: isChecking
-  if (valid && (isSNS || isTwitterHandle)) {
-    return (
-      <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
-      >
-        {address}
-      </P>
-    );
-  }
-
-  if (valid && twitterHandle && snsDomain) {
-    return (
-      <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
-      >
-        SNS domain: {snsDomain}.sol / Twitter handle: {twitterHandle}
-      </P>
-    );
-  }
-
-  if (valid && snsDomain) {
-    return (
-      <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
-      >
-        SNS domain: {snsDomain}.sol
-      </P>
-    );
-  }
-
-  if (valid && twitterHandle) {
-    return (
-      <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
-      >
-        Twitter handle: {twitterHandle}
-      </P>
-    );
-  }
-
-  return (
-    <P className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}>
-      Valid address
-    </P>
-  );
-};
-
-const parseSNSDomain = (domainString: string): string | undefined => {
-  domainString = domainString.trim();
-  const isSNSDomain = domainString.match(SNS_DOMAIN_EXT);
-  const domainName = domainString.slice(0, domainString.length - 4);
-  if (!isSNSDomain || !domainName) return;
-  return domainName;
-};
-
-const tryFetchSNSDomain = async (
-  connection: Connection,
-  domainName: string
-): Promise<PublicKey | null> => {
-  try {
-    const hashedName = await getHashedName(domainName);
-
-    const domainKey = await getNameAccountKey(
-      hashedName,
-      undefined,
-      SOL_TLD_AUTHORITY
-    );
-
-    const { registry } = await NameRegistryState.retrieve(
-      connection,
-      domainKey
-    );
-
-    return registry?.owner;
-  } catch (e) {
-    return null;
-  }
-};
-
-const parseTwitterHandle = (handleString: string): string | undefined => {
-  handleString = handleString.trim();
-  const isTwitter = handleString.startsWith('@');
-  const handle = handleString.substring(1, handleString.length);
-  if (!isTwitter || !handle) return;
-  return handle;
-};
-
-const tryFetchAddressFromTwitterHandle = async (
-  connection: Connection,
-  handle: string
-): Promise<PublicKey | null> => {
-  try {
-    const { result } = await fetchAddressFromTwitterHandle(connection, handle);
-
-    return result?.parsed.data;
-  } catch (e) {
-    return null;
-  }
-};
-
-const tryPublicKey = (addressString: string): PublicKey | null => {
-  try {
-    return new PublicKey(addressString);
-  } catch (e) {
-    return null;
-  }
-};
 
 export default function CreateThread({
   onNewThreadCreated,
