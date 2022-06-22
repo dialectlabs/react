@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDialectContext, useThreads } from '@dialectlabs/react-sdk';
+import { useDialectConnectionInfo } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import Error from './screens/Error';
@@ -48,7 +48,7 @@ function InnerChat({
         shouldConnect: isDialectCloudShouldConnect,
       },
     },
-  } = useDialectContext();
+  } = useDialectConnectionInfo();
 
   const { navigate } = useRoute();
 

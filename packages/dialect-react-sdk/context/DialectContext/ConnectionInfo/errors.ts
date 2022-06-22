@@ -4,7 +4,7 @@ import {
   DisconnectedFromChainError,
 } from '@dialectlabs/sdk';
 import { useEffect } from 'react';
-import { useDialectContext } from '../../hooks';
+import { DialectConnectionInfo } from '.';
 
 const dialectCloudNetworkErrorMatcher = (err: DialectSdkError | null) =>
   err instanceof DialectCloudUnreachableError;
@@ -16,7 +16,8 @@ const solanaNetworkErrorMatcher = (err: DialectSdkError | null) =>
 export const useDialectErrorsHandler = (
   ...errors: (DialectSdkError | null)[]
 ) => {
-  const { _updateConnectionInfo: updateConnectionInfo } = useDialectContext();
+  const { _updateConnectionInfo: updateConnectionInfo } =
+    DialectConnectionInfo.useContainer();
 
   useEffect(() => {
     if (errors.some(solanaNetworkErrorMatcher)) {

@@ -11,6 +11,7 @@ import {
   updateAddress,
   verifyCode,
 } from '../web2.api';
+import useDialectConnectionInfo from './useDialectConnectionInfo';
 import useDialectContext from './useDialectContext';
 import useDialectSdk from './useDialectSdk';
 
@@ -26,10 +27,11 @@ interface DialectCloudApi {
 }
 
 const useDialectCloudApi = (): DialectCloudApi => {
+  const { dapp } = useDialectContext();
+
   const {
-    dapp,
     connected: { wallet: isWalletConnected },
-  } = useDialectContext();
+  } = useDialectConnectionInfo();
 
   const {
     info: { wallet },

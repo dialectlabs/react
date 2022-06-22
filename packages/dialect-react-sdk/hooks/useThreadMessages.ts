@@ -8,7 +8,7 @@ import {
 import type { PublicKey } from '@solana/web3.js';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
-import { useDialectErrorsHandler } from '../context/DialectContext/errors';
+import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
 import type { LocalMessage, Message } from '../types';
 import { EMPTY_ARR } from '../utils';

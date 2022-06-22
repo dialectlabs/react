@@ -1,6 +1,6 @@
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
 import {
-  useDialectContext,
+  useDialectConnectionInfo,
   useDialectSdk,
   useThread,
   useThreads,
@@ -124,7 +124,7 @@ export default function CreateThread({
       solana: { shouldConnect: isSolanaShouldConnect },
       dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
     },
-  } = useDialectContext();
+  } = useDialectConnectionInfo();
 
   const isBackendSelectable =
     isSolanaShouldConnect && isDialectCloudShouldConnect;

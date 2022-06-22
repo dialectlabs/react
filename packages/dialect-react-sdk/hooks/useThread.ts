@@ -1,7 +1,7 @@
 import { DialectSdkError, FindThreadQuery, Thread } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { useDialectErrorsHandler } from '../context/DialectContext/errors';
+import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { EMPTY_ARR } from '../utils';
 import { isAdminable, isWritable } from '../utils/scopes';
 import useDialectSdk from './useDialectSdk';

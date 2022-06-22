@@ -1,7 +1,7 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { useDialectErrorsHandler } from '../context/DialectContext/errors';
+import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import useDialectSdk from './useDialectSdk';
 
