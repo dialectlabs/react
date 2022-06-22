@@ -1,5 +1,5 @@
 import {
-  DialectContext,
+  DialectContextProvider,
   useThread,
   useThreadMessages,
   useThreads,
@@ -91,18 +91,13 @@ const Home: NextPage = () => {
         </h1>
 
         <div className={styles.walletButtons}>
-          <DialectContext
+          <DialectContextProvider
             wallet={dialectWalletAdapter}
             environment="local-development"
             backends={[Backend.Solana]}
-            solana={{
-              dialectProgramAddress: new PublicKey(
-                '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
-              ),
-            }}
           >
             <Example />
-          </DialectContext>
+          </DialectContextProvider>
           {/* <ChatButton wallet={wallet} variables={themeVariables} /> */}
         </div>
 

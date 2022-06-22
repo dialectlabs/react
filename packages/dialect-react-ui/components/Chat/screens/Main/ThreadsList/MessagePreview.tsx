@@ -77,8 +77,6 @@ export default function MessagePreview({
   const connection = dialectProgram?.provider.connection;
   const recipient = thread?.otherMembers[0];
 
-  // console.log('message preview', thread, recipient);
-
   if (!thread || !recipient) return null;
 
   const timestamp = formatTimestamp(thread.updatedAt.getTime());

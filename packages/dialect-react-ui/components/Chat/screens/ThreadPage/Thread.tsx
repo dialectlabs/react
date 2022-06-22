@@ -1,10 +1,13 @@
 import type { ParsedErrorData } from '@dialectlabs/react';
-import { useDialectSdk, useThreadMessages } from '@dialectlabs/react-sdk';
+import {
+  useDialectSdk,
+  useThread,
+  useThreadMessages,
+} from '@dialectlabs/react-sdk';
 import { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import { FormEvent, KeyboardEvent, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import useThread from '../../../../hooks/useThread';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import MessageBubble from '../../MessageBubble';
 import MessageInput from './MessageInput';
@@ -14,9 +17,11 @@ type ThreadProps = {
 };
 
 export default function Thread({ threadId }: ThreadProps) {
-  const { thread, isWritable, isFetchingThread } = useThread(threadId);
+  const { thread, isWritable, isFetchingThread } = useThread({
+    findParams: { address: threadId },
+  });
   const { messages, send, cancel } = useThreadMessages({
-    address: thread?.address,
+    address: threadId,
   });
 
   const {

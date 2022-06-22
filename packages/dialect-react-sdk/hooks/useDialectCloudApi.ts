@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 import { EMPTY_OBJ } from '../utils';
 import {
@@ -12,6 +12,7 @@ import {
   verifyCode,
 } from '../web2.api';
 import useDialectContext from './useDialectContext';
+import useDialectSdk from './useDialectSdk';
 
 // TODO: this is subject to change
 interface DialectCloudApi {
@@ -27,11 +28,12 @@ interface DialectCloudApi {
 const useDialectCloudApi = (): DialectCloudApi => {
   const {
     dapp,
-    sdk: {
-      info: { wallet },
-    },
     connected: { wallet: isWalletConnected },
   } = useDialectContext();
+
+  const {
+    info: { wallet },
+  } = useDialectSdk();
 
   const {
     data: addresses,

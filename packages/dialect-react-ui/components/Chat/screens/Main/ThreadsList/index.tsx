@@ -25,8 +25,6 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
     [threads]
   );
 
-  console.log(threads);
-
   const { colors, highlighted, textStyles, scrollbar } = useTheme();
 
   return (

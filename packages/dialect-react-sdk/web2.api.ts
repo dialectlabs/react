@@ -2,7 +2,6 @@
 // new one will be provided in sdk
 
 import type { DialectWalletAdapter } from '@dialectlabs/sdk';
-import fetch from 'unfetch';
 
 // Change to localhost for localdev
 // TODO: make this customizable via env
@@ -82,7 +81,7 @@ const isTokenExpired = (token: string) => {
 export const fetchJSON = async (
   wallet: DialectWalletAdapter,
   url: string,
-  options: object = {},
+  options: any = {},
   ...args: any[]
 ) => {
   let headers = {};
@@ -109,6 +108,7 @@ export const fetchJSON = async (
       ...options,
       headers: { ...options?.headers, ...headers },
     },
+    //@ts-ignore
     ...args
   );
   if (response.ok) {
@@ -120,12 +120,12 @@ export const fetchJSON = async (
 };
 
 export const fetchAddressesForDapp = async (
-  wallet: WalletType,
+  wallet: DialectWalletAdapter,
   dapp: string
 ) => {
   const rawResponse = await fetchJSON(
     wallet,
-    `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey.toString()}/dapps/${dapp}/addresses`
+    `${DIALECT_BASE_URL}/v0/wallets/${wallet?.publicKey?.toString()}/dapps/${dapp}/addresses`
   );
   const content = await rawResponse.json();
   return content;
