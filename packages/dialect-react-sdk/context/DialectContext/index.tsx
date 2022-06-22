@@ -1,7 +1,9 @@
-import { Backend, Config, Dialect, DialectSdk } from '@dialectlabs/sdk';
+import { Backend, Config } from '@dialectlabs/sdk';
 import React, { useEffect, useMemo, useState } from 'react';
 import { EMPTY_ARR } from '../../utils';
 import { LocalMessages } from './LocalMessages';
+import { DialectSdk } from './Sdk';
+import { DialectWallet } from './Wallet';
 
 interface DialectBackendConnectionInfo {
   connected: boolean;
@@ -15,7 +17,6 @@ interface DialectConnectionInfo {
 }
 
 export interface DialectContextType {
-  sdk?: DialectSdk | null;
   connected: DialectConnectionInfo;
   dapp?: string;
 
@@ -28,39 +29,18 @@ export const DialectContext = React.createContext<DialectContextType>(
   {} as DialectContextType
 );
 
-type DialectContextProviderProps = Config & {
+type DialectContextProviderProps = {
+  config: Config;
   dapp?: string; // temporary until new dialect cloud api appear
 };
 
 export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
-  environment,
-  wallet,
-  solana,
-  dialectCloud,
-  encryptionKeysStore,
-  backends = EMPTY_ARR,
+  config,
   dapp,
   children,
 }) => {
-  const sdk = useMemo(() => {
-    if (!wallet.publicKey) return null;
-    return Dialect.sdk({
-      environment,
-      wallet,
-      solana,
-      dialectCloud,
-      encryptionKeysStore,
-      backends,
-    });
-  }, [
-    environment,
-    wallet,
-    solana,
-    dialectCloud,
-    encryptionKeysStore,
-    backends,
-  ]);
-
+  const { wallet, backends = EMPTY_ARR } = config;
+  // TODO move to a sep container
   const [connectionInfo, setConnectionInfo] = useState<DialectConnectionInfo>(
     () => ({
       wallet: {
@@ -80,26 +60,33 @@ export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
 
   useEffect(
     function updateWalletConnectionInfo() {
-      setConnectionInfo((prev) => ({
-        ...prev,
-        wallet: {
-          ...prev.wallet,
-          connected: Boolean(wallet.publicKey),
-        },
-      }));
+      setConnectionInfo((prev) => {
+        if (prev.wallet.connected && Boolean(wallet.publicKey)) {
+          return prev;
+        }
+        if (!prev.wallet.connected && !Boolean(wallet.publicKey)) {
+          return prev;
+        }
+        return {
+          ...prev,
+          wallet: {
+            ...prev.wallet,
+            connected: Boolean(wallet.publicKey),
+          },
+        };
+      });
     },
     [wallet]
   );
 
   const ctx = useMemo(
     (): DialectContextType => ({
-      sdk: sdk,
       connected: connectionInfo,
       dapp: dapp,
 
       _updateConnectionInfo: setConnectionInfo,
     }),
-    [sdk, connectionInfo, dapp]
+    [connectionInfo, dapp]
   );
 
   const [ctxValue, setCtxValue] = useState<DialectContextType>(ctx);
@@ -113,7 +100,11 @@ export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
 
   return (
     <DialectContext.Provider value={ctxValue}>
-      <LocalMessages.Provider>{children}</LocalMessages.Provider>
+      <DialectWallet.Provider initialState={wallet}>
+        <DialectSdk.Provider initialState={config}>
+          <LocalMessages.Provider>{children}</LocalMessages.Provider>
+        </DialectSdk.Provider>
+      </DialectWallet.Provider>
     </DialectContext.Provider>
   );
 };

@@ -1,8 +1,8 @@
-import type { DialectSdk } from '@dialectlabs/sdk';
-import useDialectContext from './useDialectContext';
+import type { DialectSdk as DialectSdkType } from '@dialectlabs/sdk';
+import { DialectSdk } from '../context/DialectContext/Sdk';
 
-const useDialectSdk = (): DialectSdk => {
-  const { sdk } = useDialectContext();
+const useDialectSdk = (): DialectSdkType => {
+  const { sdk } = DialectSdk.useContainer();
   if (!sdk) {
     throw new Error('sdk not initialized');
   }

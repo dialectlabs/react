@@ -6,9 +6,8 @@ import {
   ThemeProvider,
   useDialectUiId,
 } from '@dialectlabs/react-ui';
-import { Backend, DialectWalletAdapter, SolanaConfig } from '@dialectlabs/sdk';
+import { Backend, Config, DialectWalletAdapter } from '@dialectlabs/sdk';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
 import { useEffect, useMemo, useState } from 'react';
 import { Wallet } from '../components/Wallet';
 
@@ -65,14 +64,17 @@ export default function Home(): JSX.Element {
     setDialectWalletAdapter(walletToDialectWallet(wallet));
   }, [wallet]);
 
-  const backends = useMemo(() => [Backend.Solana, Backend.DialectCloud], []);
+  const dialectConfig = useMemo(
+    (): Config => ({
+      wallet: dialectWalletAdapter,
+      backends: [Backend.Solana, Backend.DialectCloud],
+      environment: 'local-development',
+    }),
+    [dialectWalletAdapter]
+  );
 
   return (
-    <DialectContextProvider
-      wallet={dialectWalletAdapter}
-      environment="local-development"
-      backends={backends}
-    >
+    <DialectContextProvider config={dialectConfig}>
       <DialectUiManagementProvider>
         <ThemeProvider theme={'dark'}>
           <AuthedHome />

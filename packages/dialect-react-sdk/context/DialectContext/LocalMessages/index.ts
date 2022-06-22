@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import type { LocalMessage } from '../../../types';
-import { NOOP } from '../../../utils';
 import { createContainer } from '../../../utils/container';
 
 interface LocalMessagesState {
@@ -9,16 +8,10 @@ interface LocalMessagesState {
   deleteLocalMessage: (threadAddr: string, id: string) => void;
 }
 
-function useLocalMessages(
-  initialState: LocalMessagesState = {
-    localMessages: {},
-    putLocalMessage: NOOP,
-    deleteLocalMessage: NOOP,
-  }
-): LocalMessagesState {
+function useLocalMessages(): LocalMessagesState {
   const [localMessages, setLocalMessages] = useState<
     LocalMessagesState['localMessages']
-  >(initialState.localMessages);
+  >({});
 
   const putLocalMessage = useCallback(
     (threadAddr: string, msg: LocalMessage) => {
