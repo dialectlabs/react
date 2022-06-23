@@ -5,6 +5,7 @@ import { DialectConnectionInfo } from './ConnectionInfo';
 import { DialectDapp } from './Dapp';
 import { LocalMessages } from './LocalMessages';
 import { DialectSdk } from './Sdk';
+import { DialectUnreadMessages } from './UnreadMessages';
 import { DialectWallet } from './Wallet';
 
 export const DialectContext = React.createContext<null>(null);
@@ -28,7 +29,9 @@ export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
         <DialectSdk.Provider initialState={config}>
           <DialectDapp.Provider initialState={dapp}>
             <DialectConnectionInfo.Provider initialState={config.backends}>
-              <LocalMessages.Provider>{children}</LocalMessages.Provider>
+              <DialectUnreadMessages.Provider>
+                <LocalMessages.Provider>{children}</LocalMessages.Provider>
+              </DialectUnreadMessages.Provider>
             </DialectConnectionInfo.Provider>
           </DialectDapp.Provider>
         </DialectSdk.Provider>
