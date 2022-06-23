@@ -5,14 +5,12 @@ import {
   Thread,
   ThreadId,
 } from '@dialectlabs/sdk';
-import type { PublicKey } from '@solana/web3.js';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
 import type { LocalMessage, Message } from '../types';
 import { EMPTY_ARR } from '../utils';
-import serializeThreadId from '../utils/serializeThreadId';
 import useThread from './useThread';
 
 const CACHE_KEY = (id: string) => `MESSAGES_${id}`;
@@ -98,7 +96,7 @@ const useThreadMessages = ({
         id: (arr.length - idx - 1).toString(),
       }));
     return mergedMessages;
-  }, [remoteMessages, thread, localMessages]);
+  }, [remoteMessages, thread, localMessages, deleteLocalMessage]);
 
   const sendMessage = useCallback(
     async (cmd: SendMessageCommand) => {
@@ -131,7 +129,7 @@ const useThreadMessages = ({
         setIsSendingMessage(false);
       }
     },
-    [deleteLocalMessage, mutate, putLocalMessage, threadInternal, messages]
+    [mutate, putLocalMessage, threadInternal, messages]
   );
 
   const cancelMessage = useCallback(

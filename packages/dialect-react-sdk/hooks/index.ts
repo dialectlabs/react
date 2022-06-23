@@ -1,4 +1,3 @@
-export { default as useDialectContext } from './useDialectContext';
 export { default as useDialectSdk } from './useDialectSdk';
 export { default as useDialectDapp } from './useDialectDapp';
 export { default as useThreads } from './useThreads';

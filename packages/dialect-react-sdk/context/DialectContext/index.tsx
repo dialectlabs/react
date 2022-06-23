@@ -1,5 +1,5 @@
 import type { PublicKey } from '@solana/web3.js';
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import type { Config, DialectWalletAdapter } from '../../types';
 import { DialectConnectionInfo } from './ConnectionInfo';
 import { DialectDapp } from './Dapp';
@@ -7,13 +7,7 @@ import { LocalMessages } from './LocalMessages';
 import { DialectSdk } from './Sdk';
 import { DialectWallet } from './Wallet';
 
-export interface DialectContextType {
-  dapp?: object;
-}
-
-export const DialectContext = React.createContext<DialectContextType>(
-  {} as DialectContextType
-);
+export const DialectContext = React.createContext<null>(null);
 
 type DialectContextProviderProps = {
   config: Config;
@@ -28,24 +22,8 @@ export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   dapp,
   children,
 }) => {
-  const ctx = useMemo(
-    (): DialectContextType => ({
-      dapp: dapp,
-    }),
-    [dapp]
-  );
-
-  const [ctxValue, setCtxValue] = useState<DialectContextType>(ctx);
-
-  useEffect(
-    function initSdk() {
-      setCtxValue(ctx);
-    },
-    [ctx]
-  );
-
   return (
-    <DialectContext.Provider value={ctxValue}>
+    <DialectContext.Provider value={null}>
       <DialectWallet.Provider initialState={wallet}>
         <DialectSdk.Provider initialState={config}>
           <DialectDapp.Provider initialState={dapp}>
