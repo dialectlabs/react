@@ -5,7 +5,7 @@ import { useChatInternal } from '../provider';
 import { useDialectUiId } from '../../common/providers/DialectUiManagementProvider';
 
 interface Props {
-  type: 'NoConnection' | 'NoWallet';
+  type: 'NoConnection' | 'NoWallet' | 'CantDecrypt';
 }
 
 const Error = ({ type }: Props) => {
@@ -44,6 +44,12 @@ const Error = ({ type }: Props) => {
         <Centered>
           <icons.notConnected className="dt-mb-6 dt-opacity-60" />
           <span className="dt-opacity-60">Wallet not connected</span>
+        </Centered>
+      )}
+      {type === 'CantDecrypt' && (
+        <Centered>
+          <icons.notConnected className="dt-mb-6 dt-opacity-60" />
+          <span className="dt-opacity-60">Cannot decrypt messages</span>
         </Centered>
       )}
     </>

@@ -1,10 +1,10 @@
 import { useDialectCloudApi } from '@dialectlabs/react-sdk';
 import { useEffect, useState } from 'react';
-import cs from '../../utils/classNames';
-import { Button, ToggleSection } from '../common';
-import { P } from '../common/preflighted';
-import { useTheme } from '../common/providers/DialectThemeProvider';
-import ResendIcon from '../Icon/Resend';
+import cs from '../../../../utils/classNames';
+import { Button, ToggleSection } from '../../../common';
+import { P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import ResendIcon from '../../../Icon/Resend';
 
 export function EmailForm() {
   const {

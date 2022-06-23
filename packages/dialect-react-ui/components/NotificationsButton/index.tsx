@@ -57,12 +57,13 @@ function WrappedNotificationsButton(
 
   useOutsideAlerter(wrapperRef, bellRef, close);
 
-  const threadId = useMemo(() => {
-    new ThreadId({
+  const threadId = useMemo(
+    () => ({
       address: props.publicKey,
       backend: props.backend,
-    });
-  }, []);
+    }),
+    []
+  );
 
   // TODO rewrite with new provider
   // const { messages, checkUnreadMessages } = useDialect();

@@ -1,14 +1,24 @@
+import type { AddressType } from '@dialectlabs/react';
 import { useDialectCloudApi } from '@dialectlabs/react-sdk';
 import { useEffect, useState } from 'react';
-import cs from '../../utils/classNames';
-import { Button, ToggleSection } from '../common';
-import { P } from '../common/preflighted';
-import { useTheme } from '../common/providers/DialectThemeProvider';
-import ResendIcon from '../Icon/Resend';
+import cs from '../../../../utils/classNames';
+import { Button, ToggleSection } from '../../../common';
+import { P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import ResendIcon from '../../../Icon/Resend';
 
-export function SmsForm() {
+export interface TelegramFormProps {
+  botURL?: string;
+}
+
+function getTelegramObj(addresses: AddressType[] | null): AddressType | null {
+  if (!addresses) return null;
+  return addresses.find((address) => address.type === 'telegram') || null;
+}
+
+export function TelegramForm(props: TelegramFormProps) {
   const {
-    addresses: { sms: smsObj },
+    addresses: { telegram: telegramObj },
     fetchingAddressesError,
     saveAddress,
     updateAddress,
@@ -28,54 +38,58 @@ export function SmsForm() {
     highlighted,
   } = useTheme();
 
-  const [smsNumber, setSmsNumber] = useState(smsObj?.value);
-  const [isSmsNumberEditing, setSmsNumberEditing] = useState(!smsObj?.enabled);
+  const [telegramUsername, setTelegramUsername] = useState(telegramObj?.value);
+  const [isEnabled, setEnabled] = useState(Boolean(telegramObj?.enabled));
+  const [isTelegramUsernameEditing, setTelegramUsernameEditing] = useState(
+    !telegramObj?.enabled
+  );
   const [error, setError] = useState<Error | null>(null);
-  const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const isSmsNumberSaved = Boolean(smsObj);
-  const isChanging = smsObj && isSmsNumberEditing;
-  const isVerified = smsObj?.verified;
+  const [verificationCode, setVerificationCode] = useState('');
+
+  const isTelegramSaved = Boolean(telegramObj);
+  const isChanging = telegramObj && isTelegramUsernameEditing;
+  const isVerified = telegramObj?.verified;
 
   const currentError = error || fetchingAddressesError;
 
   useEffect(() => {
     // Update state if addresses updated
-    setSmsNumber(smsObj?.value || '');
-    setSmsNumberEditing(!smsObj?.enabled);
-  }, [smsObj]);
+    setTelegramUsername(telegramObj?.value || '');
+    setTelegramUsernameEditing(!telegramObj?.enabled);
+  }, [telegramObj]);
 
-  const updateSmsNumber = async () => {
-    // TODO: validate & save sms number
+  const updateTelegram = async () => {
     if (error) return;
 
     try {
       setLoading(true);
       await updateAddress({
-        type: 'sms',
-        value: smsNumber,
+        type: 'telegram',
+        value: telegramUsername,
         enabled: true,
-        id: smsObj?.id,
-        addressId: smsObj?.addressId,
+        id: telegramObj?.id,
+        addressId: telegramObj?.addressId,
       });
       setError(null);
     } catch (e) {
       setError(e as Error);
     } finally {
       setLoading(false);
-      setSmsNumberEditing(false);
+      setTelegramUsernameEditing(false);
     }
   };
 
-  const saveSmsNumber = async () => {
+  const saveTelegram = async () => {
     if (error) return;
 
     try {
       setLoading(true);
+      const value = telegramUsername?.replace('@', '');
       await saveAddress({
-        type: 'sms',
-        value: smsNumber,
+        type: 'telegram',
+        value: value,
         enabled: true,
       });
       setError(null);
@@ -86,11 +100,11 @@ export function SmsForm() {
     }
   };
 
-  const deleteSmsNumber = async () => {
+  const deleteTelegram = async () => {
     try {
       setLoading(true);
       await deleteAddress({
-        addressId: smsObj?.addressId,
+        addressId: telegramObj?.addressId,
       });
       setError(null);
     } catch (e) {
@@ -100,15 +114,15 @@ export function SmsForm() {
     }
   };
 
-  const resendSmsVerificationCode = async () => {
+  const resendCodeVerification = async () => {
     try {
       setLoading(true);
       await resendCode({
-        type: 'sms',
-        value: smsNumber,
+        type: 'telegram',
+        value: telegramUsername,
         enabled: true,
-        id: smsObj?.id,
-        addressId: smsObj?.addressId,
+        id: telegramObj?.id,
+        addressId: telegramObj?.addressId,
       });
       setError(null);
     } catch (e) {
@@ -123,11 +137,11 @@ export function SmsForm() {
       setLoading(true);
       await verifyCode(
         {
-          type: 'sms',
-          value: smsNumber,
+          type: 'telegram',
+          value: telegramUsername,
           enabled: true,
-          id: smsObj?.id,
-          addressId: smsObj?.addressId,
+          id: telegramObj?.id,
+          addressId: telegramObj?.addressId,
         },
         verificationCode
       );
@@ -143,7 +157,7 @@ export function SmsForm() {
   const renderVerifiedState = () => {
     return (
       <div className={cs(highlighted, textStyles.body, colors.highlight)}>
-        <span className="dt-opacity-40">🔗 Phone number submitted</span>
+        <span className="dt-opacity-40">🔗 Telegram submitted</span>
       </div>
     );
   };
@@ -168,7 +182,7 @@ export function SmsForm() {
         </Button>
         <Button
           className="dt-basis-1/4"
-          onClick={deleteSmsNumber}
+          onClick={deleteTelegram}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
           loading={loading}
@@ -180,27 +194,28 @@ export function SmsForm() {
   };
 
   return (
-    <div>
+    <div key="telegram">
       <ToggleSection
         className="dt-mb-6"
-        title="📶  SMS notifications"
+        title="📡  Telegram notifications"
         onChange={async (nextValue) => {
           setError(null);
-          if (smsObj && smsObj.enabled !== nextValue) {
-            // TODO: handle error
+          if (telegramObj && telegramObj.enabled !== nextValue) {
             await updateAddress({
-              id: smsObj.id,
-              type: smsObj.type,
+              id: telegramObj.id,
               enabled: nextValue,
+              type: 'telegram',
+              addressId: !telegramObj.id ? telegramObj?.addressId : undefined,
             });
           }
+          setEnabled(!isEnabled);
         }}
-        enabled={Boolean(smsObj?.enabled)}
+        enabled={Boolean(telegramObj?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
-              {isSmsNumberSaved && !isSmsNumberEditing ? (
+              {isTelegramSaved && !isTelegramUsernameEditing ? (
                 <>
                   {isVerified
                     ? renderVerifiedState()
@@ -213,27 +228,26 @@ export function SmsForm() {
                     error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
                   )}
-                  placeholder="+15554443333 (+1 required, US only)"
-                  type="sms"
-                  value={smsNumber}
-                  onChange={(e) => setSmsNumber(e.target.value)}
+                  placeholder="Enter telegram username"
+                  type="text"
+                  value={telegramUsername}
+                  onChange={(e) => setTelegramUsername(e.target.value)}
+                  disabled={isTelegramSaved && !isTelegramUsernameEditing}
                   onBlur={(e) =>
                     e.target.checkValidity()
                       ? setError(null)
                       : setError({
-                          name: 'incorrectSmsNumber',
-                          message: 'Please enter a valid SMS number',
+                          name: 'incorrectTelegramNumber',
+                          message: 'Please enter a valid telegram number',
                         })
                   }
                   onInvalid={(e) => {
                     e.preventDefault();
                     setError({
-                      name: 'incorrectSmsNumber',
-                      message: 'Please enter a valid SMS number',
+                      name: 'incorrectTelegramNumber',
+                      message: 'Please enter a valid telegram number',
                     });
                   }}
-                  // pattern="^\S+@\S+\.\S+$"
-                  disabled={isSmsNumberSaved && !isSmsNumberEditing}
                 />
               )}
               {currentError && (
@@ -249,63 +263,86 @@ export function SmsForm() {
                   defaultStyle={secondaryButton}
                   loadingStyle={secondaryButtonLoading}
                   className="dt-basis-1/2"
-                  onClick={() => setSmsNumberEditing(false)}
+                  onClick={() => setTelegramUsernameEditing(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   className="dt-basis-1/2"
-                  disabled={smsNumber === ''}
-                  onClick={updateSmsNumber}
+                  disabled={telegramUsername === ''}
+                  onClick={updateTelegram}
                   loading={loading}
                 >
-                  {loading ? 'Saving...' : 'Submit number'}
+                  {loading ? 'Saving...' : 'Submit telegram'}
                 </Button>
               </div>
             )}
 
-            {!isChanging && isSmsNumberEditing ? (
+            {!isChanging && isTelegramUsernameEditing ? (
               <Button
                 className="dt-basis-full"
-                disabled={smsNumber === ''}
-                onClick={saveSmsNumber}
+                disabled={telegramUsername === ''}
+                onClick={saveTelegram}
                 loading={loading}
               >
-                {loading ? 'Saving...' : 'Submit number'}
+                {loading ? 'Saving...' : 'Submit telegram'}
               </Button>
             ) : null}
 
-            {!isSmsNumberEditing && !isVerified ? (
-              <div className="dt-flex dt-flex-row dt-space-x-2">
+            {!isTelegramUsernameEditing && !isVerified ? (
+              <>
                 <div
                   className={cs(
                     textStyles.small,
-                    'display: inline-flex',
-                    'dt-mb-1'
+                    'dt-flex dt-flex-row dt-space-x-2'
                   )}
-                  onClick={resendSmsVerificationCode}
                 >
-                  <span className="dt-opacity-50">
-                    {' '}
-                    Check your phone for a verification code.
-                  </span>
-                  <div className="dt-inline-block dt-cursor-pointer">
-                    <ResendIcon
-                      className="dt-px-1 dt-inline-block"
-                      height={18}
-                      width={18}
-                    />
-                    Resend code
+                  <a
+                    className={cs(textStyles.small)}
+                    href={props.botURL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    🤖
+                    <span className="dt-opacity-50">
+                      {' '}
+                      Get verification code by starting{' '}
+                    </span>
+                    <span className="dt-underline">this bot </span>
+                    <span className="dt-opacity-50">with command: /start</span>
+                  </a>
+                </div>
+                <div className="dt-flex dt-flex-row dt-space-x-2">
+                  <div
+                    className={cs(
+                      textStyles.small,
+                      'display: inline-flex',
+                      'dt-mb-1'
+                    )}
+                    onClick={resendCodeVerification}
+                  >
+                    <span className="dt-opacity-50">
+                      {' '}
+                      Check your telegram bot for a verification code.
+                    </span>
+                    <div className="dt-inline-block dt-cursor-pointer">
+                      <ResendIcon
+                        className="dt-px-1 dt-inline-block"
+                        height={18}
+                        width={18}
+                      />
+                      Resend code
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             ) : null}
 
-            {!isSmsNumberEditing && isVerified ? (
+            {!isTelegramUsernameEditing && isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   className="dt-basis-1/2"
-                  onClick={() => setSmsNumberEditing(true)}
+                  onClick={() => setTelegramUsernameEditing(true)}
                   loading={loading}
                 >
                   Change
@@ -314,15 +351,15 @@ export function SmsForm() {
                   className="dt-basis-1/2"
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
-                  onClick={deleteSmsNumber}
+                  onClick={deleteTelegram}
                   loading={loading}
                 >
-                  {loading ? 'Deleting...' : 'Delete number'}
+                  {loading ? 'Deleting...' : 'Delete telegram'}
                 </Button>
               </div>
             ) : null}
           </div>
-          {!currentError && !isChanging && isSmsNumberEditing ? (
+          {!currentError && !isChanging && isTelegramUsernameEditing ? (
             <P className={cs(textStyles.small, 'dt-mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
@@ -330,9 +367,9 @@ export function SmsForm() {
           ) : null}
           {!currentError && isChanging ? (
             <P className={cs(textStyles.small, 'dt-mb-1')}>
-              ⚠️ Changing or deleting your SMS number is a global setting across
-              all dapps. You will be prompted to sign with your wallet, this
-              action is free.
+              ⚠️ Changing or deleting your Telegram username is a global setting
+              across all dapps. You will be prompted to sign with your wallet,
+              this action is free.
             </P>
           ) : null}
         </form>

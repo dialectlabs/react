@@ -1,7 +1,7 @@
-import cs from '../../utils/classNames';
-import { LinkifiedText } from '../common';
-import { P } from '../common/preflighted';
-import { useTheme } from '../common/providers/DialectThemeProvider';
+import cs from '../../../../utils/classNames';
+import { LinkifiedText } from '../../../common';
+import { P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 
 type Props = {
   message: string;

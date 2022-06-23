@@ -1,23 +1,34 @@
+import { useCallback, useEffect } from 'react';
+import type { ThreadId } from '@dialectlabs/sdk';
 import { useDialect } from '@dialectlabs/react';
-import cs from '../../utils/classNames';
-import { useTheme } from '../common/providers/DialectThemeProvider';
-import { A, P } from '../common/preflighted';
+import { display } from '@dialectlabs/web3';
+import {
+  useDialectCloudApi,
+  useDialectSdk,
+  useThreads,
+} from '@dialectlabs/react-sdk';
+import cs from '../../../../utils/classNames';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { A, P } from '../../../common/preflighted';
 import {
   Button,
   NetworkBadge,
   ToggleSection,
   useBalance,
   ValueRow,
-} from '../common';
-import { getExplorerAddress } from '../../utils/getExplorerAddress';
-import { display, isDialectAdmin } from '@dialectlabs/web3';
-import { useCallback, useEffect } from 'react';
-import { useDialectCloudApi, useDialectSdk } from '@dialectlabs/react-sdk';
+} from '../../../common';
+import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
+import useThread from '../../../../hooks/useThread';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
-export function Wallet(props: { onThreadDelete?: () => void }) {
+type Web3Props = {
+  threadId: ThreadId;
+  onThreadDelete?: () => void;
+};
+
+export function Web3(props: Web3Props) {
   const {
     info: {
       wallet,
@@ -25,43 +36,50 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     },
   } = useDialectSdk();
   const {
+    create: createDialect,
+    isCreatingThread,
+    errorCreatingThread,
+  } = useThreads();
+  const {
+    thread,
+    delete: deleteDialect,
+    isDeletingThread,
+    errorDeletingThread,
+    isAdminable,
+  } = useThread(props.threadId);
+  const isDialectAvailable = Boolean(thread);
+  const {
     addresses: { wallet: walletObj },
     saveAddress,
     updateAddress,
     deleteAddress,
   } = useDialectCloudApi();
-  const {
-    dialect,
-    createDialect,
-    isDialectCreating,
-    isDialectAvailable,
-    dialectAddress,
-    deleteDialect,
-    isDialectDeleting,
-    deletionError,
-    creationError,
-  } = useDialect();
+
+  // TODO: replace with routing params
+  const dialectAddress = '';
+
   const {
     textStyles,
     xPaddedText,
     secondaryDangerButton,
     secondaryDangerButtonLoading,
   } = useTheme();
+
   const { balance } = useBalance();
   // Support for threads created before address registry launch
   const isWalletEnabled =
     (walletObj ? walletObj?.enabled : isDialectAvailable) ||
-    isDialectCreating ||
-    isDialectDeleting;
+    isCreatingThread ||
+    isDeletingThread;
 
-  const deleteWallet = useCallback(async () => {
+  const deleteWeb3 = useCallback(async () => {
     if (!walletObj) return;
     await deleteAddress({
       addressId: walletObj?.addressId,
     }).catch(noop);
   }, [deleteAddress, walletObj]);
 
-  const saveWallet = useCallback(async () => {
+  const saveWeb3 = useCallback(async () => {
     if (walletObj) return;
     await saveAddress({
       type: 'wallet',
@@ -70,7 +88,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     }).catch(noop);
   }, [saveAddress, walletObj, wallet]);
 
-  const updateWalletEnabled = useCallback(
+  const updateWeb3Enabled = useCallback(
     async (enabled: boolean) => {
       if (!walletObj) return;
       await updateAddress({
@@ -86,8 +104,8 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
   // TODO: move to the Notifications/index.tsx component
   useEffect(() => {
     if (
-      isDialectCreating ||
-      isDialectDeleting ||
+      isCreatingThread ||
+      isDeletingThread ||
       (isDialectAvailable && walletObj)
     )
       return;
@@ -95,24 +113,21 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
     // Sync state in case of errors
     if (isDialectAvailable && !walletObj) {
       // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
-      saveWallet();
+      saveWeb3();
     } else if (!isDialectAvailable && walletObj) {
       // In case the wallet isn't in web2 db, but the actual thread was created
-      deleteWallet();
+      deleteWeb3();
     }
   }, [
     isDialectAvailable,
-    isDialectCreating,
-    isDialectDeleting,
+    isCreatingThread,
+    isDeletingThread,
     wallet,
-    deleteWallet,
-    saveWallet,
+    deleteWeb3,
+    saveWeb3,
     walletObj,
     walletObj?.addressId,
   ]);
-
-  const isAdmin =
-    dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet.publicKey);
 
   let content = (
     <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
@@ -138,14 +153,14 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
       <Button
         className="dt-mb-2"
         onClick={async () => {
-          await saveWallet();
+          await saveWeb3();
           createDialect().catch(async () => {
-            await updateWalletEnabled(false);
+            await updateWeb3Enabled(false);
           });
         }}
-        loading={isDialectCreating}
+        loading={isCreatingThread}
       >
-        {isDialectCreating
+        {isCreatingThread
           ? 'Creating...'
           : 'Create on-chain notifications thread'}
       </Button>
@@ -155,20 +170,21 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
       </P>
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
       {/* TODO: move red color to the theme */}
-      {creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-        <P
-          className={cs(
-            textStyles.small,
-            'dt-text-red-500 dt-text-left dt-mt-2'
-          )}
-        >
-          {creationError.message}
-        </P>
-      )}
+      {errorCreatingThread &&
+        errorCreatingThread.type !== 'DISCONNECTED_FROM_CHAIN' && (
+          <P
+            className={cs(
+              textStyles.small,
+              'dt-text-red-500 dt-text-left dt-mt-2'
+            )}
+          >
+            {errorCreatingThread.message}
+          </P>
+        )}
     </div>
   );
 
-  if ((isWalletEnabled && !isDialectCreating) || isDialectDeleting) {
+  if ((isWalletEnabled && !isCreatingThread) || isDeletingThread) {
     content = (
       <div>
         {isDialectAvailable && dialectAddress ? (
@@ -201,7 +217,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
         ) : null}
         {isDialectAvailable && dialectAddress ? (
           <>
-            {isAdmin ? (
+            {isAdminable ? (
               <div>
                 <Button
                   className="dt-w-full"
@@ -209,15 +225,15 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
                   loadingStyle={secondaryDangerButtonLoading}
                   onClick={async () => {
                     // TODO: refactor: save the signature and wait for deletion before firing
-                    deleteWallet();
+                    deleteWeb3();
                     await deleteDialect().catch(() => {
                       // If deletion failed — save wallet again
-                      saveWallet();
+                      saveWeb3();
                     });
                     // TODO: properly wait for the deletion
                     props?.onThreadDelete?.();
                   }}
-                  loading={isDialectDeleting}
+                  loading={isDeletingThread}
                 >
                   Withdraw rent & delete history
                 </Button>
@@ -232,8 +248,8 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
                 </P>
               </div>
             ) : null}
-            {deletionError &&
-            deletionError.type !== 'DISCONNECTED_FROM_CHAIN' ? (
+            {errorDeletingThread &&
+            errorDeletingThread.type !== 'DISCONNECTED_FROM_CHAIN' ? (
               <P
                 className={cs(
                   textStyles.small,
@@ -241,7 +257,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
                   'dt-text-red-500 dt-mt-2'
                 )}
               >
-                {deletionError.message}
+                {errorDeletingThread.message}
               </P>
             ) : null}
           </>
@@ -255,7 +271,7 @@ export function Wallet(props: { onThreadDelete?: () => void }) {
       title="💬  Wallet notifications"
       enabled={isWalletEnabled}
       onChange={async (nextValue) => {
-        await updateWalletEnabled(nextValue);
+        await updateWeb3Enabled(nextValue);
       }}
     >
       {content}
