@@ -5,6 +5,7 @@ import {
   useThreadMessages,
 } from '@dialectlabs/react-sdk';
 import type { Message, ThreadId } from '@dialectlabs/sdk';
+import { Backend } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import serializeThreadId from '../../../../../utils/serializeThreadId';
@@ -70,8 +71,8 @@ export default function MessagePreview({
     [serializeThreadId(dialectId)]
   );
   const { thread } = useThread({ findParams });
-  const { colors } = useTheme();
   const { messages } = useThreadMessages(findParams);
+  const { colors, textStyles } = useTheme();
   const [firstMessage] = messages ?? [];
   const connection = dialectProgram?.provider.connection;
   const recipient = thread?.otherMembers[0];
@@ -105,15 +106,27 @@ export default function MessagePreview({
             firstMessage={firstMessage}
           />
         </div>
-        <div className="dt-text-xs dt-opacity-30">
-          {timestamp ? (
-            timestamp
-          ) : (
-            <MessageStatus
-              isSending={firstMessage?.isSending}
-              error={firstMessage?.error?.message}
-            />
-          )}
+        <div className="dt-flex dt-flex-col dt-space-y-1 dt-items-end dt-text-xs">
+          <span className="dt-opacity-30">
+            {timestamp ? (
+              timestamp
+            ) : (
+              <MessageStatus
+                isSending={firstMessage?.isSending}
+                error={firstMessage?.error?.message}
+              />
+            )}
+          </span>
+          {thread.backend === Backend.Solana ? (
+            <span
+              className={clsx(
+                textStyles.small,
+                'dt-bg-green-900 dt-text-white dt-rounded-full dt-inline-flex dt-grow-0 dt-px-1.5 dt-py-0.5'
+              )}
+            >
+              On-chain
+            </span>
+          ) : null}
         </div>
       </div>
     </div>
