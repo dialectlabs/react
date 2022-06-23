@@ -68,10 +68,7 @@ export default function MessagePreview({
     },
   } = useDialectSdk();
   // TODO: improve using of useMemo
-  const findParams = useMemo(
-    () => ({ id: threadId }),
-    [serializeThreadId(threadId)]
-  );
+  const findParams = useMemo(() => ({ id: threadId }), [threadId.toString()]);
   const { thread } = useThread(threadId);
   const { messages } = useThreadMessages(findParams);
   const { colors } = useTheme();

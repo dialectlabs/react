@@ -29,9 +29,7 @@ const ThreadPage = () => {
     return <NoMessages />;
   }
 
-  return (
-    <ThreadContent key={serializeThreadId(threadId)} threadId={threadId} />
-  );
+  return <ThreadContent key={threadId.toString()} threadId={threadId} />;
 };
 
 export default ThreadPage;

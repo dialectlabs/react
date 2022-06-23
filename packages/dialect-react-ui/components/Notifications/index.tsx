@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
-import type { ThreadId } from '@dialectlabs/sdk';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { PublicKey } from '@solana/web3.js';
 import {
   useDialectCloudApi,
   useDialectConnectionInfo,
   useDialectSdk,
+  useDialectDapp,
   useDialectWallet,
   useThreadMessages,
   useThreads,
+  useThread,
 } from '@dialectlabs/react-sdk';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import type { Channel } from '../common/types';
-import useThread from '../../hooks/useThread';
 import Settings from './screens/Settings';
 import Header from './Header';
 import { RouteName } from './constants';
@@ -26,7 +27,7 @@ export type NotificationType = {
 };
 
 interface NotificationsProps {
-  threadId: ThreadId;
+  dapp: PublicKey;
   onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
@@ -37,11 +38,18 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const {
     info: { apiAvailability },
   } = useDialectSdk();
+  const { dapp: address } = useDialectDapp();
   const { threads, isCreatingThread } = useThreads();
-  const { thread, isDeletingThread } = useThread(props.threadId);
-  const { messages } = useThreadMessages({ id: props.threadId });
+  const threadId = threads.find((th) => th.id.address.equals(address));
+  const { thread, isDeletingThread } = useThread({
+    findParams: { id: threadId },
+  });
+
+  const { messages } = useThreadMessages({ id: threadId });
 
   const isDialectAvailable = Boolean(thread);
+
+  console.log(thread);
 
   const cannotDecryptDialect =
     !apiAvailability.canEncrypt && thread?.encryptionEnabled;
@@ -154,7 +162,6 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           </Route>
           <Route name={RouteName.Settings}>
             <Settings
-              threadId={props.threadId}
               toggleSettings={toggleSettings}
               notifications={props.notifications || []}
               channels={props.channels || []}

@@ -1,12 +1,14 @@
+import type { PublicKey } from '@solana/web3.js';
 import React, { useEffect, useMemo, useState } from 'react';
 import type { Config, DialectWalletAdapter } from '../../types';
 import { DialectConnectionInfo } from './ConnectionInfo';
+import { DialectDapp } from './Dapp';
 import { LocalMessages } from './LocalMessages';
 import { DialectSdk } from './Sdk';
 import { DialectWallet } from './Wallet';
 
 export interface DialectContextType {
-  dapp?: string;
+  dapp?: object;
 }
 
 export const DialectContext = React.createContext<DialectContextType>(
@@ -16,7 +18,8 @@ export const DialectContext = React.createContext<DialectContextType>(
 type DialectContextProviderProps = {
   config: Config;
   wallet: DialectWalletAdapter;
-  dapp?: string; // temporary until new dialect cloud api appear
+  dapp?: PublicKey;
+  // temporary until new dialect cloud api appear
 };
 
 export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
@@ -45,9 +48,11 @@ export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
     <DialectContext.Provider value={ctxValue}>
       <DialectWallet.Provider initialState={wallet}>
         <DialectSdk.Provider initialState={config}>
-          <DialectConnectionInfo.Provider initialState={config.backends}>
-            <LocalMessages.Provider>{children}</LocalMessages.Provider>
-          </DialectConnectionInfo.Provider>
+          <DialectDapp.Provider initialState={dapp}>
+            <DialectConnectionInfo.Provider initialState={config.backends}>
+              <LocalMessages.Provider>{children}</LocalMessages.Provider>
+            </DialectConnectionInfo.Provider>
+          </DialectDapp.Provider>
         </DialectSdk.Provider>
       </DialectWallet.Provider>
     </DialectContext.Provider>

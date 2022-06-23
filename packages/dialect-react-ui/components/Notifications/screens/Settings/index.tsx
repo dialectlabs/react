@@ -19,7 +19,6 @@ const baseChannelOptions: Record<Channel, boolean> = {
 };
 
 function Settings(props: {
-  threadId: ThreadId;
   toggleSettings: () => void;
   notifications: NotificationType[];
   channels: Channel[];
@@ -40,10 +39,7 @@ function Settings(props: {
       <div className={clsx('dt-py-2', xPaddedText)}>
         {channelsOptions.web3 && (
           <div className="dt-mb-2">
-            <Web3
-              threadId={props.threadId}
-              onThreadDelete={props.toggleSettings}
-            />
+            <Web3 onThreadDelete={props.toggleSettings} />
           </div>
         )}
         {channelsOptions.email && (

@@ -68,7 +68,7 @@ const useThreadMessages = ({
     error: errorFetchingMessages = null,
     mutate,
   } = useSWR<SdkMessage[], DialectSdkError>(
-    threadInternal ? CACHE_KEY(serializeThreadId(threadInternal.id)) : null,
+    threadInternal ? CACHE_KEY(threadInternal.id.toString()) : null,
     () => threadInternal!.messages(),
     { refreshInterval, refreshWhenOffline: true }
   );
@@ -77,14 +77,14 @@ const useThreadMessages = ({
     if (!thread) {
       return EMPTY_ARR;
     }
-    const threadIdStr = serializeThreadId(thread.id);
     let merged = false;
-    const localThreadMessages = localMessages[threadIdStr] || EMPTY_ARR;
+    const localThreadMessages =
+      localMessages[thread.id.toString()] || EMPTY_ARR;
     const [firstRemote] = remoteMessages;
     const [firstLocal] = localThreadMessages;
     // we check if we can replace last local message with the remote one
     if (firstLocal?.text === firstRemote?.text && firstLocal?.isSending) {
-      deleteLocalMessage(threadIdStr, firstLocal.id);
+      deleteLocalMessage(thread.id.toString(), firstLocal.id);
       merged = true;
     }
 
@@ -105,7 +105,7 @@ const useThreadMessages = ({
       if (!threadInternal) return;
       setIsSendingMessage(true);
       setErrorSendingMessage(null);
-      const threadAddr = serializeThreadId(threadInternal.id);
+      const threadAddr = threadInternal.id.toString();
       const optimisticMessage: LocalMessage = {
         id: cmd.id || messages.length.toString(),
         text: cmd.text,
@@ -137,7 +137,7 @@ const useThreadMessages = ({
   const cancelMessage = useCallback(
     async ({ id }: CancelMessageCommand) => {
       if (!thread) return;
-      deleteLocalMessage(serializeThreadId(thread.id), id);
+      deleteLocalMessage(thread.id.toString(), id);
     },
     [thread, deleteLocalMessage]
   );

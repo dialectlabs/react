@@ -70,7 +70,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
         {/* FIXME: enter animation isn't working */}
         {threads.map((thread) => (
           <CSSTransition
-            key={serializeThreadId(thread.id)}
+            key={thread.id.toString()}
             timeout={400}
             classNames="dt-thread"
           >

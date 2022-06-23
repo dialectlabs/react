@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ThreadId } from '@dialectlabs/sdk';
+import type { PublicKey } from '@solana/web3.js';
 import type { Backend } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { SWRConfig } from 'swr';
@@ -27,6 +27,11 @@ import {
   useDialectUiId,
 } from '../common/providers/DialectUiManagementProvider';
 
+export type DappType = {
+  address?: PublicKey;
+  backend?: Backend;
+};
+
 export type PropTypes = {
   dialectId: string;
   wallet: DialectWalletAdapter;
@@ -34,6 +39,7 @@ export type PropTypes = {
   backend: Backend;
   theme?: ThemeType;
   variables?: IncomingThemeVariables;
+  dapp?: DappType;
 
   config: Config;
 
@@ -56,14 +62,6 @@ function WrappedNotificationsButton(
   const [hasNewMessages, setHasNewMessages] = useState(false);
 
   useOutsideAlerter(wrapperRef, bellRef, close);
-
-  const threadId = useMemo(
-    () => ({
-      address: props.publicKey,
-      backend: props.backend,
-    }),
-    []
-  );
 
   // TODO rewrite with new provider
   // const { messages, checkUnreadMessages } = useDialect();
@@ -133,7 +131,7 @@ function WrappedNotificationsButton(
         >
           <Notifications
             channels={props.channels}
-            threadId={threadId}
+            dapp={props.publicKey}
             notifications={props?.notifications}
             onModalClose={close}
           />
@@ -166,7 +164,7 @@ export default function NotificationsButton({
         <DialectContextProvider
           wallet={wallet}
           config={config}
-          dapp={props.publicKey.toBase58()}
+          dapp={props.publicKey}
         >
           <DialectUiManagementProvider>
             <DialectThemeProvider theme={theme} variables={variables}>

@@ -13,6 +13,7 @@ import {
 } from '../web2.api';
 import useDialectConnectionInfo from './useDialectConnectionInfo';
 import useDialectContext from './useDialectContext';
+import useDialectDapp from './useDialectDapp';
 import useDialectSdk from './useDialectSdk';
 
 // TODO: this is subject to change
@@ -27,7 +28,8 @@ interface DialectCloudApi {
 }
 
 const useDialectCloudApi = (): DialectCloudApi => {
-  const { dapp } = useDialectContext();
+  const { dapp: address } = useDialectDapp();
+  const dapp = address?.toBase58();
 
   const {
     connected: { wallet: isWalletConnected },

@@ -1,11 +1,11 @@
 import { useCallback, useEffect } from 'react';
-import type { ThreadId } from '@dialectlabs/sdk';
-import { useDialect } from '@dialectlabs/react';
+import { ThreadMemberScope, Backend } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
 import {
   useDialectCloudApi,
   useDialectSdk,
   useThreads,
+  useDialectDapp,
 } from '@dialectlabs/react-sdk';
 import cs from '../../../../utils/classNames';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -24,7 +24,6 @@ import useThread from '../../../../hooks/useThread';
 const noop = () => {};
 
 type Web3Props = {
-  threadId: ThreadId;
   onThreadDelete?: () => void;
 };
 
@@ -35,18 +34,16 @@ export function Web3(props: Web3Props) {
       config: { solana: { network } = {} },
     },
   } = useDialectSdk();
-  const {
-    create: createDialect,
-    isCreatingThread,
-    errorCreatingThread,
-  } = useThreads();
+  const { dapp: address } = useDialectDapp();
+
+  const { create, isCreatingThread, errorCreatingThread } = useThreads();
   const {
     thread,
     delete: deleteDialect,
     isDeletingThread,
     errorDeletingThread,
     isAdminable,
-  } = useThread(props.threadId);
+  } = useThread({ address });
   const isDialectAvailable = Boolean(thread);
   const {
     addresses: { wallet: walletObj },
@@ -154,9 +151,22 @@ export function Web3(props: Web3Props) {
         className="dt-mb-2"
         onClick={async () => {
           await saveWeb3();
-          createDialect().catch(async () => {
-            await updateWeb3Enabled(false);
-          });
+
+          create({
+            me: { scopes: [ThreadMemberScope.ADMIN] },
+            otherMembers: [
+              { publicKey: address, scopes: [ThreadMemberScope.WRITE] },
+            ],
+            encrypted: false,
+          })
+            .then(async (thread) => {
+              // TODO: do whatever needed for frefh created thread
+            })
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            .catch(async (e) => {
+              console.log(e);
+              // await updateWeb3Enabled(false);
+            });
         }}
         loading={isCreatingThread}
       >
