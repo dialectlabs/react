@@ -1,4 +1,3 @@
-import { useDialectWallet } from '@dialectlabs/react-sdk';
 import { useCallback } from 'react';
 import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -11,7 +10,6 @@ const NoMessages = () => {
   const { type } = useChatInternal();
   const { navigate } = useRoute();
   const inbox = type === 'inbox';
-  const { isSigning } = useDialectWallet();
 
   const navigateToCreateThread = useCallback(
     () =>
@@ -31,14 +29,8 @@ const NoMessages = () => {
         className="dt-flex dt-cursor-pointer dt-opacity-30"
         onClick={navigateToCreateThread}
       >
-        {isSigning ? (
-          <P>Approve signing in wallet to connect to dialect cloud</P>
-        ) : (
-          <>
-            <icons.compose className="dt-mr-2" />
-            <P>Send a new message</P>
-          </>
-        )}
+        <icons.compose className="dt-mr-2" />
+        <P>Send a new message</P>
       </div>
     </div>
   );

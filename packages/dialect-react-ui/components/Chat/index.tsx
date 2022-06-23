@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
-import { useDialectConnectionInfo } from '@dialectlabs/react-sdk';
+import {
+  useDialectConnectionInfo,
+  useDialectWallet,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import Error from './screens/Error';
@@ -15,6 +18,7 @@ import {
   showThread,
   showThreadSettings,
 } from './navigation';
+import SignMessageInfo from './screens/SignMessageInfo';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -49,6 +53,7 @@ function InnerChat({
       },
     },
   } = useDialectConnectionInfo();
+  const { isSigning } = useDialectWallet();
 
   const { navigate } = useRoute();
 
@@ -81,11 +86,19 @@ function InnerChat({
         navigate(RouteName.NoConnection);
       } else if (!isWalletConnected) {
         navigate(RouteName.NoWallet);
+      } else if (isSigning) {
+        navigate(RouteName.SigningRequest);
       } else {
         navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
       }
     },
-    [navigate, isSolanaConnected, isWalletConnected]
+    [
+      navigate,
+      someBackendConnected,
+      isSolanaConnected,
+      isWalletConnected,
+      isSigning,
+    ]
   );
 
   const { colors, modal, slider } = useTheme();
@@ -119,6 +132,9 @@ function InnerChat({
           {/* TODO: add error if off-chain messages enabled but dialectCloud is unreachable */}
           <Route name={RouteName.NoWallet}>
             <Error type="NoWallet" />
+          </Route>
+          <Route name={RouteName.SigningRequest}>
+            <SignMessageInfo />
           </Route>
           <Route name={RouteName.Main}>
             <Main />
