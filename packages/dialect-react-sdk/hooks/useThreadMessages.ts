@@ -12,6 +12,7 @@ import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInf
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
 import type { LocalMessage, Message } from '../types';
 import { EMPTY_ARR } from '../utils';
+import serializeThreadId from '../utils/serializeThreadId';
 import useThread from './useThread';
 
 const CACHE_KEY = (addr: PublicKey) => `MESSAGES_${addr.toString()}`;
@@ -67,7 +68,7 @@ const useThreadMessages = ({
     error: errorFetchingMessages = null,
     mutate,
   } = useSWR<SdkMessage[], DialectSdkError>(
-    threadInternal ? CACHE_KEY(threadInternal.id.address) : null,
+    threadInternal ? CACHE_KEY(serializeThreadId(threadInternal.id)) : null,
     () => threadInternal!.messages(),
     { refreshInterval, refreshWhenOffline: true }
   );
@@ -76,15 +77,14 @@ const useThreadMessages = ({
     if (!thread) {
       return EMPTY_ARR;
     }
-
+    const threadIdStr = serializeThreadId(thread.id);
     let merged = false;
-    const localThreadMessages =
-      localMessages[thread.id.address.toString()] || EMPTY_ARR;
+    const localThreadMessages = localMessages[threadIdStr] || EMPTY_ARR;
     const [firstRemote] = remoteMessages;
     const [firstLocal] = localThreadMessages;
     // we check if we can replace last local message with the remote one
     if (firstLocal?.text === firstRemote?.text && firstLocal?.isSending) {
-      deleteLocalMessage(thread.id.address.toString(), firstLocal.id);
+      deleteLocalMessage(threadIdStr, firstLocal.id);
       merged = true;
     }
 
@@ -105,7 +105,7 @@ const useThreadMessages = ({
       if (!threadInternal) return;
       setIsSendingMessage(true);
       setErrorSendingMessage(null);
-      const threadAddr = threadInternal.id.address.toString();
+      const threadAddr = serializeThreadId(threadInternal.id);
       const optimisticMessage: LocalMessage = {
         id: cmd.id || messages.length.toString(),
         text: cmd.text,
@@ -137,7 +137,7 @@ const useThreadMessages = ({
   const cancelMessage = useCallback(
     async ({ id }: CancelMessageCommand) => {
       if (!thread) return;
-      deleteLocalMessage(thread.id.address.toString(), id);
+      deleteLocalMessage(serializeThreadId(thread.id), id);
     },
     [thread, deleteLocalMessage]
   );
