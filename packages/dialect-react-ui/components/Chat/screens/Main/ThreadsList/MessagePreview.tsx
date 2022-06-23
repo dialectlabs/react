@@ -1,32 +1,32 @@
 import { formatTimestamp } from '@dialectlabs/react';
-import {
-  useDialectSdk,
-  useThread,
-  useThreadMessages,
-} from '@dialectlabs/react-sdk';
+import { useDialectSdk, useThreadMessages } from '@dialectlabs/react-sdk';
 import type { Message, ThreadId } from '@dialectlabs/sdk';
 import { Backend } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
+import useThread from '../../../../../hooks/useThread';
 import serializeThreadId from '../../../../../utils/serializeThreadId';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
+import { Lock, OnChain } from '../../../../Icon';
 import MessageStatus from '../../../MessageStatus';
 
 type PropsType = {
-  dialectId: ThreadId;
+  threadId: ThreadId;
   onClick: () => void;
   disabled?: boolean;
   selected?: boolean;
 };
 
 function FirstMessage({
-  isEncrypted,
   firstMessage,
+  isEncrypted,
+  isOnChain,
 }: {
-  isEncrypted: boolean;
   firstMessage?: Message;
+  isEncrypted: boolean;
+  isOnChain: boolean;
 }) {
   const {
     info: { wallet },
@@ -34,28 +34,30 @@ function FirstMessage({
 
   if (isEncrypted) {
     return (
-      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2">
-        Encrypted message
+      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-space-x-1">
+        {isOnChain ? <OnChain /> : null}
+        <Lock /> Encrypted message
       </div>
     );
   }
 
   return firstMessage ? (
-    <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-truncate">
-      <span className="dt-opacity-50">
-        {firstMessage.author.publicKey.equals(wallet.publicKey!) && 'You:'}
-      </span>{' '}
-      {firstMessage.text}
+    <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-flex dt-items-center dt-space-x-1 dt-truncate">
+      {isOnChain ? <OnChain /> : null}
+      <span>
+        {firstMessage.author.publicKey.equals(wallet.publicKey!) && 'You: '}
+        {firstMessage.text}
+      </span>
     </div>
   ) : (
-    <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2">
-      No messages yet
+    <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-space-x-1">
+      {isOnChain ? <OnChain /> : null}No messages yet
     </div>
   );
 }
 
 export default function MessagePreview({
-  dialectId,
+  threadId,
   onClick,
   disabled = false,
   selected = false,
@@ -67,19 +69,21 @@ export default function MessagePreview({
   } = useDialectSdk();
   // TODO: improve using of useMemo
   const findParams = useMemo(
-    () => ({ id: dialectId }),
-    [serializeThreadId(dialectId)]
+    () => ({ id: threadId }),
+    [serializeThreadId(threadId)]
   );
-  const { thread } = useThread({ findParams });
+  const { thread } = useThread(threadId);
   const { messages } = useThreadMessages(findParams);
-  const { colors, textStyles } = useTheme();
+  const { colors } = useTheme();
   const [firstMessage] = messages ?? [];
   const connection = dialectProgram?.provider.connection;
   const recipient = thread?.otherMembers[0];
 
   if (!thread || !recipient) return null;
 
-  const timestamp = formatTimestamp(thread.updatedAt.getTime());
+  const timestamp = !firstMessage?.isSending
+    ? formatTimestamp(thread.updatedAt.getTime())
+    : null;
 
   return (
     <div
@@ -102,11 +106,12 @@ export default function MessagePreview({
             />
           ) : null}
           <FirstMessage
-            isEncrypted={thread.encryptionEnabled}
             firstMessage={firstMessage}
+            isEncrypted={thread.encryptionEnabled}
+            isOnChain={thread.backend === Backend.Solana}
           />
         </div>
-        <div className="dt-flex dt-flex-col dt-space-y-1 dt-items-end dt-text-xs">
+        <div className="dt-items-end dt-text-xs">
           <span className="dt-opacity-30">
             {timestamp ? (
               timestamp
@@ -117,16 +122,6 @@ export default function MessagePreview({
               />
             )}
           </span>
-          {thread.backend === Backend.Solana ? (
-            <span
-              className={clsx(
-                textStyles.small,
-                'dt-bg-green-900 dt-text-white dt-rounded-full dt-inline-flex dt-grow-0 dt-px-1.5 dt-py-0.5'
-              )}
-            >
-              On-chain
-            </span>
-          ) : null}
         </div>
       </div>
     </div>

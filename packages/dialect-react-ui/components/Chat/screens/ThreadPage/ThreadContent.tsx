@@ -7,6 +7,7 @@ import { useDialectUiId } from '../../../common/providers/DialectUiManagementPro
 import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { DisplayAddress } from '../../../DisplayAddress';
 import { Header } from '../../../Header';
+import { Lock, NoLock } from '../../../Icon';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
 import Settings from './Settings';
@@ -73,11 +74,17 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
                   'Loading...'
                 )}
               </span>
-              {thread?.encryptionEnabled ? (
-                <span className="dt-text-xs dt-opacity-50">encrypted</span>
-              ) : (
-                <span className="dt-text-xs dt-opacity-50">unencrypted</span>
-              )}
+              <span className="dt-text-xs dt-opacity-50 dt-flex dt-items-center dt-space-x-1">
+                {thread?.encryptionEnabled ? (
+                  <>
+                    <Lock className="dt-w-3 dt-h-3 dt-mt-0.5" /> encrypted
+                  </>
+                ) : (
+                  <>
+                    <NoLock className="dt-w-3 dt-h-3 dt-mt-0.5" /> unencrypted
+                  </>
+                )}
+              </span>
             </div>
           </Header.Title>
           <Header.Icons>

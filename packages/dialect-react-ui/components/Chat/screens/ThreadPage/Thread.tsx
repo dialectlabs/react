@@ -48,6 +48,9 @@ export default function Thread({ threadId }: ThreadProps) {
     messageText: string,
     id: string = messages.length.toString()
   ) => {
+    if (!messageText) {
+      return;
+    }
     send({ text: messageText, id }).catch(handleError);
     setText('');
   };

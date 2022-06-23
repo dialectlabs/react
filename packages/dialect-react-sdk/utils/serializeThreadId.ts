@@ -1,7 +1,9 @@
 import type { ThreadId } from '@dialectlabs/sdk';
 
 const serializeThreadId = (threadId?: ThreadId) => {
-  if (!threadId) return;
+  if (!threadId) {
+    return '';
+  }
   return [threadId?.backend, threadId.address.toBase58()].join(':');
 };
 

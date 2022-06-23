@@ -5,6 +5,7 @@ import { useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName } from '../../constants';
 import NoMessages from './NoMessages';
 import ThreadContent from './ThreadContent';
+import serializeThreadId from '../../../../utils/serializeThreadId';
 
 const ThreadPage = () => {
   const {
@@ -28,7 +29,9 @@ const ThreadPage = () => {
     return <NoMessages />;
   }
 
-  return <ThreadContent threadId={threadId} />;
+  return (
+    <ThreadContent key={serializeThreadId(threadId)} threadId={threadId} />
+  );
 };
 
 export default ThreadPage;

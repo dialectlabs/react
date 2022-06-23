@@ -76,7 +76,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
           >
             <div className="dt-overflow-hidden">
               <MessagePreview
-                dialectId={thread.id}
+                threadId={thread.id}
                 disabled={
                   !apiAvailability.canEncrypt && thread.encryptionEnabled
                 }

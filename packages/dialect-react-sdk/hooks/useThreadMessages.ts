@@ -15,7 +15,7 @@ import { EMPTY_ARR } from '../utils';
 import serializeThreadId from '../utils/serializeThreadId';
 import useThread from './useThread';
 
-const CACHE_KEY = (addr: PublicKey) => `MESSAGES_${addr.toString()}`;
+const CACHE_KEY = (id: string) => `MESSAGES_${id}`;
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
   id?: string;
