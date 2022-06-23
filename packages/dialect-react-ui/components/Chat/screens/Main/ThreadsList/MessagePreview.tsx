@@ -7,6 +7,7 @@ import {
 import type { Message, ThreadId } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
+import serializeThreadId from '../../../../../utils/serializeThreadId';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
@@ -64,10 +65,13 @@ export default function MessagePreview({
     },
   } = useDialectSdk();
   // TODO: improve using of useMemo
-  const findParams = useMemo(() => ({ id: dialectId }), [dialectId]);
+  const findParams = useMemo(
+    () => ({ id: dialectId }),
+    [serializeThreadId(dialectId)]
+  );
   const { thread } = useThread({ findParams });
-  const { messages } = useThreadMessages({ id: dialectId });
   const { colors } = useTheme();
+  const { messages } = useThreadMessages(findParams);
   const [firstMessage] = messages ?? [];
   const connection = dialectProgram?.provider.connection;
   const recipient = thread?.otherMembers[0];
