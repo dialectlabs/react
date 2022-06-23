@@ -1,6 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useDialect } from '@dialectlabs/react';
-import type { MessageType } from '@dialectlabs/react';
+import type { ThreadId } from '@dialectlabs/sdk';
+import {
+  useDialectCloudApi,
+  useDialectConnectionInfo,
+  useThreadMessages,
+  useThreads,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import cs from '../../utils/classNames';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -13,7 +19,7 @@ import { Wallet } from './Wallet';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
-import { useDialectCloudApi } from '@dialectlabs/react-sdk';
+import useThread from '../../hooks/useThread';
 
 export type NotificationType = {
   name: string;
@@ -204,22 +210,34 @@ function Settings(props: {
 }
 
 export default function Notifications(props: {
+  threadId: ThreadId;
   onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
-  pollingInterval?: number;
 }): JSX.Element {
+  const { threads, isCreatingThread } = useThreads();
+  const { thread, isDeletingThread } = useThread(props.threadId);
+  const { messages } = useThreadMessages({ id: props.threadId });
+
+  const isDialectAvailable = Boolean(thread);
+
+  const { cannotDecryptDialect } = useDialect();
+
   const {
-    isWalletConnected,
-    isDialectAvailable,
-    isDialectCreating,
-    isDialectDeleting,
-    isNoMessages,
-    messages,
-    disconnectedFromChain,
-    cannotDecryptDialect,
-  } = useDialect();
+    connected: {
+      wallet: { connected: isWalletConnected },
+      solana: {
+        connected: isSolanaConnected,
+        shouldConnect: isSolanaShouldConnect,
+      },
+      dialectCloud: {
+        connected: isDialectCloudConnected,
+        shouldConnect: isDialectCloudShouldConnect,
+      },
+    },
+  } = useDialectConnectionInfo();
+
   const {
     addresses: { wallet: walletObj },
   } = useDialectCloudApi();
@@ -236,12 +254,21 @@ export default function Notifications(props: {
 
   let content: JSX.Element;
 
-  if (disconnectedFromChain) {
+  if (isSolanaShouldConnect && !isSolanaConnected) {
     content = (
       <Centered>
         <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
         <span className="dt-opacity-60">
-          Lost connection to Solana blockchain
+          Waiting for connection to Solana blockchain
+        </span>
+      </Centered>
+    );
+  } else if (isDialectCloudShouldConnect && !isDialectCloudConnected) {
+    content = (
+      <Centered>
+        <icons.offline className="dt-w-10 dt-mb-6 dt-opacity-60" />
+        <span className="dt-opacity-60">
+          Waiting for connection to Dialect cloud
         </span>
       </Centered>
     );
@@ -262,8 +289,8 @@ export default function Notifications(props: {
   } else if (
     isSettingsOpen ||
     !isWalletEnabled ||
-    isDialectCreating ||
-    isDialectDeleting
+    isCreatingThread ||
+    isDeletingThread
   ) {
     content = (
       <Settings
@@ -272,7 +299,7 @@ export default function Notifications(props: {
         channels={props.channels || []}
       />
     );
-  } else if (isNoMessages) {
+  } else if (!messages.length) {
     content = (
       <Centered>
         <icons.noNotifications className="dt-mb-6" />
@@ -283,7 +310,7 @@ export default function Notifications(props: {
   } else {
     content = (
       <div className="dt-px-4 dt-py-4">
-        {messages.map((message: MessageType) => (
+        {messages.map((message: any) => (
           <>
             <Notification
               key={message.timestamp}
@@ -308,7 +335,7 @@ export default function Notifications(props: {
         )}
       >
         <Header
-          isReady={isDialectAvailable || walletObj?.enabled}
+          isReady={isDialectAvailable || Boolean(walletObj?.enabled)}
           isSettingsOpen={isSettingsOpen}
           onModalClose={props.onModalClose}
           toggleSettings={toggleSettings}

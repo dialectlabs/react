@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Backend } from '@dialectlabs/sdk';
 import * as anchor from '@project-serum/anchor';
-
 import {
   NotificationsButton,
   IncomingThemeVariables,
   defaultVariables,
   DialectUiManagementProvider,
+  ThemeProvider,
 } from '@dialectlabs/react-ui';
-import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { Wallet as WalletButton, WalletContext } from '../components/Wallet';
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
+
+import {
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+} from '@dialectlabs/react-sdk';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'D2pyBevYb6dit1oCx6e8vCxFK9mBeYCRe8TTntk2Tm98'
@@ -33,12 +40,47 @@ export const themeVariables: IncomingThemeVariables = {
   },
 };
 
+const walletToDialectWallet = (
+  wallet: WalletContextState
+): DialectWalletAdapter => ({
+  publicKey: wallet.publicKey!,
+  connected: wallet.connected && !wallet.disconnecting,
+  signMessage: wallet.signMessage,
+  signTransaction: wallet.signTransaction,
+  signAllTransactions: wallet.signAllTransactions,
+  //@ts-ignore
+  diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
+    ? async (pubKey) => {
+        //@ts-ignore
+        return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
+      }
+    : undefined,
+});
+
 type ThemeType = 'light' | 'dark' | undefined;
 
 function AuthedHome() {
   // const wallet = useAnchorWallet();
   const wallet = useWallet();
   const [theme, setTheme] = useState<ThemeType>('dark');
+
+  const [dialectWalletAdapter, setDialectWalletAdapter] =
+    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
+
+  useEffect(() => {
+    setDialectWalletAdapter(walletToDialectWallet(wallet));
+  }, [wallet]);
+
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'local-development',
+      solana: {
+        rpcUrl: 'http://localhost:8080',
+      },
+    }),
+    []
+  );
 
   useEffect(() => {
     if (
@@ -74,16 +116,15 @@ function AuthedHome() {
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <NotificationsButton
           dialectId="dialect-notifications"
-          wallet={wallet}
-          network={'localnet'}
-          publicKey={DIALECT_PUBLIC_KEY}
-          theme={theme}
-          variables={themeVariables}
+          wallet={dialectWalletAdapter}
+          config={dialectConfig}
           notifications={[
             { name: 'Welcome message', detail: 'On thread creation' },
           ]}
           pollingInterval={15000}
           channels={['web3', 'email', 'sms', 'telegram']}
+          publicKey={DIALECT_PUBLIC_KEY}
+          theme={theme}
         />
         <WalletButton />
       </div>

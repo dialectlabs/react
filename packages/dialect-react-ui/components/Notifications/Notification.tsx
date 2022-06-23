@@ -1,4 +1,3 @@
-import React from 'react';
 import cs from '../../utils/classNames';
 import { LinkifiedText } from '../common';
 import { P } from '../common/preflighted';
