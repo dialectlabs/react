@@ -1,4 +1,8 @@
-import { DialectContextProvider } from '@dialectlabs/react-sdk';
+import {
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+} from '@dialectlabs/react-sdk';
 import {
   ChatNavigationHelpers,
   DialectUiManagementProvider,
@@ -6,7 +10,7 @@ import {
   ThemeProvider,
   useDialectUiId,
 } from '@dialectlabs/react-ui';
-import { Backend, Config, DialectWalletAdapter } from '@dialectlabs/sdk';
+import { Backend } from '@dialectlabs/sdk';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Wallet } from '../components/Wallet';
@@ -15,6 +19,7 @@ const walletToDialectWallet = (
   wallet: WalletContextState
 ): DialectWalletAdapter => ({
   publicKey: wallet.publicKey!,
+  connected: wallet.connected && !wallet.disconnecting,
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
@@ -66,15 +71,17 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo(
     (): Config => ({
-      wallet: dialectWalletAdapter,
       backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'local-development',
     }),
-    [dialectWalletAdapter]
+    []
   );
 
   return (
-    <DialectContextProvider config={dialectConfig}>
+    <DialectContextProvider
+      wallet={dialectWalletAdapter}
+      config={dialectConfig}
+    >
       <DialectUiManagementProvider>
         <ThemeProvider theme={'dark'}>
           <AuthedHome />

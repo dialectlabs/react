@@ -1,5 +1,5 @@
-import type { Config } from '@dialectlabs/sdk';
 import React, { useEffect, useMemo, useState } from 'react';
+import type { Config, DialectWalletAdapter } from '../../types';
 import { DialectConnectionInfo } from './ConnectionInfo';
 import { LocalMessages } from './LocalMessages';
 import { DialectSdk } from './Sdk';
@@ -15,16 +15,16 @@ export const DialectContext = React.createContext<DialectContextType>(
 
 type DialectContextProviderProps = {
   config: Config;
+  wallet: DialectWalletAdapter;
   dapp?: string; // temporary until new dialect cloud api appear
 };
 
 export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   config,
+  wallet,
   dapp,
   children,
 }) => {
-  const { wallet } = config;
-
   const ctx = useMemo(
     (): DialectContextType => ({
       dapp: dapp,

@@ -1,5 +1,5 @@
-import type { DialectWalletAdapter } from '@dialectlabs/sdk';
 import { useCallback, useMemo, useState } from 'react';
+import type { DialectWalletAdapter } from '../../../types';
 import { createContainer } from '../../../utils/container';
 
 export interface DialectWalletState {

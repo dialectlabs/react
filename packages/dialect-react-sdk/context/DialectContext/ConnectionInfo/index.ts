@@ -31,7 +31,7 @@ function useDialectConnectionInfo(
   const [connectionInfo, setConnectionInfo] = useState<DialectConnectionInfo>(
     () => ({
       wallet: {
-        connected: Boolean(adapter.publicKey),
+        connected: adapter.connected,
         shouldConnect: true,
       },
       solana: {
@@ -48,22 +48,16 @@ function useDialectConnectionInfo(
   useEffect(
     function updateWalletConnectionInfo() {
       setConnectionInfo((prev) => {
-        if (prev.wallet.connected && Boolean(adapter.publicKey)) {
-          return prev;
-        }
-        if (!prev.wallet.connected && !adapter.publicKey) {
-          return prev;
-        }
         return {
           ...prev,
           wallet: {
             ...prev.wallet,
-            connected: Boolean(adapter.publicKey),
+            connected: adapter.connected,
           },
         };
       });
     },
-    [adapter]
+    [adapter.connected]
   );
 
   return {
