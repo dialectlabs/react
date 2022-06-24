@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-sdk",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.0",
   "description": "React wrappers for Dialect's web3 notifications",
   "license": "MIT",
   "private": false,
@@ -12,7 +12,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "rm -rf lib && yarn build:cjs || yarn build:esm",
+    "build": "rm -rf lib && yarn build:cjs; yarn build:esm",
     "build:cjs": "tsc",
     "build:cjs:watch": "tsc --watch",
     "build:esm": "tsc --project tsconfig.esm.json",
