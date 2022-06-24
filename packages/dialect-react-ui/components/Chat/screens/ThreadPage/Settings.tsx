@@ -12,6 +12,9 @@ import { A, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName } from '../../constants';
+import { useChatInternal } from '../../provider';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
+import type { ChatNavigationHelpers } from '../../types';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -38,6 +41,8 @@ const Settings = ({ threadId }: SettingsProps) => {
   const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
     useTheme();
   const isOnChain = thread?.backend === Backend.Solana;
+  const { dialectId } = useChatInternal();
+  const { navigation } = useDialectUiId<ChatNavigationHelpers>(dialectId);
 
   return (
     <>
@@ -83,6 +88,7 @@ const Settings = ({ threadId }: SettingsProps) => {
               navigate(RouteName.Main, {
                 sub: { name: MainRouteName.Thread },
               });
+              navigation?.showMain();
             }}
             loading={isDeletingThread}
           >
