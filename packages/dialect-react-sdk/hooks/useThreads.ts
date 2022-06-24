@@ -57,11 +57,12 @@ const useThreads = ({
       try {
         const res = await threadsApi.create(cmd);
         mutate();
-        globalMutate(CACHE_KEY_THREAD_FN({ id: res.id }));
+        globalMutate(CACHE_KEY_THREAD_FN({ id: res.id }), res);
         globalMutate(
           CACHE_KEY_THREAD_FN({
             otherMembers: cmd.otherMembers.map((it) => it.publicKey),
-          })
+          }),
+          res
         );
         return res;
       } catch (e) {
