@@ -35,7 +35,7 @@ export class LocalStorageUreadMessagesStorage
     if (!rawData) {
       window.localStorage.setItem(
         LOCAL_STORAGE_KEY,
-        this.serializeDataObj({ [thread.toString()]: ts.getUTCMilliseconds() })
+        this.serializeDataObj({ [thread.toString()]: ts.getTime() })
       );
       return;
     }
@@ -44,7 +44,7 @@ export class LocalStorageUreadMessagesStorage
       LOCAL_STORAGE_KEY,
       this.serializeDataObj({
         ...deserializedData.data,
-        [thread.toString()]: ts.getUTCMilliseconds(),
+        [thread.toString()]: ts.getTime(),
       })
     );
   }
