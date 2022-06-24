@@ -9,7 +9,7 @@ interface DialectBackendConnectionInfo {
   shouldConnect: boolean;
 }
 
-interface DialectConnectionInfo {
+export interface DialectConnectionInfo {
   wallet: DialectBackendConnectionInfo;
   solana: DialectBackendConnectionInfo;
   dialectCloud: DialectBackendConnectionInfo;

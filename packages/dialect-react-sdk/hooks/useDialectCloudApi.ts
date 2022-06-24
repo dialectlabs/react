@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import useSWR, { mutate } from 'swr';
+import { useCallback, useMemo } from 'react';
+import useSWR from 'swr';
 import { EMPTY_OBJ } from '../utils';
 import {
   Address,

@@ -12,6 +12,21 @@ const dialectCloudNetworkErrorMatcher = (err: DialectSdkError | null) =>
 const solanaNetworkErrorMatcher = (err: DialectSdkError | null) =>
   err instanceof DisconnectedFromChainError;
 
+const processError = (
+  updateConnectionInfo: (
+    fn: (prevInfo: DialectConnectionInfo) => DialectConnectionInfo
+  ) => void,
+  key: 'solana' | 'dialectCloud',
+  connected: boolean
+) => {
+  updateConnectionInfo((prev) => {
+    if (prev[key].connected === connected) {
+      return prev;
+    }
+    return { ...prev, [key]: { ...prev[key], connected } };
+  });
+};
+
 // TODO: should use some kind of health checks
 export const useDialectErrorsHandler = (
   ...errors: (DialectSdkError | null)[]
@@ -21,40 +36,14 @@ export const useDialectErrorsHandler = (
 
   useEffect(() => {
     if (errors.some(solanaNetworkErrorMatcher)) {
-      updateConnectionInfo((prev) => {
-        if (!prev.solana.connected) {
-          return prev;
-        }
-        return { ...prev, solana: { ...prev.solana, connected: false } };
-      });
+      processError(updateConnectionInfo, 'solana', false);
     } else {
-      updateConnectionInfo((prev) => {
-        if (prev.solana.connected) {
-          return prev;
-        }
-        return { ...prev, solana: { ...prev.solana, connected: true } };
-      });
+      processError(updateConnectionInfo, 'solana', true);
     }
     if (errors.some(dialectCloudNetworkErrorMatcher)) {
-      updateConnectionInfo((prev) => {
-        if (!prev.dialectCloud.connected) {
-          return prev;
-        }
-        return {
-          ...prev,
-          dialectCloud: { ...prev.dialectCloud, connected: false },
-        };
-      });
+      processError(updateConnectionInfo, 'dialectCloud', false);
     } else {
-      updateConnectionInfo((prev) => {
-        if (prev.dialectCloud.connected) {
-          return prev;
-        }
-        return {
-          ...prev,
-          dialectCloud: { ...prev.dialectCloud, connected: true },
-        };
-      });
+      processError(updateConnectionInfo, 'dialectCloud', true);
     }
   }, errors);
 };
