@@ -1,9 +1,8 @@
-import { useDialectSdk } from '@dialectlabs/react-sdk';
+import { useDialectSdk, useThread } from '@dialectlabs/react-sdk';
 import type { ThreadId } from '@dialectlabs/sdk';
 import { Backend } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
-import useThread from '../../../../hooks/useThread';
 import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
 import { Button, ValueRow } from '../../../common';
 import { A, P } from '../../../common/preflighted';
@@ -30,7 +29,7 @@ const Settings = ({ threadId }: SettingsProps) => {
     isAdminable,
     isDeletingThread,
     errorDeletingThread,
-  } = useThread(threadId);
+  } = useThread({ findParams: { id: threadId } });
   const { navigate } = useRoute();
 
   const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =

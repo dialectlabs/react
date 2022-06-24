@@ -82,10 +82,10 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
                 }
                 onClick={() => {
                   // Do not trigger open if this thread already opened
-                  if (isEqual(threadId, thread.id)) return;
+                  if (threadId?.equals(thread.id)) return;
                   onThreadClick?.(thread);
                 }}
-                selected={isEqual(threadId, thread.id)}
+                selected={threadId?.equals(thread.id)}
               />
             </div>
           </CSSTransition>

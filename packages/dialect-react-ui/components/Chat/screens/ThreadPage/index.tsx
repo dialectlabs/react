@@ -5,7 +5,6 @@ import { useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName } from '../../constants';
 import NoMessages from './NoMessages';
 import ThreadContent from './ThreadContent';
-import serializeThreadId from '../../../../utils/serializeThreadId';
 
 const ThreadPage = () => {
   const {

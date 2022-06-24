@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ThreadsList from './ThreadsList';
@@ -28,6 +28,19 @@ const Main = () => {
 
     setHideList(shouldHideList);
   }, [current?.sub?.name, current?.sub?.params]);
+
+  const handleThreadClick = useCallback(
+    (thread) => {
+      navigate(RouteName.Main, {
+        sub: {
+          name: MainRouteName.Thread,
+          params: { threadId: thread.id },
+          sub: { name: ThreadRouteName.Messages },
+        },
+      });
+    },
+    [navigate]
+  );
 
   return (
     <Router initialRoute={MainRouteName.Thread}>
@@ -60,17 +73,7 @@ const Main = () => {
               />
             </Header.Icons>
           </Header>
-          <ThreadsList
-            onThreadClick={(thread) => {
-              navigate(RouteName.Main, {
-                sub: {
-                  name: MainRouteName.Thread,
-                  params: { threadId: thread.id },
-                  sub: { name: ThreadRouteName.Messages },
-                },
-              });
-            }}
-          />
+          <ThreadsList onThreadClick={handleThreadClick} />
         </div>
         <Route name={MainRouteName.CreateThread}>
           <CreateThread

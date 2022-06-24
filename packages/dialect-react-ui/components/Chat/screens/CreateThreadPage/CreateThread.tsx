@@ -135,13 +135,8 @@ export default function CreateThread({
       ? Backend.Solana
       : Backend.DialectCloud;
 
-  const findParams = useMemo(
-    () => ({ otherMembers: [actualAddress] }),
-    [actualAddress]
-  );
-  // TODO: figure out null address publickKey
   const { thread: currentChatWithAddress } = useThread({
-    findParams,
+    findParams: { otherMembers: actualAddress ? [actualAddress] : [] },
   });
 
   useEffect(() => {

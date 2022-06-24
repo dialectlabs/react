@@ -1,7 +1,6 @@
-import { useDialectSdk } from '@dialectlabs/react-sdk';
+import { useDialectSdk, useThread } from '@dialectlabs/react-sdk';
 import type { ThreadId } from '@dialectlabs/sdk';
 import clsx from 'clsx';
-import useThread from '../../../../hooks/useThread';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
@@ -19,7 +18,7 @@ type ThreadContentProps = {
 
 const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const { current, navigate } = useRoute();
-  const { thread } = useThread(threadId);
+  const { thread } = useThread({ findParams: { id: threadId } });
   const {
     info: {
       solana: { dialectProgram },

@@ -1,11 +1,12 @@
 import { formatTimestamp } from '@dialectlabs/react';
-import { useDialectSdk, useThreadMessages } from '@dialectlabs/react-sdk';
+import {
+  useDialectSdk,
+  useThread as useThreadInternal,
+  useThreadMessages,
+} from '@dialectlabs/react-sdk';
 import type { Message, ThreadId } from '@dialectlabs/sdk';
 import { Backend } from '@dialectlabs/sdk';
 import clsx from 'clsx';
-import { useMemo } from 'react';
-import useThread from '../../../../../hooks/useThread';
-import serializeThreadId from '../../../../../utils/serializeThreadId';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
@@ -67,10 +68,9 @@ export default function MessagePreview({
       solana: { dialectProgram },
     },
   } = useDialectSdk();
-  // TODO: improve using of useMemo
-  const findParams = useMemo(() => ({ id: threadId }), [threadId.toString()]);
-  const { thread } = useThread(threadId);
-  const { messages } = useThreadMessages(findParams);
+  // TODO: ensure there is no re-renders
+  const { thread } = useThreadInternal({ findParams: { id: threadId } });
+  const { messages } = useThreadMessages({ id: threadId });
   const { colors } = useTheme();
   const [firstMessage] = messages ?? [];
   const connection = dialectProgram?.provider.connection;
