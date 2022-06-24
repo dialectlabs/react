@@ -1,4 +1,9 @@
-import { ThreadId, useDialectSdk, useThread } from '@dialectlabs/react-sdk';
+import {
+  Backend,
+  ThreadId,
+  useDialectSdk,
+  useThread,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
@@ -17,7 +22,7 @@ type ThreadContentProps = {
 
 const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const { current, navigate } = useRoute();
-  const { thread } = useThread({ findParams: { id: threadId } });
+  const { thread, isAdminable } = useThread({ findParams: { id: threadId } });
   const {
     info: {
       solana: { dialectProgram },
@@ -27,6 +32,8 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const { type, onChatOpen, onChatClose, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const connection = dialectProgram?.provider.connection;
+
+  const offChain = thread?.backend === Backend.DialectCloud;
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
@@ -88,7 +95,9 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
           <Header.Icons>
             <Header.Icon
               className={clsx({
-                'dt-invisible': current?.sub?.name === ThreadRouteName.Settings,
+                'dt-invisible':
+                  current?.sub?.name === ThreadRouteName.Settings ||
+                  (offChain && !isAdminable),
               })}
               icon={<icons.settings />}
               onClick={() =>

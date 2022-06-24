@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - fix: shrinking MessagePreview in ThreadsList
+- fix: hide settings button for off-chain threads if you are not an admin
 
 ## [1.0.0-beta.1] - 2022-06-24
 
