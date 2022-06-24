@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: shrinking MessagePreview in ThreadsList
+
 ## [1.0.0-beta.1] - 2022-06-24
 
 - new implementation using react-sdk

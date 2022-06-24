@@ -64,7 +64,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
             timeout={400}
             classNames="dt-thread"
           >
-            <div className="dt-overflow-hidden">
+            <div className="dt-overflow-hidden dt-shrink-0">
               <MessagePreview
                 threadId={thread.id}
                 disabled={
