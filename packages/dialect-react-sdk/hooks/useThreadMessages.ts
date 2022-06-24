@@ -6,12 +6,12 @@ import {
   ThreadId,
 } from '@dialectlabs/sdk';
 import { useCallback, useMemo, useState } from 'react';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
 import type { LocalMessage, Message } from '../types';
 import { EMPTY_ARR } from '../utils';
-import { CACHE_KEY_MESSAGES } from './internal/swrCache';
+import { CACHE_KEY_MESSAGES, CACHE_KEY_THREADS } from './internal/swrCache';
 import useThread from './useThread';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
@@ -51,6 +51,7 @@ const useThreadMessages = ({
     },
   });
   const threadInternal = thread as Thread | null;
+  const { mutate: globalMutate } = useSWRConfig();
 
   const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const [errorSendingMessage, setErrorSendingMessage] =
@@ -114,6 +115,8 @@ const useThreadMessages = ({
         putLocalMessage(threadAddr, optimisticMessage);
         await threadInternal.send(cmd);
         mutate();
+        // Mutate threads to update threads sort
+        globalMutate(CACHE_KEY_THREADS);
       } catch (e) {
         if (e instanceof DialectSdkError) {
           setErrorSendingMessage(e);
@@ -128,7 +131,7 @@ const useThreadMessages = ({
         setIsSendingMessage(false);
       }
     },
-    [mutate, putLocalMessage, threadInternal, messages]
+    [threadInternal, messages.length, putLocalMessage, mutate, globalMutate]
   );
 
   const cancelMessage = useCallback(
