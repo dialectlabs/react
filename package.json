@@ -14,6 +14,7 @@
     "build:react-sdk": "yarn workspace @dialectlabs/react-sdk run build",
     "build:react": "yarn workspace @dialectlabs/react run build",
     "dev:react-ui": "yarn workspace @dialectlabs/react-ui run dev",
+    "dev:react-sdk": "yarn workspace @dialectlabs/react-sdk run dev",
     "dev:react": "yarn workspace @dialectlabs/react run dev",
     "lint": "eslint --ext .js --ext .ts --ext .tsx .",
     "lint:fix": "yarn lint --fix"
