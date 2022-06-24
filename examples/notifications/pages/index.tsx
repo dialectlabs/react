@@ -5,7 +5,7 @@ import {
   IncomingThemeVariables,
   NotificationsButton,
 } from '@dialectlabs/react-ui';
-import { Backend } from '@dialectlabs/sdk';
+import { Backend, TokenStore } from '@dialectlabs/sdk';
 import * as anchor from '@project-serum/anchor';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
@@ -19,7 +19,7 @@ import {
 } from '@dialectlabs/react-sdk';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'FnUaaRXXAdV1Y4RHD2k9BUwRXBtHuyTWrMK6HHtqKaEq'
+  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
 );
 
 export const themeVariables: IncomingThemeVariables = {
@@ -78,6 +78,10 @@ function AuthedHome() {
       // solana: {
       //   rpcUrl: 'http://localhost:8080',
       // },
+      dialectCloud: {
+        url: 'http://localhost:3001',
+        tokenStore: TokenStore.createLocalStorage(),
+      },
     }),
     []
   );

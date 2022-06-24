@@ -3,6 +3,7 @@ import {
   DialectContextProvider,
   DialectWalletAdapter,
 } from '@dialectlabs/react-sdk';
+import { TokenStore, EncryptionKeysStore } from '@dialectlabs/sdk';
 import {
   ChatNavigationHelpers,
   DialectUiManagementProvider,
@@ -73,6 +74,10 @@ export default function Home(): JSX.Element {
     (): Config => ({
       backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'local-development',
+      dialectCloud: {
+        tokenStore: TokenStore.createLocalStorage(),
+      },
+      encryptionKeysStore: EncryptionKeysStore.createLocalStorage(),
     }),
     []
   );
