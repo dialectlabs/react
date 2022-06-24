@@ -1,9 +1,9 @@
 import { useDialectSdk } from '@dialectlabs/react-sdk';
 import type { Connection, PublicKey } from '@solana/web3.js';
+import clsx from 'clsx';
 import { HiUserCircle } from 'react-icons/hi';
 import useSWR from 'swr';
 import useAddressImage from '../../hooks/useAddressImage';
-import cs from '../../utils/classNames';
 import { fetchSolanaNameServiceName } from '../common';
 import { Img } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -39,7 +39,7 @@ const CardinalAvatar = ({
   if (!address) return <></>;
 
   return isLoading ? (
-    <div className={cs(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
+    <div className={clsx(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
       <>{placeholder}</>
     </div>
   ) : addressImage ? (
@@ -69,7 +69,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
 
   return (
     <div
-      className={cs(
+      className={clsx(
         avatar,
         `dt-flex
         ${containerStyleMap[size]}`

@@ -2,7 +2,6 @@ import { Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { SWRConfig } from 'swr';
-import cs from '../../utils/classNames';
 import useMobile from '../../utils/useMobile';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -83,7 +82,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
           colors.bg,
           bellButton
         )}
-        icon={<icons.bell className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
+        icon={<icons.bell className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={ui?.open ? close : open}
       />
       <Transition

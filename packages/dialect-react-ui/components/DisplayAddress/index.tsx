@@ -2,9 +2,9 @@ import { getNameEntry } from '@cardinal/namespaces';
 import type { ThreadMember } from '@dialectlabs/react-sdk';
 import { display } from '@dialectlabs/web3';
 import type { Connection, PublicKey } from '@solana/web3.js';
+import clsx from 'clsx';
 import useSWR from 'swr';
 import useTwitterHandle from '../../hooks/useTwitterHandle';
-import cs from '../../utils/classNames';
 import { fetchSolanaNameServiceName, Loader } from '../common';
 import { A } from '../common/preflighted';
 import { TwitterIcon } from '../Icon/Twitter';
@@ -71,7 +71,7 @@ const TwitterHandle = ({
 }) => {
   if (!address) return <></>;
   return loadingName ? (
-    <div className={cs(dimensionClassName, 'dt-overflow-hidden')}>
+    <div className={clsx(dimensionClassName, 'dt-overflow-hidden')}>
       Loading...
     </div>
   ) : (
@@ -100,7 +100,7 @@ const SolanaName = ({
   if (!address) return <></>;
   if (loadingName) {
     return (
-      <div className={cs(dimensionClassName, 'dt-overflow-hidden')}>
+      <div className={clsx(dimensionClassName, 'dt-overflow-hidden')}>
         Loading...
       </div>
     );

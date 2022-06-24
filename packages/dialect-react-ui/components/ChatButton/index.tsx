@@ -7,7 +7,6 @@ import {
   DialectProvider,
 } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
-import cs from '../../utils/classNames';
 import {
   DialectThemeProvider,
   ThemeType,
@@ -19,6 +18,7 @@ import IconButton from '../IconButton';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import clsx from 'clsx';
 
 type PropTypes = {
   dialectId: string;
@@ -57,19 +57,19 @@ function WrappedChatButton(
 
   return (
     <div
-      className={cs(
+      className={clsx(
         'dt-flex dt-flex-col dt-items-end dt-relative',
         colors.primary
       )}
     >
       <IconButton
         ref={bellRef}
-        className={cs(
+        className={clsx(
           'dt-flex dt-items-center dt-justify-center dt-rounded-full focus:dt-outline-none dt-shadow-md',
           colors.bg,
           bellButton
         )}
-        icon={<icons.chat className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
+        icon={<icons.chat className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={ui?.open ? close : open}
       ></IconButton>
       <Transition

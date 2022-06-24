@@ -1,6 +1,6 @@
 import { useDialectCloudApi } from '@dialectlabs/react-sdk';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import cs from '../../../../utils/classNames';
 import { Button, ToggleSection } from '../../../common';
 import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -142,7 +142,7 @@ export function EmailForm() {
 
   const renderVerifiedState = () => {
     return (
-      <div className={cs(highlighted, textStyles.body, colors.highlight)}>
+      <div className={clsx(highlighted, textStyles.body, colors.highlight)}>
         <span className="dt-opacity-40">🔗 Email submitted</span>
       </div>
     );
@@ -152,7 +152,7 @@ export function EmailForm() {
     return (
       <div className="dt-flex dt-flex-row dt-space-x-2">
         <input
-          className={cs('dt-w-full', outlinedInput)}
+          className={clsx('dt-w-full', outlinedInput)}
           placeholder="Enter verification code"
           type="text"
           value={verificationCode}
@@ -207,7 +207,7 @@ export function EmailForm() {
                 </>
               ) : (
                 <input
-                  className={cs(
+                  className={clsx(
                     outlinedInput,
                     error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
@@ -236,7 +236,9 @@ export function EmailForm() {
                 />
               )}
               {currentError && (
-                <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                <P
+                  className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2')}
+                >
                   {currentError.message}
                 </P>
               )}
@@ -277,7 +279,7 @@ export function EmailForm() {
             {!isEmailEditing && !isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <div
-                  className={cs(
+                  className={clsx(
                     textStyles.small,
                     'display: inline-flex',
                     'dt-mb-1'
@@ -322,13 +324,13 @@ export function EmailForm() {
             ) : null}
           </div>
           {!currentError && !isChanging && isEmailEditing ? (
-            <P className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={clsx(textStyles.small, 'dt-mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
             </P>
           ) : null}
           {!currentError && isChanging ? (
-            <P className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={clsx(textStyles.small, 'dt-mb-1')}>
               ⚠️ Changing or deleting your email is a global setting across all
               dapps. You will be prompted to sign with your wallet, this action
               is free.

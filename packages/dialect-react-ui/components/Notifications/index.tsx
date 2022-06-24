@@ -5,11 +5,10 @@ import {
   useDialectSdk,
   useDialectWallet,
   useThread,
-  useThreadMessages,
   useThreads,
 } from '@dialectlabs/react-sdk';
+import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
-import cs from '../../utils/classNames';
 import Error from '../Chat/screens/Error';
 import SignMessageInfo from '../Chat/screens/SignMessageInfo';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -130,7 +129,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   return (
     <div className="dialect dt-h-full">
       <div
-        className={cs(
+        className={clsx(
           'dt-flex dt-flex-col dt-h-full dt-overflow-hidden',
           colors.primary,
           colors.bg,
@@ -145,7 +144,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           toggleSettings={toggleSettings}
           onBackClick={props.onBackClick}
         />
-        <div className={cs('dt-h-full dt-overflow-y-auto', scrollbar)}>
+        <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
           <Route name={RouteName.NoConnection}>
             <Error type="NoConnection" />
           </Route>

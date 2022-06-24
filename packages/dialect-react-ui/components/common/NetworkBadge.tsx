@@ -1,6 +1,5 @@
-import React from 'react';
+import clsx from 'clsx';
 import { useTheme } from './providers/DialectThemeProvider';
-import cs from '../../utils/classNames';
 
 export default function NetworkBadge({
   network = 'devnet',
@@ -17,7 +16,7 @@ export default function NetworkBadge({
   }
   return (
     <span
-      className={cs(
+      className={clsx(
         'dt-py-0.5 dt-px-1 dt-rounded-sm',
         textStyles.small,
         colors.highlight,
