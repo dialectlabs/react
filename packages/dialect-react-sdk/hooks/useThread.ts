@@ -36,7 +36,7 @@ const useThread = ({
   findParams,
   refreshInterval,
 }: UseThreadParams): UseThreadValue => {
-  const { mutate } = useSWRConfig();
+  const { mutate: globalMutate } = useSWRConfig();
   const { threads: threadsApi } = useDialectSdk();
 
   const [isDeletingThread, setIsDeletingThread] = useState<boolean>(false);
@@ -47,6 +47,7 @@ const useThread = ({
     data: thread = null,
     isValidating: isFetchingThread,
     error: errorFetchingThread,
+    mutate: mutateThread,
   } = useSWR(
     [CACHE_KEY, findParams],
     (_, findParams) => threadsApi.find(findParams),
@@ -64,8 +65,8 @@ const useThread = ({
     setErrorDeletingThread(null);
     try {
       const result = await thread.delete();
-      mutate(CACHE_KEY);
-      mutate(THREADS_CACHE_KEY);
+      mutateThread();
+      globalMutate(THREADS_CACHE_KEY);
       return result;
     } catch (e) {
       if (e instanceof DialectSdkError) {
@@ -75,7 +76,7 @@ const useThread = ({
     } finally {
       setIsDeletingThread(false);
     }
-  }, [mutate, thread]);
+  }, [globalMutate, mutateThread, thread]);
 
   return {
     // sdk

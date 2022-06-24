@@ -23,7 +23,6 @@ function useDialectSdk(
     backends = EMPTY_ARR,
   } = config;
   const wallet = DialectWallet.useContainer();
-
   const sdk = useMemo(() => {
     if (!wallet.adapter.publicKey) return null;
     return Dialect.sdk({

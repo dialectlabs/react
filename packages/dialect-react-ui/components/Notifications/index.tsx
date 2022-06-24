@@ -6,6 +6,7 @@ import {
   useDialectWallet,
   useThread,
   useThreadMessages,
+  useThreads,
 } from '@dialectlabs/react-sdk';
 import { useCallback, useEffect, useState } from 'react';
 import cs from '../../utils/classNames';
@@ -36,6 +37,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     info: { apiAvailability },
   } = useDialectSdk();
   const { dappAddress } = useDialectDapp();
+  const { isCreatingThread } = useThreads();
   const { thread, isDeletingThread, isFetchingThread } = useThread({
     findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
@@ -88,8 +90,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       const shouldShowSettings =
         isSettingsOpen ||
         !isWeb3Enabled ||
-        isFetchingThread ||
-        // isCreatingThread ||
+        isCreatingThread ||
         isDeletingThread;
 
       if (!someBackendConnected) {
@@ -119,7 +120,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       isSettingsOpen,
       isWeb3Enabled,
       isFetchingThread,
-      // isCreatingThread,
+      isCreatingThread,
       isDeletingThread,
       cannotDecryptDialect,
       thread,
@@ -160,7 +161,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           </Route>
           <Route name={RouteName.Settings}>
             <Settings
-              toggleSettings={toggleSettings}
+              toggleSettings={() => {
+                toggleSettings();
+              }}
               notifications={props.notifications || []}
               channels={props.channels || []}
             />

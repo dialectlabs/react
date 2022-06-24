@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { ThreadId } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { A, P } from '../../../common/preflighted';
 import type { Channel } from '../../../common/types';

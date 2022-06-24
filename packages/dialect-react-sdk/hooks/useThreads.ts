@@ -57,6 +57,7 @@ const useThreads = ({
       try {
         const res = await threadsApi.create(cmd);
         mutate();
+        // TODO: trigger useThread mutate after successfully created thread
         return res;
       } catch (e) {
         if (e instanceof DialectSdkError) {

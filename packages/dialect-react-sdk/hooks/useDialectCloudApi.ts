@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from 'react';
-import useSWR from 'swr';
+import { useCallback, useMemo, useState } from 'react';
+import useSWR, { mutate } from 'swr';
 import { EMPTY_OBJ } from '../utils';
 import {
   Address,
@@ -61,8 +61,17 @@ const useDialectCloudApi = (): DialectCloudApi => {
     async (address: AddressType) => {
       if (!isWalletConnected || !dapp) return;
       try {
-        const data = await saveAddress(wallet, dapp, address);
-        await mutateAddresses(mergeAddress(data));
+        // Optimisticly update the current data while run actual request
+        mutateAddresses(
+          async () => {
+            const data = await saveAddress(wallet, dapp, address);
+            return mergeAddress(data);
+          },
+          {
+            optimisticData: mergeAddress(address),
+            rollbackOnError: true,
+          }
+        );
       } catch (e) {
         throw e as Error;
       }
@@ -89,11 +98,20 @@ const useDialectCloudApi = (): DialectCloudApi => {
       if (!isWalletConnected) return;
 
       try {
-        await deleteAddress(wallet, address);
         const nextAddresses = addresses
           ? addresses.filter((add) => add.type !== address.type)
           : [];
-        await mutateAddresses(nextAddresses);
+        // Optimisticly update the current data while run actual request
+        mutateAddresses(
+          async () => {
+            await deleteAddress(wallet, address);
+            return nextAddresses;
+          },
+          {
+            optimisticData: nextAddresses,
+            rollbackOnError: true,
+          }
+        );
       } catch (e) {
         throw e as Error;
       }
@@ -143,6 +161,9 @@ const useDialectCloudApi = (): DialectCloudApi => {
     deleteAddress: deleteAddressWrapper,
     verifyCode: verifyCodeWrapper,
     resendCode: resendCodeWrapper,
+    // isSaving,
+    // isUpdating,
+    // isDeleting,
   };
 };
 
