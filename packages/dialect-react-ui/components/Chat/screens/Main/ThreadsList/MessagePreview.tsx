@@ -35,9 +35,9 @@ function FirstMessage({
 
   if (isEncrypted) {
     return (
-      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-space-x-1">
+      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
         {isOnChain ? <OnChain /> : null}
-        <Lock /> Encrypted message
+        <Lock className="dt-w-4 dt-h-4" /> Encrypted message
       </div>
     );
   }
@@ -51,8 +51,9 @@ function FirstMessage({
       </span>
     </div>
   ) : (
-    <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-space-x-1">
-      {isOnChain ? <OnChain /> : null}No messages yet
+    <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
+      {isOnChain ? <OnChain /> : null}
+      <span>No messages yet</span>
     </div>
   );
 }

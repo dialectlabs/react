@@ -21,7 +21,7 @@ export function Web3(props: Web3Props) {
   const {
     info: { wallet },
   } = useDialectSdk();
-  // TODO: fix use sdk call when wallet is not available
+  // TODO: fix sdk call when wallet is not available
   const { dappAddress } = useDialectDapp();
   const [isDeletingAddress, setDeletingAddress] = useState(false);
   const [isSavingAddress, setSavingAddress] = useState(false);
@@ -51,18 +51,6 @@ export function Web3(props: Web3Props) {
     isDeletingAddress ||
     isCreatingThread ||
     isDeletingThread;
-
-  // console.log('isWalletEnabled=', isWalletEnabled, {
-  //   walletObj,
-  //   'walletObj?.enabled': walletObj?.enabled,
-  //   isDialectAvailable,
-  //   isSavingAddress,
-  //   isCreatingThread,
-  //   isDeletingAddress,
-  //   isDeletingThread,
-  //   thread,
-  //   threads,
-  // });
 
   const deleteWeb3 = useCallback(async () => {
     // console.log('trying to delete', walletObj);
@@ -147,7 +135,7 @@ export function Web3(props: Web3Props) {
           .then(async () => {
             await deleteWeb3();
             // TODO: properly wait for the deletion
-            // props?.onThreadDelete?.();
+            props?.onThreadDelete?.();
           })
           .catch(() => {});
       }}

@@ -3,7 +3,6 @@ import type { Thread, ThreadId } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import serializeThreadId from '../../../../../utils/serializeThreadId';
 import { Centered } from '../../../../common';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../../common/providers/Router';
@@ -12,19 +11,6 @@ import MessagePreview from './MessagePreview';
 interface ThreadsListProps {
   onThreadClick?: (dialectAccount: Thread) => void;
 }
-
-const isEqual = (threadIdA?: ThreadId, threadIdB?: ThreadId) => {
-  if (!threadIdA || !threadIdB) {
-    return false;
-  }
-  if (!threadIdA.address.equals(threadIdB.address)) {
-    return false;
-  }
-  if (threadIdA?.backend !== threadIdB?.backend) {
-    return false;
-  }
-  return true;
-};
 
 const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
   const {
