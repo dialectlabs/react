@@ -1,25 +1,23 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { PublicKey } from '@solana/web3.js';
 import {
   useDialectCloudApi,
   useDialectConnectionInfo,
-  useDialectSdk,
   useDialectDapp,
+  useDialectSdk,
   useDialectWallet,
-  useThreadMessages,
-  useThreads,
   useThread,
+  useThreadMessages,
 } from '@dialectlabs/react-sdk';
+import { useCallback, useEffect, useState } from 'react';
 import cs from '../../utils/classNames';
-import { useTheme } from '../common/providers/DialectThemeProvider';
-import type { Channel } from '../common/types';
-import Settings from './screens/Settings';
-import Header from './Header';
-import { RouteName } from './constants';
-import { Route, Router, useRoute } from '../common/providers/Router';
 import Error from '../Chat/screens/Error';
 import SignMessageInfo from '../Chat/screens/SignMessageInfo';
+import { useTheme } from '../common/providers/DialectThemeProvider';
+import { Route, Router, useRoute } from '../common/providers/Router';
+import type { Channel } from '../common/types';
+import { RouteName } from './constants';
+import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
+import Settings from './screens/Settings';
 
 export type NotificationType = {
   name: string;
@@ -27,7 +25,6 @@ export type NotificationType = {
 };
 
 interface NotificationsProps {
-  dapp: PublicKey;
   onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
@@ -38,18 +35,12 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const {
     info: { apiAvailability },
   } = useDialectSdk();
-  const { dapp: address } = useDialectDapp();
-  const { threads, isCreatingThread } = useThreads();
-  const threadId = threads.find((th) => th.id.address.equals(address));
-  const { thread, isDeletingThread } = useThread({
-    findParams: { id: threadId },
+  const { dappAddress } = useDialectDapp();
+  const { thread, isDeletingThread, isFetchingThread } = useThread({
+    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
 
-  const { messages } = useThreadMessages({ id: threadId });
-
   const isDialectAvailable = Boolean(thread);
-
-  console.log(thread);
 
   const cannotDecryptDialect =
     !apiAvailability.canEncrypt && thread?.encryptionEnabled;
@@ -97,7 +88,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       const shouldShowSettings =
         isSettingsOpen ||
         !isWeb3Enabled ||
-        isCreatingThread ||
+        isFetchingThread ||
+        // isCreatingThread ||
         isDeletingThread;
 
       if (!someBackendConnected) {
@@ -110,8 +102,12 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         navigate(RouteName.CantDecrypt);
       } else if (shouldShowSettings) {
         navigate(RouteName.Settings);
-      } else {
-        navigate(RouteName.Thread);
+      } else if (thread) {
+        navigate(RouteName.Thread, {
+          params: {
+            threadId: thread.id,
+          },
+        });
       }
     },
     [
@@ -122,9 +118,11 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       isSigning,
       isSettingsOpen,
       isWeb3Enabled,
-      isCreatingThread,
+      isFetchingThread,
+      // isCreatingThread,
       isDeletingThread,
       cannotDecryptDialect,
+      thread,
     ]
   );
 

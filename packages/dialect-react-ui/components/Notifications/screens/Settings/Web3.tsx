@@ -6,6 +6,7 @@ import {
   useDialectSdk,
   useThreads,
   useDialectDapp,
+  useThread,
 } from '@dialectlabs/react-sdk';
 import cs from '../../../../utils/classNames';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -18,7 +19,6 @@ import {
   ValueRow,
 } from '../../../common';
 import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
-import useThread from '../../../../hooks/useThread';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -34,7 +34,7 @@ export function Web3(props: Web3Props) {
       config: { solana: { network } = {} },
     },
   } = useDialectSdk();
-  const { dapp: address } = useDialectDapp();
+  const { dappAddress } = useDialectDapp();
 
   const { create, isCreatingThread, errorCreatingThread } = useThreads();
   const {
@@ -43,7 +43,9 @@ export function Web3(props: Web3Props) {
     isDeletingThread,
     errorDeletingThread,
     isAdminable,
-  } = useThread({ address });
+  } = useThread({
+    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
+  });
   const isDialectAvailable = Boolean(thread);
   const {
     addresses: { wallet: walletObj },
@@ -51,9 +53,6 @@ export function Web3(props: Web3Props) {
     updateAddress,
     deleteAddress,
   } = useDialectCloudApi();
-
-  // TODO: replace with routing params
-  const dialectAddress = '';
 
   const {
     textStyles,
@@ -155,7 +154,7 @@ export function Web3(props: Web3Props) {
           create({
             me: { scopes: [ThreadMemberScope.ADMIN] },
             otherMembers: [
-              { publicKey: address, scopes: [ThreadMemberScope.WRITE] },
+              { publicKey: dappAddress, scopes: [ThreadMemberScope.WRITE] },
             ],
             encrypted: false,
           })
@@ -197,7 +196,7 @@ export function Web3(props: Web3Props) {
   if ((isWalletEnabled && !isCreatingThread) || isDeletingThread) {
     content = (
       <div>
-        {isDialectAvailable && dialectAddress ? (
+        {isDialectAvailable && thread ? (
           <ValueRow
             label={
               <>
@@ -207,10 +206,13 @@ export function Web3(props: Web3Props) {
                 <P>
                   <A
                     target="_blank"
-                    href={getExplorerAddress(dialectAddress, network)}
+                    href={getExplorerAddress(
+                      thread.id.address.toBase58(),
+                      network
+                    )}
                     rel="noreferrer"
                   >
-                    {display(dialectAddress)}↗
+                    {display(thread?.id.address)}↗
                   </A>
                 </P>
               </>
@@ -225,7 +227,7 @@ export function Web3(props: Web3Props) {
             </span>
           </ValueRow>
         ) : null}
-        {isDialectAvailable && dialectAddress ? (
+        {isDialectAvailable && thread ? (
           <>
             {isAdminable ? (
               <div>

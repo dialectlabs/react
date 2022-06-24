@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import {
+  defaultVariables,
+  DialectThemeProvider,
+  DialectUiManagementProvider,
+  IncomingThemeVariables,
+  NotificationsButton,
+} from '@dialectlabs/react-ui';
 import { Backend } from '@dialectlabs/sdk';
 import * as anchor from '@project-serum/anchor';
-import {
-  NotificationsButton,
-  IncomingThemeVariables,
-  defaultVariables,
-  DialectUiManagementProvider,
-  ThemeProvider,
-} from '@dialectlabs/react-ui';
-import { Wallet as WalletButton, WalletContext } from '../components/Wallet';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
+import { useEffect, useMemo, useState } from 'react';
+import { Wallet as WalletButton, WalletContext } from '../components/Wallet';
 
 import {
   Config,
@@ -19,7 +19,7 @@ import {
 } from '@dialectlabs/react-sdk';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'D2pyBevYb6dit1oCx6e8vCxFK9mBeYCRe8TTntk2Tm98'
+  'FnUaaRXXAdV1Y4RHD2k9BUwRXBtHuyTWrMK6HHtqKaEq'
 );
 
 export const themeVariables: IncomingThemeVariables = {
@@ -75,9 +75,9 @@ function AuthedHome() {
     (): Config => ({
       backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'local-development',
-      solana: {
-        rpcUrl: 'http://localhost:8080',
-      },
+      // solana: {
+      //   rpcUrl: 'http://localhost:8080',
+      // },
     }),
     []
   );
@@ -114,18 +114,22 @@ function AuthedHome() {
         />
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <NotificationsButton
-          dialectId="dialect-notifications"
+        <DialectContextProvider
           wallet={dialectWalletAdapter}
           config={dialectConfig}
-          notifications={[
-            { name: 'Welcome message', detail: 'On thread creation' },
-          ]}
-          pollingInterval={15000}
-          channels={['web3', 'email', 'sms', 'telegram']}
-          publicKey={DIALECT_PUBLIC_KEY}
-          theme={theme}
-        />
+          dapp={DIALECT_PUBLIC_KEY}
+        >
+          <DialectThemeProvider theme={theme} variables={themeVariables}>
+            <NotificationsButton
+              dialectId="dialect-notifications"
+              notifications={[
+                { name: 'Welcome message', detail: 'On thread creation' },
+              ]}
+              pollingInterval={15000}
+              channels={['web3', 'email', 'sms', 'telegram']}
+            />
+          </DialectThemeProvider>
+        </DialectContextProvider>
         <WalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">

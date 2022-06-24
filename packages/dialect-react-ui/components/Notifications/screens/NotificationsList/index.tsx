@@ -1,10 +1,20 @@
+import { useThreadMessages } from '@dialectlabs/react-sdk';
+import type { ThreadId } from '@dialectlabs/sdk';
+import React from 'react';
 import { Divider } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { useRoute } from '../../../common/providers/Router';
 import { NoNotifications } from '../../../Icon';
 import { Notification } from './Notification';
 
-const NotificationsList = (messages) => {
+const NotificationsList = () => {
   const { notificationsDivider } = useTheme();
+
+  const {
+    params: { threadId },
+  } = useRoute<{ threadId: ThreadId }>();
+
+  const { messages } = useThreadMessages({ id: threadId });
 
   if (!messages.length) {
     return <NoNotifications />;
@@ -12,15 +22,14 @@ const NotificationsList = (messages) => {
 
   return (
     <div className="dt-px-4 dt-py-4">
-      {messages.map((message: any) => (
-        <>
+      {messages.map((message, idx) => (
+        <React.Fragment key={idx}>
           <Notification
-            key={message.timestamp}
             message={message.text}
-            timestamp={message.timestamp}
+            timestamp={message.timestamp.getTime()}
           />
           <Divider className={notificationsDivider} />
-        </>
+        </React.Fragment>
       ))}
     </div>
   );

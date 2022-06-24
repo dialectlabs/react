@@ -27,7 +27,7 @@ interface DialectCloudApi {
 }
 
 const useDialectCloudApi = (): DialectCloudApi => {
-  const { dapp: address } = useDialectDapp();
+  const { dappAddress: address } = useDialectDapp();
   const dapp = address?.toBase58();
 
   const {

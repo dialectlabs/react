@@ -1,47 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import type { PublicKey } from '@solana/web3.js';
-import type { Backend } from '@dialectlabs/sdk';
-import clsx from 'clsx';
-import { SWRConfig } from 'swr';
-import {
-  DialectContextProvider,
-  DialectWalletAdapter,
-  Config,
-} from '@dialectlabs/react-sdk';
-import type * as anchor from '@project-serum/anchor';
 import { Transition } from '@headlessui/react';
+import clsx from 'clsx';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { SWRConfig } from 'swr';
 import cs from '../../utils/classNames';
 import useMobile from '../../utils/useMobile';
-import {
-  ThemeType,
-  IncomingThemeVariables,
-  useTheme,
-  DialectThemeProvider,
-} from '../common/providers/DialectThemeProvider';
-import type { Channel } from '../common/types';
-import Notifications, { NotificationType } from '../Notifications';
-import IconButton from '../IconButton';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
-import {
-  DialectUiManagementProvider,
-  useDialectUiId,
-} from '../common/providers/DialectUiManagementProvider';
-
-export type DappType = {
-  address?: PublicKey;
-  backend?: Backend;
-};
+import { useTheme } from '../common/providers/DialectThemeProvider';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import type { Channel } from '../common/types';
+import IconButton from '../IconButton';
+import Notifications, { NotificationType } from '../Notifications';
 
 export type PropTypes = {
   dialectId: string;
-  wallet: DialectWalletAdapter;
-  publicKey: anchor.web3.PublicKey;
-  backend: Backend;
-  theme?: ThemeType;
-  variables?: IncomingThemeVariables;
-  dapp?: DappType;
-
-  config: Config;
 
   bellClassName?: string;
   bellStyle?: object;
@@ -51,9 +22,7 @@ export type PropTypes = {
   pollingInterval?: number;
 };
 
-function WrappedNotificationsButton(
-  props: Omit<PropTypes, 'theme' | 'variables' | 'wallet' | 'config'>
-): JSX.Element {
+function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   const { ui, open, close } = useDialectUiId(props.dialectId);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -131,7 +100,6 @@ function WrappedNotificationsButton(
         >
           <Notifications
             channels={props.channels}
-            dapp={props.publicKey}
             notifications={props?.notifications}
             onModalClose={close}
           />
@@ -141,14 +109,7 @@ function WrappedNotificationsButton(
   );
 }
 
-export default function NotificationsButton({
-  theme = 'dark',
-  channels = ['web3'],
-  variables,
-  wallet,
-  config,
-  ...props
-}: PropTypes): JSX.Element {
+export default function NotificationsButton(props: PropTypes): JSX.Element {
   const swrOptions = useMemo(
     () => ({
       refreshInterval: props.pollingInterval,
@@ -161,17 +122,7 @@ export default function NotificationsButton({
     <div className="dialect">
       {/* TODO: switch to some sdk config setting */}
       <SWRConfig value={swrOptions}>
-        <DialectContextProvider
-          wallet={wallet}
-          config={config}
-          dapp={props.publicKey}
-        >
-          <DialectUiManagementProvider>
-            <DialectThemeProvider theme={theme} variables={variables}>
-              <WrappedNotificationsButton channels={channels} {...props} />
-            </DialectThemeProvider>
-          </DialectUiManagementProvider>
-        </DialectContextProvider>
+        <WrappedNotificationsButton {...props} />
       </SWRConfig>
     </div>
   );
