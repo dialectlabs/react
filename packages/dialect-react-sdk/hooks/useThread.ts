@@ -7,10 +7,25 @@ import { isAdminable, isWritable } from '../utils/scopes';
 import useDialectSdk from './useDialectSdk';
 import { CACHE_KEY as THREADS_CACHE_KEY } from './useThreads';
 
-const CACHE_KEY = 'THREAD';
-
 // TODO support multiple ways to resolve thread, eg. twitter, sns
 type ThreadSearchParams = FindThreadQuery;
+
+const CACHE_KEY = (findParams: ThreadSearchParams): string => {
+  const prefix = 'THREAD_';
+  if ('id' in findParams) {
+    return prefix + findParams.id.toString();
+  }
+  if ('otherMembers' in findParams) {
+    return (
+      prefix +
+      findParams.otherMembers
+        .filter((it) => it)
+        .map((it) => it.toString())
+        .join(':')
+    );
+  }
+  throw new Error('should never happen');
+};
 
 type UseThreadParams = {
   findParams: ThreadSearchParams;
@@ -48,14 +63,10 @@ const useThread = ({
     isValidating: isFetchingThread,
     error: errorFetchingThread,
     mutate: mutateThread,
-  } = useSWR(
-    [CACHE_KEY, findParams],
-    (_, findParams) => threadsApi.find(findParams),
-    {
-      refreshInterval,
-      refreshWhenOffline: true,
-    }
-  );
+  } = useSWR([CACHE_KEY(findParams)], () => threadsApi.find(findParams), {
+    refreshInterval,
+    refreshWhenOffline: true,
+  });
 
   useDialectErrorsHandler(errorFetchingThread, errorDeletingThread);
 
