@@ -9,6 +9,10 @@ import { Web3 } from './Web3';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
+import { Header } from '../../../Header';
+import { useRoute } from '../../../common/providers/Router';
+import { RouteName } from '../../constants';
+import { useDialectDapp, useThread } from '@dialectlabs/react-sdk';
 
 const baseChannelOptions: Record<Channel, boolean> = {
   web3: false,
@@ -18,11 +22,16 @@ const baseChannelOptions: Record<Channel, boolean> = {
 };
 
 function Settings(props: {
-  toggleSettings: () => void;
   notifications: NotificationType[];
   channels: Channel[];
+  setup?: boolean;
 }) {
-  const { textStyles, xPaddedText } = useTheme();
+  const { navigate } = useRoute();
+  const { textStyles, xPaddedText, icons } = useTheme();
+  const { dappAddress } = useDialectDapp();
+  const { thread } = useThread({
+    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
+  });
 
   const channelsOptions = useMemo(
     () =>
@@ -35,10 +44,30 @@ function Settings(props: {
 
   return (
     <>
+      <Header>
+        <Header.Icons containerOnly position="left">
+          {!props.setup ? (
+            <Header.Icon
+              icon={<icons.back />}
+              onClick={() =>
+                navigate(RouteName.Thread, {
+                  params: {
+                    threadId: thread?.id,
+                  },
+                })
+              }
+            />
+          ) : null}
+        </Header.Icons>
+        <Header.Title>
+          {props.setup ? 'Setup notifications' : 'Settings'}
+        </Header.Title>
+        <Header.Icons />
+      </Header>
       <div className={clsx('dt-py-2', xPaddedText)}>
         {channelsOptions.web3 && (
           <div className="dt-mb-2">
-            <Web3 onThreadDelete={props.toggleSettings} />
+            <Web3 />
           </div>
         )}
         {channelsOptions.email && (

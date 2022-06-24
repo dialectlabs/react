@@ -9,6 +9,7 @@ import {
 import NotificationsThreadSettings from './ThreadSettings';
 import CreateNotificationsThread from './CreateNotificationsThread';
 import { ToggleSection } from '../../../common';
+import Settings from '../../../Chat/screens/ThreadPage/Settings';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -106,14 +107,14 @@ export function Web3(props: Web3Props) {
     )
       return;
 
-    // // Sync state in case of errors
-    // if (isDialectAvailable && !walletObj) {
-    //   // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
-    //   saveWeb3();
-    // } else if (!isDialectAvailable && walletObj) {
-    //   // In case the wallet isn't in web2 db, but the actual thread was created
-    //   deleteWeb3();
-    // }
+    // Sync state in case of errors
+    if (isDialectAvailable && !walletObj) {
+      // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
+      // saveWeb3();
+    } else if (!isDialectAvailable && walletObj) {
+      // In case the wallet isn't in web2 db, but the actual thread was created
+      deleteWeb3();
+    }
   }, [
     isDialectAvailable,
     isFetchingThread,
@@ -128,19 +129,15 @@ export function Web3(props: Web3Props) {
     isDeletingAddress,
   ]);
 
-  let content = (
-    <NotificationsThreadSettings
-      onThreadDelete={() => {
-        deleteDialect()
-          .then(async () => {
-            await deleteWeb3();
-            // TODO: properly wait for the deletion
-            props?.onThreadDelete?.();
-          })
-          .catch(() => {});
+  let content = thread ? (
+    <Settings
+      threadId={thread.id}
+      onThreadDeleted={async () => {
+        await deleteWeb3();
+        // TODO: properly wait for the deletion
       }}
     />
-  );
+  ) : null;
 
   if (!isWalletEnabled || isCreatingThread || isSavingAddress) {
     content = (

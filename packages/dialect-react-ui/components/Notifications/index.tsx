@@ -5,10 +5,9 @@ import {
   useDialectSdk,
   useDialectWallet,
   useThread,
-  useThreadMessages,
   useThreads,
 } from '@dialectlabs/react-sdk';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import cs from '../../utils/classNames';
 import Error from '../Chat/screens/Error';
 import SignMessageInfo from '../Chat/screens/SignMessageInfo';
@@ -16,7 +15,6 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
 import { RouteName } from './constants';
-import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
 import Settings from './screens/Settings';
 
@@ -67,15 +65,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     addresses: { wallet: walletObj },
   } = useDialectCloudApi();
 
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
   const isWeb3Enabled = walletObj
     ? Boolean(walletObj?.enabled)
     : isDialectAvailable;
-
-  const toggleSettings = useCallback(
-    () => setSettingsOpen(!isSettingsOpen),
-    [isSettingsOpen, setSettingsOpen]
-  );
 
   const { colors, modal, scrollbar } = useTheme();
 
@@ -88,10 +80,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   useEffect(
     function pickRoute() {
       const shouldShowSettings =
-        isSettingsOpen ||
-        !isWeb3Enabled ||
-        isCreatingThread ||
-        isDeletingThread;
+        !isWeb3Enabled || isCreatingThread || isDeletingThread;
 
       if (!someBackendConnected) {
         navigate(RouteName.NoConnection);
@@ -117,7 +106,6 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       isSolanaConnected,
       isWalletConnected,
       isSigning,
-      isSettingsOpen,
       isWeb3Enabled,
       isFetchingThread,
       isCreatingThread,
@@ -137,14 +125,6 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           modal
         )}
       >
-        <Header
-          isWeb3Enabled={isWeb3Enabled}
-          isReady={isDialectAvailable || Boolean(walletObj?.enabled)}
-          isSettingsOpen={isSettingsOpen}
-          onModalClose={props.onModalClose}
-          toggleSettings={toggleSettings}
-          onBackClick={props.onBackClick}
-        />
         <div className={cs('dt-h-full dt-overflow-y-auto', scrollbar)}>
           <Route name={RouteName.NoConnection}>
             <Error type="NoConnection" />
@@ -161,11 +141,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           </Route>
           <Route name={RouteName.Settings}>
             <Settings
-              toggleSettings={() => {
-                toggleSettings();
-              }}
               notifications={props.notifications || []}
               channels={props.channels || []}
+              setup={!isWeb3Enabled}
             />
           </Route>
           <Route name={RouteName.Thread}>

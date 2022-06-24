@@ -1,18 +1,18 @@
-import { ThreadId, useThreadMessages } from '@dialectlabs/react-sdk';
 import React from 'react';
+import { ThreadId, useThreadMessages } from '@dialectlabs/react-sdk';
 import { Divider } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../common/providers/Router';
+import { Header } from '../../../Header';
+import { RouteName } from '../../constants';
 import NoNotifications from './NoNotifications';
 import { Notification } from './Notification';
 
-const NotificationsList = () => {
-  const { notificationsDivider } = useTheme();
-
+const NotificationsContent = () => {
   const {
     params: { threadId },
   } = useRoute<{ threadId: ThreadId }>();
-
+  const { notificationsDivider } = useTheme();
   const { messages } = useThreadMessages({ id: threadId });
 
   if (!messages.length) {
@@ -31,6 +31,29 @@ const NotificationsList = () => {
         </React.Fragment>
       ))}
     </div>
+  );
+};
+
+const NotificationsList = () => {
+  const { navigate } = useRoute<{ threadId: ThreadId }>();
+  const { icons } = useTheme();
+
+  return (
+    <>
+      <Header>
+        <Header.Icons containerOnly position="left" />
+        <Header.Title>Notifications</Header.Title>
+        <Header.Icons>
+          <Header.Icons>
+            <Header.Icon
+              icon={<icons.settings />}
+              onClick={() => navigate(RouteName.Settings)}
+            />
+          </Header.Icons>
+        </Header.Icons>
+      </Header>
+      <NotificationsContent />
+    </>
   );
 };
 

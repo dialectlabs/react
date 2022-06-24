@@ -33,13 +33,17 @@ const Settings = ({ threadId, onThreadDeleted }: SettingsProps) => {
     errorDeletingThread,
   } = useThread({ findParams: { id: threadId } });
 
-  const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
-    useTheme();
+  const {
+    textStyles,
+    xPaddedText,
+    secondaryDangerButton,
+    secondaryDangerButtonLoading,
+  } = useTheme();
   const isOnChain = thread?.backend === Backend.Solana;
 
   return (
     <>
-      <div className="dt-pt-1">
+      <div>
         {isOnChain ? (
           <ValueRow
             label={
@@ -72,18 +76,29 @@ const Settings = ({ threadId, onThreadDeleted }: SettingsProps) => {
           </ValueRow>
         ) : null}
         {isAdminable && (
-          <Button
-            className="dt-w-full"
-            defaultStyle={secondaryDangerButton}
-            loadingStyle={secondaryDangerButtonLoading}
-            onClick={async () => {
-              await deleteDialect().catch(noop);
-              onThreadDeleted?.();
-            }}
-            loading={isDeletingThread}
-          >
-            {isOnChain ? 'Withdraw rent & delete history' : 'Delete thread'}
-          </Button>
+          <>
+            <Button
+              className="dt-w-full"
+              defaultStyle={secondaryDangerButton}
+              loadingStyle={secondaryDangerButtonLoading}
+              onClick={async () => {
+                await deleteDialect().catch(noop);
+                onThreadDeleted?.();
+              }}
+              loading={isDeletingThread}
+            >
+              {isOnChain ? 'Withdraw rent and delete history' : 'Delete thread'}
+            </Button>
+            <P
+              className={clsx(
+                textStyles.small,
+                xPaddedText,
+                'dt-opacity-50 dt-mt-2'
+              )}
+            >
+              Notification history will be lost forever
+            </P>
+          </>
         )}
         {errorDeletingThread &&
           errorDeletingThread.type !== 'DISCONNECTED_FROM_CHAIN' && (

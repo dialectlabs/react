@@ -8,7 +8,6 @@ function Header(props: {
   isWeb3Enabled: boolean;
   isSettingsOpen: boolean;
   onModalClose: () => void;
-  toggleSettings: () => void;
   onBackClick?: () => void;
 }) {
   const { colors, textStyles, header, icons } = useTheme();
