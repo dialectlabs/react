@@ -10,13 +10,7 @@ import { ThreadMemberScope, Backend } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import type { Connection, PublicKey } from '@solana/web3.js';
-import {
-  KeyboardEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import debounce from '../../../../utils/debounce';
 import {
   Button,
@@ -135,7 +129,8 @@ export default function CreateThread({
       ? Backend.Solana
       : Backend.DialectCloud;
 
-  const { thread: currentChatWithAddress } = useThread({
+  // FIXME: handle error if [] passed
+  const { thread: currentChatWithMember } = useThread({
     findParams: { otherMembers: actualAddress ? [actualAddress] : [] },
   });
 
@@ -151,10 +146,8 @@ export default function CreateThread({
       return;
     }
 
-    if (currentChatWithAddress && currentChatWithAddress.backend === backend) {
-      const currentThreadWithAddress = currentChatWithAddress.id;
-
-      onNewThreadCreated?.(currentThreadWithAddress);
+    if (currentChatWithMember && currentChatWithMember.backend === backend) {
+      onNewThreadCreated?.(currentChatWithMember.id);
       return;
     }
 
