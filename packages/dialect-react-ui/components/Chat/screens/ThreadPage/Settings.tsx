@@ -10,17 +10,16 @@ import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
 import { Button, ValueRow } from '../../../common';
 import { A, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import { useRoute } from '../../../common/providers/Router';
-import { MainRouteName, RouteName } from '../../constants';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
 interface SettingsProps {
   threadId: ThreadId;
+  onThreadDeleted: () => void;
 }
 
-const Settings = ({ threadId }: SettingsProps) => {
+const Settings = ({ threadId, onThreadDeleted }: SettingsProps) => {
   const {
     info: {
       config: { solana },
@@ -33,7 +32,6 @@ const Settings = ({ threadId }: SettingsProps) => {
     isDeletingThread,
     errorDeletingThread,
   } = useThread({ findParams: { id: threadId } });
-  const { navigate } = useRoute();
 
   const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
     useTheme();
@@ -80,9 +78,7 @@ const Settings = ({ threadId }: SettingsProps) => {
             loadingStyle={secondaryDangerButtonLoading}
             onClick={async () => {
               await deleteDialect().catch(noop);
-              navigate(RouteName.Main, {
-                sub: { name: MainRouteName.Thread },
-              });
+              onThreadDeleted?.();
             }}
             loading={isDeletingThread}
           >

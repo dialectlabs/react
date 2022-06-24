@@ -114,7 +114,14 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
               <Thread threadId={threadId} />
             </Route>
             <Route name={ThreadRouteName.Settings}>
-              <Settings threadId={threadId} />
+              <Settings
+                threadId={threadId}
+                onThreadDeleted={() => {
+                  navigate(RouteName.Main, {
+                    sub: { name: MainRouteName.Thread },
+                  });
+                }}
+              />
             </Route>
           </Router>
         </div>
