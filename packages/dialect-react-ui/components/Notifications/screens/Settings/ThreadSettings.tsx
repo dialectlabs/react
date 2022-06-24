@@ -1,5 +1,5 @@
-import { Backend } from '@dialectlabs/sdk';
 import {
+  Backend,
   useDialectDapp,
   useDialectSdk,
   useThread,

@@ -5,7 +5,6 @@ import {
   IncomingThemeVariables,
   NotificationsButton,
 } from '@dialectlabs/react-ui';
-import { Backend } from '@dialectlabs/sdk';
 import * as anchor from '@project-serum/anchor';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
@@ -13,13 +12,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { Wallet as WalletButton, WalletContext } from '../components/Wallet';
 
 import {
+  Backend,
   Config,
   DialectContextProvider,
   DialectWalletAdapter,
 } from '@dialectlabs/react-sdk';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'FnUaaRXXAdV1Y4RHD2k9BUwRXBtHuyTWrMK6HHtqKaEq'
+  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
 );
 
 export const themeVariables: IncomingThemeVariables = {
@@ -48,9 +48,11 @@ const walletToDialectWallet = (
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
     ? async (pubKey) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
       }
@@ -75,9 +77,6 @@ function AuthedHome() {
     (): Config => ({
       backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'local-development',
-      // solana: {
-      //   rpcUrl: 'http://localhost:8080',
-      // },
     }),
     []
   );

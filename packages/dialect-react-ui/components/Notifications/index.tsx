@@ -153,9 +153,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           <Route name={RouteName.NoWallet}>
             <Error type="NoWallet" />
           </Route>
-          <Route name={RouteName.CantDecrypt}>
+          {/* <Route name={RouteName.CantDecrypt}>
             <Error type="CantDecrypt" />
-          </Route>
+          </Route> */}
           <Route name={RouteName.SigningRequest}>
             <SignMessageInfo />
           </Route>

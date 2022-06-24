@@ -1,5 +1,4 @@
-import { useDialectSdk, useThread } from '@dialectlabs/react-sdk';
-import type { ThreadId } from '@dialectlabs/sdk';
+import { ThreadId, useDialectSdk, useThread } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';

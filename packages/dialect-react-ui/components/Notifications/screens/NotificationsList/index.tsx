@@ -1,5 +1,4 @@
-import { useThreadMessages } from '@dialectlabs/react-sdk';
-import type { ThreadId } from '@dialectlabs/sdk';
+import { ThreadId, useThreadMessages } from '@dialectlabs/react-sdk';
 import React from 'react';
 import { Divider } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
