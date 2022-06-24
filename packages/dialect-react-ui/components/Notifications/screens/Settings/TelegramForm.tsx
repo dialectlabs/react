@@ -1,4 +1,3 @@
-import type { AddressType } from '@dialectlabs/react';
 import { useDialectCloudApi } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
@@ -9,11 +8,6 @@ import ResendIcon from '../../../Icon/Resend';
 
 export interface TelegramFormProps {
   botURL?: string;
-}
-
-function getTelegramObj(addresses: AddressType[] | null): AddressType | null {
-  if (!addresses) return null;
-  return addresses.find((address) => address.type === 'telegram') || null;
 }
 
 export function TelegramForm(props: TelegramFormProps) {

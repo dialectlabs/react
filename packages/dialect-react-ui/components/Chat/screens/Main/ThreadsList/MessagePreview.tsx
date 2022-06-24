@@ -1,4 +1,3 @@
-import { formatTimestamp } from '@dialectlabs/react';
 import {
   Backend,
   Message,
@@ -8,6 +7,7 @@ import {
   useThreadMessages,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
+import { formatTimestamp } from '../../../../../utils/timeUtils';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';

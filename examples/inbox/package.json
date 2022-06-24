@@ -11,8 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.16.7",
-    "@dialectlabs/react-sdk": "^1.0.0-beta.0",
-    "@dialectlabs/react-ui": "^0.9.0",
+    "@dialectlabs/react-ui": "^1.0.0-beta.1",
     "@cardinal/namespaces-components": "^2.5.0",
     "@dialectlabs/web3": "^0.3.2",
     "@project-serum/anchor": "^0.23.0",

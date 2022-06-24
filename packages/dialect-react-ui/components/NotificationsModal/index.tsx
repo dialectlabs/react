@@ -1,23 +1,12 @@
-import { useEffect, useRef } from 'react';
-import type { PropTypes } from '../NotificationsButton';
-import type { WalletType } from '@dialectlabs/react';
-import {
-  ApiProvider,
-  connected,
-  DialectProvider,
-  useApi,
-} from '@dialectlabs/react';
-import { DialectThemeProvider } from '../common/providers/DialectThemeProvider';
-import type { Channel } from '../common/types';
-import Notifications, { NotificationType } from '../Notifications';
+import { useRef } from 'react';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import type { Channel } from '../common/types';
+import Notifications, { NotificationType } from '../Notifications';
+import type { PropTypes } from '../NotificationsButton';
 
 type ModalProps = {
   dialectId: string;
-  wallet: WalletType;
-  network?: string;
-  rpcUrl?: string;
   notifications: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
@@ -31,19 +20,6 @@ function Modal({ channels = ['web3'], ...props }: ModalProps): JSX.Element {
   const bellRef = useRef(null);
 
   useOutsideAlerter(wrapperRef, bellRef, close);
-
-  const { setWallet, setNetwork, setRpcUrl } = useApi();
-  const isWalletConnected = connected(props.wallet);
-
-  useEffect(
-    () => setWallet(connected(props.wallet) ? props.wallet : null),
-    [props.wallet, isWalletConnected, setWallet]
-  );
-  useEffect(
-    () => setNetwork(props.network || null),
-    [props.network, setNetwork]
-  );
-  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
   return (
     <div
@@ -64,20 +40,11 @@ function Modal({ channels = ['web3'], ...props }: ModalProps): JSX.Element {
 }
 
 export default function NotificationModal({
-  theme = 'dark',
-  channels = ['web3'],
-  variables,
   ...props
 }: PropTypes): JSX.Element {
   return (
     <div className="dialect dt-w-full dt-h-full">
-      <ApiProvider dapp={props.publicKey.toBase58()}>
-        <DialectProvider publicKey={props.publicKey}>
-          <DialectThemeProvider theme={theme} variables={variables}>
-            <Modal channels={channels} {...props} />
-          </DialectThemeProvider>
-        </DialectProvider>
-      </ApiProvider>
+      <Modal {...props} />
     </div>
   );
 }

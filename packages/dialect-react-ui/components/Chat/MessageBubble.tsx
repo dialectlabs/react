@@ -1,4 +1,3 @@
-import { formatTimestamp } from '@dialectlabs/react';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import Avatar from '../Avatar';
@@ -6,6 +5,7 @@ import { ButtonLink, LinkifiedText } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
 import type { Message } from '@dialectlabs/react-sdk';
+import { formatTimestamp } from '../../utils/timeUtils';
 
 type MessageBubbleProps = Message & {
   isYou: boolean;

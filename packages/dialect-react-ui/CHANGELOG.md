@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.1] - 2022-06-24
+
+- new implementation using react-sdk
+
 ## [0.9.2] - 2022-06-21
 
 - fix: show solana name service domain without middle truncating

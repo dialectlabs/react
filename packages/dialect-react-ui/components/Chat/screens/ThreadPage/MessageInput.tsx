@@ -1,15 +1,15 @@
 import type { KeyboardEvent, FormEvent } from 'react';
 import clsx from 'clsx';
-import type { ParsedErrorData } from '@dialectlabs/react';
 import { ButtonBase, Textarea } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { Loader } from '../../../common';
+import type { DialectSdkError } from '@dialectlabs/react-sdk';
 
 type PropsType = {
   text: string;
   setText: (text: string) => void;
-  error: ParsedErrorData | null | undefined;
-  setError: (error: ParsedErrorData | null | undefined) => void;
+  error: DialectSdkError | null | undefined;
+  setError: (error: DialectSdkError | null | undefined) => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onEnterPress: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
   disableSendButton: boolean;

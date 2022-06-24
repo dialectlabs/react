@@ -1,5 +1,5 @@
-import type { ParsedErrorData } from '@dialectlabs/react';
 import {
+  DialectSdkError,
   ThreadId,
   useDialectSdk,
   useThread,
@@ -31,7 +31,7 @@ export default function Thread({ threadId }: ThreadProps) {
   const { scrollbar } = useTheme();
 
   const [text, setText] = useState<string>('');
-  const [error, setError] = useState<ParsedErrorData | null | undefined>();
+  const [error, setError] = useState<DialectSdkError | null | undefined>();
 
   if (!thread) return null;
 
@@ -39,7 +39,7 @@ export default function Thread({ threadId }: ThreadProps) {
     cancel({ id });
   };
 
-  const handleError = (err: ParsedErrorData) => {
+  const handleError = (err: DialectSdkError) => {
     setError(err);
   };
 

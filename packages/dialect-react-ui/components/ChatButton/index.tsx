@@ -1,32 +1,15 @@
-import { useEffect, useRef } from 'react';
-import {
-  ApiProvider,
-  connected,
-  useApi,
-  WalletType,
-  DialectProvider,
-} from '@dialectlabs/react';
-import { Transition } from '@headlessui/react';
-import {
-  DialectThemeProvider,
-  ThemeType,
-  IncomingThemeVariables,
-  useTheme,
-} from '../common/providers/DialectThemeProvider';
-import Chat from '../Chat';
-import IconButton from '../IconButton';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
-import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
-import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import { Transition } from '@headlessui/react';
 import clsx from 'clsx';
+import { useRef } from 'react';
+import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import Chat from '../Chat';
+import { useTheme } from '../common/providers/DialectThemeProvider';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import IconButton from '../IconButton';
 
 type PropTypes = {
   dialectId: string;
-  wallet: WalletType;
-  network?: string;
-  rpcUrl?: string;
-  theme?: ThemeType;
-  variables?: IncomingThemeVariables;
   bellClassName?: string;
   bellStyle?: object;
 };
@@ -39,19 +22,6 @@ function WrappedChatButton(
   const wrapperRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
   useOutsideAlerter(wrapperRef, bellRef, close);
-
-  const { setWallet, setNetwork, setRpcUrl } = useApi();
-  const isWalletConnected = connected(props.wallet);
-
-  useEffect(
-    () => setWallet(connected(props.wallet) ? props.wallet : null),
-    [props.wallet, isWalletConnected, setWallet]
-  );
-  useEffect(
-    () => setNetwork(props.network || null),
-    [props.network, setNetwork]
-  );
-  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
 
   const { colors, bellButton, icons, modalWrapper, animations } = useTheme();
 
@@ -78,29 +48,19 @@ function WrappedChatButton(
         {...animations.popup}
       >
         <div ref={wrapperRef} className="dt-w-full dt-h-full">
-          <Chat dialectId={props.id} type="popup" onChatClose={close} />
+          <Chat dialectId={props.dialectId} type="popup" onChatClose={close} />
         </div>
       </Transition>
     </div>
   );
 }
 
-export default function ChatButton({
-  theme = 'dark',
-  variables,
-  ...props
-}: PropTypes): JSX.Element {
+export default function ChatButton({ ...props }: PropTypes): JSX.Element {
   return (
     <div className="dialect">
-      <ApiProvider>
-        <DialectProvider>
-          <WalletIdentityProvider>
-            <DialectThemeProvider theme={theme} variables={variables}>
-              <WrappedChatButton {...props} />
-            </DialectThemeProvider>
-          </WalletIdentityProvider>
-        </DialectProvider>
-      </ApiProvider>
+      <WalletIdentityProvider>
+        <WrappedChatButton {...props} />
+      </WalletIdentityProvider>
     </div>
   );
 }
