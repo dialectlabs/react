@@ -63,7 +63,7 @@ const useThread = ({
     isValidating: isFetchingThread,
     error: errorFetchingThread,
     mutate: mutateThread,
-  } = useSWR([CACHE_KEY(findParams)], () => threadsApi.find(findParams), {
+  } = useSWR(CACHE_KEY(findParams), () => threadsApi.find(findParams), {
     refreshInterval,
     refreshWhenOffline: true,
   });
