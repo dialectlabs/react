@@ -1,11 +1,10 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
+import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
-
-export const CACHE_KEY = 'THREADS';
 
 interface UseThreadsParams {
   refreshInterval?: number;
@@ -26,6 +25,7 @@ const useThreads = ({
   refreshInterval,
 }: UseThreadsParams = EMPTY_OBJ): UseThreadsValue => {
   const { threads: threadsApi } = useDialectSdk();
+  const { mutate: globalMutate } = useSWRConfig();
 
   const [isCreatingThread, setIsCreatingThread] = useState<boolean>(false);
   const [errorCreatingThread, setErrorCreatingThread] =
@@ -36,7 +36,7 @@ const useThreads = ({
     isValidating: isFetchingThreads,
     error: errorFetchingThreads,
     mutate,
-  } = useSWR(CACHE_KEY, () => threadsApi.findAll(), {
+  } = useSWR(CACHE_KEY_THREADS, () => threadsApi.findAll(), {
     refreshInterval,
     refreshWhenOffline: true,
   });
@@ -57,7 +57,12 @@ const useThreads = ({
       try {
         const res = await threadsApi.create(cmd);
         mutate();
-        // TODO: trigger useThread mutate after successfully created thread
+        globalMutate(CACHE_KEY_THREAD_FN({ id: res.id }));
+        globalMutate(
+          CACHE_KEY_THREAD_FN({
+            otherMembers: cmd.otherMembers.map((it) => it.publicKey),
+          })
+        );
         return res;
       } catch (e) {
         if (e instanceof DialectSdkError) {
@@ -68,7 +73,7 @@ const useThreads = ({
         setIsCreatingThread(false);
       }
     },
-    [threadsApi, mutate]
+    [threadsApi, mutate, globalMutate]
   );
 
   return {

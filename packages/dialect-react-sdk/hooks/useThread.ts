@@ -4,28 +4,11 @@ import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { EMPTY_ARR } from '../utils';
 import { isAdminable, isWritable } from '../utils/scopes';
+import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
-import { CACHE_KEY as THREADS_CACHE_KEY } from './useThreads';
 
 // TODO support multiple ways to resolve thread, eg. twitter, sns
 type ThreadSearchParams = FindThreadQuery;
-
-const CACHE_KEY = (findParams: ThreadSearchParams): string => {
-  const prefix = 'THREAD_';
-  if ('id' in findParams) {
-    return prefix + findParams.id.toString();
-  }
-  if ('otherMembers' in findParams) {
-    return (
-      prefix +
-      findParams.otherMembers
-        .filter((it) => it)
-        .map((it) => it.toString())
-        .join(':')
-    );
-  }
-  throw new Error('should never happen');
-};
 
 type UseThreadParams = {
   findParams: ThreadSearchParams;
@@ -63,10 +46,14 @@ const useThread = ({
     isValidating: isFetchingThread,
     error: errorFetchingThread,
     mutate: mutateThread,
-  } = useSWR(CACHE_KEY(findParams), () => threadsApi.find(findParams), {
-    refreshInterval,
-    refreshWhenOffline: true,
-  });
+  } = useSWR(
+    [CACHE_KEY_THREAD_FN(findParams)],
+    () => threadsApi.find(findParams),
+    {
+      refreshInterval,
+      refreshWhenOffline: true,
+    }
+  );
 
   useDialectErrorsHandler(errorFetchingThread, errorDeletingThread);
 
@@ -77,7 +64,7 @@ const useThread = ({
     try {
       const result = await thread.delete();
       mutateThread();
-      globalMutate(THREADS_CACHE_KEY);
+      globalMutate(CACHE_KEY_THREADS);
       return result;
     } catch (e) {
       if (e instanceof DialectSdkError) {
