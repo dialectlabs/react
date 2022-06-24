@@ -1,50 +1,16 @@
-import { useEffect } from 'react';
-import {
-  ApiProvider,
-  connected,
-  useApi,
-  WalletType,
-  DialectProvider,
-} from '@dialectlabs/react';
-import {
-  DialectThemeProvider,
-  ThemeType,
-  IncomingThemeVariables,
-  useTheme,
-} from '../common/providers/DialectThemeProvider';
-import Chat from '../Chat';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 import clsx from 'clsx';
-import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { CSSTransition } from 'react-transition-group';
+import Chat from '../Chat';
+import { useTheme } from '../common/providers/DialectThemeProvider';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 
 type PropTypes = {
   dialectId: string;
-  wallet: WalletType;
-  network?: string;
-  rpcUrl?: string;
-  theme?: ThemeType;
-  variables?: IncomingThemeVariables;
-  bellClassName?: string;
-  bellStyle?: object;
 };
 
-function WrappedBottomChat(
-  props: Omit<PropTypes, 'theme' | 'variables'>
-): JSX.Element {
-  const { ui, open, close } = useDialectUiId(props.dialectId);
-  const { setWallet, setNetwork, setRpcUrl } = useApi();
-  const isWalletConnected = connected(props.wallet);
-
-  useEffect(
-    () => setWallet(connected(props.wallet) ? props.wallet : null),
-    [props.wallet, isWalletConnected, setWallet]
-  );
-  useEffect(
-    () => setNetwork(props.network || null),
-    [props.network, setNetwork]
-  );
-  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
+function WrappedBottomChat({ dialectId }: PropTypes): JSX.Element {
+  const { ui, open, close } = useDialectUiId(dialectId);
 
   const { sliderWrapper, animations } = useTheme();
 
@@ -81,7 +47,7 @@ function WrappedBottomChat(
           )}
         >
           <Chat
-            dialectId={props.dialectId}
+            dialectId={dialectId}
             type="vertical-slider"
             onChatClose={close}
             onChatOpen={open}
@@ -92,22 +58,12 @@ function WrappedBottomChat(
   );
 }
 
-export default function BottomChat({
-  theme = 'dark',
-  variables,
-  ...props
-}: PropTypes): JSX.Element {
+export default function BottomChat(props: PropTypes): JSX.Element {
   return (
     <div className="dialect">
-      <ApiProvider>
-        <DialectProvider>
-          <WalletIdentityProvider>
-            <DialectThemeProvider theme={theme} variables={variables}>
-              <WrappedBottomChat {...props} />
-            </DialectThemeProvider>
-          </WalletIdentityProvider>
-        </DialectProvider>
-      </ApiProvider>
+      <WalletIdentityProvider>
+        <WrappedBottomChat {...props} />
+      </WalletIdentityProvider>
     </div>
   );
 }

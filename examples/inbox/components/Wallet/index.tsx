@@ -7,6 +7,7 @@ import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
   GlowWalletAdapter,
   PhantomWalletAdapter,
+  SolletExtensionWalletAdapter,
   SolletWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import {
@@ -46,6 +47,7 @@ export const WalletContext: FC = (props) => {
       new PhantomWalletAdapter(),
       new GlowWalletAdapter(),
       new SolletWalletAdapter({ network }),
+      new SolletExtensionWalletAdapter({ network }),
     ],
     [network]
   );

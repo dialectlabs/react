@@ -1,10 +1,8 @@
-import type { WalletType } from '@dialectlabs/react';
-import Chat from '../Chat';
 import { WalletIdentityProvider } from '@cardinal/namespaces-components';
+import Chat from '../Chat';
 
 interface InboxProps {
   dialectId: string;
-  wallet: WalletType;
   contentClassName?: string;
   wrapperClassName?: string;
 }

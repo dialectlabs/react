@@ -1,80 +1,88 @@
+import { formatTimestamp } from '@dialectlabs/react';
 import {
-  useApi,
-  DialectAccount,
-  formatTimestamp,
-  useDialect,
-} from '@dialectlabs/react';
+  Backend,
+  Message,
+  ThreadId,
+  useDialectSdk,
+  useThread as useThreadInternal,
+  useThreadMessages,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import type { Message } from '@dialectlabs/web3';
 import Avatar from '../../../../Avatar';
-import { DisplayAddress } from '../../../../DisplayAddress';
-import MessageStatus from '../../../MessageStatus';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
+import { DisplayAddress } from '../../../../DisplayAddress';
+import { Lock, OnChain } from '../../../../Icon';
+import MessageStatus from '../../../MessageStatus';
 
 type PropsType = {
-  dialect: DialectAccount;
+  threadId: ThreadId;
   onClick: () => void;
   disabled?: boolean;
   selected?: boolean;
 };
 
 function FirstMessage({
-  isEncrypted,
   firstMessage,
+  isEncrypted,
+  isOnChain,
 }: {
+  firstMessage?: Message;
   isEncrypted: boolean;
-  firstMessage: Message;
+  isOnChain: boolean;
 }) {
-  const { wallet } = useApi();
+  const {
+    info: { wallet },
+  } = useDialectSdk();
 
   if (isEncrypted) {
     return (
-      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2">
-        Encrypted message
+      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
+        {isOnChain ? <OnChain /> : null}
+        <Lock className="dt-w-4 dt-h-4" /> Encrypted message
       </div>
     );
   }
 
   return firstMessage ? (
-    <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-truncate">
-      <span className="dt-opacity-50">
-        {firstMessage.owner.toString() === wallet?.publicKey?.toString() &&
-          'You:'}
-      </span>{' '}
-      {firstMessage.text}
+    <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-flex dt-items-center dt-space-x-1 dt-truncate">
+      {isOnChain ? <OnChain /> : null}
+      <span>
+        {firstMessage.author.publicKey.equals(wallet.publicKey!) && 'You: '}
+        {firstMessage.text}
+      </span>
     </div>
   ) : (
-    <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2">
-      No messages yet
+    <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
+      {isOnChain ? <OnChain /> : null}
+      <span>No messages yet</span>
     </div>
   );
 }
 
 export default function MessagePreview({
-  dialect,
+  threadId,
   onClick,
   disabled = false,
   selected = false,
-}: PropsType): JSX.Element {
-  const { wallet, program } = useApi();
+}: PropsType): JSX.Element | null {
+  const {
+    info: {
+      solana: { dialectProgram },
+    },
+  } = useDialectSdk();
+  // TODO: ensure there is no re-renders
+  const { thread } = useThreadInternal({ findParams: { id: threadId } });
+  const { messages } = useThreadMessages({ id: threadId });
   const { colors } = useTheme();
-  const otherMembers = dialect?.dialect.members.filter(
-    (member) => member.publicKey.toString() !== wallet?.publicKey?.toString()
-  );
-  // TODO: refactor
-  const { sendingMessagesMap } = useDialect();
-  const sendingMessages =
-    sendingMessagesMap[dialect?.publicKey.toBase58()] || [];
-  const messages = [].concat(
-    [...sendingMessages].reverse() || [],
-    dialect.dialect.messages || []
-  );
   const [firstMessage] = messages ?? [];
-  let timestamp = formatTimestamp(dialect.dialect.lastMessageTimestamp);
-  if (firstMessage?.isSending || firstMessage?.error) {
-    timestamp = null;
-  }
-  const connection = program?.provider.connection;
+  const connection = dialectProgram?.provider.connection;
+  const recipient = thread?.otherMembers[0];
+
+  if (!thread || !recipient) return null;
+
+  const timestamp = !firstMessage?.isSending
+    ? formatTimestamp(thread.updatedAt.getTime())
+    : null;
 
   return (
     <div
@@ -86,30 +94,33 @@ export default function MessagePreview({
       onClick={!disabled ? onClick : undefined}
     >
       <div className="dt-flex">
-        <Avatar publicKey={otherMembers[0].publicKey} size="regular" />
+        <Avatar publicKey={recipient.publicKey} size="regular" />
       </div>
       <div className="dt-flex dt-items-baseline dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
-          {connection ? (
+          {connection && thread.otherMembers ? (
             <DisplayAddress
               connection={connection}
-              dialectMembers={dialect?.dialect.members}
+              otherMembers={thread.otherMembers}
             />
           ) : null}
           <FirstMessage
-            isEncrypted={dialect.dialect.encrypted}
             firstMessage={firstMessage}
+            isEncrypted={thread.encryptionEnabled}
+            isOnChain={thread.backend === Backend.Solana}
           />
         </div>
-        <div className="dt-text-xs dt-opacity-30">
-          {timestamp ? (
-            timestamp
-          ) : (
-            <MessageStatus
-              isSending={firstMessage?.isSending}
-              error={firstMessage?.error}
-            />
-          )}
+        <div className="dt-items-end dt-text-xs">
+          <span className="dt-opacity-30">
+            {timestamp ? (
+              timestamp
+            ) : (
+              <MessageStatus
+                isSending={firstMessage?.isSending}
+                error={firstMessage?.error?.message}
+              />
+            )}
+          </span>
         </div>
       </div>
     </div>

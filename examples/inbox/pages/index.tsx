@@ -1,35 +1,42 @@
-import React, { useEffect } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
 import {
-  Inbox as DialectInbox,
-  DialectUiManagementProvider,
-  useDialectUiId,
-  ChatRouteName,
-  ChatMainRouteName,
-  ThemeProvider,
+  Backend,
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+} from '@dialectlabs/react-sdk';
+import { TokenStore, EncryptionKeysStore } from '@dialectlabs/sdk';
+import {
   ChatNavigationHelpers,
+  DialectUiManagementProvider,
+  Inbox as DialectInbox,
+  ThemeProvider,
+  useDialectUiId,
 } from '@dialectlabs/react-ui';
-import {
-  ApiProvider,
-  connected,
-  DialectProvider,
-  useApi,
-} from '@dialectlabs/react';
-import { Wallet, WalletContext } from '../components/Wallet';
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { useEffect, useMemo, useState } from 'react';
+import { Wallet } from '../components/Wallet';
+
+const walletToDialectWallet = (
+  wallet: WalletContextState
+): DialectWalletAdapter => ({
+  publicKey: wallet.publicKey!,
+  connected: wallet.connected && !wallet.disconnecting,
+  signMessage: wallet.signMessage,
+  signTransaction: wallet.signTransaction,
+  signAllTransactions: wallet.signAllTransactions,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
+    ? async (pubKey) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
+      }
+    : undefined,
+});
 
 function AuthedHome() {
-  const wallet = useWallet();
-  const isWalletConnected = connected(wallet);
-
-  const { setNetwork, setRpcUrl, setWallet } = useApi();
   const { navigation } = useDialectUiId<ChatNavigationHelpers>('dialect-inbox');
-
-  useEffect(
-    () => setWallet(connected(wallet) ? wallet : null),
-    [setWallet, wallet, isWalletConnected]
-  );
-  useEffect(() => setNetwork('localnet'), [setNetwork]);
-  useEffect(() => setRpcUrl(null), [setRpcUrl]);
 
   return (
     <div className="dialect">
@@ -49,7 +56,6 @@ function AuthedHome() {
           <DialectInbox
             dialectId="dialect-inbox"
             wrapperClassName="h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
-            wallet={wallet}
           />
         </div>
       </div>
@@ -58,17 +64,36 @@ function AuthedHome() {
 }
 
 export default function Home(): JSX.Element {
+  const wallet = useWallet();
+  const [dialectWalletAdapter, setDialectWalletAdapter] =
+    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
+
+  useEffect(() => {
+    setDialectWalletAdapter(walletToDialectWallet(wallet));
+  }, [wallet]);
+
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'local-development',
+      dialectCloud: {
+        tokenStore: TokenStore.createLocalStorage(),
+      },
+      encryptionKeysStore: EncryptionKeysStore.createLocalStorage(),
+    }),
+    []
+  );
+
   return (
-    <WalletContext>
-      <ApiProvider>
-        <DialectProvider>
-          <DialectUiManagementProvider>
-            <ThemeProvider theme={'dark'}>
-              <AuthedHome />
-            </ThemeProvider>
-          </DialectUiManagementProvider>
-        </DialectProvider>
-      </ApiProvider>
-    </WalletContext>
+    <DialectContextProvider
+      wallet={dialectWalletAdapter}
+      config={dialectConfig}
+    >
+      <DialectUiManagementProvider>
+        <ThemeProvider theme={'dark'}>
+          <AuthedHome />
+        </ThemeProvider>
+      </DialectUiManagementProvider>
+    </DialectContextProvider>
   );
 }

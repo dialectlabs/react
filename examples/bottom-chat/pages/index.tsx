@@ -1,22 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
-import { useWallet } from '@solana/wallet-adapter-react';
 import {
-  defaultVariables,
-  DialectUiManagementProvider,
+  Backend,
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+} from '@dialectlabs/react-sdk';
+import {
   BottomChat,
+  ChatNavigationHelpers,
+  defaultVariables,
+  DialectThemeProvider,
+  DialectUiManagementProvider,
   IncomingThemeVariables,
   useDialectUiId,
-  ChatNavigationHelpers,
 } from '@dialectlabs/react-ui';
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { PublicKey } from '@solana/web3.js';
 import Head from 'next/head';
+import { Wallet as WalletButton } from '../components/Wallet';
 // pink: #B852DC
 // teal: #59C29D
 // dark: #353535
 // light: #F6F6F6
 // border-light: #F0F0F0
 // blue: #448EF7
+
+const walletToDialectWallet = (
+  wallet: WalletContextState
+): DialectWalletAdapter => ({
+  publicKey: wallet.publicKey || PublicKey.default,
+  connected: wallet.connected && !wallet.connecting,
+  signMessage: wallet.signMessage,
+  signTransaction: wallet.signTransaction,
+  signAllTransactions: wallet.signAllTransactions,
+  //@ts-ignore
+  diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
+    ? async (pubKey) => {
+        //@ts-ignore
+        return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
+      }
+    : undefined,
+});
 
 // TODO: Use useTheme instead of explicitly importing defaultVariables
 export const themeVariables: IncomingThemeVariables = {
@@ -47,29 +72,10 @@ export const themeVariables: IncomingThemeVariables = {
 type ThemeType = 'light' | 'dark' | undefined;
 
 function AuthedHome() {
-  // const wallet = useAnchorWallet();
   const wallet = useWallet();
-  const [theme, setTheme] = useState<ThemeType>('dark');
   const { ui, open, close, navigation } = useDialectUiId<ChatNavigationHelpers>(
     'dialect-bottom-chat'
   );
-
-  useEffect(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
-    window
-      .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', (event) => {
-        const newColorScheme = event.matches ? 'dark' : 'light';
-        setTheme(newColorScheme);
-      });
-  }, []);
 
   return (
     <>
@@ -115,24 +121,58 @@ function AuthedHome() {
             </div>
           </div>
         </div>
-        <BottomChat
-          dialectId="dialect-bottom-chat"
-          wallet={wallet}
-          network={'localnet'}
-          theme={theme}
-          variables={themeVariables}
-        />
+        <BottomChat dialectId="dialect-bottom-chat" wallet={wallet} />
       </div>
     </>
   );
 }
 
 export default function Home(): JSX.Element {
+  const wallet = useWallet();
+  const [dialectWalletAdapter, setDialectWalletAdapter] =
+    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
+
+  useEffect(() => {
+    setDialectWalletAdapter(walletToDialectWallet(wallet));
+  }, [wallet]);
+
+  const [theme, setTheme] = useState<ThemeType>('dark');
+
+  useEffect(() => {
+    if (
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', (event) => {
+        const newColorScheme = event.matches ? 'dark' : 'light';
+        setTheme(newColorScheme);
+      });
+  }, []);
+
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'local-development',
+    }),
+    []
+  );
+
   return (
-    <WalletContext>
+    <DialectContextProvider
+      config={dialectConfig}
+      wallet={dialectWalletAdapter}
+    >
       <DialectUiManagementProvider>
-        <AuthedHome />
+        <DialectThemeProvider theme={theme} variables={themeVariables}>
+          <AuthedHome />
+        </DialectThemeProvider>
       </DialectUiManagementProvider>
-    </WalletContext>
+    </DialectContextProvider>
   );
 }

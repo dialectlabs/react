@@ -1,13 +1,13 @@
-import { getNameEntry, tryGetName } from '@cardinal/namespaces';
-import { useApi } from '@dialectlabs/react';
-import { display, Member } from '@dialectlabs/web3';
-import { Connection, PublicKey } from '@solana/web3.js';
+import { getNameEntry } from '@cardinal/namespaces';
+import type { ThreadMember } from '@dialectlabs/react-sdk';
+import { display } from '@dialectlabs/web3';
+import type { Connection, PublicKey } from '@solana/web3.js';
+import clsx from 'clsx';
 import useSWR from 'swr';
-import { TwitterIcon } from '../Icon/Twitter';
-import { Loader, fetchSolanaNameServiceName } from '../common';
-import cs from '../../utils/classNames';
-import { A } from '../common/preflighted';
 import useTwitterHandle from '../../hooks/useTwitterHandle';
+import { fetchSolanaNameServiceName, Loader } from '../common';
+import { A } from '../common/preflighted';
+import { TwitterIcon } from '../Icon/Twitter';
 
 const formatTwitterLink = (
   handle: string | undefined,
@@ -71,7 +71,7 @@ const TwitterHandle = ({
 }) => {
   if (!address) return <></>;
   return loadingName ? (
-    <div className={cs(dimensionClassName, 'dt-overflow-hidden')}>
+    <div className={clsx(dimensionClassName, 'dt-overflow-hidden')}>
       Loading...
     </div>
   ) : (
@@ -100,7 +100,7 @@ const SolanaName = ({
   if (!address) return <></>;
   if (loadingName) {
     return (
-      <div className={cs(dimensionClassName, 'dt-overflow-hidden')}>
+      <div className={clsx(dimensionClassName, 'dt-overflow-hidden')}>
         Loading...
       </div>
     );
@@ -125,46 +125,38 @@ export const fetchAddressFromTwitterHandle = async (
   }
 };
 
+type DisplayAddressProps = {
+  connection: Connection;
+  otherMembers: ThreadMember[];
+  isLinkable?: boolean;
+};
+
 export function DisplayAddress({
   connection,
-  dialectMembers,
+  otherMembers,
   isLinkable = false,
-}: {
-  connection: Connection;
-  dialectMembers: Member[];
-  isLinkable?: boolean;
-}) {
-  const { wallet } = useApi();
+}: DisplayAddressProps) {
+  const otherMemberPK = otherMembers[0]?.publicKey;
 
-  const isMemberExist = dialectMembers && dialectMembers.length;
-
-  const otherMembers = isMemberExist
-    ? dialectMembers.filter(
-        (member) =>
-          member.publicKey.toString() !== wallet?.publicKey?.toString()
-      )
-    : [];
-
-  const publicKey = otherMembers[0].publicKey;
   const { data: displayName, error } = useTwitterHandle(
     connection,
-    isMemberExist && publicKey?.toString()
+    otherMemberPK
   );
   const loadingName = !displayName && !error;
   const showTwitterIcon = displayName?.includes('@');
 
   const { data } = useSWR(
-    isMemberExist ? [connection, publicKey.toString(), 'sns'] : null,
+    otherMemberPK ? [connection, otherMemberPK.toString(), 'sns'] : null,
     fetchSolanaNameServiceName
   );
 
-  if (!isMemberExist) return null;
+  if (!otherMemberPK) return null;
 
   if (showTwitterIcon) {
     return (
       <div className="dt-inline-flex items-center">
         <TwitterHandle
-          address={publicKey}
+          address={otherMemberPK}
           displayName={displayName}
           loadingName={loadingName}
           isLinkable={isLinkable}
@@ -179,7 +171,7 @@ export function DisplayAddress({
   } else if (!data || data?.solanaDomain) {
     return (
       <SolanaName
-        address={publicKey}
+        address={otherMemberPK}
         displayName={data?.solanaDomain ?? ''}
         loadingName={!data}
       />
@@ -188,7 +180,7 @@ export function DisplayAddress({
 
   return (
     <span className="dt-flex dt-items-center">
-      {display(publicKey)}
+      {display(otherMemberPK)}
       {!data && <Loader className="dt-ml-1" />}
     </span>
   );

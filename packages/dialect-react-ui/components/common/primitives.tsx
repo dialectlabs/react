@@ -1,23 +1,22 @@
+import { useDialectSdk } from '@dialectlabs/react-sdk';
+import { ownerFetcher } from '@dialectlabs/web3';
+import clsx from 'clsx';
 import React, {
   DetailedHTMLProps,
   InputHTMLAttributes,
   useEffect,
   useState,
 } from 'react';
-import clsx from 'clsx';
-import { ownerFetcher } from '@dialectlabs/web3';
-import { useApi } from '@dialectlabs/react';
 import useSWR from 'swr';
-import cs from '../../utils/classNames';
-import { useTheme } from './providers/DialectThemeProvider';
-import { A, ButtonBase, Label, P } from './preflighted';
 import { DialectLogo } from '../Icon';
+import { A, ButtonBase, Label, P } from './preflighted';
+import { useTheme } from './providers/DialectThemeProvider';
 
 // TODO: separate these components to separate files
 export function Divider(props: { className?: string }): JSX.Element {
   const { divider } = useTheme();
 
-  return <div className={cs(divider, props.className)} />;
+  return <div className={clsx(divider, props.className)} />;
 }
 
 export function ValueRow(props: {
@@ -29,15 +28,15 @@ export function ValueRow(props: {
 
   return (
     <div
-      className={cs(
+      className={clsx(
         'dt-flex dt-flex-row dt-justify-between',
         colors.highlight,
         highlighted,
         props.className
       )}
     >
-      <span className={cs(textStyles.body)}>{props.label}</span>
-      <span className={cs(textStyles.body)}>{props.children}</span>
+      <span className={clsx(textStyles.body)}>{props.label}</span>
+      <span className={clsx(textStyles.body)}>{props.children}</span>
     </div>
   );
 }
@@ -48,7 +47,7 @@ export function Footer(): JSX.Element {
   return (
     <div className="dt-flex dt-justify-center dt-py-3">
       <div
-        className={cs(
+        className={clsx(
           'dt-px-3 dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-uppercase dt-rounded-full dt-text-[10px]',
           colors.highlightSolid
         )}
@@ -72,7 +71,7 @@ export function Centered(props: { children: React.ReactNode }): JSX.Element {
 
   return (
     <div
-      className={cs(
+      className={clsx(
         'dt-h-full dt-flex dt-flex-col dt-items-center dt-justify-center',
         textStyles.body
       )}
@@ -114,8 +113,8 @@ export function Button(props: {
 
   return (
     <ButtonBase
-      className={cs(
-        'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-transition-all dt-flex dt-flex-row dt-items-center dt-justify-center',
+      className={clsx(
+        'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
         props.disabled ? disabledButton : defaultClassName,
         props.loading && loadingClassName,
@@ -143,8 +142,8 @@ export function BigButton(props: {
 
   return (
     <ButtonBase
-      className={cs(
-        'dt-w-full dt-px-4 dt-py-3 dt-rounded-lg dt-transition-all',
+      className={clsx(
+        'dt-w-full dt-px-4 dt-py-3 dt-rounded-lg dt-transition',
         !props.loading ? bigButton : bigButtonLoading,
         props.className
       )}
@@ -196,14 +195,14 @@ export function Toggle({
       />
       {/* Background */}
       <span
-        className={cs(
+        className={clsx(
           'dt-h-5 dt-w-10 dt-rounded-full',
           isChecked ? colors.toggleBackgroundActive : colors.toggleBackground
         )}
       />
       {/* Thumb */}
       <span
-        className={cs(
+        className={clsx(
           'dt-absolute dt-top-1 dt-left-1 dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
           colors.toggleThumb,
           isChecked ? 'dt-translate-x-[160%]' : ''
@@ -214,11 +213,16 @@ export function Toggle({
 }
 
 export const useBalance = () => {
-  const { wallet, program } = useApi();
+  const {
+    info: {
+      wallet,
+      solana: { dialectProgram },
+    },
+  } = useDialectSdk();
 
   const { data, error } = useSWR(
-    program?.provider.connection && wallet
-      ? ['/owner', wallet, program?.provider.connection]
+    dialectProgram?.provider.connection && wallet
+      ? ['/owner', wallet, dialectProgram?.provider.connection]
       : null,
     ownerFetcher
   );

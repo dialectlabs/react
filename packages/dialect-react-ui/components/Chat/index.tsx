@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
-import { useDialect } from '@dialectlabs/react';
+import {
+  useDialectConnectionInfo,
+  useDialectWallet,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import Error from './screens/Error';
@@ -15,6 +18,7 @@ import {
   showThread,
   showThreadSettings,
 } from './navigation';
+import SignMessageInfo from './screens/SignMessageInfo';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -36,12 +40,25 @@ function InnerChat({
   onChatOpen,
 }: ChatProps): JSX.Element {
   const { configure } = useDialectUiId(dialectId);
-  const { disconnectedFromChain, isWalletConnected } = useDialect();
+  const {
+    connected: {
+      wallet: { connected: isWalletConnected },
+      solana: {
+        connected: isSolanaConnected,
+        shouldConnect: isSolanaShouldConnect,
+      },
+      dialectCloud: {
+        connected: isDialectCloudConnected,
+        shouldConnect: isDialectCloudShouldConnect,
+      },
+    },
+  } = useDialectConnectionInfo();
+  const { isSigning } = useDialectWallet();
 
   const { navigate } = useRoute();
 
   useEffect(() => {
-    if (disconnectedFromChain || !isWalletConnected) {
+    if (!isSolanaConnected || !isWalletConnected) {
       configure(null);
       return;
     }
@@ -57,19 +74,31 @@ function InnerChat({
           showThreadSettings(navigate, threadId),
       },
     });
-  }, [configure, disconnectedFromChain, isWalletConnected, navigate]);
+  }, [configure, isSolanaConnected, isWalletConnected, navigate]);
+
+  const someBackendConnected =
+    (isSolanaShouldConnect && isSolanaConnected) ||
+    (isDialectCloudShouldConnect && isDialectCloudConnected);
 
   useEffect(
     function pickRoute() {
-      if (disconnectedFromChain) {
+      if (!someBackendConnected) {
         navigate(RouteName.NoConnection);
       } else if (!isWalletConnected) {
         navigate(RouteName.NoWallet);
+      } else if (isSigning) {
+        navigate(RouteName.SigningRequest);
       } else {
         navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
       }
     },
-    [navigate, disconnectedFromChain, isWalletConnected]
+    [
+      navigate,
+      someBackendConnected,
+      isSolanaConnected,
+      isWalletConnected,
+      isSigning,
+    ]
   );
 
   const { colors, modal, slider } = useTheme();
@@ -100,8 +129,12 @@ function InnerChat({
           <Route name={RouteName.NoConnection}>
             <Error type="NoConnection" />
           </Route>
+          {/* TODO: add error if off-chain messages enabled but dialectCloud is unreachable */}
           <Route name={RouteName.NoWallet}>
             <Error type="NoWallet" />
+          </Route>
+          <Route name={RouteName.SigningRequest}>
+            <SignMessageInfo />
           </Route>
           <Route name={RouteName.Main}>
             <Main />

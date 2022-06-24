@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import {
+  defaultVariables,
+  DialectThemeProvider,
+  DialectUiManagementProvider,
+  IncomingThemeVariables,
+  NotificationsButton,
+} from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import Head from 'next/head';
+import { useEffect, useMemo, useState } from 'react';
+import { Wallet as WalletButton, WalletContext } from '../components/Wallet';
 
 import {
-  NotificationsButton,
-  IncomingThemeVariables,
-  defaultVariables,
-  DialectUiManagementProvider,
-} from '@dialectlabs/react-ui';
-import { WalletContext, Wallet as WalletButton } from '../components/Wallet';
-import { useWallet } from '@solana/wallet-adapter-react';
-import Head from 'next/head';
+  Backend,
+  TokenStore,
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+} from '@dialectlabs/react-sdk';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'D2pyBevYb6dit1oCx6e8vCxFK9mBeYCRe8TTntk2Tm98'
+  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
 );
 
 export const themeVariables: IncomingThemeVariables = {
@@ -33,12 +41,53 @@ export const themeVariables: IncomingThemeVariables = {
   },
 };
 
+const walletToDialectWallet = (
+  wallet: WalletContextState
+): DialectWalletAdapter => ({
+  publicKey: wallet.publicKey!,
+  connected: wallet.connected && !wallet.disconnecting,
+  signMessage: wallet.signMessage,
+  signTransaction: wallet.signTransaction,
+  signAllTransactions: wallet.signAllTransactions,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
+    ? async (pubKey) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
+      }
+    : undefined,
+});
+
 type ThemeType = 'light' | 'dark' | undefined;
 
 function AuthedHome() {
   // const wallet = useAnchorWallet();
   const wallet = useWallet();
   const [theme, setTheme] = useState<ThemeType>('dark');
+
+  const [dialectWalletAdapter, setDialectWalletAdapter] =
+    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
+
+  useEffect(() => {
+    setDialectWalletAdapter(walletToDialectWallet(wallet));
+  }, [wallet]);
+
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'local-development',
+      solana: {
+        rpcUrl: 'http://localhost:8080',
+      },
+      dialectCloud: {
+        url: 'http://localhost:3001',
+        tokenStore: TokenStore.createLocalStorage(),
+      },
+    }),
+    []
+  );
 
   useEffect(() => {
     if (
@@ -72,19 +121,22 @@ function AuthedHome() {
         />
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <NotificationsButton
-          dialectId="dialect-notifications"
-          wallet={wallet}
-          network={'localnet'}
-          publicKey={DIALECT_PUBLIC_KEY}
-          theme={theme}
-          variables={themeVariables}
-          notifications={[
-            { name: 'Welcome message', detail: 'On thread creation' },
-          ]}
-          pollingInterval={15000}
-          channels={['web3', 'email', 'sms', 'telegram']}
-        />
+        <DialectContextProvider
+          wallet={dialectWalletAdapter}
+          config={dialectConfig}
+          dapp={DIALECT_PUBLIC_KEY}
+        >
+          <DialectThemeProvider theme={theme} variables={themeVariables}>
+            <NotificationsButton
+              dialectId="dialect-notifications"
+              notifications={[
+                { name: 'Welcome message', detail: 'On thread creation' },
+              ]}
+              pollingInterval={15000}
+              channels={['web3', 'email', 'sms', 'telegram']}
+            />
+          </DialectThemeProvider>
+        </DialectContextProvider>
         <WalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">

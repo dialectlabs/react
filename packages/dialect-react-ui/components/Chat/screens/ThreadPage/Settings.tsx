@@ -1,10 +1,17 @@
-import { display, isDialectAdmin } from '@dialectlabs/web3';
-import { useApi, useDialect } from '@dialectlabs/react';
+import {
+  Backend,
+  ThreadId,
+  useDialectSdk,
+  useThread,
+} from '@dialectlabs/react-sdk';
+import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
+import { Button, ValueRow } from '../../../common';
 import { A, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import { Button, ValueRow } from '../../../common';
+import { useRoute } from '../../../common/providers/Router';
+import { MainRouteName, RouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import type { ChatNavigationHelpers } from '../../types';
@@ -13,30 +20,34 @@ import type { ChatNavigationHelpers } from '../../types';
 const noop = () => {};
 
 interface SettingsProps {
-  onCloseRequest?: () => void;
+  threadId: ThreadId;
 }
 
-const Settings = ({ onCloseRequest }: SettingsProps) => {
-  const { wallet, network } = useApi();
+const Settings = ({ threadId }: SettingsProps) => {
   const {
-    dialect,
-    dialectAddress,
-    deleteDialect,
-    isDialectDeleting,
-    deletionError,
-    setDialectAddress,
-  } = useDialect();
+    info: {
+      config: { solana },
+    },
+  } = useDialectSdk();
+  const {
+    thread,
+    delete: deleteDialect,
+    isAdminable,
+    isDeletingThread,
+    errorDeletingThread,
+  } = useThread({ findParams: { id: threadId } });
+  const { navigate } = useRoute();
+
   const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
     useTheme();
-  const isAdmin =
-    dialect && wallet?.publicKey && isDialectAdmin(dialect, wallet.publicKey);
+  const isOnChain = thread?.backend === Backend.Solana;
   const { dialectId } = useChatInternal();
   const { navigation } = useDialectUiId<ChatNavigationHelpers>(dialectId);
 
   return (
     <>
-      <div>
-        {dialectAddress ? (
+      <div className="dt-pt-1">
+        {isOnChain ? (
           <ValueRow
             label={
               <>
@@ -46,10 +57,13 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
                 <P>
                   <A
                     target="_blank"
-                    href={getExplorerAddress(dialectAddress, network)}
+                    href={getExplorerAddress(
+                      thread.id.address.toBase58(),
+                      solana?.network
+                    )}
                     rel="noreferrer"
                   >
-                    {display(dialectAddress)}↗
+                    {display(thread.id.address)}↗
                   </A>
                 </P>
               </>
@@ -64,33 +78,34 @@ const Settings = ({ onCloseRequest }: SettingsProps) => {
             </div>
           </ValueRow>
         ) : null}
-        {isAdmin && (
+        {isAdminable && (
           <Button
             className="dt-w-full"
             defaultStyle={secondaryDangerButton}
             loadingStyle={secondaryDangerButtonLoading}
             onClick={async () => {
               await deleteDialect().catch(noop);
-              // TODO: properly wait for the deletion
-              onCloseRequest?.();
-              setDialectAddress('');
+              navigate(RouteName.Main, {
+                sub: { name: MainRouteName.Thread },
+              });
               navigation?.showMain();
             }}
-            loading={isDialectDeleting}
+            loading={isDeletingThread}
           >
-            Withdraw rent & delete history
+            {isOnChain ? 'Withdraw rent & delete history' : 'Delete thread'}
           </Button>
         )}
-        {deletionError && deletionError.type !== 'DISCONNECTED_FROM_CHAIN' && (
-          <P
-            className={clsx(
-              textStyles.small,
-              'dt-text-red-500 dt-text-center dt-mt-2'
-            )}
-          >
-            {deletionError.message}
-          </P>
-        )}
+        {errorDeletingThread &&
+          errorDeletingThread.type !== 'DISCONNECTED_FROM_CHAIN' && (
+            <P
+              className={clsx(
+                textStyles.small,
+                'dt-text-red-500 dt-text-center dt-mt-2'
+              )}
+            >
+              {errorDeletingThread.message}
+            </P>
+          )}
       </div>
     </>
   );

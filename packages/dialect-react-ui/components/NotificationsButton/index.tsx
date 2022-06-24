@@ -1,37 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
-import type * as anchor from '@project-serum/anchor';
-import {
-  ApiProvider,
-  connected,
-  useApi,
-  DialectProvider,
-  useDialect,
-} from '@dialectlabs/react';
-import type { WalletType } from '@dialectlabs/react';
 import { Transition } from '@headlessui/react';
-import cs from '../../utils/classNames';
-import useMobile from '../../utils/useMobile';
-import {
-  DialectThemeProvider,
-  ThemeType,
-  IncomingThemeVariables,
-  useTheme,
-} from '../common/providers/DialectThemeProvider';
-import type { Channel } from '../common/types';
-import Notifications, { NotificationType } from '../Notifications';
-import IconButton from '../IconButton';
-import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
-import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import clsx from 'clsx';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { SWRConfig } from 'swr';
+import useMobile from '../../utils/useMobile';
+import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import { useTheme } from '../common/providers/DialectThemeProvider';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import type { Channel } from '../common/types';
+import IconButton from '../IconButton';
+import Notifications, { NotificationType } from '../Notifications';
 
 export type PropTypes = {
   dialectId: string;
-  wallet: WalletType;
-  network?: string;
-  rpcUrl?: string;
-  publicKey: anchor.web3.PublicKey;
-  theme?: ThemeType;
-  variables?: IncomingThemeVariables;
+
   bellClassName?: string;
   bellStyle?: object;
   notifications: NotificationType[];
@@ -40,9 +21,7 @@ export type PropTypes = {
   pollingInterval?: number;
 };
 
-function WrappedNotificationsButton(
-  props: Omit<PropTypes, 'theme' | 'variables'>
-): JSX.Element {
+function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   const { ui, open, close } = useDialectUiId(props.dialectId);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -52,33 +31,21 @@ function WrappedNotificationsButton(
 
   useOutsideAlerter(wrapperRef, bellRef, close);
 
-  const { setWallet, setNetwork, setRpcUrl, saveLastReadMessage } = useApi();
-  const isWalletConnected = connected(props.wallet);
+  // TODO rewrite with new provider
+  // const { messages, checkUnreadMessages } = useDialect();
 
-  const { messages, checkUnreadMessages } = useDialect();
+  // useEffect(() => {
+  //   if (!ui?.open) {
+  //     setHasNewMessages(checkUnreadMessages('notifications'));
+  //   }
+  // }, [checkUnreadMessages, messages, ui?.open]);
 
-  useEffect(() => {
-    if (!ui?.open) {
-      setHasNewMessages(checkUnreadMessages('notifications'));
-    }
-  }, [checkUnreadMessages, messages, ui?.open]);
-
-  useEffect(() => {
-    if (ui?.open) {
-      saveLastReadMessage('notifications', messages[0]?.timestamp);
-      setHasNewMessages(checkUnreadMessages('notifications'));
-    }
-  }, [checkUnreadMessages, messages, saveLastReadMessage, ui?.open]);
-
-  useEffect(
-    () => setWallet(connected(props.wallet) ? props.wallet : null),
-    [props.wallet, isWalletConnected, setWallet]
-  );
-  useEffect(
-    () => setNetwork(props.network || null),
-    [props.network, setNetwork]
-  );
-  useEffect(() => setRpcUrl(props.rpcUrl || null), [props.rpcUrl, setRpcUrl]);
+  // useEffect(() => {
+  //   if (ui?.open) {
+  //     saveLastReadMessage('notifications', messages[0]?.timestamp);
+  //     setHasNewMessages(checkUnreadMessages('notifications'));
+  //   }
+  // }, [checkUnreadMessages, messages, saveLastReadMessage, ui?.open]);
 
   const isMobile = useMobile();
 
@@ -115,7 +82,7 @@ function WrappedNotificationsButton(
           colors.bg,
           bellButton
         )}
-        icon={<icons.bell className={cs('dt-w-6 dt-h-6 dt-rounded-full')} />}
+        icon={<icons.bell className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={ui?.open ? close : open}
       />
       <Transition
@@ -141,24 +108,21 @@ function WrappedNotificationsButton(
   );
 }
 
-export default function NotificationsButton({
-  theme = 'dark',
-  channels = ['web3'],
-  variables,
-  ...props
-}: PropTypes): JSX.Element {
+export default function NotificationsButton(props: PropTypes): JSX.Element {
+  const swrOptions = useMemo(
+    () => ({
+      refreshInterval: props.pollingInterval,
+    }),
+    [props.pollingInterval]
+  );
+
+  // {/* TODO: consider extract the DialectProvider to avoid doubling providers in case multiple instances are used */}
   return (
     <div className="dialect">
-      <ApiProvider dapp={props.publicKey.toBase58()}>
-        <DialectProvider
-          pollingInterval={props.pollingInterval}
-          publicKey={props.publicKey}
-        >
-          <DialectThemeProvider theme={theme} variables={variables}>
-            <WrappedNotificationsButton channels={channels} {...props} />
-          </DialectThemeProvider>
-        </DialectProvider>
-      </ApiProvider>
+      {/* TODO: switch to some sdk config setting */}
+      <SWRConfig value={swrOptions}>
+        <WrappedNotificationsButton {...props} />
+      </SWRConfig>
     </div>
   );
 }

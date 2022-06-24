@@ -1,24 +1,24 @@
 import { formatTimestamp } from '@dialectlabs/react';
-import type { Message } from '@dialectlabs/web3';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import Avatar from '../Avatar';
 import { ButtonLink, LinkifiedText } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
+import type { Message } from '@dialectlabs/react-sdk';
 
 type MessageBubbleProps = Message & {
   isYou: boolean;
-  isSending: boolean;
-  error: string;
+  isSending?: boolean;
+  error?: { message: string } | null;
   showStatus: boolean;
-  onSendMessage: (text: string, id: number) => void;
-  onCancelMessage: (id: number) => void;
+  onSendMessage: (text: string, id: string) => void;
+  onCancelMessage: (id: string) => void;
 };
 
 export default function MessageBubble({
   id,
-  owner,
+  author,
   text,
   timestamp,
   isYou,
@@ -46,7 +46,7 @@ export default function MessageBubble({
         >
           {!isYou ? (
             <div className="dt-mr-1">
-              <Avatar size="small" publicKey={owner} />
+              <Avatar size="small" publicKey={author.publicKey} />
             </div>
           ) : null}
           <div
@@ -66,7 +66,9 @@ export default function MessageBubble({
                 <LinkifiedText>{text}</LinkifiedText>
               </div>
               <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>
-                {isSending ? 'Sending...' : formatTimestamp(timestamp)}
+                {isSending
+                  ? 'Sending...'
+                  : formatTimestamp(timestamp.getTime())}
               </div>
             </div>
           </div>
@@ -77,7 +79,7 @@ export default function MessageBubble({
           </div>
         </div>
 
-        <CSSTransition in={error} timeout={300}>
+        <CSSTransition in={Boolean(error)} timeout={300}>
           {(state) => (
             <div
               className={clsx(

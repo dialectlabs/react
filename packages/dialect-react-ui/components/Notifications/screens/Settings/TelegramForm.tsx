@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useApi, DialectErrors, ParsedErrorData } from '@dialectlabs/react';
 import type { AddressType } from '@dialectlabs/react';
-import cs from '../../utils/classNames';
-import { useTheme } from '../common/providers/DialectThemeProvider';
-import { P } from '../common/preflighted';
-import { Button, Toggle, ToggleSection, ValueRow } from '../common';
-import ResendIcon from '../Icon/Resend';
+import { useDialectCloudApi } from '@dialectlabs/react-sdk';
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+import { Button, ToggleSection } from '../../../common';
+import { P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import ResendIcon from '../../../Icon/Resend';
 
 export interface TelegramFormProps {
   botURL?: string;
@@ -18,7 +18,6 @@ function getTelegramObj(addresses: AddressType[] | null): AddressType | null {
 
 export function TelegramForm(props: TelegramFormProps) {
   const {
-    wallet,
     addresses: { telegram: telegramObj },
     fetchingAddressesError,
     saveAddress,
@@ -26,7 +25,7 @@ export function TelegramForm(props: TelegramFormProps) {
     deleteAddress,
     verifyCode,
     resendCode,
-  } = useApi();
+  } = useDialectCloudApi();
 
   const {
     textStyles,
@@ -66,7 +65,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
     try {
       setLoading(true);
-      await updateAddress(wallet, {
+      await updateAddress({
         type: 'telegram',
         value: telegramUsername,
         enabled: true,
@@ -88,7 +87,7 @@ export function TelegramForm(props: TelegramFormProps) {
     try {
       setLoading(true);
       const value = telegramUsername?.replace('@', '');
-      await saveAddress(wallet, {
+      await saveAddress({
         type: 'telegram',
         value: value,
         enabled: true,
@@ -104,7 +103,7 @@ export function TelegramForm(props: TelegramFormProps) {
   const deleteTelegram = async () => {
     try {
       setLoading(true);
-      await deleteAddress(wallet, {
+      await deleteAddress({
         addressId: telegramObj?.addressId,
       });
       setError(null);
@@ -118,7 +117,7 @@ export function TelegramForm(props: TelegramFormProps) {
   const resendCodeVerification = async () => {
     try {
       setLoading(true);
-      await resendCode(wallet, {
+      await resendCode({
         type: 'telegram',
         value: telegramUsername,
         enabled: true,
@@ -137,7 +136,6 @@ export function TelegramForm(props: TelegramFormProps) {
     try {
       setLoading(true);
       await verifyCode(
-        wallet,
         {
           type: 'telegram',
           value: telegramUsername,
@@ -158,7 +156,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
   const renderVerifiedState = () => {
     return (
-      <div className={cs(highlighted, textStyles.body, colors.highlight)}>
+      <div className={clsx(highlighted, textStyles.body, colors.highlight)}>
         <span className="dt-opacity-40">🔗 Telegram submitted</span>
       </div>
     );
@@ -168,7 +166,7 @@ export function TelegramForm(props: TelegramFormProps) {
     return (
       <div className="dt-flex dt-flex-row dt-space-x-2">
         <input
-          className={cs('dt-w-full', outlinedInput)}
+          className={clsx('dt-w-full', outlinedInput)}
           placeholder="Enter verification code"
           type="text"
           value={verificationCode}
@@ -203,7 +201,7 @@ export function TelegramForm(props: TelegramFormProps) {
         onChange={async (nextValue) => {
           setError(null);
           if (telegramObj && telegramObj.enabled !== nextValue) {
-            await updateAddress(wallet, {
+            await updateAddress({
               id: telegramObj.id,
               enabled: nextValue,
               type: 'telegram',
@@ -225,7 +223,7 @@ export function TelegramForm(props: TelegramFormProps) {
                 </>
               ) : (
                 <input
-                  className={cs(
+                  className={clsx(
                     outlinedInput,
                     error && '!dt-border-red-500 !dt-text-red-500',
                     'dt-w-full dt-basis-full'
@@ -253,7 +251,9 @@ export function TelegramForm(props: TelegramFormProps) {
                 />
               )}
               {currentError && (
-                <P className={cs(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+                <P
+                  className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2')}
+                >
                   {currentError.message}
                 </P>
               )}
@@ -294,13 +294,13 @@ export function TelegramForm(props: TelegramFormProps) {
             {!isTelegramUsernameEditing && !isVerified ? (
               <>
                 <div
-                  className={cs(
+                  className={clsx(
                     textStyles.small,
                     'dt-flex dt-flex-row dt-space-x-2'
                   )}
                 >
                   <a
-                    className={cs(textStyles.small)}
+                    className={clsx(textStyles.small)}
                     href={props.botURL}
                     target="_blank"
                     rel="noreferrer"
@@ -316,7 +316,7 @@ export function TelegramForm(props: TelegramFormProps) {
                 </div>
                 <div className="dt-flex dt-flex-row dt-space-x-2">
                   <div
-                    className={cs(
+                    className={clsx(
                       textStyles.small,
                       'display: inline-flex',
                       'dt-mb-1'
@@ -362,13 +362,13 @@ export function TelegramForm(props: TelegramFormProps) {
             ) : null}
           </div>
           {!currentError && !isChanging && isTelegramUsernameEditing ? (
-            <P className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={clsx(textStyles.small, 'dt-mb-1')}>
               You will be prompted to sign with your wallet, this action is
               free.
             </P>
           ) : null}
           {!currentError && isChanging ? (
-            <P className={cs(textStyles.small, 'dt-mb-1')}>
+            <P className={clsx(textStyles.small, 'dt-mb-1')}>
               ⚠️ Changing or deleting your Telegram username is a global setting
               across all dapps. You will be prompted to sign with your wallet,
               this action is free.

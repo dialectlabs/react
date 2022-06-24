@@ -1,8 +1,7 @@
-import React from 'react';
-import cs from '../../utils/classNames';
-import { LinkifiedText } from '../common';
-import { P } from '../common/preflighted';
-import { useTheme } from '../common/providers/DialectThemeProvider';
+import clsx from 'clsx';
+import { LinkifiedText } from '../../../common';
+import { P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 
 type Props = {
   message: string;
@@ -23,7 +22,7 @@ export const Notification = ({ message, timestamp }: Props) => {
     useTheme();
   return (
     <div
-      className={cs(
+      className={clsx(
         'dt-flex dt-flex-col',
         colors.highlight,
         notificationMessage
@@ -31,7 +30,7 @@ export const Notification = ({ message, timestamp }: Props) => {
     >
       <div className="dt-flex-1 dt-mb-2">
         <P
-          className={cs(
+          className={clsx(
             textStyles.body,
             'dt-break-words dt-whitespace-pre-wrap dt-font-medium dt-text-base'
           )}
@@ -40,7 +39,7 @@ export const Notification = ({ message, timestamp }: Props) => {
         </P>
       </div>
       <div className={notificationTimestamp}>
-        <P className={cs(textStyles.small, 'dt-opacity-60')}>
+        <P className={clsx(textStyles.small, 'dt-opacity-60')}>
           {timeFormatter.format(timestamp)}
         </P>
       </div>

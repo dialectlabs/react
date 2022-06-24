@@ -1,5 +1,5 @@
+import { useCallback, useState } from 'react';
 import clsx from 'clsx';
-import { useDialect } from '@dialectlabs/react';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ThreadsList from './ThreadsList';
 import { Header } from '../../../Header';
@@ -9,12 +9,10 @@ import { useChatInternal } from '../../provider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
-import { useState } from 'react';
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect';
 
 const Main = () => {
   const { navigate, current } = useRoute();
-  const { dialects } = useDialect();
   const { type, onChatClose, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const [hideList, setHideList] = useState(false);
@@ -31,50 +29,52 @@ const Main = () => {
     setHideList(shouldHideList);
   }, [current?.sub?.name, current?.sub?.params]);
 
+  const handleThreadClick = useCallback(
+    (thread) => {
+      navigate(RouteName.Main, {
+        sub: {
+          name: MainRouteName.Thread,
+          params: { threadId: thread.id },
+          sub: { name: ThreadRouteName.Messages },
+        },
+      });
+    },
+    [navigate]
+  );
+
   return (
-    <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
-      <div
-        className={clsx(
-          'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
-          {
-            'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
-            'dt-hidden': hideList,
-          }
-        )}
-      >
-        <Header
-          type={type}
-          onClose={onChatClose}
-          onOpen={onChatOpen}
-          onHeaderClick={onChatOpen}
-          isWindowOpen={ui?.open}
+    <Router initialRoute={MainRouteName.Thread}>
+      <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
+        <div
+          className={clsx(
+            'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
+            {
+              'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
+              'dt-hidden': hideList,
+            }
+          )}
         >
-          <Header.Title>Messages</Header.Title>
-          <Header.Icons>
-            <Header.Icon
-              icon={<icons.compose />}
-              onClick={() =>
-                navigate(RouteName.Main, {
-                  sub: { name: MainRouteName.CreateThread },
-                })
-              }
-            />
-          </Header.Icons>
-        </Header>
-        <ThreadsList
-          chatThreads={dialects}
-          onThreadClick={(dialectAccount) => {
-            navigate(RouteName.Main, {
-              sub: {
-                name: MainRouteName.Thread,
-                params: { threadId: dialectAccount.publicKey.toBase58() },
-                sub: { name: ThreadRouteName.Messages },
-              },
-            });
-          }}
-        />
-      </div>
-      <Router initialRoute={MainRouteName.Thread}>
+          <Header
+            type={type}
+            onClose={onChatClose}
+            onOpen={onChatOpen}
+            onHeaderClick={onChatOpen}
+            isWindowOpen={ui?.open}
+          >
+            <Header.Title>Messages</Header.Title>
+            <Header.Icons>
+              <Header.Icon
+                icon={<icons.compose />}
+                onClick={() =>
+                  navigate(RouteName.Main, {
+                    sub: { name: MainRouteName.CreateThread },
+                  })
+                }
+              />
+            </Header.Icons>
+          </Header>
+          <ThreadsList onThreadClick={handleThreadClick} />
+        </div>
         <Route name={MainRouteName.CreateThread}>
           <CreateThread
             onModalClose={onChatClose}
@@ -95,17 +95,10 @@ const Main = () => {
           />
         </Route>
         <Route name={MainRouteName.Thread}>
-          <ThreadPage
-            onModalClose={onChatClose}
-            onNewThreadClick={() =>
-              navigate(RouteName.Main, {
-                sub: { name: MainRouteName.CreateThread },
-              })
-            }
-          />
+          <ThreadPage />
         </Route>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 };
 

@@ -1,12 +1,12 @@
-import { HiUserCircle } from 'react-icons/hi';
-import { useApi } from '@dialectlabs/react';
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 import type { Connection, PublicKey } from '@solana/web3.js';
+import clsx from 'clsx';
+import { HiUserCircle } from 'react-icons/hi';
 import useSWR from 'swr';
-import cs from '../../utils/classNames';
-import { useTheme } from '../common/providers/DialectThemeProvider';
+import useAddressImage from '../../hooks/useAddressImage';
 import { fetchSolanaNameServiceName } from '../common';
 import { Img } from '../common/preflighted';
-import useAddressImage from '../../hooks/useAddressImage';
+import { useTheme } from '../common/providers/DialectThemeProvider';
 
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
@@ -39,7 +39,7 @@ const CardinalAvatar = ({
   if (!address) return <></>;
 
   return isLoading ? (
-    <div className={cs(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
+    <div className={clsx(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
       <>{placeholder}</>
     </div>
   ) : addressImage ? (
@@ -55,9 +55,13 @@ const CardinalAvatar = ({
 
 export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
-  const { program } = useApi();
+  const {
+    info: {
+      solana: { dialectProgram },
+    },
+  } = useDialectSdk();
 
-  const connection = program?.provider.connection;
+  const connection = dialectProgram.provider.connection;
   const { data } = useSWR(
     [connection, publicKey.toBase58(), 'sns'],
     fetchSolanaNameServiceName
@@ -65,7 +69,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
 
   return (
     <div
-      className={cs(
+      className={clsx(
         avatar,
         `dt-flex
         ${containerStyleMap[size]}`

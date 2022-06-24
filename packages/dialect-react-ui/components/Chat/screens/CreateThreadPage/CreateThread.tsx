@@ -1,54 +1,51 @@
-import type { KeyboardEvent } from 'react';
-import { useState, useEffect, useCallback } from 'react';
-import { display } from '@dialectlabs/web3';
-import type { Member } from '@dialectlabs/web3';
-import {
-  getDialectAddressWithOtherMember,
-  ParsedErrorData,
-  useApi,
-  useDialect,
-} from '@dialectlabs/react';
-import type { DialectAccount } from '@dialectlabs/react';
-import clsx from 'clsx';
-import {
-  getHashedName,
-  getNameAccountKey,
-  NameRegistryState,
-} from '@bonfida/spl-name-service';
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
-import { A, H1, Input, P } from '../../../common/preflighted';
-import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import {
+  Backend,
+  ThreadId,
+  ThreadMemberScope,
+  useDialectConnectionInfo,
+  useDialectSdk,
+  useThread,
+  useThreads,
+} from '@dialectlabs/react-sdk';
+import { display } from '@dialectlabs/web3';
+import clsx from 'clsx';
+import type { Connection, PublicKey } from '@solana/web3.js';
+import { KeyboardEvent, useCallback, useEffect, useState } from 'react';
+import debounce from '../../../../utils/debounce';
 import {
   Button,
+  Divider,
+  fetchSolanaNameServiceName,
   Footer,
   NetworkBadge,
   Toggle,
   useBalance,
   ValueRow,
-  fetchSolanaNameServiceName,
 } from '../../../common';
-import { fetchAddressFromTwitterHandle } from '../../../DisplayAddress';
-import { Lock, NoLock } from '../../../Icon';
-import { Header } from '../../../Header';
-import { Connection, PublicKey } from '@solana/web3.js';
-import debounce from '../../../../utils/debounce';
-import { useChatInternal } from '../../provider';
+import { A, H1, Input, P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useRoute } from '../../../common/providers/Router';
+import { Header } from '../../../Header';
+import { Lock, NoLock } from '../../../Icon';
+import { useChatInternal } from '../../provider';
+import tryPublicKey from '../../../../utils/tryPublicKey';
+import {
+  parseTwitterHandle,
+  tryFetchAddressFromTwitterHandle,
+} from '../../../../utils/cardinalUtils';
+import { parseSNSDomain, tryFetchSNSDomain } from '../../../../utils/SNSUtils';
+import AddressResult from './AddressResult';
+import ActionCaption from './ActionCaption';
 
 interface CreateThreadProps {
-  onNewThreadCreated?: (addr: string) => void;
+  onNewThreadCreated?: (threadId: ThreadId) => void;
   onCloseRequest?: () => void;
   onModalClose?: () => void;
 }
 
-const SOL_TLD_AUTHORITY = new PublicKey(
-  '58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx'
-);
-
-const SNS_DOMAIN_EXT = '.sol';
-
-function CardinalCTA() {
+function LinkingCTA() {
   const { textStyles } = useTheme();
   return (
     <P
@@ -57,7 +54,7 @@ function CardinalCTA() {
         'dt-opacity-60 dt-text-white dt-text dt-mt-1 dt-px-2'
       )}
     >
-      {'Link your Twitter handle with '}
+      {'Link twitter '}
       <A
         href={'https://twitter.cardinal.so'}
         target="_blank"
@@ -66,248 +63,45 @@ function CardinalCTA() {
       >
         twitter.cardinal.so
       </A>
-      {'.'}
+      {' and domain '}
+      <A
+        href={'https://naming.bonfida.org'}
+        target="_blank"
+        rel="noreferrer"
+        className="dt-underline"
+      >
+        naming.bonfida.org
+      </A>
     </P>
   );
 }
-
-function ActionCaption({
-  creationError,
-  encrypted,
-}: {
-  encrypted: boolean;
-  creationError: ParsedErrorData | null;
-}) {
-  const { textStyles, xPaddedText } = useTheme();
-  const { walletName } = useApi();
-
-  if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
-    return (
-      <P
-        className={clsx(
-          textStyles.small,
-          xPaddedText,
-          'dt-text-red-500 dt-mt-2'
-        )}
-      >
-        {creationError.message}
-      </P>
-    );
-  }
-
-  if (walletName !== 'Sollet') {
-    return (
-      <P
-        className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
-      >
-        Use{' '}
-        <A
-          href="https://www.sollet.io/"
-          target="_blank"
-          className="dt-underline"
-        >
-          Sollet.io
-        </A>{' '}
-        wallet to send encrypted messages.
-      </P>
-    );
-  }
-
-  if (encrypted) {
-    return (
-      <P
-        className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}
-      >
-        ⚠️ Sollet.io encryption standards in the browser are experimental. Do
-        not connect a wallet with significant funds in it.
-      </P>
-    );
-  }
-
-  return null;
-}
-
-const AddressResult = ({
-  valid,
-  address,
-  isTwitterHandle,
-  isSNS,
-  isYou,
-  twitterHandle,
-  snsDomain,
-}: {
-  valid: boolean;
-  address?: string;
-  isYou: boolean;
-  isTwitterHandle: boolean;
-  isSNS: boolean;
-  twitterHandle: string | null;
-  snsDomain: string | null;
-}) => {
-  const { textStyles } = useTheme();
-
-  if (isYou) {
-    return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Sorry, you couldn't message yourself currently
-      </P>
-    );
-  }
-
-  if (isTwitterHandle && !valid) {
-    return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        No address is associated with this twitter handle
-      </P>
-    );
-  }
-
-  if (isSNS && !valid) {
-    return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Couldn't find this SNS domain
-      </P>
-    );
-  }
-
-  if (!isTwitterHandle && !isSNS && !valid) {
-    return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Invalid address, Twitter handle or SNS domain
-      </P>
-    );
-  }
-
-  // Valid states
-
-  // TODO: isChecking
-  if (valid && (isSNS || isTwitterHandle)) {
-    return (
-      <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
-      >
-        {address}
-      </P>
-    );
-  }
-
-  if (valid && twitterHandle && snsDomain) {
-    return (
-      <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
-      >
-        SNS domain: {snsDomain}.sol / Twitter handle: {twitterHandle}
-      </P>
-    );
-  }
-
-  if (valid && snsDomain) {
-    return (
-      <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
-      >
-        SNS domain: {snsDomain}.sol
-      </P>
-    );
-  }
-
-  if (valid && twitterHandle) {
-    return (
-      <P
-        className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}
-      >
-        Twitter handle: {twitterHandle}
-      </P>
-    );
-  }
-
-  return (
-    <P className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}>
-      Valid address
-    </P>
-  );
-};
-
-const parseSNSDomain = (domainString: string): string | undefined => {
-  domainString = domainString.trim();
-  const isSNSDomain = domainString.match(SNS_DOMAIN_EXT);
-  const domainName = domainString.slice(0, domainString.length - 4);
-  if (!isSNSDomain || !domainName) return;
-  return domainName;
-};
-
-const tryFetchSNSDomain = async (
-  connection: Connection,
-  domainName: string
-): Promise<PublicKey | null> => {
-  try {
-    const hashedName = await getHashedName(domainName);
-
-    const domainKey = await getNameAccountKey(
-      hashedName,
-      undefined,
-      SOL_TLD_AUTHORITY
-    );
-
-    const { registry } = await NameRegistryState.retrieve(
-      connection,
-      domainKey
-    );
-
-    return registry?.owner;
-  } catch (e) {
-    return null;
-  }
-};
-
-const parseTwitterHandle = (handleString: string): string | undefined => {
-  handleString = handleString.trim();
-  const isTwitter = handleString.startsWith('@');
-  const handle = handleString.substring(1, handleString.length);
-  if (!isTwitter || !handle) return;
-  return handle;
-};
-
-const tryFetchAddressFromTwitterHandle = async (
-  connection: Connection,
-  handle: string
-): Promise<PublicKey | null> => {
-  try {
-    const { result } = await fetchAddressFromTwitterHandle(connection, handle);
-
-    return result?.parsed.data;
-  } catch (e) {
-    return null;
-  }
-};
-
-const tryPublicKey = (addressString: string): PublicKey | null => {
-  try {
-    return new PublicKey(addressString);
-  } catch (e) {
-    return null;
-  }
-};
 
 export default function CreateThread({
   onNewThreadCreated,
   onCloseRequest,
   onModalClose,
 }: CreateThreadProps) {
-  const { createDialect, dialects, isDialectCreating, creationError } =
-    useDialect();
+  const { create, isCreatingThread, errorCreatingThread } = useThreads();
+
   const {
     current,
     params: { receiver },
   } = useRoute<{ receiver?: string }>();
   const { type, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
-  const { program, network, wallet, walletName } = useApi();
-  const connection = program?.provider.connection;
+  const {
+    info: {
+      wallet,
+      config: { solana },
+      solana: { dialectProgram },
+      apiAvailability: { canEncrypt },
+    },
+  } = useDialectSdk();
+  const connection = dialectProgram?.provider.connection;
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
-  const [address, setAddress] = useState<string | null>(receiver ?? null);
+  const [address, setAddress] = useState<string | null>(receiver ?? '');
   const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
 
   const [isTwitterHandle, setIsTwitterHandle] = useState(false);
@@ -319,6 +113,27 @@ export default function CreateThread({
   const [encrypted, setEncrypted] = useState(false);
   const [isValidAddress, setIsValidAddress] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  // TODO: default to preferred backend
+  const {
+    connected: {
+      solana: { shouldConnect: isSolanaShouldConnect },
+      dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
+    },
+  } = useDialectConnectionInfo();
+
+  const isBackendSelectable =
+    isSolanaShouldConnect && isDialectCloudShouldConnect;
+  const [isOffChain, setIsOffChain] = useState(isDialectCloudShouldConnect);
+
+  const backend =
+    !isOffChain && isSolanaShouldConnect
+      ? Backend.Solana
+      : Backend.DialectCloud;
+
+  // FIXME: handle error if [] passed
+  const { thread: currentChatWithMember } = useThread({
+    findParams: { otherMembers: actualAddress ? [actualAddress] : [] },
+  });
 
   useEffect(() => {
     // Accessing current here, since we need to set the address if the reference to `current` has changed (route has changed)
@@ -328,38 +143,26 @@ export default function CreateThread({
 
   // TODO: useCallback
   const createThread = async () => {
-    const currentChatWithAddress = dialects.find(
-      (subscription: DialectAccount) => {
-        const otherMembers = subscription?.dialect.members.filter(
-          (member: Member) =>
-            member.publicKey.toString() !== wallet?.publicKey?.toString()
-        );
-        return (
-          otherMembers.length == 1 &&
-          actualAddress?.toBase58() == otherMembers[0]?.publicKey.toString()
-        );
-      }
-    );
-    if (currentChatWithAddress) {
-      const currentThreadWithAddress =
-        currentChatWithAddress.publicKey.toBase58();
-
-      onNewThreadCreated?.(currentThreadWithAddress);
+    if (!actualAddress) {
       return;
     }
 
-    createDialect(
-      actualAddress?.toBase58(),
-      [true, true],
-      [false, true],
-      encrypted
-    )
-      .then(async () => {
-        const [da, _] = await getDialectAddressWithOtherMember(
-          program,
-          actualAddress
-        );
-        onNewThreadCreated?.(da.toBase58());
+    if (currentChatWithMember && currentChatWithMember.backend === backend) {
+      onNewThreadCreated?.(currentChatWithMember.id);
+      return;
+    }
+
+    create({
+      me: { scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE] },
+      otherMembers: [
+        { publicKey: actualAddress, scopes: [ThreadMemberScope.WRITE] },
+      ],
+      encrypted,
+      // TODO: could select only if multiple provided
+      backend,
+    })
+      .then(async (thread) => {
+        onNewThreadCreated?.(thread.id);
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {});
@@ -469,7 +272,7 @@ export default function CreateThread({
     fetchReverse();
   }, [actualAddress, connection, isSNS, isTwitterHandle]);
 
-  const disabled = !address || (!isTyping && !isValidAddress);
+  const disabled = !actualAddress || (!isTyping && !isValidAddress);
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
@@ -490,16 +293,19 @@ export default function CreateThread({
         <Header.Icons />
       </Header>
 
-      <div className="dt-flex-1 dt-pb-8 dt-max-w-sm dt-m-auto dt-flex dt-flex-col dt-px-2">
+      <div className="dt-flex-1 dt-pb-8 dt-max-w-sm dt-min-w-[24rem] dt-m-auto dt-flex dt-flex-col dt-px-2">
         <H1
           className={clsx(
             textStyles.h1,
             colors.primary,
-            'dt-text-center dt-mb-4 dt-mt-4'
+            'dt-text-center dt-mb-4 dt-mt-8'
           )}
         >
           Create thread
         </H1>
+        <P className={clsx(textStyles.small, 'dt-mb-2 dt-px-2')}>
+          Enter recipient address, SNS domain or linked Twitter handle
+        </P>
         <Input
           className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
           placeholder="D1AL...DY5h, @saydialect or dialect.sol"
@@ -509,10 +315,11 @@ export default function CreateThread({
             onAddressChange(e.target.value);
           }}
           onKeyDown={onEnterPress}
+          disabled={isCreatingThread}
         />
         <div className="dt-mb-2">
           {isTyping || !address ? (
-            <CardinalCTA />
+            <LinkingCTA />
           ) : (
             <AddressResult
               isYou={
@@ -527,28 +334,52 @@ export default function CreateThread({
             />
           )}
         </div>
-        <ValueRow
-          label={
-            <>
-              Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}){' '}
-              <NetworkBadge network={network} />
-            </>
-          }
-          className={clsx('dt-w-full dt-mb-2')}
-        >
-          <span className="dt-text-right">{balance || 0} SOL</span>
-        </ValueRow>
-        <ValueRow
-          label="Rent Deposit (recoverable)"
-          className={clsx('dt-w-full')}
-        >
-          0.058 SOL
-        </ValueRow>
-        <P className={clsx(textStyles.body, 'dt-text-center dt-my-4')}>
-          All messages are stored on chain, so to start this message thread,
-          you&apos;ll need to deposit a small amount of rent. This rent is
-          recoverable.
-        </P>
+        <Divider className="dt-my-2 dt-opacity-20" />
+        {isBackendSelectable ? (
+          <ValueRow
+            className="dt-mb-2"
+            label={
+              isOffChain ? (
+                <span className="dt-flex dt-items-center">💬 Off-chain</span>
+              ) : (
+                <span className="dt-flex dt-items-center">⛓ On-chain</span>
+              )
+            }
+          >
+            <span className="dt-flex dt-items-center">
+              <Toggle
+                checked={isOffChain}
+                onClick={() => setIsOffChain((enc) => !enc)}
+              />
+            </span>
+          </ValueRow>
+        ) : null}
+        {!isOffChain ? (
+          <>
+            <ValueRow
+              label={
+                <>
+                  Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}
+                  ) <NetworkBadge network={solana?.network} />
+                </>
+              }
+              className={clsx('dt-w-full dt-mb-2')}
+            >
+              <span className="dt-text-right">{balance || 0} SOL</span>
+            </ValueRow>
+            <ValueRow
+              label="Rent Deposit (recoverable)"
+              className={clsx('dt-w-full')}
+            >
+              0.058 SOL
+            </ValueRow>
+            <P className={clsx(textStyles.small, 'dt-my-4 dt-px-2')}>
+              All messages are stored on chain, so to start this message thread,
+              you&apos;ll need to deposit a small amount of rent. This rent is
+              recoverable.
+            </P>
+          </>
+        ) : null}
         <div className="dt-flex dt-flex-row dt-gap-x-2 dt-w-full">
           <ValueRow
             label={
@@ -569,20 +400,23 @@ export default function CreateThread({
             <span className="dt-flex dt-items-center">
               <Toggle
                 checked={encrypted}
-                disabled={walletName !== 'Sollet'}
+                disabled={!canEncrypt}
                 onClick={() => setEncrypted((enc) => !enc)}
               />
             </span>
           </ValueRow>
           <Button
             onClick={createThread}
-            loading={isDialectCreating}
+            loading={isCreatingThread}
             disabled={disabled}
           >
-            {isDialectCreating ? 'Creating...' : 'Create thread'}
+            {isCreatingThread ? 'Creating...' : 'Create thread'}
           </Button>
         </div>
-        <ActionCaption encrypted={encrypted} creationError={creationError} />
+        <ActionCaption
+          encrypted={encrypted}
+          creationError={errorCreatingThread}
+        />
       </div>
 
       <div>

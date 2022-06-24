@@ -2,7 +2,7 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 
 export default function MessageStatus(props: {
   isSending?: boolean;
-  error?: string;
+  error?: string | null;
 }) {
   const { icons } = useTheme();
   if (props.isSending) {
