@@ -1,6 +1,6 @@
 import type { ParsedErrorData } from '@dialectlabs/react';
-import type { ThreadId } from '@dialectlabs/sdk';
 import {
+  ThreadId,
   useDialectSdk,
   useThread,
   useThreadMessages,

@@ -5,7 +5,6 @@ import {
   IncomingThemeVariables,
   NotificationsButton,
 } from '@dialectlabs/react-ui';
-import { Backend, TokenStore } from '@dialectlabs/sdk';
 import * as anchor from '@project-serum/anchor';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
@@ -13,6 +12,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Wallet as WalletButton, WalletContext } from '../components/Wallet';
 
 import {
+  Backend,
+  TokenStore,
   Config,
   DialectContextProvider,
   DialectWalletAdapter,
@@ -48,9 +49,11 @@ const walletToDialectWallet = (
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
     ? async (pubKey) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
       }
@@ -75,9 +78,9 @@ function AuthedHome() {
     (): Config => ({
       backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'local-development',
-      // solana: {
-      //   rpcUrl: 'http://localhost:8080',
-      // },
+      solana: {
+        rpcUrl: 'http://localhost:8080',
+      },
       dialectCloud: {
         url: 'http://localhost:3001',
         tokenStore: TokenStore.createLocalStorage(),

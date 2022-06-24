@@ -1,11 +1,12 @@
 import { formatTimestamp } from '@dialectlabs/react';
 import {
+  Backend,
+  Message,
+  ThreadId,
   useDialectSdk,
   useThread as useThreadInternal,
   useThreadMessages,
 } from '@dialectlabs/react-sdk';
-import type { Message, ThreadId } from '@dialectlabs/sdk';
-import { Backend } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';

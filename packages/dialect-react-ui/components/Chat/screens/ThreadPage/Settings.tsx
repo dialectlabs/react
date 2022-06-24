@@ -1,6 +1,9 @@
-import { useDialectSdk, useThread } from '@dialectlabs/react-sdk';
-import type { ThreadId } from '@dialectlabs/sdk';
-import { Backend } from '@dialectlabs/sdk';
+import {
+  Backend,
+  ThreadId,
+  useDialectSdk,
+  useThread,
+} from '@dialectlabs/react-sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../utils/getExplorerAddress';

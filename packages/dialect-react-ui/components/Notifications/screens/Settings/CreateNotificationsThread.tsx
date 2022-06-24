@@ -1,10 +1,12 @@
 import {
+  Backend,
+  Thread,
+  ThreadMemberScope,
   useDialectConnectionInfo,
   useDialectDapp,
   useDialectSdk,
   useThreads,
 } from '@dialectlabs/react-sdk';
-import { ThreadMemberScope, Thread, Backend } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';

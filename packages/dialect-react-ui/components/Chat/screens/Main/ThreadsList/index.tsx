@@ -1,5 +1,9 @@
-import { useDialectSdk, useThreads } from '@dialectlabs/react-sdk';
-import type { Thread, ThreadId } from '@dialectlabs/sdk';
+import {
+  Thread,
+  ThreadId,
+  useDialectSdk,
+  useThreads,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';

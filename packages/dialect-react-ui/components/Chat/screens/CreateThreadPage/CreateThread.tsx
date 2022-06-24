@@ -1,12 +1,13 @@
 import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
 import {
+  Backend,
+  ThreadId,
+  ThreadMemberScope,
   useDialectConnectionInfo,
   useDialectSdk,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
-import type { ThreadId } from '@dialectlabs/sdk';
-import { ThreadMemberScope, Backend } from '@dialectlabs/sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import type { Connection, PublicKey } from '@solana/web3.js';

@@ -1,5 +1,4 @@
-import { useDialectSdk } from '@dialectlabs/react-sdk';
-import type { DialectSdkError } from '@dialectlabs/sdk';
+import { DialectSdkError, useDialectSdk } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { A, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';

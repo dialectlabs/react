@@ -1,13 +1,13 @@
 import { getNameEntry } from '@cardinal/namespaces';
-import { display, Member } from '@dialectlabs/web3';
+import type { ThreadMember } from '@dialectlabs/react-sdk';
+import { display } from '@dialectlabs/web3';
 import type { Connection, PublicKey } from '@solana/web3.js';
-import type { ThreadMember } from '@dialectlabs/sdk';
 import useSWR from 'swr';
-import { TwitterIcon } from '../Icon/Twitter';
-import { Loader, fetchSolanaNameServiceName } from '../common';
-import cs from '../../utils/classNames';
-import { A } from '../common/preflighted';
 import useTwitterHandle from '../../hooks/useTwitterHandle';
+import cs from '../../utils/classNames';
+import { fetchSolanaNameServiceName, Loader } from '../common';
+import { A } from '../common/preflighted';
+import { TwitterIcon } from '../Icon/Twitter';
 
 const formatTwitterLink = (
   handle: string | undefined,

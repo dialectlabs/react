@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import type { ThreadId } from '@dialectlabs/sdk';
-import { useDialectSdk } from '@dialectlabs/react-sdk';
+import { ThreadId, useDialectSdk } from '@dialectlabs/react-sdk';
 import { useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName } from '../../constants';
 import NoMessages from './NoMessages';

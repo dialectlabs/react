@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { DialectContextProvider } from '@dialectlabs/react-sdk';
+import {
+  Backend,
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+} from '@dialectlabs/react-sdk';
 import {
   BottomChat,
   ChatNavigationHelpers,
@@ -10,7 +15,6 @@ import {
   IncomingThemeVariables,
   useDialectUiId,
 } from '@dialectlabs/react-ui';
-import { Backend, DialectWalletAdapter } from '@dialectlabs/sdk';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import Head from 'next/head';
@@ -26,6 +30,7 @@ const walletToDialectWallet = (
   wallet: WalletContextState
 ): DialectWalletAdapter => ({
   publicKey: wallet.publicKey || PublicKey.default,
+  connected: wallet.connected && !wallet.connecting,
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
@@ -150,16 +155,18 @@ export default function Home(): JSX.Element {
       });
   }, []);
 
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'local-development',
+    }),
+    []
+  );
+
   return (
     <DialectContextProvider
+      config={dialectConfig}
       wallet={dialectWalletAdapter}
-      environment="local-development"
-      backends={[Backend.Solana]}
-      solana={{
-        dialectProgramAddress: new PublicKey(
-          '7SWnT1GN99ZphthSHUAzWdMhKGfuvCypvj1m2mvdvHqY'
-        ),
-      }}
     >
       <DialectUiManagementProvider>
         <DialectThemeProvider theme={theme} variables={themeVariables}>
