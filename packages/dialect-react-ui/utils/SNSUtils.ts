@@ -25,7 +25,7 @@ export const tryFetchSNSDomain = async (
   domainName: string
 ): Promise<PublicKey | null> => {
   try {
-    const hashedName = await getHashedName(domainName);
+    const hashedName = await getHashedName(domainName.toLocaleLowerCase());
 
     const domainKey = await getNameAccountKey(
       hashedName,
