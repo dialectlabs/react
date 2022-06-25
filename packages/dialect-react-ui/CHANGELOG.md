@@ -2,6 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.3] - 2022-06-25
+
+- fix: SNS domain as priority, case insensitive lookup
+
+## [1.0.0-beta.2] - 2022-06-24
+
 - fix: shrinking MessagePreview in ThreadsList
 - fix: hide settings button for off-chain threads if you are not an admin
 
