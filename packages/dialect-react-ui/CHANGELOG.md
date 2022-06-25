@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.4] - 2022-06-25
+
+- fix outdated builded lib folder
+
 ## [1.0.0-beta.3] - 2022-06-25
 
 - fix: SNS domain as priority, case insensitive lookup
