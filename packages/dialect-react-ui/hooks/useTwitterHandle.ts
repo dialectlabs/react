@@ -22,7 +22,7 @@ function useTwitterHandle(connection: Connection, address?: PublicKey) {
     fetchTwitterHandleFromAddress
   );
 
-  return result;
+  return { ...result, isLoading: !result.data && !result.error };
 }
 
 export default useTwitterHandle;

@@ -24,7 +24,7 @@ const AddressResult = ({
   if (isYou) {
     return (
       <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
-        Sorry, you couldn't message yourself currently
+        Sorry, you can't message yourself currently
       </P>
     );
   }
