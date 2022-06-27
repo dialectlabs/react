@@ -56,12 +56,10 @@ const formatShortAddress = (
 const TwitterHandle = ({
   address,
   displayName,
-  colorClassName = 'dt-text-white',
   isLinkable = false,
 }: {
   address: PublicKey | undefined;
   displayName: string | undefined;
-  colorClassName?: string;
   className?: string;
   isLinkable?: boolean;
 }) => {
@@ -69,7 +67,7 @@ const TwitterHandle = ({
   return (
     <div className="dt-flex dt-gap-1.5">
       {displayName?.includes('@')
-        ? formatTwitterLink(displayName, isLinkable, colorClassName)
+        ? formatTwitterLink(displayName, isLinkable)
         : displayName || formatShortAddress(address, isLinkable)}
     </div>
   );
