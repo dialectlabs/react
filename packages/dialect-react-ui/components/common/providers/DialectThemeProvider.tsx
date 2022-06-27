@@ -259,7 +259,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
     buttonLoading:
-      'dt-min-h-[42px] dt-border dt-border-black !dt-opacity-20 !dt-text-black !dt-bg-transparent',
+      'dt-min-h-[42px] dt-border dt-border-black !dt-opacity-80 !dt-text-black !dt-bg-transparent',
     secondaryButton:
       'dt-bg-transparent dt-text-black dt-border dt-border-black hover:dt-bg-black/10',
     secondaryButtonLoading: '',
@@ -278,7 +278,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
-      'dt-min-h-[42px] dt-border dt-border-black dt-opacity-20 dt-bg-transparent',
+      'dt-min-h-[42px] dt-border dt-border-black dt-opacity-80 dt-bg-transparent',
   },
   dark: {
     colors: {
@@ -363,14 +363,14 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
     buttonLoading:
-      'dt-min-h-[42px] dt-border dt-border-white dt-bg-transparent !dt-opacity-20 !dt-text-white',
+      'dt-min-h-[42px] dt-border dt-border-white dt-bg-transparent !dt-opacity-80 !dt-text-white',
     secondaryButton:
       'dt-bg-transparent dt-text-white dt-border dt-border-white hover:dt-bg-white/10',
     secondaryButtonLoading: '',
     secondaryDangerButton:
       'dt-bg-transparent dt-text-error-night dt-border dt-border-error-night hover:dt-bg-error-night/10',
     secondaryDangerButtonLoading:
-      'dt-min-h-[42px] dt-text-error-night dt-opacity-20 !dt-bg-transparent',
+      'dt-min-h-[42px] dt-text-error-night dt-opacity-80 !dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-30 dt-bg-current',
     highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
     scrollbar: 'dt-dark-scrollbar',
@@ -382,7 +382,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
-      'dt-min-h-[42px] dt-border dt-border-white dt-opacity-20 dt-bg-transparent',
+      'dt-min-h-[42px] dt-border dt-border-white dt-opacity-80 dt-bg-transparent',
   },
 };
 
