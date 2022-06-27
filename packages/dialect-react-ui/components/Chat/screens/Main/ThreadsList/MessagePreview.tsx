@@ -46,7 +46,7 @@ function FirstMessage({
 
   return firstMessage ? (
     <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-flex dt-items-center dt-space-x-1">
-      {isOnChain ? <OnChain /> : null}
+      {isOnChain ? <OnChain className="dt-shrink-0" /> : null}
       <span className="dt-min-w-0 dt-truncate">
         {firstMessage.author.publicKey.equals(wallet.publicKey!) && 'You: '}
         {firstMessage.text}
@@ -54,7 +54,7 @@ function FirstMessage({
     </div>
   ) : (
     <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
-      {isOnChain ? <OnChain /> : null}
+      {isOnChain ? <OnChain className="dt-shrink-0" /> : null}
       <span className="dt-min-w-0 dt-truncate">No messages yet</span>
     </div>
   );
