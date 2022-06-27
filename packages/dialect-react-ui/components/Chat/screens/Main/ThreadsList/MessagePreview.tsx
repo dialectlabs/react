@@ -36,18 +36,18 @@ function FirstMessage({
 
   if (isEncrypted) {
     return (
-      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1 dt-truncate">
-        {isOnChain ? <OnChain /> : null}
+      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
+        {isOnChain ? <OnChain className="dt-shrink-0" /> : null}
         <Lock className="dt-w-4 dt-h-4 dt-shrink-0" />
-        <span>Encrypted message</span>
+        <span className="dt-min-w-0 dt-truncate">Encrypted message</span>
       </div>
     );
   }
 
   return firstMessage ? (
-    <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-flex dt-items-center dt-space-x-1 dt-truncate">
+    <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-flex dt-items-center dt-space-x-1">
       {isOnChain ? <OnChain /> : null}
-      <span>
+      <span className="dt-min-w-0 dt-truncate">
         {firstMessage.author.publicKey.equals(wallet.publicKey!) && 'You: '}
         {firstMessage.text}
       </span>
@@ -55,7 +55,7 @@ function FirstMessage({
   ) : (
     <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
       {isOnChain ? <OnChain /> : null}
-      <span>No messages yet</span>
+      <span className="dt-min-w-0 dt-truncate">No messages yet</span>
     </div>
   );
 }
