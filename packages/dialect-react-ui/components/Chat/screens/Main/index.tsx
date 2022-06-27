@@ -49,7 +49,7 @@ const Main = () => {
           className={clsx(
             'dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full',
             {
-              'md:dt-max-w-xs md:dt-border-r md:dt-flex': inbox,
+              'md:dt-max-w-[22rem] md:dt-border-r md:dt-flex': inbox,
               'dt-hidden': hideList,
             }
           )}
