@@ -9,8 +9,10 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
+import CantDecryptError from '../../entities/errors/ui/CantDecryptError';
+import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
+import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import EncryptionInfo from '../Chat/screens/EncryptionInfo';
-import Error from '../Chat/screens/Error';
 import SignMessageInfo from '../Chat/screens/SignMessageInfo';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
@@ -47,24 +49,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const cannotDecryptDialect =
     !apiAvailability.canEncrypt && thread?.encryptionEnabled;
 
-  const {
-    connected: {
-      solana: {
-        connected: isSolanaConnected,
-        shouldConnect: isSolanaShouldConnect,
-      },
-      dialectCloud: {
-        connected: isDialectCloudConnected,
-        shouldConnect: isDialectCloudShouldConnect,
-      },
-    },
-  } = useDialectConnectionInfo();
-
-  const {
-    isSigning,
-    isEncrypting,
-    connected: isWalletConnected,
-  } = useDialectWallet();
+  const { isSigning, isEncrypting } = useDialectWallet();
 
   const {
     addresses: { wallet: walletObj },
@@ -80,29 +65,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     [isSettingsOpen, setSettingsOpen]
   );
 
-  const { colors, modal, scrollbar } = useTheme();
+  const { scrollbar } = useTheme();
 
   const { navigate } = useRoute();
-
-  const someBackendConnected =
-    (isSolanaShouldConnect && isSolanaConnected) ||
-    (isDialectCloudShouldConnect && isDialectCloudConnected);
-
-  const hasError = !isWalletConnected || !someBackendConnected;
-
-  // we should render errors immediatly right after error appears
-  // that's why useEffect is not suitable to handle logic
-  const renderError = () => {
-    if (!hasError) {
-      return null;
-    }
-    if (!isWalletConnected) {
-      return <Error type="NoWallet" />;
-    }
-    if (!someBackendConnected) {
-      return <Error type="NoConnection" />;
-    }
-  };
 
   useEffect(
     function pickRoute() {
@@ -130,7 +95,6 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     },
     [
       navigate,
-      someBackendConnected,
       isSigning,
       isEncrypting,
       isSettingsOpen,
@@ -138,10 +102,85 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       isFetchingThread,
       isCreatingThread,
       isDeletingThread,
-      cannotDecryptDialect,
       thread,
+      cannotDecryptDialect,
     ]
   );
+
+  return (
+    <>
+      <Header
+        isWeb3Enabled={isWeb3Enabled}
+        isReady={isDialectAvailable || Boolean(walletObj?.enabled)}
+        isSettingsOpen={isSettingsOpen}
+        onModalClose={props.onModalClose}
+        toggleSettings={toggleSettings}
+        onBackClick={props.onBackClick}
+      />
+      <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
+        <Route name={RouteName.CantDecrypt}>
+          <CantDecryptError />
+        </Route>
+        <Route name={RouteName.SigningRequest}>
+          <SignMessageInfo />
+        </Route>
+        <Route name={RouteName.EncryptionRequest}>
+          <EncryptionInfo />
+        </Route>
+        <Route name={RouteName.Settings}>
+          <Settings
+            toggleSettings={() => {
+              toggleSettings();
+            }}
+            notifications={props.notifications || []}
+            channels={props.channels || []}
+          />
+        </Route>
+        <Route name={RouteName.Thread}>
+          <NotificationsList />
+        </Route>
+      </div>
+    </>
+  );
+}
+
+export default function Notifications(props: NotificationsProps) {
+  const { colors, modal } = useTheme();
+
+  const { connected: isWalletConnected } = useDialectWallet();
+
+  const {
+    connected: {
+      solana: {
+        connected: isSolanaConnected,
+        shouldConnect: isSolanaShouldConnect,
+      },
+      dialectCloud: {
+        connected: isDialectCloudConnected,
+        shouldConnect: isDialectCloudShouldConnect,
+      },
+    },
+  } = useDialectConnectionInfo();
+
+  const someBackendConnected =
+    (isSolanaShouldConnect && isSolanaConnected) ||
+    (isDialectCloudShouldConnect && isDialectCloudConnected);
+
+  const hasError = !isWalletConnected || !someBackendConnected;
+
+  // we should render errors immediatly right after error appears
+  // that's why useEffect is not suitable to handle logic
+  const renderError = () => {
+    if (!hasError) {
+      return null;
+    }
+    if (!isWalletConnected) {
+      return <NoWalletError />;
+    }
+    if (!someBackendConnected) {
+      return <NoConnectionError />;
+    }
+  };
 
   return (
     <div className="dialect dt-h-full">
@@ -153,52 +192,10 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           modal
         )}
       >
-        <Header
-          isWeb3Enabled={isWeb3Enabled}
-          isReady={isDialectAvailable || Boolean(walletObj?.enabled)}
-          isSettingsOpen={isSettingsOpen}
-          onModalClose={props.onModalClose}
-          toggleSettings={toggleSettings}
-          onBackClick={props.onBackClick}
-        />
-        <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
-          {hasError ? (
-            renderError()
-          ) : (
-            <>
-              {/* <Route name={RouteName.CantDecrypt}>
-                <Error type="CantDecrypt" /> // I guess this should never happen?
-              </Route> */}
-              <Route name={RouteName.SigningRequest}>
-                <SignMessageInfo />
-              </Route>
-              <Route name={RouteName.EncryptionRequest}>
-                <EncryptionInfo />
-              </Route>
-              <Route name={RouteName.Settings}>
-                <Settings
-                  toggleSettings={() => {
-                    toggleSettings();
-                  }}
-                  notifications={props.notifications || []}
-                  channels={props.channels || []}
-                />
-              </Route>
-              <Route name={RouteName.Thread}>
-                <NotificationsList />
-              </Route>
-            </>
-          )}
-        </div>
+        <Router initialRoute={RouteName.Main}>
+          {hasError ? renderError() : <InnerNotifications {...props} />}
+        </Router>
       </div>
     </div>
-  );
-}
-
-export default function Notifications(props: NotificationsProps) {
-  return (
-    <Router initialRoute={RouteName.Main}>
-      <InnerNotifications {...props} />
-    </Router>
   );
 }
