@@ -148,6 +148,7 @@ export default function CreateThread({
     }
 
     if (currentChatWithMember && currentChatWithMember.backend === backend) {
+      // FIXME: show error even for diffrent backends
       onNewThreadCreated?.(currentChatWithMember.id);
       return;
     }

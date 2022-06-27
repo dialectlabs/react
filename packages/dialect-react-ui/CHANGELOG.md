@@ -2,6 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.5] - 2022-06-26
+
+- fix: MessagePreview truncate, make wider, minor ui/ux improvements
+- feature: encryption keys awaiting screen
+- chore: bump @dialeclabs/react-sdk
+
 ## [1.0.0-beta.4] - 2022-06-25
 
 - fix outdated builded lib folder
