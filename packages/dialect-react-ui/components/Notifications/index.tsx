@@ -9,6 +9,7 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
+import EncryptionInfo from '../Chat/screens/EncryptionInfo';
 import Error from '../Chat/screens/Error';
 import SignMessageInfo from '../Chat/screens/SignMessageInfo';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -60,7 +61,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     },
   } = useDialectConnectionInfo();
 
-  const { isSigning } = useDialectWallet();
+  const { isSigning, isEncrypting } = useDialectWallet();
 
   const {
     addresses: { wallet: walletObj },
@@ -98,6 +99,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         navigate(RouteName.NoWallet);
       } else if (isSigning) {
         navigate(RouteName.SigningRequest);
+      } else if (isEncrypting) {
+        navigate(RouteName.SigningRequest);
       } else if (cannotDecryptDialect) {
         navigate(RouteName.CantDecrypt);
       } else if (shouldShowSettings) {
@@ -116,6 +119,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       isSolanaConnected,
       isWalletConnected,
       isSigning,
+      isEncrypting,
       isSettingsOpen,
       isWeb3Enabled,
       isFetchingThread,
@@ -157,6 +161,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           </Route> */}
           <Route name={RouteName.SigningRequest}>
             <SignMessageInfo />
+          </Route>
+          <Route name={RouteName.EncryptionRequest}>
+            <EncryptionInfo />
           </Route>
           <Route name={RouteName.Settings}>
             <Settings

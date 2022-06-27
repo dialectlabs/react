@@ -5,6 +5,7 @@ import { createContainer } from '../../../utils/container';
 export interface DialectWalletState {
   adapter: DialectWalletAdapter;
   isSigning: boolean;
+  isEncrypting: boolean;
 }
 
 function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
@@ -13,6 +14,7 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
   }
 
   const [isSigning, setIsSigning] = useState<boolean>(false);
+  const [isEncrypting, setIsEncrypting] = useState<boolean>(false);
 
   const wrapDialectWallet = useCallback(
     (adapter: DialectWalletAdapter): DialectWalletAdapter => {
@@ -28,6 +30,16 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
               }
             }
           : undefined,
+        diffieHellman: adapter.diffieHellman
+          ? async (...args) => {
+              setIsEncrypting(true);
+              try {
+                return await adapter.diffieHellman!(...args);
+              } finally {
+                setIsEncrypting(false);
+              }
+            }
+          : undefined,
       };
     },
     []
@@ -38,6 +50,7 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
   return {
     adapter: wrappedAdapter,
     isSigning,
+    isEncrypting,
   };
 }
 

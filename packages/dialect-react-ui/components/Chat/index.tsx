@@ -19,6 +19,7 @@ import {
   showThreadSettings,
 } from './navigation';
 import SignMessageInfo from './screens/SignMessageInfo';
+import EncryptionInfo from './screens/EncryptionInfo';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -53,7 +54,7 @@ function InnerChat({
       },
     },
   } = useDialectConnectionInfo();
-  const { isSigning } = useDialectWallet();
+  const { isSigning, isEncrypting } = useDialectWallet();
 
   const { navigate } = useRoute();
 
@@ -88,6 +89,8 @@ function InnerChat({
         navigate(RouteName.NoWallet);
       } else if (isSigning) {
         navigate(RouteName.SigningRequest);
+      } else if (isEncrypting) {
+        navigate(RouteName.EncryptionRequest);
       } else {
         navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
       }
@@ -98,6 +101,7 @@ function InnerChat({
       isSolanaConnected,
       isWalletConnected,
       isSigning,
+      isEncrypting,
     ]
   );
 
@@ -135,6 +139,9 @@ function InnerChat({
           </Route>
           <Route name={RouteName.SigningRequest}>
             <SignMessageInfo />
+          </Route>
+          <Route name={RouteName.EncryptionRequest}>
+            <EncryptionInfo />
           </Route>
           <Route name={RouteName.Main}>
             <Main />
