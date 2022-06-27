@@ -4,6 +4,7 @@ import { createContainer } from '../../../utils/container';
 
 export interface DialectWalletState {
   adapter: DialectWalletAdapter;
+  connected: boolean;
   isSigning: boolean;
   isEncrypting: boolean;
 }
@@ -45,10 +46,14 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
     []
   );
 
-  const wrappedAdapter = useMemo(() => wrapDialectWallet(adapter), [adapter]);
+  const wrappedAdapter = useMemo(
+    () => wrapDialectWallet(adapter),
+    [adapter, wrapDialectWallet]
+  );
 
   return {
     adapter: wrappedAdapter,
+    connected: wrappedAdapter.connected,
     isSigning,
     isEncrypting,
   };

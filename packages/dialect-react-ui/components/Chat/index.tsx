@@ -1,25 +1,25 @@
-import { useEffect } from 'react';
 import {
   useDialectConnectionInfo,
   useDialectWallet,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
+import { useEffect } from 'react';
 import { useTheme } from '../common/providers/DialectThemeProvider';
-import Error from './screens/Error';
-import Main from './screens/Main';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
-import { ChatProvider } from './provider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import { MainRouteName, RouteName } from './constants';
-import type { ChatNavigationHelpers } from './types';
 import {
   showCreateThread,
   showMain,
   showThread,
   showThreadSettings,
 } from './navigation';
-import SignMessageInfo from './screens/SignMessageInfo';
+import { ChatProvider } from './provider';
 import EncryptionInfo from './screens/EncryptionInfo';
+import Error from './screens/Error';
+import Main from './screens/Main';
+import SignMessageInfo from './screens/SignMessageInfo';
+import type { ChatNavigationHelpers } from './types';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -43,7 +43,6 @@ function InnerChat({
   const { configure } = useDialectUiId(dialectId);
   const {
     connected: {
-      wallet: { connected: isWalletConnected },
       solana: {
         connected: isSolanaConnected,
         shouldConnect: isSolanaShouldConnect,
@@ -54,12 +53,23 @@ function InnerChat({
       },
     },
   } = useDialectConnectionInfo();
-  const { isSigning, isEncrypting } = useDialectWallet();
+
+  const {
+    isSigning,
+    isEncrypting,
+    connected: isWalletConnected,
+  } = useDialectWallet();
 
   const { navigate } = useRoute();
 
+  const someBackendConnected =
+    (isSolanaShouldConnect && isSolanaConnected) ||
+    (isDialectCloudShouldConnect && isDialectCloudConnected);
+
+  const hasError = !isWalletConnected || !someBackendConnected;
+
   useEffect(() => {
-    if (!isSolanaConnected || !isWalletConnected) {
+    if (hasError) {
       configure(null);
       return;
     }
@@ -75,19 +85,25 @@ function InnerChat({
           showThreadSettings(navigate, threadId),
       },
     });
-  }, [configure, isSolanaConnected, isWalletConnected, navigate]);
+  }, [configure, hasError, navigate]);
 
-  const someBackendConnected =
-    (isSolanaShouldConnect && isSolanaConnected) ||
-    (isDialectCloudShouldConnect && isDialectCloudConnected);
+  // we should render errors immediatly right after error appears
+  // that's why useEffect is not suitable to handle logic
+  const renderError = () => {
+    if (!hasError) {
+      return null;
+    }
+    if (!isWalletConnected) {
+      return <Error type="NoWallet" />;
+    }
+    if (!someBackendConnected) {
+      return <Error type="NoConnection" />;
+    }
+  };
 
   useEffect(
     function pickRoute() {
-      if (!someBackendConnected) {
-        navigate(RouteName.NoConnection);
-      } else if (!isWalletConnected) {
-        navigate(RouteName.NoWallet);
-      } else if (isSigning) {
+      if (isSigning) {
         navigate(RouteName.SigningRequest);
       } else if (isEncrypting) {
         navigate(RouteName.EncryptionRequest);
@@ -130,22 +146,21 @@ function InnerChat({
             { [slider]: type === 'vertical-slider' }
           )}
         >
-          <Route name={RouteName.NoConnection}>
-            <Error type="NoConnection" />
-          </Route>
-          {/* TODO: add error if off-chain messages enabled but dialectCloud is unreachable */}
-          <Route name={RouteName.NoWallet}>
-            <Error type="NoWallet" />
-          </Route>
-          <Route name={RouteName.SigningRequest}>
-            <SignMessageInfo />
-          </Route>
-          <Route name={RouteName.EncryptionRequest}>
-            <EncryptionInfo />
-          </Route>
-          <Route name={RouteName.Main}>
-            <Main />
-          </Route>
+          {hasError ? (
+            renderError()
+          ) : (
+            <>
+              <Route name={RouteName.SigningRequest}>
+                <SignMessageInfo />
+              </Route>
+              <Route name={RouteName.EncryptionRequest}>
+                <EncryptionInfo />
+              </Route>
+              <Route name={RouteName.Main}>
+                <Main />
+              </Route>
+            </>
+          )}
         </div>
       </div>
     </ChatProvider>
@@ -154,7 +169,7 @@ function InnerChat({
 
 export default function Chat(props: ChatProps) {
   return (
-    <Router initialRoute={RouteName.NoConnection}>
+    <Router>
       <InnerChat {...props} />
     </Router>
   );

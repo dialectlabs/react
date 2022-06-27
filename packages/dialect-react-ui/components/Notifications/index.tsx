@@ -49,7 +49,6 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
 
   const {
     connected: {
-      wallet: { connected: isWalletConnected },
       solana: {
         connected: isSolanaConnected,
         shouldConnect: isSolanaShouldConnect,
@@ -61,7 +60,11 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     },
   } = useDialectConnectionInfo();
 
-  const { isSigning, isEncrypting } = useDialectWallet();
+  const {
+    isSigning,
+    isEncrypting,
+    connected: isWalletConnected,
+  } = useDialectWallet();
 
   const {
     addresses: { wallet: walletObj },
@@ -85,6 +88,22 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
 
+  const hasError = !isWalletConnected || !someBackendConnected;
+
+  // we should render errors immediatly right after error appears
+  // that's why useEffect is not suitable to handle logic
+  const renderError = () => {
+    if (!hasError) {
+      return null;
+    }
+    if (!isWalletConnected) {
+      return <Error type="NoWallet" />;
+    }
+    if (!someBackendConnected) {
+      return <Error type="NoConnection" />;
+    }
+  };
+
   useEffect(
     function pickRoute() {
       const shouldShowSettings =
@@ -93,11 +112,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         isCreatingThread ||
         isDeletingThread;
 
-      if (!someBackendConnected) {
-        navigate(RouteName.NoConnection);
-      } else if (!isWalletConnected) {
-        navigate(RouteName.NoWallet);
-      } else if (isSigning) {
+      if (isSigning) {
         navigate(RouteName.SigningRequest);
       } else if (isEncrypting) {
         navigate(RouteName.SigningRequest);
@@ -116,8 +131,6 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     [
       navigate,
       someBackendConnected,
-      isSolanaConnected,
-      isWalletConnected,
       isSigning,
       isEncrypting,
       isSettingsOpen,
@@ -149,34 +162,33 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           onBackClick={props.onBackClick}
         />
         <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
-          <Route name={RouteName.NoConnection}>
-            <Error type="NoConnection" />
-          </Route>
-          {/* TODO: add error if off-chain messages enabled but dialectCloud is unreachable */}
-          <Route name={RouteName.NoWallet}>
-            <Error type="NoWallet" />
-          </Route>
-          {/* <Route name={RouteName.CantDecrypt}>
-            <Error type="CantDecrypt" />
-          </Route> */}
-          <Route name={RouteName.SigningRequest}>
-            <SignMessageInfo />
-          </Route>
-          <Route name={RouteName.EncryptionRequest}>
-            <EncryptionInfo />
-          </Route>
-          <Route name={RouteName.Settings}>
-            <Settings
-              toggleSettings={() => {
-                toggleSettings();
-              }}
-              notifications={props.notifications || []}
-              channels={props.channels || []}
-            />
-          </Route>
-          <Route name={RouteName.Thread}>
-            <NotificationsList />
-          </Route>
+          {hasError ? (
+            renderError()
+          ) : (
+            <>
+              {/* <Route name={RouteName.CantDecrypt}>
+                <Error type="CantDecrypt" /> // I guess this should never happen?
+              </Route> */}
+              <Route name={RouteName.SigningRequest}>
+                <SignMessageInfo />
+              </Route>
+              <Route name={RouteName.EncryptionRequest}>
+                <EncryptionInfo />
+              </Route>
+              <Route name={RouteName.Settings}>
+                <Settings
+                  toggleSettings={() => {
+                    toggleSettings();
+                  }}
+                  notifications={props.notifications || []}
+                  channels={props.channels || []}
+                />
+              </Route>
+              <Route name={RouteName.Thread}>
+                <NotificationsList />
+              </Route>
+            </>
+          )}
         </div>
       </div>
     </div>
