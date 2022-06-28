@@ -2,16 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 
 import {
   Backend,
-  Config,
-  DialectContextProvider,
-  DialectWalletAdapter,
-} from '@dialectlabs/react-sdk';
-import {
   BottomChat,
   ChatNavigationHelpers,
+  Config,
   defaultVariables,
+  DialectContextProvider,
   DialectThemeProvider,
   DialectUiManagementProvider,
+  DialectWalletAdapter,
   IncomingThemeVariables,
   useDialectUiId,
 } from '@dialectlabs/react-ui';

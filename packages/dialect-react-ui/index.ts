@@ -61,3 +61,5 @@ export type {
   IncomingThemeValues,
   ChatNavigationHelpers,
 };
+
+export * from '@dialectlabs/react-sdk';
