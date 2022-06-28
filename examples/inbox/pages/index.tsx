@@ -19,7 +19,11 @@ const walletToDialectWallet = (
   wallet: WalletContextState
 ): DialectWalletAdapter => ({
   publicKey: wallet.publicKey!,
-  connected: wallet.connected && !wallet.disconnecting,
+  connected:
+    wallet.connected &&
+    !wallet.connecting &&
+    !wallet.disconnecting &&
+    Boolean(wallet.publicKey),
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
