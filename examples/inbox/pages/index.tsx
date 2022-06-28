@@ -1,16 +1,15 @@
 import {
-  Backend,
-  Config,
-  DialectContextProvider,
-  DialectWalletAdapter,
-} from '@dialectlabs/react-sdk';
-import { TokenStore, EncryptionKeysStore } from '@dialectlabs/sdk';
-import {
   ChatNavigationHelpers,
   DialectUiManagementProvider,
   Inbox as DialectInbox,
   ThemeProvider,
   useDialectUiId,
+  Backend,
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+  TokenStore,
+  EncryptionKeysStore,
 } from '@dialectlabs/react-ui';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import { useEffect, useMemo, useState } from 'react';
