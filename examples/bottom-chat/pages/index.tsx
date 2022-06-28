@@ -16,7 +16,6 @@ import {
   useDialectUiId,
 } from '@dialectlabs/react-ui';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
 import Head from 'next/head';
 import { Wallet as WalletButton } from '../components/Wallet';
 // pink: #B852DC
@@ -29,15 +28,21 @@ import { Wallet as WalletButton } from '../components/Wallet';
 const walletToDialectWallet = (
   wallet: WalletContextState
 ): DialectWalletAdapter => ({
-  publicKey: wallet.publicKey || PublicKey.default,
-  connected: wallet.connected && !wallet.connecting,
+  publicKey: wallet.publicKey!,
+  connected:
+    wallet.connected &&
+    !wallet.connecting &&
+    !wallet.disconnecting &&
+    Boolean(wallet.publicKey),
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
     ? async (pubKey) => {
-        //@ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
       }
     : undefined,
@@ -121,7 +126,7 @@ function AuthedHome() {
             </div>
           </div>
         </div>
-        <BottomChat dialectId="dialect-bottom-chat" wallet={wallet} />
+        <BottomChat dialectId="dialect-bottom-chat" />
       </div>
     </>
   );
