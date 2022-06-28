@@ -1,6 +1,6 @@
 import {
   DialectSdkError,
-  Message as SdkMessage,
+  ThreadMessage as SdkThreadMessage,
   SendMessageCommand as DialectSdkSendMessageCommand,
   Thread,
   ThreadId,
@@ -9,7 +9,7 @@ import { useCallback, useMemo, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
-import type { LocalMessage, Message } from '../types';
+import type { LocalThreadMessage, ThreadMessage } from '../types';
 import { EMPTY_ARR } from '../utils';
 import { CACHE_KEY_MESSAGES, CACHE_KEY_THREADS } from './internal/swrCache';
 import useThread from './useThread';
@@ -29,7 +29,7 @@ interface UseThreadMessagesParams {
 
 interface UseThreadMessagesValue {
   // sdk
-  messages: LocalMessage[];
+  messages: LocalThreadMessage[];
 
   // react-lib
   send(command: SendMessageCommand): Promise<void>;
@@ -65,13 +65,13 @@ const useThreadMessages = ({
     isValidating: isFetchingMessages,
     error: errorFetchingMessages = null,
     mutate,
-  } = useSWR<SdkMessage[], DialectSdkError>(
+  } = useSWR<SdkThreadMessage[], DialectSdkError>(
     threadInternal ? CACHE_KEY_MESSAGES(threadInternal.id.toString()) : null,
     () => threadInternal!.messages(),
     { refreshInterval, refreshWhenOffline: true }
   );
 
-  const messages: Message[] = useMemo(() => {
+  const messages: ThreadMessage[] = useMemo(() => {
     if (!thread) {
       return EMPTY_ARR;
     }
@@ -104,7 +104,7 @@ const useThreadMessages = ({
       setIsSendingMessage(true);
       setErrorSendingMessage(null);
       const threadAddr = threadInternal.id.toString();
-      const optimisticMessage: LocalMessage = {
+      const optimisticMessage: LocalThreadMessage = {
         id: cmd.id || messages.length.toString(),
         text: cmd.text,
         timestamp: new Date(),

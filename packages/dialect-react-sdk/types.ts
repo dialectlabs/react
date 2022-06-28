@@ -1,15 +1,15 @@
 import type {
   ConfigProps,
   DialectSdkError,
-  Message as SdkMessage,
+  ThreadMessage as SdkThreadMessage,
   DialectWalletAdapter as DialectSdkWalletAdapter,
 } from '@dialectlabs/sdk';
 
-export interface Message extends SdkMessage {
+export interface ThreadMessage extends SdkThreadMessage {
   id: string;
 }
 
-export interface LocalMessage extends Message {
+export interface LocalThreadMessage extends ThreadMessage {
   isSending?: boolean;
   error?: DialectSdkError | null;
 }

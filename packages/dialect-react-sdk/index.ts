@@ -5,6 +5,6 @@ export * from './hooks';
 export type {
   Config,
   DialectWalletAdapter,
-  LocalMessage,
-  Message,
+  LocalThreadMessage,
+  ThreadMessage,
 } from './types';
