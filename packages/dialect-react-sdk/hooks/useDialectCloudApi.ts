@@ -11,9 +11,8 @@ import {
   updateAddress,
   verifyCode,
 } from '../web2.api';
-import useDialectConnectionInfo from './useDialectConnectionInfo';
 import useDialectDapp from './useDialectDapp';
-import useDialectSdk from './useDialectSdk';
+import useDialectWallet from './useDialectWallet';
 
 // TODO: this is subject to change
 interface DialectCloudApi {
@@ -30,13 +29,7 @@ const useDialectCloudApi = (): DialectCloudApi => {
   const { dappAddress: address } = useDialectDapp();
   const dapp = address?.toBase58();
 
-  const {
-    connected: { wallet: isWalletConnected },
-  } = useDialectConnectionInfo();
-
-  const {
-    info: { wallet },
-  } = useDialectSdk();
+  const { adapter: wallet, connected: isWalletConnected } = useDialectWallet();
 
   const {
     data: addresses,
