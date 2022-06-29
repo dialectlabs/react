@@ -1,4 +1,5 @@
 import {
+  Backend,
   DialectSdkError,
   ThreadId,
   useDialectSdk,
@@ -34,6 +35,8 @@ export default function Thread({ threadId }: ThreadProps) {
   const [error, setError] = useState<DialectSdkError | null | undefined>();
 
   if (!thread) return null;
+
+  const isOnChain = thread.backend === Backend.Solana;
 
   const cancelSendingMessage = (id: string) => {
     cancel({ id });
@@ -108,6 +111,7 @@ export default function Thread({ threadId }: ThreadProps) {
                 <div data-key={`message-${message.id}`}>
                   <MessageBubble
                     {...message}
+                    isOnChain={isOnChain}
                     isYou={isYou}
                     showStatus={isYou && isLast}
                     onSendMessage={handleSendMessage}

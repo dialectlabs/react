@@ -10,9 +10,10 @@ import { useDialectUiId } from '../../../common/providers/DialectUiManagementPro
 import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { DisplayAddress } from '../../../DisplayAddress';
 import { Header } from '../../../Header';
-import { Lock, NoLock } from '../../../Icon';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
+import EncryptionBadge from './EncryptionBadge';
+import OnChainBadge from './OnChainBadge';
 import Settings from './Settings';
 import Thread from './Thread';
 
@@ -33,7 +34,7 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const { ui } = useDialectUiId(dialectId);
   const connection = dialectProgram?.provider.connection;
 
-  const offChain = thread?.backend === Backend.DialectCloud;
+  const isOnChain = thread?.backend === Backend.Solana;
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
@@ -79,16 +80,9 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
                   'Loading...'
                 )}
               </span>
-              <span className="dt-text-xs dt-opacity-50 dt-flex dt-items-center dt-space-x-1">
-                {thread?.encryptionEnabled ? (
-                  <>
-                    <Lock className="dt-w-3 dt-h-3 dt-mt-0.5" /> encrypted
-                  </>
-                ) : (
-                  <>
-                    <NoLock className="dt-w-3 dt-h-3 dt-mt-0.5" /> unencrypted
-                  </>
-                )}
+              <span className="dt-text-xs dt-flex dt-items-center dt-space-x-1">
+                {isOnChain ? <OnChainBadge /> : null}
+                <EncryptionBadge enabled={Boolean(thread?.encryptionEnabled)} />
               </span>
             </div>
           </Header.Title>
@@ -97,7 +91,7 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
               className={clsx({
                 'dt-invisible':
                   current?.sub?.name === ThreadRouteName.Settings ||
-                  (offChain && !isAdminable),
+                  (!isOnChain && !isAdminable),
               })}
               icon={<icons.settings />}
               onClick={() =>

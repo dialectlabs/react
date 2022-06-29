@@ -8,6 +8,7 @@ import type { Message } from '@dialectlabs/react-sdk';
 import { formatTimestamp } from '../../utils/timeUtils';
 
 type MessageBubbleProps = Message & {
+  isOnChain: boolean;
   isYou: boolean;
   isSending?: boolean;
   error?: { message: string } | null;
@@ -22,13 +23,21 @@ export default function MessageBubble({
   text,
   timestamp,
   isYou,
+  isOnChain,
   isSending,
   error,
   showStatus,
   onSendMessage,
   onCancelMessage,
 }: MessageBubbleProps) {
-  const { icons, messageBubble, otherMessageBubble } = useTheme();
+  const {
+    icons,
+    messageBubble,
+    message,
+    otherMessage,
+    messageOnChain,
+    otherMessageOnChain,
+  } = useTheme();
 
   return (
     <div
@@ -52,11 +61,15 @@ export default function MessageBubble({
           <div
             className={clsx(
               'dt-flex-row',
-              isYou ? messageBubble : otherMessageBubble,
+              messageBubble,
+              isYou && isOnChain && messageOnChain,
+              !isYou && isOnChain && otherMessageOnChain,
+              isYou && !isOnChain && message,
+              !isYou && !isOnChain && otherMessage,
               isYou ? 'dt-max-w-full ' : 'dt-max-w-xs dt-flex-shrink dt-ml-1'
             )}
           >
-            <div className={'dt-items-end'}>
+            <div className="dt-items-end">
               <div
                 className={clsx(
                   'dt-break-words dt-whitespace-pre-wrap dt-text-sm',

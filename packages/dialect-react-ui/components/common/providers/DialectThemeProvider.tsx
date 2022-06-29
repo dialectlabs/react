@@ -105,7 +105,10 @@ export type IncomingThemeValues = {
   outlinedInput?: string;
   textArea?: string;
   messageBubble?: string;
-  otherMessageBubble?: string;
+  message?: string;
+  otherMessage?: string;
+  messageOnChain?: string;
+  otherMessageOnChain?: string;
   notificationMessage?: string;
   notificationTimestamp?: string;
   notificationsDivider?: string;
@@ -244,9 +247,11 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-text-sm dt-text-black dt-bg-subtle-day dt-px-3 dt-py-2.5 dt-border-2 dt-border-subtle-day dt-rounded-lg dt-focus:border-black dt-focus:outline-none',
     textArea:
       'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none disabled:dt-text-neutral-800/50',
-    messageBubble:
-      'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-transparent dt-border dt-border-neutral-300',
-    otherMessageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-neutral-100',
+    messageBubble: 'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl',
+    message: 'dt-bg-transparent dt-border dt-border-neutral-300',
+    otherMessage: 'dt-bg-neutral-100',
+    messageOnChain: 'dt-bg-[#6F2AFF] dt-text-white',
+    otherMessageOnChain: 'dt-border-2 dt-border-[#6F2AFF]',
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
@@ -347,10 +352,11 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-text-sm dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus:dt-border-white focus:dt-outline-none',
     textArea:
       'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 dt-outline-none disabled:dt-text-neutral-200/50',
-    messageBubble:
-      'dt-text-white dt-px-4 dt-py-2 dt-rounded-2xl dt-bg-transparent dt-border dt-border-neutral-800',
-    otherMessageBubble:
-      'dt-px-4 dt-py-2 dt-rounded-2xl dt-border dt-border-neutral-900 dt-bg-neutral-900',
+    messageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl',
+    message: 'dt-bg-transparent dt-border dt-border-neutral-800 dt-text-white',
+    otherMessage: 'dt-bg-neutral-900 dt-border-neutral-900',
+    messageOnChain: 'dt-bg-[#6F2AFF] dt-text-white',
+    otherMessageOnChain: 'dt-border-2 dt-border-[#6F2AFF]',
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
