@@ -1,31 +1,43 @@
 import { getNameEntry } from '@cardinal/namespaces';
-import type { ThreadMember } from '@dialectlabs/react-sdk';
 import { display } from '@dialectlabs/web3';
 import type { Connection, PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
+import { Children } from 'react';
 import useSWR from 'swr';
 import useTwitterHandle from '../../hooks/useTwitterHandle';
-import { fetchSolanaNameServiceName, Loader } from '../common';
+import { fetchSolanaNameServiceName } from '../common';
 import { A } from '../common/preflighted';
 import { TwitterIcon } from '../Icon/Twitter';
 
-const formatTwitterLink = (
-  handle: string | undefined,
-  isLinkable: boolean,
-  className?: string
-) => {
+interface TwitterLinkProps {
+  handle: string | undefined;
+  isLinkable: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+const TwitterLink = ({
+  handle,
+  isLinkable,
+  className,
+  children,
+}: TwitterLinkProps) => {
   if (!handle) return <A></A>;
   return isLinkable ? (
     <A
       href={`https://twitter.com/${handle}`}
-      className={className}
+      className={clsx(className, 'dt-transition hover:dt-opacity-60')}
       target="_blank"
       rel="noreferrer"
     >
       {handle}
+      {children}
     </A>
   ) : (
-    handle
+    <span className={className}>
+      {handle}
+      {children}
+    </span>
   );
 };
 
@@ -53,22 +65,33 @@ const formatShortAddress = (
   );
 };
 
-const TwitterHandle = ({
+const CardinalAddress = ({
   address,
   displayName,
   isLinkable = false,
+  className,
+  children,
 }: {
   address: PublicKey | undefined;
   displayName: string | undefined;
   className?: string;
   isLinkable?: boolean;
+  children?: React.ReactNode;
 }) => {
-  if (!address) return <></>;
+  if (!address || !displayName) return <></>;
   return (
     <div className="dt-flex dt-gap-1.5">
-      {displayName?.includes('@')
-        ? formatTwitterLink(displayName, isLinkable)
-        : displayName || formatShortAddress(address, isLinkable)}
+      {displayName?.includes('@') ? (
+        <TwitterLink
+          className={className}
+          handle={displayName}
+          isLinkable={isLinkable}
+        >
+          {children}
+        </TwitterLink>
+      ) : (
+        <>{displayName}</>
+      )}
     </div>
   );
 };
@@ -158,16 +181,18 @@ export function DisplayAddress({
   if (!sns.isLoading && !cardinal.isLoading && cardinal.isTwitter) {
     return (
       <div className="dt-inline-flex items-center">
-        <TwitterHandle
+        <CardinalAddress
+          className="dt-flex dt-items-center"
           address={otherMemberPK}
           displayName={cardinal.displayName}
           isLinkable={isLinkable}
-        />
-        {cardinal.isTwitter && (
-          <div className="dt-flex dt-items-center dt-px-1">
-            <TwitterIcon height={18} width={18} />
-          </div>
-        )}
+        >
+          {cardinal.isTwitter && (
+            <div className="dt-px-1">
+              <TwitterIcon height={18} width={18} />
+            </div>
+          )}
+        </CardinalAddress>
       </div>
     );
   }
