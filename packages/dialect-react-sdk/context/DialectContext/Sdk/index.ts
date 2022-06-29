@@ -22,18 +22,18 @@ function useDialectSdk(
     encryptionKeysStore,
     backends = EMPTY_ARR,
   } = config;
-  const wallet = DialectWallet.useContainer();
+  const { adapter, connected } = DialectWallet.useContainer();
   const sdk = useMemo(() => {
-    if (!wallet.adapter.publicKey) return null;
+    if (!connected) return null;
     return Dialect.sdk({
       environment,
-      wallet: wallet.adapter,
+      wallet: adapter,
       solana,
       dialectCloud,
       encryptionKeysStore,
       backends,
     });
-  }, [config, wallet.adapter]);
+  }, [config, adapter, connected]);
 
   return {
     sdk,

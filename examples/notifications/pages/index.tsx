@@ -4,20 +4,17 @@ import {
   DialectUiManagementProvider,
   IncomingThemeVariables,
   NotificationsButton,
+  Backend,
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+  TokenStore,
 } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
 import { useEffect, useMemo, useState } from 'react';
-import { Wallet as WalletButton, WalletContext } from '../components/Wallet';
-
-import {
-  Backend,
-  TokenStore,
-  Config,
-  DialectContextProvider,
-  DialectWalletAdapter,
-} from '@dialectlabs/react-sdk';
+import { Wallet as WalletButton } from '../components/Wallet';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
   'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
@@ -45,7 +42,11 @@ const walletToDialectWallet = (
   wallet: WalletContextState
 ): DialectWalletAdapter => ({
   publicKey: wallet.publicKey!,
-  connected: wallet.connected && !wallet.disconnecting,
+  connected:
+    wallet.connected &&
+    !wallet.connecting &&
+    !wallet.disconnecting &&
+    Boolean(wallet.publicKey),
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
@@ -63,7 +64,47 @@ const walletToDialectWallet = (
 type ThemeType = 'light' | 'dark' | undefined;
 
 function AuthedHome() {
-  // const wallet = useAnchorWallet();
+  return (
+    <div className="flex flex-col h-screen bg-white dark:bg-black">
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+      <div className="flex flex-row justify-end p-2 items-center space-x-2">
+        <NotificationsButton
+          dialectId="dialect-notifications"
+          notifications={[
+            { name: 'Welcome message', detail: 'On thread creation' },
+          ]}
+          pollingInterval={15000}
+          channels={['web3', 'email', 'sms', 'telegram']}
+        />
+        <WalletButton />
+      </div>
+      <div className="h-full text-2xl flex flex-col justify-center">
+        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
+          @dialectlabs/react
+        </code>
+        <code className="text-center text-neutral-400 dark:text-neutral-600">
+          examples/
+          <code className="text-neutral-900 dark:text-neutral-100">
+            notifications
+          </code>
+        </code>
+      </div>
+    </div>
+  );
+}
+
+export default function Home(): JSX.Element {
   const wallet = useWallet();
   const [theme, setTheme] = useState<ThemeType>('dark');
 
@@ -107,59 +148,16 @@ function AuthedHome() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-black">
-      <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="true"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <DialectContextProvider
-          wallet={dialectWalletAdapter}
-          config={dialectConfig}
-          dapp={DIALECT_PUBLIC_KEY}
-        >
-          <DialectThemeProvider theme={theme} variables={themeVariables}>
-            <NotificationsButton
-              dialectId="dialect-notifications"
-              notifications={[
-                { name: 'Welcome message', detail: 'On thread creation' },
-              ]}
-              pollingInterval={15000}
-              channels={['web3', 'email', 'sms', 'telegram']}
-            />
-          </DialectThemeProvider>
-        </DialectContextProvider>
-        <WalletButton />
-      </div>
-      <div className="h-full text-2xl flex flex-col justify-center">
-        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
-          @dialectlabs/react
-        </code>
-        <code className="text-center text-neutral-400 dark:text-neutral-600">
-          examples/
-          <code className="text-neutral-900 dark:text-neutral-100">
-            notifications
-          </code>
-        </code>
-      </div>
-    </div>
-  );
-}
-
-export default function Home(): JSX.Element {
-  return (
-    <WalletContext>
-      <DialectUiManagementProvider>
-        <AuthedHome />
-      </DialectUiManagementProvider>
-    </WalletContext>
+    <DialectContextProvider
+      wallet={dialectWalletAdapter}
+      config={dialectConfig}
+      dapp={DIALECT_PUBLIC_KEY}
+    >
+      <DialectThemeProvider theme={theme} variables={themeVariables}>
+        <DialectUiManagementProvider>
+          <AuthedHome />
+        </DialectUiManagementProvider>
+      </DialectThemeProvider>
+    </DialectContextProvider>
   );
 }

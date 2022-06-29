@@ -1,16 +1,15 @@
 import {
-  Backend,
-  Config,
-  DialectContextProvider,
-  DialectWalletAdapter,
-} from '@dialectlabs/react-sdk';
-import { TokenStore, EncryptionKeysStore } from '@dialectlabs/sdk';
-import {
   ChatNavigationHelpers,
   DialectUiManagementProvider,
   Inbox as DialectInbox,
   ThemeProvider,
   useDialectUiId,
+  Backend,
+  Config,
+  DialectContextProvider,
+  DialectWalletAdapter,
+  TokenStore,
+  EncryptionKeysStore,
 } from '@dialectlabs/react-ui';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import { useEffect, useMemo, useState } from 'react';
@@ -20,7 +19,11 @@ const walletToDialectWallet = (
   wallet: WalletContextState
 ): DialectWalletAdapter => ({
   publicKey: wallet.publicKey!,
-  connected: wallet.connected && !wallet.disconnecting,
+  connected:
+    wallet.connected &&
+    !wallet.connecting &&
+    !wallet.disconnecting &&
+    Boolean(wallet.publicKey),
   signMessage: wallet.signMessage,
   signTransaction: wallet.signTransaction,
   signAllTransactions: wallet.signAllTransactions,
