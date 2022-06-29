@@ -21,3 +21,5 @@ export { default as Trash } from './Trash';
 export { default as X } from './X';
 export { default as MultiarrowVertical } from './MultiarrowVertical';
 export { default as OnChain } from './OnChain';
+export { default as Encrypted } from './Encrypted';
+export { default as Unencrypted } from './Unencrypted';

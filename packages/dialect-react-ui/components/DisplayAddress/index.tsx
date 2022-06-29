@@ -101,49 +101,69 @@ export const fetchAddressFromTwitterHandle = async (
   }
 };
 
+type UseIdentityProps = {
+  connection: Connection;
+  otherMemberPK?: PublicKey;
+};
+
+export const useIdentity = ({
+  connection,
+  otherMemberPK,
+}: UseIdentityProps) => {
+  const { data: snsData, error: snsError } = useSWR(
+    otherMemberPK ? [connection, otherMemberPK.toString(), 'sns'] : null,
+    fetchSolanaNameServiceName
+  );
+
+  const { data: displayTwitterName, isLoading: isLoadingTwitterHandle } =
+    useTwitterHandle(connection, otherMemberPK);
+
+  return {
+    sns: {
+      displayName: snsData?.solanaDomain,
+      isLoading: !snsData && !snsError,
+    },
+    cardinal: {
+      displayName: displayTwitterName,
+      isLoading: isLoadingTwitterHandle,
+      isTwitter: displayTwitterName?.includes('@'),
+    },
+  };
+};
+
 type DisplayAddressProps = {
   connection: Connection;
-  otherMembers: ThreadMember[];
+  otherMemberPK: PublicKey;
   isLinkable?: boolean;
 };
 
 export function DisplayAddress({
   connection,
-  otherMembers,
+  otherMemberPK,
   isLinkable = false,
 }: DisplayAddressProps) {
-  const otherMemberPK = otherMembers[0]?.publicKey;
-
-  const { data: snsData, error: errorFetchingSNSdomain } = useSWR(
-    otherMemberPK ? [connection, otherMemberPK.toString(), 'sns'] : null,
-    fetchSolanaNameServiceName
-  );
-  const isLoadingSNSDomain = !snsData && !errorFetchingSNSdomain;
-
-  const { data: displayName, isLoading: isLoadingTwitterHandle } =
-    useTwitterHandle(connection, otherMemberPK);
-  const showTwitterIcon = displayName?.includes('@');
+  const { sns, cardinal } = useIdentity({ connection, otherMemberPK });
 
   if (!otherMemberPK) return null;
 
-  if (snsData?.solanaDomain) {
+  if (sns?.displayName) {
     return (
       <SolanaName
         address={otherMemberPK}
-        displayName={snsData?.solanaDomain ?? ''}
+        displayName={sns?.displayName ?? ''}
       />
     );
   }
 
-  if (!isLoadingSNSDomain && !isLoadingTwitterHandle && showTwitterIcon) {
+  if (!sns.isLoading && !cardinal.isLoading && cardinal.isTwitter) {
     return (
       <div className="dt-inline-flex items-center">
         <TwitterHandle
           address={otherMemberPK}
-          displayName={displayName}
+          displayName={cardinal.displayName}
           isLinkable={isLinkable}
         />
-        {showTwitterIcon && (
+        {cardinal.isTwitter && (
           <div className="dt-flex dt-items-center dt-px-1">
             <TwitterIcon height={18} width={18} />
           </div>
@@ -153,9 +173,6 @@ export function DisplayAddress({
   }
 
   return (
-    <span className="dt-flex dt-items-center">
-      {display(otherMemberPK)}
-      {isLoadingSNSDomain && <Loader className="dt-ml-1" />}
-    </span>
+    <span className="dt-flex dt-items-center">{display(otherMemberPK)}</span>
   );
 }

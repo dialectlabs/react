@@ -11,16 +11,18 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 const containerStyleMap = {
   regular: 'dt-w-14 dt-h-14',
   small: 'dt-w-11 dt-h-11',
+  'extra-small': 'dt-w-10 dt-h-10',
 };
 
 const textStyleMap = {
   regular: 'dt-text-lg',
   small: 'dt-text-base',
+  'extra-small': 'dt-text-base',
 };
 
 type PropTypes = {
   publicKey: PublicKey;
-  size: 'regular' | 'small';
+  size: 'regular' | 'small' | 'extra-small';
 };
 
 const CardinalAvatar = ({

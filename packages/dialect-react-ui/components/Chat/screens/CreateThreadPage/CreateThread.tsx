@@ -28,7 +28,7 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useRoute } from '../../../common/providers/Router';
 import { Header } from '../../../Header';
-import { Lock, NoLock } from '../../../Icon';
+import { Encrypted, Unencrypted } from '../../../Icon';
 import { useChatInternal } from '../../provider';
 import tryPublicKey from '../../../../utils/tryPublicKey';
 import {
@@ -341,9 +341,9 @@ export default function CreateThread({
             className="dt-mb-2"
             label={
               isOffChain ? (
-                <span className="dt-flex dt-items-center">💬 Off-chain</span>
+                <span className="dt-flex dt-items-center">💬  Off-chain</span>
               ) : (
-                <span className="dt-flex dt-items-center">⛓ On-chain</span>
+                <span className="dt-flex dt-items-center">⛓  On-chain</span>
               )
             }
           >
@@ -386,13 +386,13 @@ export default function CreateThread({
             label={
               encrypted ? (
                 <span className="dt-flex dt-items-center">
-                  <Lock className="dt-mr-1 dt-opacity-60" />
-                  encrypted
+                  <Encrypted className="dt-w-4 dt-h-6 dt-mr-1 dt-opacity-60" />
+                  Encrypted
                 </span>
               ) : (
                 <span className="dt-flex dt-items-center">
-                  <NoLock className="dt-mr-1 dt-opacity-60" />
-                  unencrypted
+                  <Unencrypted className="dt-w-4 dt-h-6 dt-mr-1 dt-opacity-60" />
+                  Unencrypted
                 </span>
               )
             }

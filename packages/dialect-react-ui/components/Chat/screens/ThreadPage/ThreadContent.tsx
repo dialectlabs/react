@@ -4,11 +4,13 @@ import {
   useDialectSdk,
   useThread,
 } from '@dialectlabs/react-sdk';
+import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
+import Avatar from '../../../Avatar';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
-import { DisplayAddress } from '../../../DisplayAddress';
+import { DisplayAddress, useIdentity } from '../../../DisplayAddress';
 import { Header } from '../../../Header';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
@@ -33,6 +35,10 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const { type, onChatOpen, onChatClose, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const connection = dialectProgram?.provider.connection;
+  const otherMemberPK =
+    thread?.otherMembers[0] && thread.otherMembers[0].publicKey;
+
+  const { sns, cardinal } = useIdentity({ connection, otherMemberPK });
 
   const isOnChain = thread?.backend === Backend.Solana;
 
@@ -46,7 +52,13 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
           onHeaderClick={onChatOpen}
           isWindowOpen={ui?.open}
         >
-          <Header.Icons containerOnly position="left">
+          <Header.Icons
+            containerOnly
+            position="left"
+            className={clsx(
+              current?.sub?.name !== ThreadRouteName.Settings && 'md:dt-hidden'
+            )}
+          >
             <Header.Icon
               icon={<icons.back />}
               onClick={() => {
@@ -67,25 +79,40 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
               }}
             />
           </Header.Icons>
-          <Header.Title align="center">
-            <div className="dt-flex dt-flex-col dt-items-center">
-              <span className="dt-text-base dt-font-medium dt-text">
-                {connection && thread?.otherMembers ? (
-                  <DisplayAddress
-                    connection={connection}
-                    otherMembers={thread.otherMembers}
-                    isLinkable={true}
-                  />
-                ) : (
-                  'Loading...'
-                )}
-              </span>
-              <span className="dt-text-xs dt-flex dt-items-center dt-space-x-1">
-                {isOnChain ? <OnChainBadge /> : null}
-                <EncryptionBadge enabled={Boolean(thread?.encryptionEnabled)} />
-              </span>
-            </div>
-          </Header.Title>
+          {current?.sub?.name === ThreadRouteName.Settings ? (
+            <Header.Title align="center">Chat settings</Header.Title>
+          ) : null}
+          {otherMemberPK && current?.sub?.name !== ThreadRouteName.Settings ? (
+            <Header.Title align="left">
+              <div className="dt-flex dt-space-x-2">
+                <Avatar size="extra-small" publicKey={otherMemberPK} />
+                <div className="dt-flex dt-flex-col">
+                  <span className="dt-text-base dt-font-medium dt-text">
+                    {connection ? (
+                      <DisplayAddress
+                        connection={connection}
+                        otherMemberPK={otherMemberPK}
+                        isLinkable={true}
+                      />
+                    ) : (
+                      'Loading...'
+                    )}
+                  </span>
+                  <span className="dt-text-xs dt-flex dt-items-center dt-space-x-1">
+                    {sns.displayName || cardinal.displayName ? (
+                      <span className="dt-opacity-60">
+                        {display(otherMemberPK)}
+                      </span>
+                    ) : null}
+                    {isOnChain ? <OnChainBadge /> : null}
+                    <EncryptionBadge
+                      enabled={Boolean(thread?.encryptionEnabled)}
+                    />
+                  </span>
+                </div>
+              </div>
+            </Header.Title>
+          ) : null}
           <Header.Icons>
             <Header.Icon
               className={clsx({

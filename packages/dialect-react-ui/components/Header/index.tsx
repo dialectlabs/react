@@ -23,6 +23,7 @@ interface IconsProps {
   containerOnly?: boolean;
   children?: ReactNode | ReactNode[];
   position?: 'left' | 'right';
+  className?: string;
 }
 
 interface TitleProps {
@@ -97,16 +98,21 @@ Header.Icons = function HeaderIconsContent({
   children,
   position = 'right',
   containerOnly = false,
+  className,
 }: IconsProps) {
   const { type, onClose, onOpen, isWindowOpen } = useHeader();
   const { icons } = useTheme();
 
   return (
     <div
-      className={clsx('dt-flex', {
-        'dt-pr-3': position === 'left',
-        'dt-pl-3': position === 'right',
-      })}
+      className={clsx(
+        'dt-flex',
+        {
+          'dt-pr-3': position === 'left',
+          'dt-pl-3': position === 'right',
+        },
+        className
+      )}
     >
       {children}
       {!containerOnly && type === 'vertical-slider' && onClose && onOpen && (

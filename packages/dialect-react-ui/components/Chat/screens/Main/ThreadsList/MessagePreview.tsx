@@ -11,7 +11,7 @@ import { formatTimestamp } from '../../../../../utils/timeUtils';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
-import { Lock, OnChain } from '../../../../Icon';
+import { Encrypted, OnChain } from '../../../../Icon';
 import MessageStatus from '../../../MessageStatus';
 
 type PropsType = {
@@ -38,7 +38,7 @@ function FirstMessage({
     return (
       <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
         {isOnChain ? <OnChain className="dt-shrink-0" /> : null}
-        <Lock className="dt-w-4 dt-h-4 dt-shrink-0" />
+        <Encrypted className="dt-shrink-0" />
         <span className="dt-min-w-0 dt-truncate">Encrypted message</span>
       </div>
     );
@@ -85,6 +85,9 @@ export default function MessagePreview({
     ? formatTimestamp(thread.updatedAt.getTime())
     : null;
 
+  const otherMemberPk =
+    thread.otherMembers[0] && thread.otherMembers[0].publicKey;
+
   return (
     <div
       className={clsx(
@@ -99,10 +102,10 @@ export default function MessagePreview({
       </div>
       <div className="dt-flex dt-items-baseline dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
-          {connection && thread.otherMembers ? (
+          {connection && otherMemberPk ? (
             <DisplayAddress
               connection={connection}
-              otherMembers={thread.otherMembers}
+              otherMemberPK={otherMemberPk}
             />
           ) : null}
           <FirstMessage

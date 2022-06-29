@@ -1,9 +1,20 @@
+import clsx from 'clsx';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { OnChain } from '../../../Icon';
 
 const OnChainBadge = () => {
+  const {
+    colors: { highlight },
+  } = useTheme();
   return (
-    <div className="dt-bg-on-chain dt-flex dt-space-x-0.5 dt-items-center dt-px-1 dt-rounded-sm dt-text-white dt-select-none">
-      <OnChain className="dt-w-3 dt-h-3" /> <span>on-chain</span>
+    <div
+      className={clsx(
+        'dt-flex dt-items-center dt-px-1 dt-py-0.5 dt-rounded-sm dt-select-none',
+        highlight
+      )}
+      title="Messages stored on-chain"
+    >
+      <OnChain className="dt-w-3 dt-h-3" />
     </div>
   );
 };
