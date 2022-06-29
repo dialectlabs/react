@@ -9,6 +9,7 @@ import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
+import { Header } from '../Header';
 import { MainRouteName, RouteName } from './constants';
 import {
   showCreateThread,
@@ -16,7 +17,7 @@ import {
   showThread,
   showThreadSettings,
 } from './navigation';
-import { ChatProvider } from './provider';
+import { ChatProvider, useChatInternal } from './provider';
 import EncryptionInfo from './screens/EncryptionInfo';
 import Main from './screens/Main';
 import SignMessageInfo from './screens/SignMessageInfo';
@@ -32,11 +33,26 @@ interface InnerChatProps {
 }
 
 function InnerChat({ dialectId }: InnerChatProps): JSX.Element {
-  const { configure } = useDialectUiId(dialectId);
+  const { configure, ui } = useDialectUiId(dialectId);
+  const { type, onChatClose, onChatOpen } = useChatInternal();
 
   const { navigate } = useRoute();
 
   const { isSigning, isEncrypting } = useDialectWallet();
+
+  // rendering header to avoid empty header in bottom chat
+  const defaultHeader = (
+    <Header
+      type={type}
+      onClose={onChatClose}
+      onOpen={onChatOpen}
+      onHeaderClick={onChatOpen}
+      isWindowOpen={ui?.open}
+    >
+      <Header.Title>Messages</Header.Title>
+      <Header.Icons />
+    </Header>
+  );
 
   useEffect(() => {
     configure<ChatNavigationHelpers>({
@@ -68,9 +84,11 @@ function InnerChat({ dialectId }: InnerChatProps): JSX.Element {
   return (
     <>
       <Route name={RouteName.SigningRequest}>
+        {defaultHeader}
         <SignMessageInfo />
       </Route>
       <Route name={RouteName.EncryptionRequest}>
+        {defaultHeader}
         <EncryptionInfo />
       </Route>
       <Route name={RouteName.Main}>
@@ -97,6 +115,7 @@ export default function Chat({
   ...props
 }: ChatProps) {
   const { dialectId, type } = props;
+  const { ui } = useDialectUiId(dialectId);
 
   const { colors, modal, slider } = useTheme();
 
@@ -121,17 +140,41 @@ export default function Chat({
 
   const hasError = !isWalletConnected || !someBackendConnected;
 
+  const defaultHeader = (
+    <Header
+      type={type}
+      onClose={onChatClose}
+      onOpen={onChatOpen}
+      onHeaderClick={onChatOpen}
+      isWindowOpen={ui?.open}
+    >
+      <Header.Title>Messages</Header.Title>
+      <Header.Icons />
+    </Header>
+  );
+
   // we should render errors immediatly right after error appears
   // that's why useEffect is not suitable to handle logic
+  // rendering header to avoid empty header in bottom chat
   const renderError = () => {
     if (!hasError) {
       return null;
     }
     if (!isWalletConnected) {
-      return <NoWalletError />;
+      return (
+        <>
+          {defaultHeader}
+          <NoWalletError />
+        </>
+      );
     }
     if (!someBackendConnected) {
-      return <NoConnectionError />;
+      return (
+        <>
+          {defaultHeader}
+          <NoConnectionError />
+        </>
+      );
     }
   };
 

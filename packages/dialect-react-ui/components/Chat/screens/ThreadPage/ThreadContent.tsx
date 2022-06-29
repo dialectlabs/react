@@ -56,7 +56,9 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
             containerOnly
             position="left"
             className={clsx(
-              current?.sub?.name !== ThreadRouteName.Settings && 'md:dt-hidden'
+              current?.sub?.name !== ThreadRouteName.Settings &&
+                type == 'inbox' &&
+                'md:dt-hidden'
             )}
           >
             <Header.Icon
