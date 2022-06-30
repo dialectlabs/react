@@ -7,13 +7,12 @@ export const fetchTwitterHandleFromAddress = async (
   connection: Connection,
   publicKeyString: string
 ) => {
-  try {
-    const publicKey = new PublicKey(publicKeyString);
-    const displayName = await tryGetName(connection, publicKey);
-    return displayName;
-  } catch (e) {
-    return undefined;
+  const publicKey = new PublicKey(publicKeyString);
+  const displayName = await tryGetName(connection, publicKey);
+  if (!displayName) {
+    throw new Error(`Failed fetching name for this PK:${publicKeyString}`);
   }
+  return displayName;
 };
 
 function useTwitterHandle(connection: Connection, address?: PublicKey) {

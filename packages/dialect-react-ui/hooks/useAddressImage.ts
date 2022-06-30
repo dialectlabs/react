@@ -5,11 +5,11 @@ import { tryGetImageUrl } from '@cardinal/namespaces-components';
 import useSWR from 'swr';
 
 export const fetchImageUrlFromTwitterHandle = async (handle: string) => {
-  try {
-    return await tryGetImageUrl(handle);
-  } catch (e) {
-    return;
+  const url = await tryGetImageUrl(handle);
+  if (!url) {
+    throw new Error(`Failed fetch image url for this handle: ${handle}`);
   }
+  return url;
 };
 
 function useAddressImage(connection: Connection, address?: PublicKey) {
