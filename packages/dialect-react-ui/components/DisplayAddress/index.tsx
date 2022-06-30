@@ -2,10 +2,9 @@ import { getNameEntry } from '@cardinal/namespaces';
 import { display } from '@dialectlabs/web3';
 import type { Connection, PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
-import { Children } from 'react';
 import useSWR from 'swr';
 import useTwitterHandle from '../../hooks/useTwitterHandle';
-import { fetchSolanaNameServiceName } from '../common';
+import { fetchSolanaNameServiceName, Loader } from '../common';
 import { A } from '../common/preflighted';
 import { TwitterIcon } from '../Icon/Twitter';
 
@@ -198,6 +197,9 @@ export function DisplayAddress({
   }
 
   return (
-    <span className="dt-flex dt-items-center">{display(otherMemberPK)}</span>
+    <span className="dt-flex dt-items-center dt-space-x-1">
+      <span>{display(otherMemberPK)}</span>
+      {(sns.isLoading || cardinal.isLoading) && <Loader />}
+    </span>
   );
 }
