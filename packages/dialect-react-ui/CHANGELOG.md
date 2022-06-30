@@ -2,6 +2,26 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.10] - 2022-06-30
+
+- chore: use exact @cardinal/namespaces@3.1.0 to avoid errors
+- fix: throw errors from helper functions fetchTwitterHandleFromAddress, fetchImageUrlFromTwitterHandle to reset isLoading prop
+
+## [1.0.0-beta.9] - 2022-06-30
+
+- chore: revert bump @cardinal/namespaces
+
+## [1.0.0-beta.7] - 2022-06-30
+
+- fix: always render default header to avoid empty header in bottom-chat mode
+- chore: bump @cardinal/namespaces
+
+## [1.0.0-beta.6] - 2022-06-30
+
+- BREAKING CHANGE: feature: allow customize to style on-chain message bubbles (purple messages)
+- feature: new chat header
+- chore: bump @dialeclabs/react-sdk
+
 ## [1.0.0-beta.5] - 2022-06-26
 
 - fix: MessagePreview truncate, make wider, minor ui/ux improvements

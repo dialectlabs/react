@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.5] - 2022-06-30
+
+- chore: bump @dialectlabs/sdk
+
 ## [1.0.0-beta.4] - 2022-06-27
 
 - fix: update threads order after new message is sent

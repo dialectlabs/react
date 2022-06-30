@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.10",
   "description": "Dialect's react UI components",
   "license": "MIT",
   "private": false,
@@ -32,11 +32,11 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@dialectlabs/react-sdk": "^1.0.0-beta.4",
+    "@dialectlabs/react-sdk": "^1.0.0-beta.5",
     "@bonfida/name-offers": "^0.0.1",
     "@bonfida/spl-name-service": "^0.1.31",
-    "@cardinal/namespaces": "^3.2.0",
-    "@cardinal/namespaces-components": "^3.1.0",
+    "@cardinal/namespaces": "3.1.0",
+    "@cardinal/namespaces-components": "3.1.0",
     "@dialectlabs/web3": "^0.3.2",
     "@headlessui/react": "^1.2.0",
     "@project-serum/anchor": "^0.23.0",
