@@ -6,6 +6,18 @@ import { useRoute } from '../../../common/providers/Router';
 import NoNotifications from './NoNotifications';
 import { Notification } from './Notification';
 
+const NotificationsListWrapper = () => {
+  const {
+    params: { threadId },
+  } = useRoute<{ threadId: ThreadId }>();
+
+  if (!threadId) {
+    return null;
+  }
+
+  return <NotificationsList />;
+};
+
 const NotificationsList = () => {
   const { notificationsDivider } = useTheme();
 
@@ -34,4 +46,4 @@ const NotificationsList = () => {
   );
 };
 
-export default NotificationsList;
+export default NotificationsListWrapper;
