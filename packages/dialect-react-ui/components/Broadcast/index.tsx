@@ -79,10 +79,11 @@ function InnerBroadcast() {
     errorFetching: errorFetchingDapp,
   } = useDapp();
 
+
   if (errorFetchingDapp) {
     return (
       <Centered className="dt-text-center">
-        Fetching dapps failed: {errorFetchingDapp.message}
+        Failed to fetch your dapps: {errorFetchingDapp.message}
       </Centered>
     );
   }
@@ -93,10 +94,10 @@ function InnerBroadcast() {
 
   if (!dapp) {
     return (
-      <Centered>
+      <Centered className="dt-text-center">
         <span>
           This wallet is not eligible for broadcasting, <br />
-          contact us through twitter
+          contact us through twitter{' '}
           <A href="https://twitter.com/saydialect" target="_blank">
             @saydialect
           </A>

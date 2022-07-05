@@ -1,13 +1,25 @@
-import { Dapp, useDappAddresses } from '@dialectlabs/react-sdk';
+import { Dapp, DappAddress, useDappAddresses } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, ValueRow } from '../common';
 import { H1, Input, P, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 
+// utf8 bytes
+const MESSAGE_LIMIT = 1024;
+
 interface BroadcastFormProps {
   dapp: Dapp;
 }
+
+const getUserCount = (addresses: DappAddress[]) => {
+  // Users count = set of unique wallets, associated with enabled dapp addresses, associated with verified addresses
+  const enabledAndVerified = addresses
+    .filter((address) => address.enabled)
+    .filter((address) => address.address.verified)
+    .map((address) => address.address.wallet.publicKey.toBase58());
+  return [...new Set(enabledAndVerified)].length;
+};
 
 function BroadcastForm({ dapp }: BroadcastFormProps) {
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
@@ -17,10 +29,15 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   const [isSending, setIsSending] = useState(false);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
+  const messageLength = useMemo(
+    () => new TextEncoder().encode(message).length,
+    [message]
+  );
 
-  const usersCount = addresses?.length || 0;
+  const usersCount = useMemo(() => getUserCount(addresses), [addresses]);
   const noUsers = usersCount === 0;
-  const disabled = !title || !message || noUsers;
+  const isSubmitDisabled =
+    !title || !message || messageLength > MESSAGE_LIMIT || noUsers;
   let usersString = `${usersCount} user${usersCount > 1 ? 's' : ''}`;
 
   if (isFetchingAddresses) {
@@ -35,6 +52,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       await dapp.messages.send({ title, message });
       setTitle('');
       setMessage('');
+      setError(null);
     } catch (error) {
       setError(error as Error);
     } finally {
@@ -69,14 +87,14 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
           className={clsx(outlinedInput, 'dt-w-full dt-h-44')}
         />
         <div className="dt-text-xs dt-pl-1 dt-opacity-50">
-          Limit: {message.length}/500
+          Limit: {messageLength}/{MESSAGE_LIMIT}
         </div>
       </div>
 
       <Button
         onClick={sendBroadcastMessage}
         loading={isSending}
-        disabled={disabled}
+        disabled={isSubmitDisabled}
       >
         {isSending ? 'Sending...' : 'Send'}
       </Button>
