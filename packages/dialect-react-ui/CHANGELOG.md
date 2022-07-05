@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- feature: add broadcast component to the `react-ui`
+
 ## [1.0.0-beta.10] - 2022-06-30
 
 - chore: use exact @cardinal/namespaces@3.1.0 to avoid errors
