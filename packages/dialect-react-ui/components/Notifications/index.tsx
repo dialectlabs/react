@@ -12,7 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import CantDecryptError from '../../entities/errors/ui/CantDecryptError';
 import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
 import NoWalletError from '../../entities/errors/ui/NoWalletError';
-import EncryptionInfo from '../Chat/screens/EncryptionInfo';
+import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
 import SignMessageInfo from '../Chat/screens/SignMessageInfo';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
