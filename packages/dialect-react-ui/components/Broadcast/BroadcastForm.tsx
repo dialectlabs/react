@@ -6,7 +6,7 @@ import { H1, Input, P, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 
 // utf8 bytes
-const MESSAGE_LIMIT = 1024;
+const MESSAGE_BYTES_LIMIT = 1024;
 
 interface BroadcastFormProps {
   dapp: Dapp;
@@ -37,7 +37,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   const usersCount = useMemo(() => getUserCount(addresses), [addresses]);
   const noUsers = usersCount === 0;
   const isSubmitDisabled =
-    !title || !message || messageLength > MESSAGE_LIMIT || noUsers;
+    !title || !message || messageLength > MESSAGE_BYTES_LIMIT || noUsers;
   let usersString = `${usersCount} user${usersCount > 1 ? 's' : ''}`;
 
   if (isFetchingAddresses) {
@@ -87,7 +87,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
           className={clsx(outlinedInput, 'dt-w-full dt-h-44')}
         />
         <div className="dt-text-xs dt-pl-1 dt-opacity-50">
-          Limit: {messageLength}/{MESSAGE_LIMIT}
+          Limit: {messageLength}/{MESSAGE_BYTES_LIMIT}
         </div>
       </div>
 
