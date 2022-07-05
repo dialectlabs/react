@@ -1,9 +1,8 @@
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  ChatNavigationHelpers,
   DialectUiManagementProvider,
   Broadcast,
   ThemeProvider,
-  useDialectUiId,
   Backend,
   Config,
   DialectContextProvider,
@@ -12,7 +11,6 @@ import {
   EncryptionKeysStore,
 } from '@dialectlabs/react-ui';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
-import { useEffect, useMemo, useState } from 'react';
 import { Wallet } from '../components/Wallet';
 
 const walletToDialectWallet = (
@@ -39,23 +37,13 @@ const walletToDialectWallet = (
 });
 
 function AuthedHome() {
-  const { navigation } = useDialectUiId<ChatNavigationHelpers>('dialect-inbox');
-
   return (
     <div className="dialect">
-      <div className="flex flex-col h-screen bg-black">
-        <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <button
-            className="btn-primary"
-            onClick={() => {
-              navigation?.showCreateThread('@saydialect');
-            }}
-          >
-            Message @saydialect
-          </button>
+      <div className="flex flex-col min-h-screen bg-black">
+        <div className="flex flex-row justify-end p-2 items-center space-x-6">
           <Wallet />
         </div>
-        <div className="w-full max-w-[412px] px-6 mt-8 m-auto">
+        <div className="w-full max-w-[412px] px-6 m-auto">
           <div className="overflow-auto h-full rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600">
             <Broadcast />
           </div>
