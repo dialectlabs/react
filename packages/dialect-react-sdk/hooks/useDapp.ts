@@ -20,7 +20,6 @@ interface UseDappParams {
   refreshInterval?: number;
 }
 
-// FIXME: extend
 function useDapp({ refreshInterval }: UseDappParams = EMPTY_OBJ): UseDappValue {
   const { dapps } = useDialectSdk();
   const {
