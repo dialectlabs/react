@@ -12,6 +12,8 @@ interface BroadcastFormProps {
 function BroadcastForm({ dapp }: BroadcastFormProps) {
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
   const { textStyles, colors, outlinedInput, textArea } = useTheme();
+  // Consider moving error handling to the useDapp context
+  const [error, setError] = useState<Error | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
@@ -34,7 +36,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       setTitle('');
       setMessage('');
     } catch (error) {
-      // TODO: setError
+      setError(error as Error);
     } finally {
       setIsSending(false);
     }
@@ -78,6 +80,9 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       >
         {isSending ? 'Sending...' : 'Send'}
       </Button>
+      {error ? (
+        <div className="dt-text-red-500">Error: {error.message}</div>
+      ) : null}
       <P>
         On-chain messages not currently supported by this dashboard. Please use
         the CLI to send broadcast messages on-chain.
