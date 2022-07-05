@@ -1,43 +1,20 @@
-import { useDappAddresses } from '@dialectlabs/react-sdk';
-import { useDapp } from '@dialectlabs/react-sdk';
+import { Dapp, useDappAddresses } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useState } from 'react';
-import { Button, Centered, ValueRow } from '../common';
-import { A, H1, Input, P, Textarea } from '../common/preflighted';
+import { Button, ValueRow } from '../common';
+import { H1, Input, P, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 
-function BroadcastForm() {
-  const {
-    dapp,
-    isFetching: isFetchingDapp,
-    errorFetching: errorFetchingDapp,
-  } = useDapp();
+interface BroadcastFormProps {
+  dapp: Dapp;
+}
+
+function BroadcastForm({ dapp }: BroadcastFormProps) {
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
   const { textStyles, colors, outlinedInput, textArea } = useTheme();
   const [isSending, setIsSending] = useState(false);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
-
-  if (errorFetchingDapp) {
-    return <Centered>Failed to load your dapps {errorFetchingDapp}</Centered>;
-  }
-
-  console.log(addresses, isFetchingAddresses);
-
-  if (isFetchingDapp) {
-    return <Centered>Loading your dapps...</Centered>;
-  }
-
-  if (!dapp) {
-    return (
-      <Centered>
-        This wallet is not eligible for broadcasting, contact us through twitter
-        <A href="https://twitter.com/saydialect" target="_blank">
-          @saydialect
-        </A>
-      </Centered>
-    );
-  }
 
   const usersCount = addresses?.length || 0;
   const noUsers = usersCount === 0;
@@ -66,7 +43,7 @@ function BroadcastForm() {
   return (
     <div className="dt-flex dt-flex-col dt-space-y-2">
       <H1 className={clsx(textStyles.h1, colors.primary, 'dt-mb-4')}>
-        Create broadcast {dapp.name}
+        Create broadcast
       </H1>
       <ValueRow label="📢 Broadcast" className="dt-w-full">
         {usersString}
