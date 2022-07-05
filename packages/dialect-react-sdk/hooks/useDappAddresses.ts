@@ -24,7 +24,7 @@ function useDappAddresses({
   const dappAddressesApi = dapp?.dappAddresses;
 
   const {
-    data: addresses = EMPTY_ARR,
+    data: addresses,
     error = null,
     mutate,
   } = useSWR(
@@ -44,8 +44,8 @@ function useDappAddresses({
   );
 
   return {
-    addresses,
-    isFetching: Boolean(dapp) && !error && addresses == EMPTY_ARR,
+    addresses: addresses || EMPTY_ARR,
+    isFetching: Boolean(dapp) && !error && addresses === undefined,
     errorFetching: error,
   };
 }

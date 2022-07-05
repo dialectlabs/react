@@ -25,15 +25,15 @@ function useDapp({ refreshInterval }: UseDappParams = EMPTY_OBJ): UseDappValue {
   const {
     info: { wallet },
   } = useDialectSdk();
-  const { data: dapp = null, error } = useSWR(
+  const { data: dapp, error } = useSWR(
     DAPP_CACHE_KEY(wallet),
     () => dapps.find(),
     { refreshInterval, refreshWhenOffline: true }
   );
 
   return {
-    dapp,
-    isFetching: !error && dapp == null,
+    dapp: dapp || null,
+    isFetching: !error && dapp === undefined,
     errorFetching: error,
   };
 }
