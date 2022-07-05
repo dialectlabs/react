@@ -25,7 +25,6 @@ function useDappAddresses({
 
   const {
     data: addresses = EMPTY_ARR,
-    isValidating: isFetching,
     error = null,
     mutate,
   } = useSWR(
@@ -46,8 +45,7 @@ function useDappAddresses({
 
   return {
     addresses,
-    isFetching,
-    // isFetching: Boolean(dapp) && !error && !addresses,
+    isFetching: Boolean(dapp) && !error && addresses == EMPTY_ARR,
     errorFetching: error,
   };
 }

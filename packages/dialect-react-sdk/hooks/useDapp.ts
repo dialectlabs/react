@@ -33,7 +33,7 @@ function useDapp({ refreshInterval }: UseDappParams = EMPTY_OBJ): UseDappValue {
 
   return {
     dapp,
-    isFetching: !error && !dapp,
+    isFetching: !error && dapp == null,
     errorFetching: error,
   };
 }
