@@ -85,6 +85,8 @@ export type TransitionProps = {
 export type IncomingCommonThemeVariables = {
   animations?: {
     popup?: TransitionProps;
+    bottomSlide?: TransitionProps;
+    toast?: TransitionProps;
   };
 };
 
@@ -131,6 +133,7 @@ export type IncomingThemeValues = {
   scrollbar?: string;
   section?: string;
   xPaddedText?: string;
+  toast?: string;
   // TODO: Deprecate BigButton
   bigButton?: string;
   bigButtonLoading?: string;
@@ -154,6 +157,7 @@ export type CommonThemeValues = {
   animations: {
     popup: TransitionProps;
     bottomSlide: TransitionProps;
+    toast: TransitionProps;
   };
 };
 
@@ -176,6 +180,14 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       leave: 'dt-transition-transform dt-duration-100 dt-ease-in-out',
       leaveFrom: 'dt-translate-y-0',
       leaveTo: '!dt-translate-y-[calc(100%-3.5rem)]',
+    },
+    toast: {
+      enter: 'dt-transition dt-ease-in-out dt-duration-150',
+      enterFrom: 'dt-opacity-0 dt-translate-y-[calc(100%+1rem)]',
+      enterTo: 'dt-opacity-100 !dt-translate-y-0',
+      leave: 'dt-transition dt-ease-in-out dt-duration-150',
+      leaveFrom: 'dt-opacity-100 dt-translate-y-0',
+      leaveTo: 'dt-opacity-0 !dt-translate-y-[calc(100%+1rem)]',
     },
   },
   light: {
@@ -280,6 +292,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     xPaddedText: 'dt-px-2',
     disabledButton:
       'dt-bg-subtle-day dt-text-black/40 dt-border dt-border-outline-day',
+    toast:
+      'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
@@ -350,6 +364,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white disabled:dt-text-white/50',
     outlinedInput:
       'dt-text-sm dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus:dt-border-white focus:dt-outline-none',
+
     textArea:
       'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 dt-outline-none disabled:dt-text-neutral-200/50',
     messageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',
@@ -385,6 +400,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     xPaddedText: 'dt-px-2',
     disabledButton:
       'dt-bg-subtle-night dt-text-white/40 dt-border dt-border-outline-night',
+    toast:
+      'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     // TODO: Deprecate BigButton
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
