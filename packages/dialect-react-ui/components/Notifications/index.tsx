@@ -13,7 +13,7 @@ import CantDecryptError from '../../entities/errors/ui/CantDecryptError';
 import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
 import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
-import SignMessageInfo from '../Chat/screens/SignMessageInfo';
+import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
