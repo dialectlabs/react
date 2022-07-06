@@ -79,7 +79,6 @@ function InnerBroadcast() {
     errorFetching: errorFetchingDapp,
   } = useDapp();
 
-
   if (errorFetchingDapp) {
     return (
       <Centered className="dt-text-center">
@@ -117,7 +116,7 @@ const Wrapper = (props) => {
         textStyles.body,
         colors.primary,
         colors.bg,
-        'dt-h-full dt-min-h-[515px] dt-p-4'
+        'dt-h-full dt-min-h-[515px] dt-p-4 dt-h-0'
       )}
       {...props}
     />
