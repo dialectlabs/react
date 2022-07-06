@@ -66,14 +66,18 @@ export function Footer(): JSX.Element {
   );
 }
 
-export function Centered(props: { children: React.ReactNode }): JSX.Element {
+export function Centered(props: {
+  children: React.ReactNode;
+  className?: string;
+}): JSX.Element {
   const { textStyles } = useTheme();
 
   return (
     <div
       className={clsx(
         'dt-h-full dt-flex dt-flex-col dt-items-center dt-justify-center',
-        textStyles.body
+        textStyles.body,
+        props?.className
       )}
     >
       {props.children}
