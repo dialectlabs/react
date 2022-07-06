@@ -5,16 +5,17 @@ import IconButton from '../IconButton';
 import { useTheme } from './providers/DialectThemeProvider';
 
 interface ToastMessageProps {
-  error?: Error | null;
   message?: string | JSX.Element;
   isSuccess?: boolean;
+  isError?: boolean;
   onClose?: () => void;
 }
 
+// TODO: support stacking multiple toasts
 function ToastMessage({
-  error,
   message,
   isSuccess,
+  isError,
   onClose,
 }: ToastMessageProps) {
   const [hide, setHide] = useState(false);
@@ -22,17 +23,18 @@ function ToastMessage({
 
   let icon = null;
   if (isSuccess) {
-    icon = <icons.checkmark className="dt-w-3 dt-h-3" />;
+    icon = <icons.checkmark className="dt-w-3 dt-h-3 dt-shrink-0" />;
   }
-  if (error) {
-    icon = <icons.error className="dt-w-3 dt-h-3 dt-text-red-500" />;
+  if (isError) {
+    icon = (
+      <icons.error className="dt-w-3 dt-h-3 dt-text-red-500 dt-shrink-0" />
+    );
   }
-  const content = message ? message : error?.message;
   const timeout = 150;
 
   return (
     <CSSTransition
-      in={Boolean(message || error) && !hide}
+      in={Boolean(message) && !hide}
       classNames={{
         enter: animations.toast.enterFrom,
         enterActive: clsx(animations.toast.enter, animations.toast.enterTo),
@@ -52,12 +54,12 @@ function ToastMessage({
         <div
           className={clsx(
             toast,
-            'dt-max-w-[100vw-2rem] dt-flex dt-items-center dt-space-between'
+            'dt-max-w-[100vw-2rem] dt-mx-2 dt-flex dt-items-center dt-space-between'
           )}
         >
-          <div className="dt-flex dt-items-center dt-space-x-1">
+          <div className="dt-flex dt-items-center dt-space-x-2">
             {icon}
-            <span>{content}</span>
+            <span>{message}</span>
           </div>
           {onClose ? (
             <IconButton

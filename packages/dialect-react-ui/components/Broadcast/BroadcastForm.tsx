@@ -24,7 +24,7 @@ const getUserCount = (addresses: DappAddress[]) => {
 
 function BroadcastForm({ dapp }: BroadcastFormProps) {
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
-  const { textStyles, colors, outlinedInput, textArea, icons } = useTheme();
+  const { textStyles, colors, outlinedInput } = useTheme();
   // Consider moving error handling to the useDapp context
   const [error, setError] = useState<Error | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>('');
@@ -110,8 +110,10 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       </P>
 
       <ToastMessage
-        error={error}
-        message={statusMessage}
+        message={
+          error ? `Error sending broadcast: ${error.message}` : statusMessage
+        }
+        isError={Boolean(error)}
         isSuccess={Boolean(statusMessage)}
         onClose={() => {
           error ? setError(null) : setStatusMessage('');
