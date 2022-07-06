@@ -1,11 +1,9 @@
-import type { Dapp, DappAddress, DialectSdkError } from '@dialectlabs/sdk';
+import type { DappAddress, DialectSdkError } from '@dialectlabs/sdk';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
+import { DAPP_ADDRESSES_CACHE_KEY } from './internal/swrCache';
 import useDapp from './useDapp';
-
-const DAPP_ADDRESSES_CACHE_KEY = (dapp: Dapp | null) =>
-  'DAPP_ADDRESSES_' + dapp?.publicKey;
 
 interface UseDappAddressesValue {
   addresses: DappAddress[];

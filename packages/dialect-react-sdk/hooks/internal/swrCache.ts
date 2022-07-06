@@ -1,4 +1,8 @@
-import type { FindThreadQuery } from '@dialectlabs/sdk';
+import type {
+  FindThreadQuery,
+  DialectWalletAdapter,
+  Dapp,
+} from '@dialectlabs/sdk';
 
 export const CACHE_KEY_THREADS = 'THREADS';
 
@@ -20,3 +24,9 @@ export const CACHE_KEY_THREAD_FN = (findParams: FindThreadQuery): string => {
 };
 
 export const CACHE_KEY_MESSAGES = (id: string) => `MESSAGES_${id}`;
+
+export const DAPP_CACHE_KEY = (wallet: DialectWalletAdapter) =>
+  'DAPPS_' + wallet?.publicKey?.toBase58();
+
+export const DAPP_ADDRESSES_CACHE_KEY = (dapp: Dapp | null) =>
+  'DAPP_ADDRESSES_' + dapp?.publicKey;

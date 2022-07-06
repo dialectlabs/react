@@ -1,14 +1,8 @@
-import type {
-  Dapp,
-  DialectSdkError,
-  DialectWalletAdapter,
-} from '@dialectlabs/sdk';
+import type { Dapp, DialectSdkError } from '@dialectlabs/sdk';
 import useSWR from 'swr';
 import { EMPTY_OBJ } from '../utils';
+import { DAPP_CACHE_KEY } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
-
-const DAPP_CACHE_KEY = (wallet: DialectWalletAdapter) =>
-  'DAPPS_' + wallet?.publicKey?.toBase58();
 
 interface UseDappValue {
   dapp: Dapp | null;
