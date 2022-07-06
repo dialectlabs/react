@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: default notification channels - web3, email, telegram, sms, if channels props not provided to component
+
 ## [1.0.0-beta.10] - 2022-06-30
 
 - chore: use exact @cardinal/namespaces@3.1.0 to avoid errors
