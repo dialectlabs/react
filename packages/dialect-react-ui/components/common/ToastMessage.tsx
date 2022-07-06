@@ -50,7 +50,10 @@ function ToastMessage({
         )}
       >
         <div
-          className={clsx(toast, 'dt-flex dt-items-center dt-space-between')}
+          className={clsx(
+            toast,
+            'dt-max-w-[100vw-2rem] dt-flex dt-items-center dt-space-between'
+          )}
         >
           <div className="dt-flex dt-items-center dt-space-x-1">
             {icon}
