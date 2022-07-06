@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { Button, ValueRow } from '../common';
 import { H1, Input, P, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
+import ToastMessage from '../common/ToastMessage';
 
 // utf8 bytes
 const MESSAGE_BYTES_LIMIT = 1024;
@@ -23,9 +24,10 @@ const getUserCount = (addresses: DappAddress[]) => {
 
 function BroadcastForm({ dapp }: BroadcastFormProps) {
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
-  const { textStyles, colors, outlinedInput, textArea } = useTheme();
+  const { textStyles, colors, outlinedInput, textArea, icons } = useTheme();
   // Consider moving error handling to the useDapp context
   const [error, setError] = useState<Error | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string>('');
   const [isSending, setIsSending] = useState(false);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
@@ -53,6 +55,9 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       setTitle('');
       setMessage('');
       setError(null);
+      setStatusMessage(
+        'Broadcast successfully sent and will be delivered soon'
+      );
     } catch (error) {
       setError(error as Error);
     } finally {
@@ -98,13 +103,20 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       >
         {isSending ? 'Sending...' : 'Send'}
       </Button>
-      {error ? (
-        <div className="dt-text-red-500">Error: {error.message}</div>
-      ) : null}
+
       <P>
         On-chain messages not currently supported by this dashboard. Please use
         the CLI to send broadcast messages on-chain.
       </P>
+
+      <ToastMessage
+        error={error}
+        message={statusMessage}
+        isSuccess={Boolean(statusMessage)}
+        onClose={() => {
+          error ? setError(null) : setStatusMessage('');
+        }}
+      />
     </div>
   );
 }
