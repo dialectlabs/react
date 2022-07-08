@@ -9,6 +9,7 @@ import { Web3 } from './Web3';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 
 const baseChannelOptions: Record<Channel, boolean> = {
   web3: false,
@@ -23,6 +24,11 @@ function Settings(props: {
   channels: Channel[];
 }) {
   const { textStyles, xPaddedText } = useTheme();
+  const {
+    info: {
+      config: { environment },
+    },
+  } = useDialectSdk();
 
   const channelsOptions = useMemo(
     () =>
@@ -32,6 +38,11 @@ function Settings(props: {
       ) as Record<Channel, boolean>,
     [props.channels]
   );
+
+  const botURL =
+    environment === 'production'
+      ? 'https://telegram.me/DialectLabsBot'
+      : 'https://telegram.me/DialectLabsDevBot';
 
   return (
     <>
@@ -53,7 +64,7 @@ function Settings(props: {
         )}
         {channelsOptions.telegram && (
           <div className="dt-mb-2">
-            <TelegramForm botURL="https://telegram.me/DialectLabsBot" />
+            <TelegramForm botURL={botURL} />
           </div>
         )}
       </div>
