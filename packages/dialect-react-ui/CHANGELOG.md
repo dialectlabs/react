@@ -2,7 +2,10 @@
 
 ## [UNRELEASED]
 
-- feature: add broadcast component to the `react-ui`
+## [1.0.0-beta.11] - 2022-07-07
+
+- feature: add `<Broadcast/>` component
+- chore: bump @dialeclabs/react-sdk
 
 ## [1.0.0-beta.10] - 2022-06-30
 
