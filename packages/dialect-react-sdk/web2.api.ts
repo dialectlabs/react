@@ -54,19 +54,28 @@ const generateToken = async (wallet: DialectWalletAdapter): Promise<string> => {
   return `${expirationTime}.${base64Signature}`;
 };
 
-const saveToken = (token: string) => {
+const saveToken = (token: string, wallet: DialectWalletAdapter) => {
   if (!window) return;
-  window.sessionStorage.setItem('token', token);
+  window.sessionStorage.setItem(
+    `dialect-auth-token-${wallet?.publicKey?.toBase58()}`,
+    token
+  );
 };
 
-export const removeToken = () => {
+export const removeToken = (wallet: DialectWalletAdapter) => {
   if (!window) return;
-  window.sessionStorage.removeItem('token');
+  window.sessionStorage.removeItem(
+    `dialect-auth-token-${wallet?.publicKey?.toBase58()}`
+  );
 };
 
-const getTokenFromStorage = (): string | undefined => {
+const getTokenFromStorage = (
+  wallet: DialectWalletAdapter
+): string | undefined => {
   if (!window) return;
-  const token = window.sessionStorage.getItem('token');
+  const token = window.sessionStorage.getItem(
+    `dialect-auth-token-${wallet?.publicKey?.toBase58()}`
+  );
 
   if (!token) return;
   return token;
@@ -90,11 +99,11 @@ export const fetchJSON = async (
     options?.method === 'PUT' ||
     options?.method === 'DELETE'
   ) {
-    let token = getTokenFromStorage();
+    let token = getTokenFromStorage(wallet);
 
     if (!token || isTokenExpired(token)) {
       token = await generateToken(wallet);
-      saveToken(token);
+      saveToken(token, wallet);
     }
 
     headers = {
