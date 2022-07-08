@@ -7,7 +7,8 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 import ToastMessage from '../common/ToastMessage';
 
 // utf8 bytes
-const MESSAGE_BYTES_LIMIT = 1024;
+const MESSAGE_BYTES_LIMIT = 800;
+const TITLE_BYTES_LIMIT = 100;
 
 interface BroadcastFormProps {
   dapp: Dapp;
@@ -31,15 +32,24 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   const [isSending, setIsSending] = useState(false);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
+  const textEncoder = useMemo(() => new TextEncoder(), []);
+  const titleLength = useMemo(
+    () => textEncoder.encode(title).length,
+    [textEncoder, title]
+  );
   const messageLength = useMemo(
-    () => new TextEncoder().encode(message).length,
-    [message]
+    () => textEncoder.encode(message).length,
+    [textEncoder, message]
   );
 
   const usersCount = useMemo(() => getUserCount(addresses), [addresses]);
   const noUsers = usersCount === 0;
   const isSubmitDisabled =
-    !title || !message || messageLength > MESSAGE_BYTES_LIMIT || noUsers;
+    !title ||
+    !message ||
+    messageLength > MESSAGE_BYTES_LIMIT ||
+    titleLength > TITLE_BYTES_LIMIT ||
+    noUsers;
   let usersString = `${usersCount} user${usersCount > 1 ? 's' : ''}`;
 
   if (isFetchingAddresses) {
@@ -73,14 +83,19 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       <ValueRow label="📢 Broadcast" className="dt-w-full">
         {usersString}
       </ValueRow>
-      <Input
-        placeholder="Title"
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-        value={title}
-        className={outlinedInput}
-      />
+      <div>
+        <Input
+          placeholder="Title"
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+          value={title}
+          className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
+        />
+        <div className="dt-text-xs dt-pl-1 dt-opacity-50">
+          Limit: {titleLength}/{TITLE_BYTES_LIMIT}
+        </div>
+      </div>
       <div>
         <Textarea
           placeholder="Write message..."
