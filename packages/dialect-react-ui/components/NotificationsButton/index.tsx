@@ -59,7 +59,6 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   }, [ui?.open, isMobile]);
 
   const { colors, bellButton, icons, modalWrapper, animations } = useTheme();
-
   return (
     <div
       className={clsx(
@@ -108,20 +107,22 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   );
 }
 
-export default function NotificationsButton(props: PropTypes): JSX.Element {
+export default function NotificationsButton({
+  channels = ['web3', 'telegram', 'sms', 'email'],
+  ...props
+}: PropTypes): JSX.Element {
   const swrOptions = useMemo(
     () => ({
       refreshInterval: props.pollingInterval,
     }),
     [props.pollingInterval]
   );
-
   // {/* TODO: consider extract the DialectProvider to avoid doubling providers in case multiple instances are used */}
   return (
     <div className="dialect">
       {/* TODO: switch to some sdk config setting */}
       <SWRConfig value={swrOptions}>
-        <WrappedNotificationsButton {...props} />
+        <WrappedNotificationsButton channels={channels} {...props} />
       </SWRConfig>
     </div>
   );

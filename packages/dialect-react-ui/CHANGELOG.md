@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: default notification channels - web3, email, telegram, sms, if channels props not provided to component
+
 ## [1.0.0-beta.12] - 2022-07-08
 
 - fix: show dev bot url for `development` or `local-development` envs
