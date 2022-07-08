@@ -1,4 +1,9 @@
-import { Dapp, DappAddress, useDappAddresses } from '@dialectlabs/react-sdk';
+import {
+  AddressType,
+  Dapp,
+  DappAddress,
+  useDappAddresses,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { Button, ValueRow } from '../common';
@@ -23,6 +28,42 @@ const getUserCount = (addresses: DappAddress[]) => {
   return [...new Set(enabledAndVerified)].length;
 };
 
+const getAddressesCounts = (addresses: DappAddress[]) => {
+  const enabledAndVerified = addresses
+    .filter((address) => address.enabled)
+    .filter((address) => address.address.verified);
+  const wallets = enabledAndVerified.filter(
+    (address) => address.address.type === AddressType.Wallet
+  ).length;
+  const emails = enabledAndVerified.filter(
+    (address) => address.address.type === AddressType.Email
+  ).length;
+  const phones = enabledAndVerified.filter(
+    (addresses) => addresses.address.type === AddressType.PhoneNumber
+  ).length;
+  const telegrams = enabledAndVerified.filter(
+    (address) => address.address.type === AddressType.Telegram
+  ).length;
+  return {
+    wallets,
+    emails,
+    phones,
+    telegrams,
+  };
+};
+
+const getAddressesSummary = (addresses: DappAddress[]) => {
+  const { wallets, emails, phones, telegrams } = getAddressesCounts(addresses);
+  return [
+    wallets && `${wallets} wallet${wallets > 1 ? 's' : ''} (off-chain)`,
+    emails && `${emails} email${emails > 1 ? 's' : ''}`,
+    phones && `${phones} phone${phones > 1 ? 's' : ''}`,
+    telegrams && `${telegrams} telegram account${telegrams > 1 ? 's' : ''}`,
+  ]
+    .filter(Boolean)
+    .join(', ');
+};
+
 function BroadcastForm({ dapp }: BroadcastFormProps) {
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
   const { textStyles, colors, outlinedInput } = useTheme();
@@ -43,6 +84,10 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   );
 
   const usersCount = useMemo(() => getUserCount(addresses), [addresses]);
+  const addressesSummary = useMemo(
+    () => getAddressesSummary(addresses),
+    [addresses]
+  );
   const noUsers = usersCount === 0;
   const isSubmitDisabled =
     !title ||
@@ -81,7 +126,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
         Create broadcast
       </H1>
       <ValueRow label="📢 Broadcast" className="dt-w-full">
-        {usersString}
+        <span title={addressesSummary}>{usersString}</span>
       </ValueRow>
       <div>
         <Input
