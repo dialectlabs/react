@@ -32,13 +32,14 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   const [isSending, setIsSending] = useState(false);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
+  const textEncoder = useMemo(() => new TextEncoder(), []);
   const titleLength = useMemo(
-    () => new TextEncoder().encode(title).length,
-    [title]
+    () => textEncoder.encode(title).length,
+    [textEncoder, title]
   );
   const messageLength = useMemo(
-    () => new TextEncoder().encode(message).length,
-    [message]
+    () => textEncoder.encode(message).length,
+    [textEncoder, message]
   );
 
   const usersCount = useMemo(() => getUserCount(addresses), [addresses]);
