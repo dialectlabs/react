@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+- hotfix: save dialect auth token per wallet when using v0 addresses api
+
+## [1.0.0-beta.6] - 2022-07-07
+
 - feature: add `useDapp` and `useDappAddresses` hooks to the `react-sdk`
 
 ## [1.0.0-beta.5] - 2022-06-30
