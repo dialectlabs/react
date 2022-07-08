@@ -2,6 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.12] - 2022-07-08
+
+- fix: show dev bot url for `development` or `local-development` envs
+- fix: add text limit for Broadcast title 'cause it now included in message
+- chore: bump @dialeclabs/react-sdk
+
 ## [1.0.0-beta.11] - 2022-07-07
 
 - feature: add `<Broadcast/>` component

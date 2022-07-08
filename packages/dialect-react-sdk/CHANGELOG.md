@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.7] - 2022-07-08
+
 - hotfix: save dialect auth token per wallet when using v0 addresses api
 
 ## [1.0.0-beta.6] - 2022-07-07
