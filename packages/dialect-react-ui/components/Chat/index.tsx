@@ -18,9 +18,9 @@ import {
   showThreadSettings,
 } from './navigation';
 import { ChatProvider, useChatInternal } from './provider';
-import EncryptionInfo from './screens/EncryptionInfo';
+import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
+import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
 import Main from './screens/Main';
-import SignMessageInfo from './screens/SignMessageInfo';
 import type { ChatNavigationHelpers } from './types';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';

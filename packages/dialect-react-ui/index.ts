@@ -31,6 +31,8 @@ import type {
 } from './components/common/providers/DialectThemeProvider';
 import type { ChatNavigationHelpers } from './components/Chat/types';
 
+import Broadcast from './components/Broadcast';
+
 const ThemeProvider = DialectThemeProvider;
 
 export {
@@ -50,6 +52,7 @@ export {
   ChatRouteName,
   ChatThreadRouteName,
   ChatMainRouteName,
+  Broadcast,
 };
 
 export type {

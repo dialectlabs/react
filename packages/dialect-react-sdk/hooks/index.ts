@@ -7,3 +7,5 @@ export { default as useDialectCloudApi } from './useDialectCloudApi';
 export { default as useDialectWallet } from './useDialectWallet';
 export { default as useDialectConnectionInfo } from './useDialectConnectionInfo';
 export { default as useUnreadMessages } from './useUnreadMessages';
+export { default as useDapp } from './useDapp';
+export { default as useDappAddresses } from './useDappAddresses';

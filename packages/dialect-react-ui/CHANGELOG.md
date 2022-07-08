@@ -4,6 +4,17 @@
 
 - fix: default notification channels - web3, email, telegram, sms, if channels props not provided to component
 
+## [1.0.0-beta.12] - 2022-07-08
+
+- fix: show dev bot url for `development` or `local-development` envs
+- fix: add text limit for Broadcast title 'cause it now included in message
+- chore: bump @dialeclabs/react-sdk
+
+## [1.0.0-beta.11] - 2022-07-07
+
+- feature: add `<Broadcast/>` component
+- chore: bump @dialeclabs/react-sdk
+
 ## [1.0.0-beta.10] - 2022-06-30
 
 - chore: use exact @cardinal/namespaces@3.1.0 to avoid errors
