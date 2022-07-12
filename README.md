@@ -1,32 +1,53 @@
-# Dialect
+# [Dialect](https://www.dialect.to/) React SDK & UI 💬 &middot; ![react-sdk](https://img.shields.io/npm/v/@dialectlabs/react-sdk?color=success&label=react-sdk) ![npm](https://img.shields.io/npm/v/@dialectlabs/react-ui?color=success&label=react-ui)
 
-React components to use Dialect's web3 notifications and wallet-to-wallet chat.
+React components to use Dialect's wallet notifications and wallet-to-wallet chat.
 
-Want to learn how to add Dialect to your dapp? See the Usage section below.
+Want to learn how to add Dialect to your dapp? See the [Usage](#Usage) section below and/or check out our [docs](https://dialect.gitbook.io/documentation/).
+
 
 ## Installation
 
 **npm:**
 
 ```shell
-npm install @dialectlabs/react @dialectlabs/react-ui --save
+npm install @dialectlabs/react-ui --save
+# or if you plan to build UI yourself
+npm install @dialectlabs/react-sdk --save
 ```
 
 **yarn:**
 
 ```shell
-yarn add @dialectlabs/react @dialectlabs/react-ui
+yarn add @dialectlabs/react-ui
+# or if you plan to build UI yourself
+yarn add @dialectlabs/react-sdk
 ```
 
 ## Usage
 
-Dialect's react components library is best learned by example. This section describes how to use Dialect in your app by showing you how it has been embedded in various example apps in the `examples/` folder of this repository. Follow along in this section, & refer to the code in those examples.
+Dialect's React components library is best learned by example. This section describes how to use Dialect in your app by showing you how it has been embedded in various example apps in the [`examples/`](https://github.com/dialectlabs/react/tree/master/examples) folder of this repository. Follow along in this section, & refer to the code in those examples.
 
-1. `examples/bottom-chat/` -- A wallet-to-wallet chat box anchored to bottom.
-2. `examples/inbox/` -- A full page wallet-to-wallet chat.
-3. `examples/notifications/` -- A dapp notifications example. Note that to receive dapp messages to this UI component, you'll need to also run a monitoring service from Dialect's examples. That example can be found in [`@dialectlabs/monitor`](https://github.com/dialectlabs/monitor).
+If you're interested in contributing, see the Development section below (`CONTRIBUTION.md` is a TBD).
 
-If you're interested in developing on Dialect while making live changes to the library, see the Development section below.
+As you may have noticed, this repo covers two packages: `@dialectlabs/react-sdk` and `@dialectlabs/react-ui`.
+
+`@dialectlabs/react-sdk` contains React abstractions (context, hooks) over [`@dialectlabs/sdk`](https://github.com/dialectlabs/sdk). Has necessary tools to build a UI for messaging or notifications.
+
+- Handles (re-)fetching and storing necessary messaging data from/on Solana blockchain, Dialect Cloud (for off-chain).
+- Provides connection state to Solana blockchain and Dialect Cloud (for off-chain)
+- Exposes low-level SDK API
+
+`@dialectlabs/react-ui` contains pre-built, themeable, self-sufficient and _opinionated_ UI components for messaging and notification centers.
+
+- All exposed components are themed and can be configured to fit different use-cases
+- Even though exported UIs are controlled React components, the UI state can be handled anywhere in your dapp (e.g. routing) 
+
+### Basic
+
+If you are new to Dialect, it's highly recommended to start with pre-built components from `@dialectlabs/react-ui` package.
+1. Preliminary Setup
+2. Configuration
+3. Render
 
 ### Embed a notifications modal in your navbar
 
