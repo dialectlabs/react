@@ -2,7 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.13] - 2022-07-08
+
 - fix: default notification channels - web3, email, telegram, sms, if channels props not provided to component
+- feature: summary counts of addresses in broadcast tool
 
 ## [1.0.0-beta.12] - 2022-07-08
 
