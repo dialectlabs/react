@@ -2,7 +2,7 @@
 
 React components to use Dialect's wallet notifications and wallet-to-wallet chat.
 
-Want to learn how to add Dialect to your dapp? See the [Usage](#Usage) section below and/or check out our [docs](https://dialect.gitbook.io/documentation/).
+Want to learn how to add Dialect to your dapp? See the [Usage](#Usage) section below and/or check out our [docs](https://docs.dialect.to/).
 
 
 ## Installation
@@ -44,10 +44,57 @@ As you may have noticed, this repo covers two packages: `@dialectlabs/react-sdk`
 
 ### Basic
 
-If you are new to Dialect, it's highly recommended to start with pre-built components from `@dialectlabs/react-ui` package.
+If you are new to Dialect, it's highly recommended to start with pre-built components from `@dialectlabs/react-ui` package. In this case, basic integration falls to 3 steps:
 1. Preliminary Setup
 2. Configuration
 3. Render
+
+#### Preliminary Setup
+
+Import styles, add necessary providers in your dapp, specifically: `DialectContextProvider`, `DialectThemeProvider` and `DialectUiManagementProvider`.
+
+- `DialectContextProvider` - re-export from `@dialectlabs/react-sdk`. Handles connection info, threads and messages state.
+- `DialectThemeProvider` - as name suggests, stores theme for Dialect UIs
+- `DialectUiManagementProvider` - stores UI state (open/close state, current route) for Dialect UIs
+
+```typescript jsx
+/* App.tsx */
+
+// Baseline styles for Dialect UIs
+import '@dialectlabs/react-ui/index.css';
+
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { DialectUiManagementProvider, DialectContextProvider, DialectThemeProvider } from '@dialectlabs/react-ui';
+import { FC } from 'react';
+
+// Dialect needs the connected wallet information from your wallet adapter, wrapping in a separate component for composition
+const DialectProviders: FC = ({ children }) => {
+  return (
+    // We are missing some props for now, we will add them in the next step
+    <DialectContextProvider>
+      <DialectThemeProvider>
+        <DialectUiManagementProvider>
+          {children}
+        </DialectUiManagementProvider>
+      </DialectThemeProvider>
+    </DialectContextProvider>
+  );
+}
+
+const App = () => {
+  return (
+    // In this example, using @solana/wallet-adapter-react package for wallet data.
+    // Assuming WalletProvider and ConnectionProvider are properly configured with necessary wallets and network.
+    <ConnectionProvider>
+      <WalletProvider> 
+        <DialectProviders>
+          <MyAwesomeDapp />
+        </DialectProviders>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
+```
 
 ### Embed a notifications modal in your navbar
 
