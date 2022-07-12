@@ -96,6 +96,46 @@ const App = () => {
 }
 ```
 
+#### Configuration
+
+Now we need to tell providers where to connect and which backends to use. Configuration for certain provider may vary per use-case. In this case, we will configure our provider for a chat component, specifically `BottomChat`.
+
+```typescript jsx
+/* App.tsx */
+/* ... imports from previous step ... */
+import { useMemo } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import type { DialectWalletAdapter } from '@dialectlabs/react-ui';
+
+const DialectProviders: FC = ({children}) => {
+  const wallet = useWallet();
+  // We need to create an adapter for Dialect to support any type of wallet
+  // `convertWalletForDialect` is a function that needs to be implemented to convert `WalletContextState` to `DialectWalletAdapter` type.
+  // Please navigate to any example in `examples` folder and find an example implementation there.
+  const dialectWallet = useMemo(() => convertWalletForDialect(wallet), [wallet]);
+
+  // Basic configuration for dialect. Target mainnet-beta and dialect cloud production environment 
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'production',
+    }),
+    []
+  );
+
+  return (
+    // We are missing some props for now, we will add them in the next step
+    <DialectContextProvider config={dialectConfig} wallet={dialectWallet}>
+      <DialectThemeProvider theme="dark">
+        <DialectUiManagementProvider>
+          {children}
+        </DialectUiManagementProvider>
+      </DialectThemeProvider>
+    </DialectContextProvider>
+  );
+}
+```
+
 ### Embed a notifications modal in your navbar
 
 ```typescript jsx
