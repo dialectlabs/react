@@ -65,7 +65,7 @@ import '@dialectlabs/react-ui/index.css';
 
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { DialectUiManagementProvider, DialectContextProvider, DialectThemeProvider } from '@dialectlabs/react-ui';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 // Dialect needs the connected wallet information from your wallet adapter, wrapping in a separate component for composition
 const DialectProviders: FC = ({ children }) => {
@@ -98,7 +98,7 @@ const App = () => {
 
 #### Configuration
 
-Now we need to tell providers where to connect and which backends to use. Configuration for certain provider may vary per use-case. In this case, we will configure our provider for a chat component, specifically `BottomChat`.
+Next we need to configure added providers: where to connect, which backends to use, theme. Configuration for certain provider may vary per use-case. In this case, we will configure our provider for a chat component, specifically `BottomChat`.
 
 ```typescript jsx
 /* App.tsx */
@@ -124,7 +124,6 @@ const DialectProviders: FC = ({children}) => {
   );
 
   return (
-    // We are missing some props for now, we will add them in the next step
     <DialectContextProvider config={dialectConfig} wallet={dialectWallet}>
       <DialectThemeProvider theme="dark">
         <DialectUiManagementProvider>
@@ -135,6 +134,23 @@ const DialectProviders: FC = ({children}) => {
   );
 }
 ```
+
+#### Render
+
+Now that we've configured our providers, let's add `BottomChat` to our dapp.
+
+```typescript jsx
+/* MyAwesomeDapp.tsx */
+
+const MyAwesomeDapp = () => {
+  // `dialectId` is the identificator for this specific dialect-related component and used for external control through `DialectUiManagementProvider`
+  return <BottomChat dialectId="dialect-bottom-chat" />;
+}
+```
+
+And that's it! You should be good to go!
+
+See below full examples for different types of UIs that can be added.
 
 ### Embed a notifications modal in your navbar
 
