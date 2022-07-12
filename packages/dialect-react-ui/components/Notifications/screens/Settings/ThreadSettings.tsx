@@ -13,10 +13,16 @@ import { display } from '@dialectlabs/web3';
 
 interface ThreadSettingsProps {
   onThreadDelete: () => void;
+  isDeletingAddress: boolean;
+  isSavingAddress: boolean;
+  isUpdatingAddress: boolean;
 }
 
 const NotificationsThreadSettings = ({
   onThreadDelete,
+  isDeletingAddress,
+  isSavingAddress,
+  isUpdatingAddress,
 }: ThreadSettingsProps) => {
   const {
     textStyles,
@@ -86,7 +92,7 @@ const NotificationsThreadSettings = ({
               defaultStyle={secondaryDangerButton}
               loadingStyle={secondaryDangerButtonLoading}
               onClick={onThreadDelete}
-              loading={isDeletingThread}
+              loading={isDeletingThread || isDeletingAddress}
             >
               {isOnChain ? 'Withdraw rent and delete history' : 'Delete thread'}
             </Button>

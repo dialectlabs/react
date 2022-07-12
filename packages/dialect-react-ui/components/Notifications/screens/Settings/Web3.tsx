@@ -21,7 +21,6 @@ export function Web3(props: Web3Props) {
   const {
     info: { wallet },
   } = useDialectSdk();
-  // TODO: fix sdk call when wallet is not available
   const { dappAddress } = useDialectDapp();
   const [isDeletingAddress, setDeletingAddress] = useState(false);
   const [isSavingAddress, setSavingAddress] = useState(false);
@@ -44,37 +43,46 @@ export function Web3(props: Web3Props) {
     deleteAddress,
   } = useDialectCloudApi();
 
-  const isDialectAvailable = Boolean(thread);
-  const isWalletEnabled =
-    (walletObj ? walletObj?.enabled : isDialectAvailable) ||
-    isSavingAddress ||
-    isDeletingAddress ||
+  const isWeb3Enabled =
+    (walletObj?.enabled && Boolean(thread)) ||
+    Boolean(thread) ||
     isCreatingThread ||
-    isDeletingThread;
+    isSavingAddress ||
+    isDeletingThread ||
+    isDeletingAddress;
 
   const deleteWeb3 = useCallback(async () => {
-    // console.log('trying to delete', walletObj);
-    if (!walletObj) return;
+    // console.log('trying to delete', { walletObj, isDeletingAddress });
+    if (!walletObj || isDeletingAddress) return;
     setDeletingAddress(true);
-    await deleteAddress({
-      type: 'wallet',
-      addressId: walletObj?.addressId,
-    })
-      .catch(noop)
-      .finally(() => setDeletingAddress(false));
-  }, [deleteAddress, walletObj]);
+    try {
+      await deleteAddress({
+        type: 'wallet',
+        addressId: walletObj?.addressId,
+      });
+    } catch (e) {
+      noop();
+    } finally {
+      setDeletingAddress(false);
+    }
+  }, [deleteAddress, isDeletingAddress, walletObj]);
 
   const saveWeb3 = useCallback(async () => {
-    if (walletObj) return;
+    // console.log('trying to save', { walletObj, isSavingAddress });
+    if (walletObj || isSavingAddress) return;
     setSavingAddress(true);
-    await saveAddress({
-      type: 'wallet',
-      value: wallet?.publicKey?.toBase58(),
-      enabled: true,
-    })
-      .catch(noop)
-      .finally(() => setSavingAddress(false));
-  }, [saveAddress, walletObj, wallet]);
+    try {
+      await saveAddress({
+        type: 'wallet',
+        value: wallet?.publicKey?.toBase58(),
+        enabled: true,
+      });
+    } catch (e) {
+      noop();
+    } finally {
+      setSavingAddress(false);
+    }
+  }, [saveAddress, isSavingAddress, walletObj, wallet]);
 
   const updateWeb3Enabled = useCallback(
     async (enabled: boolean) => {
@@ -97,35 +105,34 @@ export function Web3(props: Web3Props) {
   // FIXME: refactor
   useEffect(() => {
     if (
-      isCreatingThread ||
-      isDeletingThread ||
+      isFetchingThread ||
       isSavingAddress ||
       isDeletingAddress ||
-      isFetchingThread ||
-      (isDialectAvailable && walletObj)
+      isCreatingThread ||
+      isDeletingThread
     )
       return;
 
-    // // Sync state in case of errors
-    // if (isDialectAvailable && !walletObj) {
-    //   // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
-    //   saveWeb3();
-    // } else if (!isDialectAvailable && walletObj) {
-    //   // In case the wallet isn't in web2 db, but the actual thread was created
-    //   deleteWeb3();
-    // }
+    // Sync state in case of errors
+    if (thread && !walletObj) {
+      // In case the wallet isn't in web2 db, but the actual thread was created
+      // console.log('trying to save in useEffect');
+      saveWeb3();
+    } else if (!thread && walletObj) {
+      // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
+
+      deleteWeb3();
+    }
   }, [
-    isDialectAvailable,
     isFetchingThread,
-    isCreatingThread,
-    isDeletingThread,
-    wallet,
-    deleteWeb3,
-    saveWeb3,
+    thread,
     walletObj,
-    walletObj?.addressId,
     isSavingAddress,
     isDeletingAddress,
+    isCreatingThread,
+    isDeletingThread,
+    saveWeb3,
+    deleteWeb3,
   ]);
 
   let content = (
@@ -137,16 +144,20 @@ export function Web3(props: Web3Props) {
             // TODO: properly wait for the deletion
             props?.onThreadDelete?.();
           })
-          .catch(() => {});
+          .catch(noop);
       }}
+      isDeletingAddress={isDeletingAddress}
+      isSavingAddress={isSavingAddress}
+      isUpdatingAddress={isUpdatingAddress}
     />
   );
 
-  if (!isWalletEnabled || isCreatingThread || isSavingAddress) {
+  if (!isWeb3Enabled || isCreatingThread || isSavingAddress) {
     content = (
       <CreateNotificationsThread
         onThreadCreated={() => saveWeb3()}
         onThreadCreationFailed={() => updateWeb3Enabled(false)}
+        isSavingAddress={isSavingAddress}
       />
     );
   }
@@ -156,7 +167,7 @@ export function Web3(props: Web3Props) {
       className="dt-mb-6"
       title="💬  Wallet notifications"
       // FIXME: fix toggle closing after succesfuly created thread
-      enabled={isWalletEnabled}
+      enabled={isWeb3Enabled}
       onChange={async (nextValue) => {
         await updateWeb3Enabled(nextValue);
       }}

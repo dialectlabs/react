@@ -55,13 +55,13 @@ const useDialectCloudApi = (): DialectCloudApi => {
       if (!isWalletConnected || !dapp) return;
       try {
         // Optimisticly update the current data while run actual request
-        mutateAddresses(
+        await mutateAddresses(
           async () => {
             const data = await saveAddress(wallet, dapp, address);
             return mergeAddress(data);
           },
           {
-            optimisticData: mergeAddress(address),
+            optimisticData: (data) => mergeAddress(data),
             rollbackOnError: true,
           }
         );
@@ -95,7 +95,7 @@ const useDialectCloudApi = (): DialectCloudApi => {
           ? addresses.filter((add) => add.type !== address.type)
           : [];
         // Optimisticly update the current data while run actual request
-        mutateAddresses(
+        await mutateAddresses(
           async () => {
             await deleteAddress(wallet, address);
             return nextAddresses;
