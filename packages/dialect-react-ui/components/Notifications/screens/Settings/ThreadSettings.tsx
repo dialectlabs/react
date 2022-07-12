@@ -1,5 +1,7 @@
 import {
+  AddressType,
   Backend,
+  useAddresses,
   useDialectDapp,
   useDialectSdk,
   useThread,
@@ -10,39 +12,44 @@ import { A, P } from '../../../common/preflighted';
 import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
 import { display } from '@dialectlabs/web3';
+import { useCallback } from 'react';
 
-interface ThreadSettingsProps {
-  onThreadDelete: () => void;
-  isDeletingAddress: boolean;
-  isSavingAddress: boolean;
-  isUpdatingAddress: boolean;
+interface NotificationsThreadSettingsProps {
+  onThreadDeleted?: () => void;
 }
 
 const NotificationsThreadSettings = ({
-  onThreadDelete,
-  isDeletingAddress,
-  isSavingAddress,
-  isUpdatingAddress,
-}: ThreadSettingsProps) => {
+  onThreadDeleted,
+}: NotificationsThreadSettingsProps) => {
   const {
     textStyles,
     xPaddedText,
     secondaryDangerButton,
     secondaryDangerButtonLoading,
   } = useTheme();
-
   const {
     info: {
       config: { solana: { network } = {} },
     },
   } = useDialectSdk();
-
   const { dappAddress } = useDialectDapp();
+  const {
+    thread,
+    delete: deleteDialect,
+    isDeletingThread,
+    errorDeletingThread,
+    isAdminable,
+  } = useThread({
+    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
+  });
 
-  const { thread, isDeletingThread, errorDeletingThread, isAdminable } =
-    useThread({
-      findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
-    });
+  const { isDeletingAddress, delete: deleteAddress } = useAddresses();
+
+  const deleteThread = useCallback(async () => {
+    await deleteDialect();
+    await deleteAddress(AddressType.Wallet);
+    onThreadDeleted?.();
+  }, [deleteAddress, deleteDialect, onThreadDeleted]);
 
   if (!thread) {
     return null;
@@ -91,7 +98,7 @@ const NotificationsThreadSettings = ({
               className="dt-w-full"
               defaultStyle={secondaryDangerButton}
               loadingStyle={secondaryDangerButtonLoading}
-              onClick={onThreadDelete}
+              onClick={deleteThread}
               loading={isDeletingThread || isDeletingAddress}
             >
               {isOnChain ? 'Withdraw rent and delete history' : 'Delete thread'}

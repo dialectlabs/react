@@ -1,7 +1,7 @@
 import type { Dapp, DialectSdkError } from '@dialectlabs/sdk';
 import useSWR from 'swr';
 import { EMPTY_OBJ } from '../utils';
-import { DAPP_CACHE_KEY } from './internal/swrCache';
+import { DAPP_CACHE_KEY_FN } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
 
 interface UseDappValue {
@@ -20,7 +20,7 @@ function useDapp({ refreshInterval }: UseDappParams = EMPTY_OBJ): UseDappValue {
     info: { wallet },
   } = useDialectSdk();
   const { data: dapp, error } = useSWR(
-    DAPP_CACHE_KEY(wallet),
+    DAPP_CACHE_KEY_FN(wallet),
     () => dapps.find(),
     { refreshInterval, refreshWhenOffline: true }
   );

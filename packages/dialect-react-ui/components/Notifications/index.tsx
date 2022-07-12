@@ -1,4 +1,5 @@
 import {
+  useAddresses,
   useDialectCloudApi,
   useDialectConnectionInfo,
   useDialectDapp,
@@ -52,8 +53,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const { isSigning, isEncrypting } = useDialectWallet();
 
   const {
-    addresses: { wallet: walletObj },
-  } = useDialectCloudApi();
+    addresses: { WALLET: walletObj },
+  } = useAddresses();
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const isWeb3Enabled = walletObj

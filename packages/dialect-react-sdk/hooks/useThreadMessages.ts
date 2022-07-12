@@ -11,7 +11,7 @@ import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInf
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
 import type { LocalThreadMessage, ThreadMessage } from '../types';
 import { EMPTY_ARR } from '../utils';
-import { CACHE_KEY_MESSAGES, CACHE_KEY_THREADS } from './internal/swrCache';
+import { CACHE_KEY_MESSAGES_FN, CACHE_KEY_THREADS } from './internal/swrCache';
 import useThread from './useThread';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
@@ -66,7 +66,7 @@ const useThreadMessages = ({
     error: errorFetchingMessages = null,
     mutate,
   } = useSWR<SdkThreadMessage[], DialectSdkError>(
-    threadInternal ? CACHE_KEY_MESSAGES(threadInternal.id.toString()) : null,
+    threadInternal ? CACHE_KEY_MESSAGES_FN(threadInternal.id.toString()) : null,
     () => threadInternal!.messages(),
     { refreshInterval, refreshWhenOffline: true }
   );

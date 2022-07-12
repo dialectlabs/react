@@ -1,3 +1,4 @@
+import { AddressType, useAddresses, useThread } from '@dialectlabs/react-sdk';
 import {
   Backend,
   Thread,
@@ -20,23 +21,15 @@ import {
 import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 
-interface CreateNotificationsThreadProps {
-  onThreadCreated: (thread: Thread) => void;
-  onThreadCreationFailed: (error: Error) => void;
-  isSavingAddress: boolean;
-}
-
-const CreateNotificationsThread = ({
-  onThreadCreated,
-  onThreadCreationFailed,
-  isSavingAddress,
-}: CreateNotificationsThreadProps) => {
+const CreateNotificationsThread = () => {
   const {
     info: {
       wallet,
       config: { solana: { network } = {} },
     },
   } = useDialectSdk();
+
+  const { isCreatingAddress, create: createAddress } = useAddresses();
 
   const {
     connected: {
@@ -47,8 +40,6 @@ const CreateNotificationsThread = ({
 
   const { dappAddress } = useDialectDapp();
 
-  const { create } = useThreads();
-
   const isBackendSelectable =
     isSolanaShouldConnect && isDialectCloudShouldConnect;
   const [isOffChain, setIsOffChain] = useState(isDialectCloudShouldConnect);
@@ -58,7 +49,10 @@ const CreateNotificationsThread = ({
       ? Backend.Solana
       : Backend.DialectCloud;
 
-  const { isCreatingThread, errorCreatingThread } = useThreads();
+  const { create, isCreatingThread, errorCreatingThread } = useThreads();
+  const { thread } = useThread({
+    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
+  });
 
   const { textStyles } = useTheme();
 
@@ -77,14 +71,14 @@ const CreateNotificationsThread = ({
       .then(async (thread) => {
         // console.log('successfuly created thread', thread);
         // TODO: do whatever needed for frefh created thread
-        onThreadCreated?.(thread);
+        createAddress?.(AddressType.Wallet, wallet.publicKey?.toBase58());
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(async (e) => {
         console.log('error while creating thread', e);
-        onThreadCreationFailed?.(e);
+        // TODO: do we need to do smth here?
       });
-  }, [backend, create, dappAddress, onThreadCreated, onThreadCreationFailed]);
+  }, [backend, create, createAddress, dappAddress, wallet.publicKey]);
 
   return (
     <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
@@ -133,7 +127,8 @@ const CreateNotificationsThread = ({
       <Button
         className="dt-mb-2"
         onClick={createDialect}
-        loading={isCreatingThread || isSavingAddress}
+        loading={isCreatingThread || isCreatingAddress}
+        disabled={Boolean(thread)}
       >
         {isCreatingThread
           ? 'Creating...'
