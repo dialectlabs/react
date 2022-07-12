@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.8] - 2022-07-12
+
+- fix: sync state in case thread doesnt exists but address is saved in db
+
 ## [1.0.0-beta.7] - 2022-07-08
 
 - hotfix: save dialect auth token per wallet when using v0 addresses api
