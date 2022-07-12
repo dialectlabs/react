@@ -23,11 +23,13 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 interface CreateNotificationsThreadProps {
   onThreadCreated: (thread: Thread) => void;
   onThreadCreationFailed: (error: Error) => void;
+  isSavingAddress: boolean;
 }
 
 const CreateNotificationsThread = ({
   onThreadCreated,
   onThreadCreationFailed,
+  isSavingAddress,
 }: CreateNotificationsThreadProps) => {
   const {
     info: {
@@ -73,7 +75,7 @@ const CreateNotificationsThread = ({
       backend,
     })
       .then(async (thread) => {
-        console.log('successfuly created thread', thread);
+        // console.log('successfuly created thread', thread);
         // TODO: do whatever needed for frefh created thread
         onThreadCreated?.(thread);
       })
@@ -131,7 +133,7 @@ const CreateNotificationsThread = ({
       <Button
         className="dt-mb-2"
         onClick={createDialect}
-        loading={isCreatingThread}
+        loading={isCreatingThread || isSavingAddress}
       >
         {isCreatingThread
           ? 'Creating...'

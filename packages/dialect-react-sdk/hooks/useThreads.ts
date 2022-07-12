@@ -56,9 +56,9 @@ const useThreads = ({
       setErrorCreatingThread(null);
       try {
         const res = await threadsApi.create(cmd);
-        mutate();
-        globalMutate(CACHE_KEY_THREAD_FN({ id: res.id }), res);
-        globalMutate(
+        await mutate();
+        await globalMutate(CACHE_KEY_THREAD_FN({ id: res.id }), res);
+        await globalMutate(
           CACHE_KEY_THREAD_FN({
             otherMembers: cmd.otherMembers.map((it) => it.publicKey),
           }),
