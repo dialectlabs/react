@@ -111,6 +111,7 @@ export default function NotificationsButton({
   channels = ['web3', 'telegram', 'sms', 'email'],
   ...props
 }: PropTypes): JSX.Element {
+  // TODO: Add default value to polling inteval
   const swrOptions = useMemo(
     () => ({
       refreshInterval: props.pollingInterval,

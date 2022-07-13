@@ -104,8 +104,10 @@ Next we need to configure added providers: where to connect, which backends to u
 /* App.tsx */
 /* ... imports from previous step ... */
 import { useMemo } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
-import type { DialectWalletAdapter } from '@dialectlabs/react-ui';
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { DialectWalletAdapter, Config, Backend } from '@dialectlabs/react-ui';
+
+const convertWalletForDialect = (wallet: WalletContextState): DialectWalletAdapter => ({...});
 
 const DialectProviders: FC = ({children}) => {
   const wallet = useWallet();
@@ -125,7 +127,8 @@ const DialectProviders: FC = ({children}) => {
 
   return (
     <DialectContextProvider config={dialectConfig} wallet={dialectWallet}>
-      <DialectThemeProvider theme="dark">
+      {/* 'dark' | 'light' */}
+      <DialectThemeProvider theme="dark"> 
         <DialectUiManagementProvider>
           {children}
         </DialectUiManagementProvider>
@@ -154,41 +157,89 @@ See below full examples for different types of UIs that can be added.
 
 ### Embed a notifications modal in your navbar
 
+The component above is a self-contained button that opens a notifications modal in your React app.
+
 ```typescript jsx
 import '@dialectlabs/react-ui/index.css';
 
-import { NotificationsButton, DialectUiManagementProvider } from '@dialectlabs/react-ui';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
+import { useMemo } from 'react';
+import { ConnectionProvider, WalletProvider, useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { Config, Backend, DialectWalletAdapter, DialectUiManagementProvider, DialectContextProvider, DialectThemeProvider } from '@dialectlabs/react-ui';
+import type { FC } from 'react';
 
-// ...
-const wallet = useWallet();
-const theme: 'dark' | 'light' = 'dark';
 const YOUR_PROJECT_PUBLIC_KEY = new PublicKey('8cqm...quvHK');
 
-return (
-  <DialectUiManagementProvider>
+const convertWalletForDialect = (wallet: WalletContextState): DialectWalletAdapter => ({...});
+
+const Notifications = () => {
+  return (
     <NotificationsButton
-      wallet={wallet}
-      publicKey={YOUR_PROJECT_PUBLIC_KEY}
-      network={'devnet'}
-      theme={theme}
+      dialectId="dialect-notifications"
+      {/*
+        Strictly visual prop. Specifies types of notifications one would receive.
+      */}
       notifications={[
-        { name: 'Welcome message on thread creation', detail: 'Event' },
-        { name: 'Collateral health', detail: 'Below 130%' },
+        { name: 'Welcome message', detail: 'On thread creation' },
       ]}
+      {/* 
+        How often should poll happen. If not provided, no polling would happen, SWR will handle refetch on focus or simple page refresh.
+        Best to set it, if you are using web3 notifications.
+       */}
+      pollingInterval={15000}
+      {/* 
+        `channels` prop specifies which types are supported for notification subscription. 
+        Accepts an array, containing the following values: 
+      */}
+      channels={['web3', 'email', 'sms', 'telegram']}
     />
-  </DialectUiManagementProvider>
-);
+  )
+}
 
-// ...
+const DialectProviders: FC = ({ children }) => {
+  const wallet = useWallet();
+  const dialectWallet = useMemo(() => convertWalletForDialect(wallet), [wallet]);
+
+  // Basic configuration for dialect. Target mainnet-beta and dialect cloud production environment 
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'production',
+    }),
+    []
+  );
+
+  // In order to receive notifications, we need to specify the sender of those notifications
+  // `dapp` prop is your PublicKey, which will be the sender of those notifications,
+  // either from monitoring-service or broadcast
+  return (
+    <DialectContextProvider 
+      config={dialectConfig} 
+      wallet={dialectWallet}
+      dapp={YOUR_PROJECT_PUBLIC_KEY}
+    >
+      <DialectThemeProvider theme="dark">
+        <DialectUiManagementProvider>
+          {children}
+        </DialectUiManagementProvider>
+      </DialectThemeProvider>
+    </DialectContextProvider>
+  );
+}
+
+const App = () => {
+  return (
+    // In this example, using @solana/wallet-adapter-react package for wallet data.
+    // Assuming WalletProvider and ConnectionProvider are properly configured with necessary wallets and network.
+    <ConnectionProvider>
+      <WalletProvider>
+        <DialectProviders>
+          <Notifications />
+        </DialectProviders>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
 ```
-
-The component above is a self-contained button that opens a notifications modal in your react app. Let's look at what the props above do.
-
-1. `wallet` – your user's wallet, used by Dialect to identify relevant messages and sign transactions.
-2. `publicKey` – The public key associated with your project's messaging keypair. All notifications sent to your users are signed and written on-chain using this keypair.
-3. `network` – Which network to target. `localnet`, `devnet`, & `mainnet-beta` are supported.
 
 ### Embed a full inbox view in your website
 
