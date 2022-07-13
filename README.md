@@ -221,6 +221,7 @@ const DialectProviders: FC = ({ children }) => {
     <DialectContextProvider 
       config={dialectConfig} 
       wallet={dialectWallet}
+      dapp={YOUR_PROJECT_PUBLIC_KEY}
     >
       <DialectThemeProvider theme="dark">
         <DialectUiManagementProvider>
