@@ -36,5 +36,11 @@ export const DAPP_ADDRESSES_CACHE_KEY_FN = (dapp: Dapp | null) =>
 export const WALLET_ADDRESSES_CACHE_KEY_FN = (wallet: Wallets) =>
   'WALLET_ADDRESSES_' + wallet?.publicKey?.toBase58();
 
-export const WALLET_DAPP_ADDRESSES_CACHE_KEY_FN = (wallet: Wallets) =>
-  'WALLET_DAPP_ADDRESSES_' + wallet?.publicKey?.toBase58();
+export const WALLET_DAPP_ADDRESSES_CACHE_KEY_FN = (
+  wallet: Wallets,
+  dappPublicKey?: PublicKey
+) =>
+  'WALLET_DAPP_ADDRESSES_' +
+  wallet?.publicKey?.toBase58() +
+  '_' +
+  dappPublicKey?.toBase58();

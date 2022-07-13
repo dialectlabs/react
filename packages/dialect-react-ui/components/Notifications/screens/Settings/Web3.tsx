@@ -20,7 +20,6 @@ export function Web3({ onThreadDeleted }: Web3Props) {
     toggle,
 
     isCreatingAddress,
-    isUpdatingAddress,
     isDeletingAddress,
   } = useAddresses();
 
@@ -48,9 +47,11 @@ export function Web3({ onThreadDeleted }: Web3Props) {
     <ToggleSection
       className="dt-mb-6"
       title="💬  Wallet notifications"
-      // FIXME: fix toggle closing after succesfuly created thread
       enabled={isWeb3Enabled}
       onChange={async (nextValue) => {
+        if (!walletObj || walletObj?.enabled === nextValue) {
+          return;
+        }
         await toggle(AddressType.Wallet, nextValue);
       }}
     >

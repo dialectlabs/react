@@ -19,7 +19,6 @@ const baseChannelOptions: Record<Channel, boolean> = {
 };
 
 function Settings(props: {
-  toggleSettings: () => void;
   notifications: NotificationType[];
   channels: Channel[];
 }) {
@@ -49,7 +48,7 @@ function Settings(props: {
       <div className={clsx('dt-py-2', xPaddedText)}>
         {channelsOptions.web3 && (
           <div className="dt-mb-2">
-            <Web3 onThreadDelete={props.toggleSettings} />
+            <Web3 />
           </div>
         )}
         {channelsOptions.email && (

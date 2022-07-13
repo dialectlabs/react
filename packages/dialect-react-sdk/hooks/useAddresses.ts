@@ -1,4 +1,4 @@
-import { Address, AddressType, DialectSdkError } from '@dialectlabs/sdk';
+import type { Address, AddressType, DialectSdkError } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { EMPTY_OBJ } from '../utils';
@@ -9,11 +9,8 @@ import {
 import useDialectDapp from './useDialectDapp';
 import useDialectSdk from './useDialectSdk';
 import useDialectWallet from './useDialectWallet';
-import useThread from './useThread';
-import useThreads from './useThreads';
 
 type AddressEnriched = Address & { enabled: boolean };
-
 interface UseAddressesValue {
   addresses: Record<AddressType, AddressEnriched> | Record<string, never>;
   create: (type: AddressType, value?: string) => Promise<void>;
@@ -38,7 +35,7 @@ function useAddresses({
 }: UseAddressesParams = EMPTY_OBJ): UseAddressesValue {
   const { wallet: walletsApi } = useDialectSdk();
   const { dappAddress: dappPublicKey } = useDialectDapp();
-  const { adapter: wallet, connected: isWalletConnected } = useDialectWallet();
+  const { connected: isWalletConnected } = useDialectWallet();
   const [isCreatingAddress, setCreatingAddress] = useState(false);
   const [isUpdatingAddress, setUpdatingAddress] = useState(false);
   const [isDeletingAddress, setDeletingAddress] = useState(false);
@@ -65,14 +62,14 @@ function useAddresses({
     error: errorFetchingDappAddresses = null,
     mutate: mutateDappAddresses,
   } = useSWR(
-    WALLET_DAPP_ADDRESSES_CACHE_KEY_FN(walletsApi),
+    WALLET_DAPP_ADDRESSES_CACHE_KEY_FN(walletsApi, dappPublicKey),
     walletsApi && dappPublicKey
-      ? () => walletsApi.dappAddresses.findAll({ dappPublicKey })
+      ? () =>
+          walletsApi.dappAddresses.findAll({
+            addressIds: addresses?.map((addr) => addr.id),
+          })
       : null,
     {
-      onSuccess: (data) => {
-        console.log('success loading dapp connections', data);
-      },
       refreshInterval,
       refreshWhenOffline: true,
     }
@@ -110,19 +107,11 @@ function useAddresses({
   );
 
   const createAddress = useCallback(
-    async (type: AddressType, value?: string) => {
-      if (
-        !isWalletConnected ||
-        !dappPublicKey ||
-        !value ||
-        !addresses ||
-        !dappAddresses
-      )
-        return;
+    async (type: AddressType, value: string) => {
+      if (!isWalletConnected || !dappPublicKey || isCreatingAddress) return;
       setCreatingAddress(true);
       try {
         const currentAddress = getAddress(type);
-        console.log(currentAddress, addresses);
         // Optimisticly update the current data while run actual request
         await mutateAddresses(
           async () => {
@@ -144,6 +133,7 @@ function useAddresses({
             rollbackOnError: true,
           }
         );
+        await mutateDappAddresses();
       } catch (e) {
         throw e as Error;
       } finally {
@@ -153,10 +143,10 @@ function useAddresses({
     [
       isWalletConnected,
       dappPublicKey,
-      addresses,
-      dappAddresses,
+      isCreatingAddress,
       getAddress,
       mutateAddresses,
+      mutateDappAddresses,
       walletsApi.addresses,
       walletsApi.dappAddresses,
       mergeAddress,
@@ -192,7 +182,6 @@ function useAddresses({
       try {
         const address = getAddress(type);
         const dappAddress = getDappAddress(type);
-        console.log('updateEnabled', { address, dappAddress });
         if (!dappAddress) {
           return;
         }
@@ -223,7 +212,7 @@ function useAddresses({
 
   const deleteAddress = useCallback(
     async (type: AddressType) => {
-      if (!isWalletConnected) return;
+      if (!isWalletConnected || isDeletingAddress) return;
       setDeletingAddress(true);
       try {
         const address = getAddress(type);
@@ -252,6 +241,7 @@ function useAddresses({
     },
     [
       isWalletConnected,
+      isDeletingAddress,
       getAddress,
       addresses,
       mutateAddresses,
@@ -294,70 +284,20 @@ function useAddresses({
     const obj = Object.fromEntries(
       // Since by default options everything is false, passed options are considered enabled
       addresses
-        ? addresses.map((address) => [
-            address.type,
+        ? addresses.map((addr) => [
+            addr.type,
             {
-              ...address,
+              ...addr,
               enabled: Boolean(
-                dappAddresses?.find((dappAddress) => {
-                  console.log(dappAddress.address.id === address.id);
-                  return dappAddress.address.id === address.id;
-                })?.enabled
+                dappAddresses?.find((dAddr) => dAddr.address.id === addr.id)
+                  ?.enabled
               ),
             },
           ])
         : []
     ) as Record<AddressType, AddressEnriched>;
-    console.log('addressesObj', { addresses, dappAddresses, obj });
     return obj;
   }, [addresses, dappAddresses]);
-
-  const { isCreatingThread } = useThreads();
-  const { thread, isFetchingThread, isDeletingThread } = useThread({
-    findParams: { otherMembers: dappPublicKey ? [dappPublicKey] : [] },
-  });
-
-  // Sync state for web3 channel in case of errors
-  useEffect(() => {
-    const walletAddress = getAddress(AddressType.Wallet);
-
-    if (
-      !addresses ||
-      !dappAddresses ||
-      isFetchingThread ||
-      isCreatingAddress ||
-      isDeletingAddress ||
-      isCreatingThread ||
-      isDeletingThread
-    )
-      return;
-
-    if (thread && !walletAddress) {
-      // In case the wallet isn't in web2 db, but the actual thread was created
-      // console.log('trying to save in useEffect');
-      console.log('try to create wallet address');
-      createAddress(AddressType.Wallet, wallet.publicKey?.toBase58());
-    } else if (!thread && walletAddress) {
-      // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
-      console.log('try to delete wallet address');
-      deleteAddress(AddressType.Wallet);
-    }
-  }, [
-    isFetchingThread,
-    thread,
-    isDeletingAddress,
-    isCreatingThread,
-    isDeletingThread,
-    isCreatingAddress,
-    deleteAddress,
-    wallet.publicKey,
-    getAddress,
-    createAddress,
-    addresses,
-    dappAddresses,
-  ]);
-
-  console.log(addressesObj);
 
   return {
     addresses: addressesObj || EMPTY_OBJ,

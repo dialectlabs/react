@@ -1,7 +1,6 @@
-import { AddressType, useAddresses, useThread } from '@dialectlabs/react-sdk';
+import { Thread, useAddresses, useThread } from '@dialectlabs/react-sdk';
 import {
   Backend,
-  Thread,
   ThreadMemberScope,
   useDialectConnectionInfo,
   useDialectDapp,
@@ -20,6 +19,8 @@ import {
 } from '../../../common';
 import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { useRoute } from '../../../common/providers/Router';
+import { RouteName } from '../../constants';
 
 const CreateNotificationsThread = () => {
   const {
@@ -29,7 +30,7 @@ const CreateNotificationsThread = () => {
     },
   } = useDialectSdk();
 
-  const { isCreatingAddress, create: createAddress } = useAddresses();
+  const { isCreatingAddress } = useAddresses();
 
   const {
     connected: {
@@ -39,6 +40,8 @@ const CreateNotificationsThread = () => {
   } = useDialectConnectionInfo();
 
   const { dappAddress } = useDialectDapp();
+
+  const { navigate } = useRoute();
 
   const isBackendSelectable =
     isSolanaShouldConnect && isDialectCloudShouldConnect;
@@ -54,31 +57,40 @@ const CreateNotificationsThread = () => {
     findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
 
+  const showThread = useCallback(
+    (thread: Thread) => {
+      navigate(RouteName.Thread, {
+        params: {
+          threadId: thread.id,
+        },
+      });
+    },
+    [navigate]
+  );
+
   const { textStyles } = useTheme();
 
   const { balance } = useBalance();
 
-  const createDialect = useCallback(() => {
+  const createDialect = useCallback(async () => {
     if (!dappAddress) return;
-    create({
-      me: { scopes: [ThreadMemberScope.ADMIN] },
-      otherMembers: [
-        { publicKey: dappAddress, scopes: [ThreadMemberScope.WRITE] },
-      ],
-      encrypted: false,
-      backend,
-    })
-      .then(async (thread) => {
-        // console.log('successfuly created thread', thread);
-        // TODO: do whatever needed for frefh created thread
-        createAddress?.(AddressType.Wallet, wallet.publicKey?.toBase58());
-      })
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      .catch(async (e) => {
-        console.log('error while creating thread', e);
-        // TODO: do we need to do smth here?
+    try {
+      const thread = await create({
+        me: { scopes: [ThreadMemberScope.ADMIN] },
+        otherMembers: [
+          { publicKey: dappAddress, scopes: [ThreadMemberScope.WRITE] },
+        ],
+        encrypted: false,
+        backend,
       });
-  }, [backend, create, createAddress, dappAddress, wallet.publicKey]);
+
+      // Address would be created by syncState effect
+
+      await showThread(thread);
+    } catch (e) {
+      // TODO: do we need to do smth here?
+    }
+  }, [backend, create, dappAddress, showThread]);
 
   return (
     <div className="dt-h-full dt-m-auto dt-flex dt-flex-col">
@@ -128,7 +140,7 @@ const CreateNotificationsThread = () => {
         className="dt-mb-2"
         onClick={createDialect}
         loading={isCreatingThread || isCreatingAddress}
-        disabled={Boolean(thread)}
+        disabled={Boolean(thread) || isCreatingThread || isCreatingAddress}
       >
         {isCreatingThread
           ? 'Creating...'

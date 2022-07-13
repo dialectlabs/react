@@ -1,23 +1,24 @@
 import {
+  AddressType,
   useAddresses,
-  useDialectCloudApi,
   useDialectConnectionInfo,
   useDialectDapp,
-  useDialectSdk,
   useDialectWallet,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useCallback, useEffect, useState } from 'react';
-import CantDecryptError from '../../entities/errors/ui/CantDecryptError';
+import { useCallback, useEffect } from 'react';
 import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
 import NoWalletError from '../../entities/errors/ui/NoWalletError';
-import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
-import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
+import LoadingThread from '../../entities/LoadingThread';
+
+import usePrevious from '../../hooks/usePrevious';
 import { useTheme } from '../common/providers/DialectThemeProvider';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
+import WalletStatesWrapper from '../common/WalletStatesWrapper';
 import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
@@ -36,111 +37,150 @@ interface NotificationsProps {
 }
 
 function InnerNotifications(props: NotificationsProps): JSX.Element {
-  const {
-    info: { apiAvailability },
-  } = useDialectSdk();
-  const { dappAddress } = useDialectDapp();
   const { isCreatingThread } = useThreads();
+  const { dappAddress } = useDialectDapp();
   const { thread, isDeletingThread, isFetchingThread } = useThread({
     findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
-
-  const isDialectAvailable = Boolean(thread);
-
-  const cannotDecryptDialect =
-    !apiAvailability.canEncrypt && thread?.encryptionEnabled;
-
-  const { isSigning, isEncrypting } = useDialectWallet();
+  const { adapter: wallet } = useDialectWallet();
 
   const {
-    addresses: { WALLET: walletObj },
+    addresses: { WALLET: walletAddress },
+    isFetching: isFetchingAddresses,
+    create: createAddress,
+    delete: deleteAddress,
+    isCreatingAddress,
+    isDeletingAddress,
   } = useAddresses();
 
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const isWeb3Enabled = walletObj
-    ? Boolean(walletObj?.enabled)
-    : isDialectAvailable;
-
-  const toggleSettings = useCallback(
-    () => setSettingsOpen(!isSettingsOpen),
-    [isSettingsOpen, setSettingsOpen]
-  );
+  const isWeb3Enabled =
+    walletAddress?.enabled ||
+    isCreatingThread ||
+    isCreatingAddress ||
+    isDeletingThread ||
+    isDeletingAddress;
 
   const { scrollbar } = useTheme();
-
   const { navigate } = useRoute();
+  const prevThread = usePrevious(thread);
 
+  const showThread = useCallback(() => {
+    if (!thread) {
+      return;
+    }
+    () =>
+      navigate(RouteName.Thread, {
+        params: {
+          threadId: thread.id,
+        },
+      });
+  }, [navigate, thread]);
+
+  const showSettings = useCallback(() => {
+    () => navigate(RouteName.Settings);
+  }, [navigate]);
+
+
+  // Sync state for web3 channel in case of errors
   useEffect(
-    function pickRoute() {
-      const shouldShowSettings =
-        isSettingsOpen ||
-        !isWeb3Enabled ||
-        isCreatingThread ||
-        isDeletingThread;
+    function syncState() {
+      if (thread && prevThread?.id.equals(thread.id)) {
+        return;
+      }
 
-      if (isSigning) {
-        navigate(RouteName.SigningRequest);
-      } else if (isEncrypting) {
-        navigate(RouteName.SigningRequest);
-      } else if (cannotDecryptDialect) {
-        navigate(RouteName.CantDecrypt);
-      } else if (shouldShowSettings) {
-        navigate(RouteName.Settings);
-      } else if (thread) {
-        navigate(RouteName.Thread, {
-          params: {
-            threadId: thread.id,
-          },
-        });
+      if (
+        !wallet?.publicKey ||
+        isFetchingAddresses ||
+        isFetchingThread ||
+        isCreatingThread ||
+        isDeletingThread
+      )
+        return;
+
+      if (thread && !walletAddress) {
+        // In case the wallet isn't in web2 db, but the actual thread was created
+        createAddress(AddressType.Wallet, wallet.publicKey?.toBase58());
+      } else if (!thread && walletAddress) {
+        // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
+        deleteAddress(AddressType.Wallet);
       }
     },
     [
+      isFetchingThread,
+      thread,
+      isCreatingThread,
+      isDeletingThread,
+      prevThread?.id,
+      walletAddress,
+      wallet.publicKey,
+      isFetchingAddresses,
+      createAddress,
+      deleteAddress,
+    ]
+  );
+
+  useEffect(
+    function pickInitialRoute() {
+      if (thread?.id && prevThread?.id?.equals(thread?.id)) {
+        // Skip setting initial route if the thread isn't changed
+        return;
+      }
+
+      const shouldShowSettings =
+        !isWeb3Enabled ||
+        isCreatingThread ||
+        isFetchingThread ||
+        isDeletingThread;
+
+      if (shouldShowSettings) {
+        showSettings();
+        return;
+      }
+
+      if (!thread) {
+        return;
+      }
+
+      showThread();
+    },
+    [
       navigate,
-      isSigning,
-      isEncrypting,
-      isSettingsOpen,
       isWeb3Enabled,
       isFetchingThread,
       isCreatingThread,
       isDeletingThread,
       thread,
-      cannotDecryptDialect,
+      prevThread?.id,
+      showThread,
+      showSettings,
     ]
   );
 
   return (
     <>
-      <Header
-        isWeb3Enabled={isWeb3Enabled}
-        isReady={isDialectAvailable || Boolean(walletObj?.enabled)}
-        isSettingsOpen={isSettingsOpen}
-        onModalClose={props.onModalClose}
-        toggleSettings={toggleSettings}
-        onBackClick={props.onBackClick}
-      />
-      <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
-        <Route name={RouteName.CantDecrypt}>
-          <CantDecryptError />
-        </Route>
-        <Route name={RouteName.SigningRequest}>
-          <SignMessageInfo />
-        </Route>
-        <Route name={RouteName.EncryptionRequest}>
-          <EncryptionInfo />
-        </Route>
-        <Route name={RouteName.Settings}>
-          <Settings
-            toggleSettings={() => {
-              toggleSettings();
-            }}
-            notifications={props.notifications || []}
-            channels={props.channels || []}
+      {isFetchingThread || isFetchingAddresses ? (
+        <LoadingThread />
+      ) : (
+        <>
+          <Header
+            isWeb3Enabled={isWeb3Enabled}
+            isReady={!isFetchingAddresses && !isFetchingThread}
+            onModalClose={props.onModalClose}
+            onBackClick={props.onBackClick}
           />
-        </Route>
-        <Route name={RouteName.Thread}>
-          <NotificationsList />
-        </Route>
-      </div>
+          <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
+            <Route name={RouteName.Settings}>
+              <Settings
+                notifications={props.notifications || []}
+                channels={props.channels || []}
+              />
+            </Route>
+            <Route name={RouteName.Thread}>
+              <NotificationsList />
+            </Route>
+          </div>
+        </>
+      )}
     </>
   );
 }
@@ -193,8 +233,14 @@ export default function Notifications(props: NotificationsProps) {
           modal
         )}
       >
-        <Router initialRoute={RouteName.Main}>
-          {hasError ? renderError() : <InnerNotifications {...props} />}
+        <Router initialRoute={RouteName.Settings}>
+          {hasError ? (
+            renderError()
+          ) : (
+            <WalletStatesWrapper>
+              <InnerNotifications {...props} />
+            </WalletStatesWrapper>
+          )}
         </Router>
       </div>
     </div>
