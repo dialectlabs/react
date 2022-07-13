@@ -38,6 +38,7 @@ export const themeVariables: IncomingThemeVariables = {
   },
 };
 
+// TODO: move this to react-sdk and export
 const walletToDialectWallet = (
   wallet: WalletContextState
 ): DialectWalletAdapter => ({

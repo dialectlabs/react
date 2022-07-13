@@ -40,7 +40,7 @@ As you may have noticed, this repo covers two packages: `@dialectlabs/react-sdk`
 `@dialectlabs/react-ui` contains pre-built, themeable, self-sufficient and _opinionated_ UI components for messaging and notification centers.
 
 - All exposed components are themed and can be configured to fit different use-cases
-- Even though exported UIs are controlled React components, the UI state can be handled anywhere in your dapp (e.g. routing) 
+- Even though exported UIs are uncontrolled React components, the UI state can be handled anywhere in your dapp (e.g. routing) 
 
 ### Basic
 
@@ -162,10 +162,10 @@ The component above is a self-contained button that opens a notifications modal 
 ```typescript jsx
 import '@dialectlabs/react-ui/index.css';
 
-import { useMemo } from 'react';
+import { useMemo, FC } from 'react';
 import { ConnectionProvider, WalletProvider, useWallet, WalletContextState } from '@solana/wallet-adapter-react';
-import { Config, Backend, DialectWalletAdapter, DialectUiManagementProvider, DialectContextProvider, DialectThemeProvider } from '@dialectlabs/react-ui';
-import type { FC } from 'react';
+import { NotificationsButton, Config, Backend, DialectWalletAdapter, DialectUiManagementProvider, DialectContextProvider, DialectThemeProvider } from '@dialectlabs/react-ui';
+import { PublicKey } from '@solana/web3.js';
 
 const YOUR_PROJECT_PUBLIC_KEY = new PublicKey('8cqm...quvHK');
 
@@ -182,7 +182,7 @@ const Notifications = () => {
         { name: 'Welcome message', detail: 'On thread creation' },
       ]}
       {/* 
-        How often should poll happen. If not provided, no polling would happen, SWR will handle refetch on focus or simple page refresh.
+        How often should polling happen. If not provided, fetch would happen once. SWR will handle refetch on focus or simple page refresh.
         Best to set it, if you are using web3 notifications.
        */}
       pollingInterval={15000}
@@ -215,7 +215,6 @@ const DialectProviders: FC = ({ children }) => {
     <DialectContextProvider 
       config={dialectConfig} 
       wallet={dialectWallet}
-      dapp={YOUR_PROJECT_PUBLIC_KEY}
     >
       <DialectThemeProvider theme="dark">
         <DialectUiManagementProvider>
@@ -243,90 +242,149 @@ const App = () => {
 
 ### Embed a full inbox view in your website
 
-```typescript jsx
-import '@dialectlabs/react-ui/index.css';
-
-// You can also use the `DialectThemeProvider` instead
-import { Inbox, ThemeProvider, DialectUiManagementProvider } from '@dialectlabs/react-ui';
-import { useWallet } from '@solana/wallet-adapter-react';
-
-// ...
-const wallet = useWallet();
-const theme: 'dark' | 'light' = 'dark';
-
-return (
-  <ThemeProvider theme={theme}>
-    <DialectUiManagementProvider>
-      <Inbox
-        wallet={wallet}
-        dialectId="dialect-inbox"
-        wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
-      />
-    </DialectUiManagementProvider>
-  </ThemeProvider>
-);
-
-// ...
-```
-
-The component above contains a wallet's current inbox of current chats/notifications. From this inbox a user can create chats, browse chats, and send messages. Props are outlined as follows.
-
-1. `wallet` – your user's wallet, used by Dialect to identify relevant messages and sign transactions.
-2. `dialectId` — a custom id for each dialect component, e.g. 'dialect-inbox' or 'marketplace-bottom-chat'
-3. `wrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _container_ view, both augments and overrides Dialect styling.
-4. `contentWrapperClassName` – _optional_ - a string representation of the class attribute on the inbox's _content_ view, augments Dialect styling.
-
-### Embed wallet-to-wallet chat in your navbar
+The component below contains a wallet's current inbox of current chats/notifications. From this inbox a user can create chats, browse chats, and send messages.
 
 ```typescript jsx
 import '@dialectlabs/react-ui/index.css';
 
-import { ChatButton, DialectUiManagementProvider } from '@dialectlabs/react-ui';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useMemo, FC } from 'react';
+import { ConnectionProvider, WalletProvider, useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { Inbox, Config, Backend, DialectWalletAdapter, DialectUiManagementProvider, DialectContextProvider, DialectThemeProvider } from '@dialectlabs/react-ui';
 
-// ...
-const wallet = useWallet();
-const theme: 'dark' | 'light' = 'dark';
+const convertWalletForDialect = (wallet: WalletContextState): DialectWalletAdapter => ({...});
 
-return (
-  <DialectUiManagementProvider>
-    <ChatButton
-      wallet={wallet}
-      dialectId="header-chat-button"
-      network={'devnet'}
-      theme={theme}
+const MyInbox = () => {
+  return (
+    <Inbox
+      dialectId="dialect-inbox"
+      {/*
+        Custom styles for the wrapper. By default, Inbox tries to take the whole height and width of the parent container.
+      */}
+      wrapperClassName="p-2 h-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600"
     />
-  </DialectUiManagementProvider>
-);
+  )
+}
 
-// ...
+const DialectProviders: FC = ({ children }) => {
+  const wallet = useWallet();
+  const dialectWallet = useMemo(() => convertWalletForDialect(wallet), [wallet]);
+
+  // Basic configuration for dialect. Target mainnet-beta and dialect cloud production environment 
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'production',
+    }),
+    []
+  );
+  
+  return (
+    <DialectContextProvider 
+      config={dialectConfig} 
+      wallet={dialectWallet}
+    >
+      <DialectThemeProvider theme="dark">
+        <DialectUiManagementProvider>
+          {children}
+        </DialectUiManagementProvider>
+      </DialectThemeProvider>
+    </DialectContextProvider>
+  );
+}
+
+const App = () => {
+  return (
+    // In this example, using @solana/wallet-adapter-react package for wallet data.
+    // Assuming WalletProvider and ConnectionProvider are properly configured with necessary wallets and network.
+    <ConnectionProvider>
+      <WalletProvider>
+        <DialectProviders>
+          <MyInbox />
+        </DialectProviders>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
 ```
 
-### DialectUiManagementProvider
+### Embed fixed bottom chat
 
-DialectUiManagementProvider is the provider to control all Dialect related UIs in your dApp. Import `useDialectUiId` hook to gain access to a certain window, and be able to open popup, close popup or navigate through different pages (only for Chat) externally. 
+```typescript jsx
+import '@dialectlabs/react-ui/index.css';
 
-Please see `examples/bottom-chat` for more clarity and usage examples. 
+import { useMemo, FC } from 'react';
+import { ConnectionProvider, WalletProvider, useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { BottomChat, Config, Backend, DialectWalletAdapter, DialectUiManagementProvider, DialectContextProvider, DialectThemeProvider } from '@dialectlabs/react-ui';
 
-### Embed specific Dialect React components throughout your dApp
+const convertWalletForDialect = (wallet: WalletContextState): DialectWalletAdapter => ({...});
 
-In addition to out-of-the-box button and modal support, you can also import subcomponents of Dialect's component library – messages lists, settings & configurations, etc. – directly into your project.
+const HomePage = () => {
+  return (
+    <BottomChat dialectId="dialect-bottom-chat" />
+  )
+}
 
-Note: This is not yet supported, but will be simple to. We're working on it.
+const DialectProviders: FC = ({ children }) => {
+  const wallet = useWallet();
+  const dialectWallet = useMemo(() => convertWalletForDialect(wallet), [wallet]);
 
-### Apply custom styles to Dialect React components
+  // Basic configuration for dialect. Target mainnet-beta and dialect cloud production environment 
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'production',
+    }),
+    []
+  );
+  
+  return (
+    <DialectContextProvider 
+      config={dialectConfig} 
+      wallet={dialectWallet}
+    >
+      <DialectThemeProvider theme="dark">
+        <DialectUiManagementProvider>
+          {children}
+        </DialectUiManagementProvider>
+      </DialectThemeProvider>
+    </DialectContextProvider>
+  );
+}
+
+const App = () => {
+  return (
+    // In this example, using @solana/wallet-adapter-react package for wallet data.
+    // Assuming WalletProvider and ConnectionProvider are properly configured with necessary wallets and network.
+    <ConnectionProvider>
+      <WalletProvider>
+        <DialectProviders>
+          <MyPage />
+        </DialectProviders>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
+```
+
+## FAQ
+
+### I don't need the whole functionality of these pre-built components. Can I reuse only specific parts of them, e.g. thread view?
+
+At this stage, it is not yet supported, but will be simple to. We're working on it. Composition and flexibility is everything!
+
+### How to apply custom styles to Dialect React components?
 
 In addition to its default light & dark modes, Dialect supports highly customizable styles, applicable to both notifications and chat.
 
 Note: This styles API is incomplete and may be subject to change. If you have questions or suggestions, reach out to us at https://twitter.com/saydialect.
 
-### Use custom React components
+### I want to change the structure of <view_name> in <component_name>. How can I do that? 
 
-Dialect does not yet support custom react components, but has plans to support this in the future. Reach out to us at https://twitter.com/saydialect if you'd like support for this.
+Existing components are designed to be uncontrolled and very coupled with `react-sdk` logic. Dialect does not yet support injecting custom views in current implementation, but has plans to add this in the future. Reach out to us at https://twitter.com/saydialect if you'd like support for this.
 
-### Use the Dialect react hooks API
+### Can I use only Dialect's logic for messaging and notifications experience?
 
-If you'd like greater control over your users' messaging experience, Dialect's React library also comes with a simple hooks API for interacting with Dialect's data & local state directly.
+If you'd like greater control over your users' messaging experience, Dialect's React library also comes with a simple hooks API from `@dialectlabs/react-sdk` package for interacting with Dialect's data & local state directly.
 
 ## Development
 
