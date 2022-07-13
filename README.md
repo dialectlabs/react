@@ -46,7 +46,7 @@ As you may have noticed, this repo covers two packages: `@dialectlabs/react-sdk`
 `@dialectlabs/react-ui` contains pre-built, themeable, self-sufficient and _opinionated_ UI components for messaging and notification centers.
 
 - All exposed components are themed and can be configured to fit different use-cases
-- Even though exported UIs are uncontrolled React components, the UI state can be handled anywhere in your dapp (e.g. routing) 
+- Even though exported UIs meant to be uncontrolled React components, the UI state can be handled anywhere in your dapp (e.g. routing) 
 
 ### Basic
 
@@ -55,7 +55,7 @@ If you are new to Dialect, it's highly recommended to start with pre-built compo
 2. Configuration
 3. Render
 
-#### Preliminary Setup
+#### 1. Preliminary Setup
 
 Import styles, add necessary providers in your dapp, specifically: `DialectContextProvider`, `DialectThemeProvider` and `DialectUiManagementProvider`.
 
@@ -63,7 +63,7 @@ Import styles, add necessary providers in your dapp, specifically: `DialectConte
 - `DialectThemeProvider` - as name suggests, stores theme for Dialect UIs
 - `DialectUiManagementProvider` - stores UI state (open/close state, current route) for Dialect UIs
 
-```typescript jsx
+```tsx
 /* App.tsx */
 
 // Baseline styles for Dialect UIs
@@ -102,11 +102,11 @@ const App = () => {
 }
 ```
 
-#### Configuration
+#### 2. Configuration
 
 Next we need to configure added providers: where to connect, which backends to use, theme. Configuration for certain provider may vary per use-case. In this case, we will configure our provider for a chat component, specifically `BottomChat`.
 
-```typescript jsx
+```tsx
 /* App.tsx */
 /* ... imports from previous step ... */
 import { useMemo } from 'react';
@@ -144,11 +144,11 @@ const DialectProviders: FC = ({children}) => {
 }
 ```
 
-#### Render
+#### 3. Render
 
 Now that we've configured our providers, let's add `BottomChat` to our dapp.
 
-```typescript jsx
+```tsx
 /* MyAwesomeDapp.tsx */
 
 const MyAwesomeDapp = () => {
@@ -165,7 +165,7 @@ See below full examples for different types of UIs that can be added.
 
 The component above is a self-contained button that opens a notifications modal in your React app.
 
-```typescript jsx
+```tsx
 import '@dialectlabs/react-ui/index.css';
 
 import { useMemo, FC } from 'react';
@@ -250,7 +250,7 @@ const App = () => {
 
 The component below contains a wallet's current inbox of current chats/notifications. From this inbox a user can create chats, browse chats, and send messages.
 
-```typescript jsx
+```tsx
 import '@dialectlabs/react-ui/index.css';
 
 import { useMemo, FC } from 'react';
@@ -315,7 +315,7 @@ const App = () => {
 
 ### Embed fixed bottom chat
 
-```typescript jsx
+```tsx
 import '@dialectlabs/react-ui/index.css';
 
 import { useMemo, FC } from 'react';
