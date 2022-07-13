@@ -1,4 +1,8 @@
-import { useDialectCloudApi } from '@dialectlabs/react-sdk';
+import {
+  AddressType,
+  useAddresses,
+  useDialectCloudApi,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { Button, ToggleSection } from '../../../common';
@@ -8,14 +12,22 @@ import ResendIcon from '../../../Icon/Resend';
 
 export function EmailForm() {
   const {
-    addresses: { email: emailObj },
-    fetchingAddressesError,
-    saveAddress,
-    updateAddress,
-    deleteAddress,
+    addresses: { EMAIL: emailAddress },
+    create: createAddress,
+    delete: deleteAddress,
+    update: updateAddress,
+
+    toggle: toggleAddress,
+
+    isCreatingAddress,
+    isUpdatingAddress,
+    isDeletingAddress,
+
+    errorFetching: errorFetchingAddresses,
+
     verifyCode,
     resendCode,
-  } = useDialectCloudApi();
+  } = useAddresses();
 
   const {
     textStyles,
@@ -28,76 +40,41 @@ export function EmailForm() {
     highlighted,
   } = useTheme();
 
-  const [email, setEmail] = useState(emailObj?.value);
-  const [isEmailEditing, setEmailEditing] = useState(!emailObj?.enabled);
+  const [email, setEmail] = useState(emailAddress?.value);
+  const [isEmailEditing, setEmailEditing] = useState(!emailAddress?.enabled);
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState<Error | null>(null);
 
-  const isEmailSaved = Boolean(emailObj);
-  const isChanging = emailObj && isEmailEditing;
-  const isVerified = emailObj?.verified;
+  const isEmailSaved = Boolean(emailAddress);
+  const isChanging = emailAddress && isEmailEditing;
+  const isVerified = emailAddress?.verified;
 
-  const currentError = error || fetchingAddressesError;
+  const currentError = error || errorFetchingAddresses;
 
+  // FIXME: replace with key change
   useEffect(() => {
     // Update state if addresses updated
-    setEmail(emailObj?.value || '');
-    setEmailEditing(!emailObj?.enabled);
-  }, [emailObj]);
+    setEmail(emailAddress?.value || '');
+    setEmailEditing(!emailAddress?.enabled);
+  }, [emailAddress]);
 
   const updateEmail = async () => {
     // TODO: validate & save email
     if (error) return;
-    try {
-      setLoading(true);
-      await updateAddress({
-        type: 'email',
-        value: email,
-        enabled: true,
-        id: emailObj?.id,
-        addressId: emailObj?.addressId,
-      });
-      setError(null);
-    } catch (e) {
-      setError(e as Error);
-    } finally {
-      setLoading(false);
-      setEmailEditing(false);
-    }
+    await updateAddress(AddressType.Email, email);
+    setEmailEditing(false);
   };
 
   const saveEmail = async () => {
     if (error) return;
 
-    try {
-      setLoading(true);
-      await saveAddress({
-        type: 'email',
-        value: email,
-        enabled: true,
-      });
-      setError(null);
-    } catch (e) {
-      setError(e as Error);
-    } finally {
-      setLoading(false);
-    }
+    await createAddress(AddressType.Email, email);
   };
 
   const deleteEmail = async () => {
-    try {
-      setLoading(true);
-      await deleteAddress({
-        addressId: emailObj?.addressId,
-      });
-      setError(null);
-    } catch (e) {
-      setError(e as Error);
-    } finally {
-      setLoading(false);
-    }
+    await deleteAddress(AddressType.Email);
   };
 
   const resendEmailCode = async () => {
@@ -107,8 +84,8 @@ export function EmailForm() {
         type: 'email',
         value: email,
         enabled: true,
-        id: emailObj?.id,
-        addressId: emailObj?.addressId,
+        id: emailAddress?.id,
+        addressId: emailAddress?.addressId,
       });
       setError(null);
     } catch (e) {
@@ -126,8 +103,8 @@ export function EmailForm() {
           type: 'email',
           value: email,
           enabled: true,
-          id: emailObj?.id,
-          addressId: emailObj?.addressId,
+          id: emailAddress?.id,
+          addressId: emailAddress?.addressId,
         },
         verificationCode
       );
@@ -171,9 +148,9 @@ export function EmailForm() {
           onClick={deleteEmail}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
-          loading={loading}
+          loading={isDeletingAddress}
         >
-          {loading ? 'Deleting...' : 'Cancel'}
+          {isDeletingAddress ? 'Deleting...' : 'Cancel'}
         </Button>
       </div>
     );
@@ -185,16 +162,12 @@ export function EmailForm() {
         className="dt-mb-6"
         title="📩  Email notifications"
         onChange={async (nextValue) => {
-          if (emailObj && emailObj.enabled !== nextValue) {
+          if (emailAddress && emailAddress.enabled !== nextValue) {
             setError(null);
-            await updateAddress({
-              id: emailObj.id,
-              type: emailObj.type,
-              enabled: nextValue,
-            });
+            await toggleAddress(AddressType.Email, nextValue);
           }
         }}
-        enabled={Boolean(emailObj?.enabled)}
+        enabled={Boolean(emailAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
@@ -258,9 +231,9 @@ export function EmailForm() {
                   className="dt-basis-1/2"
                   disabled={email === ''}
                   onClick={updateEmail}
-                  loading={loading}
+                  loading={isUpdatingAddress}
                 >
-                  {loading ? 'Saving...' : 'Submit email'}
+                  {isUpdatingAddress ? 'Saving...' : 'Submit email'}
                 </Button>
               </div>
             )}
@@ -270,9 +243,9 @@ export function EmailForm() {
                 className="dt-basis-full"
                 disabled={email === ''}
                 onClick={saveEmail}
-                loading={loading}
+                loading={isCreatingAddress}
               >
-                {loading ? 'Saving...' : 'Submit email'}
+                {isCreatingAddress ? 'Saving...' : 'Submit email'}
               </Button>
             ) : null}
 
@@ -316,9 +289,9 @@ export function EmailForm() {
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
                   onClick={deleteEmail}
-                  loading={loading}
+                  loading={isDeletingAddress}
                 >
-                  {loading ? 'Deleting...' : 'Delete email'}
+                  {isDeletingAddress ? 'Deleting...' : 'Delete email'}
                 </Button>
               </div>
             ) : null}
