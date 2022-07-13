@@ -33,7 +33,7 @@ yarn add @dialectlabs/react-sdk
 
 Dialect's React components library is best learned by example. This section describes how to use Dialect in your app by showing you how it has been embedded in various example apps in the [`examples/`](https://github.com/dialectlabs/react/tree/master/examples) folder of this repository. Follow along in this section, & refer to the code in those examples.
 
-If you're interested in contributing, see the Development section below (`CONTRIBUTION.md` is a TBD).
+If you're interested in contributing, see the Development section below (`CONTRIBUTION.md` is TBD).
 
 As you may have noticed, this repo covers two packages: `@dialectlabs/react-sdk` and `@dialectlabs/react-ui`.
 
@@ -364,7 +364,7 @@ const App = () => {
     <ConnectionProvider>
       <WalletProvider>
         <DialectProviders>
-          <MyPage />
+          <HomePage />
         </DialectProviders>
       </WalletProvider>
     </ConnectionProvider>
