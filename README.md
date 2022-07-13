@@ -4,6 +4,12 @@ React components to use Dialect's wallet notifications and wallet-to-wallet chat
 
 Want to learn how to add Dialect to your dapp? See the [Usage](#Usage) section below and/or check out our [docs](https://docs.dialect.to/).
 
+### Table of Contents
+
+- [Installation](#Installation)
+- [Usage](#Usage)
+- [FAQ](#FAQ)
+- [Development](#Development)
 
 ## Installation
 
@@ -481,7 +487,7 @@ Store original svgs in `Icon/source/`, then run inside `Icon` directory to conve
 
 Import Icon as a React Component from `Icon`, e.g. (`import {BackArrow} from '/Icon/'`). See [SVGR Command Line guide](https://react-svgr.com/docs/cli/) for more details.
 
-## Publishing
+### Publishing
 
 1.
 
@@ -496,9 +502,3 @@ popd
 ```
 
 2. Update all versions of packages to the new one(e.g. bump react, react-ui version in examples, starters folder)
-
-## Know-hows
-
-- Currently every npm project inside the `packages` and `examples` directories, becomes part of the workspaces. Referencing other workspace package can be done by using npm project's name (in `package.json`)
-  - Root `package.json` MAY contain references to child npm projects to simplify ci commands: e.g. in root `package.json` - `yarn build:react-ui` which would call the `packages/dialect-react-ui`'s `build` command.
-- Linting configuration in located in repo's root and takes over the code style for all projects.
