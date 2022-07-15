@@ -1,4 +1,4 @@
-import { useDialectCloudApi } from '@dialectlabs/react-sdk';
+import { AddressType, useAddresses } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { Button, ToggleSection } from '../../../common';
@@ -6,16 +6,27 @@ import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ResendIcon from '../../../Icon/Resend';
 
+const type = AddressType.PhoneNumber;
+
 export function SmsForm() {
   const {
-    addresses: { sms: smsObj },
-    fetchingAddressesError,
-    saveAddress,
-    updateAddress,
-    deleteAddress,
-    verifyCode,
-    resendCode,
-  } = useDialectCloudApi();
+    addresses: { [type]: smsAddress },
+    create: createAddress,
+    delete: deleteAddress,
+    update: updateAddress,
+    verify: verifyCode,
+    resend: resendCode,
+
+    toggle: toggleAddress,
+
+    isCreatingAddress,
+    isUpdatingAddress,
+    isDeletingAddress,
+    isSendingCode,
+    isVerifyingCode,
+
+    errorFetching: errorFetchingAddresses,
+  } = useAddresses();
 
   const {
     textStyles,
@@ -28,42 +39,34 @@ export function SmsForm() {
     highlighted,
   } = useTheme();
 
-  const [smsNumber, setSmsNumber] = useState(smsObj?.value);
-  const [isSmsNumberEditing, setSmsNumberEditing] = useState(!smsObj?.enabled);
+  const [smsNumber, setSmsNumber] = useState(smsAddress?.value);
+  const [isSmsNumberEditing, setSmsNumberEditing] = useState(
+    !smsAddress?.enabled
+  );
   const [error, setError] = useState<Error | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const isSmsNumberSaved = Boolean(smsObj);
-  const isChanging = smsObj && isSmsNumberEditing;
-  const isVerified = smsObj?.verified;
+  const isSmsNumberSaved = Boolean(smsAddress);
+  const isChanging = smsAddress && isSmsNumberEditing;
+  const isVerified = smsAddress?.verified;
 
-  const currentError = error || fetchingAddressesError;
+  const currentError = error || errorFetchingAddresses;
 
   useEffect(() => {
     // Update state if addresses updated
-    setSmsNumber(smsObj?.value || '');
-    setSmsNumberEditing(!smsObj?.enabled);
-  }, [smsObj]);
+    setSmsNumber(smsAddress?.value || '');
+    setSmsNumberEditing(!smsAddress?.enabled);
+  }, [smsAddress]);
 
   const updateSmsNumber = async () => {
-    // TODO: validate & save sms number
     if (error) return;
 
     try {
-      setLoading(true);
-      await updateAddress({
-        type: 'sms',
-        value: smsNumber,
-        enabled: true,
-        id: smsObj?.id,
-        addressId: smsObj?.addressId,
-      });
+      await updateAddress({ type, value: smsNumber });
       setError(null);
     } catch (e) {
       setError(e as Error);
     } finally {
-      setLoading(false);
       setSmsNumberEditing(false);
     }
   };
@@ -72,70 +75,38 @@ export function SmsForm() {
     if (error) return;
 
     try {
-      setLoading(true);
-      await saveAddress({
-        type: 'sms',
-        value: smsNumber,
-        enabled: true,
-      });
+      await createAddress({ type, value: smsNumber });
       setError(null);
     } catch (e) {
       setError(e as Error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const deleteSmsNumber = async () => {
     try {
-      setLoading(true);
-      await deleteAddress({
-        addressId: smsObj?.addressId,
-      });
+      await deleteAddress({ type });
       setError(null);
     } catch (e) {
       setError(e as Error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const resendSmsVerificationCode = async () => {
     try {
-      setLoading(true);
-      await resendCode({
-        type: 'sms',
-        value: smsNumber,
-        enabled: true,
-        id: smsObj?.id,
-        addressId: smsObj?.addressId,
-      });
+      await resendCode({ type });
       setError(null);
     } catch (e) {
       setError(e as Error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const sendCode = async () => {
     try {
-      setLoading(true);
-      await verifyCode(
-        {
-          type: 'sms',
-          value: smsNumber,
-          enabled: true,
-          id: smsObj?.id,
-          addressId: smsObj?.addressId,
-        },
-        verificationCode
-      );
+      await verifyCode({ type, code: verificationCode });
       setError(null);
     } catch (e) {
       setError(e as Error);
     } finally {
-      setLoading(false);
       setVerificationCode('');
     }
   };
@@ -162,22 +133,53 @@ export function SmsForm() {
           className="dt-basis-1/4"
           onClick={sendCode}
           disabled={verificationCode.length !== 6}
-          loading={loading}
+          loading={isVerifyingCode}
         >
-          {loading ? 'Sending code...' : 'Submit'}
+          {isVerifyingCode ? 'Sending code...' : 'Submit'}
         </Button>
         <Button
           className="dt-basis-1/4"
           onClick={deleteSmsNumber}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
-          loading={loading}
+          loading={isDeletingAddress}
         >
-          {loading ? 'Deleting...' : 'Cancel'}
+          {isDeletingAddress ? 'Deleting...' : 'Cancel'}
         </Button>
       </div>
     );
   };
+
+  const renderInput = () => (
+    <input
+      className={clsx(
+        outlinedInput,
+        error && '!dt-border-red-500 !dt-text-red-500',
+        'dt-w-full dt-basis-full'
+      )}
+      placeholder="+15554443333 (+1 required, US only)"
+      type="sms"
+      value={smsNumber}
+      onChange={(e) => setSmsNumber(e.target.value)}
+      onBlur={(e) =>
+        e.target.checkValidity()
+          ? setError(null)
+          : setError({
+              name: 'incorrectSmsNumber',
+              message: 'Please enter a valid SMS number',
+            })
+      }
+      onInvalid={(e) => {
+        e.preventDefault();
+        setError({
+          name: 'incorrectSmsNumber',
+          message: 'Please enter a valid SMS number',
+        });
+      }}
+      // pattern="^\S+@\S+\.\S+$"
+      disabled={isSmsNumberSaved && !isSmsNumberEditing}
+    />
+  );
 
   return (
     <div>
@@ -186,16 +188,14 @@ export function SmsForm() {
         title="📶  SMS notifications"
         onChange={async (nextValue) => {
           setError(null);
-          if (smsObj && smsObj.enabled !== nextValue) {
-            // TODO: handle error
-            await updateAddress({
-              id: smsObj.id,
-              type: smsObj.type,
+          if (smsAddress && smsAddress.enabled !== nextValue) {
+            await toggleAddress({
+              type,
               enabled: nextValue,
             });
           }
         }}
-        enabled={Boolean(smsObj?.enabled)}
+        enabled={Boolean(smsAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
@@ -206,36 +206,10 @@ export function SmsForm() {
                     ? renderVerifiedState()
                     : renderVerificationCode()}
                 </>
-              ) : (
-                <input
-                  className={clsx(
-                    outlinedInput,
-                    error && '!dt-border-red-500 !dt-text-red-500',
-                    'dt-w-full dt-basis-full'
-                  )}
-                  placeholder="+15554443333 (+1 required, US only)"
-                  type="sms"
-                  value={smsNumber}
-                  onChange={(e) => setSmsNumber(e.target.value)}
-                  onBlur={(e) =>
-                    e.target.checkValidity()
-                      ? setError(null)
-                      : setError({
-                          name: 'incorrectSmsNumber',
-                          message: 'Please enter a valid SMS number',
-                        })
-                  }
-                  onInvalid={(e) => {
-                    e.preventDefault();
-                    setError({
-                      name: 'incorrectSmsNumber',
-                      message: 'Please enter a valid SMS number',
-                    });
-                  }}
-                  // pattern="^\S+@\S+\.\S+$"
-                  disabled={isSmsNumberSaved && !isSmsNumberEditing}
-                />
-              )}
+              ) : null}
+              {(!isSmsNumberSaved && isSmsNumberEditing) || isChanging
+                ? renderInput()
+                : null}
               {currentError && (
                 <P
                   className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2')}
@@ -245,7 +219,21 @@ export function SmsForm() {
               )}
             </div>
 
-            {isChanging && (
+            {/* 1. If the phone number wasn't submitted yet */}
+            {!isChanging && isSmsNumberEditing ? (
+              <Button
+                className="dt-basis-full"
+                disabled={smsNumber === ''}
+                onClick={saveSmsNumber}
+                loading={isCreatingAddress}
+              >
+                {isCreatingAddress ? 'Saving...' : 'Submit number'}
+              </Button>
+            ) : null}
+
+            {/* 2. If phone number already submited and user clicked "Change" */}
+            {/* FIXME: this state enabled right after first email submition */}
+            {isChanging && isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   defaultStyle={secondaryButton}
@@ -259,24 +247,14 @@ export function SmsForm() {
                   className="dt-basis-1/2"
                   disabled={smsNumber === ''}
                   onClick={updateSmsNumber}
-                  loading={loading}
+                  loading={isUpdatingAddress}
                 >
-                  {loading ? 'Saving...' : 'Submit number'}
+                  {isUpdatingAddress ? 'Saving...' : 'Submit number'}
                 </Button>
               </div>
-            )}
-
-            {!isChanging && isSmsNumberEditing ? (
-              <Button
-                className="dt-basis-full"
-                disabled={smsNumber === ''}
-                onClick={saveSmsNumber}
-                loading={loading}
-              >
-                {loading ? 'Saving...' : 'Submit number'}
-              </Button>
             ) : null}
 
+            {/* 3. User submitted a phone number and now promted to verification */}
             {!isSmsNumberEditing && !isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <div
@@ -289,13 +267,17 @@ export function SmsForm() {
                 >
                   <span className="dt-opacity-50">
                     {' '}
-                    Check your phone for a verification code.
+                    Check {smsAddress?.value || 'your phone'} for a verification
+                    code.
                   </span>
                   <div className="dt-inline-block dt-cursor-pointer">
                     <ResendIcon
-                      className="dt-px-1 dt-inline-block"
-                      height={18}
-                      width={18}
+                      className={clsx(
+                        'dt-inline-block dt-ml-1 dt-mr-0.5',
+                        isSendingCode && 'dt-animate-spin'
+                      )}
+                      height={14}
+                      width={14}
                     />
                     Resend code
                   </div>
@@ -303,12 +285,12 @@ export function SmsForm() {
               </div>
             ) : null}
 
+            {/* 4. User submitted and verified a phone number, and there's no user interaction yet */}
             {!isSmsNumberEditing && isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   className="dt-basis-1/2"
                   onClick={() => setSmsNumberEditing(true)}
-                  loading={loading}
                 >
                   Change
                 </Button>
@@ -317,9 +299,9 @@ export function SmsForm() {
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
                   onClick={deleteSmsNumber}
-                  loading={loading}
+                  loading={isDeletingAddress}
                 >
-                  {loading ? 'Deleting...' : 'Delete number'}
+                  {isDeletingAddress ? 'Deleting...' : 'Delete number'}
                 </Button>
               </div>
             ) : null}
