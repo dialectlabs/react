@@ -1,6 +1,6 @@
 import { createContainer } from '../../../utils/container';
 
-export type Gate = () => boolean;
+export type Gate = () => boolean | Promise<boolean>;
 
 export interface DialectGateState {
   gate?: Gate;

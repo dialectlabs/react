@@ -6,6 +6,7 @@ import {
   useDialectWallet,
   useThread,
   useThreads,
+  useDialectGate,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
@@ -21,6 +22,7 @@ import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
 import Settings from './screens/Settings';
+import FailingGateError from '../../entities/errors/ui/FailingGateError';
 
 export type NotificationType = {
   name: string;
@@ -38,6 +40,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const {
     info: { apiAvailability },
   } = useDialectSdk();
+  const { isGatePassing } = useDialectGate();
   const { dappAddress } = useDialectDapp();
   const { isCreatingThread } = useThreads();
   const { thread, isDeletingThread, isFetchingThread } = useThread({
@@ -83,6 +86,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         navigate(RouteName.SigningRequest);
       } else if (cannotDecryptDialect) {
         navigate(RouteName.CantDecrypt);
+      } else if (!isGatePassing) {
+        navigate(RouteName.FailingGate);
       } else if (shouldShowSettings) {
         navigate(RouteName.Settings);
       } else if (thread) {
@@ -104,6 +109,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       isDeletingThread,
       thread,
       cannotDecryptDialect,
+      isGatePassing,
     ]
   );
 
@@ -126,6 +132,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         </Route>
         <Route name={RouteName.EncryptionRequest}>
           <EncryptionInfo />
+        </Route>
+        <Route name={RouteName.FailingGate}>
+          <FailingGateError />
         </Route>
         <Route name={RouteName.Settings}>
           <Settings
