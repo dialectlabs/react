@@ -14,6 +14,7 @@ import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
 import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
 import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
+import SignTransactionInfo from '../../entities/wallet-states/SignTransactionInfo';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
@@ -49,7 +50,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const cannotDecryptDialect =
     !apiAvailability.canEncrypt && thread?.encryptionEnabled;
 
-  const { isSigning, isEncrypting } = useDialectWallet();
+  const { isSigningMessage, isSigningFreeTransaction, isEncrypting } =
+    useDialectWallet();
 
   const {
     addresses: { wallet: walletObj },
@@ -77,8 +79,10 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         isCreatingThread ||
         isDeletingThread;
 
-      if (isSigning) {
+      if (isSigningMessage) {
         navigate(RouteName.SigningRequest);
+      } else if (isSigningFreeTransaction) {
+        navigate(RouteName.TransactionSigning);
       } else if (isEncrypting) {
         navigate(RouteName.SigningRequest);
       } else if (cannotDecryptDialect) {
@@ -95,7 +99,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     },
     [
       navigate,
-      isSigning,
+      isSigningMessage,
+      isSigningFreeTransaction,
       isEncrypting,
       isSettingsOpen,
       isWeb3Enabled,
@@ -123,6 +128,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         </Route>
         <Route name={RouteName.SigningRequest}>
           <SignMessageInfo />
+        </Route>
+        <Route name={RouteName.TransactionSigning}>
+          <SignTransactionInfo />
         </Route>
         <Route name={RouteName.EncryptionRequest}>
           <EncryptionInfo />
