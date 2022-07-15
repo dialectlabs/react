@@ -269,18 +269,18 @@ export function SmsForm() {
                     {' '}
                     Check {smsAddress?.value || 'your phone'} for a verification
                     code.
-                  </span>
-                  <div className="dt-inline-block dt-cursor-pointer">
+                  </span>{' '}
+                  <span className="dt-inline-block dt-cursor-pointer">
                     <ResendIcon
                       className={clsx(
-                        'dt-inline-block dt-ml-1 dt-mr-0.5',
+                        'dt-inline-block dt-mr-0.5',
                         isSendingCode && 'dt-animate-spin'
                       )}
                       height={14}
                       width={14}
                     />
                     Resend code
-                  </div>
+                  </span>
                 </div>
               </div>
             ) : null}
