@@ -14,7 +14,7 @@ const FailingGateError = ({ message }: FailingGateErrorProps) => {
       <span className="dt-text-center">
         {message
           ? message
-          : 'This wallet is not eligible to receive notifications yet.'}
+          : 'Your wallet is not eligible to receive notifications yet. Contact the dapp team if you think this is a mistake.'}
       </span>
     </Centered>
   );
