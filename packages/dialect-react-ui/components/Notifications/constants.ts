@@ -7,4 +7,5 @@ export enum RouteName {
   Settings = 'settings_notifications',
   Thread = 'notifications_thread',
   CantDecrypt = 'cant_decrypt',
+  FailingGate = 'failing_gate',
 }

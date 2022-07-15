@@ -6,6 +6,7 @@ import {
   useDialectWallet,
   useThread,
   useThreads,
+  useDialectGate,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
 import Settings from './screens/Settings';
+import FailingGateError from '../../entities/errors/ui/FailingGateError';
 
 export type NotificationType = {
   name: string;
@@ -33,12 +35,14 @@ interface NotificationsProps {
   notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
+  gatedView?: string | JSX.Element;
 }
 
 function InnerNotifications(props: NotificationsProps): JSX.Element {
   const {
     info: { apiAvailability },
   } = useDialectSdk();
+  const { isGatePassed, isGateLoading } = useDialectGate();
   const { dappAddress } = useDialectDapp();
   const { isCreatingThread } = useThreads();
   const { thread, isDeletingThread, isFetchingThread } = useThread({
@@ -87,6 +91,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         navigate(RouteName.SigningRequest);
       } else if (cannotDecryptDialect) {
         navigate(RouteName.CantDecrypt);
+      } else if (!isGatePassed) {
+        navigate(RouteName.FailingGate);
       } else if (shouldShowSettings) {
         navigate(RouteName.Settings);
       } else if (thread) {
@@ -109,6 +115,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       isDeletingThread,
       thread,
       cannotDecryptDialect,
+      isGatePassed,
     ]
   );
 
@@ -134,6 +141,16 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         </Route>
         <Route name={RouteName.EncryptionRequest}>
           <EncryptionInfo />
+        </Route>
+        <Route name={RouteName.FailingGate}>
+          {!props.gatedView || typeof props.gatedView === 'string' ? (
+            <FailingGateError
+              message={props.gatedView}
+              isLoading={isGateLoading}
+            />
+          ) : (
+            props.gatedView
+          )}
         </Route>
         <Route name={RouteName.Settings}>
           <Settings

@@ -153,6 +153,9 @@ export default function Home(): JSX.Element {
       wallet={dialectWalletAdapter}
       config={dialectConfig}
       dapp={DIALECT_PUBLIC_KEY}
+      gate={() =>
+        new Promise((resolve) => setTimeout(() => resolve(true), 3000))
+      }
     >
       <DialectThemeProvider theme={theme} variables={themeVariables}>
         <DialectUiManagementProvider>
