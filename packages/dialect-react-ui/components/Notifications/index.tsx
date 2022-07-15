@@ -41,7 +41,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const {
     info: { apiAvailability },
   } = useDialectSdk();
-  const { isGatePassing } = useDialectGate();
+  const { isGatePassed, isGateLoading } = useDialectGate();
   const { dappAddress } = useDialectDapp();
   const { isCreatingThread } = useThreads();
   const { thread, isDeletingThread, isFetchingThread } = useThread({
@@ -87,7 +87,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         navigate(RouteName.SigningRequest);
       } else if (cannotDecryptDialect) {
         navigate(RouteName.CantDecrypt);
-      } else if (!isGatePassing) {
+      } else if (!isGatePassed) {
         navigate(RouteName.FailingGate);
       } else if (shouldShowSettings) {
         navigate(RouteName.Settings);
@@ -110,7 +110,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       isDeletingThread,
       thread,
       cannotDecryptDialect,
-      isGatePassing,
+      isGatePassed,
     ]
   );
 
@@ -136,7 +136,10 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         </Route>
         <Route name={RouteName.FailingGate}>
           {!props.gatedView || typeof props.gatedView === 'string' ? (
-            <FailingGateError message={props.gatedView} />
+            <FailingGateError
+              message={props.gatedView}
+              isLoading={isGateLoading}
+            />
           ) : (
             props.gatedView
           )}
