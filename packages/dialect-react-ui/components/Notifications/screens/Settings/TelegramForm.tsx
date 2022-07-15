@@ -1,4 +1,4 @@
-import { useDialectCloudApi } from '@dialectlabs/react-sdk';
+import { AddressType, useAddresses } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { Button, ToggleSection } from '../../../common';
@@ -12,14 +12,23 @@ export interface TelegramFormProps {
 
 export function TelegramForm(props: TelegramFormProps) {
   const {
-    addresses: { telegram: telegramObj },
-    fetchingAddressesError,
-    saveAddress,
-    updateAddress,
-    deleteAddress,
-    verifyCode,
-    resendCode,
-  } = useDialectCloudApi();
+    addresses: { TELEGRAM: telegramAddress },
+    create: createAddress,
+    delete: deleteAddress,
+    update: updateAddress,
+    verify: verifyCode,
+    resend: resendCode,
+
+    toggle: toggleAddress,
+
+    isCreatingAddress,
+    isUpdatingAddress,
+    isDeletingAddress,
+    isSendingCode,
+    isVerifyingCode,
+
+    errorFetching: errorFetchingAddresses,
+  } = useAddresses();
 
   const {
     textStyles,
@@ -32,45 +41,41 @@ export function TelegramForm(props: TelegramFormProps) {
     highlighted,
   } = useTheme();
 
-  const [telegramUsername, setTelegramUsername] = useState(telegramObj?.value);
-  const [isEnabled, setEnabled] = useState(Boolean(telegramObj?.enabled));
+  const [telegramUsername, setTelegramUsername] = useState(
+    telegramAddress?.value
+  );
+  const [isEnabled, setEnabled] = useState(Boolean(telegramAddress?.enabled));
   const [isTelegramUsernameEditing, setTelegramUsernameEditing] = useState(
-    !telegramObj?.enabled
+    !telegramAddress?.enabled
   );
   const [error, setError] = useState<Error | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const [verificationCode, setVerificationCode] = useState('');
 
-  const isTelegramSaved = Boolean(telegramObj);
-  const isChanging = telegramObj && isTelegramUsernameEditing;
-  const isVerified = telegramObj?.verified;
+  const isTelegramSaved = Boolean(telegramAddress);
+  const isChanging = telegramAddress && isTelegramUsernameEditing;
+  const isVerified = telegramAddress?.verified;
 
-  const currentError = error || fetchingAddressesError;
+  const currentError = error || errorFetchingAddresses;
 
   useEffect(() => {
     // Update state if addresses updated
-    setTelegramUsername(telegramObj?.value || '');
-    setTelegramUsernameEditing(!telegramObj?.enabled);
-  }, [telegramObj]);
+    setTelegramUsername(telegramAddress?.value || '');
+    setTelegramUsernameEditing(!telegramAddress?.enabled);
+  }, [telegramAddress]);
 
   const updateTelegram = async () => {
     if (error) return;
 
     try {
-      setLoading(true);
       await updateAddress({
-        type: 'telegram',
+        type: AddressType.Telegram,
         value: telegramUsername,
-        enabled: true,
-        id: telegramObj?.id,
-        addressId: telegramObj?.addressId,
       });
       setError(null);
     } catch (e) {
       setError(e as Error);
     } finally {
-      setLoading(false);
       setTelegramUsernameEditing(false);
     }
   };
@@ -79,71 +84,39 @@ export function TelegramForm(props: TelegramFormProps) {
     if (error) return;
 
     try {
-      setLoading(true);
       const value = telegramUsername?.replace('@', '');
-      await saveAddress({
-        type: 'telegram',
-        value: value,
-        enabled: true,
-      });
+      await createAddress({ type: AddressType.Telegram, value });
       setError(null);
     } catch (e) {
       setError(e as Error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const deleteTelegram = async () => {
     try {
-      setLoading(true);
-      await deleteAddress({
-        addressId: telegramObj?.addressId,
-      });
+      await deleteAddress({ type: AddressType.Telegram });
       setError(null);
     } catch (e) {
       setError(e as Error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const resendCodeVerification = async () => {
     try {
-      setLoading(true);
-      await resendCode({
-        type: 'telegram',
-        value: telegramUsername,
-        enabled: true,
-        id: telegramObj?.id,
-        addressId: telegramObj?.addressId,
-      });
+      await resendCode({ type: AddressType.Telegram });
       setError(null);
     } catch (e) {
       setError(e as Error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const sendCode = async () => {
     try {
-      setLoading(true);
-      await verifyCode(
-        {
-          type: 'telegram',
-          value: telegramUsername,
-          enabled: true,
-          id: telegramObj?.id,
-          addressId: telegramObj?.addressId,
-        },
-        verificationCode
-      );
+      await verifyCode({ type: AddressType.Telegram, code: verificationCode });
       setError(null);
     } catch (e) {
       setError(e as Error);
     } finally {
-      setLoading(false);
       setVerificationCode('');
     }
   };
@@ -170,22 +143,52 @@ export function TelegramForm(props: TelegramFormProps) {
           className="dt-basis-1/4"
           onClick={sendCode}
           disabled={verificationCode.length !== 6}
-          loading={loading}
+          loading={isVerifyingCode}
         >
-          {loading ? 'Sending code...' : 'Submit'}
+          {isVerifyingCode ? 'Sending code...' : 'Submit'}
         </Button>
         <Button
           className="dt-basis-1/4"
           onClick={deleteTelegram}
           defaultStyle={secondaryButton}
           loadingStyle={secondaryButtonLoading}
-          loading={loading}
+          loading={isDeletingAddress}
         >
-          {loading ? 'Deleting...' : 'Cancel'}
+          {isDeletingAddress ? 'Deleting...' : 'Cancel'}
         </Button>
       </div>
     );
   };
+
+  const renderInput = () => (
+    <input
+      className={clsx(
+        outlinedInput,
+        error && '!dt-border-red-500 !dt-text-red-500',
+        'dt-w-full dt-basis-full'
+      )}
+      placeholder="Enter telegram username"
+      type="text"
+      value={telegramUsername}
+      onChange={(e) => setTelegramUsername(e.target.value)}
+      disabled={isTelegramSaved && !isTelegramUsernameEditing}
+      onBlur={(e) =>
+        e.target.checkValidity()
+          ? setError(null)
+          : setError({
+              name: 'incorrectTelegramNumber',
+              message: 'Please enter a valid telegram number',
+            })
+      }
+      onInvalid={(e) => {
+        e.preventDefault();
+        setError({
+          name: 'incorrectTelegramNumber',
+          message: 'Please enter a valid telegram number',
+        });
+      }}
+    />
+  );
 
   return (
     <div key="telegram">
@@ -194,56 +197,29 @@ export function TelegramForm(props: TelegramFormProps) {
         title="📡  Telegram notifications"
         onChange={async (nextValue) => {
           setError(null);
-          if (telegramObj && telegramObj.enabled !== nextValue) {
-            await updateAddress({
-              id: telegramObj.id,
+          if (telegramAddress && telegramAddress.enabled !== nextValue) {
+            await toggleAddress({
+              type: AddressType.Telegram,
               enabled: nextValue,
-              type: 'telegram',
-              addressId: !telegramObj.id ? telegramObj?.addressId : undefined,
             });
           }
           setEnabled(!isEnabled);
         }}
-        enabled={Boolean(telegramObj?.enabled)}
+        enabled={Boolean(telegramAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
             <div className="">
-              {isTelegramSaved && !isTelegramUsernameEditing ? (
+              {isTelegramSaved && !isChanging ? (
                 <>
                   {isVerified
                     ? renderVerifiedState()
                     : renderVerificationCode()}
                 </>
-              ) : (
-                <input
-                  className={clsx(
-                    outlinedInput,
-                    error && '!dt-border-red-500 !dt-text-red-500',
-                    'dt-w-full dt-basis-full'
-                  )}
-                  placeholder="Enter telegram username"
-                  type="text"
-                  value={telegramUsername}
-                  onChange={(e) => setTelegramUsername(e.target.value)}
-                  disabled={isTelegramSaved && !isTelegramUsernameEditing}
-                  onBlur={(e) =>
-                    e.target.checkValidity()
-                      ? setError(null)
-                      : setError({
-                          name: 'incorrectTelegramNumber',
-                          message: 'Please enter a valid telegram number',
-                        })
-                  }
-                  onInvalid={(e) => {
-                    e.preventDefault();
-                    setError({
-                      name: 'incorrectTelegramNumber',
-                      message: 'Please enter a valid telegram number',
-                    });
-                  }}
-                />
-              )}
+              ) : null}
+              {(!isTelegramSaved && isTelegramUsernameEditing) || isChanging
+                ? renderInput()
+                : null}
               {currentError && (
                 <P
                   className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2')}
@@ -253,7 +229,21 @@ export function TelegramForm(props: TelegramFormProps) {
               )}
             </div>
 
-            {isChanging && (
+            {/* 1. If the telegram wasn't submitted yet */}
+            {!isTelegramSaved && isTelegramUsernameEditing ? (
+              <Button
+                className="dt-basis-full"
+                disabled={telegramUsername === ''}
+                onClick={saveTelegram}
+                loading={isCreatingAddress}
+              >
+                {isCreatingAddress ? 'Saving...' : 'Submit telegram'}
+              </Button>
+            ) : null}
+
+            {/* 2. If email already submited and user clicked "Change" */}
+            {/* FIXME: this state got enabled right after first email submition */}
+            {isChanging && isVerified ? (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button
                   defaultStyle={secondaryButton}
@@ -267,22 +257,11 @@ export function TelegramForm(props: TelegramFormProps) {
                   className="dt-basis-1/2"
                   disabled={telegramUsername === ''}
                   onClick={updateTelegram}
-                  loading={loading}
+                  loading={isUpdatingAddress}
                 >
-                  {loading ? 'Saving...' : 'Submit telegram'}
+                  {isUpdatingAddress ? 'Saving...' : 'Submit telegram'}
                 </Button>
               </div>
-            )}
-
-            {!isChanging && isTelegramUsernameEditing ? (
-              <Button
-                className="dt-basis-full"
-                disabled={telegramUsername === ''}
-                onClick={saveTelegram}
-                loading={loading}
-              >
-                {loading ? 'Saving...' : 'Submit telegram'}
-              </Button>
             ) : null}
 
             {!isTelegramUsernameEditing && !isVerified ? (
@@ -323,9 +302,12 @@ export function TelegramForm(props: TelegramFormProps) {
                     </span>
                     <div className="dt-inline-block dt-cursor-pointer">
                       <ResendIcon
-                        className="dt-px-1 dt-inline-block"
-                        height={18}
-                        width={18}
+                        className={clsx(
+                          'dt-inline-block dt-ml-1 dt-mr-0.5',
+                          isSendingCode && 'dt-animate-spin'
+                        )}
+                        height={14}
+                        width={14}
                       />
                       Resend code
                     </div>
@@ -339,7 +321,6 @@ export function TelegramForm(props: TelegramFormProps) {
                 <Button
                   className="dt-basis-1/2"
                   onClick={() => setTelegramUsernameEditing(true)}
-                  loading={loading}
                 >
                   Change
                 </Button>
@@ -348,9 +329,9 @@ export function TelegramForm(props: TelegramFormProps) {
                   defaultStyle={secondaryDangerButton}
                   loadingStyle={secondaryDangerButtonLoading}
                   onClick={deleteTelegram}
-                  loading={loading}
+                  loading={isDeletingAddress}
                 >
-                  {loading ? 'Deleting...' : 'Delete telegram'}
+                  {isDeletingAddress ? 'Deleting...' : 'Delete telegram'}
                 </Button>
               </div>
             ) : null}
