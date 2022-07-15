@@ -10,9 +10,11 @@ export interface TelegramFormProps {
   botURL?: string;
 }
 
+const type = AddressType.Telegram;
+
 export function TelegramForm(props: TelegramFormProps) {
   const {
-    addresses: { TELEGRAM: telegramAddress },
+    addresses: { [type]: telegramAddress },
     create: createAddress,
     delete: deleteAddress,
     update: updateAddress,
@@ -69,7 +71,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
     try {
       await updateAddress({
-        type: AddressType.Telegram,
+        type,
         value: telegramUsername,
       });
       setError(null);
@@ -85,7 +87,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
     try {
       const value = telegramUsername?.replace('@', '');
-      await createAddress({ type: AddressType.Telegram, value });
+      await createAddress({ type, value });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -94,7 +96,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
   const deleteTelegram = async () => {
     try {
-      await deleteAddress({ type: AddressType.Telegram });
+      await deleteAddress({ type });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -103,7 +105,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
   const resendCodeVerification = async () => {
     try {
-      await resendCode({ type: AddressType.Telegram });
+      await resendCode({ type });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -112,7 +114,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
   const sendCode = async () => {
     try {
-      await verifyCode({ type: AddressType.Telegram, code: verificationCode });
+      await verifyCode({ type, code: verificationCode });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -199,7 +201,7 @@ export function TelegramForm(props: TelegramFormProps) {
           setError(null);
           if (telegramAddress && telegramAddress.enabled !== nextValue) {
             await toggleAddress({
-              type: AddressType.Telegram,
+              type,
               enabled: nextValue,
             });
           }
@@ -298,19 +300,23 @@ export function TelegramForm(props: TelegramFormProps) {
                   >
                     <span className="dt-opacity-50">
                       {' '}
-                      Check your telegram bot for a verification code.
-                    </span>
-                    <div className="dt-inline-block dt-cursor-pointer">
+                      Check your telegram bot{' '}
+                      {telegramAddress?.value
+                        ? `from @${telegramAddress?.value}`
+                        : ''}{' '}
+                      for a verification code.
+                    </span>{' '}
+                    <span className="dt-inline-block dt-cursor-pointer">
                       <ResendIcon
                         className={clsx(
-                          'dt-inline-block dt-ml-1 dt-mr-0.5',
+                          'dt-inline-block dt-mr-0.5',
                           isSendingCode && 'dt-animate-spin'
                         )}
                         height={14}
                         width={14}
                       />
                       Resend code
-                    </div>
+                    </span>
                   </div>
                 </div>
               </>
