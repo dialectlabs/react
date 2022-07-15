@@ -34,6 +34,7 @@ interface NotificationsProps {
   notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
+  gatedView?: string | JSX.Element;
 }
 
 function InnerNotifications(props: NotificationsProps): JSX.Element {
@@ -134,7 +135,11 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           <EncryptionInfo />
         </Route>
         <Route name={RouteName.FailingGate}>
-          <FailingGateError />
+          {!props.gatedView || typeof props.gatedView === 'string' ? (
+            <FailingGateError message={props.gatedView} />
+          ) : (
+            props.gatedView
+          )}
         </Route>
         <Route name={RouteName.Settings}>
           <Settings
