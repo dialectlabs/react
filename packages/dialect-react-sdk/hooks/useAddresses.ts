@@ -1,4 +1,9 @@
-import type { Address, AddressType, DialectSdkError } from '@dialectlabs/sdk';
+import type {
+  Address,
+  DappAddress,
+  AddressType,
+  DialectSdkError,
+} from '@dialectlabs/sdk';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { EMPTY_OBJ } from '../utils';
@@ -10,17 +15,54 @@ import useDialectDapp from './useDialectDapp';
 import useDialectSdk from './useDialectSdk';
 import useDialectWallet from './useDialectWallet';
 
-type AddressEnriched = Address & { enabled: boolean };
+interface CreateUpdateParams {
+  type: AddressType;
+  value: string;
+}
+
+interface DeleteParams {
+  type: AddressType;
+}
+
+interface ToggleParams {
+  type: AddressType;
+  enabled: boolean;
+}
+
+interface VerifyParams {
+  type: AddressType;
+  code: string;
+}
+interface ResendParams {
+  type: AddressType;
+}
+
+type AddressActionParams =
+  | CreateUpdateParams
+  | DeleteParams
+  | ToggleParams
+  | VerifyParams
+  | ResendParams;
+
+type AddressEnriched = Address & {
+  enabled: boolean;
+  dappAddress?: DappAddress;
+};
 interface UseAddressesValue {
   addresses: Record<AddressType, AddressEnriched> | Record<string, never>;
-  create: (type: AddressType, value?: string) => Promise<void>;
-  update: (type: AddressType, value: string) => Promise<void>;
-  delete: (type: AddressType) => Promise<void>;
-  toggle: (type: AddressType, enabled: boolean) => Promise<void>;
+  create: (params: CreateUpdateParams) => Promise<void>;
+  update: (params: CreateUpdateParams) => Promise<void>;
+  delete: (params: DeleteParams) => Promise<void>;
+  toggle: (params: ToggleParams) => Promise<void>;
+
+  verify: (params: VerifyParams) => Promise<void>;
+  resend: (params: ResendParams) => Promise<void>;
 
   isCreatingAddress: boolean;
   isUpdatingAddress: boolean;
   isDeletingAddress: boolean;
+  isSendingCode: boolean;
+  isVerifyingCode: boolean;
 
   isFetching: boolean;
   errorFetching: DialectSdkError | null;
@@ -39,6 +81,8 @@ function useAddresses({
   const [isCreatingAddress, setCreatingAddress] = useState(false);
   const [isUpdatingAddress, setUpdatingAddress] = useState(false);
   const [isDeletingAddress, setDeletingAddress] = useState(false);
+  const [isVerifyingCode, setVerifyingCode] = useState(false);
+  const [isSendingCode, setSendingCode] = useState(false);
 
   // Fetch all wallet addresses (it doesn't include a enabled prop)
   const {
@@ -80,23 +124,51 @@ function useAddresses({
     !errorFetchingDappAddresses &&
     dappAddresses === undefined;
 
+  const addressesEnriched = useMemo(
+    () =>
+      addresses
+        ? addresses.map((address) => {
+            const dappAddress = dappAddresses?.find(
+              (dAddr) => dAddr.address.id === address.id
+            );
+            return {
+              ...address,
+              dappAddress,
+              enabled: Boolean(dappAddress?.enabled),
+            };
+          })
+        : [],
+    [addresses, dappAddresses]
+  );
+
   const mergeAddress = useCallback(
     (data) =>
-      addresses
-        ? addresses.map((add: Address) => (add.type === data.type ? data : add))
+      addressesEnriched
+        ? addressesEnriched.map((add: AddressEnriched) =>
+            add.type === data.type ? data : add
+          )
         : [data],
-    [addresses]
+    [addressesEnriched]
   );
 
   const getAddress = useCallback(
-    (type: AddressType) => addresses?.find((address) => address.type === type),
-    [addresses]
+    (type: AddressType) =>
+      addressesEnriched?.find((address) => address.type === type),
+    [addressesEnriched]
   );
 
-  const getDappAddress = useCallback(
-    (type: AddressType) =>
-      dappAddresses?.find((dappAddress) => dappAddress.address.type === type),
-    [dappAddresses]
+  const withAddress = useCallback(
+    (
+        func: ({
+          type,
+          ...args
+        }: AddressActionParams & { address?: AddressEnriched }) => void
+      ) =>
+      ({ type, ...args }: AddressActionParams) => {
+        const address = getAddress(type);
+        return func({ type, address, ...args });
+      },
+    [getAddress]
   );
 
   useEffect(
@@ -107,11 +179,10 @@ function useAddresses({
   );
 
   const createAddress = useCallback(
-    async (type: AddressType, value: string) => {
+    withAddress(async ({ type, address: currentAddress, value }) => {
       if (!isWalletConnected || !dappPublicKey || isCreatingAddress) return;
       setCreatingAddress(true);
       try {
-        const currentAddress = getAddress(type);
         // Optimisticly update the current data while run actual request
         await mutateAddresses(
           async () => {
@@ -139,12 +210,12 @@ function useAddresses({
       } finally {
         setCreatingAddress(false);
       }
-    },
+    }),
     [
+      withAddress,
       isWalletConnected,
       dappPublicKey,
       isCreatingAddress,
-      getAddress,
       mutateAddresses,
       mutateDappAddresses,
       walletsApi.addresses,
@@ -154,39 +225,44 @@ function useAddresses({
   );
 
   const updateAddress = useCallback(
-    async (addressId: string, value: string) => {
-      if (!isWalletConnected || !dappPublicKey) return;
+    withAddress(async ({ address, value }) => {
+      if (!isWalletConnected || !dappPublicKey || !address) return;
       setUpdatingAddress(true);
       try {
-        const address = await walletsApi.addresses.update({ addressId, value });
-        await mutateAddresses(mergeAddress(address));
+        const updatedAddress = await walletsApi.addresses.update({
+          addressId: address.id,
+          value,
+        });
+        await mutateAddresses(mergeAddress(updatedAddress));
       } catch (e) {
         throw e as Error;
       } finally {
         setUpdatingAddress(false);
       }
-    },
+    }),
     [
+      withAddress,
+      isWalletConnected,
       dappPublicKey,
       walletsApi.addresses,
-      mergeAddress,
-      isWalletConnected,
       mutateAddresses,
+      mergeAddress,
     ]
   );
 
   const updateEnabled = useCallback(
-    async (type: AddressType, enabled: boolean) => {
-      if (!isWalletConnected || !dappPublicKey || !dappAddresses) return;
+    withAddress(async ({ address, enabled }) => {
+      if (
+        !isWalletConnected ||
+        !dappPublicKey ||
+        !address ||
+        !address?.dappAddress
+      )
+        return;
       setUpdatingAddress(true);
       try {
-        const address = getAddress(type);
-        const dappAddress = getDappAddress(type);
-        if (!dappAddress) {
-          return;
-        }
         const newDappAddress = await walletsApi.dappAddresses.update({
-          dappAddressId: dappAddress.id,
+          dappAddressId: address.dappAddress.id,
           enabled,
         });
         await mutateAddresses(
@@ -197,13 +273,12 @@ function useAddresses({
       } finally {
         setUpdatingAddress(false);
       }
-    },
+    }),
     [
+      withAddress,
       isWalletConnected,
       dappPublicKey,
       dappAddresses,
-      getAddress,
-      getDappAddress,
       walletsApi.dappAddresses,
       mutateAddresses,
       mergeAddress,
@@ -211,14 +286,10 @@ function useAddresses({
   );
 
   const deleteAddress = useCallback(
-    async (type: AddressType) => {
-      if (!isWalletConnected || isDeletingAddress) return;
+    withAddress(async ({ address }) => {
+      if (!isWalletConnected || isDeletingAddress || !address) return;
       setDeletingAddress(true);
       try {
-        const address = getAddress(type);
-        if (!address) {
-          return;
-        }
         const nextAddresses = addresses
           ? addresses.filter((add) => add.id !== address.id)
           : [];
@@ -238,11 +309,11 @@ function useAddresses({
       } finally {
         setDeletingAddress(false);
       }
-    },
+    }),
     [
+      withAddress,
       isWalletConnected,
       isDeletingAddress,
-      getAddress,
       addresses,
       mutateAddresses,
       walletsApi.addresses,
@@ -250,16 +321,23 @@ function useAddresses({
   );
 
   const verifyCode = useCallback(
-    async (addressId: string, code: string) => {
-      if (!isWalletConnected || !dappPublicKey) return;
+    withAddress(async ({ address, code }) => {
+      if (!isWalletConnected || !dappPublicKey || !address) return;
+      setVerifyingCode(true);
       try {
-        const data = await walletsApi.addresses.verify({ addressId, code });
+        const data = await walletsApi.addresses.verify({
+          addressId: address.id,
+          code,
+        });
         await mutateAddresses(mergeAddress(data));
       } catch (err) {
         throw err as Error;
+      } finally {
+        setVerifyingCode(false);
       }
-    },
+    }),
     [
+      withAddress,
       isWalletConnected,
       dappPublicKey,
       walletsApi.addresses,
@@ -269,35 +347,30 @@ function useAddresses({
   );
 
   const resendCode = useCallback(
-    async (addressId: string) => {
-      if (!isWalletConnected || !dappPublicKey) return;
+    withAddress(async ({ address }) => {
+      if (!isWalletConnected || !dappPublicKey || !address) return;
+      setSendingCode(true);
       try {
-        await walletsApi.addresses.resendVerificationCode({ addressId });
+        await walletsApi.addresses.resendVerificationCode({
+          addressId: address.id,
+        });
       } catch (err) {
         throw err as Error;
+      } finally {
+        setSendingCode(false);
       }
-    },
-    [dappPublicKey, isWalletConnected, walletsApi.addresses]
+    }),
+    [dappPublicKey, isWalletConnected, walletsApi.addresses, withAddress]
   );
 
+  // Convert to object like { EMAIL: {...addr}, .. }
   const addressesObj = useMemo(() => {
     const obj = Object.fromEntries(
       // Since by default options everything is false, passed options are considered enabled
-      addresses
-        ? addresses.map((addr) => [
-            addr.type,
-            {
-              ...addr,
-              enabled: Boolean(
-                dappAddresses?.find((dAddr) => dAddr.address.id === addr.id)
-                  ?.enabled
-              ),
-            },
-          ])
-        : []
+      addressesEnriched.map((addr) => [addr.type, addr])
     ) as Record<AddressType, AddressEnriched>;
     return obj;
-  }, [addresses, dappAddresses]);
+  }, [addressesEnriched]);
 
   return {
     addresses: addressesObj || EMPTY_OBJ,
@@ -313,6 +386,8 @@ function useAddresses({
     isCreatingAddress,
     isUpdatingAddress,
     isDeletingAddress,
+    isSendingCode,
+    isVerifyingCode,
 
     isFetching: isFetchingAddresses || isFetchingDappAddresses,
     errorFetchingAddresses,

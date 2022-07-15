@@ -99,10 +99,13 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
 
       if (thread && !walletAddress) {
         // In case the wallet isn't in web2 db, but the actual thread was created
-        createAddress(AddressType.Wallet, wallet.publicKey?.toBase58());
+        createAddress({
+          type: AddressType.Wallet,
+          value: wallet.publicKey?.toBase58(),
+        });
       } else if (!thread && walletAddress) {
         // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
-        deleteAddress(AddressType.Wallet);
+        deleteAddress({ type: AddressType.Wallet });
       }
     },
     [

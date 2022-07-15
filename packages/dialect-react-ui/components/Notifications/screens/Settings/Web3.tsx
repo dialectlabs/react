@@ -52,7 +52,7 @@ export function Web3({ onThreadDeleted }: Web3Props) {
         if (!walletObj || walletObj?.enabled === nextValue) {
           return;
         }
-        await toggle(AddressType.Wallet, nextValue);
+        await toggle({ type: AddressType.Wallet, enabled: nextValue });
       }}
     >
       {content}
