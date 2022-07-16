@@ -18,6 +18,8 @@ interface NotificationsThreadSettingsProps {
   onThreadDeleted?: () => void;
 }
 
+const addressType = AddressType.Wallet;
+
 const NotificationsThreadSettings = ({
   onThreadDeleted,
 }: NotificationsThreadSettingsProps) => {
@@ -47,7 +49,7 @@ const NotificationsThreadSettings = ({
 
   const deleteThread = useCallback(async () => {
     await deleteDialect();
-    await deleteAddress(AddressType.Wallet);
+    await deleteAddress({ addressType });
     onThreadDeleted?.();
   }, [deleteAddress, deleteDialect, onThreadDeleted]);
 

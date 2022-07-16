@@ -36,6 +36,8 @@ interface NotificationsProps {
   onBackClick?: () => void;
 }
 
+const addressType = AddressType.Wallet;
+
 function InnerNotifications(props: NotificationsProps): JSX.Element {
   const { isCreatingThread } = useThreads();
   const { dappAddress } = useDialectDapp();
@@ -80,7 +82,6 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     () => navigate(RouteName.Settings);
   }, [navigate]);
 
-
   // Sync state for web3 channel in case of errors
   useEffect(
     function syncState() {
@@ -100,12 +101,12 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       if (thread && !walletAddress) {
         // In case the wallet isn't in web2 db, but the actual thread was created
         createAddress({
-          type: AddressType.Wallet,
+          addressType,
           value: wallet.publicKey?.toBase58(),
         });
       } else if (!thread && walletAddress) {
         // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
-        deleteAddress({ type: AddressType.Wallet });
+        deleteAddress({ addressType });
       }
     },
     [
