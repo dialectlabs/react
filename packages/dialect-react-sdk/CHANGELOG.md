@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.12] - 2022-07-16
+
+- fix: fetch only dAddresses related to this particular dapp
+
 ## [1.0.0-beta.10] - 2022-07-16
 
 - refactor: introduce to use new addresses API via SDK

@@ -198,8 +198,6 @@ export function EmailForm() {
     />
   );
 
-  console.log({ emailAddress, isEmailSaved, isEmailEditing, isChanging });
-
   return (
     <div>
       <ToggleSection

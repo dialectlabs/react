@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.17] - 2022-07-16
+
+- chore: bump @dialeclabs/react-sdk
+
 ## [1.0.0-beta.16] - 2022-07-16
 
 - fix: handle error on toggle notification channels, so it doesn't break the app

@@ -1,4 +1,8 @@
-import { AddressType, useAddresses } from '@dialectlabs/react-sdk';
+import {
+  AddressType,
+  useAddresses,
+  useDialectSdk,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { Button, ToggleSection } from '../../../common';
@@ -6,13 +10,14 @@ import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ResendIcon from '../../../Icon/Resend';
 
-export interface TelegramFormProps {
-  botURL?: string;
-}
-
 const addressType = AddressType.Telegram;
 
-export function TelegramForm(props: TelegramFormProps) {
+export function TelegramForm() {
+  const {
+    info: {
+      config: { environment },
+    },
+  } = useDialectSdk();
   const {
     addresses: { [addressType]: telegramAddress },
     create: createAddress,
@@ -206,6 +211,11 @@ export function TelegramForm(props: TelegramFormProps) {
     }
   };
 
+  const botURL =
+    environment === 'production'
+      ? 'https://telegram.me/DialectLabsBot'
+      : 'https://telegram.me/DialectLabsDevBot';
+
   return (
     <div key="telegram">
       <ToggleSection
@@ -281,7 +291,7 @@ export function TelegramForm(props: TelegramFormProps) {
                 >
                   <a
                     className={clsx(textStyles.small)}
-                    href={props.botURL}
+                    href={botURL}
                     target="_blank"
                     rel="noreferrer"
                   >

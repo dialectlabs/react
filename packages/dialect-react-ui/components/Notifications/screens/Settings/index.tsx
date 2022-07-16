@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import clsx from 'clsx';
 import { A, P } from '../../../common/preflighted';
 import type { Channel } from '../../../common/types';
@@ -9,63 +8,33 @@ import { Web3 } from './Web3';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
-import { useDialectSdk } from '@dialectlabs/react-sdk';
-
-const baseChannelOptions: Record<Channel, boolean> = {
-  web3: false,
-  email: false,
-  sms: false,
-  telegram: false,
-};
 
 function Settings(props: {
   notifications: NotificationType[];
   channels: Channel[];
 }) {
   const { textStyles, xPaddedText } = useTheme();
-  const {
-    info: {
-      config: { environment },
-    },
-  } = useDialectSdk();
-
-  const channelsOptions = useMemo(
-    () =>
-      Object.fromEntries(
-        // Since by default options everything is false, passed options are considered enabled
-        props.channels.map((channel) => [channel, !baseChannelOptions[channel]])
-      ) as Record<Channel, boolean>,
-    [props.channels]
-  );
-
-  const botURL =
-    environment === 'production'
-      ? 'https://telegram.me/DialectLabsBot'
-      : 'https://telegram.me/DialectLabsDevBot';
 
   return (
     <>
       <div className={clsx('dt-py-2', xPaddedText)}>
-        {channelsOptions.web3 && (
-          <div className="dt-mb-2">
-            <Web3 />
-          </div>
-        )}
-        {channelsOptions.email && (
-          <div className="dt-mb-2">
-            <EmailForm />
-          </div>
-        )}
-        {channelsOptions.sms && (
-          <div className="dt-mb-2">
-            <SmsForm />
-          </div>
-        )}
-        {channelsOptions.telegram && (
-          <div className="dt-mb-2">
-            <TelegramForm botURL={botURL} />
-          </div>
-        )}
+        {props.channels.map((channelSlug) => {
+          let form;
+          if (channelSlug === 'web3') {
+            form = <Web3 />;
+          } else if (channelSlug === 'email') {
+            form = <EmailForm />;
+          } else if (channelSlug === 'sms') {
+            form = <SmsForm />;
+          } else if (channelSlug === 'telegram') {
+            form = <TelegramForm />;
+          }
+          return (
+            <div key={channelSlug} className="dt-mb-2">
+              {form}
+            </div>
+          );
+        })}
       </div>
       <Section className="dt-mb-" title="Notification types">
         <P

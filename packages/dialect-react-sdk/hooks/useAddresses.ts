@@ -114,6 +114,7 @@ function useAddresses({
       ? () =>
           walletsApi.dappAddresses.findAll({
             addressIds: addresses?.map((addr) => addr.id),
+            dappPublicKey,
           })
       : null,
     {
