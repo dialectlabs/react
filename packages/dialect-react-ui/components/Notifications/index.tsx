@@ -8,7 +8,7 @@ import {
   useThreads,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
 import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import LoadingThread from '../../entities/LoadingThread';
@@ -45,6 +45,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
   const { adapter: wallet } = useDialectWallet();
+  const [isInitialRoutePicked, setInitialRoutePicked] = useState(false);
 
   const {
     addresses: { WALLET: walletAddress },
@@ -124,8 +125,11 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
 
   useEffect(
     function pickInitialRoute() {
-      if (thread?.id && prevThread?.id?.equals(thread?.id)) {
-        // Skip setting initial route if the thread isn't changed
+      if (isInitialRoutePicked) {
+        return;
+      }
+
+      if (isFetchingAddresses || isFetchingThread) {
         return;
       }
 
@@ -137,6 +141,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
 
       if (shouldShowSettings) {
         showSettings();
+        setInitialRoutePicked(true);
         return;
       }
 
@@ -145,6 +150,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       }
 
       showThread();
+      setInitialRoutePicked(true);
     },
     [
       navigate,
@@ -156,12 +162,15 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       prevThread?.id,
       showThread,
       showSettings,
+      walletAddress?.enabled,
+      isFetchingAddresses,
+      isInitialRoutePicked,
     ]
   );
 
   return (
     <>
-      {isFetchingThread || isFetchingAddresses ? (
+      {isFetchingThread || isFetchingAddresses || !isInitialRoutePicked ? (
         <LoadingThread />
       ) : (
         <>
