@@ -1,5 +1,8 @@
 module.exports = {
-  content: ['./components/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './components/**/*.{js,ts,jsx,tsx}',
+    './entities/**/*.{js,ts,jsx,tsx}',
+  ],
   theme: {
     extend: {
       inter: ['Inter, sans-serif'],

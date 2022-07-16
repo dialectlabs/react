@@ -18,7 +18,7 @@ const FailingGateError = ({ message, isLoading }: FailingGateErrorProps) => {
           <H3
             className={clsx(
               textStyles.header,
-              'dt-flex dt-items-center dt-mb-1'
+              'dt-flex dt-items-center dt-mb-1 dt-mx-4'
             )}
           >
             <Loader className="dt-mr-2" /> Verifying your eligibility to use
