@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.10] - 2022-07-16
+
+- refactor: introduce to use new addresses API via SDK
+
 ## [1.0.0-beta.9] - 2022-07-12
 
 - chore: bump @dialectlabs/sdk
