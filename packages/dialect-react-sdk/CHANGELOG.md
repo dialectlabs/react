@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.9] - 2022-07-12
+
+- chore: bump @dialectlabs/sdk
+
 ## [1.0.0-beta.8] - 2022-07-12
 
 - fix: sync state in case thread doesnt exists but address is saved in db
