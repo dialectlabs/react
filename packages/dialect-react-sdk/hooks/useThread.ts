@@ -42,8 +42,7 @@ const useThread = ({
     useState<DialectSdkError | null>(null);
 
   const {
-    data: thread = null,
-    isValidating: isFetchingThread,
+    data: thread,
     error: errorFetchingThread,
     mutate: mutateThread,
   } = useSWR(
@@ -78,11 +77,11 @@ const useThread = ({
 
   return {
     // sdk
-    thread,
+    thread: thread || null,
     delete: deleteThread,
 
     // react-lib
-    isFetchingThread,
+    isFetchingThread: thread === undefined && !errorFetchingThread,
     errorFetchingThread,
     isDeletingThread,
     errorDeletingThread,

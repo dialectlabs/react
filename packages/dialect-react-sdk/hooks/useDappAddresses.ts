@@ -2,7 +2,7 @@ import type { DappAddress, DialectSdkError } from '@dialectlabs/sdk';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
-import { DAPP_ADDRESSES_CACHE_KEY } from './internal/swrCache';
+import { DAPP_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
 import useDapp from './useDapp';
 
 interface UseDappAddressesValue {
@@ -26,7 +26,7 @@ function useDappAddresses({
     error = null,
     mutate,
   } = useSWR(
-    DAPP_ADDRESSES_CACHE_KEY(dapp),
+    DAPP_ADDRESSES_CACHE_KEY_FN(dapp),
     dappAddressesApi ? () => dappAddressesApi.findAll() : null,
     {
       refreshInterval,

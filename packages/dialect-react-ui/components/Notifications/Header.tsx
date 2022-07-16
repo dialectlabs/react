@@ -1,23 +1,58 @@
+import { useDialectDapp, useThread } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { Divider } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
+import { useRoute } from '../common/providers/Router';
 import IconButton from '../IconButton';
+import { RouteName } from './constants';
 
 function Header(props: {
   isReady: boolean;
   isWeb3Enabled: boolean;
-  isSettingsOpen: boolean;
   onModalClose: () => void;
-  toggleSettings: () => void;
   onBackClick?: () => void;
 }) {
+  const { navigate, current } = useRoute();
   const { colors, textStyles, header, icons } = useTheme();
+  const isSettingsOpen = current?.name === RouteName.Settings;
+  const { dappAddress } = useDialectDapp();
+  const { thread } = useThread({
+    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
+  });
+  const openSettings = () => {
+    navigate(RouteName.Settings);
+  };
+  const openThread = () => {
+    if (!thread) return;
+    navigate(RouteName.Thread, {
+      params: { threadId: thread.id },
+    });
+  };
 
-  const BackButton = () =>
-    props?.onBackClick != null ? (
-      <span className="pt-1 mr-1">
-        <IconButton icon={<icons.back />} onClick={props.onBackClick} />
-      </span>
+  const BackButton = () => (
+    <IconButton
+      icon={<icons.back />}
+      onClick={openThread}
+      className="dt-mr-2 dt-py-1"
+    />
+  );
+
+  const SettingsButton = () =>
+    props.isReady && !isSettingsOpen ? (
+      <IconButton icon={<icons.settings />} onClick={openSettings} />
+    ) : null;
+
+  const CloseButton = () => (
+    <IconButton icon={<icons.x />} onClick={props.onModalClose} />
+  );
+
+  const MasterBackButton = () =>
+    props.onBackClick ? (
+      <IconButton
+        icon={<icons.back />}
+        onClick={props.onBackClick}
+        className="dt-mr-2 dt-py-1"
+      />
     ) : null;
 
   // Support for threads created before address registry launch
@@ -30,7 +65,7 @@ function Header(props: {
             header
           )}
         >
-          <BackButton />
+          <MasterBackButton />
           <span className={clsx(textStyles.header, colors.accent)}>
             Setup Notifications
           </span>
@@ -48,34 +83,25 @@ function Header(props: {
           header
         )}
       >
-        {!props.isSettingsOpen ? (
+        {!isSettingsOpen ? (
           <>
-            <BackButton />
+            <MasterBackButton />
             <span className={clsx(textStyles.header, colors.accent)}>
               Notifications
             </span>
           </>
         ) : (
           <div className="dt-flex dt-flex-row dt-items-center">
-            <IconButton
-              icon={<icons.back />}
-              onClick={props.toggleSettings}
-              className="dt-mr-2 dt-py-1"
-            />
+            <BackButton />
             <span className={clsx(textStyles.header, colors.accent)}>
               Settings
             </span>
           </div>
         )}
         <div className="dt-flex">
-          {props.isReady && !props.isSettingsOpen ? (
-            <IconButton
-              icon={<icons.settings />}
-              onClick={props.toggleSettings}
-            />
-          ) : null}
+          <SettingsButton />
           <div className="sm:dt-hidden dt-ml-3">
-            <IconButton icon={<icons.x />} onClick={props.onModalClose} />
+            <CloseButton />
           </div>
         </div>
       </div>
