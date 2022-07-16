@@ -49,7 +49,7 @@ type AddressEnriched = Address & {
   dappAddress?: DappAddress;
 };
 interface UseAddressesValue {
-  addresses: Record<AddressType, AddressEnriched> | Record<string, never>;
+  addresses: Record<AddressType, AddressEnriched>;
   create: (params: CreateUpdateParams) => Promise<void>;
   update: (params: CreateUpdateParams) => Promise<void>;
   delete: (params: DeleteParams) => Promise<void>;
@@ -78,6 +78,7 @@ function useAddresses({
   const { wallet: walletsApi } = useDialectSdk();
   const { dappAddress: dappPublicKey } = useDialectDapp();
   const { connected: isWalletConnected } = useDialectWallet();
+
   const [isCreatingAddress, setCreatingAddress] = useState(false);
   const [isUpdatingAddress, setUpdatingAddress] = useState(false);
   const [isDeletingAddress, setDeletingAddress] = useState(false);
@@ -142,12 +143,12 @@ function useAddresses({
   );
 
   const mergeAddress = useCallback(
-    (data) =>
+    (address: AddressEnriched | Address) =>
       addressesEnriched
-        ? addressesEnriched.map((add: AddressEnriched) =>
-            add.type === data.type ? data : add
+        ? addressesEnriched.map((add) =>
+            add.type === address.type ? { ...address, ...add } : add
           )
-        : [data],
+        : [address],
     [addressesEnriched]
   );
 
@@ -158,17 +159,16 @@ function useAddresses({
   );
 
   const withAddress = useCallback(
-    (
-        func: ({
-          type,
-          ...args
-        }: AddressActionParams & { address?: AddressEnriched }) => void
-      ) =>
+    (func: ({ type, ...args }: AddressActionParams) => void) =>
       ({ type, ...args }: AddressActionParams) => {
         const address = getAddress(type);
+        if (!isWalletConnected || !dappPublicKey) {
+          // Don't execute the function if wallet or dappPK is not present
+          return;
+        }
         return func({ type, address, ...args });
       },
-    [getAddress]
+    [dappPublicKey, getAddress, isWalletConnected]
   );
 
   useEffect(
@@ -180,40 +180,39 @@ function useAddresses({
 
   const createAddress = useCallback(
     withAddress(async ({ type, address: currentAddress, value }) => {
-      if (!isWalletConnected || !dappPublicKey || isCreatingAddress) return;
-      setCreatingAddress(true);
-      try {
-        // Optimisticly update the current data while run actual request
-        await mutateAddresses(
-          async () => {
-            const address = currentAddress
-              ? currentAddress
-              : await walletsApi.addresses.create({
-                  type,
-                  value,
-                });
-            const dappAddress = await walletsApi.dappAddresses.create({
-              dappPublicKey,
-              addressId: address.id,
-              enabled: true,
-            });
-            return mergeAddress({ address, enabled: dappAddress.enabled });
-          },
-          {
-            optimisticData: (data) => mergeAddress(data),
-            rollbackOnError: true,
-          }
-        );
-        await mutateDappAddresses();
-      } catch (e) {
-        throw e as Error;
-      } finally {
-        setCreatingAddress(false);
+      if (isCreatingAddress) {
+        // Do not create address if it's already creating
+        return;
       }
+      setCreatingAddress(true);
+      // Optimisticly update the current data while run actual request
+      await mutateAddresses(
+        async () => {
+          const address = currentAddress
+            ? currentAddress
+            : await walletsApi.addresses.create({
+                type,
+                value,
+              });
+          const dappAddress = await walletsApi.dappAddresses.create({
+            dappPublicKey,
+            addressId: address.id,
+            enabled: true,
+          });
+          return mergeAddress({ ...address, enabled: dappAddress.enabled });
+        },
+        {
+          // FIXME: something goes wrong with assigning array in the optimisticData
+          // optimisticData: (nextAddress) =>
+          //   nextAddress ? mergeAddress(nextAddress) : [],
+          rollbackOnError: true,
+        }
+      );
+      await mutateDappAddresses();
+      setCreatingAddress(false);
     }),
     [
       withAddress,
-      isWalletConnected,
       dappPublicKey,
       isCreatingAddress,
       mutateAddresses,
@@ -226,7 +225,9 @@ function useAddresses({
 
   const updateAddress = useCallback(
     withAddress(async ({ address, value }) => {
-      if (!isWalletConnected || !dappPublicKey || !address) return;
+      if (!address) {
+        return;
+      }
       setUpdatingAddress(true);
       try {
         const updatedAddress = await walletsApi.addresses.update({
@@ -240,44 +241,26 @@ function useAddresses({
         setUpdatingAddress(false);
       }
     }),
-    [
-      withAddress,
-      isWalletConnected,
-      dappPublicKey,
-      walletsApi.addresses,
-      mutateAddresses,
-      mergeAddress,
-    ]
+    [withAddress, walletsApi.addresses, mutateAddresses, mergeAddress]
   );
 
   const updateEnabled = useCallback(
     withAddress(async ({ address, enabled }) => {
-      if (
-        !isWalletConnected ||
-        !dappPublicKey ||
-        !address ||
-        !address?.dappAddress
-      )
+      if (!address || !address?.dappAddress) {
         return;
-      setUpdatingAddress(true);
-      try {
-        const newDappAddress = await walletsApi.dappAddresses.update({
-          dappAddressId: address.dappAddress.id,
-          enabled,
-        });
-        await mutateAddresses(
-          mergeAddress({ address, enabled: newDappAddress.enabled })
-        );
-      } catch (e) {
-        throw e as Error;
-      } finally {
-        setUpdatingAddress(false);
       }
+      setUpdatingAddress(true);
+      const newDappAddress = await walletsApi.dappAddresses.update({
+        dappAddressId: address.dappAddress.id,
+        enabled,
+      });
+      await mutateAddresses(
+        mergeAddress({ ...address, enabled: newDappAddress.enabled })
+      );
+      setUpdatingAddress(false);
     }),
     [
       withAddress,
-      isWalletConnected,
-      dappPublicKey,
       dappAddresses,
       walletsApi.dappAddresses,
       mutateAddresses,
@@ -287,32 +270,29 @@ function useAddresses({
 
   const deleteAddress = useCallback(
     withAddress(async ({ address }) => {
-      if (!isWalletConnected || isDeletingAddress || !address) return;
-      setDeletingAddress(true);
-      try {
-        const nextAddresses = addresses
-          ? addresses.filter((add) => add.id !== address.id)
-          : [];
-        // Optimisticly update the current data while run actual request
-        await mutateAddresses(
-          async () => {
-            await walletsApi.addresses.delete({ addressId: address.id });
-            return nextAddresses;
-          },
-          {
-            optimisticData: nextAddresses,
-            rollbackOnError: true,
-          }
-        );
-      } catch (e) {
-        throw e as Error;
-      } finally {
-        setDeletingAddress(false);
+      if (!address || isDeletingAddress) {
+        // Do not delete address if it's already deleting or not present
+        return;
       }
+      setDeletingAddress(true);
+      const nextAddresses = addresses
+        ? addresses.filter((add) => add.id !== address.id)
+        : [];
+      // Optimisticly update the current data while run actual request
+      await mutateAddresses(
+        async () => {
+          await walletsApi.addresses.delete({ addressId: address.id });
+          return nextAddresses;
+        },
+        {
+          optimisticData: nextAddresses,
+          rollbackOnError: true,
+        }
+      );
+      setDeletingAddress(false);
     }),
     [
       withAddress,
-      isWalletConnected,
       isDeletingAddress,
       addresses,
       mutateAddresses,
@@ -322,45 +302,32 @@ function useAddresses({
 
   const verifyCode = useCallback(
     withAddress(async ({ address, code }) => {
-      if (!isWalletConnected || !dappPublicKey || !address) return;
-      setVerifyingCode(true);
-      try {
-        const data = await walletsApi.addresses.verify({
-          addressId: address.id,
-          code,
-        });
-        await mutateAddresses(mergeAddress(data));
-      } catch (err) {
-        throw err as Error;
-      } finally {
-        setVerifyingCode(false);
+      if (!address) {
+        return;
       }
+      setVerifyingCode(true);
+      const nextAddress = await walletsApi.addresses.verify({
+        addressId: address.id,
+        code,
+      });
+      await mutateAddresses(mergeAddress(nextAddress));
+      setVerifyingCode(false);
     }),
-    [
-      withAddress,
-      isWalletConnected,
-      dappPublicKey,
-      walletsApi.addresses,
-      mutateAddresses,
-      mergeAddress,
-    ]
+    [withAddress, walletsApi.addresses, mutateAddresses, mergeAddress]
   );
 
   const resendCode = useCallback(
     withAddress(async ({ address }) => {
-      if (!isWalletConnected || !dappPublicKey || !address) return;
-      setSendingCode(true);
-      try {
-        await walletsApi.addresses.resendVerificationCode({
-          addressId: address.id,
-        });
-      } catch (err) {
-        throw err as Error;
-      } finally {
-        setSendingCode(false);
+      if (!address) {
+        return;
       }
+      setSendingCode(true);
+      await walletsApi.addresses.resendVerificationCode({
+        addressId: address.id,
+      });
+      setSendingCode(false);
     }),
-    [dappPublicKey, isWalletConnected, walletsApi.addresses, withAddress]
+    [dappPublicKey, walletsApi.addresses, withAddress]
   );
 
   // Convert to object like { EMAIL: {...addr}, .. }
