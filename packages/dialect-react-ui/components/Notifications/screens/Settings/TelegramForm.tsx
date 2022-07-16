@@ -10,11 +10,11 @@ export interface TelegramFormProps {
   botURL?: string;
 }
 
-const type = AddressType.Telegram;
+const addressType = AddressType.Telegram;
 
 export function TelegramForm(props: TelegramFormProps) {
   const {
-    addresses: { [type]: telegramAddress },
+    addresses: { [addressType]: telegramAddress },
     create: createAddress,
     delete: deleteAddress,
     update: updateAddress,
@@ -71,7 +71,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
     try {
       await updateAddress({
-        type,
+        addressType,
         value: telegramUsername,
       });
       setError(null);
@@ -87,7 +87,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
     try {
       const value = telegramUsername?.replace('@', '');
-      await createAddress({ type, value });
+      await createAddress({ addressType, value });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -96,7 +96,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
   const deleteTelegram = async () => {
     try {
-      await deleteAddress({ type });
+      await deleteAddress({ addressType });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -105,7 +105,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
   const resendCodeVerification = async () => {
     try {
-      await resendCode({ type });
+      await resendCode({ addressType });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -114,7 +114,7 @@ export function TelegramForm(props: TelegramFormProps) {
 
   const sendCode = async () => {
     try {
-      await verifyCode({ type, code: verificationCode });
+      await verifyCode({ addressType, code: verificationCode });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -201,7 +201,7 @@ export function TelegramForm(props: TelegramFormProps) {
           setError(null);
           if (telegramAddress && telegramAddress.enabled !== nextValue) {
             await toggleAddress({
-              type,
+              addressType,
               enabled: nextValue,
             });
           }
