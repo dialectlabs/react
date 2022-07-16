@@ -6,9 +6,11 @@ import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ResendIcon from '../../../Icon/Resend';
 
+const addressType = AddressType.Email;
+
 export function EmailForm() {
   const {
-    addresses: { EMAIL: emailAddress },
+    addresses: { [addressType]: emailAddress },
     create: createAddress,
     delete: deleteAddress,
     update: updateAddress,
@@ -62,7 +64,7 @@ export function EmailForm() {
       return;
     }
     try {
-      await updateAddress({ type: AddressType.Email, value: email });
+      await updateAddress({ addressType, value: email });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -75,7 +77,7 @@ export function EmailForm() {
       return;
     }
     try {
-      await createAddress({ type: AddressType.Email, value: email });
+      await createAddress({ addressType, value: email });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -84,7 +86,7 @@ export function EmailForm() {
 
   const deleteEmail = async () => {
     try {
-      await deleteAddress({ type: AddressType.Email });
+      await deleteAddress({ addressType });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -93,7 +95,7 @@ export function EmailForm() {
 
   const resendEmailCode = async () => {
     try {
-      await resendCode({ type: AddressType.Email });
+      await resendCode({ addressType });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -102,7 +104,7 @@ export function EmailForm() {
 
   const sendCode = async () => {
     try {
-      await verifyCode({ type: AddressType.Email, code: verificationCode });
+      await verifyCode({ addressType, code: verificationCode });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -192,7 +194,7 @@ export function EmailForm() {
           if (emailAddress && emailAddress.enabled !== nextValue) {
             setError(null);
             await toggleAddress({
-              type: AddressType.Email,
+              addressType,
               enabled: nextValue,
             });
           }
@@ -271,18 +273,18 @@ export function EmailForm() {
                   <span className="dt-opacity-50">
                     {' '}
                     Check your email for a verification code.
-                  </span>
-                  <div className="dt-inline-block dt-cursor-pointer">
+                  </span>{' '}
+                  <span className="dt-inline-block dt-cursor-pointer">
                     <ResendIcon
                       className={clsx(
-                        'dt-inline-block dt-ml-1 dt-mr-0.5',
+                        'dt-inline-block dt-mr-0.5',
                         isSendingCode && 'dt-animate-spin'
                       )}
                       height={14}
                       width={14}
                     />
                     Resend code
-                  </div>
+                  </span>
                 </div>
               </div>
             ) : null}
