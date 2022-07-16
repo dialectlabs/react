@@ -111,6 +111,21 @@ export function SmsForm() {
     }
   };
 
+  const toggleSms = async (nextValue: boolean) => {
+    if (!smsAddress || smsAddress?.enabled === nextValue) {
+      return;
+    }
+    try {
+      await toggleAddress({
+        addressType,
+        enabled: nextValue,
+      });
+      setError(null);
+    } catch (e) {
+      setError(e as Error);
+    }
+  };
+
   const renderVerifiedState = () => {
     return (
       <div className={clsx(highlighted, textStyles.body, colors.highlight)}>
@@ -186,15 +201,7 @@ export function SmsForm() {
       <ToggleSection
         className="dt-mb-6"
         title="📶  SMS notifications"
-        onChange={async (nextValue) => {
-          setError(null);
-          if (smsAddress && smsAddress.enabled !== nextValue) {
-            await toggleAddress({
-              addressType,
-              enabled: nextValue,
-            });
-          }
-        }}
+        onChange={toggleSms}
         enabled={Boolean(smsAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>

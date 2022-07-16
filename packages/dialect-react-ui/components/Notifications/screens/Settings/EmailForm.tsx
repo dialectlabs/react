@@ -113,6 +113,21 @@ export function EmailForm() {
     }
   };
 
+  const toggleEmail = async (nextValue: boolean) => {
+    if (!emailAddress || emailAddress?.enabled === nextValue) {
+      return;
+    }
+    try {
+      await toggleAddress({
+        addressType,
+        enabled: nextValue,
+      });
+      setError(null);
+    } catch (e) {
+      setError(e as Error);
+    }
+  };
+
   const renderVerifiedState = () => {
     return (
       <div className={clsx(highlighted, textStyles.body, colors.highlight)}>
@@ -190,15 +205,7 @@ export function EmailForm() {
       <ToggleSection
         className="dt-mb-6"
         title="📩  Email notifications"
-        onChange={async (nextValue) => {
-          if (emailAddress && emailAddress.enabled !== nextValue) {
-            setError(null);
-            await toggleAddress({
-              addressType,
-              enabled: nextValue,
-            });
-          }
-        }}
+        onChange={toggleEmail}
         enabled={Boolean(emailAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>

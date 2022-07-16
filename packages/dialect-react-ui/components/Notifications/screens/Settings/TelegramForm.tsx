@@ -46,7 +46,6 @@ export function TelegramForm(props: TelegramFormProps) {
   const [telegramUsername, setTelegramUsername] = useState(
     telegramAddress?.value
   );
-  const [isEnabled, setEnabled] = useState(Boolean(telegramAddress?.enabled));
   const [isTelegramUsernameEditing, setTelegramUsernameEditing] = useState(
     !telegramAddress?.enabled
   );
@@ -192,21 +191,27 @@ export function TelegramForm(props: TelegramFormProps) {
     />
   );
 
+  const toggleTelegram = async (nextValue: boolean) => {
+    if (!telegramAddress || telegramAddress?.enabled === nextValue) {
+      return;
+    }
+    try {
+      await toggleAddress({
+        addressType,
+        enabled: nextValue,
+      });
+      setError(null);
+    } catch (e) {
+      setError(e as Error);
+    }
+  };
+
   return (
     <div key="telegram">
       <ToggleSection
         className="dt-mb-6"
         title="📡  Telegram notifications"
-        onChange={async (nextValue) => {
-          setError(null);
-          if (telegramAddress && telegramAddress.enabled !== nextValue) {
-            await toggleAddress({
-              addressType,
-              enabled: nextValue,
-            });
-          }
-          setEnabled(!isEnabled);
-        }}
+        onChange={toggleTelegram}
         enabled={Boolean(telegramAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>

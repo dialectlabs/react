@@ -17,7 +17,7 @@ export function Web3({ onThreadDeleted }: Web3Props) {
   const { dappAddress } = useDialectDapp();
   const {
     addresses: { WALLET: walletObj },
-    toggle,
+    toggle: toggleAddress,
 
     isCreatingAddress,
     isDeletingAddress,
@@ -39,6 +39,16 @@ export function Web3({ onThreadDeleted }: Web3Props) {
     <NotificationsThreadSettings onThreadDeleted={onThreadDeleted} />
   );
 
+  const toggleWeb3 = async (nextValue: boolean) => {
+    if (!walletObj || walletObj?.enabled === nextValue) {
+      return;
+    }
+    await toggleAddress({
+      addressType: AddressType.Wallet,
+      enabled: nextValue,
+    });
+  };
+
   if (!isWeb3Enabled || isCreatingThread || isCreatingAddress) {
     content = <CreateNotificationsThread />;
   }
@@ -48,12 +58,7 @@ export function Web3({ onThreadDeleted }: Web3Props) {
       className="dt-mb-6"
       title="💬  Wallet notifications"
       enabled={isWeb3Enabled}
-      onChange={async (nextValue) => {
-        if (!walletObj || walletObj?.enabled === nextValue) {
-          return;
-        }
-        await toggle({ type: AddressType.Wallet, enabled: nextValue });
-      }}
+      onChange={toggleWeb3}
     >
       {content}
     </ToggleSection>
