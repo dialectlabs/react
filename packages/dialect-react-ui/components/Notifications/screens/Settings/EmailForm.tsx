@@ -6,11 +6,11 @@ import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ResendIcon from '../../../Icon/Resend';
 
-const type = AddressType.Email;
+const addressType = AddressType.Email;
 
 export function EmailForm() {
   const {
-    addresses: { [type]: emailAddress },
+    addresses: { [addressType]: emailAddress },
     create: createAddress,
     delete: deleteAddress,
     update: updateAddress,
@@ -64,7 +64,7 @@ export function EmailForm() {
       return;
     }
     try {
-      await updateAddress({ type, value: email });
+      await updateAddress({ addressType, value: email });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -77,7 +77,7 @@ export function EmailForm() {
       return;
     }
     try {
-      await createAddress({ type, value: email });
+      await createAddress({ addressType, value: email });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -86,7 +86,7 @@ export function EmailForm() {
 
   const deleteEmail = async () => {
     try {
-      await deleteAddress({ type });
+      await deleteAddress({ addressType });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -95,7 +95,7 @@ export function EmailForm() {
 
   const resendEmailCode = async () => {
     try {
-      await resendCode({ type });
+      await resendCode({ addressType });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -104,7 +104,7 @@ export function EmailForm() {
 
   const sendCode = async () => {
     try {
-      await verifyCode({ type, code: verificationCode });
+      await verifyCode({ addressType, code: verificationCode });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -194,7 +194,7 @@ export function EmailForm() {
           if (emailAddress && emailAddress.enabled !== nextValue) {
             setError(null);
             await toggleAddress({
-              type,
+              addressType,
               enabled: nextValue,
             });
           }
