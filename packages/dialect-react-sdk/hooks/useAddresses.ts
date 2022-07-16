@@ -16,25 +16,25 @@ import useDialectSdk from './useDialectSdk';
 import useDialectWallet from './useDialectWallet';
 
 interface CreateUpdateParams {
-  type: AddressType;
+  addressType: AddressType;
   value: string;
 }
 
 interface DeleteParams {
-  type: AddressType;
+  addressType: AddressType;
 }
 
 interface ToggleParams {
-  type: AddressType;
+  addressType: AddressType;
   enabled: boolean;
 }
 
 interface VerifyParams {
-  type: AddressType;
+  addressType: AddressType;
   code: string;
 }
 interface ResendParams {
-  type: AddressType;
+  addressType: AddressType;
 }
 
 type AddressActionParams =
@@ -71,6 +71,8 @@ interface UseAddressesValue {
 interface UseAddressesParams {
   refreshInterval?: number;
 }
+
+type WrappedFuncParams = AddressActionParams;
 
 function useAddresses({
   refreshInterval,
@@ -142,6 +144,8 @@ function useAddresses({
     [addresses, dappAddresses]
   );
 
+  const errorFetching = errorFetchingAddresses || errorFetchingDappAddresses;
+
   const mergeAddress = useCallback(
     (address: AddressEnriched | Address) =>
       addressesEnriched
@@ -159,15 +163,24 @@ function useAddresses({
   );
 
   const withAddress = useCallback(
-    (func: ({ type, ...args }: AddressActionParams) => void) =>
-      ({ type, ...args }: AddressActionParams) => {
-        const address = getAddress(type);
+    <
+      F extends (
+        params: AddressActionParams & {
+          address?: AddressEnriched;
+        }
+      ) => Promise<void>
+    >(
+      fn: F
+    ) => {
+      return async function ({ addressType, ...args }: WrappedFuncParams) {
+        const address = getAddress(addressType);
         if (!isWalletConnected || !dappPublicKey) {
           // Don't execute the function if wallet or dappPK is not present
           return;
         }
-        return func({ type, address, ...args });
-      },
+        return await fn({ addressType, address, ...args });
+      };
+    },
     [dappPublicKey, getAddress, isWalletConnected]
   );
 
@@ -179,8 +192,13 @@ function useAddresses({
   );
 
   const createAddress = useCallback(
-    withAddress(async ({ type, address: currentAddress, value }) => {
-      if (isCreatingAddress) {
+    withAddress(async (params) => {
+      const {
+        address: currentAddress,
+        addressType,
+        value,
+      } = params as CreateUpdateParams & { address?: AddressEnriched };
+      if (!dappPublicKey || isCreatingAddress) {
         // Do not create address if it's already creating
         return;
       }
@@ -191,7 +209,7 @@ function useAddresses({
           const address = currentAddress
             ? currentAddress
             : await walletsApi.addresses.create({
-                type,
+                type: addressType,
                 value,
               });
           const dappAddress = await walletsApi.dappAddresses.create({
@@ -224,7 +242,10 @@ function useAddresses({
   );
 
   const updateAddress = useCallback(
-    withAddress(async ({ address, value }) => {
+    withAddress(async (params) => {
+      const { address, value } = params as CreateUpdateParams & {
+        address?: AddressEnriched;
+      };
       if (!address) {
         return;
       }
@@ -245,7 +266,10 @@ function useAddresses({
   );
 
   const updateEnabled = useCallback(
-    withAddress(async ({ address, enabled }) => {
+    withAddress(async (params) => {
+      const { address, enabled } = params as ToggleParams & {
+        address?: AddressEnriched;
+      };
       if (!address || !address?.dappAddress) {
         return;
       }
@@ -269,7 +293,10 @@ function useAddresses({
   );
 
   const deleteAddress = useCallback(
-    withAddress(async ({ address }) => {
+    withAddress(async (params) => {
+      const { address } = params as DeleteParams & {
+        address?: AddressEnriched;
+      };
       if (!address || isDeletingAddress) {
         // Do not delete address if it's already deleting or not present
         return;
@@ -301,7 +328,10 @@ function useAddresses({
   );
 
   const verifyCode = useCallback(
-    withAddress(async ({ address, code }) => {
+    withAddress(async (params) => {
+      const { address, code } = params as VerifyParams & {
+        address?: AddressEnriched;
+      };
       if (!address) {
         return;
       }
@@ -317,7 +347,10 @@ function useAddresses({
   );
 
   const resendCode = useCallback(
-    withAddress(async ({ address }) => {
+    withAddress(async (params) => {
+      const { address } = params as ResendParams & {
+        address?: AddressEnriched;
+      };
       if (!address) {
         return;
       }
@@ -357,8 +390,7 @@ function useAddresses({
     isVerifyingCode,
 
     isFetching: isFetchingAddresses || isFetchingDappAddresses,
-    errorFetchingAddresses,
-    errorFetchingDappAddresses,
+    errorFetching,
   };
 }
 
