@@ -280,6 +280,9 @@ function useAddresses({
         const nextAddresses = mergeAddress({ ...address, enabled });
         await mutateAddresses(
           async () => {
+            if (!address || !address.dappAddress) {
+              return nextAddresses;
+            }
             const newDappAddress = await walletsApi.dappAddresses.update({
               dappAddressId: address.dappAddress.id,
               enabled,
