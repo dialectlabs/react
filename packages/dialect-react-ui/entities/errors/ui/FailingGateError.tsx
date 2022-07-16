@@ -1,4 +1,6 @@
+import clsx from 'clsx';
 import { Centered, Loader } from '../../../components/common';
+import { H3 } from '../../../components/common/preflighted';
 import { useTheme } from '../../../components/common/providers/DialectThemeProvider';
 
 interface FailingGateErrorProps {
@@ -7,14 +9,21 @@ interface FailingGateErrorProps {
 }
 
 const FailingGateError = ({ message, isLoading }: FailingGateErrorProps) => {
-  const { icons } = useTheme();
+  const { icons, textStyles } = useTheme();
 
   return (
     <Centered>
       {isLoading ? (
         <>
-          <Loader className="dt-mr-2" /> Verifying your eligibility to use dapp
-          notifications
+          <H3
+            className={clsx(
+              textStyles.header,
+              'dt-flex dt-items-center dt-mb-1'
+            )}
+          >
+            <Loader className="dt-mr-2" /> Verifying your eligibility to use
+            dapp notifications
+          </H3>
         </>
       ) : (
         <icons.noNotifications className="dt-mb-6 dt-opacity-60" />
