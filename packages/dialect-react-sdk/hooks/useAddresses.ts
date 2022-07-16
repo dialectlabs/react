@@ -204,31 +204,34 @@ function useAddresses({
         return;
       }
       setCreatingAddress(true);
-      // Optimisticly update the current data while run actual request
-      await mutateAddresses(
-        async () => {
-          const address = currentAddress
-            ? currentAddress
-            : await walletsApi.addresses.create({
-                type: addressType,
-                value,
-              });
-          const dappAddress = await walletsApi.dappAddresses.create({
-            dappPublicKey,
-            addressId: address.id,
-            enabled: true,
-          });
-          return mergeAddress({ ...address, enabled: dappAddress.enabled });
-        },
-        {
-          // FIXME: something goes wrong with assigning array in the optimisticData
-          // optimisticData: (nextAddress) =>
-          //   nextAddress ? mergeAddress(nextAddress) : [],
-          rollbackOnError: true,
-        }
-      );
-      await mutateDappAddresses();
-      setCreatingAddress(false);
+      try {
+        // Optimisticly update the current data while run actual request
+        await mutateAddresses(
+          async () => {
+            const address = currentAddress
+              ? currentAddress
+              : await walletsApi.addresses.create({
+                  type: addressType,
+                  value,
+                });
+            const dappAddress = await walletsApi.dappAddresses.create({
+              dappPublicKey,
+              addressId: address.id,
+              enabled: true,
+            });
+            return mergeAddress({ ...address, enabled: dappAddress.enabled });
+          },
+          {
+            // FIXME: something goes wrong with assigning array in the optimisticData
+            // optimisticData: (nextAddress) =>
+            //   nextAddress ? mergeAddress(nextAddress) : [],
+            rollbackOnError: true,
+          }
+        );
+        await mutateDappAddresses();
+      } finally {
+        setCreatingAddress(false);
+      }
     }),
     [
       withAddress,
@@ -257,8 +260,6 @@ function useAddresses({
           value,
         });
         await mutateAddresses(mergeAddress(updatedAddress));
-      } catch (e) {
-        throw e as Error;
       } finally {
         setUpdatingAddress(false);
       }
@@ -271,18 +272,31 @@ function useAddresses({
       const { address, enabled } = params as ToggleParams & {
         address?: AddressEnriched;
       };
-      if (!address || !address?.dappAddress) {
+      if (!address || !address.dappAddress) {
         return;
       }
       setUpdatingAddress(true);
-      const newDappAddress = await walletsApi.dappAddresses.update({
-        dappAddressId: address.dappAddress.id,
-        enabled,
-      });
-      await mutateAddresses(
-        mergeAddress({ ...address, enabled: newDappAddress.enabled })
-      );
-      setUpdatingAddress(false);
+      try {
+        const nextAddresses = mergeAddress({ ...address, enabled });
+        await mutateAddresses(
+          async () => {
+            const newDappAddress = await walletsApi.dappAddresses.update({
+              dappAddressId: address.dappAddress.id,
+              enabled,
+            });
+            return mergeAddress({
+              ...newDappAddress.address,
+              enabled: newDappAddress.enabled,
+            });
+          },
+          {
+            optimisticData: nextAddresses,
+            rollbackOnError: true,
+          }
+        );
+      } finally {
+        setUpdatingAddress(false);
+      }
     }),
     [
       withAddress,
@@ -303,21 +317,24 @@ function useAddresses({
         return;
       }
       setDeletingAddress(true);
-      const nextAddresses = addresses
-        ? addresses.filter((add) => add.id !== address.id)
-        : [];
-      // Optimisticly update the current data while run actual request
-      await mutateAddresses(
-        async () => {
-          await walletsApi.addresses.delete({ addressId: address.id });
-          return nextAddresses;
-        },
-        {
-          optimisticData: nextAddresses,
-          rollbackOnError: true,
-        }
-      );
-      setDeletingAddress(false);
+      try {
+        const nextAddresses = addresses
+          ? addresses.filter((add) => add.id !== address.id)
+          : [];
+        // Optimisticly update the current data while run actual request
+        await mutateAddresses(
+          async () => {
+            await walletsApi.addresses.delete({ addressId: address.id });
+            return nextAddresses;
+          },
+          {
+            optimisticData: nextAddresses,
+            rollbackOnError: true,
+          }
+        );
+      } finally {
+        setDeletingAddress(false);
+      }
     }),
     [
       withAddress,
@@ -337,12 +354,15 @@ function useAddresses({
         return;
       }
       setVerifyingCode(true);
-      const nextAddress = await walletsApi.addresses.verify({
-        addressId: address.id,
-        code,
-      });
-      await mutateAddresses(mergeAddress(nextAddress));
-      setVerifyingCode(false);
+      try {
+        const nextAddress = await walletsApi.addresses.verify({
+          addressId: address.id,
+          code,
+        });
+        await mutateAddresses(mergeAddress(nextAddress));
+      } finally {
+        setVerifyingCode(false);
+      }
     }),
     [withAddress, walletsApi.addresses, mutateAddresses, mergeAddress]
   );

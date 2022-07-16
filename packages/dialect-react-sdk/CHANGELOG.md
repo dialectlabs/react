@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.13] - 2022-07-16
+
+- fix: switch statuses if error happens for CRUD in `useAddresses`
+
 ## [1.0.0-beta.12] - 2022-07-16
 
 - fix: fetch only dAddresses related to this particular dapp
