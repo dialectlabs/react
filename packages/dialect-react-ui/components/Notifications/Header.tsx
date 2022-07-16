@@ -30,10 +30,15 @@ function Header(props: {
             header
           )}
         >
-          <BackButton />
-          <span className={clsx(textStyles.header, colors.accent)}>
-            Setup Notifications
-          </span>
+          <div className="dt-flex-1">
+            <BackButton />
+            <span className={clsx(textStyles.header, colors.accent)}>
+              Setup Notifications
+            </span>
+          </div>
+          <div className="sm:dt-hidden dt-ml-3">
+            <IconButton icon={<icons.x />} onClick={props.onModalClose} />
+          </div>
         </div>
         <Divider />
       </>
