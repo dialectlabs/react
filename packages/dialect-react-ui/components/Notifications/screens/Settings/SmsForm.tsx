@@ -54,9 +54,9 @@ export function SmsForm() {
 
   useEffect(() => {
     // Update state if addresses updated
+    setSmsNumberEditing(!isSmsNumberSaved && !smsAddress?.enabled);
     setSmsNumber(smsAddress?.value || '');
-    setSmsNumberEditing(!smsAddress?.enabled);
-  }, [smsAddress]);
+  }, [isSmsNumberSaved, smsAddress?.enabled, smsAddress?.value]);
 
   const updateSmsNumber = async () => {
     if (error) return;

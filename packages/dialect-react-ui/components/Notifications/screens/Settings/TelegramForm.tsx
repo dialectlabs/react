@@ -67,8 +67,8 @@ export function TelegramForm() {
   useEffect(() => {
     // Update state if addresses updated
     setTelegramUsername(telegramAddress?.value || '');
-    setTelegramUsernameEditing(!telegramAddress?.enabled);
-  }, [telegramAddress]);
+    setTelegramUsernameEditing(!isTelegramSaved && !telegramAddress?.enabled);
+  }, [isTelegramSaved, telegramAddress?.value, telegramAddress?.enabled]);
 
   const updateTelegram = async () => {
     if (error) return;

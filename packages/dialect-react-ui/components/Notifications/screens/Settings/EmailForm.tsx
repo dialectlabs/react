@@ -54,9 +54,9 @@ export function EmailForm() {
   // // FIXME: replace with key change
   useEffect(() => {
     // Update state if addresses updated
+    setEmailEditing(!isEmailSaved && !emailAddress?.enabled);
     setEmail(emailAddress?.value || '');
-    setEmailEditing(!emailAddress?.enabled);
-  }, [emailAddress]);
+  }, [isEmailSaved, emailAddress?.enabled, emailAddress?.value]);
 
   const updateEmail = async () => {
     // TODO: validate & save email
