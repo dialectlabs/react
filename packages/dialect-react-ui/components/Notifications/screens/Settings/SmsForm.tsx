@@ -6,11 +6,11 @@ import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import ResendIcon from '../../../Icon/Resend';
 
-const type = AddressType.PhoneNumber;
+const addressType = AddressType.PhoneNumber;
 
 export function SmsForm() {
   const {
-    addresses: { [type]: smsAddress },
+    addresses: { [addressType]: smsAddress },
     create: createAddress,
     delete: deleteAddress,
     update: updateAddress,
@@ -62,7 +62,7 @@ export function SmsForm() {
     if (error) return;
 
     try {
-      await updateAddress({ type, value: smsNumber });
+      await updateAddress({ addressType, value: smsNumber });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -75,7 +75,7 @@ export function SmsForm() {
     if (error) return;
 
     try {
-      await createAddress({ type, value: smsNumber });
+      await createAddress({ addressType, value: smsNumber });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -84,7 +84,7 @@ export function SmsForm() {
 
   const deleteSmsNumber = async () => {
     try {
-      await deleteAddress({ type });
+      await deleteAddress({ addressType });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -93,7 +93,7 @@ export function SmsForm() {
 
   const resendSmsVerificationCode = async () => {
     try {
-      await resendCode({ type });
+      await resendCode({ addressType });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -102,7 +102,7 @@ export function SmsForm() {
 
   const sendCode = async () => {
     try {
-      await verifyCode({ type, code: verificationCode });
+      await verifyCode({ addressType, code: verificationCode });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -190,7 +190,7 @@ export function SmsForm() {
           setError(null);
           if (smsAddress && smsAddress.enabled !== nextValue) {
             await toggleAddress({
-              type,
+              addressType,
               enabled: nextValue,
             });
           }
