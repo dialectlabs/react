@@ -70,12 +70,11 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     if (!thread) {
       return;
     }
-    () =>
-      navigate(RouteName.Thread, {
-        params: {
-          threadId: thread.id,
-        },
-      });
+    navigate(RouteName.Thread, {
+      params: {
+        threadId: thread.id,
+      },
+    });
   }, [navigate, thread]);
 
   const showSettings = useCallback(() => {
