@@ -55,20 +55,34 @@ function Header(props: {
       />
     ) : null;
 
+  const headerIcons = (
+    <>
+      <div className="dt-flex">
+        <SettingsButton />
+        <div className="sm:dt-hidden dt-ml-3">
+          <CloseButton />
+        </div>
+      </div>
+    </>
+  );
+
   // Support for threads created before address registry launch
   if (!props.isWeb3Enabled) {
     return (
       <>
         <div
           className={clsx(
-            'dt-flex dt-flex-row dt-items-center dt-justify-items-start',
+            'dt-flex dt-flex-row dt-items-center dt-justify-between',
             header
           )}
         >
-          <MasterBackButton />
-          <span className={clsx(textStyles.header, colors.accent)}>
-            Setup Notifications
-          </span>
+          <div className="dt-flex dt-items-center">
+            <MasterBackButton />
+            <span className={clsx(textStyles.header, colors.accent)}>
+              Setup Notifications
+            </span>
+          </div>
+          {headerIcons}
         </div>
         <Divider />
       </>
@@ -98,12 +112,7 @@ function Header(props: {
             </span>
           </div>
         )}
-        <div className="dt-flex">
-          <SettingsButton />
-          <div className="sm:dt-hidden dt-ml-3">
-            <CloseButton />
-          </div>
-        </div>
+        {headerIcons}
       </div>
       <Divider />
     </>

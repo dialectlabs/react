@@ -100,6 +100,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
             channels={props.channels}
             notifications={props?.notifications}
             onModalClose={close}
+            onBackClick={props?.onBackClick}
             gatedView={props.gatedView}
           />
         </div>
