@@ -1,19 +1,22 @@
 import clsx from 'clsx';
 import { A, P } from '../../../common/preflighted';
 import type { Channel } from '../../../common/types';
-import { Footer, Section, ValueRow } from '../../../common';
+import { Footer, Section, Toggle, ValueRow } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import type { NotificationType } from '../..';
 import { Web3 } from './Web3';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
+import { useNotificationsConfigs } from '@dialectlabs/react-sdk';
 
-function Settings(props: {
-  notifications: NotificationType[];
-  channels: Channel[];
-}) {
+function Settings(props: { channels: Channel[] }) {
   const { textStyles, xPaddedText } = useTheme();
+  const {
+    notifications,
+    // TODO: should we provide a fallback?
+    toggle,
+    isFetching: isFetchingNotifications,
+  } = useNotificationsConfigs();
 
   return (
     <>
@@ -46,14 +49,27 @@ function Settings(props: {
         >
           The following notification types are supported
         </P>
-        {props.notifications
-          ? props.notifications.map((type) => (
+        {/* TODO: check for fetching */}
+        {isFetchingNotifications ? 'Loading your notifications settings' : null}
+        {notifications
+          ? notifications.map((config) => (
               <ValueRow
-                key={type.name}
-                label={type.name}
+                key={config.dappNotification.id}
+                label={config.dappNotification.name}
                 className={clsx('dt-mb-1')}
               >
-                {type.detail}
+                <span className="dt-flex dt-items-center">
+                  <Toggle
+                    checked={config.config.enabled}
+                    onClick={() =>
+                      toggle({
+                        dappNotificationId: dappNotification.id,
+                        enabled: !config.config.enabled,
+                      })
+                    }
+                  />
+                </span>
+                {/* TODO: config.dappNotification.trigger */}
               </ValueRow>
             ))
           : 'No notification types supplied'}
