@@ -10,3 +10,4 @@ export { default as useUnreadMessages } from './useUnreadMessages';
 export { default as useDapp } from './useDapp';
 export { default as useDappAddresses } from './useDappAddresses';
 export { default as useAddresses } from './useAddresses';
+export { default as useDialectGate } from './useDialectGate';

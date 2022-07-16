@@ -12,10 +12,10 @@ import Notifications, { NotificationType } from '../Notifications';
 
 export type PropTypes = {
   dialectId: string;
-
   bellClassName?: string;
   bellStyle?: object;
   notifications: NotificationType[];
+  gatedView?: string | JSX.Element;
   channels?: Channel[];
   onBackClick?: () => void;
   pollingInterval?: number;
@@ -100,6 +100,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
             channels={props.channels}
             notifications={props?.notifications}
             onModalClose={close}
+            gatedView={props.gatedView}
           />
         </div>
       </Transition>
@@ -111,6 +112,7 @@ export default function NotificationsButton({
   channels = ['web3', 'telegram', 'sms', 'email'],
   ...props
 }: PropTypes): JSX.Element {
+  // TODO: Add default value to polling inteval
   const swrOptions = useMemo(
     () => ({
       refreshInterval: props.pollingInterval,

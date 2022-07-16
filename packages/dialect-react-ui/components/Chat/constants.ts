@@ -1,5 +1,6 @@
 export enum RouteName {
   SigningRequest = 'sign_wallet',
+  SigningTransaction = 'sign_transaction',
   EncryptionRequest = 'encryption_request',
   Main = 'main',
 }

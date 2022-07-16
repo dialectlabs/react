@@ -80,9 +80,9 @@ export default function Home(): JSX.Element {
       backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'local-development',
       dialectCloud: {
-        tokenStore: TokenStore.createLocalStorage(),
+        tokenStore: TokenStore.createInMemory(),
       },
-      encryptionKeysStore: EncryptionKeysStore.createLocalStorage(),
+      encryptionKeysStore: EncryptionKeysStore.createInMemory(),
     }),
     []
   );

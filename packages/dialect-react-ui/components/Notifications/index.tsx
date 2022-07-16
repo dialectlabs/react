@@ -12,13 +12,12 @@ import { useCallback, useEffect } from 'react';
 import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
 import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import LoadingThread from '../../entities/LoadingThread';
-
 import usePrevious from '../../hooks/usePrevious';
 import { useTheme } from '../common/providers/DialectThemeProvider';
-import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
 import WalletStatesWrapper from '../common/WalletStatesWrapper';
+import GatedWrapper from '../common/GatedWrapper';
 import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
@@ -34,6 +33,7 @@ interface NotificationsProps {
   notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
+  gatedView?: string | JSX.Element;
 }
 
 const addressType = AddressType.Wallet;
@@ -189,7 +189,10 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   );
 }
 
-export default function Notifications(props: NotificationsProps) {
+export default function Notifications({
+  gatedView,
+  ...props
+}: NotificationsProps) {
   const { colors, modal } = useTheme();
 
   const { connected: isWalletConnected } = useDialectWallet();
@@ -242,7 +245,9 @@ export default function Notifications(props: NotificationsProps) {
             renderError()
           ) : (
             <WalletStatesWrapper>
-              <InnerNotifications {...props} />
+              <GatedWrapper gatedView={gatedView}>
+                <InnerNotifications {...props} />
+              </GatedWrapper>
             </WalletStatesWrapper>
           )}
         </Router>

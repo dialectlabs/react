@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js';
 import { useCallback, useMemo, useState } from 'react';
 import type { DialectWalletAdapter } from '../../../types';
 import { createContainer } from '../../../utils/container';
@@ -5,7 +6,8 @@ import { createContainer } from '../../../utils/container';
 export interface DialectWalletState {
   adapter: DialectWalletAdapter;
   connected: boolean;
-  isSigning: boolean;
+  isSigningFreeTransaction: boolean;
+  isSigningMessage: boolean;
   isEncrypting: boolean;
 }
 
@@ -14,20 +16,38 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
     throw new Error('dialect wallet adapter should be provided');
   }
 
-  const [isSigning, setIsSigning] = useState<boolean>(false);
+  const [isSigningFreeTransaction, setIsSigningFreeTransaction] =
+    useState<boolean>(false);
+  const [isSigningMessage, setIsSigningMessage] = useState<boolean>(false);
   const [isEncrypting, setIsEncrypting] = useState<boolean>(false);
 
   const wrapDialectWallet = useCallback(
     (adapter: DialectWalletAdapter): DialectWalletAdapter => {
       return {
         ...adapter,
+        signTransaction: adapter.signTransaction
+          ? async (tx) => {
+              const isFreeTx =
+                tx.recentBlockhash === PublicKey.default.toString();
+              if (isFreeTx) {
+                setIsSigningFreeTransaction(true);
+              }
+              try {
+                return await adapter.signTransaction!(tx);
+              } finally {
+                if (isFreeTx) {
+                  setIsSigningFreeTransaction(false);
+                }
+              }
+            }
+          : undefined,
         signMessage: adapter.signMessage
           ? async (msg) => {
-              setIsSigning(true);
+              setIsSigningMessage(true);
               try {
                 return await adapter.signMessage!(msg);
               } finally {
-                setIsSigning(false);
+                setIsSigningMessage(false);
               }
             }
           : undefined,
@@ -54,7 +74,8 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
   return {
     adapter: wrappedAdapter,
     connected: wrappedAdapter.connected,
-    isSigning,
+    isSigningFreeTransaction,
+    isSigningMessage,
     isEncrypting,
   };
 }

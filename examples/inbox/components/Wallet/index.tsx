@@ -5,7 +5,9 @@ import {
 } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
+  getDerivationPath,
   GlowWalletAdapter,
+  LedgerWalletAdapter,
   PhantomWalletAdapter,
   SolletExtensionWalletAdapter,
   SolletWalletAdapter,
@@ -48,7 +50,8 @@ export const WalletContext: FC = (props) => {
       new GlowWalletAdapter(),
       new SolletWalletAdapter({ network }),
       new SolletExtensionWalletAdapter({ network }),
-    ],
+      new LedgerWalletAdapter({ derivationPath: getDerivationPath(0) }),
+    ], // 44'/501'/0'
     [network]
   );
 

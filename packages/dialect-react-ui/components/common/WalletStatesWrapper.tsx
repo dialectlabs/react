@@ -7,6 +7,7 @@ import {
 import CantDecryptError from '../../entities/errors/ui/CantDecryptError';
 import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
 import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
+import SignTransactionInfo from '../../entities/wallet-states/SignTransactionInfo';
 
 interface WalletStatesWrapperProps {
   children: JSX.Element;
@@ -24,10 +25,15 @@ function WalletStatesWrapper({ children }: WalletStatesWrapperProps) {
   const cannotDecryptDialect =
     !apiAvailability.canEncrypt && thread?.encryptionEnabled;
 
-  const { isSigning, isEncrypting } = useDialectWallet();
+  const { isSigningMessage, isSigningFreeTransaction, isEncrypting } =
+    useDialectWallet();
 
-  if (isSigning) {
+  if (isSigningMessage) {
     return <SignMessageInfo />;
+  }
+
+  if (isSigningFreeTransaction) {
+    return <SignTransactionInfo />;
   }
 
   if (isEncrypting) {

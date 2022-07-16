@@ -22,6 +22,7 @@ import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
 import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
 import Main from './screens/Main';
 import type { ChatNavigationHelpers } from './types';
+import SignTransactionInfo from '../../entities/wallet-states/SignTransactionInfo';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -38,7 +39,8 @@ function InnerChat({ dialectId }: InnerChatProps): JSX.Element {
 
   const { navigate } = useRoute();
 
-  const { isSigning, isEncrypting } = useDialectWallet();
+  const { isSigningFreeTransaction, isSigningMessage, isEncrypting } =
+    useDialectWallet();
 
   // rendering header to avoid empty header in bottom chat
   const defaultHeader = (
@@ -70,15 +72,17 @@ function InnerChat({ dialectId }: InnerChatProps): JSX.Element {
 
   useEffect(
     function pickRoute() {
-      if (isSigning) {
+      if (isSigningMessage) {
         navigate(RouteName.SigningRequest);
+      } else if (isSigningFreeTransaction) {
+        navigate(RouteName.SigningTransaction);
       } else if (isEncrypting) {
         navigate(RouteName.EncryptionRequest);
       } else {
         navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
       }
     },
-    [navigate, isSigning, isEncrypting]
+    [navigate, isSigningMessage, isSigningFreeTransaction, isEncrypting]
   );
 
   return (
@@ -86,6 +90,10 @@ function InnerChat({ dialectId }: InnerChatProps): JSX.Element {
       <Route name={RouteName.SigningRequest}>
         {defaultHeader}
         <SignMessageInfo />
+      </Route>
+      <Route name={RouteName.SigningTransaction}>
+        {defaultHeader}
+        <SignTransactionInfo />
       </Route>
       <Route name={RouteName.EncryptionRequest}>
         {defaultHeader}

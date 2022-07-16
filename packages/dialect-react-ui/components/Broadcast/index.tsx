@@ -8,6 +8,7 @@ import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
 import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
 import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
+import SignTransactionInfo from '../../entities/wallet-states/SignTransactionInfo';
 import { Centered } from '../common';
 import { A } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -34,7 +35,8 @@ function WalletStateWrapper({
   } = useDialectConnectionInfo();
 
   const {
-    isSigning,
+    isSigningFreeTransaction,
+    isSigningMessage,
     isEncrypting,
     connected: isWalletConnected,
   } = useDialectWallet();
@@ -61,8 +63,12 @@ function WalletStateWrapper({
     return <NoConnectionError />;
   }
 
-  if (isSigning) {
+  if (isSigningMessage) {
     return <SignMessageInfo />;
+  }
+
+  if (isSigningFreeTransaction) {
+    return <SignTransactionInfo />;
   }
 
   if (isEncrypting) {
