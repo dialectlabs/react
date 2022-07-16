@@ -131,7 +131,9 @@ export function EmailForm() {
   const renderVerifiedState = () => {
     return (
       <div className={clsx(highlighted, textStyles.body, colors.highlight)}>
-        <span className="dt-opacity-40">🔗 Email submitted</span>
+        <span className="dt-opacity-40">
+          🔗 Email {emailAddress.value} submitted
+        </span>
       </div>
     );
   };
@@ -277,7 +279,8 @@ export function EmailForm() {
                 >
                   <span className="dt-opacity-50">
                     {' '}
-                    Check your email for a verification code.
+                    Check your email {emailAddress?.value} for a verification
+                    code.
                   </span>{' '}
                   <span className="dt-inline-block dt-cursor-pointer">
                     <ResendIcon

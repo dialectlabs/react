@@ -129,7 +129,9 @@ export function SmsForm() {
   const renderVerifiedState = () => {
     return (
       <div className={clsx(highlighted, textStyles.body, colors.highlight)}>
-        <span className="dt-opacity-40">🔗 Phone number submitted</span>
+        <span className="dt-opacity-40">
+          🔗 Phone number {smsAddress?.value} submitted
+        </span>
       </div>
     );
   };

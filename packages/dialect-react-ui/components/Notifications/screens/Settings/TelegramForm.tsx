@@ -66,9 +66,9 @@ export function TelegramForm() {
 
   useEffect(() => {
     // Update state if addresses updated
-    setTelegramUsername(telegramAddress?.value || '');
     setTelegramUsernameEditing(!isTelegramSaved && !telegramAddress?.enabled);
-  }, [isTelegramSaved, telegramAddress?.value, telegramAddress?.enabled]);
+    setTelegramUsername(telegramAddress?.value || '');
+  }, [isTelegramSaved, telegramAddress?.enabled, telegramAddress?.value]);
 
   const updateTelegram = async () => {
     if (error) return;
@@ -130,7 +130,10 @@ export function TelegramForm() {
   const renderVerifiedState = () => {
     return (
       <div className={clsx(highlighted, textStyles.body, colors.highlight)}>
-        <span className="dt-opacity-40">🔗 Telegram submitted</span>
+        <span className="dt-opacity-40">
+          🔗 Telegram{' '}
+          {telegramAddress?.value ? `@${telegramAddress?.value}` : ''} submitted
+        </span>
       </div>
     );
   };
