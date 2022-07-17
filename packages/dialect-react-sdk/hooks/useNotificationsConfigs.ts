@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import { WALLET_CONFIGS_CACHE_KEY } from './internal/swrCache';
+import useDapp from './useDapp';
 import useDialectSdk from './useDialectSdk';
 
 interface ToggleParams {
@@ -28,8 +29,10 @@ function useNotificationsConfigs({
   refreshInterval,
 }: UseDappAddressesParams = EMPTY_OBJ): UseDappAddressesValue {
   const { wallet } = useDialectSdk();
+  const { dapp } = useDapp();
   const [isUpserting, setUpserting] = useState(false);
-  const configsApi = wallet?.dappNotificationSubscriptionConfigs;
+  const configsFetchApi = dapp?.notifications;
+  const configsChangeApi = wallet?.dappNotificationSubscriptionConfigs;
 
   const {
     data: configs,
@@ -37,7 +40,7 @@ function useNotificationsConfigs({
     mutate,
   } = useSWR(
     WALLET_CONFIGS_CACHE_KEY(wallet),
-    configsApi ? () => configsApi.findAll() : null,
+    configsFetchApi ? () => configsFetchApi.findAll() : null,
     {
       refreshInterval,
       refreshWhenOffline: true,
@@ -53,7 +56,7 @@ function useNotificationsConfigs({
 
   const toggle = useCallback(
     async ({ dappNotificationId, enabled }) => {
-      if (!configsApi) {
+      if (!configsChangeApi) {
         return;
       }
       const current = configs?.find(
@@ -64,7 +67,7 @@ function useNotificationsConfigs({
       }
       setUpserting(true);
       try {
-        await configsApi.upsert({
+        await configsChangeApi.upsert({
           dappNotificationId,
           config: { ...current.config, enabled },
         });
@@ -72,7 +75,7 @@ function useNotificationsConfigs({
         setUpserting(false);
       }
     },
-    [configs, configsApi]
+    [configs, configsChangeApi]
   );
 
   return {
@@ -80,8 +83,8 @@ function useNotificationsConfigs({
 
     toggle,
 
-    isFetching: Boolean(configsApi) && !error && configs === undefined,
-    errorFetching: !configsApi
+    isFetching: Boolean(configsFetchApi) && !error && configs === undefined,
+    errorFetching: !configsChangeApi
       ? new Error('Config API is not available')
       : error,
     isUpserting,
