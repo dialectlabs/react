@@ -2,7 +2,7 @@
 
 ## [UNRELEASED]
 
-- feature: introduce `useNotificationConfigs` hook to configure notifications
+- feature: introduce `useNotificationSubscriptions` hook to configure notifications
 
 ## [1.0.0-beta.14] - 2022-07-21
 

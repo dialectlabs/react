@@ -3,65 +3,29 @@ import { A, P } from '../../../common/preflighted';
 import type { Channel } from '../../../common/types';
 import { Footer, Loader, Section, Toggle, ValueRow } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import type { NotificationType } from '../..';
 import { Web3 } from './Web3';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
-import { useNotificationsConfigs } from '@dialectlabs/react-sdk';
-import { useState } from 'react';
+import { useNotificationSubscriptions } from '@dialectlabs/react-sdk';
 
-interface RenderNotificationTypeParams {
-  name: string;
-  detail?: string;
-  id?: string;
-  enabled?: boolean;
-  onToggle?: () => void;
-}
-
-interface SettingsProps {
-  channels: Channel[];
-  notifications?: NotificationType[];
-}
-
-function Settings({
-  channels,
-  notifications: notificationsTypes,
-}: SettingsProps) {
+function Settings(props: { channels: Channel[] }) {
   const { textStyles, xPaddedText } = useTheme();
-  const [errorUpserting, setErrorUpserting] = useState<Error | null>(null);
   const {
-    notifications,
-    // TODO: should we provide a fallback?
-    toggle,
+    subscriptions: notificationSubscriptions,
+    update: updateNotificationSubscription,
     isFetching: isFetchingNotifications,
+    errorUpdating: errorUpdatingNotificationSubscription,
     errorFetching: errorFetchingNotificationsConfigs,
-  } = useNotificationsConfigs();
+  } = useNotificationSubscriptions();
 
-  const renderNotificationType = ({
-    id,
-    name,
-    detail,
-    enabled,
-    onToggle,
-  }: RenderNotificationTypeParams) => (
-    <ValueRow key={id || name} label={name} className={clsx('dt-mb-1')}>
-      <span className="dt-flex dt-items-center">
-        {onToggle && enabled !== undefined ? (
-          <Toggle checked={enabled} onClick={onToggle} />
-        ) : (
-          detail
-        )}
-      </span>
-      {/* TODO: render config.dappNotification.trigger */}
-    </ValueRow>
-  );
-  const error = errorUpserting || errorFetchingNotificationsConfigs;
+  const error =
+    errorFetchingNotificationsConfigs || errorUpdatingNotificationSubscription;
 
   return (
     <>
       <div className={clsx('dt-py-2', xPaddedText)}>
-        {channels.map((channelSlug) => {
+        {props.channels.map((channelSlug) => {
           let form;
           if (channelSlug === 'web3') {
             form = <Web3 />;
@@ -91,14 +55,14 @@ function Settings({
             {''}
           </ValueRow>
         ) : null}
-        {error && !notifications ? (
+        {error ? (
           <ValueRow
             label={<P className={clsx('dt-text-red-500')}>{error.message}</P>}
           >
             {''}
           </ValueRow>
         ) : null}
-        {notifications.length || notificationsTypes?.length ? (
+        {notificationSubscriptions.length ? (
           <>
             <P
               className={clsx(
@@ -109,28 +73,31 @@ function Settings({
             >
               The following notification types are supported
             </P>
-            {notifications.map((config) =>
-              renderNotificationType({
-                id: config.dappNotification.id,
-                name: config.dappNotification.name,
-                enabled: config.config.enabled,
-                onToggle: () => {
-                  try {
-                    toggle({
-                      dappNotificationId: config.dappNotification.id,
-                      enabled: !config.config.enabled,
-                    });
-                  } catch (error) {
-                    setErrorUpserting(error as Error);
-                  }
-                },
-              })
+            {notificationSubscriptions.map(
+              ({ notificationType, subscription }) => (
+                <ValueRow
+                  key={notificationType.id}
+                  label={notificationType.name}
+                  className={clsx('dt-mb-1')}
+                >
+                  <span className="dt-flex dt-items-center">
+                    <Toggle
+                      checked={subscription.config.enabled}
+                      onClick={async () => {
+                        updateNotificationSubscription({
+                          notificationTypeId: notificationType.id,
+                          config: {
+                            ...subscription.config,
+                            enabled: !subscription.config.enabled,
+                          },
+                        });
+                      }}
+                    />
+                  </span>
+                  {/* TODO: render config.dappNotification.trigger */}
+                </ValueRow>
+              )
             )}
-            {/* Render manually passed types in case api doesn't return anything */}
-            {!notifications.length &&
-              notificationsTypes?.map((notificationType) =>
-                renderNotificationType(notificationType)
-              )}
           </>
         ) : null}
       </Section>

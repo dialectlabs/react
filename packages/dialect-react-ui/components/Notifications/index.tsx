@@ -4,7 +4,7 @@ import {
   useDialectConnectionInfo,
   useDialectDapp,
   useDialectWallet,
-  useNotificationsConfigs,
+  useNotificationSubscriptions,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
@@ -58,8 +58,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     isDeletingAddress,
   } = useAddresses();
 
-  const { isFetching: isFetchingNotificationsConfigs } =
-    useNotificationsConfigs();
+  const { isFetching: isFetchingNotificationsSubscriptions } =
+    useNotificationSubscriptions();
 
   const isWeb3Enabled =
     walletAddress?.enabled ||
@@ -177,8 +177,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     <>
       {isFetchingThread ||
       isFetchingAddresses ||
-      !isInitialRoutePicked ||
-      isFetchingNotificationsConfigs ? (
+      isFetchingNotificationsSubscriptions ||
+      !isInitialRoutePicked ? (
         <LoadingThread />
       ) : (
         <>

@@ -45,5 +45,6 @@ export const WALLET_DAPP_ADDRESSES_CACHE_KEY_FN = (
   '_' +
   dappPublicKey?.toBase58();
 
-export const WALLET_CONFIGS_CACHE_KEY = (wallet: Wallets) =>
-  'WALLET_NOTIFICATION_CONFIGS_' + wallet?.publicKey?.toBase58();
+export const WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
+  wallet: Wallets
+) => 'WALLET_NOTIFICATION_SUBSCRIPTIONS_' + wallet?.publicKey?.toBase58();
