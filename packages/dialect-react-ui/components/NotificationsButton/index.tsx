@@ -111,7 +111,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
 
 export default function NotificationsButton({
   channels = ['web3', 'telegram', 'sms', 'email'],
-  // TODO: backward compt with prev versions with manually setting notifs types
+  notifications,
   ...props
 }: PropTypes): JSX.Element {
   // TODO: Add default value to polling inteval
@@ -125,7 +125,11 @@ export default function NotificationsButton({
     <div className="dialect">
       {/* TODO: switch to some sdk config setting */}
       <SWRConfig value={swrOptions}>
-        <WrappedNotificationsButton channels={channels} {...props} />
+        <WrappedNotificationsButton
+          notifications={notifications}
+          channels={channels}
+          {...props}
+        />
       </SWRConfig>
     </div>
   );

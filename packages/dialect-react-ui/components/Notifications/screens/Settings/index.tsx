@@ -3,6 +3,7 @@ import { A, P } from '../../../common/preflighted';
 import type { Channel } from '../../../common/types';
 import { Footer, Loader, Section, Toggle, ValueRow } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import type { NotificationType } from '../..';
 import { Web3 } from './Web3';
 import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
@@ -10,7 +11,23 @@ import { TelegramForm } from './TelegramForm';
 import { useNotificationsConfigs } from '@dialectlabs/react-sdk';
 import { useState } from 'react';
 
-function Settings(props: { channels: Channel[] }) {
+interface RenderNotificationTypeParams {
+  name: string;
+  detail?: string;
+  id?: string;
+  enabled?: boolean;
+  onToggle?: () => void;
+}
+
+interface SettingsProps {
+  channels: Channel[];
+  notifications?: NotificationType[];
+}
+
+function Settings({
+  channels,
+  notifications: notificationsTypes,
+}: SettingsProps) {
   const { textStyles, xPaddedText } = useTheme();
   const [errorUpserting, setErrorUpserting] = useState<Error | null>(null);
   const {
@@ -21,12 +38,30 @@ function Settings(props: { channels: Channel[] }) {
     errorFetching: errorFetchingNotificationsConfigs,
   } = useNotificationsConfigs();
 
+  const renderNotificationType = ({
+    id,
+    name,
+    detail,
+    enabled,
+    onToggle,
+  }: RenderNotificationTypeParams) => (
+    <ValueRow key={id || name} label={name} className={clsx('dt-mb-1')}>
+      <span className="dt-flex dt-items-center">
+        {onToggle && enabled !== undefined ? (
+          <Toggle checked={enabled} onClick={onToggle} />
+        ) : (
+          detail
+        )}
+      </span>
+      {/* TODO: render config.dappNotification.trigger */}
+    </ValueRow>
+  );
   const error = errorUpserting || errorFetchingNotificationsConfigs;
 
   return (
     <>
       <div className={clsx('dt-py-2', xPaddedText)}>
-        {props.channels.map((channelSlug) => {
+        {channels.map((channelSlug) => {
           let form;
           if (channelSlug === 'web3') {
             form = <Web3 />;
@@ -56,14 +91,14 @@ function Settings(props: { channels: Channel[] }) {
             {''}
           </ValueRow>
         ) : null}
-        {error ? (
+        {error && !notifications ? (
           <ValueRow
             label={<P className={clsx('dt-text-red-500')}>{error.message}</P>}
           >
             {''}
           </ValueRow>
         ) : null}
-        {notifications.length ? (
+        {notifications.length || notificationsTypes?.length ? (
           <>
             <P
               className={clsx(
@@ -74,30 +109,28 @@ function Settings(props: { channels: Channel[] }) {
             >
               The following notification types are supported
             </P>
-            {notifications.map((config) => (
-              <ValueRow
-                key={config.dappNotification.id}
-                label={config.dappNotification.name}
-                className={clsx('dt-mb-1')}
-              >
-                <span className="dt-flex dt-items-center">
-                  <Toggle
-                    checked={config.config.enabled}
-                    onClick={() => {
-                      try {
-                        toggle({
-                          dappNotificationId: config.dappNotification.id,
-                          enabled: !config.config.enabled,
-                        });
-                      } catch (error) {
-                        setErrorUpserting(error as Error);
-                      }
-                    }}
-                  />
-                </span>
-                {/* TODO: render config.dappNotification.trigger */}
-              </ValueRow>
-            ))}
+            {notifications.map((config) =>
+              renderNotificationType({
+                id: config.dappNotification.id,
+                name: config.dappNotification.name,
+                enabled: config.config.enabled,
+                onToggle: () => {
+                  try {
+                    toggle({
+                      dappNotificationId: config.dappNotification.id,
+                      enabled: !config.config.enabled,
+                    });
+                  } catch (error) {
+                    setErrorUpserting(error as Error);
+                  }
+                },
+              })
+            )}
+            {/* Render manually passed types in case api doesn't return anything */}
+            {!notifications.length &&
+              notificationsTypes?.map((notificationType) =>
+                renderNotificationType(notificationType)
+              )}
           </>
         ) : null}
       </Section>
