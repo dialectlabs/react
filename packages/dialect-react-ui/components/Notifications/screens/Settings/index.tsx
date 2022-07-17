@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { A, P } from '../../../common/preflighted';
 import type { Channel } from '../../../common/types';
-import { Footer, Section, Toggle, ValueRow } from '../../../common';
+import { Footer, Loader, Section, Toggle, ValueRow } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { Web3 } from './Web3';
 import { EmailForm } from './EmailForm';
@@ -40,19 +40,29 @@ function Settings(props: { channels: Channel[] }) {
         })}
       </div>
       <Section className="dt-mb-" title="Notification types">
-        <P
-          className={clsx(
-            textStyles.small,
-            xPaddedText,
-            'dt-opacity-50 dt-mb-3'
-          )}
-        >
-          The following notification types are supported
-        </P>
-        {/* TODO: check for fetching */}
-        {isFetchingNotifications ? 'Loading your notifications settings' : null}
-        {notifications
-          ? notifications.map((config) => (
+        {isFetchingNotifications ? (
+          <ValueRow
+            label={
+              <div className="dt-flex dt-items-center dt-space-x-1">
+                <Loader /> <span>Loading your notifications settings</span>
+              </div>
+            }
+          >
+            {''}
+          </ValueRow>
+        ) : null}
+        {notifications ? (
+          <>
+            <P
+              className={clsx(
+                textStyles.small,
+                xPaddedText,
+                'dt-opacity-50 dt-mb-3'
+              )}
+            >
+              The following notification types are supported
+            </P>
+            {notifications.map((config) => (
               <ValueRow
                 key={config.dappNotification.id}
                 label={config.dappNotification.name}
@@ -63,7 +73,7 @@ function Settings(props: { channels: Channel[] }) {
                     checked={config.config.enabled}
                     onClick={() =>
                       toggle({
-                        dappNotificationId: dappNotification.id,
+                        dappNotificationId: config.dappNotification.id,
                         enabled: !config.config.enabled,
                       })
                     }
@@ -71,8 +81,11 @@ function Settings(props: { channels: Channel[] }) {
                 </span>
                 {/* TODO: config.dappNotification.trigger */}
               </ValueRow>
-            ))
-          : 'No notification types supplied'}
+            ))}
+          </>
+        ) : (
+          'No notification types supplied'
+        )}
       </Section>
       <P
         className={clsx(

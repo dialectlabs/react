@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- feature: configurable notifications in `<NotificationsButton/>` Settings
+
 ## [1.0.0-beta.20] - 2022-07-21
 
 - feature: add use hardware wallet option
