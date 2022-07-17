@@ -111,6 +111,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
 
 export default function NotificationsButton({
   channels = ['web3', 'telegram', 'sms', 'email'],
+  // TODO: backward compt with prev versions with manually setting notifs types
   ...props
 }: PropTypes): JSX.Element {
   // TODO: Add default value to polling inteval
@@ -120,7 +121,6 @@ export default function NotificationsButton({
     }),
     [props.pollingInterval]
   );
-  // {/* TODO: consider extract the DialectProvider to avoid doubling providers in case multiple instances are used */}
   return (
     <div className="dialect">
       {/* TODO: switch to some sdk config setting */}
