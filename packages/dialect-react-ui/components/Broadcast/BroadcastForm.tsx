@@ -2,11 +2,13 @@ import {
   AddressType,
   Dapp,
   DappAddress,
+  DappNotificationConfig,
   useDappAddresses,
+  useNotificationsConfigs,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
-import { Button, ValueRow } from '../common';
+import { Button, Loader, ValueRow } from '../common';
 import { H1, Input, P, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import ToastMessage from '../common/ToastMessage';
@@ -19,7 +21,11 @@ interface BroadcastFormProps {
   dapp: Dapp;
 }
 
-const getUserCount = (addresses: DappAddress[]) => {
+const getUserCount = (
+  addresses: DappAddress[],
+  notificationTypeId?: string
+) => {
+  // TODO: Use `notificationType` to get users who enabled
   // Users count = set of unique wallets, associated with enabled dapp addresses, associated with verified addresses
   const enabledAndVerified = addresses
     .filter((address) => address.enabled)
@@ -65,6 +71,12 @@ const getAddressesSummary = (addresses: DappAddress[]) => {
 };
 
 function BroadcastForm({ dapp }: BroadcastFormProps) {
+  const {
+    notifications: notificationsConfigs,
+    isFetching: isFetchingNotifications,
+    errorFetching: errorFetchingNotificationsConfigs,
+  } = useNotificationsConfigs();
+  const [notificationTypeId, setNotificationTypeId] = useState<string | null>();
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
   const { textStyles, colors, outlinedInput } = useTheme();
   // Consider moving error handling to the useDapp context
@@ -83,7 +95,10 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     [textEncoder, message]
   );
 
-  const usersCount = useMemo(() => getUserCount(addresses), [addresses]);
+  const usersCount = useMemo(
+    () => getUserCount(addresses, notificationTypeId),
+    [addresses, notificationTypeId]
+  );
   const addressesSummary = useMemo(
     () => getAddressesSummary(addresses),
     [addresses]
@@ -95,18 +110,21 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     messageLength > MESSAGE_BYTES_LIMIT ||
     titleLength > TITLE_BYTES_LIMIT ||
     noUsers;
-  let usersString = `${usersCount} user${usersCount > 1 ? 's' : ''}`;
+  let usersInfo: string | JSX.Element = `${usersCount} user${
+    usersCount > 1 ? 's' : ''
+  }`;
 
   if (isFetchingAddresses) {
-    usersString = 'Loading users...';
+    usersInfo = <Loader />;
   } else if (noUsers) {
-    usersString = 'No users yet';
+    usersInfo = 'No users yet';
   }
 
   const sendBroadcastMessage = async () => {
     setIsSending(true);
     try {
-      await dapp.messages.send({ title, message });
+      // TODO/FIXME: add notification type to the broadcast
+      await dapp.messages.send({ title, message, notificationType });
       setTitle('');
       setMessage('');
       setError(null);
@@ -120,13 +138,40 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     }
   };
 
+  const renderNotificationTypeSelect = () => {
+    if (!notificationsConfigs.length) {
+      return '📢 Broadcast';
+    }
+
+    if (notificationsConfigs.length === 1) {
+      return notificationsConfigs[0]?.dappNotification.name;
+    }
+
+    return (
+      // TODO: create a preflighted version of select with :focus-visible and other default things, which is already configured for inputs and buttons
+      <select
+        className="dt-bg-transparent dt-text-inherit focus:dt-outline-0"
+        onChange={(event) => setNotificationTypeId(event.target.value)}
+      >
+        {notificationsConfigs.map((config) => (
+          <option
+            key={config.dappNotification.id}
+            value={config.dappNotification.id}
+          >
+            {config.dappNotification.name}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
   return (
     <div className="dt-flex dt-flex-col dt-space-y-2">
       <H1 className={clsx(textStyles.h1, colors.primary, 'dt-mb-4')}>
         Create broadcast
       </H1>
-      <ValueRow label="📢 Broadcast" className="dt-w-full">
-        <span title={addressesSummary}>{usersString}</span>
+      <ValueRow label={renderNotificationTypeSelect()} className="dt-w-full">
+        <span title={addressesSummary}>{usersInfo}</span>
       </ValueRow>
       <div>
         <Input
