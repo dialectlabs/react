@@ -1,14 +1,23 @@
-import type { DialectSdkError } from '@dialectlabs/sdk';
-import { useEffect } from 'react';
+import type { DialectSdkError, DappNotificationConfig } from '@dialectlabs/sdk';
+import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
-import { DAPP_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
-import useDapp from './useDapp';
+import { WALLET_CONFIGS_CACHE_KEY } from './internal/swrCache';
+import useDialectSdk from './useDialectSdk';
+
+interface ToggleParams {
+  dappNotificationId: string;
+  enabled: boolean;
+}
 
 interface UseDappAddressesValue {
   notifications: DappNotificationConfig[];
+
+  toggle: (params: ToggleParams) => Promise<void>;
+
   isFetching: boolean;
   errorFetching: DialectSdkError | null;
+  isUpserting: boolean;
 }
 
 interface UseDappAddressesParams {
@@ -18,15 +27,16 @@ interface UseDappAddressesParams {
 function useNotificationsConfigs({
   refreshInterval,
 }: UseDappAddressesParams = EMPTY_OBJ): UseDappAddressesValue {
-  const { dapp } = useDapp();
-  const configsApi = dapp?.dappNotificationSubscriptionConfigs;
+  const { wallet } = useDialectSdk();
+  const [isUpserting, setUpserting] = useState(false);
+  const configsApi = wallet?.dappNotificationSubscriptionConfigs;
 
   const {
     data: configs,
     error = null,
     mutate,
   } = useSWR(
-    DAPP_ADDRESSES_CACHE_KEY_FN(dapp),
+    WALLET_CONFIGS_CACHE_KEY(wallet),
     configsApi ? () => configsApi.findAll() : null,
     {
       refreshInterval,
@@ -41,12 +51,38 @@ function useNotificationsConfigs({
     [mutate]
   );
 
-  // TODO: upsert
+  const toggle = useCallback(
+    async ({ dappNotificationId, enabled }) => {
+      if (!configsApi) {
+        return;
+      }
+      const current = configs?.find(
+        (config) => config.dappNotification.id === dappNotificationId
+      );
+      if (!current) {
+        return;
+      }
+      setUpserting(true);
+      try {
+        await configsApi.upsert({
+          dappNotificationId,
+          config: { ...current.config, enabled },
+        });
+      } finally {
+        setUpserting(false);
+      }
+    },
+    [configs, configsApi]
+  );
 
   return {
     notifications: configs || EMPTY_ARR,
-    isFetching: Boolean(dapp) && !error && configs === undefined,
+
+    toggle,
+
+    isFetching: !error && configs === undefined,
     errorFetching: error,
+    isUpserting,
   };
 }
 
