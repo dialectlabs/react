@@ -2,9 +2,8 @@ import {
   AddressType,
   Dapp,
   DappAddress,
-  DappNotificationConfig,
   useDappAddresses,
-  useNotificationsConfigs,
+  useDappNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
@@ -21,10 +20,7 @@ interface BroadcastFormProps {
   dapp: Dapp;
 }
 
-const getUserCount = (
-  addresses: DappAddress[],
-  notificationTypeId?: string
-) => {
+const getUserCount = (addresses: DappAddress[]) => {
   // TODO: Use `notificationType` to get users who enabled
   // Users count = set of unique wallets, associated with enabled dapp addresses, associated with verified addresses
   const enabledAndVerified = addresses
@@ -72,10 +68,10 @@ const getAddressesSummary = (addresses: DappAddress[]) => {
 
 function BroadcastForm({ dapp }: BroadcastFormProps) {
   const {
-    notifications: notificationsConfigs,
-    isFetching: isFetchingNotifications,
-    errorFetching: errorFetchingNotificationsConfigs,
-  } = useNotificationsConfigs();
+    subscriptions: notificationsSubscriptions,
+    // isFetching: isFetchingNotificationSubscriptions,
+    // errorFetching: errorFetchingNotificationSubscriptions,
+  } = useDappNotificationSubscriptions();
   const [notificationTypeId, setNotificationTypeId] = useState<string | null>();
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
   const { textStyles, colors, outlinedInput } = useTheme();
@@ -96,7 +92,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   );
 
   const usersCount = useMemo(
-    () => getUserCount(addresses, notificationTypeId),
+    () => getUserCount(addresses),
     [addresses, notificationTypeId]
   );
   const addressesSummary = useMemo(
@@ -123,8 +119,11 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   const sendBroadcastMessage = async () => {
     setIsSending(true);
     try {
-      // TODO/FIXME: add notification type to the broadcast
-      await dapp.messages.send({ title, message, notificationType });
+      await dapp.messages.send({
+        title,
+        message,
+        ...(notificationTypeId && { notificationTypeId }),
+      });
       setTitle('');
       setMessage('');
       setError(null);
@@ -139,12 +138,12 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   };
 
   const renderNotificationTypeSelect = () => {
-    if (!notificationsConfigs.length) {
+    if (!notificationsSubscriptions.length) {
       return '📢 Broadcast';
     }
 
-    if (notificationsConfigs.length === 1) {
-      return notificationsConfigs[0]?.dappNotification.name;
+    if (notificationsSubscriptions.length === 1) {
+      return notificationsSubscriptions[0]?.notificationType.name;
     }
 
     return (
@@ -153,12 +152,9 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
         className="dt-bg-transparent dt-text-inherit focus:dt-outline-0"
         onChange={(event) => setNotificationTypeId(event.target.value)}
       >
-        {notificationsConfigs.map((config) => (
-          <option
-            key={config.dappNotification.id}
-            value={config.dappNotification.id}
-          >
-            {config.dappNotification.name}
+        {notificationsSubscriptions.map(({ notificationType }) => (
+          <option key={notificationType.id} value={notificationType.id}>
+            {notificationType.name}
           </option>
         ))}
       </select>
