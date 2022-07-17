@@ -80,8 +80,10 @@ function useNotificationsConfigs({
 
     toggle,
 
-    isFetching: !error && configs === undefined,
-    errorFetching: error,
+    isFetching: Boolean(configsApi) && !error && configs === undefined,
+    errorFetching: !configsApi
+      ? new Error('Config API is not available')
+      : error,
     isUpserting,
   };
 }

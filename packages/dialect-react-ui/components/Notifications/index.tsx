@@ -4,6 +4,7 @@ import {
   useDialectConnectionInfo,
   useDialectDapp,
   useDialectWallet,
+  useNotificationsConfigs,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
@@ -56,6 +57,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     isCreatingAddress,
     isDeletingAddress,
   } = useAddresses();
+
+  const { isFetching: isFetchingNotificationsConfigs } =
+    useNotificationsConfigs();
 
   const isWeb3Enabled =
     walletAddress?.enabled ||
@@ -171,7 +175,10 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
 
   return (
     <>
-      {isFetchingThread || isFetchingAddresses || !isInitialRoutePicked ? (
+      {isFetchingThread ||
+      isFetchingAddresses ||
+      !isInitialRoutePicked ||
+      isFetchingNotificationsConfigs ? (
         <LoadingThread />
       ) : (
         <>
@@ -183,10 +190,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           />
           <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
             <Route name={RouteName.Settings}>
-              <Settings
-                notifications={props.notifications || []}
-                channels={props.channels || []}
-              />
+              <Settings channels={props.channels || []} />
             </Route>
             <Route name={RouteName.Thread}>
               <NotificationsList />
@@ -204,10 +208,7 @@ export default function Notifications({
 }: NotificationsProps) {
   const { colors, modal } = useTheme();
 
-  const {
-    connectionInitiated,
-    adapter: { connected: isWalletConnected },
-  } = useDialectWallet();
+  const { connected: isWalletConnected } = useDialectWallet();
 
   const {
     connected: {
@@ -226,17 +227,26 @@ export default function Notifications({
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
 
+  const hasError = !isWalletConnected || !someBackendConnected;
+
   // we should render errors immediatly right after error appears
   // that's why useEffect is not suitable to handle logic
   const renderError = () => {
+    if (!hasError) {
+      return null;
+    }
     if (!isWalletConnected) {
       return <NoWalletError />;
     }
+    if (!someBackendConnected) {
+      return <NoConnectionError />;
+  const {
+    connectionInitiated,
+    adapter: { connected: isWalletConnected },
+  } = useDialectWallet();
     if (!connectionInitiated) {
       return <NotAuthorizedError />;
     }
-    if (!someBackendConnected) {
-      return <NoConnectionError />;
     }
     return null;
   };

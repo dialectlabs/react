@@ -8,15 +8,20 @@ import { EmailForm } from './EmailForm';
 import { SmsForm } from './SmsForm';
 import { TelegramForm } from './TelegramForm';
 import { useNotificationsConfigs } from '@dialectlabs/react-sdk';
+import { useState } from 'react';
 
 function Settings(props: { channels: Channel[] }) {
   const { textStyles, xPaddedText } = useTheme();
+  const [errorUpserting, setErrorUpserting] = useState<Error | null>(null);
   const {
     notifications,
     // TODO: should we provide a fallback?
     toggle,
     isFetching: isFetchingNotifications,
+    errorFetching: errorFetchingNotificationsConfigs,
   } = useNotificationsConfigs();
+
+  const error = errorUpserting || errorFetchingNotificationsConfigs;
 
   return (
     <>
@@ -51,7 +56,14 @@ function Settings(props: { channels: Channel[] }) {
             {''}
           </ValueRow>
         ) : null}
-        {notifications ? (
+        {error ? (
+          <ValueRow
+            label={<P className={clsx('dt-text-red-500')}>{error.message}</P>}
+          >
+            {''}
+          </ValueRow>
+        ) : null}
+        {notifications.length ? (
           <>
             <P
               className={clsx(
@@ -71,21 +83,23 @@ function Settings(props: { channels: Channel[] }) {
                 <span className="dt-flex dt-items-center">
                   <Toggle
                     checked={config.config.enabled}
-                    onClick={() =>
-                      toggle({
-                        dappNotificationId: config.dappNotification.id,
-                        enabled: !config.config.enabled,
-                      })
-                    }
+                    onClick={() => {
+                      try {
+                        toggle({
+                          dappNotificationId: config.dappNotification.id,
+                          enabled: !config.config.enabled,
+                        });
+                      } catch (error) {
+                        setErrorUpserting(error as Error);
+                      }
+                    }}
                   />
                 </span>
-                {/* TODO: config.dappNotification.trigger */}
+                {/* TODO: render config.dappNotification.trigger */}
               </ValueRow>
             ))}
           </>
-        ) : (
-          'No notification types supplied'
-        )}
+        ) : null}
       </Section>
       <P
         className={clsx(
