@@ -15,7 +15,7 @@ import ToastMessage from '../common/ToastMessage';
 // utf8 bytes
 const MESSAGE_BYTES_LIMIT = 800;
 const TITLE_BYTES_LIMIT = 100;
-
+const ADDRESSES_REFRESH_INTERVAL = 10000;
 interface BroadcastFormProps {
   dapp: Dapp;
 }
@@ -73,7 +73,9 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     // errorFetching: errorFetchingNotificationSubscriptions,
   } = useDappNotificationSubscriptions();
   const [notificationTypeId, setNotificationTypeId] = useState<string | null>();
-  const { addresses, isFetching: isFetchingAddresses } = useDappAddresses();
+  const { addresses, isFetching: isFetchingAddresses } = useDappAddresses({
+    refreshInterval: ADDRESSES_REFRESH_INTERVAL,
+  });
   const { textStyles, colors, outlinedInput } = useTheme();
   // Consider moving error handling to the useDapp context
   const [error, setError] = useState<Error | null>(null);
