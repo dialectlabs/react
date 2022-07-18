@@ -2,6 +2,7 @@ import {
   AddressType,
   Dapp,
   DappAddress,
+  DappNotificationSubscription,
   useDappAddresses,
   useDappNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
@@ -20,14 +21,30 @@ interface BroadcastFormProps {
   dapp: Dapp;
 }
 
-const getUserCount = (addresses: DappAddress[]) => {
-  // TODO: Use `notificationType` to get users who enabled
+const getUserCount = (
+  addresses: DappAddress[],
+  subscriptions: DappNotificationSubscription[],
+  notificationTypeId?: string | null
+) => {
   // Users count = set of unique wallets, associated with enabled dapp addresses, associated with verified addresses
-  const enabledAndVerified = addresses
+  const enabledAndVerifiedPks = addresses
     .filter((address) => address.enabled)
     .filter((address) => address.address.verified)
-    .map((address) => address.address.wallet.publicKey.toBase58());
-  return [...new Set(enabledAndVerified)].length;
+    .map((address) => address.address.wallet.publicKey);
+  const enabledSubsriptionsPKs = subscriptions
+    .filter(
+      (sub) =>
+        (sub.notificationType.id === notificationTypeId ||
+          !notificationTypeId) &&
+        sub.subscriptions.find((subscription) => subscription.config.enabled)
+    )
+    .flatMap((sub) =>
+      sub.subscriptions.map((subscription) => subscription.wallet.publicKey)
+    );
+
+  return enabledSubsriptionsPKs.filter((subPK) =>
+    enabledAndVerifiedPks.find((pk) => pk.equals(subPK))
+  ).length;
 };
 
 const getAddressesCounts = (addresses: DappAddress[]) => {
@@ -94,9 +111,11 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   );
 
   const usersCount = useMemo(
-    () => getUserCount(addresses),
-    [addresses, notificationTypeId]
+    () =>
+      getUserCount(addresses, notificationsSubscriptions, notificationTypeId),
+    [addresses, notificationTypeId, notificationsSubscriptions]
   );
+
   const addressesSummary = useMemo(
     () => getAddressesSummary(addresses),
     [addresses]
