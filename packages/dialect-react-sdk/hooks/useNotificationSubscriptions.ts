@@ -7,8 +7,8 @@ import { useCallback, useState } from 'react';
 import useSWR from 'swr';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import { WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from './internal/swrCache';
-import useDapp from './useDapp';
 import useDialectSdk from './useDialectSdk';
+import useDialectDapp from './useDialectDapp';
 
 interface UseNotificationSubscriptionsValue {
   subscriptions: WalletNotificationSubscription[];
@@ -31,7 +31,7 @@ interface UseUseNotificationSubscriptions {
 function useNotificationSubscriptions({
   refreshInterval,
 }: UseUseNotificationSubscriptions = EMPTY_OBJ): UseNotificationSubscriptionsValue {
-  const { dapp } = useDapp();
+  const { dappAddress: dappPublicKey } = useDialectDapp();
   const { wallet: walletsApi } = useDialectSdk();
   const subscriptionsApi = walletsApi.notificationSubscriptions;
 
@@ -47,10 +47,10 @@ function useNotificationSubscriptions({
     mutate,
   } = useSWR(
     WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(walletsApi),
-    subscriptionsApi
+    subscriptionsApi && dappPublicKey
       ? () => {
           return subscriptionsApi.findAll({
-            dappPublicKey: dapp?.publicKey,
+            dappPublicKey,
           });
         }
       : null,
@@ -63,6 +63,7 @@ function useNotificationSubscriptions({
   const update = useCallback(
     async (command: UpsertNotificationSubscriptionCommand) => {
       setIsUpdating(true);
+      setErrorUpdating(null);
       try {
         await subscriptionsApi.upsert(command);
       } catch (e) {
