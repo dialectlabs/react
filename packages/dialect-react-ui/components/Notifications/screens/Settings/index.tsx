@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { A, P } from '../../../common/preflighted';
 import type { Channel } from '../../../common/types';
-import { Footer, Section, Toggle, ValueRow } from '../../../common';
+import { Footer, Section, ToggleSection, ValueRow } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import type { NotificationType } from '../..';
 import { Web3 } from './Web3';
@@ -14,7 +14,8 @@ interface RenderNotificationTypeParams {
   name: string;
   detail?: string;
   id?: string;
-  enabled?: boolean;
+  enabled: boolean;
+  disabled: boolean;
   onToggle?: () => void;
 }
 
@@ -41,17 +42,22 @@ function Settings({
     detail,
     enabled,
     onToggle,
+    disabled,
   }: RenderNotificationTypeParams) => (
-    <ValueRow key={id || name} label={name} className={clsx('dt-mb-1')}>
-      <span className="dt-flex dt-items-center">
-        {onToggle && enabled !== undefined ? (
-          <Toggle checked={enabled} onClick={onToggle} />
-        ) : (
-          detail
+    <div className="dt-mb-2">
+      <ToggleSection
+        key={id || name}
+        title={name}
+        checked={enabled}
+        disabled={disabled}
+        onChange={onToggle}
+        className={clsx('dt-mb-1')}
+      >
+        {detail && (
+          <P className={clsx(textStyles.small, 'dt-mb-1')}>{detail}</P>
         )}
-      </span>
-      {/* TODO: render config.dappNotification.trigger */}
-    </ValueRow>
+      </ToggleSection>
+    </div>
   );
 
   const error =
@@ -103,6 +109,8 @@ function Settings({
                   id: notificationType.id,
                   name: notificationType.name,
                   enabled: subscription.config.enabled,
+                  disabled: false,
+                  detail: notificationType.trigger,
                   onToggle: () => {
                     updateNotificationSubscription({
                       notificationTypeId: notificationType.id,
@@ -117,7 +125,11 @@ function Settings({
             {/* Render manually passed types in case api doesn't return anything */}
             {!notificationSubscriptions.length &&
               notificationsTypes?.map((notificationType) =>
-                renderNotificationType(notificationType)
+                renderNotificationType({
+                  ...notificationType,
+                  enabled: true,
+                  disabled: true,
+                })
               )}
           </>
         ) : null}

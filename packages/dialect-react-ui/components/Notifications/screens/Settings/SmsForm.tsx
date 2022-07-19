@@ -204,7 +204,7 @@ export function SmsForm() {
         className="dt-mb-6"
         title="📶  SMS notifications"
         onChange={toggleSms}
-        enabled={Boolean(smsAddress?.enabled)}
+        checked={Boolean(smsAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">
