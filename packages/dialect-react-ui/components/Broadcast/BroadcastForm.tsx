@@ -193,7 +193,10 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       <H1 className={clsx(textStyles.h1, colors.primary, 'dt-mb-4')}>
         Create broadcast
       </H1>
-      <ValueRow label={renderNotificationTypeSelect()} className="dt-w-full">
+      <ValueRow label="Category" className="dt-w-full">
+        <span title={addressesSummary}>{renderNotificationTypeSelect()}</span>
+      </ValueRow>
+      <ValueRow label="📢 Broadcast users coverage" className="dt-w-full">
         <span title={addressesSummary}>{usersInfo}</span>
       </ValueRow>
       <div>
