@@ -27,7 +27,7 @@ import NotAuthorizedError from '../../entities/errors/ui/NotAuthorizedError';
 
 export type NotificationType = {
   name: string;
-  detail: string;
+  detail?: string;
 };
 
 interface NotificationsProps {
