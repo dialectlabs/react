@@ -7,7 +7,7 @@ import {
   useDappNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, Loader, ValueRow } from '../common';
 import { H1, Input, P, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -110,6 +110,12 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     [textEncoder, message]
   );
 
+  useEffect(() => {
+    !notificationTypeId &&
+      notificationsSubscriptions.length > 0 &&
+      setNotificationTypeId(notificationsSubscriptions[0]?.notificationType.id);
+  }, [notificationTypeId, notificationsSubscriptions]);
+
   const usersCount = useMemo(
     () =>
       getUserCount(addresses, notificationsSubscriptions, notificationTypeId),
@@ -170,7 +176,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     return (
       // TODO: create a preflighted version of select with :focus-visible and other default things, which is already configured for inputs and buttons
       <select
-        className="dt-bg-transparent dt-text-inherit focus:dt-outline-0"
+        className="dt-bg-transparent dt-text-inherit focus:dt-outline-0 dt-text-right"
         onChange={(event) => setNotificationTypeId(event.target.value)}
       >
         {notificationsSubscriptions.map(({ notificationType }) => (
