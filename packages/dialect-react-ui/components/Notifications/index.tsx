@@ -61,6 +61,15 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const { isFetching: isFetchingNotificationsSubscriptions } =
     useNotificationSubscriptions();
 
+  const [
+    isInitialNotificationSubscriptionsLoaded,
+    setInitialNotificationSubscriptionsLoaded,
+  ] = useState(false);
+
+  useEffect(() => {
+    setInitialNotificationSubscriptionsLoaded(true);
+  }, [isFetchingNotificationsSubscriptions]);
+
   const isWeb3Enabled =
     walletAddress?.enabled ||
     isCreatingThread ||
@@ -177,7 +186,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     <>
       {isFetchingThread ||
       isFetchingAddresses ||
-      isFetchingNotificationsSubscriptions ||
+      !isInitialNotificationSubscriptionsLoaded ||
       !isInitialRoutePicked ? (
         <LoadingThread />
       ) : (
