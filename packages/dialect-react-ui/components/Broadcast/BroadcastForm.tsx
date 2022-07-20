@@ -17,52 +17,66 @@ import ToastMessage from '../common/ToastMessage';
 const MESSAGE_BYTES_LIMIT = 800;
 const TITLE_BYTES_LIMIT = 100;
 const ADDRESSES_REFRESH_INTERVAL = 10000;
+
 interface BroadcastFormProps {
   dapp: Dapp;
 }
 
-const getUserCount = (
+const getUsersCount = (
   addresses: DappAddress[],
   subscriptions: DappNotificationSubscription[],
-  notificationTypeId?: string | null
+  notificationTypeId?: string | null,
+  addressTypePredicate: (addressType: AddressType) => boolean = () => true
 ) => {
-  // Users count = set of unique wallets, associated with enabled dapp addresses, associated with verified addresses
-  const enabledAndVerifiedPks = addresses
+  const enabledAndVerifiedAddresses = addresses
     .filter((address) => address.enabled)
     .filter((address) => address.address.verified)
-    .map((address) => address.address.wallet.publicKey);
-  const enabledSubsriptionsPKs = subscriptions
+    .filter((address) => addressTypePredicate(address.address.type));
+  const enabledSubscriptionsPKs = subscriptions
     .filter(
       (sub) =>
         (sub.notificationType.id === notificationTypeId ||
           !notificationTypeId) &&
         sub.subscriptions.find((subscription) => subscription.config.enabled)
     )
-    .flatMap((sub) =>
-      sub.subscriptions.map((subscription) => subscription.wallet.publicKey)
-    );
-
-  return enabledSubsriptionsPKs.filter((subPK) =>
-    enabledAndVerifiedPks.find((pk) => pk.equals(subPK))
-  ).length;
+    .flatMap((it) => it.subscriptions);
+  const filtered = enabledSubscriptionsPKs.filter((subscription) =>
+    enabledAndVerifiedAddresses.find((address) =>
+      address.address.wallet.publicKey.equals(subscription.wallet.publicKey)
+    )
+  );
+  return [...new Set(filtered)].length;
 };
 
-const getAddressesCounts = (addresses: DappAddress[]) => {
-  const enabledAndVerified = addresses
-    .filter((address) => address.enabled)
-    .filter((address) => address.address.verified);
-  const wallets = enabledAndVerified.filter(
-    (address) => address.address.type === AddressType.Wallet
-  ).length;
-  const emails = enabledAndVerified.filter(
-    (address) => address.address.type === AddressType.Email
-  ).length;
-  const phones = enabledAndVerified.filter(
-    (addresses) => addresses.address.type === AddressType.PhoneNumber
-  ).length;
-  const telegrams = enabledAndVerified.filter(
-    (address) => address.address.type === AddressType.Telegram
-  ).length;
+const getAddressesCounts = (
+  addresses: DappAddress[],
+  subscriptions: DappNotificationSubscription[],
+  notificationTypeId?: string | null
+) => {
+  const wallets = getUsersCount(
+    addresses,
+    subscriptions,
+    notificationTypeId,
+    (it) => it === AddressType.Wallet
+  );
+  const emails = getUsersCount(
+    addresses,
+    subscriptions,
+    notificationTypeId,
+    (it) => it === AddressType.Email
+  );
+  const phones = getUsersCount(
+    addresses,
+    subscriptions,
+    notificationTypeId,
+    (it) => it === AddressType.PhoneNumber
+  );
+  const telegrams = getUsersCount(
+    addresses,
+    subscriptions,
+    notificationTypeId,
+    (it) => it === AddressType.Telegram
+  );
   return {
     wallets,
     emails,
@@ -71,8 +85,16 @@ const getAddressesCounts = (addresses: DappAddress[]) => {
   };
 };
 
-const getAddressesSummary = (addresses: DappAddress[]) => {
-  const { wallets, emails, phones, telegrams } = getAddressesCounts(addresses);
+const getAddressesSummary = (
+  addresses: DappAddress[],
+  subscriptions: DappNotificationSubscription[],
+  notificationTypeId?: string | null
+) => {
+  const { wallets, emails, phones, telegrams } = getAddressesCounts(
+    addresses,
+    subscriptions,
+    notificationTypeId
+  );
   return [
     wallets && `${wallets} wallet${wallets > 1 ? 's' : ''} (off-chain)`,
     emails && `${emails} email${emails > 1 ? 's' : ''}`,
@@ -118,13 +140,18 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
 
   const usersCount = useMemo(
     () =>
-      getUserCount(addresses, notificationsSubscriptions, notificationTypeId),
+      getUsersCount(addresses, notificationsSubscriptions, notificationTypeId),
     [addresses, notificationTypeId, notificationsSubscriptions]
   );
 
   const addressesSummary = useMemo(
-    () => getAddressesSummary(addresses),
-    [addresses]
+    () =>
+      getAddressesSummary(
+        addresses,
+        notificationsSubscriptions,
+        notificationTypeId
+      ),
+    [addresses, notificationsSubscriptions]
   );
   const noUsers = usersCount === 0;
   const isSubmitDisabled =
@@ -194,7 +221,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
         Create broadcast
       </H1>
       <ValueRow label="Category" className="dt-w-full">
-        <span title={addressesSummary}>{renderNotificationTypeSelect()}</span>
+        <span>{renderNotificationTypeSelect()}</span>
       </ValueRow>
       <ValueRow label="📢 Broadcast users coverage" className="dt-w-full">
         <span title={addressesSummary}>{usersInfo}</span>
