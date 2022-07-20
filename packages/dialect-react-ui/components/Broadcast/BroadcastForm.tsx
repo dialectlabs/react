@@ -151,7 +151,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
         notificationsSubscriptions,
         notificationTypeId
       ),
-    [addresses, notificationsSubscriptions]
+    [addresses, notificationsSubscriptions, notificationTypeId]
   );
   const noUsers = usersCount === 0;
   const isSubmitDisabled =
