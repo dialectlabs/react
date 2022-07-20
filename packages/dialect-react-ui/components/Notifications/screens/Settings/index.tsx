@@ -14,8 +14,8 @@ interface RenderNotificationTypeParams {
   name: string;
   detail?: string;
   id?: string;
-  enabled: boolean;
-  disabled: boolean;
+  enabled?: boolean;
+  type: 'local' | 'remote';
   onToggle?: () => void;
 }
 
@@ -40,16 +40,16 @@ function Settings({
     id,
     name,
     detail,
-    enabled,
+    enabled = true,
     onToggle,
-    disabled,
+    type,
   }: RenderNotificationTypeParams) => (
     <div className="dt-mb-2">
       <ToggleSection
         key={id || name}
         title={name}
-        checked={enabled}
-        disabled={disabled}
+        checked={type === 'local' || enabled}
+        hideToggle={type === 'local'}
         onChange={onToggle}
         className={clsx('dt-mb-1')}
       >
@@ -109,7 +109,7 @@ function Settings({
                   id: notificationType.id,
                   name: notificationType.name,
                   enabled: subscription.config.enabled,
-                  disabled: false,
+                  type: 'remote',
                   detail: notificationType.trigger,
                   onToggle: () => {
                     updateNotificationSubscription({
@@ -127,8 +127,7 @@ function Settings({
               notificationsTypes?.map((notificationType) =>
                 renderNotificationType({
                   ...notificationType,
-                  enabled: true,
-                  disabled: true,
+                  type: 'local',
                 })
               )}
           </>

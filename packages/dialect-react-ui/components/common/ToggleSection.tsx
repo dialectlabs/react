@@ -8,6 +8,7 @@ type PropsType = {
   className?: string;
   checked: boolean;
   disabled?: boolean;
+  hideToggle?: boolean;
   noBorder?: boolean;
   onChange?: (nextValue: boolean) => void;
   children?: React.ReactNode;
@@ -20,6 +21,7 @@ export default function ToggleSection({
   children,
   onChange,
   disabled,
+  hideToggle,
 }: PropsType) {
   const [isEnabled, setEnabled] = useState(checked);
   const { section } = useTheme();
@@ -34,16 +36,18 @@ export default function ToggleSection({
         className={clsx(isEnabled && children && 'dt-mb-2')}
         label={title}
       >
-        <Toggle
-          type="checkbox"
-          checked={isEnabled}
-          disabled={disabled}
-          onClick={async () => {
-            const nextValue = !isEnabled;
-            await onChange?.(nextValue);
-            setEnabled(nextValue);
-          }}
-        />
+        {!hideToggle && (
+          <Toggle
+            type="checkbox"
+            checked={isEnabled}
+            disabled={disabled}
+            onClick={async () => {
+              const nextValue = !isEnabled;
+              await onChange?.(nextValue);
+              setEnabled(nextValue);
+            }}
+          />
+        )}
       </ValueRow>
       {isEnabled && children}
     </>
