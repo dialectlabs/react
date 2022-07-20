@@ -23,6 +23,7 @@ import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
 import Main from './screens/Main';
 import type { ChatNavigationHelpers } from './types';
 import SignTransactionInfo from '../../entities/wallet-states/SignTransactionInfo';
+import NotAuthorizedError from '../../entities/errors/ui/NotAuthorizedError';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -140,7 +141,10 @@ export default function Chat({
     },
   } = useDialectConnectionInfo();
 
-  const { connected: isWalletConnected } = useDialectWallet();
+  const {
+    connectionInitiated,
+    adapter: { connected: isWalletConnected },
+  } = useDialectWallet();
 
   const someBackendConnected =
     (isSolanaShouldConnect && isSolanaConnected) ||
@@ -176,6 +180,16 @@ export default function Chat({
         </>
       );
     }
+
+    if (!connectionInitiated) {
+      return (
+        <>
+          {defaultHeader}
+          <NotAuthorizedError />
+        </>
+      );
+    }
+
     if (!someBackendConnected) {
       return (
         <>

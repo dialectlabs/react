@@ -5,6 +5,7 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
+import NotAuthorizedError from '../../entities/errors/ui/NotAuthorizedError';
 import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
 import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
@@ -38,7 +39,8 @@ function WalletStateWrapper({
     isSigningFreeTransaction,
     isSigningMessage,
     isEncrypting,
-    connected: isWalletConnected,
+    connectionInitiated,
+    adapter: { connected: isWalletConnected },
   } = useDialectWallet();
 
   const someBackendConnected =
@@ -57,6 +59,10 @@ function WalletStateWrapper({
         }
       />
     );
+  }
+
+  if (!connectionInitiated) {
+    return <NotAuthorizedError />;
   }
 
   if (!someBackendConnected) {
