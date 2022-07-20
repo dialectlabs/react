@@ -22,8 +22,9 @@ const NotAuthorizedError = () => {
           'dt-flex dt-items-center dt-mb-4 dt-w-[80%] dt-text-center'
         )}
       >
-        To continue please prove you own a wallet by approving signing request.
-        It is free and does not involve the network.
+        To continue, please prove you own this wallet by signing a{' '}
+        {hardwareWalletForced ? 'transaction' : 'message'}. It is free and does
+        not involve the network.
       </span>
       <div className="dt-w-[80%]">
         <ToggleSection
