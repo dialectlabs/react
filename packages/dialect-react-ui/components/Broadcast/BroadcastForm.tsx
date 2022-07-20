@@ -7,7 +7,7 @@ import {
   useDappNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { Button, Loader, ValueRow } from '../common';
 import { H1, Input, P, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -111,7 +111,9 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     // isFetching: isFetchingNotificationSubscriptions,
     // errorFetching: errorFetchingNotificationSubscriptions,
   } = useDappNotificationSubscriptions();
-  const [notificationTypeId, setNotificationTypeId] = useState<string | null>();
+  const [notificationTypeId, setNotificationTypeId] = useState<string | null>(
+    notificationsSubscriptions[0]?.notificationType.id ?? null
+  );
   const { addresses, isFetching: isFetchingAddresses } = useDappAddresses({
     refreshInterval: ADDRESSES_REFRESH_INTERVAL,
   });
@@ -135,7 +137,9 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   useEffect(() => {
     !notificationTypeId &&
       notificationsSubscriptions.length > 0 &&
-      setNotificationTypeId(notificationsSubscriptions[0]?.notificationType.id);
+      setNotificationTypeId(
+        notificationsSubscriptions[0]?.notificationType.id ?? null
+      );
   }, [notificationTypeId, notificationsSubscriptions]);
 
   const usersCount = useMemo(
@@ -160,9 +164,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     messageLength > MESSAGE_BYTES_LIMIT ||
     titleLength > TITLE_BYTES_LIMIT ||
     noUsers;
-  let usersInfo: string | JSX.Element = `${usersCount} user${
-    usersCount > 1 ? 's' : ''
-  }`;
+  let usersInfo: ReactNode = `${usersCount} user${usersCount > 1 ? 's' : ''}`;
 
   if (isFetchingAddresses) {
     usersInfo = <Loader />;
@@ -192,7 +194,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   };
 
   const renderNotificationTypeSelect = () => {
-    if (!notificationsSubscriptions.length) {
+    if (!notificationsSubscriptions.length || !notificationTypeId) {
       return '📢 Broadcast';
     }
 
@@ -203,6 +205,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
     return (
       // TODO: create a preflighted version of select with :focus-visible and other default things, which is already configured for inputs and buttons
       <select
+        value={notificationTypeId}
         className="dt-bg-transparent dt-text-inherit focus:dt-outline-0 dt-text-right"
         onChange={(event) => setNotificationTypeId(event.target.value)}
       >

@@ -27,7 +27,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
 
-  const [hasNewMessages, setHasNewMessages] = useState(false);
+  const [hasNewMessages] = useState(false);
 
   useOutsideAlerter(wrapperRef, bellRef, close);
 
@@ -111,7 +111,6 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
 
 export default function NotificationsButton({
   channels = ['web3', 'telegram', 'sms', 'email'],
-  notifications,
   ...props
 }: PropTypes): JSX.Element {
   // TODO: Add default value to polling inteval
@@ -125,11 +124,7 @@ export default function NotificationsButton({
     <div className="dialect">
       {/* TODO: switch to some sdk config setting */}
       <SWRConfig value={swrOptions}>
-        <WrappedNotificationsButton
-          notifications={notifications}
-          channels={channels}
-          {...props}
-        />
+        <WrappedNotificationsButton channels={channels} {...props} />
       </SWRConfig>
     </div>
   );

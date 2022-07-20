@@ -169,7 +169,7 @@ export function BigButton(props: {
 export function Toggle({
   checked,
   onClick,
-  ...props
+  ...props // TODO: adjust the styles for a disabled toggle
 }: { checked: boolean; onClick: () => void } & DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement

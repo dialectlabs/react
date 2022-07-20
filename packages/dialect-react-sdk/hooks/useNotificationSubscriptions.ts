@@ -33,7 +33,7 @@ function useNotificationSubscriptions({
 }: UseUseNotificationSubscriptions = EMPTY_OBJ): UseNotificationSubscriptionsValue {
   const { dappAddress: dappPublicKey } = useDialectDapp();
   const { wallet: walletsApi } = useDialectSdk();
-  const subscriptionsApi = walletsApi.notificationSubscriptions;
+  const { notificationSubscriptions } = walletsApi;
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorUpdating, setErrorUpdating] = useState<DialectSdkError | null>(
@@ -47,13 +47,9 @@ function useNotificationSubscriptions({
     mutate,
   } = useSWR(
     WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(walletsApi),
-    subscriptionsApi && dappPublicKey
-      ? () => {
-          return subscriptionsApi.findAll({
-            dappPublicKey,
-          });
-        }
-      : null,
+    !(notificationSubscriptions && dappPublicKey)
+      ? null
+      : () => notificationSubscriptions.findAll({ dappPublicKey }),
     {
       refreshInterval,
       refreshWhenOffline: true,
@@ -65,7 +61,7 @@ function useNotificationSubscriptions({
       setIsUpdating(true);
       setErrorUpdating(null);
       try {
-        await subscriptionsApi.upsert(command);
+        await notificationSubscriptions.upsert(command);
       } catch (e) {
         if (e instanceof DialectSdkError) {
           setErrorUpdating(e);
@@ -76,7 +72,7 @@ function useNotificationSubscriptions({
       }
       mutate();
     },
-    [mutate, subscriptionsApi]
+    [mutate, notificationSubscriptions]
   );
 
   return {
