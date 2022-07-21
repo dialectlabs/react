@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- feature: add use hardware wallet option
+
 ## [1.0.0-beta.19] - 2022-07-16
 
 - fix: default navigation to thread if web3 channel enabled

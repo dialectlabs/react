@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- feature: add use hardware wallet option
+
 ## [1.0.0-beta.13] - 2022-07-16
 
 - fix: switch statuses if error happens for CRUD in `useAddresses`
