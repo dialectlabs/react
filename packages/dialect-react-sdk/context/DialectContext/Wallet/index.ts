@@ -9,7 +9,9 @@ export interface DialectWalletState {
   connectionInitiated: boolean;
   initiateConnection: () => void;
   hardwareWalletForced: boolean;
-  setHardwareWalletForced: (arg: (prev: boolean) => boolean | boolean) => void;
+  setHardwareWalletForced: (
+    arg: ((prev: boolean) => boolean) | boolean
+  ) => void;
   isSigningFreeTransaction: boolean;
   isSigningMessage: boolean;
   isEncrypting: boolean;

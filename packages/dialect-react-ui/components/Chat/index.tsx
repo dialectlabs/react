@@ -150,8 +150,6 @@ export default function Chat({
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
 
-  const hasError = !isWalletConnected || !someBackendConnected;
-
   const defaultHeader = (
     <Header
       type={type}
@@ -169,9 +167,6 @@ export default function Chat({
   // that's why useEffect is not suitable to handle logic
   // rendering header to avoid empty header in bottom chat
   const renderError = () => {
-    if (!hasError) {
-      return null;
-    }
     if (!isWalletConnected) {
       return (
         <>
@@ -198,7 +193,13 @@ export default function Chat({
         </>
       );
     }
+
+    return null;
   };
+
+  const renderedError = renderError();
+
+  const hasError = Boolean(renderedError);
 
   return (
     <Router>
@@ -224,7 +225,7 @@ export default function Chat({
               { [slider]: type === 'vertical-slider' }
             )}
           >
-            {hasError ? renderError() : <InnerChat {...props} />}
+            {hasError ? renderedError : <InnerChat {...props} />}
           </div>
         </div>
       </ChatProvider>
