@@ -27,9 +27,13 @@ function useDialectSdk(
   const { adapter, connected, initiateConnection } =
     DialectWallet.useContainer();
 
-  // checks if wallet is already authorized to skip not authorized screen
+  // The idea is to check if we already has token stored somewhere to skip NotAuthorized screen
+  // so that we check if sdk is about to be configred with local storage
+  // and if so, we validate the token
+  // if token is valid, then NotAuthorized will be skipped
   useEffect(
     function preValidateSdkToken() {
+      // checks if sdk configured to use local storage
       if (!dialectCloud) return;
       if (!dialectCloud.tokenStore) return;
       if (!adapter.publicKey) return;
@@ -42,10 +46,12 @@ function useDialectSdk(
         tokenStore = dialectCloud.tokenStore;
       }
 
+      // validates token
       const token = tokenStore.get(adapter.publicKey);
       if (!token) return;
       const tokenValid = Auth.tokens.isValid(token);
       if (!tokenValid) return;
+      // if token valid, initiate connections will skip NotAuthorized screen
       initiateConnection();
     },
     [dialectCloud, adapter, initiateConnection]
