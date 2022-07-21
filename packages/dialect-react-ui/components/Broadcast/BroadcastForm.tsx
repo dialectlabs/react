@@ -45,7 +45,8 @@ const getUsersCount = (
       address.address.wallet.publicKey.equals(subscription.wallet.publicKey)
     )
   );
-  return [...new Set(filtered)].length;
+  return [...new Set(filtered.map((it) => it.wallet.publicKey.toBase58()))]
+    .length;
 };
 
 const getAddressesCounts = (
