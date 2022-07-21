@@ -1,11 +1,17 @@
 import { PublicKey } from '@solana/web3.js';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DialectWalletAdapter } from '../../../types';
 import { createContainer } from '../../../utils/container';
 
 export interface DialectWalletState {
   adapter: DialectWalletAdapter;
   connected: boolean;
+  connectionInitiated: boolean;
+  initiateConnection: () => void;
+  hardwareWalletForced: boolean;
+  setHardwareWalletForced: (
+    arg: ((prev: boolean) => boolean) | boolean
+  ) => void;
   isSigningFreeTransaction: boolean;
   isSigningMessage: boolean;
   isEncrypting: boolean;
@@ -16,10 +22,22 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
     throw new Error('dialect wallet adapter should be provided');
   }
 
+  const [connectionInitiated, setConnectionInitiated] = useState(false);
+  const [hardwareWalletForced, setHardwareWalletForced] = useState(false);
+
   const [isSigningFreeTransaction, setIsSigningFreeTransaction] =
     useState<boolean>(false);
   const [isSigningMessage, setIsSigningMessage] = useState<boolean>(false);
   const [isEncrypting, setIsEncrypting] = useState<boolean>(false);
+
+  useEffect(
+    function walletDisconnected() {
+      if (!adapter.connected) {
+        setConnectionInitiated(false);
+      }
+    },
+    [adapter]
+  );
 
   const wrapDialectWallet = useCallback(
     (adapter: DialectWalletAdapter): DialectWalletAdapter => {
@@ -41,16 +59,17 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
               }
             }
           : undefined,
-        signMessage: adapter.signMessage
-          ? async (msg) => {
-              setIsSigningMessage(true);
-              try {
-                return await adapter.signMessage!(msg);
-              } finally {
-                setIsSigningMessage(false);
+        signMessage:
+          !hardwareWalletForced && adapter.signMessage
+            ? async (msg) => {
+                setIsSigningMessage(true);
+                try {
+                  return await adapter.signMessage!(msg);
+                } finally {
+                  setIsSigningMessage(false);
+                }
               }
-            }
-          : undefined,
+            : undefined,
         diffieHellman: adapter.diffieHellman
           ? async (...args) => {
               setIsEncrypting(true);
@@ -63,7 +82,7 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
           : undefined,
       };
     },
-    []
+    [hardwareWalletForced]
   );
 
   const wrappedAdapter = useMemo(
@@ -71,9 +90,17 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
     [adapter, wrapDialectWallet]
   );
 
+  const initiateConnection = useCallback(() => {
+    setConnectionInitiated(true);
+  }, []);
+
   return {
     adapter: wrappedAdapter,
-    connected: wrappedAdapter.connected,
+    connected: connectionInitiated && wrappedAdapter.connected,
+    connectionInitiated,
+    initiateConnection,
+    hardwareWalletForced,
+    setHardwareWalletForced,
     isSigningFreeTransaction,
     isSigningMessage,
     isEncrypting,

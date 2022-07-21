@@ -22,6 +22,7 @@ import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
 import Settings from './screens/Settings';
+import NotAuthorizedError from '../../entities/errors/ui/NotAuthorizedError';
 
 export type NotificationType = {
   name: string;
@@ -203,7 +204,10 @@ export default function Notifications({
 }: NotificationsProps) {
   const { colors, modal } = useTheme();
 
-  const { connected: isWalletConnected } = useDialectWallet();
+  const {
+    connectionInitiated,
+    adapter: { connected: isWalletConnected },
+  } = useDialectWallet();
 
   const {
     connected: {
@@ -222,21 +226,24 @@ export default function Notifications({
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
 
-  const hasError = !isWalletConnected || !someBackendConnected;
-
   // we should render errors immediatly right after error appears
   // that's why useEffect is not suitable to handle logic
   const renderError = () => {
-    if (!hasError) {
-      return null;
-    }
     if (!isWalletConnected) {
       return <NoWalletError />;
+    }
+    if (!connectionInitiated) {
+      return <NotAuthorizedError />;
     }
     if (!someBackendConnected) {
       return <NoConnectionError />;
     }
+    return null;
   };
+
+  const renderedError = renderError();
+
+  const hasError = Boolean(renderedError);
 
   return (
     <div className="dialect dt-h-full">
@@ -250,7 +257,7 @@ export default function Notifications({
       >
         <Router initialRoute={RouteName.Settings}>
           {hasError ? (
-            renderError()
+            renderedError
           ) : (
             <WalletStatesWrapper>
               <GatedWrapper gatedView={gatedView}>

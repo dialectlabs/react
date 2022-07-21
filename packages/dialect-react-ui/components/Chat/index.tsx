@@ -23,6 +23,7 @@ import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
 import Main from './screens/Main';
 import type { ChatNavigationHelpers } from './types';
 import SignTransactionInfo from '../../entities/wallet-states/SignTransactionInfo';
+import NotAuthorizedError from '../../entities/errors/ui/NotAuthorizedError';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -140,13 +141,14 @@ export default function Chat({
     },
   } = useDialectConnectionInfo();
 
-  const { connected: isWalletConnected } = useDialectWallet();
+  const {
+    connectionInitiated,
+    adapter: { connected: isWalletConnected },
+  } = useDialectWallet();
 
   const someBackendConnected =
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
-
-  const hasError = !isWalletConnected || !someBackendConnected;
 
   const defaultHeader = (
     <Header
@@ -165,9 +167,6 @@ export default function Chat({
   // that's why useEffect is not suitable to handle logic
   // rendering header to avoid empty header in bottom chat
   const renderError = () => {
-    if (!hasError) {
-      return null;
-    }
     if (!isWalletConnected) {
       return (
         <>
@@ -176,6 +175,16 @@ export default function Chat({
         </>
       );
     }
+
+    if (!connectionInitiated) {
+      return (
+        <>
+          {defaultHeader}
+          <NotAuthorizedError />
+        </>
+      );
+    }
+
     if (!someBackendConnected) {
       return (
         <>
@@ -184,7 +193,13 @@ export default function Chat({
         </>
       );
     }
+
+    return null;
   };
+
+  const renderedError = renderError();
+
+  const hasError = Boolean(renderedError);
 
   return (
     <Router>
@@ -210,7 +225,7 @@ export default function Chat({
               { [slider]: type === 'vertical-slider' }
             )}
           >
-            {hasError ? renderError() : <InnerChat {...props} />}
+            {hasError ? renderedError : <InnerChat {...props} />}
           </div>
         </div>
       </ChatProvider>

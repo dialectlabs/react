@@ -7,13 +7,15 @@ type PropsType = {
   title: string | React.ReactNode;
   className?: string;
   enabled: boolean;
+  noBorder?: boolean;
   onChange?: (nextValue: boolean) => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 export default function ToggleSection({
   title,
   enabled,
+  noBorder,
   children,
   onChange,
 }: PropsType) {
@@ -24,9 +26,12 @@ export default function ToggleSection({
     setEnabled(enabled);
   }, [enabled]);
 
-  return (
-    <div className={clsx(section)}>
-      <ValueRow className={clsx(isEnabled && 'dt-mb-2')} label={title}>
+  const inner = (
+    <>
+      <ValueRow
+        className={clsx(isEnabled && children && 'dt-mb-2')}
+        label={title}
+      >
         <Toggle
           type="checkbox"
           checked={isEnabled}
@@ -38,6 +43,12 @@ export default function ToggleSection({
         />
       </ValueRow>
       {isEnabled && children}
-    </div>
+    </>
   );
+
+  if (noBorder) {
+    return inner;
+  }
+
+  return <div className={clsx(section)}>{inner}</div>;
 }
