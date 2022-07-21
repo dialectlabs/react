@@ -10,17 +10,12 @@ import {
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';
-import {
-  Button,
-  NetworkBadge,
-  Toggle,
-  useBalance,
-  ValueRow,
-} from '../../../common';
+import { Button, NetworkBadge, Toggle, ValueRow } from '../../../common';
 import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../common/providers/Router';
 import { RouteName } from '../../constants';
+import useBalance from '../../../../hooks/useBalance';
 
 const CreateNotificationsThread = () => {
   const {
