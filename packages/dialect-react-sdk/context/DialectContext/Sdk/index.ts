@@ -3,7 +3,7 @@ import {
   ConfigProps,
   Dialect,
   DialectSdk as DialectSdkType,
-  TokenStore
+  TokenStore,
 } from '@dialectlabs/sdk';
 import { useEffect, useMemo } from 'react';
 import { EMPTY_ARR } from '../../../utils';
@@ -48,7 +48,7 @@ function useDialectSdk(
       if (!tokenValid) return;
       initiateConnection();
     },
-    [config, adapter, initiateConnection]
+    [dialectCloud, adapter, initiateConnection]
   );
 
   const sdk = useMemo(() => {
