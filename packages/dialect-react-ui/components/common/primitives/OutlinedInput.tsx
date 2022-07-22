@@ -14,6 +14,7 @@ const OutlinedInput = ({
   onChange,
   placeholder,
   rightAdornment,
+  type = 'text',
 }: Props) => {
   const { outlinedInput } = useTheme();
 
@@ -22,7 +23,7 @@ const OutlinedInput = ({
       <input
         className={clsx('dt-w-full dt-bg-transparent dt-outline-0')}
         placeholder={placeholder}
-        type="text"
+        type={type}
         value={value}
         onChange={onChange}
       />

@@ -52,7 +52,8 @@ export type ThemeTextStyles =
   | 'buttonText'
   | 'bigButtonText'
   | 'bigButtonSubtle'
-  | 'link';
+  | 'link'
+  | 'label';
 
 export type ThemeIcons =
   | 'arrowclockwise'
@@ -224,6 +225,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-black',
       bigButtonSubtle: 'dt-font-inter dt-font-medium dt-text-sm dt-text-black',
       link: 'dt-underline dt-decoration-1 dt-break-words',
+      label: 'dt-font-inter dt-text-base dt-text-black dt-opacity-40',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
@@ -332,6 +334,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-white',
       bigButtonSubtle: 'dt-font-inter dt-font-medium dt-text-sm dt-text-white',
       link: 'dt-underline decoration-1 dt-break-words',
+      label: 'dt-font-inter dt-text-base dt-text-white dt-opacity-40',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
