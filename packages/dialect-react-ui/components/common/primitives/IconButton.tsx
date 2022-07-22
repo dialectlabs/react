@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { forwardRef, HTMLProps } from 'react';
-import { ButtonBase } from '../common/preflighted';
-import { useTheme } from '../common/providers/DialectThemeProvider';
+import { ButtonBase } from '../preflighted';
+import { useTheme } from '../providers/DialectThemeProvider';
 
 type IconButtonPropsType = {
   icon: JSX.Element;

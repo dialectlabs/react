@@ -19,6 +19,7 @@ import {
   X,
   MultiarrowVertical,
   Cancel,
+  CheckmarkThin,
 } from '../../Icon';
 
 export type ThemeType = 'dark' | 'light';
@@ -63,6 +64,7 @@ export type ThemeIcons =
   | 'chat'
   | 'chevron'
   | 'checkmark'
+  | 'checkmarkThin'
   | 'error'
   | 'compose'
   | 'settings'
@@ -234,6 +236,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       compose: Compose,
       chevron: Chevron,
       checkmark: Checkmark,
+      checkmarkThin: CheckmarkThin,
       error: ErrorIcon,
       settings: Gear,
       notConnected: NotConnected,
@@ -339,6 +342,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       cancel: Cancel,
       chat: ChatBubble,
       checkmark: Checkmark,
+      checkmarkThin: CheckmarkThin,
       error: ErrorIcon,
       chevron: Chevron,
       compose: Compose,

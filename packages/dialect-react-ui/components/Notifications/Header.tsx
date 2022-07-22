@@ -1,9 +1,8 @@
 import { useDialectDapp, useThread } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { Divider } from '../common';
+import { Divider, IconButton } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useRoute } from '../common/providers/Router';
-import IconButton from '../IconButton';
 import { RouteName } from './constants';
 
 function Header(props: {

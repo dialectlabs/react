@@ -6,7 +6,7 @@ import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import Chat from '../Chat';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
-import IconButton from '../IconButton';
+import { IconButton } from '../common';
 
 type PropTypes = {
   dialectId: string;

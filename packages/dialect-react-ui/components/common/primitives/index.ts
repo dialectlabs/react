@@ -5,3 +5,5 @@ export { default as Loader } from './Loader';
 export { default as ButtonLink } from './ButtonLink';
 export { default as Button } from './Button';
 export { default as Toggle } from './Toggle';
+export { default as OutlinedInput } from './OutlinedInput';
+export { default as IconButton } from './IconButton';

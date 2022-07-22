@@ -6,6 +6,7 @@ export { default as Cancel } from './Cancel';
 export { default as ChatBubble } from './ChatBubble';
 export { default as Chevron } from './Chevron';
 export { default as Checkmark } from './Checkmark';
+export { default as CheckmarkThin } from './CheckmarkThin';
 export { default as Error } from './Error';
 export { default as Compose } from './Compose';
 export { default as DialectLogo } from './DialectLogo';
