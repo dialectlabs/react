@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: better web3 notifications enable/disable button naming
+
 ## [1.0.0-beta.14] - 2022-07-21
 
 - feature: add use hardware wallet option
