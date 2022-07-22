@@ -15,17 +15,22 @@ const OutlinedInput = ({
   placeholder,
   rightAdornment,
   type = 'text',
+  ...props
 }: Props) => {
-  const { outlinedInput } = useTheme();
+  const { textStyles, outlinedInput } = useTheme();
 
   return (
-    <div className={clsx('dt-flex', outlinedInput)}>
+    <div className={clsx('dt-flex dt-items-center', outlinedInput)}>
       <input
-        className={clsx('dt-w-full dt-bg-transparent dt-outline-0')}
+        className={clsx(
+          'dt-w-full dt-bg-transparent dt-outline-0',
+          textStyles.input
+        )}
         placeholder={placeholder}
         type={type}
         value={value}
         onChange={onChange}
+        {...props}
       />
       {rightAdornment && (
         <div className="dt-flex dt-gap-1 dt-pl-2">{rightAdornment}</div>
