@@ -220,7 +220,10 @@ export default function Notifications({
 }: NotificationsProps) {
   const { colors, modal } = useTheme();
 
-  const { connected: isWalletConnected } = useDialectWallet();
+  const {
+    connectionInitiated,
+    adapter: { connected: isWalletConnected },
+  } = useDialectWallet();
 
   const {
     connected: {
@@ -239,26 +242,17 @@ export default function Notifications({
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
 
-  const hasError = !isWalletConnected || !someBackendConnected;
-
   // we should render errors immediatly right after error appears
   // that's why useEffect is not suitable to handle logic
   const renderError = () => {
-    if (!hasError) {
-      return null;
-    }
     if (!isWalletConnected) {
       return <NoWalletError />;
     }
-    if (!someBackendConnected) {
-      return <NoConnectionError />;
-  const {
-    connectionInitiated,
-    adapter: { connected: isWalletConnected },
-  } = useDialectWallet();
     if (!connectionInitiated) {
       return <NotAuthorizedError />;
     }
+    if (!someBackendConnected) {
+      return <NoConnectionError />;
     }
     return null;
   };
