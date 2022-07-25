@@ -2,8 +2,9 @@
 
 ## [UNRELEASED]
 
-- fix: auth request cancel do not mark state as connected anymore
-- chore: better web3 notifications enable/disable button naming
+## [1.0.0-beta.15] - 2022-07-25
+- fix: notification togglers
+- fix: auth request cancel do not mark state as connected
 
 ## [1.0.0-beta.14] - 2022-07-21
 

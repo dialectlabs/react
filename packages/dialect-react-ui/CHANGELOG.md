@@ -2,6 +2,11 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.21] - 2022-07-25
+- chore: minor stylistic changes
+- fix: add missing notifs header
+- chore: better web3 notifications enable/disable button naming
+
 ## [1.0.0-beta.20] - 2022-07-21
 
 - feature: add use hardware wallet option
