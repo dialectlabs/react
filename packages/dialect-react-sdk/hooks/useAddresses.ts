@@ -151,7 +151,7 @@ function useAddresses({
     (address: AddressEnriched | Address) =>
       addressesEnriched
         ? addressesEnriched.map((add) =>
-            add.type === address.type ? { ...address, ...add } : add
+            add.type === address.type ? { ...add, ...address } : add
           )
         : [address],
     [addressesEnriched]
@@ -277,26 +277,11 @@ function useAddresses({
       }
       setUpdatingAddress(true);
       try {
-        const nextAddresses = mergeAddress({ ...address, enabled });
-        await mutateAddresses(
-          async () => {
-            if (!address || !address.dappAddress) {
-              return nextAddresses;
-            }
-            const newDappAddress = await walletsApi.dappAddresses.update({
-              dappAddressId: address.dappAddress.id,
-              enabled,
-            });
-            return mergeAddress({
-              ...newDappAddress.address,
-              enabled: newDappAddress.enabled,
-            });
-          },
-          {
-            optimisticData: nextAddresses,
-            rollbackOnError: true,
-          }
-        );
+        await walletsApi.dappAddresses.update({
+          dappAddressId: address.dappAddress.id,
+          enabled,
+        });
+        await Promise.all([mutateDappAddresses(), mutateAddresses()])
       } finally {
         setUpdatingAddress(false);
       }
