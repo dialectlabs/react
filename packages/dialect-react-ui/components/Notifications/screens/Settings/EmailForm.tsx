@@ -243,8 +243,8 @@ export function EmailForm() {
               </Button>
             ) : null}
 
-            {/* 2. If email already submited and user clicked "Change" */}
-            {/* FIXME: this state enabled right after first email submition */}
+            {/* 2. If email already submitted and user clicks "Change" */}
+            {/* FIXME: this state is enabled right after first email submission */}
             {isChanging && isVerified && (
               <div className="dt-flex dt-flex-row dt-space-x-2">
                 <Button

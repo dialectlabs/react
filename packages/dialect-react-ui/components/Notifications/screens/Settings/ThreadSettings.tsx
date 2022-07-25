@@ -103,7 +103,9 @@ const NotificationsThreadSettings = ({
               onClick={deleteThread}
               loading={isDeletingThread || isDeletingAddress}
             >
-              {isOnChain ? 'Withdraw rent and delete history' : 'Delete thread'}
+              {isOnChain
+                ? 'Withdraw rent and disable notifications'
+                : 'Disable Notifications'}
             </Button>
             <P
               className={clsx(
