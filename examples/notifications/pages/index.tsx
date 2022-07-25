@@ -83,7 +83,7 @@ function AuthedHome() {
         <NotificationsButton
           dialectId="dialect-notifications"
           notifications={[
-            { name: 'Welcome message', detail: 'On thread creation' },
+            { name: 'Welcome message', detail: 'On signup' },
           ]}
           pollingInterval={15000}
           channels={['web3', 'email', 'sms', 'telegram']}
