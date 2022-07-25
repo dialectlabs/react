@@ -301,10 +301,10 @@ export function TelegramForm() {
                     🤖
                     <span className="dt-opacity-50">
                       {' '}
-                      Get verification code by starting{' '}
+                      To receive a verification code, start a chat with{' '}
                     </span>
                     <span className="dt-underline">this bot </span>
-                    <span className="dt-opacity-50">with command: /start</span>
+                    <span className="dt-opacity-50">by typing /start.</span>
                   </a>
                 </div>
                 <div className="dt-flex dt-flex-row dt-space-x-2">
@@ -316,14 +316,6 @@ export function TelegramForm() {
                     )}
                     onClick={resendCodeVerification}
                   >
-                    <span className="dt-opacity-50">
-                      {' '}
-                      Check your telegram bot{' '}
-                      {telegramAddress?.value
-                        ? `from @${telegramAddress?.value}`
-                        : ''}{' '}
-                      for a verification code.
-                    </span>{' '}
                     <span className="dt-inline-block dt-cursor-pointer">
                       <ResendIcon
                         className={clsx(

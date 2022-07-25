@@ -52,6 +52,12 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
               }
               try {
                 return await adapter.signTransaction!(tx);
+              } catch (e) {
+                if (isFreeTx) {
+                  // assuming free tx is the tx for auth
+                  setConnectionInitiated(false);
+                }
+                throw e;
               } finally {
                 if (isFreeTx) {
                   setIsSigningFreeTransaction(false);
@@ -65,6 +71,10 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
                 setIsSigningMessage(true);
                 try {
                   return await adapter.signMessage!(msg);
+                } catch (e) {
+                  // assumint sign message used only for auth
+                  setConnectionInitiated(false);
+                  throw e;
                 } finally {
                   setIsSigningMessage(false);
                 }

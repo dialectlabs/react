@@ -185,7 +185,7 @@ const Notifications = () => {
         Strictly visual prop. Specifies types of notifications one would receive.
       */}
       notifications={[
-        { name: 'Welcome message', detail: 'On thread creation' },
+        { name: 'Welcome message', detail: 'On signup' },
       ]}
       {/* 
         How often should polling happen. If not provided, fetch would happen once. SWR will handle refetch on focus or simple page refresh.
@@ -494,7 +494,7 @@ Import Icon as a React Component from `Icon`, e.g. (`import {BackArrow} from '/I
 
 ```shell
 yarn build:all
-pushd packages/dialect-react/
+pushd packages/dialect-react-sdk/
 npm publish --access public
 popd
 pushd packages/dialect-react-ui/
