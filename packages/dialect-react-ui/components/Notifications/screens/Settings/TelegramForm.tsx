@@ -225,7 +225,7 @@ export function TelegramForm() {
         className="dt-mb-6"
         title="📡  Telegram notifications"
         onChange={toggleTelegram}
-        enabled={Boolean(telegramAddress?.enabled)}
+        checked={Boolean(telegramAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">

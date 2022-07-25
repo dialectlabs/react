@@ -124,12 +124,7 @@ const Wrapper = (props) => {
   const { textStyles, colors } = useTheme();
   return (
     <div
-      className={clsx(
-        textStyles.body,
-        colors.primary,
-        colors.bg,
-        'dt-h-full dt-min-h-[515px] dt-p-4 dt-h-0'
-      )}
+      className={clsx(textStyles.body, colors.primary, colors.bg, 'dt-p-4')}
       {...props}
     />
   );

@@ -6,7 +6,9 @@ import { useTheme } from './providers/DialectThemeProvider';
 type PropsType = {
   title: string | React.ReactNode;
   className?: string;
-  enabled: boolean;
+  checked: boolean;
+  disabled?: boolean;
+  hideToggle?: boolean;
   noBorder?: boolean;
   onChange?: (nextValue: boolean) => void;
   children?: React.ReactNode;
@@ -14,17 +16,19 @@ type PropsType = {
 
 export default function ToggleSection({
   title,
-  enabled,
+  checked,
   noBorder,
   children,
   onChange,
+  disabled,
+  hideToggle,
 }: PropsType) {
-  const [isEnabled, setEnabled] = useState(enabled);
+  const [isEnabled, setEnabled] = useState(checked);
   const { section } = useTheme();
 
   useEffect(() => {
-    setEnabled(enabled);
-  }, [enabled]);
+    setEnabled(checked);
+  }, [checked]);
 
   const inner = (
     <>
@@ -32,15 +36,18 @@ export default function ToggleSection({
         className={clsx(isEnabled && children && 'dt-mb-2')}
         label={title}
       >
-        <Toggle
-          type="checkbox"
-          checked={isEnabled}
-          onClick={async () => {
-            const nextValue = !isEnabled;
-            await onChange?.(nextValue);
-            setEnabled(nextValue);
-          }}
-        />
+        {!hideToggle && (
+          <Toggle
+            type="checkbox"
+            checked={isEnabled}
+            disabled={disabled}
+            onClick={async () => {
+              const nextValue = !isEnabled;
+              await onChange?.(nextValue);
+              setEnabled(nextValue);
+            }}
+          />
+        )}
       </ValueRow>
       {isEnabled && children}
     </>

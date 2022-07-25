@@ -43,7 +43,7 @@ function AuthedHome() {
         <div className="flex flex-row justify-end p-2 items-center space-x-6">
           <Wallet />
         </div>
-        <div className="w-full max-w-[412px] px-6 m-auto">
+        <div className="w-full px-6 max-w-[600px] m-auto">
           <div className="overflow-auto h-full rounded-2xl shadow-2xl shadow-neutral-800 border border-neutral-600">
             <Broadcast />
           </div>
@@ -64,7 +64,7 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo(
     (): Config => ({
-      backends: [Backend.DialectCloud, Backend.Solana],
+      backends: [Backend.DialectCloud],
       environment: 'local-development',
       dialectCloud: {
         tokenStore: TokenStore.createLocalStorage(),

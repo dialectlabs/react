@@ -10,3 +10,5 @@ export { default as useDapp } from './useDapp';
 export { default as useDappAddresses } from './useDappAddresses';
 export { default as useAddresses } from './useAddresses';
 export { default as useDialectGate } from './useDialectGate';
+export { default as useNotificationSubscriptions } from './useNotificationSubscriptions';
+export { default as useDappNotificationSubscriptions } from './useDappNotificationSubscriptions';

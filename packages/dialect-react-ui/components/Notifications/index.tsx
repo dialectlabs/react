@@ -4,6 +4,7 @@ import {
   useDialectConnectionInfo,
   useDialectDapp,
   useDialectWallet,
+  useNotificationSubscriptions,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
@@ -27,7 +28,7 @@ import IconButton from '../IconButton';
 
 export type NotificationType = {
   name: string;
-  detail: string;
+  detail?: string;
 };
 
 interface NotificationsProps {
@@ -57,6 +58,18 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     isCreatingAddress,
     isDeletingAddress,
   } = useAddresses();
+
+  const { isFetching: isFetchingNotificationsSubscriptions } =
+    useNotificationSubscriptions();
+
+  const [
+    isInitialNotificationSubscriptionsLoaded,
+    setInitialNotificationSubscriptionsLoaded,
+  ] = useState(false);
+
+  useEffect(() => {
+    setInitialNotificationSubscriptionsLoaded(true);
+  }, [isFetchingNotificationsSubscriptions]);
 
   const isWeb3Enabled =
     walletAddress?.enabled ||
@@ -172,7 +185,10 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
 
   return (
     <>
-      {isFetchingThread || isFetchingAddresses || !isInitialRoutePicked ? (
+      {isFetchingThread ||
+      isFetchingAddresses ||
+      !isInitialNotificationSubscriptionsLoaded ||
+      !isInitialRoutePicked ? (
         <LoadingThread />
       ) : (
         <>
@@ -185,8 +201,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
             <Route name={RouteName.Settings}>
               <Settings
-                notifications={props.notifications || []}
                 channels={props.channels || []}
+                notifications={props?.notifications}
               />
             </Route>
             <Route name={RouteName.Thread}>

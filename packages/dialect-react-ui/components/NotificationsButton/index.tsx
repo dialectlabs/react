@@ -27,7 +27,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
 
-  const [hasNewMessages, setHasNewMessages] = useState(false);
+  const [hasNewMessages] = useState(false);
 
   useOutsideAlerter(wrapperRef, bellRef, close);
 
@@ -120,7 +120,6 @@ export default function NotificationsButton({
     }),
     [props.pollingInterval]
   );
-  // {/* TODO: consider extract the DialectProvider to avoid doubling providers in case multiple instances are used */}
   return (
     <div className="dialect">
       {/* TODO: switch to some sdk config setting */}

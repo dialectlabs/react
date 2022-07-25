@@ -1,13 +1,13 @@
 import {
-  defaultVariables,
-  DialectThemeProvider,
-  DialectUiManagementProvider,
-  IncomingThemeVariables,
-  NotificationsButton,
   Backend,
   Config,
+  defaultVariables,
   DialectContextProvider,
+  DialectThemeProvider,
+  DialectUiManagementProvider,
   DialectWalletAdapter,
+  IncomingThemeVariables,
+  NotificationsButton,
   TokenStore,
 } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
@@ -83,7 +83,13 @@ function AuthedHome() {
         <NotificationsButton
           dialectId="dialect-notifications"
           notifications={[
-            { name: 'Welcome message', detail: 'On signup' },
+            { name: 'Welcome message on thread creation' },
+            {
+              name: 'Example notification',
+              detail:
+                'This is the description of example notification that is never sent since it is just example.' +
+                'The description is super long and does not fit in a single line',
+            },
           ]}
           pollingInterval={15000}
           channels={['web3', 'email', 'sms', 'telegram']}

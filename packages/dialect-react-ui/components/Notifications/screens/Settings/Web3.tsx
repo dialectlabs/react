@@ -57,7 +57,7 @@ export function Web3({ onThreadDeleted }: Web3Props) {
     <ToggleSection
       className="dt-mb-6"
       title="💬  Wallet notifications"
-      enabled={isWeb3Enabled}
+      checked={isWeb3Enabled}
       onChange={toggleWeb3}
     >
       {content}

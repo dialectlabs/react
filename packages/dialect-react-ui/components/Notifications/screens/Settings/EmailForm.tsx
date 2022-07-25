@@ -206,7 +206,7 @@ export function EmailForm() {
         className="dt-mb-6"
         title="📩  Email notifications"
         onChange={toggleEmail}
-        enabled={Boolean(emailAddress?.enabled)}
+        checked={Boolean(emailAddress?.enabled)}
       >
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="dt-flex dt-flex-col dt-space-y-2 dt-mb-2">

@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- feature: introduce `useNotificationSubscriptions` hook to configure notifications
+- feature: introduce `useDappNotificationSubscriptions` hook to fetch notification subscriptions on behalf of dapp
+
 ## [1.0.0-beta.15] - 2022-07-25
 - fix: notification togglers
 - fix: auth request cancel do not mark state as connected
