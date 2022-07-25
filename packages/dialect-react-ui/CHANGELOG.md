@@ -2,7 +2,8 @@
 
 ## [UNRELEASED]
 
-- feature: configurable notifications in `<NotificationsButton/>` Settings
+- feature: configurable notifications in `<NotificationsButton/>` component settings
+- feature: configurable notifications in `<BroadcastForm/>` component
 
 ## [1.0.0-beta.21] - 2022-07-25
 - chore: minor stylistic changes
