@@ -23,6 +23,7 @@ import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
 import Settings from './screens/Settings';
 import NotAuthorizedError from '../../entities/errors/ui/NotAuthorizedError';
+import IconButton from '../IconButton';
 
 export type NotificationType = {
   name: string;
@@ -202,7 +203,7 @@ export default function Notifications({
   gatedView,
   ...props
 }: NotificationsProps) {
-  const { colors, modal } = useTheme();
+  const { colors, modal, header, textStyles, icons } = useTheme();
 
   const {
     connectionInitiated,
@@ -257,7 +258,19 @@ export default function Notifications({
       >
         <Router initialRoute={RouteName.Settings}>
           {hasError ? (
-            renderedError
+            <>
+              <div
+                className={clsx(
+                  'dt-flex dt-flex-row dt-items-center dt-justify-end',
+                  header
+                )}
+              >
+                <span className={clsx(textStyles.header, colors.accent)}>
+                  <IconButton icon={<icons.x />} onClick={props.onModalClose} />
+                </span>
+              </div>
+              {renderedError}
+            </>
           ) : (
             <WalletStatesWrapper>
               <GatedWrapper gatedView={gatedView}>
