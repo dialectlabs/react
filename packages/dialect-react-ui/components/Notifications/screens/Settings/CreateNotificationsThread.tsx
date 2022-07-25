@@ -143,8 +143,8 @@ const CreateNotificationsThread = () => {
         disabled={Boolean(thread) || isCreatingThread || isCreatingAddress}
       >
         {isCreatingThread
-          ? 'Creating...'
-          : `Create ${isOffChain ? '' : 'on-chain'} notifications thread`}
+          ? 'Enabling...'
+          : `Enable ${isOffChain ? '' : 'on-chain'} notifications`}
       </Button>
       {!isOffChain ? (
         <P
@@ -153,8 +153,8 @@ const CreateNotificationsThread = () => {
             'dt-p-1 dt-opacity-50 dt-text-left'
           )}
         >
-          To start this notifications thread, you&apos;ll need to deposit a
-          small amount of rent, since messages are stored on-chain.
+          To enable this notifications, you&apos;ll need to deposit a small
+          amount of rent, since messages are stored on-chain.
         </P>
       ) : null}
       {/* Ignoring disconnected from chain error, since we show a separate screen in this case */}
