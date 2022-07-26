@@ -2,6 +2,7 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.16] - 2022-07-26
 - feature: introduce `useNotificationSubscriptions` hook to configure notifications
 - feature: introduce `useDappNotificationSubscriptions` hook to fetch notification subscriptions on behalf of dapp
 - fix: types for react 18
