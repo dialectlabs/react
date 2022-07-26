@@ -16,6 +16,7 @@ type DialectContextProviderProps = {
   wallet: DialectWalletAdapter;
   dapp?: PublicKey;
   gate?: Gate;
+  children?: React.ReactNode;
   // temporary until new dialect cloud api appear
 };
 

@@ -4,6 +4,7 @@
 
 - feature: configurable notifications in `<NotificationsButton/>` component settings
 - feature: configurable notifications in `<BroadcastForm/>` component
+- fix: types for react 18
 
 ## [1.0.0-beta.21] - 2022-07-25
 - chore: minor stylistic changes

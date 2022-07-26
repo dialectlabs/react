@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   FunctionComponent,
   useCallback,
@@ -41,9 +41,13 @@ interface UiManagementContextType {
 export const DialectUiManagementContext =
   createContext<UiManagementContextType | null>(null);
 
-export const DialectUiManagementProvider: FunctionComponent = ({
-  children,
-}) => {
+interface DialectUiManagementProviderProps {
+  children?: React.ReactNode;
+}
+
+export const DialectUiManagementProvider: React.FC<
+  DialectUiManagementProviderProps
+> = ({ children }) => {
   const [ui, setUi] = useState<UiManagementContextType['ui']>({});
   const [navigation, setNavigation] = useState<
     UiManagementContextType['navigation']
