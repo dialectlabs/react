@@ -7,6 +7,7 @@ import {
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import Avatar from '../../../Avatar';
+import { OnChainIndicator } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
@@ -15,7 +16,6 @@ import { Header } from '../../../Header';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
 import EncryptionBadge from './EncryptionBadge';
-import OnChainBadge from './OnChainBadge';
 import Settings from './Settings';
 import Thread from './Thread';
 
@@ -89,24 +89,28 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
               <div className="dt-flex dt-space-x-2">
                 <Avatar size="extra-small" publicKey={otherMemberPK} />
                 <div className="dt-flex dt-flex-col">
-                  <span className="dt-text-base dt-font-medium dt-text">
-                    {connection ? (
-                      <DisplayAddress
-                        connection={connection}
-                        otherMemberPK={otherMemberPK}
-                        isLinkable={true}
-                      />
-                    ) : (
-                      'Loading...'
-                    )}
-                  </span>
+                  <div className="dt-flex dt-flex-row items-center">
+                    <span className="dt-text-base dt-font-medium dt-text">
+                      {connection ? (
+                        <>
+                          <DisplayAddress
+                            connection={connection}
+                            otherMemberPK={otherMemberPK}
+                            isLinkable={true}
+                          />
+                        </>
+                      ) : (
+                        'Loading...'
+                      )}
+                    </span>
+                    {isOnChain && <OnChainIndicator />}
+                  </div>
                   <span className="dt-text-xs dt-flex dt-items-center dt-space-x-1">
                     {sns.displayName || cardinal.displayName ? (
                       <span className="dt-opacity-60">
                         {display(otherMemberPK)}
                       </span>
                     ) : null}
-                    {isOnChain ? <OnChainBadge /> : null}
                     <EncryptionBadge
                       enabled={Boolean(thread?.encryptionEnabled)}
                     />
