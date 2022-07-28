@@ -30,7 +30,7 @@ const NotAuthorizedError = () => {
         <ToggleSection
           noBorder
           title="Using ledger?"
-          enabled={hardwareWalletForced}
+          checked={hardwareWalletForced}
           onChange={(next) => setHardwareWalletForced(next)}
         />
         <Button onClick={initiateConnection} className="dt-w-full dt-mt-2">
