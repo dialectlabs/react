@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { Encrypted, Unencrypted } from '../../../Icon';
 
 type EncyptionBadgeProps = {
@@ -7,15 +6,9 @@ type EncyptionBadgeProps = {
 };
 
 const EncryptionBadge = ({ enabled }: EncyptionBadgeProps) => {
-  const {
-    colors: { highlight },
-  } = useTheme();
   return (
     <div
-      className={clsx(
-        'dt-flex dt-items-center dt-px-1 dt-py-0.5 dt-rounded-sm dt-select-none',
-        highlight
-      )}
+      className={clsx('dt-flex dt-items-center dt-select-none')}
       title={enabled ? 'encrypted' : 'unencrypted'}
     >
       {enabled ? (

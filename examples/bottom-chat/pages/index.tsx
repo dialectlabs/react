@@ -162,6 +162,9 @@ export default function Home(): JSX.Element {
     (): Config => ({
       backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'local-development',
+      dialectCloud: {
+        tokenStore: 'local-storage',
+      },
     }),
     []
   );

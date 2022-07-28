@@ -11,8 +11,9 @@ import { formatTimestamp } from '../../../../../utils/timeUtils';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
-import { Encrypted, OnChain } from '../../../../Icon';
+import { Encrypted } from '../../../../Icon';
 import MessageStatus from '../../../MessageStatus';
+import { OnChainIndicator } from '../../../../common';
 
 type PropsType = {
   threadId: ThreadId;
@@ -24,11 +25,9 @@ type PropsType = {
 function FirstMessage({
   firstMessage,
   isEncrypted,
-  isOnChain,
 }: {
   firstMessage?: Message;
   isEncrypted: boolean;
-  isOnChain: boolean;
 }) {
   const {
     info: { wallet },
@@ -37,7 +36,6 @@ function FirstMessage({
   if (isEncrypted) {
     return (
       <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
-        {isOnChain ? <OnChain className="dt-shrink-0" /> : null}
         <Encrypted className="dt-shrink-0" />
         <span className="dt-min-w-0 dt-truncate">Encrypted message</span>
       </div>
@@ -46,7 +44,6 @@ function FirstMessage({
 
   return firstMessage ? (
     <div className="dt-max-w-full dt-text-sm dt-opacity-50 dt-mb-2 dt-flex dt-items-center dt-space-x-1">
-      {isOnChain ? <OnChain className="dt-shrink-0" /> : null}
       <span className="dt-min-w-0 dt-truncate">
         {firstMessage.author.publicKey.equals(wallet.publicKey!) && 'You: '}
         {firstMessage.text}
@@ -54,7 +51,6 @@ function FirstMessage({
     </div>
   ) : (
     <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
-      {isOnChain ? <OnChain className="dt-shrink-0" /> : null}
       <span className="dt-min-w-0 dt-truncate">No messages yet</span>
     </div>
   );
@@ -78,6 +74,7 @@ export default function MessagePreview({
   const [firstMessage] = messages ?? [];
   const connection = dialectProgram?.provider.connection;
   const recipient = thread?.otherMembers[0];
+  const isOnChain = thread?.backend === Backend.Solana;
 
   if (!thread || !recipient) return null;
 
@@ -103,15 +100,17 @@ export default function MessagePreview({
       <div className="dt-flex dt-items-baseline dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {connection && otherMemberPk ? (
-            <DisplayAddress
-              connection={connection}
-              otherMemberPK={otherMemberPk}
-            />
+            <div className="dt-flex dt-items-center">
+              <DisplayAddress
+                connection={connection}
+                otherMemberPK={otherMemberPk}
+              />
+              {isOnChain && <OnChainIndicator />}
+            </div>
           ) : null}
           <FirstMessage
             firstMessage={firstMessage}
             isEncrypted={thread.encryptionEnabled}
-            isOnChain={thread.backend === Backend.Solana}
           />
         </div>
         <div className="dt-items-end dt-text-xs">
