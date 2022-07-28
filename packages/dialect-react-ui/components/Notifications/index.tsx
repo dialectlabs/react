@@ -191,25 +191,23 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       !isInitialRoutePicked ? (
         <LoadingThread />
       ) : (
-        <>
+        <div className={clsx('dt-h-full dt-overflow-y-auto dt-p-9', scrollbar)}>
           <Header
             isWeb3Enabled={isWeb3Enabled}
             isReady={!isFetchingAddresses && !isFetchingThread}
             onModalClose={props.onModalClose}
             onBackClick={props.onBackClick}
           />
-          <div className={clsx('dt-h-full dt-overflow-y-auto', scrollbar)}>
-            <Route name={RouteName.Settings}>
-              <Settings
-                channels={props.channels || []}
-                notifications={props?.notifications}
-              />
-            </Route>
-            <Route name={RouteName.Thread}>
-              <NotificationsList />
-            </Route>
-          </div>
-        </>
+          <Route name={RouteName.Settings}>
+            <Settings
+              channels={props.channels || []}
+              notifications={props?.notifications}
+            />
+          </Route>
+          <Route name={RouteName.Thread}>
+            <NotificationsList />
+          </Route>
+        </div>
       )}
     </>
   );

@@ -24,7 +24,7 @@ export const themeVariables: IncomingThemeVariables = {
   dark: {
     bellButton:
       'w-10 h-10 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700 bg-white text-black',
-    modal: `${defaultVariables.dark.modal} sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-[#ABABAB]/40`, // 0.4 opacity based on trial-and-error
+    modal: `${defaultVariables.dark.modal} sm:rounded-3xl sm:border border-[#383838]/40 bg-[#141414]`, // 0.4 opacity based on trial-and-error
   },
   animations: {
     popup: {
@@ -83,12 +83,10 @@ function AuthedHome() {
         <NotificationsButton
           dialectId="dialect-notifications"
           notifications={[
-            { name: 'Welcome message on thread creation' },
             {
               name: 'Example notification',
               detail:
-                'This is the description of example notification that is never sent since it is just example.' +
-                'The description is super long and does not fit in a single line',
+                'This is an example notification that is never sent. More examples coming soon',
             },
           ]}
           pollingInterval={15000}
@@ -124,15 +122,8 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo(
     (): Config => ({
-      backends: [Backend.DialectCloud, Backend.Solana],
-      environment: 'local-development',
-      solana: {
-        rpcUrl: 'http://localhost:8080',
-      },
-      dialectCloud: {
-        url: 'http://localhost:3001',
-        tokenStore: TokenStore.createLocalStorage(),
-      },
+      backends: [Backend.Solana, Backend.DialectCloud],
+      environment: 'development',
     }),
     []
   );

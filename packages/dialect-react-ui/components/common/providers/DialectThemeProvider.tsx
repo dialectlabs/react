@@ -51,7 +51,8 @@ export type ThemeTextStyles =
   | 'buttonText'
   | 'bigButtonText'
   | 'bigButtonSubtle'
-  | 'link';
+  | 'link'
+  | 'label';
 
 export type ThemeIcons =
   | 'arrowclockwise'
@@ -138,6 +139,8 @@ export type IncomingThemeValues = {
   bigButton?: string;
   bigButtonLoading?: string;
   disabledButton?: string;
+  notificationHeader?: string;
+  addormentButton?: string;
 };
 
 export type IncomingThemeVariables = Partial<
@@ -203,8 +206,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       highlight: 'dt-bg-subtle-day',
       highlightSolid: 'dt-bg-[#F2F3F2]',
       toggleBackground: 'dt-bg-[#D6D6D6]',
-      toggleBackgroundActive: 'dt-bg-[#25BC3B]',
-      toggleThumb: 'dt-bg-[#EEEEEE]',
+      toggleBackgroundActive: 'dt-bg-[#528E5B]',
+      toggleThumb: 'dt-bg-[#1F1F1F]',
       notificationBadgeColor: 'dt-bg-red-500',
     },
     // TODO: simplify setting just font-family
@@ -222,6 +225,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-black',
       bigButtonSubtle: 'dt-font-inter dt-font-medium dt-text-sm dt-text-black',
       link: 'dt-underline dt-decoration-1 dt-break-words',
+      label: 'dt-font-inter dt-text-base dt-text-black dt-opacity-40',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
@@ -256,7 +260,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0 disabled:dt-text-neutral-700/50',
     outlinedInput:
-      'dt-text-sm dt-text-black dt-bg-subtle-day dt-px-3 dt-py-2.5 dt-border-2 dt-border-subtle-day dt-rounded-lg dt-focus:border-black dt-focus:outline-none',
+      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
     textArea:
       'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none disabled:dt-text-neutral-800/50',
     messageBubble: 'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',
@@ -267,6 +271,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
+    notificationHeader: '',
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
@@ -285,7 +290,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     secondaryDangerButtonLoading:
       'dt-min-h-[42px] dt-text-error-day/40 !dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-10 dt-bg-current',
-    highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
+    highlighted: 'dt-px-4 dt-py-3 dt-rounded-2xl',
     scrollbar: 'dt-light-scrollbar',
     section:
       'dt-p-2 dt-rounded-2xl dt-bg-dark-day dt-border dt-border-outline-day',
@@ -298,6 +303,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-black dt-opacity-80 dt-bg-transparent',
+    addormentButton:
+      'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
   },
   dark: {
     colors: {
@@ -311,8 +318,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       highlight: 'dt-bg-subtle-night',
       highlightSolid: 'dt-bg-[#262626]',
       toggleBackground: 'dt-bg-white/60',
-      toggleBackgroundActive: 'dt-bg-[#25BC3B]',
-      toggleThumb: 'dt-bg-[#363636]',
+      toggleBackgroundActive: 'dt-bg-[#528E5B]',
+      toggleThumb: 'dt-bg-[#1F1F1F]',
       notificationBadgeColor: 'dt-bg-red-500',
     },
     textStyles: {
@@ -329,6 +336,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-white',
       bigButtonSubtle: 'dt-font-inter dt-font-medium dt-text-sm dt-text-white',
       link: 'dt-underline decoration-1 dt-break-words',
+      label: 'dt-font-inter dt-text-base dt-text-white dt-opacity-40',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
@@ -363,8 +371,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     input:
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white disabled:dt-text-white/50',
     outlinedInput:
-      'dt-text-sm dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus:dt-border-white focus:dt-outline-none',
-
+      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
     textArea:
       'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 dt-outline-none disabled:dt-text-neutral-200/50',
     messageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',
@@ -375,6 +382,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
+    notificationHeader: '',
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
@@ -393,7 +401,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     secondaryDangerButtonLoading:
       'dt-min-h-[42px] dt-text-error-night dt-opacity-80 !dt-bg-transparent',
     divider: 'dt-h-px dt-opacity-30 dt-bg-current',
-    highlighted: 'dt-px-4 dt-py-3 dt-rounded-lg',
+    highlighted: 'dt-px-4 dt-py-3 dt-rounded-2xl',
     scrollbar: 'dt-dark-scrollbar',
     section:
       'dt-p-2 dt-rounded-2xl dt-bg-dark-night dt-border dt-border-outline-night',
@@ -406,6 +414,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
     bigButtonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-opacity-80 dt-bg-transparent',
+    addormentButton:
+      'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
   },
 };
 
