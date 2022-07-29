@@ -27,6 +27,13 @@ export const CACHE_KEY_THREAD_FN = (findParams: FindThreadQuery): string => {
 
 export const CACHE_KEY_MESSAGES_FN = (id: string) => `MESSAGES_${id}`;
 
+export const CACHE_KEY_THREAD_SUMMARY_FN = (otherMembers: PublicKey[]) =>
+  'THREAD_SUMMARY_' +
+  otherMembers
+    .filter((it) => it)
+    .map((it) => it.toString())
+    .join(':');
+
 export const DAPP_CACHE_KEY_FN = (wallet: DialectWalletAdapter) =>
   'DAPPS_' + wallet?.publicKey?.toBase58();
 

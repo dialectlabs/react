@@ -1,6 +1,7 @@
+import { useDialectDapp, useUnreadMessages } from '@dialectlabs/react-sdk';
 import { Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { SWRConfig } from 'swr';
 import useMobile from '../../utils/useMobile';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
@@ -27,25 +28,13 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
 
-  const [hasNewMessages] = useState(false);
+  const { dappAddress } = useDialectDapp();
+
+  const { hasUnreadMessages } = useUnreadMessages({
+    otherMembers: dappAddress ? [dappAddress] : [],
+  });
 
   useOutsideAlerter(wrapperRef, bellRef, close);
-
-  // TODO rewrite with new provider
-  // const { messages, checkUnreadMessages } = useDialect();
-
-  // useEffect(() => {
-  //   if (!ui?.open) {
-  //     setHasNewMessages(checkUnreadMessages('notifications'));
-  //   }
-  // }, [checkUnreadMessages, messages, ui?.open]);
-
-  // useEffect(() => {
-  //   if (ui?.open) {
-  //     saveLastReadMessage('notifications', messages[0]?.timestamp);
-  //     setHasNewMessages(checkUnreadMessages('notifications'));
-  //   }
-  // }, [checkUnreadMessages, messages, saveLastReadMessage, ui?.open]);
 
   const isMobile = useMobile();
 
@@ -66,7 +55,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
         colors.primary
       )}
     >
-      {hasNewMessages && (
+      {hasUnreadMessages && (
         <div
           className={clsx(
             'dt-absolute dt-h-3 dt-w-3 dt-z-50 dt-rounded-full',

@@ -4,7 +4,11 @@ import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { EMPTY_ARR } from '../utils';
 import { isAdminable, isWritable } from '../utils/scopes';
-import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
+import {
+  CACHE_KEY_THREADS,
+  CACHE_KEY_THREAD_FN,
+  CACHE_KEY_THREAD_SUMMARY_FN,
+} from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
 
 // TODO support multiple ways to resolve thread, eg. twitter, sns
@@ -20,6 +24,7 @@ interface UseThreadValue {
   thread: Omit<Thread, 'messages' | 'send' | 'delete'> | null;
 
   delete(): Promise<void>;
+  setLastReadMessageTime(time: Date): Promise<void>;
 
   // react-lib
   isFetchingThread: boolean;
@@ -75,11 +80,24 @@ const useThread = ({
     }
   }, [globalMutate, mutateThread, thread]);
 
+  const setLastReadMessageTime = useCallback(
+    async (time: Date) => {
+      if (!thread) return;
+      await thread.setLastReadMessageTime(time);
+      globalMutate(
+        CACHE_KEY_THREAD_SUMMARY_FN(
+          thread.otherMembers.map((it) => it.publicKey)
+        )
+      );
+    },
+    [globalMutate, thread]
+  );
+
   return {
     // sdk
     thread: thread || null,
     delete: deleteThread,
-
+    setLastReadMessageTime,
     // react-lib
     isFetchingThread: thread === undefined && !errorFetchingThread,
     errorFetchingThread,
