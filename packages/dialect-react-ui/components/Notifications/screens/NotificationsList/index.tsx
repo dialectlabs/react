@@ -25,10 +25,9 @@ const NotificationsList = () => {
     params: { threadId },
   } = useRoute<{ threadId: ThreadId }>();
 
-  const { setLastReadMessageTime } = useThread({
-    findParams: { id: threadId },
+  const { messages, setLastReadMessageTime } = useThreadMessages({
+    id: threadId,
   });
-  const { messages } = useThreadMessages({ id: threadId });
 
   useEffect(
     function markAsRead() {
