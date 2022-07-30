@@ -2,6 +2,7 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.23] - 2022-07-30
 - feature: implement new notifications settings UI
 
 ## [1.0.0-beta.22] - 2022-07-26
