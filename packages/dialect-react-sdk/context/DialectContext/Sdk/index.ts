@@ -59,7 +59,6 @@ function useDialectSdk(
       encryptionKeysStore,
       backends = EMPTY_ARR,
     } = config;
-    console.log('sdk init');
     return Dialect.sdk({
       environment,
       wallet: adapter,
