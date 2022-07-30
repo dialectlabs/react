@@ -1,6 +1,5 @@
 import { useDialectDapp, useThread } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { Divider } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useRoute } from '../common/providers/Router';
 import IconButton from '../IconButton';
@@ -13,7 +12,7 @@ function Header(props: {
   onBackClick?: () => void;
 }) {
   const { navigate, current } = useRoute();
-  const { colors, textStyles, header, icons } = useTheme();
+  const { colors, textStyles, icons, notificationHeader } = useTheme();
   const isSettingsOpen = current?.name === RouteName.Settings;
   const { dappAddress } = useDialectDapp();
   const { thread } = useThread({
@@ -73,7 +72,7 @@ function Header(props: {
         <div
           className={clsx(
             'dt-flex dt-flex-row dt-items-center dt-justify-between',
-            header
+            notificationHeader
           )}
         >
           <div className="dt-flex dt-items-center">
@@ -84,7 +83,6 @@ function Header(props: {
           </div>
           {headerIcons}
         </div>
-        <Divider />
       </>
     );
   }
@@ -94,7 +92,7 @@ function Header(props: {
       <div
         className={clsx(
           'dt-flex dt-flex-row dt-items-center dt-justify-between',
-          header
+          notificationHeader
         )}
       >
         {!isSettingsOpen ? (
@@ -114,7 +112,6 @@ function Header(props: {
         )}
         {headerIcons}
       </div>
-      <Divider />
     </>
   );
 }

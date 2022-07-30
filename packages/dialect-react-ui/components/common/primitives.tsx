@@ -166,11 +166,18 @@ export function BigButton(props: {
   );
 }
 
+type SIZE = 'S' | 'M';
+
 export function Toggle({
   checked,
   onClick,
+  toggleSize,
   ...props // TODO: adjust the styles for a disabled toggle
-}: { checked: boolean; onClick: () => void } & DetailedHTMLProps<
+}: {
+  checked: boolean;
+  onClick: () => void;
+  toggleSize?: SIZE;
+} & DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 >) {
@@ -179,11 +186,18 @@ export function Toggle({
 
   useEffect(() => setChecked(checked), [checked]);
 
+  const size = toggleSize || 'M';
+  const translate =
+    size === 'M' ? 'dt-translate-x-[160%]' : 'dt-translate-x-3/4';
+
   return (
     <Label
       className={clsx(
         props.disabled ? 'dt-cursor-not-allowed' : 'dt-cursor-pointer',
-        'dt-flex dt-items-center dt-relative dt-h-5 dt-w-10'
+        'dt-flex dt-items-center dt-relative dt-h-5 dt-w-10',
+        size === 'M'
+          ? 'dt-h-5 dt-w-10 dt-rounded-full'
+          : 'dt-h-4 dt-w-7 dt-rounded-full'
       )}
     >
       <input
@@ -200,8 +214,10 @@ export function Toggle({
       {/* Background */}
       <span
         className={clsx(
-          'dt-h-5 dt-w-10 dt-rounded-full',
-          isChecked ? colors.toggleBackgroundActive : colors.toggleBackground
+          isChecked ? colors.toggleBackgroundActive : colors.toggleBackground,
+          size === 'M'
+            ? 'dt-h-5 dt-w-10 dt-rounded-full'
+            : 'dt-h-4 dt-w-7 dt-rounded-full'
         )}
       />
       {/* Thumb */}
@@ -209,7 +225,7 @@ export function Toggle({
         className={clsx(
           'dt-absolute dt-top-1 dt-left-1 dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
           colors.toggleThumb,
-          isChecked ? 'dt-translate-x-[160%]' : ''
+          isChecked ? translate : ''
         )}
       />
     </Label>

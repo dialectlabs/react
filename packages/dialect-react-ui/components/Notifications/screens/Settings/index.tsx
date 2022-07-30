@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 import { A, P } from '../../../common/preflighted';
 import type { Channel } from '../../../common/types';
-import { Footer, Section, ToggleSection, ValueRow } from '../../../common';
+import { Divider, Footer, Toggle, ValueRow } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import type { NotificationType } from '../..';
-import { Web3 } from './Web3';
-import { EmailForm } from './EmailForm';
-import { SmsForm } from './SmsForm';
-import { TelegramForm } from './TelegramForm';
 import { useNotificationSubscriptions } from '@dialectlabs/react-sdk';
+import Email from '../NewSettings/Email';
+import Sms from '../NewSettings/Sms';
+import Wallet from '../NewSettings/Wallet';
+import Telegram from '../NewSettings/Telegram';
 
 interface RenderNotificationTypeParams {
   name: string;
@@ -28,7 +28,7 @@ function Settings({
   channels,
   notifications: notificationsTypes,
 }: SettingsProps) {
-  const { textStyles, xPaddedText } = useTheme();
+  const { textStyles, xPaddedText, highlighted, colors } = useTheme();
   const {
     subscriptions: notificationSubscriptions,
     update: updateNotificationSubscription,
@@ -44,19 +44,24 @@ function Settings({
     onToggle,
     type,
   }: RenderNotificationTypeParams) => (
-    <div className="dt-mb-2">
-      <ToggleSection
-        key={id || name}
-        title={name}
-        checked={type === 'local' || enabled}
-        hideToggle={type === 'local'}
-        onChange={onToggle}
-        className={clsx('dt-mb-1')}
-      >
-        {detail && (
-          <P className={clsx(textStyles.small, 'dt-mb-1')}>{detail}</P>
+    <div className={clsx(highlighted, 'dt-mb-2', colors.highlight)}>
+      <div className="dt-flex dt-justify-between">
+        <span className={clsx(textStyles.body)}>{name}</span>
+        {type !== 'local' && (
+          <Toggle
+            key={id || name}
+            checked={enabled}
+            toggleSize="S"
+            onClick={() => onToggle?.()}
+          />
         )}
-      </ToggleSection>
+      </div>
+
+      {detail && (
+        <P className={clsx(textStyles.small, 'dt-mb-1 dt-mt-1 dt-opacity-60')}>
+          {detail}
+        </P>
+      )}
     </div>
   );
 
@@ -65,17 +70,17 @@ function Settings({
 
   return (
     <>
-      <div className={clsx('dt-py-2', xPaddedText)}>
+      <div className={clsx('dt-pt-4 dt-pb-2')}>
         {channels.map((channelSlug) => {
           let form;
           if (channelSlug === 'web3') {
-            form = <Web3 />;
+            form = <Wallet />;
           } else if (channelSlug === 'email') {
-            form = <EmailForm />;
+            form = <Email />;
           } else if (channelSlug === 'sms') {
-            form = <SmsForm />;
+            form = <Sms />;
           } else if (channelSlug === 'telegram') {
-            form = <TelegramForm />;
+            form = <Telegram />;
           }
           return (
             <div key={channelSlug} className="dt-mb-2">
@@ -84,7 +89,10 @@ function Settings({
           );
         })}
       </div>
-      <Section className="dt-mb-" title="Notification types">
+      <div className="dt-mt-2 dt-mb-6">
+        <Divider />
+      </div>
+      <div className="dt-mb-">
         {error && !notificationsTypes ? (
           <ValueRow
             label={<P className={clsx('dt-text-red-500')}>{error.message}</P>}
@@ -94,15 +102,6 @@ function Settings({
         ) : null}
         {notificationSubscriptions.length || notificationsTypes?.length ? (
           <>
-            <P
-              className={clsx(
-                textStyles.small,
-                xPaddedText,
-                'dt-opacity-50 dt-mb-3'
-              )}
-            >
-              The following notification types are supported
-            </P>
             {notificationSubscriptions.map(
               ({ notificationType, subscription }) =>
                 renderNotificationType({
@@ -132,7 +131,7 @@ function Settings({
               )}
           </>
         ) : null}
-      </Section>
+      </div>
       <P
         className={clsx(
           textStyles.small,

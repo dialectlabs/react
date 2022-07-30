@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- feature: implement new notifications settings UI
+
 ## [1.0.0-beta.22] - 2022-07-26
 - feature: configurable notifications in `<NotificationsButton/>` component settings
 - feature: configurable notifications in `<BroadcastForm/>` component
