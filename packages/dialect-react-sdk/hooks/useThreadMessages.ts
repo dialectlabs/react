@@ -11,7 +11,11 @@ import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInf
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
 import type { LocalThreadMessage, ThreadMessage } from '../types';
 import { EMPTY_ARR } from '../utils';
-import { CACHE_KEY_MESSAGES_FN, CACHE_KEY_THREADS } from './internal/swrCache';
+import {
+  CACHE_KEY_MESSAGES_FN,
+  CACHE_KEY_THREADS,
+  CACHE_KEY_THREAD_SUMMARY_FN,
+} from './internal/swrCache';
 import useThread from './useThread';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
@@ -34,6 +38,7 @@ interface UseThreadMessagesValue {
   // react-lib
   send(command: SendMessageCommand): Promise<void>;
   cancel(cmd: CancelMessageCommand): Promise<void>;
+  setLastReadMessageTime(time: Date): Promise<void>;
 
   isFetchingMessages: boolean;
   errorFetchingMessages: DialectSdkError | null;
@@ -144,10 +149,24 @@ const useThreadMessages = ({
 
   useDialectErrorsHandler(errorFetchingMessages, errorSendingMessage);
 
+  const setLastReadMessageTime = useCallback(
+    async (time: Date) => {
+      if (!thread) return;
+      await thread.setLastReadMessageTime(time);
+      globalMutate(
+        CACHE_KEY_THREAD_SUMMARY_FN(
+          thread.otherMembers.map((it) => it.publicKey)
+        )
+      );
+    },
+    [globalMutate, thread]
+  );
+
   return {
     messages,
     send: sendMessage,
     cancel: cancelMessage,
+    setLastReadMessageTime,
 
     isFetchingMessages,
     errorFetchingMessages,

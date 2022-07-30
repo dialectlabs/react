@@ -1,5 +1,5 @@
-import { ThreadId, useThreadMessages } from '@dialectlabs/react-sdk';
-import React from 'react';
+import { ThreadId, useThread, useThreadMessages } from '@dialectlabs/react-sdk';
+import React, { useEffect } from 'react';
 import { Divider } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../common/providers/Router';
@@ -25,7 +25,16 @@ const NotificationsList = () => {
     params: { threadId },
   } = useRoute<{ threadId: ThreadId }>();
 
-  const { messages } = useThreadMessages({ id: threadId });
+  const { messages, setLastReadMessageTime } = useThreadMessages({
+    id: threadId,
+  });
+
+  useEffect(
+    function markAsRead() {
+      setLastReadMessageTime(new Date());
+    },
+    [setLastReadMessageTime]
+  );
 
   if (!messages.length) {
     return <NoNotifications />;

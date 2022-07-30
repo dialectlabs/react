@@ -17,15 +17,7 @@ interface DialectSdkState {
 function useDialectSdk(
   config: Omit<ConfigProps, 'wallet'> = {}
 ): DialectSdkState {
-  const {
-    environment,
-    solana,
-    dialectCloud,
-    encryptionKeysStore,
-    backends = EMPTY_ARR,
-  } = config;
-  const { adapter, connected, initiateConnection } =
-    DialectWallet.useContainer();
+  const { adapter, initiateConnection } = DialectWallet.useContainer();
 
   // The idea is to check if we already has token stored somewhere to skip NotAuthorized screen
   // so that we check if sdk is about to be configred with local storage
@@ -33,6 +25,7 @@ function useDialectSdk(
   // if token is valid, then NotAuthorized will be skipped
   useEffect(
     function preValidateSdkToken() {
+      const { dialectCloud } = config;
       // checks if sdk configured to use local storage
       if (!dialectCloud) return;
       if (!dialectCloud.tokenStore) return;
@@ -54,11 +47,18 @@ function useDialectSdk(
       // if token valid, initiate connections will skip NotAuthorized screen
       initiateConnection();
     },
-    [dialectCloud, adapter, initiateConnection]
+    [config, adapter, initiateConnection]
   );
 
   const sdk = useMemo(() => {
-    if (!connected) return null;
+    if (!adapter.connected) return null;
+    const {
+      environment,
+      solana,
+      dialectCloud,
+      encryptionKeysStore,
+      backends = EMPTY_ARR,
+    } = config;
     return Dialect.sdk({
       environment,
       wallet: adapter,
@@ -67,7 +67,7 @@ function useDialectSdk(
       encryptionKeysStore,
       backends,
     });
-  }, [config, adapter, connected]);
+  }, [config, adapter]);
 
   return {
     sdk,

@@ -17,12 +17,18 @@ export interface DialectWalletState {
   isEncrypting: boolean;
 }
 
-function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
+function useDialectWallet({
+  adapter,
+  autoConnect = false,
+}: {
+  adapter?: DialectWalletAdapter;
+  autoConnect?: boolean;
+} = {}): DialectWalletState {
   if (!adapter) {
     throw new Error('dialect wallet adapter should be provided');
   }
 
-  const [connectionInitiated, setConnectionInitiated] = useState(false);
+  const [connectionInitiated, setConnectionInitiated] = useState(autoConnect);
   const [hardwareWalletForced, setHardwareWalletForced] = useState(false);
 
   const [isSigningFreeTransaction, setIsSigningFreeTransaction] =
@@ -33,10 +39,10 @@ function useDialectWallet(adapter?: DialectWalletAdapter): DialectWalletState {
   useEffect(
     function walletDisconnected() {
       if (!adapter.connected) {
-        setConnectionInitiated(false);
+        setConnectionInitiated(autoConnect);
       }
     },
-    [adapter]
+    [adapter, autoConnect]
   );
 
   const wrapDialectWallet = useCallback(

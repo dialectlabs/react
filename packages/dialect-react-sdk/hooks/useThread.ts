@@ -79,7 +79,6 @@ const useThread = ({
     // sdk
     thread: thread || null,
     delete: deleteThread,
-
     // react-lib
     isFetchingThread: thread === undefined && !errorFetchingThread,
     errorFetchingThread,

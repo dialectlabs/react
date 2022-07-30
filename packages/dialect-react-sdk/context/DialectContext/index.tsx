@@ -6,7 +6,6 @@ import { DialectDapp } from './Dapp';
 import { DialectGate, Gate } from './Gate';
 import { LocalMessages } from './LocalMessages';
 import { DialectSdk } from './Sdk';
-import { DialectUnreadMessages } from './UnreadMessages';
 import { DialectWallet } from './Wallet';
 
 export const DialectContext = React.createContext<null>(null);
@@ -16,27 +15,26 @@ type DialectContextProviderProps = {
   wallet: DialectWalletAdapter;
   dapp?: PublicKey;
   gate?: Gate;
+  autoConnect?: boolean;
   children?: React.ReactNode;
-  // temporary until new dialect cloud api appear
 };
 
 export const DialectContextProvider: React.FC<DialectContextProviderProps> = ({
   config,
   wallet,
   dapp,
+  autoConnect,
   gate,
   children,
 }) => {
   return (
     <DialectContext.Provider value={null}>
-      <DialectWallet.Provider initialState={wallet}>
+      <DialectWallet.Provider initialState={{ adapter: wallet, autoConnect }}>
         <DialectSdk.Provider initialState={config}>
           <DialectGate.Provider initialState={gate}>
             <DialectDapp.Provider initialState={dapp}>
               <DialectConnectionInfo.Provider initialState={config.backends}>
-                <DialectUnreadMessages.Provider>
-                  <LocalMessages.Provider>{children}</LocalMessages.Provider>
-                </DialectUnreadMessages.Provider>
+                <LocalMessages.Provider>{children}</LocalMessages.Provider>
               </DialectConnectionInfo.Provider>
             </DialectDapp.Provider>
           </DialectGate.Provider>
