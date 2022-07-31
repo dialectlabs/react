@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+
+## [1.0.0-beta.24] - 2022-07-31
 - fix: reduce trash can size
 
 ## [1.0.0-beta.23] - 2022-07-30
