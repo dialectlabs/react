@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- fix: reduce trash can size
 
 ## [1.0.0-beta.23] - 2022-07-30
 - feature: implement new notifications settings UI
