@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- feature: add unread notifictions indicator
 
 ## [1.0.0-beta.16] - 2022-07-26
 - feature: introduce `useNotificationSubscriptions` hook to configure notifications
