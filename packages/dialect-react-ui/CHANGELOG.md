@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.26] - 2022-08-02
+
+- fix: wallet address on settings screen
+
 ## [1.0.0-beta.25] - 2022-08-02
 
 - feature: add unread notifictions indicator

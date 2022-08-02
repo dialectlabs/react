@@ -140,7 +140,7 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
         >
           <div className="dt-flex dt-justify-between dt-items-center">
             <span className={'dt-opacity-40'}>
-              {display(wallet?.publicKey || '')}
+              {display(wallet.adapter.publicKey || '')}
             </span>
             {thread && !isLoading && (
               <IconButton
