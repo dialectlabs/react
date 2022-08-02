@@ -6,11 +6,11 @@ import {
   useAddresses,
   useDialectConnectionInfo,
   useDialectDapp,
+  useDialectWallet,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
 import { display } from '@dialectlabs/web3';
-import { useWallet } from '@solana/wallet-adapter-react';
 import clsx from 'clsx';
 import { useCallback } from 'react';
 import { Button, Loader, Toggle } from '../../../common';
@@ -27,7 +27,7 @@ type Web3Props = {
 const addressType = AddressType.Wallet;
 
 const Wallet = ({ onThreadDeleted }: Web3Props) => {
-  const wallet = useWallet();
+  const wallet = useDialectWallet();
   const { dappAddress } = useDialectDapp();
   const { textStyles, outlinedInput, addormentButton } = useTheme();
   const { icons } = useTheme();
