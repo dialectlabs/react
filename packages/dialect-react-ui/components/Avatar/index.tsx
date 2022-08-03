@@ -1,10 +1,10 @@
-import { useDialectSdk } from '@dialectlabs/react-sdk';
+import { useDapp, useDialectSdk } from '@dialectlabs/react-sdk';
 import type { Connection, PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import { HiUserCircle } from 'react-icons/hi';
 import useSWR from 'swr';
 import useAddressImage from '../../hooks/useAddressImage';
-import { fetchSolanaNameServiceName } from '../common';
+import { fetchSolanaNameServiceName, Loader } from '../common';
 import { Img } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 
@@ -63,11 +63,31 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
     },
   } = useDialectSdk();
 
+  const { dapps } = useDapp();
+
   const connection = dialectProgram.provider.connection;
   const { data } = useSWR(
     [connection, publicKey.toBase58(), 'sns'],
     fetchSolanaNameServiceName
   );
+
+  const dapp = dapps[publicKey.toString()];
+
+  if (dapp) {
+    return (
+      <div className={clsx(avatar, `dt-flex ${containerStyleMap[size]}`)}>
+        {dapp.avatarUrl ? (
+          <Img
+            className="dt-rounded-full"
+            alt={`dapp-profile-${dapp.name}`}
+            src={dapp.avatarUrl}
+          />
+        ) : (
+          <>{dapp.name[0]}</>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div
