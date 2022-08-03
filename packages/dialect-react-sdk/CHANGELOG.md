@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+
+## [1.0.0-beta.18] - 2022-08-03
+
 - feature: add dapp name and avatar in chat
 
 ## [1.0.0-beta.17] - 2022-08-02
