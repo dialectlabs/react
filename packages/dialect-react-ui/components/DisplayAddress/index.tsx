@@ -1,4 +1,5 @@
 import { getNameEntry } from '@cardinal/namespaces';
+import { useDapp } from '@dialectlabs/react-sdk';
 import { display } from '@dialectlabs/web3';
 import type { Connection, PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
@@ -166,6 +167,10 @@ export function DisplayAddress({
 }: DisplayAddressProps) {
   const { sns, cardinal } = useIdentity({ connection, otherMemberPK });
 
+  const { dapps } = useDapp();
+
+  const dapp = dapps[otherMemberPK.toString()];
+
   if (!otherMemberPK) return null;
 
   if (sns?.displayName) {
@@ -177,7 +182,7 @@ export function DisplayAddress({
     );
   }
 
-  if (!sns.isLoading && !cardinal.isLoading && cardinal.isTwitter) {
+  if (!dapp && !sns.isLoading && !cardinal.isLoading && cardinal.isTwitter) {
     return (
       <div className="dt-inline-flex items-center">
         <CardinalAddress
@@ -198,8 +203,8 @@ export function DisplayAddress({
 
   return (
     <span className="dt-flex dt-items-center dt-space-x-1">
-      <span>{display(otherMemberPK)}</span>
-      {(sns.isLoading || cardinal.isLoading) && <Loader />}
+      <span>{dapp ? dapp.name : display(otherMemberPK)}</span>
+      {!dapp && (sns.isLoading || cardinal.isLoading) && <Loader />}
     </span>
   );
 }
