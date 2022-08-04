@@ -23,11 +23,7 @@ function useDappNotificationSubscriptions({
   const { dapp } = useDapp();
   const subscriptionsApi = dapp?.notificationSubscriptions;
 
-  const {
-    data: subscriptions,
-    error: errorFetching = null,
-    isValidating: isFetching,
-  } = useSWR(
+  const { data: subscriptions, error: errorFetching = null } = useSWR(
     DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(dapp),
     subscriptionsApi
       ? () => {
@@ -42,7 +38,7 @@ function useDappNotificationSubscriptions({
 
   return {
     subscriptions: subscriptions || EMPTY_ARR,
-    isFetching,
+    isFetching: Boolean(dapp) && !errorFetching && subscriptions === undefined,
     errorFetching,
   };
 }
