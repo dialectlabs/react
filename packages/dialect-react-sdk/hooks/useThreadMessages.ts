@@ -151,7 +151,7 @@ const useThreadMessages = ({
 
   const setLastReadMessageTime = useCallback(
     async (time: Date) => {
-      if (!thread) return;
+      if (!thread || !thread?.setLastReadMessageTime) return;
       await thread.setLastReadMessageTime(time);
       globalMutate(
         CACHE_KEY_THREAD_SUMMARY_FN(
