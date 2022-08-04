@@ -1,14 +1,23 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+
+## [1.0.0-beta.18] - 2022-08-03
+
+- feature: add dapp name and avatar in chat
+
+## [1.0.0-beta.17] - 2022-08-02
+
 - feature: add unread notifictions indicator
 
 ## [1.0.0-beta.16] - 2022-07-26
+
 - feature: introduce `useNotificationSubscriptions` hook to configure notifications
 - feature: introduce `useDappNotificationSubscriptions` hook to fetch notification subscriptions on behalf of dapp
 - fix: types for react 18
 
 ## [1.0.0-beta.15] - 2022-07-25
+
 - fix: notification togglers
 - fix: auth request cancel do not mark state as connected
 

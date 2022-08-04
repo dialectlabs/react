@@ -1,20 +1,35 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+
+## [1.0.0-beta.27] - 2022-08-03
+
+- feature: add dapp name and avatar in chat
+
+## [1.0.0-beta.26] - 2022-08-02
+
+- fix: wallet address on settings screen
+
+## [1.0.0-beta.25] - 2022-08-02
+
 - feature: add unread notifictions indicator
 
 ## [1.0.0-beta.24] - 2022-07-31
+
 - fix: reduce trash can size
 
 ## [1.0.0-beta.23] - 2022-07-30
+
 - feature: implement new notifications settings UI
 
 ## [1.0.0-beta.22] - 2022-07-26
+
 - feature: configurable notifications in `<NotificationsButton/>` component settings
 - feature: configurable notifications in `<BroadcastForm/>` component
 - fix: types for react 18
 
 ## [1.0.0-beta.21] - 2022-07-25
+
 - chore: minor stylistic changes
 - fix: add missing notifs header
 - chore: better web3 notifications enable/disable button naming
