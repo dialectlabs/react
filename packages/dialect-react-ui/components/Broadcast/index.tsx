@@ -84,7 +84,12 @@ function WalletStateWrapper({
   return <>{children}</>;
 }
 
-function InnerBroadcast() {
+interface InnerBroadcastProps {
+  headless?: boolean;
+  notificationTypeId?: string;
+}
+
+function InnerBroadcast({ headless, notificationTypeId }: InnerBroadcastProps) {
   const {
     dapp,
     isFetching: isFetchingDapp,
@@ -117,7 +122,13 @@ function InnerBroadcast() {
     );
   }
 
-  return <BroadcastForm dapp={dapp} />;
+  return (
+    <BroadcastForm
+      dapp={dapp}
+      headless={headless}
+      notificationTypeId={notificationTypeId}
+    />
+  );
 }
 
 const Wrapper = (props) => {
@@ -130,11 +141,19 @@ const Wrapper = (props) => {
   );
 };
 
-function Broadcast() {
+interface BroadcastProps {
+  headless?: boolean;
+  notificationTypeId?: string;
+}
+
+function Broadcast({ headless, notificationTypeId }: BroadcastProps) {
   return (
     <Wrapper>
       <WalletStateWrapper>
-        <InnerBroadcast />
+        <InnerBroadcast
+          headless={headless}
+          notificationTypeId={notificationTypeId}
+        />
       </WalletStateWrapper>
     </Wrapper>
   );

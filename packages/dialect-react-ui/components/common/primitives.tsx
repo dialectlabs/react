@@ -108,6 +108,7 @@ export function Button(props: {
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
+  readOnly?: boolean;
   loading?: boolean;
   children: React.ReactNode;
 }): JSX.Element {
@@ -120,11 +121,12 @@ export function Button(props: {
       className={clsx(
         'dt-min-w-120 dt-px-4 dt-py-2 dt-rounded-lg dt-flex dt-flex-row dt-items-center dt-justify-center',
         textStyles.buttonText,
-        props.disabled ? disabledButton : defaultClassName,
+        props.disabled || props.readOnly ? disabledButton : defaultClassName,
         props.loading && loadingClassName,
         props.className
       )}
       onClick={props.onClick}
+      readOnly={props.readOnly}
       disabled={props.loading || props.disabled}
     >
       {!props.loading ? props.children : <Loader />}
