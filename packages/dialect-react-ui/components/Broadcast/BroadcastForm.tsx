@@ -21,6 +21,7 @@ const ADDRESSES_REFRESH_INTERVAL = 10000;
 interface BroadcastFormProps {
   dapp: Dapp;
   headless?: boolean;
+  notificationTypeId?: string;
 }
 
 const getUsersCount = (
@@ -107,7 +108,11 @@ const getAddressesSummary = (
     .join(', ');
 };
 
-function BroadcastForm({ dapp, headless }: BroadcastFormProps) {
+function BroadcastForm({
+  dapp,
+  headless,
+  notificationTypeId: notificationTypeIdExternal,
+}: BroadcastFormProps) {
   const {
     subscriptions: notificationsSubscriptions,
     // isFetching: isFetchingNotificationSubscriptions,
@@ -143,6 +148,10 @@ function BroadcastForm({ dapp, headless }: BroadcastFormProps) {
         notificationsSubscriptions[0]?.notificationType.id ?? null
       );
   }, [notificationTypeId, notificationsSubscriptions]);
+
+  useEffect(() => {
+    setNotificationTypeId(notificationTypeIdExternal ?? null);
+  }, [notificationTypeIdExternal]);
 
   const usersCount = useMemo(
     () =>
