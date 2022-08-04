@@ -20,6 +20,7 @@ const ADDRESSES_REFRESH_INTERVAL = 10000;
 
 interface BroadcastFormProps {
   dapp: Dapp;
+  headless?: boolean;
 }
 
 const getUsersCount = (
@@ -106,7 +107,7 @@ const getAddressesSummary = (
     .join(', ');
 };
 
-function BroadcastForm({ dapp }: BroadcastFormProps) {
+function BroadcastForm({ dapp, headless }: BroadcastFormProps) {
   const {
     subscriptions: notificationsSubscriptions,
     // isFetching: isFetchingNotificationSubscriptions,
@@ -174,6 +175,11 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
   }
 
   const sendBroadcastMessage = async () => {
+    if (noUsers) {
+      setError(new Error('No users in the audience for this broadcast'));
+      return;
+    }
+
     setIsSending(true);
     try {
       await dapp.messages.send({
@@ -221,15 +227,19 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
 
   return (
     <div className="dt-flex dt-flex-col dt-space-y-2">
-      <H1 className={clsx(textStyles.h1, colors.primary, 'dt-mb-4')}>
-        Create broadcast
-      </H1>
-      <ValueRow label="Category" className="dt-w-full">
-        <span>{renderNotificationTypeSelect()}</span>
-      </ValueRow>
-      <ValueRow label="📢 Broadcast users coverage" className="dt-w-full">
-        <span title={addressesSummary}>{usersInfo}</span>
-      </ValueRow>
+      {!headless ? (
+        <>
+          <H1 className={clsx(textStyles.h1, colors.primary, 'dt-mb-4')}>
+            Create broadcast
+          </H1>
+          <ValueRow label="Category" className="dt-w-full">
+            <span>{renderNotificationTypeSelect()}</span>
+          </ValueRow>
+          <ValueRow label="📢 Broadcast users coverage" className="dt-w-full">
+            <span title={addressesSummary}>{usersInfo}</span>
+          </ValueRow>
+        </>
+      ) : null}
       <div>
         <Input
           placeholder="Title"
@@ -261,7 +271,7 @@ function BroadcastForm({ dapp }: BroadcastFormProps) {
       <Button
         onClick={sendBroadcastMessage}
         loading={isSending}
-        disabled={isSubmitDisabled}
+        readOnly={isSubmitDisabled}
       >
         {isSending ? 'Sending...' : 'Send'}
       </Button>
