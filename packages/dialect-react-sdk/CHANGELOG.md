@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.19] - 2022-08-04
+
 - fix: calculate `isFetching` in `useDappNotificationSubscriptions` in the same way it's done in other hooks
 
 ## [1.0.0-beta.18] - 2022-08-03
