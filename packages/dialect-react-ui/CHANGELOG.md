@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.28] - 2022-08-04
+
+- feature: add headless mode for `<Broadcast />`
+
 ## [1.0.0-beta.27] - 2022-08-03
 
 - feature: add dapp name and avatar in chat
