@@ -89,7 +89,7 @@ function AuthedHome() {
                 'This is an example notification that is never sent. More examples coming soon',
             },
           ]}
-          pollingInterval={15000}
+          pollingInterval={1000}
           channels={['web3', 'email', 'sms', 'telegram']}
         />
         <WalletButton />

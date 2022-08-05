@@ -191,7 +191,7 @@ const Notifications = () => {
         How often should polling happen. If not provided, fetch would happen once. SWR will handle refetch on focus or simple page refresh.
         Best to set it, if you are using web3 notifications.
        */}
-      pollingInterval={15000}
+      pollingInterval={1000}
       {/* 
         `channels` prop specifies which types are supported for notification subscription. 
         Accepts an array, containing the following values: 
