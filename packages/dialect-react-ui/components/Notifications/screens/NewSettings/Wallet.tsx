@@ -3,10 +3,11 @@ import {
   Backend,
   Thread,
   ThreadMemberScope,
-  useAddresses,
   useDialectConnectionInfo,
   useDialectDapp,
   useDialectWallet,
+  useNotificationChannel,
+  useNotificationChannelDappSubscription,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
@@ -35,12 +36,19 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
   const { navigate } = useRoute();
 
   const {
-    addresses: { WALLET: walletObj },
-    toggle: toggleAddress,
+    globalAddress: walletObj,
     delete: deleteAddress,
     isCreatingAddress,
     isDeletingAddress,
-  } = useAddresses();
+  } = useNotificationChannel({ addressType });
+
+  const {
+    enabled: subscriptionEnabled,
+    toggleSubscription,
+    isToggling,
+  } = useNotificationChannelDappSubscription({
+    addressType,
+  });
 
   const {
     connected: {
@@ -57,17 +65,17 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
       ? Backend.Solana
       : Backend.DialectCloud;
 
-  const { thread, delete: deleteDialect } = useThread({
-    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
-  });
-
-  const { isDeletingThread } = useThread({
+  const {
+    thread,
+    delete: deleteDialect,
+    isDeletingThread,
+  } = useThread({
     findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
 
   const deleteThread = useCallback(async () => {
     await deleteDialect();
-    await deleteAddress({ addressType });
+    await deleteAddress();
     onThreadDeleted?.();
   }, [deleteAddress, deleteDialect, onThreadDeleted]);
 
@@ -102,21 +110,10 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
   const isLoading = isDeletingThread || isCreatingThread || isDeletingAddress;
 
   const toggleWeb3 = async (nextValue: boolean) => {
-    if (!walletObj || walletObj?.enabled === nextValue) {
-      return;
-    }
-    await toggleAddress({
-      addressType: AddressType.Wallet,
+    await toggleSubscription({
       enabled: nextValue,
     });
   };
-
-  const isWeb3Enabled =
-    walletObj?.enabled ||
-    isCreatingThread ||
-    isCreatingAddress ||
-    isDeletingThread ||
-    isDeletingAddress;
 
   return (
     <div>
@@ -174,16 +171,16 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
         <div className="dt-flex dt-flex-row dt-space-x-2 dt-items-center dt-mt-1">
           <Toggle
             type="checkbox"
-            checked={isWeb3Enabled}
+            checked={subscriptionEnabled}
             toggleSize="S"
-            onClick={async () => {
-              const nextValue = !isWeb3Enabled;
-              await toggleWeb3?.(nextValue);
+            onChange={(checked) => {
+              if (isToggling) return;
+              return toggleSubscription({ enabled: checked });
             }}
           />
 
           <P className={clsx(textStyles.small, 'dt-opacity-60')}>
-            Notifications {isWeb3Enabled ? 'on' : 'off'}
+            Notifications {subscriptionEnabled ? 'on' : 'off'}
           </P>
 
           {backend === Backend.Solana && (

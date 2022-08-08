@@ -1,11 +1,12 @@
 import {
   AddressType,
-  useAddresses,
+  useNotificationChannel,
   useDialectDapp,
   useDialectWallet,
   useNotificationSubscriptions,
   useThread,
   useThreads,
+  useNotificationChannelDappSubscription,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
@@ -48,13 +49,17 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const [isInitialRoutePicked, setInitialRoutePicked] = useState(false);
 
   const {
-    addresses: { WALLET: walletAddress },
+    globalAddress: walletAddress,
     isFetching: isFetchingAddresses,
     create: createAddress,
     delete: deleteAddress,
     isCreatingAddress,
     isDeletingAddress,
-  } = useAddresses();
+  } = useNotificationChannel({ addressType });
+
+  const subscription = useNotificationChannelDappSubscription({
+    addressType,
+  });
 
   const { isFetching: isFetchingNotificationsSubscriptions } =
     useNotificationSubscriptions();
@@ -69,7 +74,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   }, [isFetchingNotificationsSubscriptions]);
 
   const isWeb3Enabled =
-    walletAddress?.enabled ||
+    subscription.enabled ||
     isCreatingThread ||
     isCreatingAddress ||
     isDeletingThread ||
@@ -110,16 +115,16 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       )
         return;
 
-      if (thread && !walletAddress) {
-        // In case the wallet isn't in web2 db, but the actual thread was created
-        createAddress({
-          addressType,
-          value: wallet.publicKey?.toBase58(),
-        });
-      } else if (!thread && walletAddress) {
-        // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
-        deleteAddress({ addressType });
-      }
+      // if (thread && !walletAddress) {
+      //   // In case the wallet isn't in web2 db, but the actual thread was created
+      //   createAddress({
+      //     addressType,
+      //     value: wallet.publicKey?.toBase58(),
+      //   });
+      // } else if (!thread && walletAddress) {
+      //   // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
+      //   deleteAddress({ addressType });
+      // }
     },
     [
       isFetchingThread,
@@ -174,7 +179,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       prevThread?.id,
       showThread,
       showSettings,
-      walletAddress?.enabled,
+      subscription?.enabled,
       isFetchingAddresses,
       isInitialRoutePicked,
     ]

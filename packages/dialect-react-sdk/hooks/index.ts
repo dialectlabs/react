@@ -8,7 +8,8 @@ export { default as useDialectConnectionInfo } from './useDialectConnectionInfo'
 export { default as useUnreadMessages } from './useUnreadMessages';
 export { default as useDapp } from './useDapp';
 export { default as useDappAddresses } from './useDappAddresses';
-export { default as useAddresses } from './useAddresses';
+export { default as useNotificationChannel } from './useNotificationChannel';
+export { default as useNotificationChannelDappSubscription } from './useNotificationChannelDappSubscription';
 export { default as useDialectGate } from './useDialectGate';
 export { default as useNotificationSubscriptions } from './useNotificationSubscriptions';
 export { default as useDappNotificationSubscriptions } from './useDappNotificationSubscriptions';

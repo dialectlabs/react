@@ -1,7 +1,11 @@
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
 import { RightAdornment } from './RightAdorment';
-import { AddressType, useAddresses } from '@dialectlabs/react-sdk';
+import {
+  AddressType,
+  useNotificationChannel,
+  useNotificationChannelDappSubscription,
+} from '@dialectlabs/react-sdk';
 import { useEffect, useState } from 'react';
 import { P } from '../../../common/preflighted';
 import { VerificationInput } from './VerificationInput';
@@ -13,12 +17,10 @@ const addressType = AddressType.PhoneNumber;
 
 const Sms = () => {
   const {
-    addresses: { [addressType]: smsAddress },
+    globalAddress: smsAddress,
     create: createAddress,
     delete: deleteAddress,
     update: updateAddress,
-
-    toggle: toggleAddress,
 
     isCreatingAddress,
     isUpdatingAddress,
@@ -27,17 +29,22 @@ const Sms = () => {
     isVerifyingCode,
 
     errorFetching: errorFetchingAddresses,
-  } = useAddresses();
+  } = useNotificationChannel({ addressType });
+
+  const {
+    enabled: subscriptionEnabled,
+    isToggling,
+    toggleSubscription,
+  } = useNotificationChannelDappSubscription({ addressType });
 
   const { textStyles } = useTheme();
 
-  const [smsNumber, setSmsNumber] = useState(smsAddress?.value);
+  const [smsNumber, setSmsNumber] = useState(smsAddress?.value || '');
   const [error, setError] = useState<Error | null>(null);
-  const [isEnabled, setIsEnabled] = useState(Boolean(smsAddress?.enabled));
   const [isDeleting, setIsDeleting] = useState(false);
 
   const isSmsNumberSaved = Boolean(smsAddress);
-  const isVerified = smsAddress?.verified;
+  const isVerified = smsAddress?.verified || false;
 
   const isLoading =
     isCreatingAddress ||
@@ -50,25 +57,20 @@ const Sms = () => {
 
   useEffect(() => {
     setSmsNumber(smsAddress?.value || '');
-  }, [isSmsNumberSaved, smsAddress?.enabled, smsAddress?.value]);
+  }, [isSmsNumberSaved, smsAddress?.value]);
 
   const updateSmsNumber = async () => {
-    if (error) return;
-
     try {
-      await updateAddress({ addressType, value: smsNumber });
+      await updateAddress({ value: smsNumber });
       setError(null);
     } catch (e) {
       setError(e as Error);
-    } finally {
     }
   };
 
   const saveSmsNumber = async () => {
-    if (error) return;
-
     try {
-      await createAddress({ addressType, value: smsNumber });
+      await createAddress({ value: smsNumber });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -77,7 +79,7 @@ const Sms = () => {
 
   const deleteSmsNumber = async () => {
     try {
-      await deleteAddress({ addressType });
+      await deleteAddress();
       setError(null);
       setIsDeleting(false);
     } catch (e) {
@@ -86,12 +88,8 @@ const Sms = () => {
   };
 
   const toggleSms = async (nextValue: boolean) => {
-    if (!smsAddress || smsAddress?.enabled === nextValue) {
-      return;
-    }
     try {
-      await toggleAddress({
-        addressType,
+      await toggleSubscription({
         enabled: nextValue,
       });
       setError(null);
@@ -118,7 +116,7 @@ const Sms = () => {
         <VerificationInput
           onCancel={deleteSmsNumber}
           addressType={addressType}
-          description="Сheck sms for verification code."
+          description="Check sms for verification code."
         />
       ) : (
         <OutlinedInput
@@ -191,12 +189,12 @@ const Sms = () => {
           {isEditing && (
             <div>
               <span className="dt-opacity-60">
-                Updating your email here will update it across all dapps you've
-                signed up.
+                Updating your sms number here will update it across all dapps
+                you've signed up.
               </span>
               <span
                 onClick={() => {
-                  setSmsNumber(smsAddress?.value);
+                  setSmsNumber(smsAddress?.value || '');
                 }}
                 className="dt-inline-block dt-cursor-pointer"
               >
@@ -223,16 +221,15 @@ const Sms = () => {
           <Toggle
             type="checkbox"
             toggleSize={'S'}
-            checked={isEnabled}
-            onClick={async () => {
-              const nextValue = !isEnabled;
-              await toggleSms?.(nextValue);
-              setIsEnabled(nextValue);
+            checked={subscriptionEnabled}
+            onChange={(value) => {
+              if (isToggling) return;
+              return toggleSms(value);
             }}
           />
 
           <P className={clsx(textStyles.small, 'dt-opacity-60')}>
-            Notifications {isEnabled ? 'on' : 'off'}
+            Notifications {subscriptionEnabled ? 'on' : 'off'}
           </P>
         </div>
       )}

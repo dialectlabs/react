@@ -8,7 +8,6 @@ import {
   DialectWalletAdapter,
   IncomingThemeVariables,
   NotificationsButton,
-  TokenStore,
 } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
@@ -122,8 +121,11 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo(
     (): Config => ({
-      backends: [Backend.Solana, Backend.DialectCloud],
+      backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'development',
+      dialectCloud: {
+        tokenStore: 'local-storage',
+      },
     }),
     []
   );
