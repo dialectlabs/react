@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- refactor: separate wrappers for wallet, connection, encryption states, export them from `react-ui`
+
 ## [1.0.0-beta.28] - 2022-08-04
 
 - feature: add headless mode for `<Broadcast />`
