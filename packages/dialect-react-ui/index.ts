@@ -30,6 +30,10 @@ import type {
   IncomingThemeValues,
 } from './components/common/providers/DialectThemeProvider';
 import type { ChatNavigationHelpers } from './components/Chat/types';
+import WalletStatesWrapper from './entities/wrappers/WalletStatesWrapper';
+import ConnectionWrapper from './entities/wrappers/ConnectionWrapper';
+import DashboardWrapper from './entities/wrappers/DashboardWrapper';
+import ThreadEncyprionWrapper from './entities/wrappers/ThreadEncryptionWrapper';
 
 import Broadcast from './components/Broadcast';
 
@@ -53,6 +57,11 @@ export {
   ChatThreadRouteName,
   ChatMainRouteName,
   Broadcast,
+  // etc for building custom components
+  WalletStatesWrapper,
+  ConnectionWrapper,
+  DashboardWrapper,
+  ThreadEncyprionWrapper,
 };
 
 export type {

@@ -1,29 +1,21 @@
-import {
-  useDialectConnectionInfo,
-  useDialectWallet,
-} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect } from 'react';
-import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
-import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import { Header } from '../Header';
-import { MainRouteName, RouteName } from './constants';
+import { RouteName } from './constants';
 import {
   showCreateThread,
   showMain,
   showThread,
   showThreadSettings,
 } from './navigation';
-import { ChatProvider, useChatInternal } from './provider';
-import EncryptionInfo from '../../entities/wallet-states/EncryptionInfo';
-import SignMessageInfo from '../../entities/wallet-states/SignMessageInfo';
+import { ChatProvider } from './provider';
 import Main from './screens/Main';
 import type { ChatNavigationHelpers } from './types';
-import SignTransactionInfo from '../../entities/wallet-states/SignTransactionInfo';
-import NotAuthorizedError from '../../entities/errors/ui/NotAuthorizedError';
+import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
+import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
 
 type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
@@ -35,27 +27,9 @@ interface InnerChatProps {
 }
 
 function InnerChat({ dialectId }: InnerChatProps): JSX.Element {
-  const { configure, ui } = useDialectUiId(dialectId);
-  const { type, onChatClose, onChatOpen } = useChatInternal();
+  const { configure } = useDialectUiId(dialectId);
 
   const { navigate } = useRoute();
-
-  const { isSigningFreeTransaction, isSigningMessage, isEncrypting } =
-    useDialectWallet();
-
-  // rendering header to avoid empty header in bottom chat
-  const defaultHeader = (
-    <Header
-      type={type}
-      onClose={onChatClose}
-      onOpen={onChatOpen}
-      onHeaderClick={onChatOpen}
-      isWindowOpen={ui?.open}
-    >
-      <Header.Title>Messages</Header.Title>
-      <Header.Icons />
-    </Header>
-  );
 
   useEffect(() => {
     configure<ChatNavigationHelpers>({
@@ -71,35 +45,8 @@ function InnerChat({ dialectId }: InnerChatProps): JSX.Element {
     });
   }, [configure, navigate]);
 
-  useEffect(
-    function pickRoute() {
-      if (isSigningMessage) {
-        navigate(RouteName.SigningRequest);
-      } else if (isSigningFreeTransaction) {
-        navigate(RouteName.SigningTransaction);
-      } else if (isEncrypting) {
-        navigate(RouteName.EncryptionRequest);
-      } else {
-        navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
-      }
-    },
-    [navigate, isSigningMessage, isSigningFreeTransaction, isEncrypting]
-  );
-
   return (
     <>
-      <Route name={RouteName.SigningRequest}>
-        {defaultHeader}
-        <SignMessageInfo />
-      </Route>
-      <Route name={RouteName.SigningTransaction}>
-        {defaultHeader}
-        <SignTransactionInfo />
-      </Route>
-      <Route name={RouteName.EncryptionRequest}>
-        {defaultHeader}
-        <EncryptionInfo />
-      </Route>
       <Route name={RouteName.Main}>
         <Main />
       </Route>
@@ -128,28 +75,6 @@ export default function Chat({
 
   const { colors, modal, slider } = useTheme();
 
-  const {
-    connected: {
-      solana: {
-        connected: isSolanaConnected,
-        shouldConnect: isSolanaShouldConnect,
-      },
-      dialectCloud: {
-        connected: isDialectCloudConnected,
-        shouldConnect: isDialectCloudShouldConnect,
-      },
-    },
-  } = useDialectConnectionInfo();
-
-  const {
-    connectionInitiated,
-    adapter: { connected: isWalletConnected },
-  } = useDialectWallet();
-
-  const someBackendConnected =
-    (isSolanaShouldConnect && isSolanaConnected) ||
-    (isDialectCloudShouldConnect && isDialectCloudConnected);
-
   const defaultHeader = (
     <Header
       type={type}
@@ -166,43 +91,9 @@ export default function Chat({
   // we should render errors immediatly right after error appears
   // that's why useEffect is not suitable to handle logic
   // rendering header to avoid empty header in bottom chat
-  const renderError = () => {
-    if (!isWalletConnected) {
-      return (
-        <>
-          {defaultHeader}
-          <NoWalletError />
-        </>
-      );
-    }
-
-    if (!connectionInitiated) {
-      return (
-        <>
-          {defaultHeader}
-          <NotAuthorizedError />
-        </>
-      );
-    }
-
-    if (!someBackendConnected) {
-      return (
-        <>
-          {defaultHeader}
-          <NoConnectionError />
-        </>
-      );
-    }
-
-    return null;
-  };
-
-  const renderedError = renderError();
-
-  const hasError = Boolean(renderedError);
 
   return (
-    <Router>
+    <Router initialRoute={RouteName.Main}>
       <ChatProvider
         dialectId={dialectId}
         type={type}
@@ -225,7 +116,11 @@ export default function Chat({
               { [slider]: type === 'vertical-slider' }
             )}
           >
-            {hasError ? renderedError : <InnerChat {...props} />}
+            <WalletStatesWrapper header={defaultHeader}>
+              <ConnectionWrapper header={defaultHeader}>
+                <InnerChat {...props} />
+              </ConnectionWrapper>
+            </WalletStatesWrapper>
           </div>
         </div>
       </ChatProvider>

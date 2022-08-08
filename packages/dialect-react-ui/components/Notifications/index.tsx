@@ -1,7 +1,6 @@
 import {
   AddressType,
   useAddresses,
-  useDialectConnectionInfo,
   useDialectDapp,
   useDialectWallet,
   useNotificationSubscriptions,
@@ -10,21 +9,19 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
-import NoConnectionError from '../../entities/errors/ui/NoConnectionError';
-import NoWalletError from '../../entities/errors/ui/NoWalletError';
 import LoadingThread from '../../entities/LoadingThread';
 import usePrevious from '../../hooks/usePrevious';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
-import WalletStatesWrapper from '../common/WalletStatesWrapper';
+import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
 import GatedWrapper from '../common/GatedWrapper';
 import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
 import Settings from './screens/Settings';
-import NotAuthorizedError from '../../entities/errors/ui/NotAuthorizedError';
-import IconButton from '../IconButton';
+import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
+import ThreadEncyprionWrapper from '../../entities/wrappers/ThreadEncryptionWrapper';
 
 export type NotificationType = {
   name: string;
@@ -217,48 +214,8 @@ export default function Notifications({
   gatedView,
   ...props
 }: NotificationsProps) {
-  const { colors, modal, header, textStyles, icons } = useTheme();
-
-  const {
-    connectionInitiated,
-    adapter: { connected: isWalletConnected },
-  } = useDialectWallet();
-
-  const {
-    connected: {
-      solana: {
-        connected: isSolanaConnected,
-        shouldConnect: isSolanaShouldConnect,
-      },
-      dialectCloud: {
-        connected: isDialectCloudConnected,
-        shouldConnect: isDialectCloudShouldConnect,
-      },
-    },
-  } = useDialectConnectionInfo();
-
-  const someBackendConnected =
-    (isSolanaShouldConnect && isSolanaConnected) ||
-    (isDialectCloudShouldConnect && isDialectCloudConnected);
-
-  // we should render errors immediatly right after error appears
-  // that's why useEffect is not suitable to handle logic
-  const renderError = () => {
-    if (!isWalletConnected) {
-      return <NoWalletError />;
-    }
-    if (!connectionInitiated) {
-      return <NotAuthorizedError />;
-    }
-    if (!someBackendConnected) {
-      return <NoConnectionError />;
-    }
-    return null;
-  };
-
-  const renderedError = renderError();
-
-  const hasError = Boolean(renderedError);
+  const { dappAddress } = useDialectDapp();
+  const { colors, modal } = useTheme();
 
   return (
     <div className="dialect dt-h-full">
@@ -271,27 +228,15 @@ export default function Notifications({
         )}
       >
         <Router initialRoute={RouteName.Settings}>
-          {hasError ? (
-            <>
-              <div
-                className={clsx(
-                  'dt-flex dt-flex-row dt-items-center dt-justify-end',
-                  header
-                )}
-              >
-                <span className={clsx(textStyles.header, colors.accent)}>
-                  <IconButton icon={<icons.x />} onClick={props.onModalClose} />
-                </span>
-              </div>
-              {renderedError}
-            </>
-          ) : (
-            <WalletStatesWrapper>
+          <WalletStatesWrapper>
+            <ConnectionWrapper>
               <GatedWrapper gatedView={gatedView}>
-                <InnerNotifications {...props} />
+                <ThreadEncyprionWrapper otherMemberPK={dappAddress}>
+                  <InnerNotifications {...props} />
+                </ThreadEncyprionWrapper>
               </GatedWrapper>
-            </WalletStatesWrapper>
-          )}
+            </ConnectionWrapper>
+          </WalletStatesWrapper>
         </Router>
       </div>
     </div>
