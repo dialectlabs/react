@@ -4,7 +4,7 @@ import NoConnectionError from '../errors/ui/NoConnectionError';
 // Only renders children if connected to successfully some backend
 
 interface ConnectionWrapperProps {
-  header: JSX.Element | null;
+  header?: JSX.Element | null;
   children?: React.ReactNode;
 }
 
