@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - refactor: separate wrappers for wallet, connection, encryption states, export them from `react-ui`
+- chore: export unwrapped component `<BroadcastForm/>` as well to be able to compose custom dashboards
 
 ## [1.0.0-beta.28] - 2022-08-04
 
