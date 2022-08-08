@@ -34,13 +34,6 @@ export default function ConnectionWrapper({
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
 
-  console.log({
-    isSolanaShouldConnect,
-    isDialectCloudShouldConnect,
-    isSolanaConnected,
-    isDialectCloudConnected,
-  });
-
   if (!someBackendConnected) {
     return (
       <>
