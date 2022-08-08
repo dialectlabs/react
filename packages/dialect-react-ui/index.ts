@@ -6,6 +6,10 @@ import Notifications from './components/Notifications';
 import NotificationsButton from './components/NotificationsButton';
 import NotificationsModal from './components/NotificationsModal';
 import Inbox from './components/Inbox';
+
+import Broadcast from './components/Broadcast';
+import BroadcastForm from './components/Broadcast/BroadcastForm';
+
 import {
   defaultVariables,
   DialectThemeProvider,
@@ -35,8 +39,6 @@ import ConnectionWrapper from './entities/wrappers/ConnectionWrapper';
 import DashboardWrapper from './entities/wrappers/DashboardWrapper';
 import ThreadEncyprionWrapper from './entities/wrappers/ThreadEncryptionWrapper';
 
-import Broadcast from './components/Broadcast';
-
 const ThemeProvider = DialectThemeProvider;
 
 export {
@@ -57,6 +59,7 @@ export {
   ChatThreadRouteName,
   ChatMainRouteName,
   Broadcast,
+  BroadcastForm,
   // etc for building custom components
   WalletStatesWrapper,
   ConnectionWrapper,
