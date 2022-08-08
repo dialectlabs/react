@@ -2,6 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.30] - 2022-08-08
+
+- fix: export safe version of broadcast form with already filled dapp prop
+
+## [1.0.0-beta.29] - 2022-08-08
+
 - refactor: separate wrappers for wallet, connection, encryption states, export them from `react-ui`
 - chore: export unwrapped component `<BroadcastForm/>` as well to be able to compose custom dashboards
 
