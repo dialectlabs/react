@@ -8,10 +8,12 @@ import SignTransactionInfo from '../wallet-states/SignTransactionInfo';
 
 interface WalletStatesWrapperProps {
   notConnectedMessage?: string | JSX.Element;
+  header?: JSX.Element | null;
   children: JSX.Element;
 }
 
 function WalletStatesWrapper({
+  header = null,
   notConnectedMessage,
   children,
 }: WalletStatesWrapperProps) {
@@ -23,19 +25,39 @@ function WalletStatesWrapper({
   } = useDialectWallet();
 
   if (!isWalletConnected) {
-    return <NoWalletError message={notConnectedMessage} />;
+    return (
+      <>
+        {header}
+        <NoWalletError message={notConnectedMessage} />
+      </>
+    );
   }
 
   if (isSigningMessage) {
-    return <SignMessageInfo />;
+    return (
+      <>
+        {header}
+        <SignMessageInfo />
+      </>
+    );
   }
 
   if (isSigningFreeTransaction) {
-    return <SignTransactionInfo />;
+    return (
+      <>
+        {header}
+        <SignTransactionInfo />
+      </>
+    );
   }
 
   if (isEncrypting) {
-    return <EncryptionInfo />;
+    return (
+      <>
+        {header}
+        <EncryptionInfo />
+      </>
+    );
   }
 
   return children;
