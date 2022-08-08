@@ -14,6 +14,7 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 import ToastMessage from '../common/ToastMessage';
 
 // utf8 bytes
+const GENERAL_BROADCAST = 'general-broadcast';
 const MESSAGE_BYTES_LIMIT = 800;
 const TITLE_BYTES_LIMIT = 100;
 const ADDRESSES_REFRESH_INTERVAL = 10000;
@@ -35,18 +36,23 @@ const getUsersCount = (
     .filter((address) => address.address.verified)
     .filter((address) => addressTypePredicate(address.address.type));
   const enabledSubscriptionsPKs = subscriptions
-    .filter(
-      (sub) =>
+    .filter((sub) => {
+      if (notificationTypeId === GENERAL_BROADCAST) {
+        return true;
+      }
+      return (
         (sub.notificationType.id === notificationTypeId ||
           !notificationTypeId) &&
         sub.subscriptions.find((subscription) => subscription.config.enabled)
-    )
+      );
+    })
     .flatMap((it) => it.subscriptions);
   const filtered = enabledSubscriptionsPKs.filter((subscription) =>
     enabledAndVerifiedAddresses.find((address) =>
       address.address.wallet.publicKey.equals(subscription.wallet.publicKey)
     )
   );
+
   return [...new Set(filtered.map((it) => it.wallet.publicKey.toBase58()))]
     .length;
 };
@@ -225,6 +231,9 @@ function BroadcastForm({
         className="dt-bg-transparent dt-text-inherit focus:dt-outline-0 dt-text-right"
         onChange={(event) => setNotificationTypeId(event.target.value)}
       >
+        <option key="general-broadcast" value={GENERAL_BROADCAST}>
+          📢 General broadcast
+        </option>
         {notificationsSubscriptions.map(({ notificationType }) => (
           <option key={notificationType.id} value={notificationType.id}>
             {notificationType.name}
