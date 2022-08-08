@@ -21,7 +21,7 @@ interface BroadcastProps {
   notificationTypeId?: string;
 }
 
-function InnerBroadcast(props: BroadcastProps) {
+export function UnwrappedBroadcastForm(props: BroadcastProps) {
   const { dapp } = useDapp();
 
   // Nice error handling already exists in <DashboardWrapper />
@@ -46,7 +46,7 @@ function Broadcast(props: BroadcastProps) {
       >
         <ConnectionWrapper>
           <DashboardWrapper>
-            <InnerBroadcast {...props} />
+            <UnwrappedBroadcastForm {...props} />
           </DashboardWrapper>
         </ConnectionWrapper>
       </WalletStatesWrapper>

@@ -7,8 +7,9 @@ import NotificationsButton from './components/NotificationsButton';
 import NotificationsModal from './components/NotificationsModal';
 import Inbox from './components/Inbox';
 
-import Broadcast from './components/Broadcast';
-import BroadcastForm from './components/Broadcast/BroadcastForm';
+import Broadcast, {
+  UnwrappedBroadcastForm as BroadcastForm,
+} from './components/Broadcast';
 
 import {
   defaultVariables,
