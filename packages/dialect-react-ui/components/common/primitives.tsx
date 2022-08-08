@@ -177,7 +177,7 @@ export function Toggle({
   ...props // TODO: adjust the styles for a disabled toggle
 }: {
   checked: boolean;
-  onChange: (checked: boolean) => void;
+  onChange?: (checked: boolean) => void;
   toggleSize?: SIZE;
 } & Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,

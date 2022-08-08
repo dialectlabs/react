@@ -16,7 +16,7 @@ interface RenderNotificationTypeParams {
   id?: string;
   enabled?: boolean;
   type: 'local' | 'remote';
-  onToggle?: () => void;
+  onToggle?: (value: boolean) => void;
 }
 
 interface SettingsProps {
@@ -32,11 +32,12 @@ function Settings({
   const {
     subscriptions: notificationSubscriptions,
     update: updateNotificationSubscription,
+    isUpdating,
     errorUpdating: errorUpdatingNotificationSubscription,
     errorFetching: errorFetchingNotificationsConfigs,
   } = useNotificationSubscriptions();
 
-  const renderNotificationType = ({
+  const NotificationType = ({
     id,
     name,
     detail,
@@ -52,7 +53,7 @@ function Settings({
             key={id || name}
             checked={enabled}
             toggleSize="S"
-            onClick={() => onToggle?.()}
+            onChange={onToggle}
           />
         )}
       </div>
@@ -103,32 +104,36 @@ function Settings({
         {notificationSubscriptions.length || notificationsTypes?.length ? (
           <>
             {notificationSubscriptions.map(
-              ({ notificationType, subscription }) =>
-                renderNotificationType({
-                  id: notificationType.id,
-                  name: notificationType.name,
-                  enabled: subscription.config.enabled,
-                  type: 'remote',
-                  detail: notificationType.trigger,
-                  onToggle: () => {
+              ({ notificationType, subscription }) => (
+                <NotificationType
+                  key={notificationType.id}
+                  id={notificationType.id}
+                  name={notificationType.name}
+                  enabled={subscription.config.enabled}
+                  type="remote"
+                  detail={notificationType.trigger}
+                  onToggle={(value) => {
+                    if (isUpdating) return;
                     updateNotificationSubscription({
                       notificationTypeId: notificationType.id,
                       config: {
                         ...subscription.config,
-                        enabled: !subscription.config.enabled,
+                        enabled: value,
                       },
                     });
-                  },
-                })
+                  }}
+                />
+              )
             )}
             {/* Render manually passed types in case api doesn't return anything */}
             {!notificationSubscriptions.length &&
-              notificationsTypes?.map((notificationType) =>
-                renderNotificationType({
-                  ...notificationType,
-                  type: 'local',
-                })
-              )}
+              notificationsTypes?.map((notificationType, idx) => (
+                <NotificationType
+                  key={idx}
+                  {...notificationType}
+                  type="local"
+                />
+              ))}
           </>
         ) : null}
       </div>
