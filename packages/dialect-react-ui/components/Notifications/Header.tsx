@@ -65,28 +65,6 @@ function Header(props: {
     </>
   );
 
-  // Support for threads created before address registry launch
-  if (!props.isWeb3Enabled) {
-    return (
-      <>
-        <div
-          className={clsx(
-            'dt-flex dt-flex-row dt-items-center dt-justify-between',
-            notificationHeader
-          )}
-        >
-          <div className="dt-flex dt-items-center">
-            <MasterBackButton />
-            <span className={clsx(textStyles.header, colors.accent)}>
-              Setup Notifications
-            </span>
-          </div>
-          {headerIcons}
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
       <div
@@ -104,7 +82,7 @@ function Header(props: {
           </>
         ) : (
           <div className="dt-flex dt-flex-row dt-items-center">
-            <BackButton />
+            {props.isWeb3Enabled && <BackButton />}
             <span className={clsx(textStyles.header, colors.accent)}>
               Settings
             </span>
