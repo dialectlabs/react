@@ -6,6 +6,7 @@ import Notifications from './components/Notifications';
 import NotificationsButton from './components/NotificationsButton';
 import NotificationsModal from './components/NotificationsModal';
 import Inbox from './components/Inbox';
+import useDappAudience from './hooks/useDappAudience';
 
 import Broadcast, {
   UnwrappedBroadcastForm as BroadcastForm,
@@ -66,6 +67,7 @@ export {
   ConnectionWrapper,
   DashboardWrapper,
   ThreadEncyprionWrapper,
+  useDappAudience,
 };
 
 export type {
