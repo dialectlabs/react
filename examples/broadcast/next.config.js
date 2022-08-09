@@ -7,4 +7,16 @@ module.exports = {
     });
     return config;
   },
+  // TODO: pass dialect env as env variable and enable proxy only on local-development
+  // rewrites:
+  //   process.env.NODE_ENV == 'development'
+  //     ? async () => {
+  //         return [
+  //           {
+  //             source: '/:path*',
+  //             destination: 'http://localhost:8080/:path*',
+  //           },
+  //         ];
+  //       }
+  //     : undefined,
 };

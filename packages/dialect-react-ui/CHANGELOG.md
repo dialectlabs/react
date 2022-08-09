@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.37] - 2022-08-09
+
+- fix: broadcast audience calculation
+
 ## [1.0.0-beta.36] - 2022-08-09
 
 - fix: consistent `useDappAudience` return type
