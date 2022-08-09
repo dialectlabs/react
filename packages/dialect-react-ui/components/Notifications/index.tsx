@@ -93,10 +93,6 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         return;
       }
 
-      if (!thread) {
-        return;
-      }
-
       showThread();
       setInitialRoutePicked(true);
     },
