@@ -75,6 +75,8 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     isFetchingThread ||
     isFetchingNotificationsSubscriptions;
 
+  const isWeb3Enabled = subscription.enabled && Boolean(thread);
+
   useEffect(
     function pickInitialRoute() {
       if (isInitialRoutePicked) {
@@ -85,7 +87,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         return;
       }
 
-      const shouldShowSettings = !subscription.enabled || !thread;
+      const shouldShowSettings = !isWeb3Enabled;
 
       if (shouldShowSettings) {
         showSettings();
@@ -96,14 +98,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       showThread();
       setInitialRoutePicked(true);
     },
-    [
-      isInitialRoutePicked,
-      isLoading,
-      showSettings,
-      showThread,
-      subscription,
-      thread,
-    ]
+    [isInitialRoutePicked, isLoading, isWeb3Enabled, showSettings, showThread]
   );
 
   return (
@@ -113,7 +108,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       ) : (
         <div className={clsx('dt-h-full dt-overflow-y-auto dt-p-9', scrollbar)}>
           <Header
-            isWeb3Enabled={subscription.enabled}
+            isWeb3Enabled={isWeb3Enabled}
             isReady={!isLoading}
             onModalClose={props.onModalClose}
             onBackClick={props.onBackClick}
