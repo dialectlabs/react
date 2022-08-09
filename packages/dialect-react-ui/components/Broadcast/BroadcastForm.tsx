@@ -1,10 +1,7 @@
 import {
-  AddressType,
   Dapp,
-  DappAddress,
-  DappNotificationSubscription,
-  useDappAddresses,
   useDappNotificationSubscriptions,
+  useDappAudience,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
@@ -17,102 +14,12 @@ import ToastMessage from '../common/ToastMessage';
 const GENERAL_BROADCAST = 'general-broadcast';
 const MESSAGE_BYTES_LIMIT = 800;
 const TITLE_BYTES_LIMIT = 100;
-const ADDRESSES_REFRESH_INTERVAL = 10000;
 
 interface BroadcastFormProps {
   dapp: Dapp;
   headless?: boolean;
   notificationTypeId?: string;
 }
-
-const getUsersCount = (
-  addresses: DappAddress[],
-  subscriptions: DappNotificationSubscription[],
-  notificationTypeId?: string | null,
-  addressTypePredicate: (addressType: AddressType) => boolean = () => true
-) => {
-  const enabledAndVerifiedAddresses = addresses
-    .filter((address) => address.enabled)
-    .filter((address) => address.address.verified)
-    .filter((address) => addressTypePredicate(address.address.type));
-  const enabledSubscriptionsPKs = subscriptions
-    .filter((sub) => {
-      if (notificationTypeId === GENERAL_BROADCAST) {
-        return true;
-      }
-      return (
-        (sub.notificationType.id === notificationTypeId ||
-          !notificationTypeId) &&
-        sub.subscriptions.find((subscription) => subscription.config.enabled)
-      );
-    })
-    .flatMap((it) => it.subscriptions);
-  const filtered = enabledSubscriptionsPKs.filter((subscription) =>
-    enabledAndVerifiedAddresses.find((address) =>
-      address.address.wallet.publicKey.equals(subscription.wallet.publicKey)
-    )
-  );
-
-  return [...new Set(filtered.map((it) => it.wallet.publicKey.toBase58()))]
-    .length;
-};
-
-const getAddressesCounts = (
-  addresses: DappAddress[],
-  subscriptions: DappNotificationSubscription[],
-  notificationTypeId?: string | null
-) => {
-  const wallets = getUsersCount(
-    addresses,
-    subscriptions,
-    notificationTypeId,
-    (it) => it === AddressType.Wallet
-  );
-  const emails = getUsersCount(
-    addresses,
-    subscriptions,
-    notificationTypeId,
-    (it) => it === AddressType.Email
-  );
-  const phones = getUsersCount(
-    addresses,
-    subscriptions,
-    notificationTypeId,
-    (it) => it === AddressType.PhoneNumber
-  );
-  const telegrams = getUsersCount(
-    addresses,
-    subscriptions,
-    notificationTypeId,
-    (it) => it === AddressType.Telegram
-  );
-  return {
-    wallets,
-    emails,
-    phones,
-    telegrams,
-  };
-};
-
-const getAddressesSummary = (
-  addresses: DappAddress[],
-  subscriptions: DappNotificationSubscription[],
-  notificationTypeId?: string | null
-) => {
-  const { wallets, emails, phones, telegrams } = getAddressesCounts(
-    addresses,
-    subscriptions,
-    notificationTypeId
-  );
-  return [
-    wallets && `${wallets} wallet${wallets > 1 ? 's' : ''} (off-chain)`,
-    emails && `${emails} email${emails > 1 ? 's' : ''}`,
-    phones && `${phones} phone${phones > 1 ? 's' : ''}`,
-    telegrams && `${telegrams} telegram account${telegrams > 1 ? 's' : ''}`,
-  ]
-    .filter(Boolean)
-    .join(', ');
-};
 
 function BroadcastForm({
   dapp,
@@ -121,15 +28,11 @@ function BroadcastForm({
 }: BroadcastFormProps) {
   const {
     subscriptions: notificationsSubscriptions,
-    // isFetching: isFetchingNotificationSubscriptions,
-    // errorFetching: errorFetchingNotificationSubscriptions,
+    errorFetching: errorFetchingNotificationSubscriptions,
   } = useDappNotificationSubscriptions();
   const [notificationTypeId, setNotificationTypeId] = useState<string | null>(
     notificationsSubscriptions[0]?.notificationType.id ?? null
   );
-  const { addresses, isFetching: isFetchingAddresses } = useDappAddresses({
-    refreshInterval: ADDRESSES_REFRESH_INTERVAL,
-  });
   const { textStyles, colors, outlinedInput } = useTheme();
   // Consider moving error handling to the useDapp context
   const [error, setError] = useState<Error | null>(null);
@@ -147,6 +50,11 @@ function BroadcastForm({
     [textEncoder, message]
   );
 
+  useEffect(
+    () => setError(errorFetchingNotificationSubscriptions),
+    [errorFetchingNotificationSubscriptions]
+  );
+
   useEffect(() => {
     !notificationTypeId &&
       notificationsSubscriptions.length > 0 &&
@@ -159,21 +67,12 @@ function BroadcastForm({
     setNotificationTypeId(notificationTypeIdExternal ?? null);
   }, [notificationTypeIdExternal]);
 
-  const usersCount = useMemo(
-    () =>
-      getUsersCount(addresses, notificationsSubscriptions, notificationTypeId),
-    [addresses, notificationTypeId, notificationsSubscriptions]
-  );
+  const {
+    totalCount: usersCount,
+    summary: addressesSummary,
+    isFetching: isLoadingAudience,
+  } = useDappAudience({ notificationTypeId });
 
-  const addressesSummary = useMemo(
-    () =>
-      getAddressesSummary(
-        addresses,
-        notificationsSubscriptions,
-        notificationTypeId
-      ),
-    [addresses, notificationsSubscriptions, notificationTypeId]
-  );
   const noUsers = usersCount === 0;
   const isSubmitDisabled =
     !title ||
@@ -183,7 +82,7 @@ function BroadcastForm({
     noUsers;
   let usersInfo: ReactNode = `${usersCount} user${usersCount > 1 ? 's' : ''}`;
 
-  if (isFetchingAddresses) {
+  if (isLoadingAudience) {
     usersInfo = <Loader />;
   } else if (noUsers) {
     usersInfo = 'No users yet';
@@ -200,7 +99,8 @@ function BroadcastForm({
       await dapp.messages.send({
         title,
         message,
-        ...(notificationTypeId && { notificationTypeId }),
+        ...(notificationTypeId &&
+          notificationTypeId !== GENERAL_BROADCAST && { notificationTypeId }),
       });
       setTitle('');
       setMessage('');
