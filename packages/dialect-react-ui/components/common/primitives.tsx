@@ -201,7 +201,7 @@ export function Toggle({
     >
       <input
         type="checkbox"
-        className="dt-input dt-appearance-none dt-opacity-0 dt-w-0 dt-h-0"
+        className="dt-input dt-appearance-none dt-opacity-0 !dt-w-0 !dt-h-0"
         {...props}
         checked={checked}
         onChange={() => onChange?.(!checked)}
