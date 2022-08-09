@@ -110,7 +110,7 @@ const getAddressesSummary = (
 const ADDRESSES_REFRESH_INTERVAL = 10000;
 
 interface UseDappAudienceParams {
-  notificationTypeId?: string;
+  notificationTypeId?: string | null;
 }
 
 export default function useDappAudience({
@@ -128,11 +128,11 @@ export default function useDappAudience({
   } = useDappAddresses({
     refreshInterval: ADDRESSES_REFRESH_INTERVAL,
   });
-  const isFetchingData = isFetchingSubscriptions || isFetchingAddresses;
+  const isFetching = isFetchingSubscriptions || isFetchingAddresses;
 
   const counts = useMemo(
     () =>
-      isFetchingData
+      isFetching
         ? {
             wallet: undefined,
             email: undefined,
@@ -144,7 +144,7 @@ export default function useDappAudience({
             notificationsSubscriptions,
             notificationTypeId
           ),
-    [isFetchingData, addresses, notificationsSubscriptions, notificationTypeId]
+    [isFetching, addresses, notificationsSubscriptions, notificationTypeId]
   );
 
   const totalCount = useMemo(
@@ -168,5 +168,6 @@ export default function useDappAudience({
     totalCount,
     summary,
     error: errorFetchingNotificationSubscriptions || errorFetchingAddresses,
+    isFetching,
   };
 }

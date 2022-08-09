@@ -1,7 +1,7 @@
 import {
   Dapp,
-  useDappAddresses,
   useDappNotificationSubscriptions,
+  useDappAudience,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
@@ -14,7 +14,6 @@ import ToastMessage from '../common/ToastMessage';
 const GENERAL_BROADCAST = 'general-broadcast';
 const MESSAGE_BYTES_LIMIT = 800;
 const TITLE_BYTES_LIMIT = 100;
-const ADDRESSES_REFRESH_INTERVAL = 10000;
 
 interface BroadcastFormProps {
   dapp: Dapp;
@@ -34,9 +33,6 @@ function BroadcastForm({
   const [notificationTypeId, setNotificationTypeId] = useState<string | null>(
     notificationsSubscriptions[0]?.notificationType.id ?? null
   );
-  const { isFetching: isFetchingAddresses } = useDappAddresses({
-    refreshInterval: ADDRESSES_REFRESH_INTERVAL,
-  });
   const { textStyles, colors, outlinedInput } = useTheme();
   // Consider moving error handling to the useDapp context
   const [error, setError] = useState<Error | null>(null);
@@ -71,9 +67,11 @@ function BroadcastForm({
     setNotificationTypeId(notificationTypeIdExternal ?? null);
   }, [notificationTypeIdExternal]);
 
-  const { totalCount: usersCount, summary: addressesSummary } = useDappAudience(
-    { notificationTypeId }
-  );
+  const {
+    totalCount: usersCount,
+    summary: addressesSummary,
+    isFetching: isLoadingAudience,
+  } = useDappAudience({ notificationTypeId });
 
   const noUsers = usersCount === 0;
   const isSubmitDisabled =
@@ -84,7 +82,7 @@ function BroadcastForm({
     noUsers;
   let usersInfo: ReactNode = `${usersCount} user${usersCount > 1 ? 's' : ''}`;
 
-  if (isFetchingAddresses) {
+  if (isLoadingAudience) {
     usersInfo = <Loader />;
   } else if (noUsers) {
     usersInfo = 'No users yet';
