@@ -17,7 +17,7 @@ interface VerifyParams {
   code: string;
 }
 
-interface UseAddressesValue {
+interface UseNotificationChannelValue {
   globalAddress?: Address;
   create: (params: CreateParams) => Promise<Address | null>;
   update: (params: UpdateParams) => Promise<Address | null>;
@@ -36,15 +36,15 @@ interface UseAddressesValue {
   errorFetching: DialectSdkError | null;
 }
 
-interface UseAddressesParams {
+interface UseNotificationChannelParams {
   addressType: AddressType;
   refreshInterval?: number;
 }
 
-function useGlobalAddress({
+function useNotificationChannel({
   addressType,
   refreshInterval,
-}: UseAddressesParams): UseAddressesValue {
+}: UseNotificationChannelParams): UseNotificationChannelValue {
   const { wallet: walletsApi } = useDialectSdk();
 
   const [isCreatingAddress, setCreatingAddress] = useState(false);
@@ -188,4 +188,4 @@ function useGlobalAddress({
   };
 }
 
-export default useGlobalAddress;
+export default useNotificationChannel;
