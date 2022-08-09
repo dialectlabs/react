@@ -2,6 +2,7 @@
 
 ## [UNRELEASED]
 
+- fix: notif channel togglers and refactoring
 - fix: do not filter subscriptions for general broadcast
 
 ## [1.0.0-beta.30] - 2022-08-08
