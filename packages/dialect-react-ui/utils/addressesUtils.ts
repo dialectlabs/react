@@ -32,7 +32,9 @@ export const getUsersCount = (
     .filter((address) => addressTypePredicate(address.address.type));
 
   // If there're no notifications type set up for this dapp, return all addresses count
-  if (!subscriptions.length) {
+  console.log('sss', { addresses, subscriptions, notificationTypeId });
+  if (!subscriptions.length && notificationTypeId === null) {
+    console.log('simple approach');
     return enabledAndVerifiedAddresses.length;
   }
 
@@ -43,12 +45,11 @@ export const getUsersCount = (
         return true;
       }
       return (
-        (sub.notificationType.id === notificationTypeId ||
-          !notificationTypeId) &&
+        sub.notificationType.id === notificationTypeId &&
         sub.subscriptions.find((subscription) => subscription.config.enabled)
       );
     })
-    .flatMap((it) => it.subscriptions);
+    .flatMap((it) => it.subscriptions.filter((sub) => sub.config.enabled));
 
   // And intersect subscriptions with addresses
   const filtered = enabledSubscriptionsPKs.filter((subscription) =>
