@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: tune a bit wallet settings field
+
 ## [1.0.0-beta.33] - 2022-08-09
 
 - fix: wallet create button

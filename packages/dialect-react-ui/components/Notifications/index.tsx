@@ -85,7 +85,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         return;
       }
 
-      const shouldShowSettings = !subscription.enabled;
+      const shouldShowSettings = !subscription.enabled || !thread;
 
       if (shouldShowSettings) {
         showSettings();

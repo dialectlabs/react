@@ -201,7 +201,7 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
         </div>
       </div>
 
-      {walletAddress && (
+      {walletEnabled && (
         <div className="dt-flex dt-flex-row dt-space-x-2 dt-items-center dt-mt-1">
           <Toggle
             type="checkbox"
