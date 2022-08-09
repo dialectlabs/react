@@ -27,29 +27,16 @@ interface SettingsProps {
   notifications?: NotificationType[];
 }
 
-function Settings({
-  channels,
-  notifications: notificationsTypes,
-}: SettingsProps) {
-  const { textStyles, xPaddedText, highlighted, colors } = useTheme();
-  const {
-    subscriptions: notificationSubscriptions,
-    update: updateNotificationSubscription,
-    isUpdating,
-    errorUpdating: errorUpdatingNotificationSubscription,
-    errorFetching: errorFetchingNotificationsConfigs,
-  } = useNotificationSubscriptions();
-
-  const { navigate } = useRoute();
-
-  const NotificationType = ({
-    id,
-    name,
-    detail,
-    enabled = true,
-    onToggle,
-    type,
-  }: RenderNotificationTypeParams) => (
+export const NotificationToggle = ({
+  id,
+  name,
+  detail,
+  enabled = true,
+  onToggle,
+  type,
+}: RenderNotificationTypeParams) => {
+  const { highlighted, colors, textStyles } = useTheme();
+  return (
     <div className={clsx(highlighted, 'dt-mb-2', colors.highlight)}>
       <div className="dt-flex dt-justify-between">
         <span className={clsx(textStyles.body)}>{name}</span>
@@ -70,6 +57,22 @@ function Settings({
       )}
     </div>
   );
+};
+
+function Settings({
+  channels,
+  notifications: notificationsTypes,
+}: SettingsProps) {
+  const { textStyles, xPaddedText } = useTheme();
+  const {
+    subscriptions: notificationSubscriptions,
+    update: updateNotificationSubscription,
+    isUpdating,
+    errorUpdating: errorUpdatingNotificationSubscription,
+    errorFetching: errorFetchingNotificationsConfigs,
+  } = useNotificationSubscriptions();
+
+  const { navigate } = useRoute();
 
   const error =
     errorFetchingNotificationsConfigs || errorUpdatingNotificationSubscription;
@@ -121,7 +124,7 @@ function Settings({
           <>
             {notificationSubscriptions.map(
               ({ notificationType, subscription }) => (
-                <NotificationType
+                <NotificationToggle
                   key={notificationType.id}
                   id={notificationType.id}
                   name={notificationType.name}
@@ -144,7 +147,7 @@ function Settings({
             {/* Render manually passed types in case api doesn't return anything */}
             {!notificationSubscriptions.length &&
               notificationsTypes?.map((notificationType, idx) => (
-                <NotificationType
+                <NotificationToggle
                   key={idx}
                   {...notificationType}
                   type="local"

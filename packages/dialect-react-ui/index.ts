@@ -45,6 +45,7 @@ import Email from './components/Notifications/screens/NewSettings/Email';
 import Sms from './components/Notifications/screens/NewSettings/Sms';
 import Telegram from './components/Notifications/screens/NewSettings/Telegram';
 import Wallet from './components/Notifications/screens/NewSettings/Wallet';
+import { NotificationToggle } from './components/Notifications/screens/Settings';
 
 const ThemeProvider = DialectThemeProvider;
 
@@ -78,6 +79,7 @@ export {
   Sms,
   Telegram,
   Wallet,
+  NotificationToggle,
 };
 
 export type {
