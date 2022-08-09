@@ -6,6 +6,20 @@ import {
 
 const GENERAL_BROADCAST = 'general-broadcast';
 
+export type ChannelCountsType = {
+  wallet: number | null;
+  telegram: number | null;
+  phone: number | null;
+  email: number | null;
+};
+
+const DEFAULT_COUNTS: ChannelCountsType = {
+  wallet: null,
+  email: null,
+  phone: null,
+  telegram: null,
+};
+
 export const getUsersCount = (
   addresses: DappAddress[],
   subscriptions: DappNotificationSubscription[],
@@ -48,10 +62,14 @@ export const getUsersCount = (
 };
 
 export const getAddressesCounts = (
-  addresses: DappAddress[],
-  subscriptions: DappNotificationSubscription[],
+  addresses: DappAddress[] | null,
+  subscriptions: DappNotificationSubscription[] | null,
   notificationTypeId?: string | null
-) => {
+): ChannelCountsType => {
+  if (!addresses || !subscriptions) {
+    return DEFAULT_COUNTS;
+  }
+
   const wallet = getUsersCount(
     addresses,
     subscriptions,

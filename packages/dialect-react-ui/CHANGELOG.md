@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: consistent `useDappAudience` return type
+
 ## [1.0.0-beta.34] - 2022-08-09
 
 - fix: tune a bit wallet settings field

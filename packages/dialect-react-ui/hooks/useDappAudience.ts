@@ -5,6 +5,7 @@ import {
 } from '@dialectlabs/react-sdk';
 import { useMemo } from 'react';
 import {
+  ChannelCountsType,
   getAddressesCounts,
   getAddressesSummary,
   getUsersCount,
@@ -16,20 +17,6 @@ interface UseDappAudienceParams {
   notificationTypeId?: string | null;
   refreshInterval?: number;
 }
-
-type ChannelCountsType = {
-  wallet?: number;
-  telegram?: number;
-  phone?: number;
-  email?: number;
-};
-
-const DEFAULT_COUNTS: ChannelCountsType = {
-  wallet: undefined,
-  email: undefined,
-  phone: undefined,
-  telegram: undefined,
-};
 
 interface UseDappAudienceValue {
   counts: ChannelCountsType;
@@ -59,13 +46,11 @@ export default function useDappAudience({
 
   const counts = useMemo(
     () =>
-      isFetching
-        ? DEFAULT_COUNTS
-        : getAddressesCounts(
-            addresses,
-            notificationsSubscriptions,
-            notificationTypeId
-          ),
+      getAddressesCounts(
+        isFetching ? null : addresses,
+        isFetching ? null : notificationsSubscriptions,
+        notificationTypeId
+      ),
     [isFetching, addresses, notificationsSubscriptions, notificationTypeId]
   );
 
