@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.35] - 2022-08-09
+- fix: notifications header
+
 ## [1.0.0-beta.34] - 2022-08-09
 
 - fix: tune a bit wallet settings field
