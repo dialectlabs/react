@@ -16,7 +16,7 @@ interface IRightAdorment {
   isDeleting: boolean;
 }
 
-export const RightAdornment: React.FC<IRightAdorment> = ({
+export const RightAdornment = ({
   loading,
   currentVal,
   isSaved,
@@ -27,7 +27,7 @@ export const RightAdornment: React.FC<IRightAdorment> = ({
   onUpdateCallback,
   isDeleting,
   deleteConfirm,
-}) => {
+}: IRightAdorment) => {
   const { icons, addormentButton } = useTheme();
 
   const getIcon = () => {

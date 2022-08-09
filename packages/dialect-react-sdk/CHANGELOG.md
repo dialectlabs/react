@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.20] - 2022-08-09
+
+- chore: refactoring, introduced two new hooks `useNotificationChannel` and `useNotificationChannelDappSubscription` instead of `useAddresses`
+
 ## [1.0.0-beta.19] - 2022-08-04
 
 - fix: calculate `isFetching` in `useDappNotificationSubscriptions` in the same way it's done in other hooks

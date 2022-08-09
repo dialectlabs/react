@@ -23,33 +23,24 @@ export default function ToggleSection({
   disabled,
   hideToggle,
 }: PropsType) {
-  const [isEnabled, setEnabled] = useState(checked);
   const { section } = useTheme();
-
-  useEffect(() => {
-    setEnabled(checked);
-  }, [checked]);
 
   const inner = (
     <>
       <ValueRow
-        className={clsx(isEnabled && children && 'dt-mb-2')}
+        className={clsx(checked && children && 'dt-mb-2')}
         label={title}
       >
         {!hideToggle && (
           <Toggle
             type="checkbox"
-            checked={isEnabled}
+            checked={checked}
             disabled={disabled}
-            onClick={async () => {
-              const nextValue = !isEnabled;
-              await onChange?.(nextValue);
-              setEnabled(nextValue);
-            }}
+            onChange={onChange}
           />
         )}
       </ValueRow>
-      {isEnabled && children}
+      {checked && children}
     </>
   );
 

@@ -2,7 +2,17 @@
 
 ## [UNRELEASED]
 
+- fix: tune a bit wallet settings field
+
+## [1.0.0-beta.33] - 2022-08-09
+
+- fix: wallet create button
+
+## [1.0.0-beta.32] - 2022-08-09
+
+- fix: notif channel togglers and refactoring
 - fix: do not filter subscriptions for general broadcast
+- fix: toggle styles with using some css reset or tailwind forms
 
 ## [1.0.0-beta.30] - 2022-08-08
 

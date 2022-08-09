@@ -3,7 +3,8 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
 import {
   AddressType,
-  useAddresses,
+  useNotificationChannel,
+  useNotificationChannelDappSubscription,
   useDialectSdk,
 } from '@dialectlabs/react-sdk';
 import { useEffect, useState } from 'react';
@@ -21,12 +22,10 @@ const Telegram = () => {
     },
   } = useDialectSdk();
   const {
-    addresses: { [addressType]: telegramAddress },
+    globalAddress: telegramAddress,
     create: createAddress,
     delete: deleteAddress,
     update: updateAddress,
-
-    toggle: toggleAddress,
 
     isCreatingAddress,
     isUpdatingAddress,
@@ -35,54 +34,55 @@ const Telegram = () => {
     isVerifyingCode,
 
     errorFetching: errorFetchingAddresses,
-  } = useAddresses();
+  } = useNotificationChannel({ addressType });
+
+  const {
+    enabled: subscriptionEnabled,
+    toggleSubscription,
+    isToggling,
+  } = useNotificationChannelDappSubscription({ addressType });
 
   const { textStyles } = useTheme();
 
   const [telegramUsername, setTelegramUsername] = useState(
-    telegramAddress?.value
+    telegramAddress?.value || ''
   );
   const [error, setError] = useState<Error | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isUserDeleting, setIsUserDeleting] = useState(false);
 
   const isTelegramSaved = Boolean(telegramAddress);
-  const isVerified = telegramAddress?.verified;
+  const isVerified = telegramAddress?.verified || false;
   const isLoading =
     isCreatingAddress ||
     isUpdatingAddress ||
     isDeletingAddress ||
     isSendingCode ||
-    isVerifyingCode;
+    isVerifyingCode ||
+    isToggling;
 
-  const [isEnabled, setIsEnabled] = useState(Boolean(telegramAddress?.enabled));
   const currentError = error || errorFetchingAddresses;
 
   useEffect(() => {
     setTelegramUsername(telegramAddress?.value || '');
-  }, [isTelegramSaved, telegramAddress?.enabled, telegramAddress?.value]);
+  }, [isTelegramSaved, telegramAddress?.value]);
 
   const updateTelegram = async () => {
-    if (error) return;
-
     try {
       await updateAddress({
-        addressType,
         value: telegramUsername,
       });
       setError(null);
-      setIsDeleting(false);
+      setIsUserDeleting(false);
     } catch (e) {
       setError(e as Error);
-    } finally {
     }
   };
 
   const saveTelegram = async () => {
-    if (error) return;
-
     try {
-      const value = telegramUsername?.replace('@', '');
-      await createAddress({ addressType, value });
+      const value = telegramUsername.replace('@', '');
+      const address = await createAddress({ value });
+      await toggleSubscription({ enabled: true, address });
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -91,8 +91,8 @@ const Telegram = () => {
 
   const deleteTelegram = async () => {
     try {
-      await deleteAddress({ addressType });
-      setIsDeleting(false);
+      await deleteAddress();
+      setIsUserDeleting(false);
       setError(null);
     } catch (e) {
       setError(e as Error);
@@ -105,8 +105,7 @@ const Telegram = () => {
 
   const toggleTelegram = async (nextValue: boolean) => {
     try {
-      await toggleAddress({
-        addressType,
+      await toggleSubscription({
         enabled: nextValue,
       });
       setError(null);
@@ -120,7 +119,7 @@ const Telegram = () => {
       ? 'https://telegram.me/DialectLabsBot'
       : 'https://telegram.me/DialectLabsDevBot';
 
-  const isEditing =
+  const isUserEditing =
     telegramAddress?.value !== telegramUsername && isTelegramSaved;
 
   return (
@@ -177,21 +176,21 @@ const Telegram = () => {
               loading={isLoading}
               currentVal={telegramUsername}
               isSaved={isTelegramSaved}
-              isChanging={isEditing}
+              isChanging={isUserEditing}
               isVerified={isVerified}
               onSaveCallback={saveTelegram}
               onDeleteCallback={deleteTelegram}
               onUpdateCallback={updateTelegram}
               deleteConfirm={(isDelete) => {
-                setIsDeleting(isDelete);
+                setIsUserDeleting(isDelete);
               }}
-              isDeleting={isDeleting}
+              isDeleting={isUserDeleting}
             />
           }
         />
       )}
 
-      {(isDeleting || isEditing) && (
+      {(isUserDeleting || isUserEditing) && (
         <div
           className={clsx(
             textStyles.small,
@@ -199,14 +198,14 @@ const Telegram = () => {
             'dt-mb-1 dt-mt-1'
           )}
         >
-          {isDeleting && (
+          {isUserDeleting && (
             <div>
               <span className="dt-opacity-60">
-                Deleting your email here will delete it across all dapps you've
-                signed up.
+                Deleting your telegram handle here will delete it across all
+                dapps you've signed up.
               </span>
               <span
-                onClick={() => setIsDeleting(false)}
+                onClick={() => setIsUserDeleting(false)}
                 className="dt-inline-block dt-cursor-pointer"
               >
                 <CancelIcon
@@ -218,15 +217,15 @@ const Telegram = () => {
               </span>
             </div>
           )}
-          {isEditing && (
+          {isUserEditing && (
             <div>
               <span className="dt-opacity-60">
-                Updating your email here will update it across all dapps you've
-                signed up.
+                Updating your telegram handle here will update it across all
+                dapps you've signed up.
               </span>
               <span
                 onClick={() => {
-                  setTelegramUsername(telegramAddress?.value);
+                  setTelegramUsername(telegramAddress?.value || '');
                 }}
                 className="dt-inline-block dt-cursor-pointer"
               >
@@ -248,21 +247,20 @@ const Telegram = () => {
         </P>
       )}
 
-      {isTelegramSaved && isVerified && !isEditing && (
+      {isTelegramSaved && isVerified && !isUserEditing && (
         <div className="dt-flex dt-flex-row dt-space-x-2 dt-items-center dt-mt-1">
           <Toggle
             type="checkbox"
-            checked={isEnabled}
+            checked={subscriptionEnabled}
             toggleSize="S"
-            onClick={async () => {
-              const nextValue = !isEnabled;
-              await toggleTelegram?.(nextValue);
-              setIsEnabled(nextValue);
+            onChange={(value) => {
+              if (isToggling) return;
+              return toggleTelegram(value);
             }}
           />
 
           <P className={clsx(textStyles.small, 'dt-opacity-60')}>
-            Notifications {isEnabled ? 'on' : 'off'}
+            Notifications {subscriptionEnabled ? 'on' : 'off'}
           </P>
         </div>
       )}

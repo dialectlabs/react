@@ -1,4 +1,5 @@
 import { useDialectWallet } from '@dialectlabs/react-sdk';
+import NotAuthorizedError from '../errors/ui/NotAuthorizedError';
 import NoWalletError from '../errors/ui/NoWalletError';
 import EncryptionInfo from '../wallet-states/EncryptionInfo';
 import SignMessageInfo from '../wallet-states/SignMessageInfo';
@@ -21,6 +22,7 @@ function WalletStatesWrapper({
     isSigningMessage,
     isSigningFreeTransaction,
     isEncrypting,
+    connectionInitiated,
     adapter: { connected: isWalletConnected },
   } = useDialectWallet();
 
@@ -31,6 +33,10 @@ function WalletStatesWrapper({
         <NoWalletError message={notConnectedMessage} />
       </>
     );
+  }
+
+  if (!connectionInitiated) {
+    return <NotAuthorizedError />;
   }
 
   if (isSigningMessage) {

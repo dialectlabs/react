@@ -62,6 +62,7 @@ function useNotificationSubscriptions({
       setErrorUpdating(null);
       try {
         await notificationSubscriptions.upsert(command);
+        await mutate();
       } catch (e) {
         if (e instanceof DialectSdkError) {
           setErrorUpdating(e);
@@ -70,7 +71,6 @@ function useNotificationSubscriptions({
       } finally {
         setIsUpdating(false);
       }
-      mutate();
     },
     [mutate, notificationSubscriptions]
   );
