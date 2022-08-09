@@ -52,35 +52,35 @@ export const getAddressesCounts = (
   subscriptions: DappNotificationSubscription[],
   notificationTypeId?: string | null
 ) => {
-  const wallets = getUsersCount(
+  const wallet = getUsersCount(
     addresses,
     subscriptions,
     notificationTypeId,
     (type) => type === AddressType.Wallet
   );
-  const emails = getUsersCount(
+  const email = getUsersCount(
     addresses,
     subscriptions,
     notificationTypeId,
     (it) => it === AddressType.Email
   );
-  const phones = getUsersCount(
+  const phone = getUsersCount(
     addresses,
     subscriptions,
     notificationTypeId,
     (it) => it === AddressType.PhoneNumber
   );
-  const telegrams = getUsersCount(
+  const telegram = getUsersCount(
     addresses,
     subscriptions,
     notificationTypeId,
     (it) => it === AddressType.Telegram
   );
   return {
-    wallets,
-    emails,
-    phones,
-    telegrams,
+    wallet,
+    email,
+    phone,
+    telegram,
   };
 };
 
@@ -89,16 +89,16 @@ export const getAddressesSummary = (
   subscriptions: DappNotificationSubscription[],
   notificationTypeId?: string | null
 ) => {
-  const { wallets, emails, phones, telegrams } = getAddressesCounts(
+  const { wallet, email, phone, telegram } = getAddressesCounts(
     addresses,
     subscriptions,
     notificationTypeId
   );
   return [
-    wallets && `${wallets} wallet${wallets > 1 ? 's' : ''} (off-chain)`,
-    emails && `${emails} email${emails > 1 ? 's' : ''}`,
-    phones && `${phones} phone${phones > 1 ? 's' : ''}`,
-    telegrams && `${telegrams} telegram account${telegrams > 1 ? 's' : ''}`,
+    wallet && `${wallet} wallet${wallet > 1 ? 's' : ''} (off-chain)`,
+    email && `${email} email${email > 1 ? 's' : ''}`,
+    phone && `${phone} phone${phone > 1 ? 's' : ''}`,
+    telegram && `${telegram} telegram account${telegram > 1 ? 's' : ''}`,
   ]
     .filter(Boolean)
     .join(', ');
