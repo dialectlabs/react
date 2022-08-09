@@ -4,6 +4,7 @@
 
 - fix: notif channel togglers and refactoring
 - fix: do not filter subscriptions for general broadcast
+- fix: toggle styles with using some css reset or tailwind forms
 
 ## [1.0.0-beta.30] - 2022-08-08
 
