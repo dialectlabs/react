@@ -1,8 +1,5 @@
-import {
-  Dapp,
-  useDappNotificationSubscriptions,
-  useDappAudience,
-} from '@dialectlabs/react-sdk';
+import { Dapp, useDappNotificationSubscriptions } from '@dialectlabs/react-sdk';
+import { useDappAudience } from '@dialectlabs/react-ui';
 import clsx from 'clsx';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { Button, Loader, ValueRow } from '../common';
@@ -153,9 +150,11 @@ function BroadcastForm({
           <ValueRow label="Category" className="dt-w-full">
             <span>{renderNotificationTypeSelect()}</span>
           </ValueRow>
-          <ValueRow label="📢 Broadcast users coverage" className="dt-w-full">
-            <span title={addressesSummary}>{usersInfo}</span>
-          </ValueRow>
+          <span title={addressesSummary}>
+            <ValueRow label="📢 Broadcast users coverage" className="dt-w-full">
+              <span>{usersInfo}</span>
+            </ValueRow>
+          </span>
         </>
       ) : null}
       <div>
