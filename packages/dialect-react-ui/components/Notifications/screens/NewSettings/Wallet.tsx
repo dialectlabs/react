@@ -124,7 +124,8 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
     isDeletingThread ||
     isCreatingThread ||
     isDeletingAddress ||
-    isCreatingAddress;
+    isCreatingAddress ||
+    isToggling;
 
   const walletEnabled = thread && walletAddress;
 
