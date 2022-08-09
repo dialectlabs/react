@@ -3,10 +3,11 @@ import {
   Backend,
   Thread,
   ThreadMemberScope,
-  useAddresses,
   useDialectConnectionInfo,
   useDialectDapp,
   useDialectWallet,
+  useNotificationChannel,
+  useNotificationChannelDappSubscription,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
@@ -27,20 +28,28 @@ type Web3Props = {
 const addressType = AddressType.Wallet;
 
 const Wallet = ({ onThreadDeleted }: Web3Props) => {
-  const wallet = useDialectWallet();
+  const { adapter: wallet } = useDialectWallet();
   const { dappAddress } = useDialectDapp();
   const { textStyles, outlinedInput, addormentButton } = useTheme();
   const { icons } = useTheme();
-  const { create, isCreatingThread } = useThreads();
+  const { create: createThread, isCreatingThread } = useThreads();
   const { navigate } = useRoute();
 
   const {
-    addresses: { WALLET: walletObj },
-    toggle: toggleAddress,
+    globalAddress: walletAddress,
+    create: createAddress,
     delete: deleteAddress,
     isCreatingAddress,
     isDeletingAddress,
-  } = useAddresses();
+  } = useNotificationChannel({ addressType });
+
+  const {
+    enabled: subscriptionEnabled,
+    toggleSubscription,
+    isToggling,
+  } = useNotificationChannelDappSubscription({
+    addressType,
+  });
 
   const {
     connected: {
@@ -57,66 +66,67 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
       ? Backend.Solana
       : Backend.DialectCloud;
 
-  const { thread, delete: deleteDialect } = useThread({
-    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
-  });
-
-  const { isDeletingThread } = useThread({
+  const {
+    thread,
+    delete: deleteDialect,
+    isDeletingThread,
+  } = useThread({
     findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
 
   const deleteThread = useCallback(async () => {
     await deleteDialect();
-    await deleteAddress({ addressType });
+    await deleteAddress();
     onThreadDeleted?.();
   }, [deleteAddress, deleteDialect, onThreadDeleted]);
 
-  const showThread = (thread: Thread) => {
-    navigate(RouteName.Thread, {
-      params: {
-        threadId: thread.id,
-      },
-    });
-  };
-
-  const createThread = useCallback(async () => {
-    if (!dappAddress) return;
-    try {
-      const thread = await create({
-        me: { scopes: [ThreadMemberScope.ADMIN] },
-        otherMembers: [
-          { publicKey: dappAddress, scopes: [ThreadMemberScope.WRITE] },
-        ],
-        encrypted: false,
-        backend,
+  const showThread = useCallback(
+    (thread: Thread) => {
+      navigate(RouteName.Thread, {
+        params: {
+          threadId: thread.id,
+        },
       });
+    },
+    [navigate]
+  );
 
-      // Address would be created by syncState effect
+  const createWalletThread = useCallback(async () => {
+    if (!dappAddress) return;
+    return createThread({
+      me: { scopes: [ThreadMemberScope.ADMIN] },
+      otherMembers: [
+        { publicKey: dappAddress, scopes: [ThreadMemberScope.WRITE] },
+      ],
+      encrypted: false,
+      backend,
+    });
+  }, [backend, createThread, dappAddress]);
 
-      await showThread(thread);
-    } catch (e) {
-      // TODO: do we need to do smth here?
-    }
-  }, [backend, create, dappAddress, showThread]);
-
-  const isLoading = isDeletingThread || isCreatingThread || isDeletingAddress;
-
-  const toggleWeb3 = async (nextValue: boolean) => {
-    if (!walletObj || walletObj?.enabled === nextValue) {
+  const createWalletAddress = useCallback(async () => {
+    if (!wallet.publicKey) {
       return;
     }
-    await toggleAddress({
-      addressType: AddressType.Wallet,
-      enabled: nextValue,
-    });
-  };
+    return createAddress({ value: wallet.publicKey?.toBase58() });
+  }, [createAddress, wallet.publicKey]);
 
-  const isWeb3Enabled =
-    walletObj?.enabled ||
-    isCreatingThread ||
-    isCreatingAddress ||
+  const fullEnableWallet = useCallback(async () => {
+    const address = await createWalletAddress();
+    const thread = await createWalletThread();
+    if (!thread) {
+      return;
+    }
+    await toggleSubscription({ enabled: true, address });
+    await showThread(thread);
+  }, [createWalletAddress, createWalletThread, showThread, toggleSubscription]);
+
+  const isLoading =
     isDeletingThread ||
-    isDeletingAddress;
+    isCreatingThread ||
+    isDeletingAddress ||
+    isCreatingAddress;
+
+  const walletEnabled = thread && walletAddress;
 
   return (
     <div>
@@ -140,16 +150,37 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
         >
           <div className="dt-flex dt-justify-between dt-items-center">
             <span className={'dt-opacity-40'}>
-              {display(wallet.adapter.publicKey || '')}
+              {display(wallet.publicKey || '')}
             </span>
-            {thread && !isLoading && (
+            {walletEnabled && !isLoading && (
               <IconButton
                 className={clsx(addormentButton, 'dt-w-9 dt-h-9')}
                 icon={<icons.trash />}
                 onClick={deleteThread}
               />
             )}
-            {!thread && !isLoading && (
+            {/* when no address and thread
+                should be a default case */}
+            {!thread && !walletAddress && !isLoading && (
+              <Button
+                onClick={fullEnableWallet}
+                className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+              >
+                Enable
+              </Button>
+            )}
+            {/* when address exists but no thread */}
+            {walletAddress && !thread && !isLoading && (
+              <Button
+                onClick={createThread}
+                className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+              >
+                Enable
+              </Button>
+            )}
+            {/* when thread exists but no address
+                Probably this is a *very* old users case */}
+            {thread && !walletAddress && !isLoading && (
               <Button
                 onClick={createThread}
                 className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
@@ -170,20 +201,20 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
         </div>
       </div>
 
-      {walletObj && (
+      {walletAddress && (
         <div className="dt-flex dt-flex-row dt-space-x-2 dt-items-center dt-mt-1">
           <Toggle
             type="checkbox"
-            checked={isWeb3Enabled}
+            checked={subscriptionEnabled}
             toggleSize="S"
-            onClick={async () => {
-              const nextValue = !isWeb3Enabled;
-              await toggleWeb3?.(nextValue);
+            onChange={(checked) => {
+              if (isToggling) return;
+              return toggleSubscription({ enabled: checked });
             }}
           />
 
           <P className={clsx(textStyles.small, 'dt-opacity-60')}>
-            Notifications {isWeb3Enabled ? 'on' : 'off'}
+            Notifications {subscriptionEnabled ? 'on' : 'off'}
           </P>
 
           {backend === Backend.Solana && (

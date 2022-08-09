@@ -172,21 +172,18 @@ type SIZE = 'S' | 'M';
 
 export function Toggle({
   checked,
-  onClick,
+  onChange,
   toggleSize,
   ...props // TODO: adjust the styles for a disabled toggle
 }: {
   checked: boolean;
-  onClick: () => void;
+  onChange?: (checked: boolean) => void;
   toggleSize?: SIZE;
-} & DetailedHTMLProps<
-  InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
+} & Omit<
+  DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
+  'onChange'
 >) {
-  const [isChecked, setChecked] = useState<boolean>(checked);
   const { colors } = useTheme();
-
-  useEffect(() => setChecked(checked), [checked]);
 
   const size = toggleSize || 'M';
   const translate =
@@ -205,18 +202,14 @@ export function Toggle({
       <input
         type="checkbox"
         className="dt-input dt-appearance-none dt-opacity-0 dt-w-0 dt-h-0"
-        checked={checked}
-        onChange={async () => {
-          const nextValue = !checked;
-          await onClick();
-          setChecked(nextValue);
-        }}
         {...props}
+        checked={checked}
+        onChange={() => onChange?.(!checked)}
       />
       {/* Background */}
       <span
         className={clsx(
-          isChecked ? colors.toggleBackgroundActive : colors.toggleBackground,
+          checked ? colors.toggleBackgroundActive : colors.toggleBackground,
           size === 'M'
             ? 'dt-h-5 dt-w-10 dt-rounded-full'
             : 'dt-h-4 dt-w-7 dt-rounded-full'
@@ -227,7 +220,7 @@ export function Toggle({
         className={clsx(
           'dt-absolute dt-top-1 dt-left-1 dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
           colors.toggleThumb,
-          isChecked ? translate : ''
+          checked ? translate : ''
         )}
       />
     </Label>

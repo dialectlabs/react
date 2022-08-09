@@ -1,13 +1,17 @@
-import { Toggle } from '../../../common';
-import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import {
+  AddressType,
+  useNotificationChannel,
+  useNotificationChannelDappSubscription,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { AddressType, useAddresses } from '@dialectlabs/react-sdk';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Toggle } from '../../../common';
 import { P } from '../../../common/preflighted';
-import { VerificationInput } from './VerificationInput';
-import { RightAdornment } from './RightAdorment';
 import OutlinedInput from '../../../common/primitives/OutlinedInput';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import CancelIcon from '../../../Icon/Cancel';
+import { RightAdornment } from './RightAdorment';
+import { VerificationInput } from './VerificationInput';
 
 const addressType = AddressType.Email;
 
@@ -15,71 +19,71 @@ const Email = () => {
   const { textStyles } = useTheme();
 
   const {
-    addresses: { [addressType]: emailAddress },
+    globalAddress: emailAddress,
     create: createAddress,
     delete: deleteAddress,
     update: updateAddress,
 
-    toggle: toggleAddress,
-
-    isCreatingAddress,
     isUpdatingAddress,
+    isCreatingAddress,
     isDeletingAddress,
     isSendingCode,
     isVerifyingCode,
 
     errorFetching: errorFetchingAddresses,
-  } = useAddresses();
+  } = useNotificationChannel({ addressType });
+
+  const {
+    enabled: subscriptionEnabled,
+    toggleSubscription,
+    isToggling,
+  } = useNotificationChannelDappSubscription({
+    addressType,
+  });
 
   const [email, setEmail] = useState(emailAddress?.value ?? '');
-  const [isEnabled, setIsEnabled] = useState(Boolean(emailAddress?.enabled));
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [error, setError] = useState<Error | null>(null);
 
   const isEmailSaved = Boolean(emailAddress);
-  const isVerified = emailAddress?.verified;
+  const isVerified = emailAddress?.verified || false;
 
   const isLoading =
     isCreatingAddress ||
     isDeletingAddress ||
     isUpdatingAddress ||
     isVerifyingCode ||
-    isSendingCode;
+    isSendingCode ||
+    isToggling;
 
   const currentError = error || errorFetchingAddresses;
 
   useEffect(() => {
     setEmail(emailAddress?.value || '');
-  }, [isEmailSaved, emailAddress?.enabled, emailAddress?.value]);
+  }, [isEmailSaved, emailAddress?.value]);
 
   const updateEmail = useCallback(async () => {
-    if (error) {
-      return;
-    }
     try {
-      await updateAddress({ addressType, value: email });
+      await updateAddress({ value: email });
       setError(null);
     } catch (e) {
       setError(e as Error);
     }
-  }, [email]);
+  }, [email, updateAddress]);
 
-  const saveEmail = useCallback(async () => {
-    if (error) {
-      return;
-    }
+  const createEmail = useCallback(async () => {
     try {
-      await createAddress({ addressType, value: email });
+      await createAddress({ value: email });
       setError(null);
     } catch (e) {
       setError(e as Error);
     }
-  }, [email]);
+  }, [createAddress, email]);
 
   const deleteEmail = async () => {
     try {
-      await deleteAddress({ addressType });
+      await deleteAddress();
       setIsDeleting(false);
       setError(null);
     } catch (e) {
@@ -89,8 +93,7 @@ const Email = () => {
 
   const toggleEmail = async (nextValue: boolean) => {
     try {
-      await toggleAddress({
-        addressType,
+      await toggleSubscription({
         enabled: nextValue,
       });
       setError(null);
@@ -99,7 +102,7 @@ const Email = () => {
     }
   };
 
-  const onChange = (e: any) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
@@ -116,7 +119,7 @@ const Email = () => {
 
       {isEmailSaved && !isVerified ? (
         <VerificationInput
-          description="Сheck your email for a verification code."
+          description="Check your email for a verification code."
           onCancel={deleteEmail}
           addressType={addressType}
         />
@@ -150,7 +153,7 @@ const Email = () => {
               isSaved={isEmailSaved}
               isChanging={isEditing}
               isVerified={isVerified}
-              onSaveCallback={saveEmail}
+              onSaveCallback={createEmail}
               onDeleteCallback={deleteEmail}
               onUpdateCallback={updateEmail}
               deleteConfirm={(isDelete) => {
@@ -197,7 +200,7 @@ const Email = () => {
               </span>
               <span
                 onClick={() => {
-                  setEmail(emailAddress?.value);
+                  setEmail(emailAddress?.value || '');
                 }}
                 className="dt-inline-block dt-cursor-pointer"
               >
@@ -224,16 +227,15 @@ const Email = () => {
           <Toggle
             type="checkbox"
             toggleSize={'S'}
-            checked={isEnabled}
-            onClick={async () => {
-              const nextValue = !isEnabled;
-              await toggleEmail?.(nextValue);
-              setIsEnabled(nextValue);
+            checked={subscriptionEnabled}
+            onChange={(next) => {
+              if (isLoading) return;
+              toggleEmail(next);
             }}
           />
 
           <P className={clsx(textStyles.small, 'dt-opacity-60')}>
-            Notifications {isEnabled ? 'on' : 'off'}
+            Notifications {subscriptionEnabled ? 'on' : 'off'}
           </P>
         </div>
       )}

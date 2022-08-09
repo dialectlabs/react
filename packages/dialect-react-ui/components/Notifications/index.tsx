@@ -1,27 +1,24 @@
 import {
   AddressType,
-  useAddresses,
   useDialectDapp,
-  useDialectWallet,
+  useNotificationChannelDappSubscription,
   useNotificationSubscriptions,
   useThread,
-  useThreads,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
 import LoadingThread from '../../entities/LoadingThread';
-import usePrevious from '../../hooks/usePrevious';
+import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
+import ThreadEncyprionWrapper from '../../entities/wrappers/ThreadEncryptionWrapper';
+import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
+import GatedWrapper from '../common/GatedWrapper';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
-import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
-import GatedWrapper from '../common/GatedWrapper';
 import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
 import Settings from './screens/Settings';
-import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
-import ThreadEncyprionWrapper from '../../entities/wrappers/ThreadEncryptionWrapper';
 
 export type NotificationType = {
   name: string;
@@ -39,45 +36,24 @@ interface NotificationsProps {
 const addressType = AddressType.Wallet;
 
 function InnerNotifications(props: NotificationsProps): JSX.Element {
-  const { isCreatingThread } = useThreads();
   const { dappAddress } = useDialectDapp();
-  const { thread, isDeletingThread, isFetchingThread } = useThread({
-    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
+  if (!dappAddress) {
+    throw new Error('dapp address should be provided for notifications');
+  }
+  const { thread, isFetchingThread } = useThread({
+    findParams: { otherMembers: [dappAddress] },
   });
-  const { adapter: wallet } = useDialectWallet();
   const [isInitialRoutePicked, setInitialRoutePicked] = useState(false);
 
-  const {
-    addresses: { WALLET: walletAddress },
-    isFetching: isFetchingAddresses,
-    create: createAddress,
-    delete: deleteAddress,
-    isCreatingAddress,
-    isDeletingAddress,
-  } = useAddresses();
+  const subscription = useNotificationChannelDappSubscription({
+    addressType,
+  });
 
   const { isFetching: isFetchingNotificationsSubscriptions } =
     useNotificationSubscriptions();
 
-  const [
-    isInitialNotificationSubscriptionsLoaded,
-    setInitialNotificationSubscriptionsLoaded,
-  ] = useState(false);
-
-  useEffect(() => {
-    setInitialNotificationSubscriptionsLoaded(true);
-  }, [isFetchingNotificationsSubscriptions]);
-
-  const isWeb3Enabled =
-    walletAddress?.enabled ||
-    isCreatingThread ||
-    isCreatingAddress ||
-    isDeletingThread ||
-    isDeletingAddress;
-
   const { scrollbar } = useTheme();
   const { navigate } = useRoute();
-  const prevThread = usePrevious(thread);
 
   const showThread = useCallback(() => {
     if (!thread) {
@@ -94,46 +70,10 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
     () => navigate(RouteName.Settings);
   }, [navigate]);
 
-  // Sync state for web3 channel in case of errors
-  useEffect(
-    function syncState() {
-      if (thread && prevThread?.id.equals(thread.id)) {
-        return;
-      }
-
-      if (
-        !wallet?.publicKey ||
-        isFetchingAddresses ||
-        isFetchingThread ||
-        isCreatingThread ||
-        isDeletingThread
-      )
-        return;
-
-      if (thread && !walletAddress) {
-        // In case the wallet isn't in web2 db, but the actual thread was created
-        createAddress({
-          addressType,
-          value: wallet.publicKey?.toBase58(),
-        });
-      } else if (!thread && walletAddress) {
-        // In case the wallet is set to enabled in web2 db, but the actual thread wasn't created
-        deleteAddress({ addressType });
-      }
-    },
-    [
-      isFetchingThread,
-      thread,
-      isCreatingThread,
-      isDeletingThread,
-      prevThread?.id,
-      walletAddress,
-      wallet.publicKey,
-      isFetchingAddresses,
-      createAddress,
-      deleteAddress,
-    ]
-  );
+  const isLoading =
+    subscription.isFetchingSubscriptions ||
+    isFetchingThread ||
+    isFetchingNotificationsSubscriptions;
 
   useEffect(
     function pickInitialRoute() {
@@ -141,15 +81,11 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         return;
       }
 
-      if (isFetchingAddresses || isFetchingThread) {
+      if (isLoading) {
         return;
       }
 
-      const shouldShowSettings =
-        !isWeb3Enabled ||
-        isCreatingThread ||
-        isFetchingThread ||
-        isDeletingThread;
+      const shouldShowSettings = !subscription.enabled;
 
       if (shouldShowSettings) {
         showSettings();
@@ -165,33 +101,24 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       setInitialRoutePicked(true);
     },
     [
-      navigate,
-      isWeb3Enabled,
-      isFetchingThread,
-      isCreatingThread,
-      isDeletingThread,
-      thread,
-      prevThread?.id,
-      showThread,
-      showSettings,
-      walletAddress?.enabled,
-      isFetchingAddresses,
       isInitialRoutePicked,
+      isLoading,
+      showSettings,
+      showThread,
+      subscription,
+      thread,
     ]
   );
 
   return (
     <>
-      {isFetchingThread ||
-      isFetchingAddresses ||
-      !isInitialNotificationSubscriptionsLoaded ||
-      !isInitialRoutePicked ? (
+      {!isInitialRoutePicked ? (
         <LoadingThread />
       ) : (
         <div className={clsx('dt-h-full dt-overflow-y-auto dt-p-9', scrollbar)}>
           <Header
-            isWeb3Enabled={isWeb3Enabled}
-            isReady={!isFetchingAddresses && !isFetchingThread}
+            isWeb3Enabled={subscription.enabled}
+            isReady={!isLoading}
             onModalClose={props.onModalClose}
             onBackClick={props.onBackClick}
           />

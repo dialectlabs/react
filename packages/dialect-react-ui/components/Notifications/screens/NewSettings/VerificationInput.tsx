@@ -1,4 +1,4 @@
-import { AddressType, useAddresses } from '@dialectlabs/react-sdk';
+import { AddressType, useNotificationChannel } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { Button } from '../../../common';
@@ -17,20 +17,22 @@ interface IVerificationInputProps {
 
 const VERIFICATION_CODE_REGEX = '^[0-9]{6}$';
 
-export const VerificationInput: React.FC<IVerificationInputProps> = ({
+export const VerificationInput = ({
   addressType,
   onCancel,
   description,
   customText,
-}) => {
+}: IVerificationInputProps) => {
   const [verificationCode, setVerificationCode] = useState('');
   const [currentError, setCurrentError] = useState<Error | null>(null);
-  const { verify: verifyCode, resend } = useAddresses();
+  const { verify: verifyCode, resend } = useNotificationChannel({
+    addressType,
+  });
   const { textStyles, addormentButton } = useTheme();
 
   const sendCode = async () => {
     try {
-      await verifyCode({ addressType, code: verificationCode });
+      await verifyCode({ code: verificationCode });
       setCurrentError(null);
     } catch (e) {
       setCurrentError(e as Error);
@@ -41,7 +43,7 @@ export const VerificationInput: React.FC<IVerificationInputProps> = ({
 
   const resendCode = async () => {
     try {
-      await resend({ addressType });
+      await resend();
       setCurrentError(null);
     } catch (e) {
       setCurrentError(e as Error);
