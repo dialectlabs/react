@@ -121,8 +121,8 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo(
     (): Config => ({
-      backends: [Backend.DialectCloud, Backend.Solana],
-      environment: 'development',
+      backends: [Backend.DialectCloud],
+      environment: 'production',
       dialectCloud: {
         tokenStore: 'local-storage',
       },

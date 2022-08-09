@@ -160,8 +160,7 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
                 onClick={deleteThread}
               />
             )}
-            {/* when no address and thread
-                should be a default case */}
+            {/* when no address and thread */}
             {!thread && !walletAddress && !isLoading && (
               <Button
                 onClick={fullEnableWallet}
@@ -173,7 +172,7 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
             {/* when address exists but no thread */}
             {walletAddress && !thread && !isLoading && (
               <Button
-                onClick={createThread}
+                onClick={createWalletThread}
                 className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
               >
                 Enable
@@ -183,7 +182,7 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
                 Probably this is a *very* old users case */}
             {thread && !walletAddress && !isLoading && (
               <Button
-                onClick={createThread}
+                onClick={createWalletAddress}
                 className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
               >
                 Enable
