@@ -118,13 +118,7 @@ function useGlobalAddress({
         setUpdatingAddress(false);
       }
     },
-    [
-      address,
-      addressType,
-      isUpdatingAddress,
-      mutateAddresses,
-      walletsApi.addresses,
-    ]
+    [address, addressType, isUpdatingAddress, mutateAddresses, walletsApi]
   );
 
   const deleteAddress = useCallback(async () => {
