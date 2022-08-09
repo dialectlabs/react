@@ -17,23 +17,20 @@ import { useCallback } from 'react';
 import { Button, Loader, Toggle } from '../../../common';
 import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import { useRoute } from '../../../common/providers/Router';
 import IconButton from '../../../IconButton';
-import { RouteName } from '../../constants';
 
 type Web3Props = {
   onThreadDeleted?: () => void;
+  onThreadCreated?: (thread: Thread) => void;
 };
 
 const addressType = AddressType.Wallet;
 
-const Wallet = ({ onThreadDeleted }: Web3Props) => {
+const Wallet = ({ onThreadDeleted, onThreadCreated }: Web3Props) => {
   const { adapter: wallet } = useDialectWallet();
   const { dappAddress } = useDialectDapp();
-  const { textStyles, outlinedInput, addormentButton } = useTheme();
-  const { icons } = useTheme();
+  const { textStyles, outlinedInput, addormentButton, icons } = useTheme();
   const { create: createThread, isCreatingThread } = useThreads();
-  const { navigate } = useRoute();
 
   const {
     globalAddress: walletAddress,
@@ -80,17 +77,6 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
     onThreadDeleted?.();
   }, [deleteAddress, deleteDialect, onThreadDeleted]);
 
-  const showThread = useCallback(
-    (thread: Thread) => {
-      navigate(RouteName.Thread, {
-        params: {
-          threadId: thread.id,
-        },
-      });
-    },
-    [navigate]
-  );
-
   const createWalletThread = useCallback(async () => {
     if (!dappAddress) return;
     return createThread({
@@ -117,8 +103,13 @@ const Wallet = ({ onThreadDeleted }: Web3Props) => {
       return;
     }
     await toggleSubscription({ enabled: true, address });
-    await showThread(thread);
-  }, [createWalletAddress, createWalletThread, showThread, toggleSubscription]);
+    onThreadCreated?.(thread);
+  }, [
+    createWalletAddress,
+    createWalletThread,
+    onThreadCreated,
+    toggleSubscription,
+  ]);
 
   const isLoading =
     isDeletingThread ||

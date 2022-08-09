@@ -41,6 +41,11 @@ import ConnectionWrapper from './entities/wrappers/ConnectionWrapper';
 import DashboardWrapper from './entities/wrappers/DashboardWrapper';
 import ThreadEncyprionWrapper from './entities/wrappers/ThreadEncryptionWrapper';
 
+import Email from './components/Notifications/screens/NewSettings/Email';
+import Sms from './components/Notifications/screens/NewSettings/Sms';
+import Telegram from './components/Notifications/screens/NewSettings/Telegram';
+import Wallet from './components/Notifications/screens/NewSettings/Wallet';
+
 const ThemeProvider = DialectThemeProvider;
 
 export {
@@ -68,6 +73,11 @@ export {
   DashboardWrapper,
   ThreadEncyprionWrapper,
   useDappAudience,
+  // UI component
+  Email,
+  Sms,
+  Telegram,
+  Wallet,
 };
 
 export type {

@@ -4,11 +4,14 @@ import type { Channel } from '../../../common/types';
 import { Divider, Footer, Toggle, ValueRow } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import type { NotificationType } from '../..';
-import { useNotificationSubscriptions } from '@dialectlabs/react-sdk';
+import { Thread, useNotificationSubscriptions } from '@dialectlabs/react-sdk';
 import Email from '../NewSettings/Email';
 import Sms from '../NewSettings/Sms';
 import Wallet from '../NewSettings/Wallet';
 import Telegram from '../NewSettings/Telegram';
+import { useCallback } from 'react';
+import { RouteName } from '../../constants';
+import { useRoute } from '../../../common/providers/Router';
 
 interface RenderNotificationTypeParams {
   name: string;
@@ -36,6 +39,8 @@ function Settings({
     errorUpdating: errorUpdatingNotificationSubscription,
     errorFetching: errorFetchingNotificationsConfigs,
   } = useNotificationSubscriptions();
+
+  const { navigate } = useRoute();
 
   const NotificationType = ({
     id,
@@ -69,13 +74,24 @@ function Settings({
   const error =
     errorFetchingNotificationsConfigs || errorUpdatingNotificationSubscription;
 
+  const showThread = useCallback(
+    (thread: Thread) => {
+      navigate(RouteName.Thread, {
+        params: {
+          threadId: thread.id,
+        },
+      });
+    },
+    [navigate]
+  );
+
   return (
     <>
       <div className={clsx('dt-pt-4 dt-pb-2')}>
         {channels.map((channelSlug) => {
           let form;
           if (channelSlug === 'web3') {
-            form = <Wallet />;
+            form = <Wallet onThreadCreated={showThread} />;
           } else if (channelSlug === 'email') {
             form = <Email />;
           } else if (channelSlug === 'sms') {
