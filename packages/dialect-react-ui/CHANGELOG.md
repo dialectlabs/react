@@ -2,6 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.38] - 2022-08-09
+
+- fix: calculating audience for dapps without notifications types
+- fix: error handling on sending broadcast
+- chore: bump @dialeclabs/react-sdk
+
 ## [1.0.0-beta.37] - 2022-08-09
 
 - fix: broadcast audience calculation

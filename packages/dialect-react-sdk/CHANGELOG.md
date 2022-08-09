@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.9] - 2022-08-09
+
+- chore: bump @dialectlabs/sdk
+
 ## [1.0.0-beta.20] - 2022-08-09
 
 - chore: refactoring, introduced two new hooks `useNotificationChannel` and `useNotificationChannelDappSubscription` instead of `useAddresses`

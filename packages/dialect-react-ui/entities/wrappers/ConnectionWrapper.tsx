@@ -1,4 +1,4 @@
-import { useDialectConnectionInfo } from '@dialectlabs/react-sdk';
+import { useDialectConnectionInfo, useThreads } from '@dialectlabs/react-sdk';
 import NoConnectionError from '../errors/ui/NoConnectionError';
 
 // Only renders children if connected to successfully some backend
@@ -14,6 +14,7 @@ export default function ConnectionWrapper({
   header,
   children,
 }: ConnectionWrapperProps): JSX.Element {
+  // TODO: take into account offline
   const {
     connected: {
       solana: {
@@ -28,7 +29,9 @@ export default function ConnectionWrapper({
   } = useDialectConnectionInfo();
 
   // FIXME: trigger some fetch from some of backends to get connection state
-  // const { threads, errorFetchingThreads } = useThreads();
+  const { errorFetchingThreads } = useThreads({
+    refreshInterval: 5000,
+  });
 
   const someBackendConnected =
     (isSolanaShouldConnect && isSolanaConnected) ||

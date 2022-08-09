@@ -32,9 +32,7 @@ export const getUsersCount = (
     .filter((address) => addressTypePredicate(address.address.type));
 
   // If there're no notifications type set up for this dapp, return all addresses count
-  console.log('sss', { addresses, subscriptions, notificationTypeId });
   if (!subscriptions.length && notificationTypeId === null) {
-    console.log('simple approach');
     return enabledAndVerifiedAddresses.length;
   }
 

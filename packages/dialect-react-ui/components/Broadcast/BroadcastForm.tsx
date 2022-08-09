@@ -1,4 +1,8 @@
-import { Dapp, useDappNotificationSubscriptions } from '@dialectlabs/react-sdk';
+import {
+  Dapp,
+  DialectSdkError,
+  useDappNotificationSubscriptions,
+} from '@dialectlabs/react-sdk';
 import { useDappAudience } from '@dialectlabs/react-ui';
 import clsx from 'clsx';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
@@ -32,7 +36,9 @@ function BroadcastForm({
   );
   const { textStyles, colors, outlinedInput } = useTheme();
   // Consider moving error handling to the useDapp context
-  const [error, setError] = useState<Error | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | undefined | null>(
+    null
+  );
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [isSending, setIsSending] = useState(false);
   const [title, setTitle] = useState('');
@@ -48,7 +54,7 @@ function BroadcastForm({
   );
 
   useEffect(
-    () => setError(errorFetchingNotificationSubscriptions),
+    () => setErrorMessage(errorFetchingNotificationSubscriptions?.msg),
     [errorFetchingNotificationSubscriptions]
   );
 
@@ -87,7 +93,7 @@ function BroadcastForm({
 
   const sendBroadcastMessage = async () => {
     if (noUsers) {
-      setError(new Error('No users in the audience for this broadcast'));
+      setErrorMessage('No users in the audience for this broadcast');
       return;
     }
 
@@ -101,12 +107,13 @@ function BroadcastForm({
       });
       setTitle('');
       setMessage('');
-      setError(null);
+      setErrorMessage(null);
       setStatusMessage(
         'Broadcast successfully sent and will be delivered soon'
       );
     } catch (error) {
-      setError(error as Error);
+      const errMessage = (error as DialectSdkError)?.msg;
+      setErrorMessage(errMessage);
     } finally {
       setIsSending(false);
     }
@@ -200,12 +207,14 @@ function BroadcastForm({
 
       <ToastMessage
         message={
-          error ? `Error sending broadcast: ${error.message}` : statusMessage
+          errorMessage
+            ? `Error sending broadcast: ${errorMessage}`
+            : statusMessage
         }
-        isError={Boolean(error)}
+        isError={Boolean(errorMessage)}
         isSuccess={Boolean(statusMessage)}
         onClose={() => {
-          error ? setError(null) : setStatusMessage('');
+          errorMessage ? setErrorMessage(null) : setStatusMessage('');
         }}
       />
     </div>
