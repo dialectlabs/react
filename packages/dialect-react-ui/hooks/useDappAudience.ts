@@ -1,9 +1,11 @@
 import {
+  DialectSdkError,
   useDappAddresses,
   useDappNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
 import { useMemo } from 'react';
 import {
+  ChannelCountsType,
   getAddressesCounts,
   getAddressesSummary,
   getUsersCount,
@@ -16,19 +18,27 @@ interface UseDappAudienceParams {
   refreshInterval?: number;
 }
 
+interface UseDappAudienceValue {
+  counts: ChannelCountsType;
+  totalCount: number;
+  isFetching: boolean;
+  summary: string;
+  error: DialectSdkError | null;
+}
+
 export default function useDappAudience({
   notificationTypeId,
   refreshInterval = DEFAULT_ADDRESSES_REFRESH_INTERVAL,
-}: UseDappAudienceParams) {
+}: UseDappAudienceParams): UseDappAudienceValue {
   const {
     subscriptions: notificationsSubscriptions,
     isFetching: isFetchingSubscriptions,
-    errorFetching: errorFetchingNotificationSubscriptions,
+    errorFetching: errorFetchingNotificationSubscriptions = null,
   } = useDappNotificationSubscriptions();
   const {
     addresses,
     isFetching: isFetchingAddresses,
-    errorFetching: errorFetchingAddresses,
+    errorFetching: errorFetchingAddresses = null,
   } = useDappAddresses({
     refreshInterval,
   });
@@ -36,18 +46,11 @@ export default function useDappAudience({
 
   const counts = useMemo(
     () =>
-      isFetching
-        ? {
-            wallet: undefined,
-            email: undefined,
-            phone: undefined,
-            telegram: undefined,
-          }
-        : getAddressesCounts(
-            addresses,
-            notificationsSubscriptions,
-            notificationTypeId
-          ),
+      getAddressesCounts(
+        isFetching ? null : addresses,
+        isFetching ? null : notificationsSubscriptions,
+        notificationTypeId
+      ),
     [isFetching, addresses, notificationsSubscriptions, notificationTypeId]
   );
 

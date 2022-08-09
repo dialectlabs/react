@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- fix: consistent `useDappAudience` return type
+
+
 ## [1.0.0-beta.35] - 2022-08-09
 - fix: notifications header
 
