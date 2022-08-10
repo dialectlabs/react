@@ -46,6 +46,7 @@ import Sms from './components/Notifications/screens/NewSettings/Sms';
 import Telegram from './components/Notifications/screens/NewSettings/Telegram';
 import Wallet from './components/Notifications/screens/NewSettings/Wallet';
 import { NotificationToggle } from './components/Notifications/screens/Settings';
+import { Notification } from './components/Notifications/screens/NotificationsList/Notification';
 
 const ThemeProvider = DialectThemeProvider;
 
@@ -80,6 +81,7 @@ export {
   Telegram,
   Wallet,
   NotificationToggle,
+  Notification,
 };
 
 export type {
