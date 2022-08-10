@@ -36,7 +36,12 @@ function WalletStatesWrapper({
   }
 
   if (!connectionInitiated) {
-    return <NotAuthorizedError />;
+    return (
+      <>
+        {header}
+        <NotAuthorizedError />
+      </>
+    );
   }
 
   if (isSigningMessage) {

@@ -43,7 +43,6 @@ function useNotificationSubscriptions({
   const {
     data: subscriptions,
     error: errorFetching = null,
-    isValidating: isFetching,
     mutate,
   } = useSWR(
     WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(walletsApi),
@@ -78,7 +77,7 @@ function useNotificationSubscriptions({
   return {
     subscriptions: subscriptions || EMPTY_ARR,
     update,
-    isFetching,
+    isFetching: subscriptions === undefined && !errorFetching,
     errorFetching,
     isUpdating,
     errorUpdating,

@@ -41,7 +41,7 @@ const NotificationsList = () => {
   }
 
   return (
-    <div className="dt-px-4 dt-py-4">
+    <div className="dt-py-4">
       {messages.map((message, idx) => (
         <React.Fragment key={idx}>
           <Notification

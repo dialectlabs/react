@@ -271,7 +271,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
-    notificationHeader: '',
+    notificationHeader: 'dt-border-b dt-border-neutral-300',
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
@@ -382,7 +382,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationMessage: 'dt--mx-2 dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
-    notificationHeader: '',
+    notificationHeader: 'dt-border-b dt-border-neutral-900',
     modalWrapper:
       'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
