@@ -22,11 +22,16 @@ import IconButton from '../../../IconButton';
 type Web3Props = {
   onThreadDeleted?: () => void;
   onThreadCreated?: (thread: Thread) => void;
+  showLabel?: boolean;
 };
 
 const addressType = AddressType.Wallet;
 
-const Wallet = ({ onThreadDeleted, onThreadCreated }: Web3Props) => {
+const Wallet = ({
+  onThreadDeleted,
+  onThreadCreated,
+  showLabel = true,
+}: Web3Props) => {
   const { adapter: wallet } = useDialectWallet();
   const { dappAddress } = useDialectDapp();
   const { textStyles, outlinedInput, addormentButton, icons } = useTheme();
@@ -122,12 +127,14 @@ const Wallet = ({ onThreadDeleted, onThreadCreated }: Web3Props) => {
 
   return (
     <div>
-      <label
-        htmlFor="settings-email"
-        className={clsx(textStyles.label, 'dt-block dt-mb-1')}
-      >
-        Wallet
-      </label>
+      {showLabel && (
+        <label
+          htmlFor="settings-email"
+          className={clsx(textStyles.label, 'dt-block dt-mb-1')}
+        >
+          Wallet
+        </label>
+      )}
       <div
         className={clsx(
           'dt-flex dt-items-center dt-border !dt-bg-transparent',
