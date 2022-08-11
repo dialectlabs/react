@@ -2,7 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.22] - 2022-08-11
+
 - fix: correct thread loading status
+- chore: bump sdk
 
 ## [1.0.0-beta.21] - 2022-08-09
 

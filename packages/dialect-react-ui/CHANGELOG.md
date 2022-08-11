@@ -2,7 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.39] - 2022-08-11
+
 - fix: update header, add missing states and align styling with chat
+- chore: export settings components
 
 ## [1.0.0-beta.38] - 2022-08-09
 
