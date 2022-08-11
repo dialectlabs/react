@@ -112,7 +112,7 @@ function Settings({
       <div className="dt-mt-2 dt-mb-6">
         <Divider />
       </div>
-      <div className="dt-mb-">
+      <div>
         {error && !notificationsTypes ? (
           <ValueRow
             label={<P className={clsx('dt-text-red-500')}>{error.message}</P>}

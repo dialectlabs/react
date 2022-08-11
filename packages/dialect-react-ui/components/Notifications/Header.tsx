@@ -73,6 +73,7 @@ function Header(props: {
         {isSettingsOpen ? (
           <div className="dt-flex dt-flex-row dt-items-center">
             {props.isWeb3Enabled && <BackButton />}
+            {!props.isWeb3Enabled && <MasterBackButton />}
             <span className={clsx(textStyles.header, colors.accent)}>
               Settings
             </span>
