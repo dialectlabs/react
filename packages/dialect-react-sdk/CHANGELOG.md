@@ -2,7 +2,9 @@
 
 ## [UNRELEASED]
 
-## [1.0.0-beta.9] - 2022-08-09
+- fix: correct thread loading status
+
+## [1.0.0-beta.21] - 2022-08-09
 
 - chore: bump @dialectlabs/sdk
 

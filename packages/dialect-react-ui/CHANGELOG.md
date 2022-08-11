@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: update header, add missing states and align styling with chat
+
 ## [1.0.0-beta.38] - 2022-08-09
 
 - fix: calculating audience for dapps without notifications types

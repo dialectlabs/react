@@ -15,6 +15,7 @@ import GatedWrapper from '../common/GatedWrapper';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
+import IconButton from '../IconButton';
 import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
@@ -43,6 +44,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   const { thread, isFetchingThread } = useThread({
     findParams: { otherMembers: [dappAddress] },
   });
+
   const [isInitialRoutePicked, setInitialRoutePicked] = useState(false);
 
   const subscription = useNotificationChannelDappSubscription({
@@ -102,29 +104,37 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   );
 
   return (
-    <>
-      {!isInitialRoutePicked ? (
-        <LoadingThread />
-      ) : (
-        <div className={clsx('dt-h-full dt-overflow-y-auto dt-p-9', scrollbar)}>
-          <Header
-            isWeb3Enabled={isWeb3Enabled}
-            isReady={!isLoading}
-            onModalClose={props.onModalClose}
-            onBackClick={props.onBackClick}
-          />
-          <Route name={RouteName.Settings}>
-            <Settings
-              channels={props.channels || []}
-              notifications={props?.notifications}
-            />
-          </Route>
-          <Route name={RouteName.Thread}>
-            <NotificationsList />
-          </Route>
-        </div>
-      )}
-    </>
+    <div className="dt-h-full">
+      <Header
+        threadId={thread?.id.address.toString()}
+        isWeb3Enabled={isWeb3Enabled}
+        isReady={!isLoading}
+        onModalClose={props.onModalClose}
+        onBackClick={props.onBackClick}
+      />
+      <div
+        className={clsx(
+          'dt-h-full dt-overflow-y-auto dt-px-8 dt-pb-[3.5rem]',
+          scrollbar
+        )}
+      >
+        {isInitialRoutePicked ? (
+          <>
+            <Route name={RouteName.Settings}>
+              <Settings
+                channels={props.channels || []}
+                notifications={props?.notifications}
+              />
+            </Route>
+            <Route name={RouteName.Thread}>
+              <NotificationsList />
+            </Route>
+          </>
+        ) : (
+          <LoadingThread />
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -134,6 +144,15 @@ export default function Notifications({
 }: NotificationsProps) {
   const { dappAddress } = useDialectDapp();
   const { colors, modal } = useTheme();
+
+  const fallbackHeader = (
+    <Header
+      isReady={true}
+      isWeb3Enabled={false}
+      onBackClick={props.onBackClick}
+      onModalClose={props.onModalClose}
+    />
+  );
 
   return (
     <div className="dialect dt-h-full">
@@ -146,8 +165,8 @@ export default function Notifications({
         )}
       >
         <Router initialRoute={RouteName.Settings}>
-          <WalletStatesWrapper>
-            <ConnectionWrapper>
+          <WalletStatesWrapper header={fallbackHeader}>
+            <ConnectionWrapper header={fallbackHeader}>
               <GatedWrapper gatedView={gatedView}>
                 <ThreadEncyprionWrapper otherMemberPK={dappAddress}>
                   <InnerNotifications {...props} />

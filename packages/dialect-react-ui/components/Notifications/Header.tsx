@@ -1,4 +1,3 @@
-import { useDialectDapp, useThread } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useRoute } from '../common/providers/Router';
@@ -10,21 +9,18 @@ function Header(props: {
   isWeb3Enabled: boolean;
   onModalClose: () => void;
   onBackClick?: () => void;
+  threadId?: string;
 }) {
   const { navigate, current } = useRoute();
-  const { colors, textStyles, icons, notificationHeader } = useTheme();
+  const { colors, textStyles, icons, header, notificationHeader } = useTheme();
   const isSettingsOpen = current?.name === RouteName.Settings;
-  const { dappAddress } = useDialectDapp();
-  const { thread } = useThread({
-    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
-  });
   const openSettings = () => {
     navigate(RouteName.Settings);
   };
   const openThread = () => {
-    if (!thread) return;
+    if (!props.threadId) return;
     navigate(RouteName.Thread, {
-      params: { threadId: thread.id },
+      params: { threadId: props.threadId },
     });
   };
 
@@ -70,23 +66,24 @@ function Header(props: {
       <div
         className={clsx(
           'dt-flex dt-flex-row dt-items-center dt-justify-between',
+          header,
           notificationHeader
         )}
       >
-        {!isSettingsOpen ? (
-          <>
-            <MasterBackButton />
-            <span className={clsx(textStyles.header, colors.accent)}>
-              Notifications
-            </span>
-          </>
-        ) : (
+        {isSettingsOpen ? (
           <div className="dt-flex dt-flex-row dt-items-center">
             {props.isWeb3Enabled && <BackButton />}
             <span className={clsx(textStyles.header, colors.accent)}>
               Settings
             </span>
           </div>
+        ) : (
+          <>
+            <MasterBackButton />
+            <span className={clsx(textStyles.header, colors.accent)}>
+              Notifications
+            </span>
+          </>
         )}
         {headerIcons}
       </div>
