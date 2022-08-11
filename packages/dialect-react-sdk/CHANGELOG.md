@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.23] - 2022-08-11
+
+- chore: add polling interval configuration for unread messages
+
 ## [1.0.0-beta.22] - 2022-08-11
 
 - fix: correct thread loading status

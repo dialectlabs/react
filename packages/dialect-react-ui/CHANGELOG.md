@@ -2,6 +2,11 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.43] - 2022-08-11
+
+- hotfix: notifications settings go back button
+- fix: refresh interval in notifications
+
 ## [1.0.0-beta.42] - 2022-08-11
 
 - chore: upd notification default styles
