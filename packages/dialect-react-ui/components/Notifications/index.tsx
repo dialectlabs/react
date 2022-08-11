@@ -15,7 +15,6 @@ import GatedWrapper from '../common/GatedWrapper';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { Route, Router, useRoute } from '../common/providers/Router';
 import type { Channel } from '../common/types';
-import IconButton from '../IconButton';
 import { RouteName } from './constants';
 import Header from './Header';
 import NotificationsList from './screens/NotificationsList';
@@ -69,7 +68,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   }, [navigate, thread]);
 
   const showSettings = useCallback(() => {
-    () => navigate(RouteName.Settings);
+    navigate(RouteName.Settings);
   }, [navigate]);
 
   const isLoading =
