@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.40] - 2022-08-11
+- fix: header back button(realms use case)
+
 ## [1.0.0-beta.39] - 2022-08-11
 
 - fix: update header, add missing states and align styling with chat
