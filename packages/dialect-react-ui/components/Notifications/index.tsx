@@ -147,7 +147,7 @@ export default function Notifications({
 
   const fallbackHeader = (
     <Header
-      isReady={true}
+      isReady={false}
       isWeb3Enabled={false}
       onBackClick={props.onBackClick}
       onModalClose={props.onModalClose}
@@ -164,7 +164,7 @@ export default function Notifications({
           modal
         )}
       >
-        <Router initialRoute={RouteName.Settings}>
+        <Router>
           <WalletStatesWrapper header={fallbackHeader}>
             <ConnectionWrapper header={fallbackHeader}>
               <GatedWrapper gatedView={gatedView}>
