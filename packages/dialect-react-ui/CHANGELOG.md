@@ -2,7 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.42] - 2022-08-11
+
+- chore: upd notification default styles
+
 ## [1.0.0-beta.41] - 2022-08-11
+
 - hotfix: notifications header router
 
 ## [1.0.0-beta.40] - 2022-08-11
