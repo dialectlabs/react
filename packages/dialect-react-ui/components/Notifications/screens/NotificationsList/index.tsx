@@ -1,4 +1,4 @@
-import { ThreadId, useThread, useThreadMessages } from '@dialectlabs/react-sdk';
+import { ThreadId, useThreadMessages } from '@dialectlabs/react-sdk';
 import React, { useEffect } from 'react';
 import { Divider } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -6,7 +6,11 @@ import { useRoute } from '../../../common/providers/Router';
 import NoNotifications from './NoNotifications';
 import { Notification } from './Notification';
 
-const NotificationsListWrapper = () => {
+interface NotificationsListProps {
+  refreshInterval?: number;
+}
+
+const NotificationsListWrapper = (props: NotificationsListProps) => {
   const {
     params: { threadId },
   } = useRoute<{ threadId: ThreadId }>();
@@ -15,10 +19,10 @@ const NotificationsListWrapper = () => {
     return null;
   }
 
-  return <NotificationsList />;
+  return <NotificationsList {...props} />;
 };
 
-const NotificationsList = () => {
+const NotificationsList = ({ refreshInterval }: NotificationsListProps) => {
   const { notificationsDivider } = useTheme();
 
   const {
@@ -27,6 +31,7 @@ const NotificationsList = () => {
 
   const { messages, setLastReadMessageTime } = useThreadMessages({
     id: threadId,
+    refreshInterval,
   });
 
   useEffect(

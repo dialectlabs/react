@@ -1,8 +1,7 @@
 import { useDialectDapp, useUnreadMessages } from '@dialectlabs/react-sdk';
 import { Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef } from 'react';
-import { SWRConfig } from 'swr';
+import { useEffect, useRef } from 'react';
 import useMobile from '../../utils/useMobile';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -32,6 +31,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
 
   const { hasUnreadMessages } = useUnreadMessages({
     otherMembers: dappAddress ? [dappAddress] : [],
+    refreshInterval: props.pollingInterval,
   });
 
   useOutsideAlerter(wrapperRef, bellRef, close);
@@ -91,6 +91,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
             onModalClose={close}
             onBackClick={props?.onBackClick}
             gatedView={props.gatedView}
+            pollingInterval={props.pollingInterval}
           />
         </div>
       </Transition>
@@ -102,19 +103,9 @@ export default function NotificationsButton({
   channels = ['web3', 'telegram', 'sms', 'email'],
   ...props
 }: PropTypes): JSX.Element {
-  // TODO: Add default value to polling inteval
-  const swrOptions = useMemo(
-    () => ({
-      refreshInterval: props.pollingInterval,
-    }),
-    [props.pollingInterval]
-  );
   return (
     <div className="dialect">
-      {/* TODO: switch to some sdk config setting */}
-      <SWRConfig value={swrOptions}>
-        <WrappedNotificationsButton channels={channels} {...props} />
-      </SWRConfig>
+      <WrappedNotificationsButton channels={channels} {...props} />
     </div>
   );
 }

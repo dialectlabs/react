@@ -31,6 +31,7 @@ interface NotificationsProps {
   channels?: Channel[];
   onBackClick?: () => void;
   gatedView?: string | JSX.Element;
+  pollingInterval?: number;
 }
 
 const addressType = AddressType.Wallet;
@@ -126,7 +127,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
               />
             </Route>
             <Route name={RouteName.Thread}>
-              <NotificationsList />
+              <NotificationsList refreshInterval={props.pollingInterval} />
             </Route>
           </>
         ) : (
