@@ -1,3 +1,4 @@
+import type { ThreadId } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useRoute } from '../common/providers/Router';
@@ -9,7 +10,7 @@ function Header(props: {
   isWeb3Enabled: boolean;
   onModalClose: () => void;
   onBackClick?: () => void;
-  threadId?: string;
+  threadId?: ThreadId;
 }) {
   const { navigate, current } = useRoute();
   const { colors, textStyles, icons, header, notificationHeader } = useTheme();

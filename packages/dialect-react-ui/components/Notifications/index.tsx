@@ -105,7 +105,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
   return (
     <div className="dt-h-full">
       <Header
-        threadId={thread?.id.address.toString()}
+        threadId={thread?.id}
         isWeb3Enabled={isWeb3Enabled}
         isReady={!isLoading}
         onModalClose={props.onModalClose}
