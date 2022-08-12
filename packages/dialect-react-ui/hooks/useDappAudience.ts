@@ -1,4 +1,5 @@
 import {
+  AddressType,
   DialectSdkError,
   useDappAddresses,
   useDappNotificationSubscriptions,
@@ -15,6 +16,7 @@ const DEFAULT_ADDRESSES_REFRESH_INTERVAL = 10000;
 
 interface UseDappAudienceParams {
   notificationTypeId?: string | null;
+  addressTypes?: AddressType[];
   refreshInterval?: number;
 }
 
@@ -28,6 +30,7 @@ interface UseDappAudienceValue {
 
 export default function useDappAudience({
   notificationTypeId,
+  addressTypes,
   refreshInterval = DEFAULT_ADDRESSES_REFRESH_INTERVAL,
 }: UseDappAudienceParams): UseDappAudienceValue {
   const {
@@ -35,14 +38,22 @@ export default function useDappAudience({
     isFetching: isFetchingSubscriptions,
     errorFetching: errorFetchingNotificationSubscriptions = null,
   } = useDappNotificationSubscriptions();
+  let { addresses } = useDappAddresses({
+    refreshInterval,
+  });
   const {
-    addresses,
     isFetching: isFetchingAddresses,
     errorFetching: errorFetchingAddresses = null,
   } = useDappAddresses({
     refreshInterval,
   });
   const isFetching = isFetchingSubscriptions || isFetchingAddresses;
+
+  if (addressTypes) {
+    addresses = addresses.filter((addr) =>
+      addressTypes.includes(addr.address.type)
+    );
+  }
 
   const counts = useMemo(
     () =>
