@@ -8,9 +8,9 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { formatTimestamp } from '../../../../../utils/timeUtils';
-import Avatar2 from '../../../../Avatar2';
+import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
-import { DisplayAddress2 } from '../../../../DisplayAddress2';
+import { DisplayAddress } from '../../../../DisplayAddress';
 import MessageStatus from '../../../MessageStatus';
 import { OnChainIndicator } from '../../../../common';
 import { Encrypted } from '../../../../Icon';
@@ -95,13 +95,13 @@ export default function MessagePreview({
       onClick={!disabled ? onClick : undefined}
     >
       <div className="dt-flex">
-        <Avatar2 publicKey={recipient.publicKey} size="regular" />
+        <Avatar publicKey={recipient.publicKey} size="regular" />
       </div>
       <div className="dt-flex dt-items-baseline dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {connection && otherMemberPk ? (
             <div className="dt-flex dt-items-center">
-              <DisplayAddress2
+              <DisplayAddress
                 publicKey={otherMemberPk}
               />
               {isOnChain && <OnChainIndicator />}

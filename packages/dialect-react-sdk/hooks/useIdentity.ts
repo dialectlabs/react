@@ -70,14 +70,14 @@ const fetchImageUrlFromTwitterHandle = async (handle: string) => {
 function useTwitterAvatar(connection: Connection, publicKey: PublicKey) {
   const { data: twitterHandle } = useTwitterHandle(connection, publicKey);
   const [_namespace, handle] = twitterHandle ? breakName(twitterHandle) : [];
-  const { data: addressImage, error } = useSWR(
+  const { data: addressImage, error, isValidating } = useSWR(
     handle ? [handle, 'twitter-avatar'] : null,
     fetchImageUrlFromTwitterHandle,
     // Since it's likely avatar wont change, increase dedupingInterval to 1 minute
     { dedupingInterval: 1000 * 60 }
   );
 
-  const isLoading = typeof addressImage === 'undefined' && !error;
+  const isLoading = isValidating;
 
   return { src: addressImage, isLoading };
 }
@@ -93,8 +93,6 @@ const useCardinalIdentity = ({publicKey}: UseIdentityParams): UseIdentityValue =
     useTwitterHandle(connection, publicKey);
   const { src, isLoading: isAvatarLoading } = useTwitterAvatar(connection, publicKey);
   const loading = isHandleLoading || isAvatarLoading;
-
-  console.log('usecardinaldintity', name);
   // TODO: determine if !name is sufficient
   if (!name) return { identity: undefined, loading };
   

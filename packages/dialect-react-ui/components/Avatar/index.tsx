@@ -22,7 +22,7 @@ type PropTypes = {
   size: 'regular' | 'small' | 'extra-small';
 };
 
-export default function Avatar2({ publicKey, size = 'regular' }: PropTypes) {
+export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
   const placeholder = publicKey.toString().substr(0, 2);
   const { identity, loading } = useIdentity({publicKey});

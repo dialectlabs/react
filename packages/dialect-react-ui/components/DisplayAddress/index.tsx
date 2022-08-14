@@ -3,6 +3,7 @@ import { useIdentity } from '@dialectlabs/react-sdk';
 import { TwitterIcon } from '../Icon/Twitter';
 
 import { A } from '../common/preflighted';
+import { Loader } from '../common';
 
 type DisplayAddressProps = {
   publicKey: PublicKey;
@@ -20,12 +21,12 @@ const displayName = (identity: any) => {
     }
     case 'CardinalTwitter': {
       return (
-        <>
+        <div className='flex flex-row items-center'>
           <div>{identity.name}</div>
           <div className="dt-pl-2">
             <TwitterIcon height={15} width={15} />
           </div>
-        </>
+        </div>
       );
     }
     default: {
@@ -34,26 +35,29 @@ const displayName = (identity: any) => {
   }
 }
 
-export function DisplayAddress2({
+export function DisplayAddress({
   publicKey,
   isLinkable = false,
 }: DisplayAddressProps) {
   const { identity, loading } = useIdentity({ publicKey });
-  return isLinkable ? (
-    <A
-      href={identity.link}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {loading ? (
-        displayName(identity)
+  return (
+    <div className='flex flex-row items-center'>
+      {isLinkable ? (
+        <A
+          href={identity.link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {displayName(identity)}
+        </A>
       ) : (
         displayName(identity)
       )}
-    </A>
-  ) : loading ? (
-    displayName(identity)
-  ) : (
-    displayName(identity)
+      {loading && 
+        <div className='dt-pl-2'>
+          <Loader />
+        </div>
+      }
+    </div>
   );
 }

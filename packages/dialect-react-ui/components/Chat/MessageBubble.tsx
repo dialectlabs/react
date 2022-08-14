@@ -1,6 +1,6 @@
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
-import Avatar2 from '../Avatar2';
+import Avatar from '../Avatar';
 import { ButtonLink, LinkifiedText } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
@@ -55,7 +55,7 @@ export default function MessageBubble({
         >
           {!isYou ? (
             <div className="dt-mr-1">
-              <Avatar2 size="small" publicKey={author.publicKey} />
+              <Avatar size="small" publicKey={author.publicKey} />
             </div>
           ) : null}
           <div
