@@ -1,10 +1,7 @@
-import { useDapp, useDialectSdk } from '@dialectlabs/react-sdk';
-import type { Connection, PublicKey } from '@solana/web3.js';
+import type { PublicKey } from '@solana/web3.js';
+import { useIdentity } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { HiUserCircle } from 'react-icons/hi';
-import useSWR from 'swr';
-import useAddressImage from '../../hooks/useAddressImage';
-import { fetchSolanaNameServiceName, Loader } from '../common';
+
 import { Img } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 
@@ -25,70 +22,10 @@ type PropTypes = {
   size: 'regular' | 'small' | 'extra-small';
 };
 
-const CardinalAvatar = ({
-  connection,
-  address,
-  placeholder,
-  className,
-}: {
-  connection: Connection;
-  address: PublicKey | undefined;
-  placeholder?: React.ReactNode;
-  className?: string;
-}) => {
-  const { src: addressImage, isLoading } = useAddressImage(connection, address);
-
-  if (!address) return <></>;
-
-  return isLoading ? (
-    <div className={clsx(className, 'dt-rounded-full', 'dt-overflow-hidden')}>
-      <>{placeholder}</>
-    </div>
-  ) : addressImage ? (
-    <Img
-      className="dt-rounded-full"
-      alt={`profile-${address.toString()}`}
-      src={addressImage}
-    />
-  ) : (
-    <>{placeholder}</> || <HiUserCircle className={className} />
-  );
-};
-
 export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
-  const {
-    info: {
-      solana: { dialectProgram },
-    },
-  } = useDialectSdk();
-
-  const { dapps } = useDapp();
-
-  const connection = dialectProgram.provider.connection;
-  const { data } = useSWR(
-    [connection, publicKey.toBase58(), 'sns'],
-    fetchSolanaNameServiceName
-  );
-
-  const dapp = dapps[publicKey.toString()];
-
-  if (dapp) {
-    return (
-      <div className={clsx(avatar, `dt-flex ${containerStyleMap[size]}`)}>
-        {dapp.avatarUrl ? (
-          <Img
-            className="dt-rounded-full"
-            alt={`dapp-profile-${dapp.name}`}
-            src={dapp.avatarUrl}
-          />
-        ) : (
-          <>{dapp.name[0]}</>
-        )}
-      </div>
-    );
-  }
-
+  const placeholder = publicKey.toString().substr(0, 2);
+  const { identity, loading } = useIdentity({ publicKey });
   return (
     <div
       className={clsx(
@@ -98,20 +35,14 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
       )}
     >
       <div className={`${textStyleMap[size]}`}>
-        {connection ? (
-          <CardinalAvatar
-            className="dt-h-full"
-            connection={connection}
-            address={publicKey}
-            // TODO: refactor the CardinalAvatar to separate out SNS logic
-            placeholder={
-              data?.solanaDomain
-                ? data.solanaDomain.substr(0, 1)
-                : publicKey.toString().substr(0, 1)
-            }
-          />
+        {loading || !identity.avatarUrl ? (
+          <div className="text-xs">{placeholder}</div>
         ) : (
-          publicKey.toString().substr(0, 1)
+          <Img
+            className="dt-rounded-full"
+            alt={`profile-${identity.name}`}
+            src={identity.avatarUrl}
+          />
         )}
       </div>
     </div>

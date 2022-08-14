@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: move cardinal, SNS, & dapp identities from react-ui
+
 ## [1.0.0-beta.23] - 2022-08-11
 
 - chore: add polling interval configuration for unread messages

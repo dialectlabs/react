@@ -11,13 +11,14 @@ import { OnChainIndicator } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
-import { DisplayAddress, useIdentity } from '../../../DisplayAddress';
+import { DisplayAddress } from '../../../DisplayAddress';
 import { Header } from '../../../Header';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
 import EncryptionBadge from './EncryptionBadge';
 import Settings from './Settings';
 import Thread from './Thread';
+import { useIdentity } from '@dialectlabs/react-sdk';
 
 type ThreadContentProps = {
   threadId: ThreadId;
@@ -38,7 +39,8 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const otherMemberPK =
     thread?.otherMembers[0] && thread.otherMembers[0].publicKey;
 
-  const { sns, cardinal } = useIdentity({ connection, otherMemberPK });
+  // TODO: ! is unsafe
+  const { identity, loading } = useIdentity({ publicKey: otherMemberPK! });
 
   const isOnChain = thread?.backend === Backend.Solana;
 
@@ -94,8 +96,7 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
                       {connection ? (
                         <>
                           <DisplayAddress
-                            connection={connection}
-                            otherMemberPK={otherMemberPK}
+                            publicKey={otherMemberPK}
                             isLinkable={true}
                           />
                         </>
@@ -106,7 +107,7 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
                     {isOnChain && <OnChainIndicator />}
                   </div>
                   <span className="dt-text-xs dt-flex dt-items-center dt-space-x-1">
-                    {sns.displayName || cardinal.displayName ? (
+                    {identity.type == 'PublicKey' ? (
                       <span className="dt-opacity-60">
                         {display(otherMemberPK)}
                       </span>
