@@ -6,7 +6,7 @@ import {
 } from '@dialectlabs/react-sdk';
 import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
-import Avatar from '../../../Avatar';
+import Avatar2 from '../../../Avatar2';
 import { OnChainIndicator } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
@@ -87,7 +87,7 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
           {otherMemberPK && current?.sub?.name !== ThreadRouteName.Settings ? (
             <Header.Title align="left">
               <div className="dt-flex dt-space-x-2">
-                <Avatar size="extra-small" publicKey={otherMemberPK} />
+                <Avatar2 size="extra-small" publicKey={otherMemberPK} />
                 <div className="dt-flex dt-flex-col">
                   <div className="dt-flex dt-flex-row items-center">
                     <span className="dt-text-base dt-font-medium dt-text">
