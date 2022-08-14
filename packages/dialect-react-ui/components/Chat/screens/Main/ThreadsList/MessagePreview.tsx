@@ -13,6 +13,7 @@ import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress2 } from '../../../../DisplayAddress2';
 import MessageStatus from '../../../MessageStatus';
 import { OnChainIndicator } from '../../../../common';
+import { Encrypted } from '../../../../Icon';
 
 type PropsType = {
   threadId: ThreadId;
