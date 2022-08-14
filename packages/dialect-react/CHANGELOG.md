@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: move cardinal, SNS, & dapp identities from react-ui
+
 ## [0.5.6] - 2022-06-14
 
 - refactor: introduce `isMessages Ready` flag, and assign ids for every message for purposes of improving animation
