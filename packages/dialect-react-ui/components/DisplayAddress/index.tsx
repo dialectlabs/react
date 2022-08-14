@@ -14,13 +14,11 @@ type DisplayAddressProps = {
 const displayName = (identity: any) => {
   switch(identity.type) {
     case 'SNS': {
-      console.log('is SNS');
       return (
         <div className="dt-truncate dt-mr-0.5">{`${identity.name}.sol ◎`}</div>
       );
     }
     case 'CardinalTwitter': {
-      console.log('is twitter');
       return (
         <>
           <div>{identity.name}</div>
@@ -31,7 +29,6 @@ const displayName = (identity: any) => {
       );
     }
     default: {
-      console.log('is default');
       return (<div>{identity.name}</div>);
     }
   }

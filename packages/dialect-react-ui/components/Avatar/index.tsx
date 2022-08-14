@@ -26,7 +26,6 @@ export default function Avatar2({ publicKey, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
   const placeholder = publicKey.toString().substr(0, 2);
   const { identity, loading } = useIdentity({publicKey});
-  console.log({identity, loading});
   return (
     <div
       className={clsx(
