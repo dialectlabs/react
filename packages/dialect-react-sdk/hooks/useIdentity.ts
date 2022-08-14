@@ -1,6 +1,6 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { breakName, tryGetName } from '@cardinal/namespaces';
-import { useDialectSdk } from '@dialectlabs/react-sdk';
+import { useDapp, useDialectSdk } from '@dialectlabs/react-sdk';
 import { tryGetImageUrl } from '@cardinal/namespaces-components';
 
 import useSWR from 'swr';
@@ -16,6 +16,7 @@ type UseIdentityParams = {
 };
 
 enum Types {
+  Dapp = 'Dapp',
   PublicKey = 'PublicKey',
   SNS = 'SNS',
   CardinalTwitter = 'CardinalTwitter',
@@ -226,6 +227,27 @@ const useSNSIdentity = ({ publicKey }: UseIdentityParams): UseIdentityValue => {
   };
 };
 
+/*
+  Dialect verified dapps
+*/
+
+const useDappIdentity = ({
+  publicKey,
+}: UseIdentityParams): UseIdentityValue => {
+  const { dapps, isFetching: loading } = useDapp();
+  const dapp = dapps[publicKey.toString()];
+  if (!dapp) return { identity: undefined, loading };
+  return {
+    identity: {
+      avatarUrl: dapp.avatarUrl,
+      name: dapp.name,
+      publicKey,
+      type: Types.Dapp,
+    },
+    loading,
+  };
+};
+
 const useIdentity = ({ publicKey }: UseIdentityParams): UseIdentityValue => {
   const defaultIdentity = {
     link: `https://explorer.solana.com/address/${publicKey.toString()}`,
@@ -234,15 +256,27 @@ const useIdentity = ({ publicKey }: UseIdentityParams): UseIdentityValue => {
     type: Types.PublicKey,
   };
 
+  const { identity: dappIdentity, loading: dappLoading } = useDappIdentity({
+    publicKey,
+  });
   const { identity: cardinalIdentity, loading: cardinalLoading } =
     useCardinalIdentity({ publicKey });
   const { identity: snsIdentity, loading: snsLoading } = useSNSIdentity({
     publicKey,
   });
-  const loading = cardinalLoading || snsLoading;
+
+  // If dappIdentity exists we prioritize it over everything else
+  const loading =
+    !dappIdentity && (dappLoading || cardinalLoading || snsLoading);
 
   if (loading) return { identity: defaultIdentity, loading };
 
+  if (dappIdentity) {
+    return {
+      identity: dappIdentity,
+      loading,
+    };
+  }
   if (snsIdentity) {
     return {
       identity: { ...cardinalIdentity, ...snsIdentity },
@@ -252,7 +286,6 @@ const useIdentity = ({ publicKey }: UseIdentityParams): UseIdentityValue => {
   if (cardinalIdentity) {
     return { identity: cardinalIdentity, loading: false };
   }
-
   return {
     identity: defaultIdentity,
     loading: false,
