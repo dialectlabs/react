@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.25] - 2022-08-14
+
 - chore: move cardinal, SNS, & dapp identities from react-ui
 
 ## [1.0.0-beta.23] - 2022-08-11

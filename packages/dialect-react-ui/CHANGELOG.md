@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.45] - 2022-08-14
+
 - chore: move cardinal, SNS, & dapp identities to react-sdk
 
 ## [1.0.0-beta.43] - 2022-08-11
