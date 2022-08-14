@@ -101,9 +101,7 @@ export default function MessagePreview({
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {connection && otherMemberPk ? (
             <div className="dt-flex dt-items-center">
-              <DisplayAddress
-                publicKey={otherMemberPk}
-              />
+              <DisplayAddress publicKey={otherMemberPk} />
               {isOnChain && <OnChainIndicator />}
             </div>
           ) : null}

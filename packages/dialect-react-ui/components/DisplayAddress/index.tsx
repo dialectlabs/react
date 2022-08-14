@@ -8,12 +8,12 @@ import { Loader } from '../common';
 type DisplayAddressProps = {
   publicKey: PublicKey;
   isLinkable?: boolean;
-}
+};
 
 // TODO: Get Identity type from react-sdk
 // TODO: Abstract this hardcoding away since we won't know types generally in the long run
 const displayName = (identity: any) => {
-  switch(identity.type) {
+  switch (identity.type) {
     case 'SNS': {
       return (
         <div className="dt-truncate dt-mr-0.5">{`${identity.name}.sol ◎`}</div>
@@ -21,7 +21,7 @@ const displayName = (identity: any) => {
     }
     case 'CardinalTwitter': {
       return (
-        <div className='flex flex-row items-center'>
+        <div className="flex flex-row items-center">
           <div>{identity.name}</div>
           <div className="dt-pl-2">
             <TwitterIcon height={15} width={15} />
@@ -30,10 +30,10 @@ const displayName = (identity: any) => {
       );
     }
     default: {
-      return (<div>{identity.name}</div>);
+      return <div>{identity.name}</div>;
     }
   }
-}
+};
 
 export function DisplayAddress({
   publicKey,
@@ -41,23 +41,19 @@ export function DisplayAddress({
 }: DisplayAddressProps) {
   const { identity, loading } = useIdentity({ publicKey });
   return (
-    <div className='flex flex-row items-center'>
+    <div className="flex flex-row items-center">
       {isLinkable ? (
-        <A
-          href={identity.link}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <A href={identity.link} target="_blank" rel="noopener noreferrer">
           {displayName(identity)}
         </A>
       ) : (
         displayName(identity)
       )}
-      {loading && 
-        <div className='dt-pl-2'>
+      {loading && (
+        <div className="dt-pl-2">
           <Loader />
         </div>
-      }
+      )}
     </div>
   );
 }

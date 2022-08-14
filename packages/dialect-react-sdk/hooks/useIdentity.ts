@@ -1,4 +1,4 @@
-import { Connection, PublicKey } from "@solana/web3.js"
+import { Connection, PublicKey } from '@solana/web3.js';
 import { breakName, tryGetName } from '@cardinal/namespaces';
 import { useDialectSdk } from '@dialectlabs/react-sdk';
 import { tryGetImageUrl } from '@cardinal/namespaces-components';
@@ -57,7 +57,7 @@ const useTwitterHandle = (connection: Connection, address?: PublicKey) => {
   );
 
   return { ...result, isLoading: !result.data && !result.error };
-}
+};
 
 const fetchImageUrlFromTwitterHandle = async (handle: string) => {
   const url = await tryGetImageUrl(handle);
@@ -70,7 +70,11 @@ const fetchImageUrlFromTwitterHandle = async (handle: string) => {
 function useTwitterAvatar(connection: Connection, publicKey: PublicKey) {
   const { data: twitterHandle } = useTwitterHandle(connection, publicKey);
   const [_namespace, handle] = twitterHandle ? breakName(twitterHandle) : [];
-  const { data: addressImage, error, isValidating } = useSWR(
+  const {
+    data: addressImage,
+    error,
+    isValidating,
+  } = useSWR(
     handle ? [handle, 'twitter-avatar'] : null,
     fetchImageUrlFromTwitterHandle,
     // Since it's likely avatar wont change, increase dedupingInterval to 1 minute
@@ -82,20 +86,27 @@ function useTwitterAvatar(connection: Connection, publicKey: PublicKey) {
   return { src: addressImage, isLoading };
 }
 
-const useCardinalIdentity = ({publicKey}: UseIdentityParams): UseIdentityValue => {
+const useCardinalIdentity = ({
+  publicKey,
+}: UseIdentityParams): UseIdentityValue => {
   const {
     info: {
       solana: { dialectProgram },
     },
   } = useDialectSdk();
   const connection = dialectProgram.provider.connection;
-  const { data: name, isLoading: isHandleLoading } =
-    useTwitterHandle(connection, publicKey);
-  const { src, isLoading: isAvatarLoading } = useTwitterAvatar(connection, publicKey);
+  const { data: name, isLoading: isHandleLoading } = useTwitterHandle(
+    connection,
+    publicKey
+  );
+  const { src, isLoading: isAvatarLoading } = useTwitterAvatar(
+    connection,
+    publicKey
+  );
   const loading = isHandleLoading || isAvatarLoading;
   // TODO: determine if !name is sufficient
   if (!name) return { identity: undefined, loading };
-  
+
   return {
     identity: {
       avatarUrl: src,
@@ -105,9 +116,8 @@ const useCardinalIdentity = ({publicKey}: UseIdentityParams): UseIdentityValue =
       type: Types.CardinalTwitter,
     },
     loading,
-  }
+  };
 };
-
 
 /*
  SNS / Bonfida
@@ -167,10 +177,7 @@ const fetchSolanaNameServiceName = async (
   try {
     if (publicKeyString) {
       const address = new PublicKey(publicKeyString);
-      let domainName = await findFavoriteDomainName(
-        connection,
-        address)
-      ;
+      let domainName = await findFavoriteDomainName(connection, address);
       if (!domainName || domainName == '') {
         const domainKeys = await findOwnedNameAccountsForUser(
           connection,
@@ -191,8 +198,7 @@ const fetchSolanaNameServiceName = async (
   return { solanaDomain: undefined };
 };
 
-
-const useSNSIdentity = ({publicKey}: UseIdentityParams): UseIdentityValue => {
+const useSNSIdentity = ({ publicKey }: UseIdentityParams): UseIdentityValue => {
   const {
     info: {
       solana: { dialectProgram },
@@ -204,10 +210,11 @@ const useSNSIdentity = ({publicKey}: UseIdentityParams): UseIdentityValue => {
     fetchSolanaNameServiceName
   );
   const isLoading = !data && !error;
-  if (isLoading || !data?.solanaDomain ) return {
-    identity: undefined,
-    loading: isLoading,
-  }
+  if (isLoading || !data?.solanaDomain)
+    return {
+      identity: undefined,
+      loading: isLoading,
+    };
   return {
     identity: {
       link: `https://explorer.solana.com/address/${publicKey.toString()}`,
@@ -216,27 +223,31 @@ const useSNSIdentity = ({publicKey}: UseIdentityParams): UseIdentityValue => {
       type: Types.SNS,
     },
     loading: isLoading,
-  }
+  };
 };
 
-const useIdentity = ({
-  publicKey,
-}: UseIdentityParams): UseIdentityValue => {
+const useIdentity = ({ publicKey }: UseIdentityParams): UseIdentityValue => {
   const defaultIdentity = {
     link: `https://explorer.solana.com/address/${publicKey.toString()}`,
     name: shortenAddress(publicKey.toBase58()),
     publicKey,
     type: Types.PublicKey,
-  }
+  };
 
-  const { identity: cardinalIdentity, loading: cardinalLoading } = useCardinalIdentity({ publicKey });
-  const { identity: snsIdentity, loading: snsLoading } = useSNSIdentity({ publicKey });
+  const { identity: cardinalIdentity, loading: cardinalLoading } =
+    useCardinalIdentity({ publicKey });
+  const { identity: snsIdentity, loading: snsLoading } = useSNSIdentity({
+    publicKey,
+  });
   const loading = cardinalLoading || snsLoading;
 
   if (loading) return { identity: defaultIdentity, loading };
 
   if (snsIdentity) {
-    return { identity: {...cardinalIdentity, ...snsIdentity}, loading: false };
+    return {
+      identity: { ...cardinalIdentity, ...snsIdentity },
+      loading: false,
+    };
   }
   if (cardinalIdentity) {
     return { identity: cardinalIdentity, loading: false };
@@ -245,7 +256,7 @@ const useIdentity = ({
   return {
     identity: defaultIdentity,
     loading: false,
-  }
-}
+  };
+};
 
 export default useIdentity;

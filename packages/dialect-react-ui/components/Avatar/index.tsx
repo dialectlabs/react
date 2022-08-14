@@ -25,7 +25,7 @@ type PropTypes = {
 export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
   const placeholder = publicKey.toString().substr(0, 2);
-  const { identity, loading } = useIdentity({publicKey});
+  const { identity, loading } = useIdentity({ publicKey });
   return (
     <div
       className={clsx(
@@ -35,15 +35,15 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
       )}
     >
       <div className={`${textStyleMap[size]}`}>
-      {loading || !identity.avatarUrl ? (
-         <div className='text-xs'>{placeholder}</div>
-      ) : (
-        <Img
-          className="dt-rounded-full"
-          alt={`profile-${identity.name}`}
-          src={identity.avatarUrl}
-        />
-      )}
+        {loading || !identity.avatarUrl ? (
+          <div className="text-xs">{placeholder}</div>
+        ) : (
+          <Img
+            className="dt-rounded-full"
+            alt={`profile-${identity.name}`}
+            src={identity.avatarUrl}
+          />
+        )}
       </div>
     </div>
   );
