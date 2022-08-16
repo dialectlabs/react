@@ -1,7 +1,8 @@
-import { Connection, PublicKey } from '@solana/web3.js';
 import { breakName, tryGetName } from '@cardinal/namespaces';
-import { useDapp, useDialectSdk } from '@dialectlabs/react-sdk';
 import { tryGetImageUrl } from '@cardinal/namespaces-components';
+import { Connection, PublicKey } from '@solana/web3.js';
+import useDapp from './useDapp';
+import useDialectSdk from './useDialectSdk';
 
 import useSWR from 'swr';
 
@@ -127,7 +128,7 @@ const useCardinalIdentity = ({
 import { FavouriteDomain, NAME_OFFERS_ID } from '@bonfida/name-offers';
 import {
   NAME_PROGRAM_ID,
-  performReverseLookup,
+  performReverseLookup
 } from '@bonfida/spl-name-service';
 
 async function findOwnedNameAccountsForUser(
