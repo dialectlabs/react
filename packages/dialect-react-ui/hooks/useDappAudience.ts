@@ -38,10 +38,8 @@ export default function useDappAudience({
     isFetching: isFetchingSubscriptions,
     errorFetching: errorFetchingNotificationSubscriptions = null,
   } = useDappNotificationSubscriptions();
-  let { addresses } = useDappAddresses({
-    refreshInterval,
-  });
   const {
+    addresses,
     isFetching: isFetchingAddresses,
     errorFetching: errorFetchingAddresses = null,
   } = useDappAddresses({
@@ -49,8 +47,10 @@ export default function useDappAudience({
   });
   const isFetching = isFetchingSubscriptions || isFetchingAddresses;
 
-  if (addressTypes) {
-    addresses = addresses.filter((addr) =>
+  let addressesFiltered = addresses;
+
+  if (addressTypes && addressTypes.length) {
+    addressesFiltered = addresses.filter((addr) =>
       addressTypes.includes(addr.address.type)
     );
   }
@@ -58,27 +58,36 @@ export default function useDappAudience({
   const counts = useMemo(
     () =>
       getAddressesCounts(
-        isFetching ? null : addresses,
+        isFetching ? null : addressesFiltered,
         isFetching ? null : notificationsSubscriptions,
         notificationTypeId
       ),
-    [isFetching, addresses, notificationsSubscriptions, notificationTypeId]
+    [
+      isFetching,
+      addressesFiltered,
+      notificationsSubscriptions,
+      notificationTypeId,
+    ]
   );
 
   const totalCount = useMemo(
     () =>
-      getUsersCount(addresses, notificationsSubscriptions, notificationTypeId),
-    [addresses, notificationTypeId, notificationsSubscriptions]
+      getUsersCount(
+        addressesFiltered,
+        notificationsSubscriptions,
+        notificationTypeId
+      ),
+    [addressesFiltered, notificationTypeId, notificationsSubscriptions]
   );
 
   const summary = useMemo(
     () =>
       getAddressesSummary(
-        addresses,
+        addressesFiltered,
         notificationsSubscriptions,
         notificationTypeId
       ),
-    [addresses, notificationsSubscriptions, notificationTypeId]
+    [addressesFiltered, notificationsSubscriptions, notificationTypeId]
   );
 
   return {
