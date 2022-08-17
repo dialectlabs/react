@@ -2,6 +2,11 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.46] - 2022-08-17
+
+- feature: update `useDappAudience` to take into account address types
+- chore: bump @dialeclabs/react-sdk
+
 ## [1.0.0-beta.45] - 2022-08-14
 
 - chore: move cardinal, SNS, & dapp identities to react-sdk
