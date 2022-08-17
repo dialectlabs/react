@@ -13,6 +13,9 @@ import Broadcast, {
   UnwrappedBroadcastForm as BroadcastForm,
 } from './components/Broadcast';
 
+import * as PrimitivesInternal from './components/common/primitives';
+import * as Preflighted from './components/common/preflighted';
+
 import {
   defaultVariables,
   DialectThemeProvider,
@@ -37,6 +40,7 @@ import type {
   IncomingThemeValues,
 } from './components/common/providers/DialectThemeProvider';
 import type { ChatNavigationHelpers } from './components/Chat/types';
+import type { ChannelCountsType } from './utils/addressesUtils';
 import WalletStatesWrapper from './entities/wrappers/WalletStatesWrapper';
 import ConnectionWrapper from './entities/wrappers/ConnectionWrapper';
 import DashboardWrapper from './entities/wrappers/DashboardWrapper';
@@ -48,8 +52,11 @@ import Telegram from './components/Notifications/screens/NewSettings/Telegram';
 import Wallet from './components/Notifications/screens/NewSettings/Wallet';
 import { NotificationToggle } from './components/Notifications/screens/Settings';
 import { Notification } from './components/Notifications/screens/NotificationsList/Notification';
+import ToastMessage from './components/common/ToastMessage';
 
 const ThemeProvider = DialectThemeProvider;
+
+const Primitives = { ...PrimitivesInternal, ...Preflighted, ToastMessage };
 
 export {
   Chat,
@@ -84,6 +91,7 @@ export {
   Wallet,
   NotificationToggle,
   Notification,
+  Primitives,
 };
 
 export type {
@@ -94,6 +102,7 @@ export type {
   IncomingThemeVariables,
   IncomingThemeValues,
   ChatNavigationHelpers,
+  ChannelCountsType,
 };
 
 export * from '@dialectlabs/react-sdk';
