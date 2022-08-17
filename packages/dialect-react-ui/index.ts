@@ -54,6 +54,7 @@ import { NotificationToggle } from './components/Notifications/screens/Settings'
 import { Notification } from './components/Notifications/screens/NotificationsList/Notification';
 import ToastMessage from './components/common/ToastMessage';
 
+import { useTheme } from './components/common/providers/DialectThemeProvider';
 const ThemeProvider = DialectThemeProvider;
 
 const Primitives = { ...PrimitivesInternal, ...Preflighted, ToastMessage };
@@ -70,6 +71,7 @@ export {
   ThemeProvider,
   DialectThemeProvider,
   DialectUiManagementProvider,
+  useTheme,
   useDialectUi,
   useDialectUiId,
   ChatRouteName,
