@@ -53,11 +53,16 @@ import Wallet from './components/Notifications/screens/NewSettings/Wallet';
 import { NotificationToggle } from './components/Notifications/screens/Settings';
 import { Notification } from './components/Notifications/screens/NotificationsList/Notification';
 import ToastMessage from './components/common/ToastMessage';
+import * as Icons from './components/Icon';
 
 import { useTheme } from './components/common/providers/DialectThemeProvider';
 const ThemeProvider = DialectThemeProvider;
 
-const Primitives = { ...PrimitivesInternal, ...Preflighted, ToastMessage };
+const Primitives = {
+  ...PrimitivesInternal,
+  ...Preflighted,
+  ToastMessage,
+};
 
 export {
   Chat,
@@ -94,6 +99,7 @@ export {
   NotificationToggle,
   Notification,
   Primitives,
+  Icons,
 };
 
 export type {
