@@ -7,6 +7,7 @@ import NotificationsButton from './components/NotificationsButton';
 import NotificationsModal from './components/NotificationsModal';
 import Inbox from './components/Inbox';
 import useDappAudience from './hooks/useDappAudience';
+import useBalance from './hooks/useBalance';
 
 import Broadcast, {
   UnwrappedBroadcastForm as BroadcastForm,
@@ -75,7 +76,8 @@ export {
   DashboardWrapper,
   ThreadEncyprionWrapper,
   useDappAudience,
-  // UI component
+  useBalance,
+  // UI components
   Email,
   Sms,
   Telegram,

@@ -20,7 +20,6 @@ import {
   Footer,
   NetworkBadge,
   Toggle,
-  useBalance,
   ValueRow,
 } from '../../../common';
 import { A, H1, Input, P } from '../../../common/preflighted';
@@ -38,6 +37,7 @@ import {
 import { parseSNSDomain, tryFetchSNSDomain } from '../../../../utils/SNSUtils';
 import AddressResult from './AddressResult';
 import ActionCaption from './ActionCaption';
+import useBalance from '../../../../hooks/useBalance';
 
 interface CreateThreadProps {
   onNewThreadCreated?: (threadId: ThreadId) => void;
