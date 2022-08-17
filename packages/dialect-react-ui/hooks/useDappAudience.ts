@@ -1,4 +1,5 @@
 import {
+  AddressType,
   DialectSdkError,
   useDappAddresses,
   useDappNotificationSubscriptions,
@@ -15,6 +16,7 @@ const DEFAULT_ADDRESSES_REFRESH_INTERVAL = 10000;
 
 interface UseDappAudienceParams {
   notificationTypeId?: string | null;
+  addressTypes?: AddressType[];
   refreshInterval?: number;
 }
 
@@ -28,6 +30,7 @@ interface UseDappAudienceValue {
 
 export default function useDappAudience({
   notificationTypeId,
+  addressTypes,
   refreshInterval = DEFAULT_ADDRESSES_REFRESH_INTERVAL,
 }: UseDappAudienceParams): UseDappAudienceValue {
   const {
@@ -44,30 +47,47 @@ export default function useDappAudience({
   });
   const isFetching = isFetchingSubscriptions || isFetchingAddresses;
 
+  let addressesFiltered = addresses;
+
+  if (addressTypes && addressTypes.length) {
+    addressesFiltered = addresses.filter((addr) =>
+      addressTypes.includes(addr.address.type)
+    );
+  }
+
   const counts = useMemo(
     () =>
       getAddressesCounts(
-        isFetching ? null : addresses,
+        isFetching ? null : addressesFiltered,
         isFetching ? null : notificationsSubscriptions,
         notificationTypeId
       ),
-    [isFetching, addresses, notificationsSubscriptions, notificationTypeId]
+    [
+      isFetching,
+      addressesFiltered,
+      notificationsSubscriptions,
+      notificationTypeId,
+    ]
   );
 
   const totalCount = useMemo(
     () =>
-      getUsersCount(addresses, notificationsSubscriptions, notificationTypeId),
-    [addresses, notificationTypeId, notificationsSubscriptions]
+      getUsersCount(
+        addressesFiltered,
+        notificationsSubscriptions,
+        notificationTypeId
+      ),
+    [addressesFiltered, notificationTypeId, notificationsSubscriptions]
   );
 
   const summary = useMemo(
     () =>
       getAddressesSummary(
-        addresses,
+        addressesFiltered,
         notificationsSubscriptions,
         notificationTypeId
       ),
-    [addresses, notificationsSubscriptions, notificationTypeId]
+    [addressesFiltered, notificationsSubscriptions, notificationTypeId]
   );
 
   return {

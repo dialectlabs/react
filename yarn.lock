@@ -1484,6 +1484,15 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
+"@dialectlabs/react-sdk@^1.0.0-beta.26":
+  version "1.0.0-beta.26"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/react-sdk/-/react-sdk-1.0.0-beta.26.tgz#470753d470b94ed52eb132cd1392f7d94edf266b"
+  integrity sha512-kzDt+mdRYwCTypuO0XwUPBdHWrkMSpEYL7sf0M9uUIJtvvbfUvdt+M/4bM02DaqKXlRK/zDMvaN7khJHWVPhVg==
+  dependencies:
+    "@dialectlabs/sdk" "^0.6.5"
+    nanoid "^4.0.0"
+    swr "^1.3.0"
+
 "@dialectlabs/react-ui@^0.9.0":
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/@dialectlabs/react-ui/-/react-ui-0.9.2.tgz#762a574af51f44641c1caae408753bb8741c2f9f"
@@ -1503,6 +1512,22 @@
     react-media-hook "^0.4.9"
     react-transition-group "^4.4.2"
     swr "^1.3.0"
+
+"@dialectlabs/sdk@^0.6.5":
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.6.5.tgz#356fe6fa8253fc0eeddf7f4c7a77c7978fee6637"
+  integrity sha512-K68vzK530jzWf66ag4L7H0Nun5FfeAl0KRJpbAxc4mzXA749M7R5N3H0UbQdysjswUqoVSsBx+gVYQdWNdM1kA==
+  dependencies:
+    "@dialectlabs/web3" "^0.3.2"
+    "@project-serum/anchor" "0.23.0"
+    "@solana/wallet-adapter-base" "^0.9.5"
+    "@solana/web3.js" "^1.22.0"
+    "@stablelib/base64" "^1.0.1"
+    axios "^0.27.2"
+    ed2curve "^0.3.0"
+    luxon "^2.4.0"
+    nanoid "^3.3.4"
+    tweetnacl "^1.0.3"
 
 "@dialectlabs/sdk@^0.6.5":
   version "0.6.5"
