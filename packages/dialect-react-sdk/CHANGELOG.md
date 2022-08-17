@@ -2,6 +2,11 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.26] - 2022-08-17
+
+- chore: bump sdk
+- fix: eslint error in `useIdentity`
+
 ## [1.0.0-beta.25] - 2022-08-14
 
 - chore: move cardinal, SNS, & dapp identities from react-ui

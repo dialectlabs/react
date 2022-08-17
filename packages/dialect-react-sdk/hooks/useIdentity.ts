@@ -85,7 +85,7 @@ function useTwitterAvatar(connection: Connection, publicKey: PublicKey) {
 
   const isLoading = isValidating;
 
-  return { src: addressImage, isLoading };
+  return { src: addressImage, error, isLoading };
 }
 
 const useCardinalIdentity = ({
@@ -128,7 +128,7 @@ const useCardinalIdentity = ({
 import { FavouriteDomain, NAME_OFFERS_ID } from '@bonfida/name-offers';
 import {
   NAME_PROGRAM_ID,
-  performReverseLookup
+  performReverseLookup,
 } from '@bonfida/spl-name-service';
 
 async function findOwnedNameAccountsForUser(

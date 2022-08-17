@@ -1504,10 +1504,10 @@
     react-transition-group "^4.4.2"
     swr "^1.3.0"
 
-"@dialectlabs/sdk@^0.6.4":
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.6.4.tgz#d1fc39e9c53f1efb8e2b1de00cbcc13aeeedbc10"
-  integrity sha512-VwZIQA+Xp7qciJhtvhuVF/MFFI2OSAeItzmDvH5TeCo/pB9L/KDFs7oenYi6GkkZHvlLOuiNRsInG05JhiouXg==
+"@dialectlabs/sdk@^0.6.5":
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.6.5.tgz#356fe6fa8253fc0eeddf7f4c7a77c7978fee6637"
+  integrity sha512-K68vzK530jzWf66ag4L7H0Nun5FfeAl0KRJpbAxc4mzXA749M7R5N3H0UbQdysjswUqoVSsBx+gVYQdWNdM1kA==
   dependencies:
     "@dialectlabs/web3" "^0.3.2"
     "@project-serum/anchor" "0.23.0"
