@@ -134,40 +134,6 @@ export function Button(props: {
   );
 }
 
-// TODO: Deprecate BigButton
-export function BigButton(props: {
-  className?: string;
-  onClick?: () => void;
-  disabled?: boolean;
-  icon?: React.ReactNode;
-  loading?: boolean;
-  heading: React.ReactNode;
-  description: React.ReactNode;
-}): JSX.Element {
-  const { bigButton, bigButtonLoading, textStyles } = useTheme();
-
-  return (
-    <ButtonBase
-      className={clsx(
-        'dt-w-full dt-px-4 dt-py-3 dt-rounded-lg dt-transition',
-        !props.loading ? bigButton : bigButtonLoading,
-        props.className
-      )}
-      style={{ borderColor: 'currentColor' }}
-      onClick={props.onClick}
-      disabled={props.loading || props.disabled}
-    >
-      <div className="dt-flex dt-flex-row dt-justify-between dt-items-center">
-        <div className="dt-flex dt-flex-col dt-items-start">
-          <P className={textStyles.bigButtonText}>{props.heading}</P>
-          <P className={textStyles.bigButtonSubtle}>{props.description}</P>
-        </div>
-        <div>{!props.loading ? props.icon : <Loader />}</div>
-      </div>
-    </ButtonBase>
-  );
-}
-
 type SIZE = 'S' | 'M';
 
 export function Toggle({

@@ -34,7 +34,8 @@ const Wallet = ({
 }: Web3Props) => {
   const { adapter: wallet } = useDialectWallet();
   const { dappAddress } = useDialectDapp();
-  const { textStyles, outlinedInput, addormentButton, icons } = useTheme();
+  const { textStyles, outlinedInput, addormentButton, icons, colors } =
+    useTheme();
   const { create: createThread, isCreatingThread } = useThreads();
 
   const {
@@ -130,7 +131,7 @@ const Wallet = ({
       {showLabel && (
         <label
           htmlFor="settings-email"
-          className={clsx(textStyles.label, 'dt-block dt-mb-1')}
+          className={clsx(colors.label, textStyles.label, 'dt-block dt-mb-1')}
         >
           Wallet
         </label>

@@ -159,7 +159,7 @@ export default function Notifications({
       <div
         className={clsx(
           'dt-flex dt-flex-col dt-h-full dt-overflow-hidden',
-          colors.primary,
+          colors.textPrimary,
           colors.bg,
           modal
         )}

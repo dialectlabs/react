@@ -298,7 +298,7 @@ export default function CreateThread({
         <H1
           className={clsx(
             textStyles.h1,
-            colors.primary,
+            colors.textPrimary,
             'dt-text-center dt-mb-4 dt-mt-8'
           )}
         >

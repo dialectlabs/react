@@ -37,7 +37,7 @@ const Sms = () => {
     toggleSubscription,
   } = useNotificationChannelDappSubscription({ addressType });
 
-  const { textStyles } = useTheme();
+  const { textStyles, colors } = useTheme();
 
   const [smsNumber, setSmsNumber] = useState(smsAddress?.value || '');
   const [error, setError] = useState<Error | null>(null);
@@ -108,7 +108,7 @@ const Sms = () => {
     <div>
       <label
         htmlFor="settings-sms"
-        className={clsx(textStyles.label, 'dt-block dt-mb-1')}
+        className={clsx(colors.label, textStyles.label, 'dt-block dt-mb-1')}
       >
         Phone
       </label>
