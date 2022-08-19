@@ -46,6 +46,12 @@ interface UseThreadMessagesValue {
   errorSendingMessage: DialectSdkError | null;
 }
 
+const getIdFromProps = (date: Date, text: string) => `${date.getTime()}-${text}`;
+
+const getId = (message: SdkThreadMessage) => getIdFromProps(message.timestamp, message.text);
+
+const getIdOpt = (message: SdkThreadMessage | undefined) => message ? getId(message) : undefined;
+
 const useThreadMessages = ({
   id,
   refreshInterval,
@@ -86,7 +92,7 @@ const useThreadMessages = ({
     const [firstRemote] = remoteMessages;
     const [firstLocal] = localThreadMessages;
     // we check if we can replace last local message with the remote one
-    if (firstLocal?.text === firstRemote?.text && firstLocal?.isSending) {
+    if (getIdOpt(firstLocal) === getIdOpt(firstRemote) && firstLocal?.isSending) {
       deleteLocalMessage(thread.id.toString(), firstLocal.id);
       merged = true;
     }
@@ -98,7 +104,7 @@ const useThreadMessages = ({
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .map((msg, idx, arr) => ({
         ...msg,
-        id: (arr.length - idx - 1).toString(),
+        id: getId(msg),
       }));
     return mergedMessages;
   }, [remoteMessages, thread, localMessages, deleteLocalMessage]);
@@ -109,10 +115,11 @@ const useThreadMessages = ({
       setIsSendingMessage(true);
       setErrorSendingMessage(null);
       const threadAddr = threadInternal.id.toString();
+      const timestamp = new Date();
       const optimisticMessage: LocalThreadMessage = {
-        id: cmd.id || messages.length.toString(),
+        id: getIdFromProps(timestamp, cmd.text),
         text: cmd.text,
-        timestamp: new Date(),
+        timestamp: timestamp,
         author: threadInternal.me,
         isSending: true,
       };
