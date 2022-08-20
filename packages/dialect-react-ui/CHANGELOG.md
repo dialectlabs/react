@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.47] - 2022-08-20
+
+- refactor: export UI primitives
+
 ## [1.0.0-beta.46] - 2022-08-17
 
 - feature: update `useDappAudience` to take into account address types
