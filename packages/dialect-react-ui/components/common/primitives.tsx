@@ -1,18 +1,10 @@
-import { useDialectSdk } from '@dialectlabs/react-sdk';
-import { ownerFetcher } from '@dialectlabs/web3';
+import type { DetailedHTMLProps, InputHTMLAttributes } from 'react';
 import clsx from 'clsx';
-import React, {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  useEffect,
-  useState,
-} from 'react';
-import useSWR from 'swr';
 import { DialectLogo } from '../Icon';
 import { A, ButtonBase, Label, P } from './preflighted';
 import { useTheme } from './providers/DialectThemeProvider';
 
-// TODO: separate these components to separate files
+// TODO: TBD separate these components to separate files
 export function Divider(props: { className?: string }): JSX.Element {
   const { divider } = useTheme();
 
@@ -226,22 +218,3 @@ export function Toggle({
     </Label>
   );
 }
-
-export const useBalance = () => {
-  const {
-    info: {
-      wallet,
-      solana: { dialectProgram },
-    },
-  } = useDialectSdk();
-
-  const { data, error } = useSWR(
-    dialectProgram?.provider.connection && wallet
-      ? ['/owner', wallet, dialectProgram?.provider.connection]
-      : null,
-    ownerFetcher
-  );
-  const balance = data?.lamports ? (data.lamports / 1e9).toFixed(2) : null;
-
-  return { balance, error };
-};
