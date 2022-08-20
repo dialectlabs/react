@@ -11,9 +11,9 @@ import { formatTimestamp } from '../../../../../utils/timeUtils';
 import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
-import { Encrypted } from '../../../../Icon';
 import MessageStatus from '../../../MessageStatus';
 import { OnChainIndicator } from '../../../../common';
+import { Encrypted } from '../../../../Icon';
 
 type PropsType = {
   threadId: ThreadId;
@@ -101,10 +101,7 @@ export default function MessagePreview({
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {connection && otherMemberPk ? (
             <div className="dt-flex dt-items-center">
-              <DisplayAddress
-                connection={connection}
-                otherMemberPK={otherMemberPk}
-              />
+              <DisplayAddress publicKey={otherMemberPk} />
               {isOnChain && <OnChainIndicator />}
             </div>
           ) : null}

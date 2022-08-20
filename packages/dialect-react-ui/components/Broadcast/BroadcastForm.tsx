@@ -3,9 +3,9 @@ import {
   DialectSdkError,
   useDappNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
-import { useDappAudience } from '@dialectlabs/react-ui';
 import clsx from 'clsx';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
+import useDappAudience from '../../hooks/useDappAudience';
 import { Button, Loader, ValueRow } from '../common';
 import { H1, Input, P, Textarea } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
