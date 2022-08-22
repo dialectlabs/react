@@ -2,10 +2,11 @@ import {
   Backend,
   ThreadId,
   useDialectSdk,
+  useIdentity,
   useThread,
 } from '@dialectlabs/react-sdk';
-import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
+import { shortenAddress } from '../../../../utils/displayUtils';
 import Avatar from '../../../Avatar';
 import { OnChainIndicator } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -18,7 +19,6 @@ import { useChatInternal } from '../../provider';
 import EncryptionBadge from './EncryptionBadge';
 import Settings from './Settings';
 import Thread from './Thread';
-import { useIdentity } from '@dialectlabs/react-sdk';
 
 type ThreadContentProps = {
   threadId: ThreadId;
@@ -107,9 +107,9 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
                     {isOnChain && <OnChainIndicator />}
                   </div>
                   <span className="dt-text-xs dt-flex dt-items-center dt-space-x-1">
-                    {identity.type == 'PublicKey' ? (
+                    {!identity ? (
                       <span className="dt-opacity-60">
-                        {display(otherMemberPK)}
+                        {shortenAddress(otherMemberPK)}
                       </span>
                     ) : null}
                     <EncryptionBadge
