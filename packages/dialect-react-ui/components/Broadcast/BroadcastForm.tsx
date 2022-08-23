@@ -151,7 +151,7 @@ function BroadcastForm({
     <div className="dt-flex dt-flex-col dt-space-y-2">
       {!headless ? (
         <>
-          <H1 className={clsx(textStyles.h1, colors.primary, 'dt-mb-4')}>
+          <H1 className={clsx(textStyles.h1, colors.textPrimary, 'dt-mb-4')}>
             Create broadcast
           </H1>
           <ValueRow label="Category" className="dt-w-full">

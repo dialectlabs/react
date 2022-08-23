@@ -25,32 +25,24 @@ export type ThemeType = 'dark' | 'light';
 
 export type ThemeColors =
   | 'bg'
-  | 'errorBg'
-  | 'primary'
-  | 'secondary'
+  | 'textPrimary'
   | 'accent'
-  | 'accentSolid'
-  | 'brand'
   | 'highlight'
   | 'highlightSolid'
   | 'toggleThumb'
   | 'toggleBackground'
   | 'toggleBackgroundActive'
-  | 'notificationBadgeColor';
+  | 'notificationBadgeColor'
+  | 'label';
 
 export type ThemeTextStyles =
   | 'h1'
-  | 'h2'
   | 'body'
   | 'small'
   | 'bigText'
   | 'header'
   | 'input'
-  | 'textArea'
-  | 'messageBubble'
   | 'buttonText'
-  | 'bigButtonText'
-  | 'bigButtonSubtle'
   | 'link'
   | 'label';
 
@@ -135,9 +127,6 @@ export type IncomingThemeValues = {
   section?: string;
   xPaddedText?: string;
   toast?: string;
-  // TODO: Deprecate BigButton
-  bigButton?: string;
-  bigButtonLoading?: string;
   disabledButton?: string;
   notificationHeader?: string;
   addormentButton?: string;
@@ -196,36 +185,38 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
   light: {
     // TODO: either put all colors in the theme or define as css-custom-properties to simplify overriding
     colors: {
+      // main background (modal)
       bg: 'dt-bg-white',
-      secondary: '',
-      brand: '',
-      errorBg: 'dt-bg-transparent',
-      primary: 'dt-text-black',
+      // primary text color
+      textPrimary: 'dt-text-black',
+      // header color
       accent: 'dt-text-black',
-      accentSolid: 'dt-text-[#5895B9]',
+      // block for use case example
       highlight: 'dt-bg-subtle-day',
+      // powerd by dialect block
       highlightSolid: 'dt-bg-[#F2F3F2]',
+      // toggle background off
       toggleBackground: 'dt-bg-[#D6D6D6]',
+      // toggle background on
       toggleBackgroundActive: 'dt-bg-[#528E5B]',
+      // circle in toggle
       toggleThumb: 'dt-bg-[#1F1F1F]',
+      // notification badge
       notificationBadgeColor: 'dt-bg-red-500',
+      // input label
+      label: 'dt-text-black/60',
     },
     // TODO: simplify setting just font-family
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
-      h2: 'dt-font-inter dt-text-xl dt-font-bold',
       input: 'dt-font-inter',
-      textArea: 'dt-font-inter',
-      messageBubble: 'dt-font-inter',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
       bigText: 'dt-font-inter dt-text-lg dt-font-medium',
       header: 'dt-font-inter dt-text-base dt-font-medium',
       buttonText: 'dt-font-inter dt-text-base',
-      bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-black',
-      bigButtonSubtle: 'dt-font-inter dt-font-medium dt-text-sm dt-text-black',
       link: 'dt-underline dt-decoration-1 dt-break-words',
-      label: 'dt-font-inter dt-text-base dt-text-black dt-opacity-40',
+      label: 'dt-font-inter dt-text-base',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
@@ -299,44 +290,32 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-bg-subtle-day dt-text-black/40 dt-border dt-border-outline-day',
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
-    // TODO: Deprecate BigButton
-    bigButton: 'dt-text-black dt-border dt-border-black hover:dt-opacity-60',
-    bigButtonLoading:
-      'dt-min-h-[42px] dt-border dt-border-black dt-opacity-80 dt-bg-transparent',
     addormentButton:
       'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
   },
   dark: {
     colors: {
       bg: 'dt-bg-black',
-      secondary: '',
-      brand: '',
-      errorBg: 'dt-bg-transparent',
-      primary: 'dt-text-white',
+      textPrimary: 'dt-text-white',
       accent: 'dt-text-white',
-      accentSolid: 'dt-text-white',
       highlight: 'dt-bg-subtle-night',
       highlightSolid: 'dt-bg-[#262626]',
       toggleBackground: 'dt-bg-white/60',
       toggleBackgroundActive: 'dt-bg-[#528E5B]',
       toggleThumb: 'dt-bg-[#1F1F1F]',
       notificationBadgeColor: 'dt-bg-red-500',
+      label: 'dt-text-white/60',
     },
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
-      h2: 'dt-font-inter dt-text-xl dt-font-bold',
       input: 'dt-font-inter',
-      textArea: 'dt-font-inter',
-      messageBubble: 'dt-font-inter',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
       bigText: 'dt-font-inter dt-text-lg dt-font-medium',
       header: 'dt-font-inter dt-text-lg dt-font-medium',
       buttonText: 'dt-font-inter dt-text-base',
-      bigButtonText: 'dt-font-inter dt-font-medium dt-text-base dt-text-white',
-      bigButtonSubtle: 'dt-font-inter dt-font-medium dt-text-sm dt-text-white',
       link: 'dt-underline decoration-1 dt-break-words',
-      label: 'dt-font-inter dt-text-base dt-text-white dt-opacity-40',
+      label: 'dt-font-inter dt-text-base',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
@@ -410,10 +389,6 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-bg-subtle-night dt-text-white/40 dt-border dt-border-outline-night',
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
-    // TODO: Deprecate BigButton
-    bigButton: 'dt-text-white dt-border dt-border-white hover:dt-opacity-60',
-    bigButtonLoading:
-      'dt-min-h-[42px] dt-border dt-border-white dt-opacity-80 dt-bg-transparent',
     addormentButton:
       'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
   },

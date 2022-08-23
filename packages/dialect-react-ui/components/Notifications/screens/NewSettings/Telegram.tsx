@@ -42,7 +42,7 @@ const Telegram = () => {
     isToggling,
   } = useNotificationChannelDappSubscription({ addressType });
 
-  const { textStyles } = useTheme();
+  const { textStyles, colors } = useTheme();
 
   const [telegramUsername, setTelegramUsername] = useState(
     telegramAddress?.value || ''
@@ -126,7 +126,7 @@ const Telegram = () => {
     <div>
       <label
         htmlFor="settings-telegram"
-        className={clsx(textStyles.label, 'dt-block dt-mb-1')}
+        className={clsx(colors.label, textStyles.label, 'dt-block dt-mb-1')}
       >
         Telegram
       </label>

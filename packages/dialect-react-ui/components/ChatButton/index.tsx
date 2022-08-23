@@ -28,7 +28,7 @@ function WrappedChatButton(
     <div
       className={clsx(
         'dt-flex dt-flex-col dt-items-end dt-relative',
-        colors.primary
+        colors.textPrimary
       )}
     >
       <IconButton
