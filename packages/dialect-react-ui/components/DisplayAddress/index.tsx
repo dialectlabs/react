@@ -1,10 +1,10 @@
-import type { PublicKey } from '@solana/web3.js';
 import { Identity, useIdentity } from '@dialectlabs/react-sdk';
+import type { PublicKey } from '@solana/web3.js';
 import { TwitterIcon } from '../Icon/Twitter';
 
-import { A } from '../common/preflighted';
-import { Loader } from '../common';
 import { shortenAddress } from '../../utils/displayUtils';
+import { Loader } from '../common';
+import { A } from '../common/preflighted';
 
 type DisplayAddressProps = {
   publicKey: PublicKey;
@@ -21,7 +21,7 @@ const displayCustomIdentityName = (identity: Identity) => {
     case 'CARDINAL_TWITTER': {
       return (
         <div className="flex flex-row items-center">
-          <div>{identity.name}</div>
+          <div>@{identity.name}</div>
           <div className="dt-pl-2">
             <TwitterIcon height={15} width={15} />
           </div>

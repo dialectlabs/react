@@ -1519,10 +1519,10 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@dialectlabs/identity-cardinal@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/identity-cardinal/-/identity-cardinal-0.0.1.tgz#bd941b51960a06f1c4dcc5f8ad205756e330cc03"
-  integrity sha512-8BEX69akTCr3ViLW56eq+hSZXc0ABNrGpuOGYFhTnp4+TST9q7pPjutm/UzIzkXHO2r4Y6cwQtJlOTNyH8TW8g==
+"@dialectlabs/identity-cardinal@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/identity-cardinal/-/identity-cardinal-0.0.2.tgz#4716e334e8d35fd6d7dc5c33470058c9741df7bd"
+  integrity sha512-lVeIj7/+dtWCUCicsisUkHPjApxFvWJ0nqd0slIidGq20zCQlQM1/06jTZH/i9SVTVPwfoa2dwyUHGhSGM/9MA==
   dependencies:
     "@cardinal/namespaces" "^4.1.55"
 
@@ -1531,10 +1531,10 @@
   resolved "https://registry.yarnpkg.com/@dialectlabs/identity-dialect-dapps/-/identity-dialect-dapps-0.0.1.tgz#ac4b6a1209863005dd3af4b455533d83bb10ef4f"
   integrity sha512-hc9VXg1lKX18RTv3hyZhwxyZVKYRm3dqcIShlabjXHncB6N8PM6Lla6Wt5GwIMyc6gIVq3GuZzUgQI1XngJldw==
 
-"@dialectlabs/identity-sns@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/identity-sns/-/identity-sns-0.0.1.tgz#831c83dda913e8dfde1b235cc405b56828b506e0"
-  integrity sha512-urBgrdPIAZnCmAlWzZgDwvGYkuI9UcXlrDIl5dOrJJZT7K4jW/VpsfIVHMWqAjLMuJ91SWpRyvmnKv4pkMbRhA==
+"@dialectlabs/identity-sns@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/identity-sns/-/identity-sns-0.0.2.tgz#8655908533da42049bae87468ffee04899ac17ae"
+  integrity sha512-6ceDq+mVrVCLrvQW2Af3TxNu81qY8+FBsSaL1IiNBuoF6vEohC58F6aQURTPakXB8i3qFmTzQSWude+ixxMTKQ==
   dependencies:
     "@bonfida/spl-name-service" "^0.1.49"
 
