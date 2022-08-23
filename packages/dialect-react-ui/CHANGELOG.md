@@ -2,6 +2,7 @@
 
 ## [UNRELEASED]
 
+- feature: mark thread's messages as read upon entry
 - feature: add pluggable identity providers
 
 ## [1.0.0-beta.47] - 2022-08-20
