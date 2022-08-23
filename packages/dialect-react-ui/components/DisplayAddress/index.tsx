@@ -12,7 +12,7 @@ type DisplayAddressProps = {
 };
 
 const displayCustomIdentityName = (identity: Identity) => {
-  switch (identity.identityName) {
+  switch (identity.type) {
     case 'SNS': {
       return (
         <div className="dt-truncate dt-mr-0.5">{`${identity.name}.sol ◎`}</div>

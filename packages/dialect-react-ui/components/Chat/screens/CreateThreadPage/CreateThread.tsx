@@ -149,7 +149,7 @@ export default function CreateThread({
       }
 
       const potentialIdentity = await identity.resolveReverse(addressString);
-      console.log({ potentialIdentity });
+
       if (potentialIdentity) {
         setActualAddress(potentialIdentity.publicKey);
         return;
