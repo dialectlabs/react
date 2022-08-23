@@ -7,6 +7,7 @@ export { default as useThreadMessages } from './useThreadMessages';
 export { default as useDialectWallet } from './useDialectWallet';
 export { default as useDialectConnectionInfo } from './useDialectConnectionInfo';
 export { default as useUnreadMessages } from './useUnreadMessages';
+export { default as useGlobalUnreadMessages } from './useGlobalUnreadMessages';
 export { default as useDapp } from './useDapp';
 export { default as useDappAddresses } from './useDappAddresses';
 export { default as useNotificationChannel } from './useNotificationChannel';
