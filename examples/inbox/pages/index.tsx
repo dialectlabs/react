@@ -1,19 +1,25 @@
 import {
+  Backend,
   ChatNavigationHelpers,
+  Config,
+  DialectContextProvider,
   DialectUiManagementProvider,
+  DialectWalletAdapter,
   Inbox as DialectInbox,
   ThemeProvider,
   useDialectUiId,
-  Backend,
-  Config,
-  DialectContextProvider,
-  DialectWalletAdapter,
-  TokenStore,
-  EncryptionKeysStore,
 } from '@dialectlabs/react-ui';
-import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import {
+  useConnection,
+  useWallet,
+  WalletContextState,
+} from '@solana/wallet-adapter-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Wallet } from '../components/Wallet';
+
+import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
+import { SNSIdentityResolver } from '@dialectlabs/identity-sns';
+import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal';
 
 const walletToDialectWallet = (
   wallet: WalletContextState
@@ -67,6 +73,7 @@ function AuthedHome() {
 }
 
 export default function Home(): JSX.Element {
+  const { connection } = useConnection();
   const wallet = useWallet();
   const [dialectWalletAdapter, setDialectWalletAdapter] =
     useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
@@ -78,13 +85,19 @@ export default function Home(): JSX.Element {
   const dialectConfig = useMemo(
     (): Config => ({
       backends: [Backend.DialectCloud, Backend.Solana],
-      environment: 'local-development',
+      environment: 'production',
       dialectCloud: {
-        tokenStore: TokenStore.createInMemory(),
+        tokenStore: 'local-storage',
       },
-      encryptionKeysStore: EncryptionKeysStore.createInMemory(),
+      identity: {
+        resolvers: [
+          new DialectDappsIdentityResolver(),
+          new SNSIdentityResolver(connection),
+          new CardinalTwitterIdentityResolver(connection),
+        ],
+      },
     }),
-    []
+    [connection]
   );
 
   return (

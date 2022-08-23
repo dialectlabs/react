@@ -4,7 +4,6 @@ import {
   useDialectSdk,
   useThread,
 } from '@dialectlabs/react-sdk';
-import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
 import { Button, ValueRow } from '../../../common';
@@ -15,6 +14,7 @@ import { MainRouteName, RouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import type { ChatNavigationHelpers } from '../../types';
+import { shortenAddress } from '../../../../utils/displayUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -63,7 +63,7 @@ const Settings = ({ threadId }: SettingsProps) => {
                     )}
                     rel="noreferrer"
                   >
-                    {display(thread.id.address)}↗
+                    {shortenAddress(thread.id.address)}↗
                   </A>
                 </P>
               </>

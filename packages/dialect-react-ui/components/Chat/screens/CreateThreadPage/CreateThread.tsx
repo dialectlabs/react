@@ -1,4 +1,3 @@
-import { tryGetName as tryGetTwitterHandle } from '@cardinal/namespaces';
 import {
   Backend,
   ThreadId,
@@ -8,72 +7,36 @@ import {
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
-import { display } from '@dialectlabs/web3';
+import type { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
-import type { Connection, PublicKey } from '@solana/web3.js';
 import { KeyboardEvent, useCallback, useEffect, useState } from 'react';
+import useBalance from '../../../../hooks/useBalance';
 import debounce from '../../../../utils/debounce';
+import { shortenAddress } from '../../../../utils/displayUtils';
+import tryPublicKey from '../../../../utils/tryPublicKey';
 import {
   Button,
   Divider,
-  fetchSolanaNameServiceName,
   Footer,
   NetworkBadge,
   Toggle,
   ValueRow,
 } from '../../../common';
-import { A, H1, Input, P } from '../../../common/preflighted';
+import { H1, Input, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useRoute } from '../../../common/providers/Router';
 import { Header } from '../../../Header';
 import { Encrypted, Unencrypted } from '../../../Icon';
 import { useChatInternal } from '../../provider';
-import tryPublicKey from '../../../../utils/tryPublicKey';
-import {
-  parseTwitterHandle,
-  tryFetchAddressFromTwitterHandle,
-} from '../../../../utils/cardinalUtils';
-import { parseSNSDomain, tryFetchSNSDomain } from '../../../../utils/SNSUtils';
-import AddressResult from './AddressResult';
 import ActionCaption from './ActionCaption';
-import useBalance from '../../../../hooks/useBalance';
+import AddressResult from './AddressResult';
+import LinkingCTA from './LinkingCTA';
 
 interface CreateThreadProps {
   onNewThreadCreated?: (threadId: ThreadId) => void;
   onCloseRequest?: () => void;
   onModalClose?: () => void;
-}
-
-function LinkingCTA() {
-  const { textStyles } = useTheme();
-  return (
-    <P
-      className={clsx(
-        textStyles.small,
-        'dt-opacity-60 dt-text-white dt-text dt-mt-1 dt-px-2'
-      )}
-    >
-      {'Link twitter '}
-      <A
-        href={'https://twitter.cardinal.so'}
-        target="_blank"
-        rel="noreferrer"
-        className="dt-underline"
-      >
-        twitter.cardinal.so
-      </A>
-      {' and domain '}
-      <A
-        href={'https://naming.bonfida.org'}
-        target="_blank"
-        rel="noreferrer"
-        className="dt-underline"
-      >
-        naming.bonfida.org
-      </A>
-    </P>
-  );
 }
 
 export default function CreateThread({
@@ -93,25 +56,17 @@ export default function CreateThread({
     info: {
       wallet,
       config: { solana },
-      solana: { dialectProgram },
       apiAvailability: { canEncrypt },
     },
+    identity,
   } = useDialectSdk();
-  const connection = dialectProgram?.provider.connection;
   const { balance } = useBalance();
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
-  const [address, setAddress] = useState<string | null>(receiver ?? '');
+  const [address, setAddress] = useState<string>(receiver || '');
   const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
 
-  const [isTwitterHandle, setIsTwitterHandle] = useState(false);
-  const [isSNS, setIsSNS] = useState(false);
-
-  const [twitterHandle, setTwitterHandle] = useState<string | null>(null);
-  const [snsDomain, setSNSDomain] = useState<string | null>(null);
-
   const [encrypted, setEncrypted] = useState(false);
-  const [isValidAddress, setIsValidAddress] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   // TODO: default to preferred backend
   const {
@@ -176,104 +131,43 @@ export default function CreateThread({
     }
   };
 
-  const onAddressChange = (addr: string) => {
-    setAddress(addr);
-    setIsTyping(true);
-  };
-
-  const findAddress = async (
-    connection: Connection | undefined,
-    addressString: string
-  ) => {
-    if (!connection) {
-      // TODO: set connection error
-      return;
-    }
-
-    // Empty string
-    if (addressString.length === 0) {
-      setActualAddress(null);
-      setIsValidAddress(false);
-      setIsSNS(false);
-      setIsTwitterHandle(false);
-    }
-
-    const twitterHandle = parseTwitterHandle(addressString);
-    const snsDomain = parseSNSDomain(addressString);
-
-    let addressFromSNS = null;
-    let addressFromTwitter = null;
-    let addressFromBase58 = null;
-
+  const findAddress = async (addressString: string) => {
     try {
-      // SNS DOMAIN, like sysy.sol
-      if (snsDomain)
-        addressFromSNS = await tryFetchSNSDomain(connection, snsDomain);
-
-      // Twitter Handle (via cardinal.so)
-      if (twitterHandle)
-        addressFromTwitter = await tryFetchAddressFromTwitterHandle(
-          connection,
-          twitterHandle
-        );
-      // Just a base58 string
-      addressFromBase58 = await tryPublicKey(addressString);
-    } catch (e) {
-      // console.log('Error parsing type of address');
-    }
-
-    const actualAddress =
-      addressFromSNS || addressFromTwitter || addressFromBase58;
-    setActualAddress(actualAddress);
-
-    setIsSNS(Boolean(snsDomain));
-    setIsTwitterHandle(Boolean(twitterHandle));
-    setIsValidAddress(Boolean(actualAddress));
-
-    setIsTyping(false);
-  };
-
-  // TODO: Fix Eslint
-  const findAddressDebounced = useCallback(debounce(findAddress, 500), []);
-
-  useEffect(() => {
-    // When input address changes, we debounce
-    findAddressDebounced(connection, address ?? '');
-  }, [findAddressDebounced, connection, address]);
-
-  useEffect(() => {
-    const fetchReverse = async () => {
-      if (!actualAddress || !connection) {
-        setTwitterHandle('');
-        setSNSDomain('');
+      if (!addressString) {
+        setActualAddress(null);
         return;
       }
 
-      let twitterName = null;
-      let snsName = null;
+      const isPk = tryPublicKey(addressString);
+      if (isPk) {
+        if (wallet.publicKey && isPk.equals(wallet.publicKey)) {
+          setActualAddress(null);
+          return;
+        }
+        setActualAddress(isPk);
+        return;
+      }
 
-      try {
-        if (!isTwitterHandle)
-          twitterName = await tryGetTwitterHandle(connection, actualAddress);
-      } catch (e) {}
+      const potentialIdentity = await identity.resolveReverse(addressString);
 
-      try {
-        if (!isSNS)
-          snsName = await fetchSolanaNameServiceName(
-            connection,
-            actualAddress?.toBase58()
-          );
-      } catch (e) {}
+      if (potentialIdentity) {
+        setActualAddress(potentialIdentity.publicKey);
+        return;
+      }
 
-      setTwitterHandle(twitterName ? twitterName : null);
-      setSNSDomain(
-        snsName && snsName?.solanaDomain ? snsName?.solanaDomain : null
-      );
-    };
-    fetchReverse();
-  }, [actualAddress, connection, isSNS, isTwitterHandle]);
+      setActualAddress(null);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
-  const disabled = !actualAddress || (!isTyping && !isValidAddress);
+  const findAddressDebounced = useCallback(debounce(findAddress, 700), []);
+
+  const onAddressChange = (addr: string) => {
+    setAddress(addr);
+    setIsTyping(true);
+    findAddressDebounced(addr);
+  };
 
   return (
     <div className="dt-flex dt-flex-col dt-flex-1">
@@ -311,7 +205,7 @@ export default function CreateThread({
           className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
           placeholder="D1AL...DY5h, @saydialect or dialect.sol"
           type="text"
-          value={address ?? ''}
+          value={address}
           onChange={(e) => {
             onAddressChange(e.target.value);
           }}
@@ -322,17 +216,7 @@ export default function CreateThread({
           {isTyping || !address ? (
             <LinkingCTA />
           ) : (
-            <AddressResult
-              isYou={
-                actualAddress?.toBase58() === wallet?.publicKey?.toBase58()
-              }
-              valid={isValidAddress}
-              address={actualAddress?.toBase58()}
-              isSNS={isSNS}
-              isTwitterHandle={isTwitterHandle}
-              twitterHandle={twitterHandle}
-              snsDomain={snsDomain}
-            />
+            <AddressResult publicKey={actualAddress} />
           )}
         </div>
         <Divider className="dt-my-2 dt-opacity-20" />
@@ -360,7 +244,8 @@ export default function CreateThread({
             <ValueRow
               label={
                 <>
-                  Balance ({wallet?.publicKey ? display(wallet?.publicKey) : ''}
+                  Balance (
+                  {wallet?.publicKey ? shortenAddress(wallet.publicKey) : ''}
                   ) <NetworkBadge network={solana?.network} />
                 </>
               }
@@ -409,7 +294,7 @@ export default function CreateThread({
           <Button
             onClick={createThread}
             loading={isCreatingThread}
-            disabled={disabled}
+            disabled={isCreatingThread || !actualAddress}
           >
             {isCreatingThread ? 'Creating...' : 'Create thread'}
           </Button>

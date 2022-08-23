@@ -1,5 +1,5 @@
-import type { PublicKey } from '@solana/web3.js';
 import { useIdentity } from '@dialectlabs/react-sdk';
+import type { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 
 import { Img } from '../common/preflighted';
@@ -26,6 +26,7 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
   const placeholder = publicKey.toString().substr(0, 2);
   const { identity, loading } = useIdentity({ publicKey });
+
   return (
     <div
       className={clsx(
@@ -35,13 +36,13 @@ export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
       )}
     >
       <div className={`${textStyleMap[size]}`}>
-        {loading || !identity.avatarUrl ? (
+        {loading || !identity?.additionals?.avatarUrl ? (
           <div className="text-xs">{placeholder}</div>
         ) : (
           <Img
             className="dt-rounded-full"
             alt={`profile-${identity.name}`}
-            src={identity.avatarUrl}
+            src={identity.additionals.avatarUrl}
           />
         )}
       </div>

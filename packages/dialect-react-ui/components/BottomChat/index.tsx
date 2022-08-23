@@ -1,4 +1,3 @@
-import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
 import Chat from '../Chat';
@@ -61,9 +60,7 @@ function WrappedBottomChat({ dialectId }: PropTypes): JSX.Element {
 export default function BottomChat(props: PropTypes): JSX.Element {
   return (
     <div className="dialect">
-      <WalletIdentityProvider>
-        <WrappedBottomChat {...props} />
-      </WalletIdentityProvider>
+      <WrappedBottomChat {...props} />
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 import Chat from '../Chat';
 
 interface InboxProps {
@@ -8,11 +7,7 @@ interface InboxProps {
 }
 
 const Inbox = (props: InboxProps) => {
-  return (
-    <WalletIdentityProvider>
-      <Chat type="inbox" {...props} />
-    </WalletIdentityProvider>
-  );
+  return <Chat type="inbox" {...props} />;
 };
 
 export default Inbox;

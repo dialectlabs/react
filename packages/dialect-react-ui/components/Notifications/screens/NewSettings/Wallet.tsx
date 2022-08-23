@@ -11,9 +11,9 @@ import {
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
-import { display } from '@dialectlabs/web3';
 import clsx from 'clsx';
 import { useCallback } from 'react';
+import { shortenAddress } from '../../../../utils/displayUtils';
 import { Button, Loader, Toggle } from '../../../common';
 import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -149,7 +149,7 @@ const Wallet = ({
         >
           <div className="dt-flex dt-justify-between dt-items-center">
             <span className={'dt-opacity-40'}>
-              {display(wallet.publicKey || '')}
+              {shortenAddress(wallet.publicKey || '')}
             </span>
             {walletEnabled && !isLoading && (
               <IconButton

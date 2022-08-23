@@ -58,6 +58,7 @@ function useDialectSdk(
       dialectCloud,
       encryptionKeysStore,
       backends = EMPTY_ARR,
+      identity,
     } = config;
     return Dialect.sdk({
       environment,
@@ -66,6 +67,7 @@ function useDialectSdk(
       dialectCloud,
       encryptionKeysStore,
       backends,
+      identity,
     });
   }, [config, adapter]);
 
