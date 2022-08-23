@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- feature: add pluggable identity providers
+
 ## [1.0.0-beta.26] - 2022-08-17
 
 - chore: bump sdk
