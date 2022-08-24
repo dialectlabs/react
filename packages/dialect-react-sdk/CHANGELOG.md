@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.27] - 2022-08-24
+
 - feature: add pluggable identity providers
 - feature: add the total amount of unread messages globally and per-thread
 
