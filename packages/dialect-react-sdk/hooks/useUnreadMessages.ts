@@ -27,7 +27,7 @@ interface UseUnreadMessageValue {
 const isParamsExtended = (
   params: BaseUseUnreadMessagesParams | PerThreadUseUnreadMessagesParams
 ): params is PerThreadUseUnreadMessagesParams =>
-  !!(params as PerThreadUseUnreadMessagesParams).otherMembers;
+  Boolean((params as PerThreadUseUnreadMessagesParams).otherMembers);
 
 const isDataPerThread = (
   data: ThreadSummary | ThreadsGeneralSummary | undefined | null
