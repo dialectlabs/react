@@ -29,7 +29,7 @@ const displayCustomIdentityName = (identity: Identity) => {
       );
     }
     default: {
-      return <div>{identity.name}</div>;
+      return <div>{identity.additionals?.displayName || identity.name}</div>;
     }
   }
 };
