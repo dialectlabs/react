@@ -5,10 +5,11 @@ import {
   useDialectSdk,
   useThread,
   useThreadMessages,
+  useUnreadMessages,
 } from '@dialectlabs/react-sdk';
 import { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
-import { FormEvent, KeyboardEvent, useState } from 'react';
+import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import MessageBubble from '../../MessageBubble';
@@ -22,9 +23,10 @@ export default function Thread({ threadId }: ThreadProps) {
   const { thread, isWritable, isFetchingThread } = useThread({
     findParams: { id: threadId },
   });
-  const { messages, send, cancel } = useThreadMessages({
+  const { messages, send, cancel, setLastReadMessageTime } = useThreadMessages({
     id: threadId,
   });
+  const { refresh } = useUnreadMessages();
 
   const {
     info: { wallet },
@@ -33,6 +35,11 @@ export default function Thread({ threadId }: ThreadProps) {
 
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<DialectSdkError | null | undefined>();
+
+  useEffect(() => {
+    // After resetting the last read timestamp, we need to refetch the global unread message state
+    setLastReadMessageTime(new Date()).then(refresh);
+  }, [setLastReadMessageTime, refresh]);
 
   if (!thread) return null;
 
