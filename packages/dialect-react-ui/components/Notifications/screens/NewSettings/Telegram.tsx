@@ -3,11 +3,13 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
 import {
   AddressType,
+  useDapp,
+  useDialectDapp,
+  useDialectSdk,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
-  useDialectSdk,
 } from '@dialectlabs/react-sdk';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { RightAdornment } from './RightAdorment';
 import { VerificationInput } from './VerificationInput';
 import { P } from '../../../common/preflighted';
@@ -41,6 +43,9 @@ const Telegram = () => {
     toggleSubscription,
     isToggling,
   } = useNotificationChannelDappSubscription({ addressType });
+
+  const { dapps } = useDapp({ verified: false });
+  const { dappAddress } = useDialectDapp();
 
   const { textStyles, colors } = useTheme();
 
@@ -114,10 +119,24 @@ const Telegram = () => {
     }
   };
 
-  const botURL =
+  const defaultBotUrl =
     environment === 'production'
-      ? 'https://telegram.me/DialectLabsBot'
-      : 'https://telegram.me/DialectLabsDevBot';
+      ? 'https://t.me/DialectLabsBot'
+      : 'https://t.me/DialectLabsDevBot';
+
+  const botURL = useMemo(() => {
+    if (!dappAddress) {
+      return defaultBotUrl;
+    }
+    const dapp = dapps[dappAddress.toBase58()];
+    if (!dapp) {
+      return defaultBotUrl;
+    }
+    if (!dapp.telegramUsername) {
+      return defaultBotUrl;
+    }
+    return `https://t.me/${dapp.telegramUsername}`;
+  }, [dappAddress, dapps, defaultBotUrl]);
 
   const isUserEditing =
     telegramAddress?.value !== telegramUsername && isTelegramSaved;

@@ -15,9 +15,13 @@ interface UseDappValue {
 
 interface UseDappParams {
   refreshInterval?: number;
+  verified?: boolean;
 }
 
-function useDapp({ refreshInterval }: UseDappParams = EMPTY_OBJ): UseDappValue {
+function useDapp({
+  refreshInterval,
+  verified = true,
+}: UseDappParams = EMPTY_OBJ): UseDappValue {
   const { dapps } = useDialectSdk();
   const {
     info: { wallet },
@@ -30,7 +34,7 @@ function useDapp({ refreshInterval }: UseDappParams = EMPTY_OBJ): UseDappValue {
 
   const { data: dappsList = EMPTY_ARR } = useSWR(
     DAPPS_CACHE_KEY,
-    () => dapps.findAll({ verified: true }),
+    () => dapps.findAll({ verified }),
     {
       refreshInterval: 0,
       revalidateIfStale: false,
