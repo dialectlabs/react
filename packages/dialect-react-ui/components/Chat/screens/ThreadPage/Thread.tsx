@@ -3,9 +3,9 @@ import {
   DialectSdkError,
   ThreadId,
   useDialectSdk,
-  useGlobalUnreadMessages,
   useThread,
   useThreadMessages,
+  useUnreadMessages,
 } from '@dialectlabs/react-sdk';
 import { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
@@ -26,7 +26,7 @@ export default function Thread({ threadId }: ThreadProps) {
   const { messages, send, cancel, setLastReadMessageTime } = useThreadMessages({
     id: threadId,
   });
-  const { refresh } = useGlobalUnreadMessages();
+  const { refresh } = useUnreadMessages();
 
   const {
     info: { wallet },
