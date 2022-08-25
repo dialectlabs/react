@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.28] - 2022-08-25
+
 - feature: expose package version
 
 ## [1.0.0-beta.27] - 2022-08-24
