@@ -94,6 +94,7 @@ export default function CreateThread({
     // Accessing current here, since we need to set the address if the reference to `current` has changed (route has changed)
     if (!current || !receiver) return;
     setAddress(receiver);
+    findAddress(receiver);
   }, [current, receiver]);
 
   // TODO: useCallback

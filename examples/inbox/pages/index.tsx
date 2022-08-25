@@ -89,6 +89,9 @@ export default function Home(): JSX.Element {
       dialectCloud: {
         tokenStore: 'local-storage',
       },
+      solana: {
+        rpcUrl: connection.rpcEndpoint,
+      },
       identity: {
         resolvers: [
           new DialectDappsIdentityResolver(),

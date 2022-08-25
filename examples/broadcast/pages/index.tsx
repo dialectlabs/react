@@ -1,16 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import {
-  DialectUiManagementProvider,
-  Broadcast,
-  ThemeProvider,
   Backend,
+  Broadcast,
   Config,
   DialectContextProvider,
+  DialectUiManagementProvider,
   DialectWalletAdapter,
-  TokenStore,
-  EncryptionKeysStore,
+  ThemeProvider,
 } from '@dialectlabs/react-ui';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import { useEffect, useMemo, useState } from 'react';
 import { Wallet } from '../components/Wallet';
 
 const walletToDialectWallet = (
@@ -65,11 +63,11 @@ export default function Home(): JSX.Element {
   const dialectConfig = useMemo(
     (): Config => ({
       backends: [Backend.DialectCloud],
-      environment: 'local-development',
+      environment: 'production',
       dialectCloud: {
-        tokenStore: TokenStore.createLocalStorage(),
+        tokenStore: 'local-storage',
       },
-      encryptionKeysStore: EncryptionKeysStore.createSessionStorage(),
+      encryptionKeysStore: 'session-storage',
     }),
     []
   );
