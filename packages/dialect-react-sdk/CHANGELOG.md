@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- feature: expose package version
+
 ## [1.0.0-beta.27] - 2022-08-24
 
 - feature: add pluggable identity providers
