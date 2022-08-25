@@ -22,6 +22,7 @@
 # misc
 .DS_Store
 *.pem
+/packages/**/version.ts
 
 # debug
 npm-debug.log*

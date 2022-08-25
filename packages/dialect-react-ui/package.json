@@ -19,7 +19,8 @@
     "lib"
   ],
   "scripts": {
-    "build": "yarn clean && yarn build:cjs; yarn build:esm; yarn build:styles",
+    "prebuild": "node ./prebuild.js",
+    "build": "yarn clean && yarn prebuild && yarn build:cjs; yarn build:esm; yarn build:styles",
     "build:cjs": "tsc",
     "build:cjs:watch": "tsc --watch",
     "build:esm": "tsc --project tsconfig.esm.json",
@@ -27,12 +28,12 @@
     "build:styles": "yarn tailwindcss -i index.css -o lib/index.css --minify",
     "build:styles:watch": "yarn tailwindcss -i index.css -o lib/index.css --watch",
     "clean": "rm -rf lib",
-    "dev": "yarn clean && concurrently \"npm:build:cjs:watch\" \"npm:build:esm:watch\" \"npm:build:styles:watch\"",
+    "dev": "yarn clean && yarn prebuild && concurrently \"npm:build:cjs:watch\" \"npm:build:esm:watch\" \"npm:build:styles:watch\"",
     "lint": "eslint --ext .js --ext .ts --ext .tsx .",
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@dialectlabs/react-sdk": "^1.0.0-beta.27",
+    "@dialectlabs/react-sdk": "1.0.0-beta.27",
     "@headlessui/react": "^1.2.0",
     "clsx": "^1.1.1",
     "focus-visible": "^5.2.0",

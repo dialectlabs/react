@@ -1,8 +1,10 @@
 import type { DetailedHTMLProps, InputHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import { DialectLogo } from '../Icon';
-import { A, ButtonBase, Label, P } from './preflighted';
+import { A, ButtonBase, Label } from './preflighted';
 import { useTheme } from './providers/DialectThemeProvider';
+import { UI_VERSION } from '../../version';
+import { SDK_VERSION } from '@dialectlabs/react-sdk';
 
 // TODO: TBD separate these components to separate files
 export function Divider(props: { className?: string }): JSX.Element {
@@ -34,25 +36,32 @@ export function ValueRow(props: {
 }
 
 export function Footer(): JSX.Element {
-  const { colors } = useTheme();
+  const { colors, textStyles } = useTheme();
 
   return (
-    <div className="dt-flex dt-justify-center dt-py-3">
-      <div
-        className={clsx(
-          'dt-px-3 dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-uppercase dt-rounded-full dt-text-[10px]',
-          colors.highlightSolid
-        )}
-      >
-        Powered by{' '}
-        <A
-          href="https://dialect.to"
-          target="_blank"
-          rel="noreferrer"
-          className="hover:dt-text-inherit"
+    <div>
+      <div className="dt-flex dt-justify-center dt-py-3">
+        <div
+          className={clsx(
+            'dt-px-3 dt-py-1 dt-inline-flex dt-items-center dt-justify-center dt-uppercase dt-rounded-full dt-text-[10px]',
+            colors.highlightSolid
+          )}
         >
-          <DialectLogo className="dt-ml-[3px] -dt-mt-[1px]" />
-        </A>
+          Powered by{' '}
+          <A
+            href="https://dialect.to"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:dt-text-inherit"
+          >
+            <DialectLogo className="dt-ml-[3px] -dt-mt-[1px]" />
+          </A>
+        </div>
+      </div>
+      <div className="dt-px-4 dt-py-2 dt-flex dt-items-center dt-justify-center">
+        <span className={clsx('dt-opacity-40', textStyles.small)}>
+          {UI_VERSION} / {SDK_VERSION}
+        </span>
       </div>
     </div>
   );

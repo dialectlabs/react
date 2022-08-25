@@ -8,3 +8,6 @@ export type {
   LocalThreadMessage,
   ThreadMessage,
 } from './types';
+
+// Generated
+export * from './version';

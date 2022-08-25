@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- feature: expose package version
+- feature: versions are now visible for chat and notification components
+
 ## [1.0.0-beta.48] - 2022-08-24
 
 - feature: mark thread's messages as read upon entry
