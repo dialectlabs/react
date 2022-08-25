@@ -39,6 +39,7 @@ export type ThemeTextStyles =
   | 'h1'
   | 'body'
   | 'small'
+  | 'xsmall'
   | 'bigText'
   | 'header'
   | 'input'
@@ -212,6 +213,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       input: 'dt-font-inter',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
+      xsmall: 'dt-font-inter dt-text-[0.6875rem] dt-font-normal',
       bigText: 'dt-font-inter dt-text-lg dt-font-medium',
       header: 'dt-font-inter dt-text-base dt-font-medium',
       buttonText: 'dt-font-inter dt-text-base',
@@ -311,6 +313,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       input: 'dt-font-inter',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
+      xsmall: 'dt-font-inter dt-text-[0.6875rem] dt-font-normal',
       bigText: 'dt-font-inter dt-text-lg dt-font-medium',
       header: 'dt-font-inter dt-text-lg dt-font-medium',
       buttonText: 'dt-font-inter dt-text-base',

@@ -4,7 +4,11 @@ import type { Channel } from '../../../common/types';
 import { Divider, Footer, Toggle, ValueRow } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import type { NotificationType } from '../..';
-import { Thread, useNotificationSubscriptions } from '@dialectlabs/react-sdk';
+import {
+  SDK_VERSION,
+  Thread,
+  useNotificationSubscriptions,
+} from '@dialectlabs/react-sdk';
 import Email from '../NewSettings/Email';
 import Sms from '../NewSettings/Sms';
 import Wallet from '../NewSettings/Wallet';
@@ -12,6 +16,7 @@ import Telegram from '../NewSettings/Telegram';
 import { useCallback } from 'react';
 import { RouteName } from '../../constants';
 import { useRoute } from '../../../common/providers/Router';
+import { UI_VERSION } from '../../../../version';
 
 interface RenderNotificationTypeParams {
   name: string;
@@ -158,7 +163,7 @@ function Settings({
       </div>
       <P
         className={clsx(
-          textStyles.small,
+          textStyles.xsmall,
           xPaddedText,
           'dt-opacity-50 dt-text-center'
         )}
@@ -184,6 +189,11 @@ function Settings({
       </P>
       <div>
         <Footer />
+      </div>
+      <div className="dt-px-4 dt-py-2 dt-flex dt-items-center dt-justify-center">
+        <span className={clsx('dt-opacity-40', textStyles.small)}>
+          {UI_VERSION} / {SDK_VERSION}
+        </span>
       </div>
     </>
   );

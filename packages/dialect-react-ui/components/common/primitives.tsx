@@ -1,7 +1,7 @@
 import type { DetailedHTMLProps, InputHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import { DialectLogo } from '../Icon';
-import { A, ButtonBase, Label, P } from './preflighted';
+import { A, ButtonBase, Label } from './preflighted';
 import { useTheme } from './providers/DialectThemeProvider';
 
 // TODO: TBD separate these components to separate files
