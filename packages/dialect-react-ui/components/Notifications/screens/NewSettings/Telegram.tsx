@@ -118,10 +118,13 @@ const Telegram = () => {
     }
   };
 
+  const buildBotUrl = (botUsername: string) =>
+    `https://t.me/${botUsername}?start=${botUsername}`;
+
   const defaultBotUrl =
     environment === 'production'
-      ? 'https://t.me/DialectLabsBot'
-      : 'https://t.me/DialectLabsDevBot';
+      ? buildBotUrl('DialectLabsBot')
+      : buildBotUrl('DialectLabsDevBot');
 
   const botURL = useMemo(() => {
     if (!dappAddress) {
@@ -131,10 +134,7 @@ const Telegram = () => {
     if (!dapp) {
       return defaultBotUrl;
     }
-    if (!dapp.telegramUsername) {
-      return defaultBotUrl;
-    }
-    return `https://t.me/${dapp.telegramUsername}`;
+    return buildBotUrl(dapp.telegramUsername);
   }, [dappAddress, dapps, defaultBotUrl]);
 
   const isUserEditing =
@@ -166,8 +166,8 @@ const Telegram = () => {
                   {' '}
                   Get verification code by starting{' '}
                 </span>
-                <span className="dt-underline">this bot </span>
-                <span className="dt-opacity-50">with command: /start</span>
+                <span className="dt-underline">this bot</span>
+                <span className="dt-opacity-50"> with command: /start </span>
               </a>
               <span
                 onClick={deleteTelegram}
