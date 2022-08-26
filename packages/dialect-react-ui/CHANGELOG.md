@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: polling for chat components
+
 ## [1.0.0-beta.49] - 2022-08-25
 
 - feature: expose package version
