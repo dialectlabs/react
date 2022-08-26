@@ -109,7 +109,7 @@ export default function Chat({
           <div
             className={clsx(
               'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
-              colors.primary,
+              colors.textPrimary,
               colors.bg,
               contentWrapperClassName,
               { [modal]: type === 'popup' },

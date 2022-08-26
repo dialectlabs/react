@@ -34,6 +34,8 @@ export const CACHE_KEY_THREAD_SUMMARY_FN = (otherMembers: PublicKey[]) =>
     .map((it) => it.toString())
     .join(':');
 
+export const CACHE_KEY_THREADS_SUMMARY = 'THREADS_GENERAL_SUMMARY';
+
 export const DAPPS_CACHE_KEY = 'DAPPS';
 
 export const DAPP_CACHE_KEY_FN = (wallet: DialectWalletAdapter) =>
@@ -61,3 +63,6 @@ export const WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
 export const DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
   dapp: Dapp | null
 ) => 'DAPP_NOTIFICATION_SUBSCRIPTIONS_' + dapp?.publicKey?.toBase58();
+
+export const IDENTITY_CACHE_KEY_FN = (publicKey: PublicKey) =>
+  `IDENTITY_${publicKey.toString()}`;

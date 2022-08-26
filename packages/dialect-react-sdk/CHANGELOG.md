@@ -2,6 +2,15 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.28] - 2022-08-25
+
+- feature: expose package version
+
+## [1.0.0-beta.27] - 2022-08-24
+
+- feature: add pluggable identity providers
+- feature: add the total amount of unread messages globally and per-thread
+
 ## [1.0.0-beta.26] - 2022-08-17
 
 - chore: bump sdk

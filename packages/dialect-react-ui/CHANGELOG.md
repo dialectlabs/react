@@ -2,6 +2,20 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.50] - 2022-08-26
+
+- feature: per-channel broadcast support
+
+## [1.0.0-beta.49] - 2022-08-25
+
+- feature: expose package version
+- feature: versions are now visible for chat and notification components
+
+## [1.0.0-beta.48] - 2022-08-24
+
+- feature: mark thread's messages as read upon entry
+- feature: add pluggable identity providers
+
 ## [1.0.0-beta.47] - 2022-08-20
 
 - refactor: export UI primitives

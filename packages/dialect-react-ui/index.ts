@@ -114,3 +114,6 @@ export type {
 };
 
 export * from '@dialectlabs/react-sdk';
+
+// Generated
+export * from './version';

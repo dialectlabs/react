@@ -13,9 +13,16 @@ import {
   IncomingThemeVariables,
   useDialectUiId,
 } from '@dialectlabs/react-ui';
-import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import {
+  useConnection,
+  useWallet,
+  WalletContextState,
+} from '@solana/wallet-adapter-react';
 import Head from 'next/head';
 import { Wallet as WalletButton } from '../components/Wallet';
+import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
+import { SNSIdentityResolver } from '@dialectlabs/identity-sns';
+import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal';
 // pink: #B852DC
 // teal: #59C29D
 // dark: #353535
@@ -131,6 +138,7 @@ function AuthedHome() {
 }
 
 export default function Home(): JSX.Element {
+  const { connection } = useConnection();
   const wallet = useWallet();
   const [dialectWalletAdapter, setDialectWalletAdapter] =
     useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
@@ -161,12 +169,22 @@ export default function Home(): JSX.Element {
   const dialectConfig = useMemo(
     (): Config => ({
       backends: [Backend.DialectCloud, Backend.Solana],
-      environment: 'local-development',
+      environment: 'production',
       dialectCloud: {
         tokenStore: 'local-storage',
       },
+      solana: {
+        rpcUrl: connection.rpcEndpoint,
+      },
+      identity: {
+        resolvers: [
+          new DialectDappsIdentityResolver(),
+          new SNSIdentityResolver(connection),
+          new CardinalTwitterIdentityResolver(connection),
+        ],
+      },
     }),
-    []
+    [connection]
   );
 
   return (

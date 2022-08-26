@@ -10,7 +10,11 @@ import {
   NotificationsButton,
 } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
-import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import {
+  useConnection,
+  useWallet,
+  WalletContextState,
+} from '@solana/wallet-adapter-react';
 import Head from 'next/head';
 import { useEffect, useMemo, useState } from 'react';
 import { Wallet as WalletButton } from '../components/Wallet';
@@ -109,6 +113,7 @@ function AuthedHome() {
 }
 
 export default function Home(): JSX.Element {
+  const { connection } = useConnection();
   const wallet = useWallet();
   const [theme, setTheme] = useState<ThemeType>('dark');
 
@@ -121,13 +126,16 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo(
     (): Config => ({
-      backends: [Backend.DialectCloud],
+      backends: [Backend.DialectCloud, Backend.Solana],
       environment: 'production',
       dialectCloud: {
         tokenStore: 'local-storage',
       },
+      solana: {
+        rpcUrl: connection.rpcEndpoint,
+      },
     }),
-    []
+    [connection]
   );
 
   useEffect(() => {

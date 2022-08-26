@@ -158,7 +158,7 @@ function Settings({
       </div>
       <P
         className={clsx(
-          textStyles.small,
+          textStyles.xsmall,
           xPaddedText,
           'dt-opacity-50 dt-text-center'
         )}

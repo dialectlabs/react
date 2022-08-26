@@ -1,4 +1,3 @@
-import { WalletIdentityProvider } from '@cardinal/namespaces-components';
 import { Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { useRef } from 'react';
@@ -29,7 +28,7 @@ function WrappedChatButton(
     <div
       className={clsx(
         'dt-flex dt-flex-col dt-items-end dt-relative',
-        colors.primary
+        colors.textPrimary
       )}
     >
       <IconButton
@@ -58,9 +57,7 @@ function WrappedChatButton(
 export default function ChatButton({ ...props }: PropTypes): JSX.Element {
   return (
     <div className="dialect">
-      <WalletIdentityProvider>
-        <WrappedChatButton {...props} />
-      </WalletIdentityProvider>
+      <WrappedChatButton {...props} />
     </div>
   );
 }

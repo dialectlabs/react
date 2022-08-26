@@ -1,10 +1,43 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { ChatButton, IncomingThemeVariables } from '@dialectlabs/react-ui';
+import {
+  Backend,
+  ChatButton,
+  Config,
+  DialectContextProvider,
+  DialectUiManagementProvider,
+  DialectWalletAdapter,
+  IncomingThemeVariables,
+  ThemeProvider,
+} from '@dialectlabs/react-ui';
 import styles from '../styles/Home.module.css';
-import { useSolana } from '@saberhq/use-solana';
-import { useEffect } from 'react';
+import { useSolana, WalletAdapter } from '@saberhq/use-solana';
+import { useEffect, useMemo, useState } from 'react';
+
+const walletToDialectWallet = (
+  wallet?: WalletAdapter
+): DialectWalletAdapter => {
+  return {
+    publicKey: wallet?.publicKey ?? undefined,
+    connected: (wallet?.connected && Boolean(wallet?.publicKey)) || false,
+    signMessage: (wallet as any)?.adapter?.adapter?.signMessage
+      ? async (msg) => {
+          const signed = await (wallet as any).adapter.adapter.signMessage(msg);
+          if (signed.signature) {
+            return signed.signature;
+          }
+          return signed;
+        }
+      : undefined,
+    signTransaction: wallet?.signTransaction
+      ? (tx) => wallet.signTransaction(tx)
+      : undefined,
+    signAllTransactions: wallet?.signAllTransactions
+      ? (tx) => wallet.signAllTransactions(tx)
+      : undefined,
+  };
+};
 
 export const themeVariables: IncomingThemeVariables = {
   dark: {
@@ -16,8 +49,26 @@ const Home: NextPage = () => {
   const { activate, wallet } = useSolana();
 
   useEffect(() => {
-    activate('Sollet');
+    activate('Phantom');
   }, []);
+
+  const [dialectWalletAdapter, setDialectWalletAdapter] =
+    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
+
+  useEffect(() => {
+    setDialectWalletAdapter(walletToDialectWallet(wallet));
+  }, [wallet, wallet?.connected]);
+
+  const dialectConfig = useMemo(
+    (): Config => ({
+      backends: [Backend.DialectCloud, Backend.Solana],
+      environment: 'production',
+      dialectCloud: {
+        tokenStore: 'local-storage',
+      },
+    }),
+    []
+  );
 
   return (
     <div className={styles.container}>
@@ -33,7 +84,16 @@ const Home: NextPage = () => {
         </h1>
 
         <div className={styles.walletButtons}>
-          <ChatButton wallet={wallet} variables={themeVariables} />
+          <DialectContextProvider
+            wallet={dialectWalletAdapter}
+            config={dialectConfig}
+          >
+            <DialectUiManagementProvider>
+              <ThemeProvider theme={'dark'} variables={themeVariables}>
+                <ChatButton dialectId="dialect-widget" />
+              </ThemeProvider>
+            </DialectUiManagementProvider>
+          </DialectContextProvider>
         </div>
 
         <p className={styles.description}>

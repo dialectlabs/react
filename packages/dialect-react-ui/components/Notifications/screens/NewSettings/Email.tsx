@@ -16,7 +16,7 @@ import { VerificationInput } from './VerificationInput';
 const addressType = AddressType.Email;
 
 const Email = () => {
-  const { textStyles } = useTheme();
+  const { textStyles, colors } = useTheme();
 
   const {
     globalAddress: emailAddress,
@@ -112,7 +112,7 @@ const Email = () => {
     <div>
       <label
         htmlFor="settings-email"
-        className={clsx(textStyles.label, 'dt-block dt-mb-1')}
+        className={clsx(colors.label, textStyles.label, 'dt-block dt-mb-1')}
       >
         Email
       </label>
