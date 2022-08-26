@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.50] - 2022-08-26
+
 - fix: polling for chat components
 
 ## [1.0.0-beta.49] - 2022-08-25
