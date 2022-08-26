@@ -13,6 +13,7 @@ import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../../common/providers/Router';
 import MessagePreview from './MessagePreview';
 import { UI_VERSION } from '../../../../../version';
+import { useChatInternal } from '../../../provider';
 
 interface ThreadsListProps {
   onThreadClick?: (dialectAccount: Thread) => void;
@@ -22,8 +23,8 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
   const {
     params: { threadId },
   } = useRoute<{ threadId?: ThreadId }>();
-  const { threads } = useThreads();
-  // const threads = [];
+  const { pollingInterval } = useChatInternal();
+  const { threads } = useThreads({ refreshInterval: pollingInterval });
   const {
     info: { apiAvailability },
   } = useDialectSdk();

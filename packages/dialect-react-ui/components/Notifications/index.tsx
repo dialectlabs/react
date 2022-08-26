@@ -166,7 +166,10 @@ export default function Notifications({
       >
         <Router>
           <WalletStatesWrapper header={fallbackHeader}>
-            <ConnectionWrapper header={fallbackHeader}>
+            <ConnectionWrapper
+              header={fallbackHeader}
+              pollingInterval={props.pollingInterval}
+            >
               <GatedWrapper gatedView={gatedView}>
                 <ThreadEncyprionWrapper otherMemberPK={dappAddress}>
                   <InnerNotifications {...props} />

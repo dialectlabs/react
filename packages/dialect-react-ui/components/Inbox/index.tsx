@@ -4,6 +4,7 @@ interface InboxProps {
   dialectId: string;
   contentClassName?: string;
   wrapperClassName?: string;
+  pollingInterval?: number;
 }
 
 const Inbox = (props: InboxProps) => {

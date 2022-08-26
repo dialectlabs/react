@@ -26,21 +26,25 @@ type ThreadContentProps = {
 
 const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const { current, navigate } = useRoute();
-  const { thread, isAdminable } = useThread({ findParams: { id: threadId } });
+  const { type, onChatOpen, onChatClose, dialectId, pollingInterval } =
+    useChatInternal();
+  const { thread, isAdminable } = useThread({
+    findParams: { id: threadId },
+    refreshInterval: pollingInterval,
+  });
   const {
     info: {
       solana: { dialectProgram },
     },
   } = useDialectSdk();
   const { icons, xPaddedText } = useTheme();
-  const { type, onChatOpen, onChatClose, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const connection = dialectProgram?.provider.connection;
   const otherMemberPK =
     thread?.otherMembers[0] && thread.otherMembers[0].publicKey;
 
   // TODO: ! is unsafe
-  const { identity, loading } = useIdentity({ publicKey: otherMemberPK! });
+  const { identity } = useIdentity({ publicKey: otherMemberPK! });
 
   const isOnChain = thread?.backend === Backend.Solana;
 

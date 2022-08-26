@@ -226,9 +226,13 @@ export default function CreateThread({
             className="dt-mb-2"
             label={
               isOffChain ? (
-                <span className="dt-flex dt-items-center">💬  Off-chain</span>
+                <span className="dt-flex dt-items-center">
+                  💬&nbsp;&nbsp;Off-chain
+                </span>
               ) : (
-                <span className="dt-flex dt-items-center">⛓  On-chain</span>
+                <span className="dt-flex dt-items-center">
+                  ⛓&nbsp;&nbsp;On-chain
+                </span>
               )
             }
           >

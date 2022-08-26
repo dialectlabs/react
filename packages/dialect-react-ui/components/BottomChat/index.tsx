@@ -6,9 +6,13 @@ import { useDialectUiId } from '../common/providers/DialectUiManagementProvider'
 
 type PropTypes = {
   dialectId: string;
+  pollingInterval?: number;
 };
 
-function WrappedBottomChat({ dialectId }: PropTypes): JSX.Element {
+function WrappedBottomChat({
+  dialectId,
+  pollingInterval,
+}: PropTypes): JSX.Element {
   const { ui, open, close } = useDialectUiId(dialectId);
 
   const { sliderWrapper, animations } = useTheme();
@@ -50,6 +54,7 @@ function WrappedBottomChat({ dialectId }: PropTypes): JSX.Element {
             type="vertical-slider"
             onChatClose={close}
             onChatOpen={open}
+            pollingInterval={pollingInterval}
           />
         </div>
       </CSSTransition>
