@@ -8,6 +8,7 @@ interface ChatContextValue {
   type: ChatType;
   onChatClose?: () => void;
   onChatOpen?: () => void;
+  pollingInterval?: number;
 }
 
 interface ChatProviderProps {
@@ -15,15 +16,23 @@ interface ChatProviderProps {
   type: ChatType;
   onChatClose?: () => void;
   onChatOpen?: () => void;
+  pollingInterval?: number;
 }
+
+const DEFAULT_POLLING_INTERVAL = 2000; // Value TBD
 
 export const ChatContext = createContext<ChatContextValue | null>(null);
 
 export const ChatProvider: FunctionComponent<ChatProviderProps> = ({
   children,
+  pollingInterval = DEFAULT_POLLING_INTERVAL,
   ...props
 }) => {
-  return <ChatContext.Provider value={props}>{children}</ChatContext.Provider>;
+  return (
+    <ChatContext.Provider value={{ ...props, pollingInterval }}>
+      {children}
+    </ChatContext.Provider>
+  );
 };
 
 export const useChatInternal = () => {
