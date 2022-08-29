@@ -86,7 +86,8 @@ const Telegram = () => {
   const saveTelegram = async () => {
     try {
       const value = telegramUsername.replace('@', '');
-      await createAddress({ value });
+      const address = await createAddress({ value });
+      await toggleSubscription({ enabled: true, address });
       setError(null);
     } catch (e) {
       setError(e as Error);

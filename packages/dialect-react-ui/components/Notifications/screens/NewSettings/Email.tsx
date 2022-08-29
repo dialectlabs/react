@@ -74,7 +74,8 @@ const Email = () => {
 
   const createEmail = useCallback(async () => {
     try {
-      await createAddress({ value: email });
+      const address = await createAddress({ value: email });
+      await toggleSubscription({ enabled: true, address });
       setError(null);
     } catch (e) {
       setError(e as Error);
