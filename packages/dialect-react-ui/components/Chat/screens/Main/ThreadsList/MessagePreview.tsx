@@ -5,6 +5,7 @@ import {
   useDialectSdk,
   useThread as useThreadInternal,
   useThreadMessages,
+  useUnreadMessages,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { formatTimestamp } from '../../../../../utils/timeUtils';
@@ -70,6 +71,9 @@ export default function MessagePreview({
   // TODO: ensure there is no re-renders
   const { thread } = useThreadInternal({ findParams: { id: threadId } });
   const { messages } = useThreadMessages({ id: threadId });
+  const { unreadCount } = useUnreadMessages({
+    otherMembers: thread?.otherMembers.map((m) => m.publicKey) ?? [],
+  });
   const { colors } = useTheme();
   const [firstMessage] = messages ?? [];
   const connection = dialectProgram?.provider.connection;
@@ -110,7 +114,7 @@ export default function MessagePreview({
             isEncrypted={thread.encryptionEnabled}
           />
         </div>
-        <div className="dt-items-end dt-text-xs">
+        <div className="dt-flex dt-flex-col dt-items-end dt-text-xs">
           <span className="dt-opacity-30">
             {timestamp ? (
               timestamp
@@ -121,6 +125,11 @@ export default function MessagePreview({
               />
             )}
           </span>
+          {unreadCount > 0 && (
+            <div className="dt-mt-1 dt-min-w-[1.25rem] dt-h-[1.25rem] dt-bg-white dt-text-black dt-rounded-full dt-flex dt-items-center dt-justify-center">
+              {unreadCount}
+            </div>
+          )}
         </div>
       </div>
     </div>
