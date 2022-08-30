@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.29] - 2022-08-30
+
+- feature: support dapp-configured telegram bots
+
 ## [1.0.0-beta.28] - 2022-08-25
 
 - feature: expose package version
