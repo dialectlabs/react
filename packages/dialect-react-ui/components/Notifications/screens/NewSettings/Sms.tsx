@@ -70,7 +70,8 @@ const Sms = () => {
 
   const saveSmsNumber = async () => {
     try {
-      await createAddress({ value: smsNumber });
+      const address = await createAddress({ value: smsNumber });
+      await toggleSubscription({ enabled: true, address });
       setError(null);
     } catch (e) {
       setError(e as Error);

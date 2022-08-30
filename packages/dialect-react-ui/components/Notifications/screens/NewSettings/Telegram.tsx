@@ -3,11 +3,13 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
 import {
   AddressType,
+  useDapp,
+  useDialectDapp,
+  useDialectSdk,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
-  useDialectSdk,
 } from '@dialectlabs/react-sdk';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { RightAdornment } from './RightAdorment';
 import { VerificationInput } from './VerificationInput';
 import { P } from '../../../common/preflighted';
@@ -41,6 +43,9 @@ const Telegram = () => {
     toggleSubscription,
     isToggling,
   } = useNotificationChannelDappSubscription({ addressType });
+
+  const { dapps } = useDapp({ verified: false });
+  const { dappAddress } = useDialectDapp();
 
   const { textStyles, colors } = useTheme();
 
@@ -114,10 +119,24 @@ const Telegram = () => {
     }
   };
 
-  const botURL =
+  const buildBotUrl = (botUsername: string) =>
+    `https://t.me/${botUsername}?start=${botUsername}`;
+
+  const defaultBotUrl =
     environment === 'production'
-      ? 'https://telegram.me/DialectLabsBot'
-      : 'https://telegram.me/DialectLabsDevBot';
+      ? buildBotUrl('DialectLabsBot')
+      : buildBotUrl('DialectLabsDevBot');
+
+  const botURL = useMemo(() => {
+    if (!dappAddress) {
+      return defaultBotUrl;
+    }
+    const dapp = dapps[dappAddress.toBase58()];
+    if (!dapp) {
+      return defaultBotUrl;
+    }
+    return buildBotUrl(dapp.telegramUsername);
+  }, [dappAddress, dapps, defaultBotUrl]);
 
   const isUserEditing =
     telegramAddress?.value !== telegramUsername && isTelegramSaved;
@@ -148,8 +167,8 @@ const Telegram = () => {
                   {' '}
                   Get verification code by starting{' '}
                 </span>
-                <span className="dt-underline">this bot </span>
-                <span className="dt-opacity-50">with command: /start</span>
+                <span className="dt-underline">this bot</span>
+                <span className="dt-opacity-50"> with command: /start </span>
               </a>
               <span
                 onClick={deleteTelegram}
