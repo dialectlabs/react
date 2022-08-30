@@ -1403,10 +1403,10 @@
   dependencies:
     "@bonfida/spl-name-service" "^0.1.49"
 
-"@dialectlabs/sdk@0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.7.1.tgz#f87fdd7e731f26771c4a41a0bb0d7630b760891c"
-  integrity sha512-AEaVm8jHjJODf6hbVOBqFlwBOTEDlJ3cJjJXv3TVCINSkrcgwUXRu/Wc+h5FSj5w+0gmxy58hfun6DeHMa2Xzg==
+"@dialectlabs/sdk@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.8.0.tgz#13a7be13d827b604e7715528716e657f4b889175"
+  integrity sha512-1E/eKLnwc9HPfXVUI2Xa1RJrkj2ID9yA0VHwml2TtMK1xwbpluIfLS864A9jcuXhLY9TVncK2YC1tvqiliArxQ==
   dependencies:
     "@dialectlabs/web3" "^0.3.2"
     "@project-serum/anchor" "0.23.0"
