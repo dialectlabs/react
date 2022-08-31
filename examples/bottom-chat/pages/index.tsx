@@ -67,7 +67,7 @@ export const themeVariables: IncomingThemeVariables = {
     slider:
       'sm:border-t sm:border-l sm:border-r border-[#F0F0F0] shadow-lg shadow-neutral-300 sm:rounded-t-3xl',
     colors: {
-      primary: 'text-[#353535]',
+      textPrimary: 'text-[#353535]',
     },
     button: `${defaultVariables.light.button} border-none bg-[#B852DC]`,
     highlighted: `${defaultVariables.light.highlighted} bg-[#F6F6F6] border border-[#F0F0F0]`,

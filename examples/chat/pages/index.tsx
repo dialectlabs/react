@@ -6,17 +6,20 @@ import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal'
 import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
 import { SNSIdentityResolver } from '@dialectlabs/identity-sns';
 import {
-  Backend, ChatButton,
+  Backend,
+  ChatButton,
   Config,
   defaultVariables,
   DialectContextProvider,
   DialectThemeProvider,
-  DialectUiManagementProvider, DialectWalletAdapter, IncomingThemeVariables
+  DialectUiManagementProvider,
+  DialectWalletAdapter,
+  IncomingThemeVariables,
 } from '@dialectlabs/react-ui';
 import {
   useConnection,
   useWallet,
-  WalletContextState
+  WalletContextState,
 } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
 import { Wallet as WalletButton } from '../components/Wallet';
@@ -41,14 +44,14 @@ export const themeVariables: IncomingThemeVariables = {
     modal:
       'sm:border border-[#F0F0F0] shadow-lg shadow-neutral-300 sm:rounded-xl',
     colors: {
-      primary: 'text-[#353535]',
+      textPrimary: 'text-[#353535]',
     },
     button: `${defaultVariables.light.button} border-none bg-[#B852DC]`,
     highlighted: `${defaultVariables.light.highlighted} bg-[#F6F6F6] border border-[#F0F0F0]`,
     input: `${defaultVariables.light.input} border-b-[#59C29D] focus:ring-[#59C29D] text-[#59C29D]`,
     iconButton: `${defaultVariables.light.iconButton} hover:text-[#59C29D] hover:opacity-100`,
     avatar: `${defaultVariables.light.avatar} bg-[#F6F6F6]`,
-    messageBubble: `${defaultVariables.light.messageBubble} border-none bg-[#448EF7] text-white`,
+    messageBubble: `${defaultVariables.light.messageBubble} border-none bg-[#448EF7] text-black`,
     sendButton: `${defaultVariables.light.sendButton} bg-[#59C29D]`,
   },
 };

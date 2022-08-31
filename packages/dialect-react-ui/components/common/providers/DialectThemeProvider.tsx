@@ -203,7 +203,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       // circle in toggle
       toggleThumb: 'dt-bg-[#1F1F1F]',
       // notification badge
-      notificationBadgeColor: 'dt-bg-red-500',
+      notificationBadgeColor: 'dt-bg-[#6F2AFF] dt-text-white',
       // input label
       label: 'dt-text-black/60',
     },
@@ -256,8 +256,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
     textArea:
       'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none disabled:dt-text-neutral-800/50',
-    messageBubble: 'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',
-    message: 'dt-bg-transparent dt-border dt-border-neutral-300 ',
+    messageBubble: 'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-text-black',
+    message: 'dt-bg-transparent dt-border dt-border-neutral-300',
     otherMessage: 'dt-bg-neutral-100',
     messageOnChain: 'dt-bg-[#6F2AFF]',
     otherMessageOnChain: 'dt-bg-neutral-100',
@@ -305,7 +305,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       toggleBackground: 'dt-bg-white/60',
       toggleBackgroundActive: 'dt-bg-[#528E5B]',
       toggleThumb: 'dt-bg-[#1F1F1F]',
-      notificationBadgeColor: 'dt-bg-red-500',
+      notificationBadgeColor: 'dt-bg-[#6F2AFF] dt-text-white',
       label: 'dt-text-white/60',
     },
     textStyles: {

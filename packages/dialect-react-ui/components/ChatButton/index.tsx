@@ -6,6 +6,9 @@ import Chat from '../Chat';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import IconButton from '../IconButton';
+import { useUnreadMessages } from '@dialectlabs/react-sdk';
+import { UnreadMessagesBadge } from '../common';
+import { DEFAULT_POLLING_INTERVAL } from '../Chat/provider';
 
 type PropTypes = {
   dialectId: string;
@@ -18,6 +21,9 @@ function WrappedChatButton(
   props: Omit<PropTypes, 'theme' | 'variables'>
 ): JSX.Element {
   const { ui, open, close } = useDialectUiId(props.dialectId);
+  const { unreadCount } = useUnreadMessages({
+    refreshInterval: props.pollingInterval ?? DEFAULT_POLLING_INTERVAL,
+  });
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
@@ -32,16 +38,23 @@ function WrappedChatButton(
         colors.textPrimary
       )}
     >
-      <IconButton
-        ref={bellRef}
-        className={clsx(
-          'dt-flex dt-items-center dt-justify-center dt-rounded-full focus:dt-outline-none dt-shadow-md',
-          colors.bg,
-          bellButton
-        )}
-        icon={<icons.chat className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />}
-        onClick={ui?.open ? close : open}
-      ></IconButton>
+      <div className="dt-relative">
+        <IconButton
+          ref={bellRef}
+          className={clsx(
+            'dt-flex dt-items-center dt-justify-center dt-rounded-full focus:dt-outline-none dt-shadow-md',
+            colors.bg,
+            bellButton
+          )}
+          icon={
+            <icons.chat className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />
+          }
+          onClick={ui?.open ? close : open}
+        />
+        <div className="dt-absolute -dt-top-1 -dt-right-1">
+          <UnreadMessagesBadge amount={unreadCount} />
+        </div>
+      </div>
       <Transition
         className={modalWrapper}
         show={ui?.open ?? false}
@@ -60,7 +73,7 @@ function WrappedChatButton(
   );
 }
 
-export default function ChatButton({ ...props }: PropTypes): JSX.Element {
+export default function ChatButton(props: PropTypes): JSX.Element {
   return (
     <div className="dialect">
       <WrappedChatButton {...props} />

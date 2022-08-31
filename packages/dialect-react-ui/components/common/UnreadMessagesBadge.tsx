@@ -7,13 +7,14 @@ interface Props {
 }
 
 export default function UnreadMessagesBadge({ amount, className }: Props) {
-  const { textStyles } = useTheme();
+  const { textStyles, colors } = useTheme();
 
   return amount > 0 ? (
     <div
       className={clsx(
-        'dt-min-w-[1.25rem] dt-h-[1.25rem] dt-bg-white dt-text-black dt-rounded-full dt-flex dt-items-center dt-justify-center',
+        'dt-w-5 dt-h-5 dt-rounded-full dt-flex dt-items-center dt-justify-center',
         textStyles.small,
+        colors.notificationBadgeColor,
         className
       )}
     >
