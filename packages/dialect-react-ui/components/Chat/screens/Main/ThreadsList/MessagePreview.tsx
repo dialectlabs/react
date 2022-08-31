@@ -1,6 +1,6 @@
 import {
   Backend,
-  Message,
+  LocalThreadMessage,
   ThreadId,
   useDialectSdk,
   useThread as useThreadInternal,
@@ -13,7 +13,7 @@ import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
 import MessageStatus from '../../../MessageStatus';
-import { OnChainIndicator } from '../../../../common';
+import { OnChainIndicator, UnreadMessagesBadge } from '../../../../common';
 import { Encrypted } from '../../../../Icon';
 
 type PropsType = {
@@ -27,7 +27,7 @@ function FirstMessage({
   firstMessage,
   isEncrypted,
 }: {
-  firstMessage?: Message;
+  firstMessage?: LocalThreadMessage;
   isEncrypted: boolean;
 }) {
   const {
@@ -125,11 +125,7 @@ export default function MessagePreview({
               />
             )}
           </span>
-          {unreadCount > 0 && (
-            <div className="dt-mt-1 dt-min-w-[1.25rem] dt-h-[1.25rem] dt-bg-white dt-text-black dt-rounded-full dt-flex dt-items-center dt-justify-center">
-              {unreadCount}
-            </div>
-          )}
+          <UnreadMessagesBadge amount={unreadCount} className="dt-mt-1" />
         </div>
       </div>
     </div>
