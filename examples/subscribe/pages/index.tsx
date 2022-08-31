@@ -73,7 +73,7 @@ type ThemeType = 'light' | 'dark' | undefined;
 
 function AuthedHome() {
   // const { select } = useWallet();
-  const { setVisible } = useWalletModal();
+  const { setVisible: showWalletModal } = useWalletModal();
 
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-black">
@@ -88,6 +88,7 @@ function AuthedHome() {
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <title>Subscribe Button Example | Dialect</title>
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <WalletButton />
@@ -107,7 +108,7 @@ function AuthedHome() {
             <SubscribeButton
               dialectId="dialect-subscribe"
               onWalletConnect={() => {
-                setVisible(true);
+                showWalletModal(true);
               }}
               notifications={[
                 {
@@ -175,9 +176,6 @@ export default function Home(): JSX.Element {
         wallet={dialectWalletAdapter}
         config={dialectConfig}
         dapp={DIALECT_PUBLIC_KEY}
-        gate={() =>
-          new Promise((resolve) => setTimeout(() => resolve(true), 3000))
-        }
       >
         <DialectThemeProvider theme={theme} variables={themeVariables}>
           <DialectUiManagementProvider>
