@@ -195,7 +195,7 @@ function BroadcastForm({
       <Button
         onClick={sendBroadcastMessage}
         loading={isSending}
-        readOnly={isSubmitDisabled}
+        disabled={isSubmitDisabled}
       >
         {isSending ? 'Sending...' : 'Send'}
       </Button>

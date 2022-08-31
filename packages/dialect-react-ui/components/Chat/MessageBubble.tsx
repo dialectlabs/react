@@ -4,10 +4,10 @@ import Avatar from '../Avatar';
 import { ButtonLink, LinkifiedText } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
-import type { Message } from '@dialectlabs/react-sdk';
+import type { LocalThreadMessage } from '@dialectlabs/react-sdk';
 import { formatTimestamp } from '../../utils/timeUtils';
 
-type MessageBubbleProps = Message & {
+type MessageBubbleProps = LocalThreadMessage & {
   isOnChain: boolean;
   isYou: boolean;
   isSending?: boolean;
