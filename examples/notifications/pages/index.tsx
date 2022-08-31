@@ -83,6 +83,7 @@ function AuthedHome() {
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <title>Notifications Button Example | Dialect</title>
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <NotificationsButton
