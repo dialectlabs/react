@@ -12,6 +12,7 @@ import { VerificationInput } from './VerificationInput';
 import OutlinedInput from '../../../common/primitives/OutlinedInput';
 import { Toggle } from '../../../common';
 import CancelIcon from '../../../Icon/Cancel';
+import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
 const addressType = AddressType.PhoneNumber;
 
@@ -100,7 +101,9 @@ const Sms = () => {
   };
 
   const onChange = (e: any) => {
-    setSmsNumber(e.target.value);
+    const formattedValue = formatPhoneNumberIntl(e.target.value);
+    const value = formattedValue === '' ? e.target.value : formattedValue;
+    setSmsNumber(value);
   };
 
   const isEditing = smsNumber !== smsAddress?.value && isSmsNumberSaved;
@@ -122,7 +125,7 @@ const Sms = () => {
       ) : (
         <OutlinedInput
           id="settings-sms"
-          placeholder="+15554443333 (+1 required, US only)"
+          placeholder="+15554443333 (country code required +1 or etc)"
           type="tel"
           value={smsNumber}
           rightAdornment={
