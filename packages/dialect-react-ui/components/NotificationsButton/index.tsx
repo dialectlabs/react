@@ -1,14 +1,14 @@
 import { useDialectDapp, useUnreadMessages } from '@dialectlabs/react-sdk';
-import { Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { useEffect, useRef } from 'react';
-import useMobile from '../../utils/useMobile';
+import { useRef } from 'react';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import { DEFAULT_NOTIFICATIONS_CHANNELS } from '../common/constants';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
-import type { Channel } from '../common/types';
 import IconButton from '../IconButton';
-import Notifications, { NotificationType } from '../Notifications';
+import NotificationModal from '../NotificationsModal';
+import type { NotificationType } from '../Notifications';
+import type { Channel } from '../common/types';
 
 export type PropTypes = {
   dialectId: string;
@@ -23,9 +23,7 @@ export type PropTypes = {
 
 function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   const { ui, open, close } = useDialectUiId(props.dialectId);
-
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const bellRef = useRef<HTMLButtonElement>(null);
+  const { colors, bellButton, icons } = useTheme();
 
   const { dappAddress } = useDialectDapp();
 
@@ -34,20 +32,9 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
     refreshInterval: props.pollingInterval,
   });
 
-  useOutsideAlerter(wrapperRef, bellRef, close);
+  const refs = useRef<HTMLElement[]>([]);
+  useOutsideAlerter(refs, close);
 
-  const isMobile = useMobile();
-
-  useEffect(() => {
-    // Prevent scrolling of backdrop content on mobile
-    document.documentElement.classList[ui?.open && isMobile ? 'add' : 'remove'](
-      'dt-overflow-hidden',
-      'dt-static',
-      'sm:dt-overflow-auto'
-    );
-  }, [ui?.open, isMobile]);
-
-  const { colors, bellButton, icons, modalWrapper, animations } = useTheme();
   return (
     <div
       className={clsx(
@@ -64,7 +51,10 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
         ></div>
       )}
       <IconButton
-        ref={bellRef}
+        ref={(el) => {
+          if (!el) return;
+          refs.current[0] = el;
+        }}
         className={clsx(
           'dt-flex dt-items-center dt-justify-center dt-rounded-full focus:dt-outline-none dt-shadow-md',
           colors.bg,
@@ -73,34 +63,13 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
         icon={<icons.bell className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={ui?.open ? close : open}
       />
-      <Transition
-        className={modalWrapper}
-        show={ui?.open ?? false}
-        {...animations.popup}
-      >
-        <div
-          ref={wrapperRef}
-          className="dt-w-full dt-h-full"
-          // TODO: investigate blur
-          // className="dt-w-full dt-h-full bg-white/10"
-          // style={{ backdropFilter: 'blur(132px)' }}
-        >
-          <Notifications
-            channels={props.channels}
-            notifications={props?.notifications}
-            onModalClose={close}
-            onBackClick={props?.onBackClick}
-            gatedView={props.gatedView}
-            pollingInterval={props.pollingInterval}
-          />
-        </div>
-      </Transition>
+      <NotificationModal {...props} />
     </div>
   );
 }
 
 export default function NotificationsButton({
-  channels = ['web3', 'telegram', 'sms', 'email'],
+  channels = DEFAULT_NOTIFICATIONS_CHANNELS,
   ...props
 }: PropTypes): JSX.Element {
   return (

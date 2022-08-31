@@ -1,50 +1,68 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { Transition } from '@headlessui/react';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
-import type { PropTypes } from '../NotificationsButton';
+import { useTheme } from '../common/providers/DialectThemeProvider';
+import useMobile from '../../utils/useMobile';
+import clsx from 'clsx';
 
-type ModalProps = {
+interface NotificationsModalProps {
   dialectId: string;
+  wrapperClassName?: string;
+  className?: string;
   notifications: NotificationType[];
+  gatedView?: string | JSX.Element;
   channels?: Channel[];
   onBackClick?: () => void;
-};
+  pollingInterval?: number;
+}
 
 // TODO: deprecate or reuse?
-function Modal({ channels = ['web3'], ...props }: ModalProps): JSX.Element {
-  const { close } = useDialectUiId(props.dialectId);
+function InnerNotificationsModal(props: NotificationsModalProps): JSX.Element {
+  const { modalWrapper, animations } = useTheme();
+  const { ui, open, close } = useDialectUiId(props.dialectId);
 
-  const wrapperRef = useRef(null);
-  const bellRef = useRef(null);
+  const refs = useRef<HTMLDivElement[]>([]);
+  useOutsideAlerter(refs, close);
 
-  useOutsideAlerter(wrapperRef, bellRef, close);
+  const isMobile = useMobile();
+
+  useEffect(() => {
+    // Prevent scrolling of backdrop content on mobile
+    document.documentElement.classList[ui?.open && isMobile ? 'add' : 'remove'](
+      'dt-overflow-hidden',
+      'dt-static',
+      'sm:dt-overflow-auto'
+    );
+  }, [ui?.open, isMobile]);
 
   return (
-    <div
-      ref={wrapperRef}
-      className="dt-w-full dt-h-full"
-      // TODO: investigate blur
-      // className="dt-w-full dt-h-full bg-white/10"
-      // style={{ backdropFilter: 'blur(132px)' }}
+    <Transition
+      className={clsx(modalWrapper, props.wrapperClassName)}
+      show={ui?.open ?? false}
+      {...animations.popup}
     >
-      <Notifications
-        channels={channels}
-        notifications={props?.notifications}
-        onModalClose={close}
-        onBackClick={props?.onBackClick}
-      />
-    </div>
+      <div
+        ref={(el) => {
+          if (!el) return;
+          refs.current[0] = el;
+        }}
+        className="dt-w-full dt-h-full"
+      >
+        <Notifications onModalClose={close} {...props} />
+      </div>
+    </Transition>
   );
 }
 
-export default function NotificationModal({
-  ...props
-}: PropTypes): JSX.Element {
+export default function NotificationsModal(
+  props: NotificationsModalProps
+): JSX.Element {
   return (
-    <div className="dialect dt-w-full dt-h-full">
-      <Modal {...props} />
+    <div className={clsx('dialect dt-w-full dt-h-full', props?.className)}>
+      <InnerNotificationsModal {...props} />
     </div>
   );
 }

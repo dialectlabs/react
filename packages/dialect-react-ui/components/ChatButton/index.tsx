@@ -18,9 +18,9 @@ function WrappedChatButton(
 ): JSX.Element {
   const { ui, open, close } = useDialectUiId(props.dialectId);
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const bellRef = useRef<HTMLButtonElement>(null);
-  useOutsideAlerter(wrapperRef, bellRef, close);
+  const refs = useRef<HTMLElement[]>([]);
+
+  useOutsideAlerter(refs, close);
 
   const { colors, bellButton, icons, modalWrapper, animations } = useTheme();
 
@@ -32,7 +32,10 @@ function WrappedChatButton(
       )}
     >
       <IconButton
-        ref={bellRef}
+        ref={(el) => {
+          if (!el) return;
+          refs.current[0] = el;
+        }}
         className={clsx(
           'dt-flex dt-items-center dt-justify-center dt-rounded-full focus:dt-outline-none dt-shadow-md',
           colors.bg,
@@ -46,7 +49,13 @@ function WrappedChatButton(
         show={ui?.open ?? false}
         {...animations.popup}
       >
-        <div ref={wrapperRef} className="dt-w-full dt-h-full">
+        <div
+          ref={(el) => {
+            if (!el) return;
+            refs.current[1] = el;
+          }}
+          className="dt-w-full dt-h-full"
+        >
           <Chat dialectId={props.dialectId} type="popup" onChatClose={close} />
         </div>
       </Transition>
