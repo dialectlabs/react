@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import { Button, ButtonLink, Loader } from '../common';
 import { P } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
+import { PlusCircle } from '../Icon';
+import IconButton from '../IconButton';
 
 interface SubscribeRowProps {
   label: string;
@@ -18,25 +20,24 @@ const SubscribeRow = ({
   isSubscribed,
   isLoading,
 }: SubscribeRowProps) => {
-  const { textStyles, outlinedInput, button } = useTheme();
+  const { textStyles, subscribeRow, button } = useTheme();
 
   return (
     <div>
-      <div
-        className={clsx(
-          'dt-flex dt-items-center dt-border !dt-bg-transparent',
-          outlinedInput
-        )}
-      >
+      <div className={clsx('dt-flex dt-items-center dt-border', subscribeRow)}>
         <div
           className={clsx(
             'dt-w-full dt-bg-transparent dt-outline-0',
-            textStyles.input
+            textStyles.subscribeRow
           )}
         >
           <div className="dt-flex dt-justify-between dt-items-center">
-            <span className={'dt-opacity-40'}>{label}</span>
-            {!isLoading && isSubscribed ? <span>✓ Subscribed</span> : null}
+            <span className={clsx('dt-ml-2', isSubscribed && 'dt-opacity-50')}>
+              {label}
+            </span>
+            {!isLoading && isSubscribed ? (
+              <span className="dt-opacity-50">Subscribed ✓</span>
+            ) : null}
             {!isLoading && !isSubscribed ? (
               <Button onClick={onSubscribe} className={clsx(button, 'dt-h-9')}>
                 Subscribe
@@ -58,12 +59,14 @@ const SubscribeRow = ({
 
       <div
         className={clsx(
-          !isSubscribed && 'dt-opacity-0 dt-pointer-events-none',
-          'dt-flex dt-flex-row dt-space-x-2 dt-items-center dt-mt-1'
+          // !isSubscribed && 'dt-opacity-0 dt-pointer-events-none',
+          'dt-flex dt-flex-row dt-space-x-2 dt-items-center dt-mt-2'
         )}
       >
-        <P className={'dt-px-4 dt-text-xs dt-opacity-60'}>
-          <ButtonLink onClick={onOpenMoreOptions}>Other options</ButtonLink>
+        <P className={clsx('dt-opacity-50', textStyles.subscribeRow)}>
+          <ButtonLink onClick={onOpenMoreOptions} className="dt-space-x-1">
+            <PlusCircle /> <span>More options</span>
+          </ButtonLink>
         </P>
       </div>
     </div>

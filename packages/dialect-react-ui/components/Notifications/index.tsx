@@ -32,11 +32,19 @@ interface NotificationsProps {
   onBackClick?: () => void;
   gatedView?: string | JSX.Element;
   pollingInterval?: number;
+  settingsOnly?: boolean;
 }
 
 const addressType = AddressType.Wallet;
 
-function InnerNotifications(props: NotificationsProps): JSX.Element {
+function InnerNotifications({
+  onModalClose,
+  onBackClick,
+  channels,
+  notifications,
+  settingsOnly,
+  pollingInterval,
+}: NotificationsProps): JSX.Element {
   const { dappAddress } = useDialectDapp();
   if (!dappAddress) {
     throw new Error('dapp address should be provided for notifications');
@@ -89,7 +97,7 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         return;
       }
 
-      const shouldShowSettings = !isWeb3Enabled;
+      const shouldShowSettings = settingsOnly || !isWeb3Enabled;
 
       if (shouldShowSettings) {
         showSettings();
@@ -100,7 +108,14 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
       showThread();
       setInitialRoutePicked(true);
     },
-    [isInitialRoutePicked, isLoading, isWeb3Enabled, showSettings, showThread]
+    [
+      isInitialRoutePicked,
+      isLoading,
+      isWeb3Enabled,
+      settingsOnly,
+      showSettings,
+      showThread,
+    ]
   );
 
   return (
@@ -109,8 +124,9 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
         threadId={thread?.id}
         isWeb3Enabled={isWeb3Enabled}
         isReady={!isLoading}
-        onModalClose={props.onModalClose}
-        onBackClick={props.onBackClick}
+        onModalClose={onModalClose}
+        onBackClick={onBackClick}
+        settingsOnly={settingsOnly}
       />
       <div
         className={clsx(
@@ -122,12 +138,12 @@ function InnerNotifications(props: NotificationsProps): JSX.Element {
           <>
             <Route name={RouteName.Settings}>
               <Settings
-                channels={props.channels || []}
-                notifications={props?.notifications}
+                channels={channels || []}
+                notifications={notifications}
               />
             </Route>
             <Route name={RouteName.Thread}>
-              <NotificationsList refreshInterval={props.pollingInterval} />
+              <NotificationsList refreshInterval={pollingInterval} />
             </Route>
           </>
         ) : (

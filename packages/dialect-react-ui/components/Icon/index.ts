@@ -22,3 +22,4 @@ export { default as X } from './X';
 export { default as MultiarrowVertical } from './MultiarrowVertical';
 export { default as Encrypted } from './Encrypted';
 export { default as Unencrypted } from './Unencrypted';
+export { default as PlusCircle } from './PlusCircle';

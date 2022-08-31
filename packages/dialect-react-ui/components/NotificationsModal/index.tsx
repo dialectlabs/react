@@ -9,14 +9,19 @@ import useMobile from '../../utils/useMobile';
 import clsx from 'clsx';
 
 interface NotificationsModalProps {
-  dialectId: string;
   wrapperClassName?: string;
   className?: string;
-  notifications: NotificationType[];
-  gatedView?: string | JSX.Element;
+  animationStyle?: string;
+  settingsOnly?: boolean;
+
+  dialectId: string;
+
+  notifications?: NotificationType[];
   channels?: Channel[];
-  onBackClick?: () => void;
+  gatedView?: string | JSX.Element;
   pollingInterval?: number;
+
+  onBackClick?: () => void;
 }
 
 // TODO: deprecate or reuse?
@@ -38,22 +43,32 @@ function InnerNotificationsModal(props: NotificationsModalProps): JSX.Element {
     );
   }, [ui?.open, isMobile]);
 
+  const animationKey = props.animationStyle || 'popup';
+  // TODO: fix types
+  const animationProps = animations[animationKey];
+
   return (
-    <Transition
-      className={clsx(modalWrapper, props.wrapperClassName)}
-      show={ui?.open ?? false}
-      {...animations.popup}
-    >
-      <div
-        ref={(el) => {
-          if (!el) return;
-          refs.current[0] = el;
-        }}
-        className="dt-w-full dt-h-full"
+    <>
+      {/* Page content overflow */}
+      {ui?.open ? (
+        <div className="dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[49] dt-bg-black/50" />
+      ) : null}
+      <Transition
+        className={clsx(modalWrapper, props.wrapperClassName)}
+        show={ui?.open ?? false}
+        {...animationProps}
       >
-        <Notifications onModalClose={close} {...props} />
-      </div>
-    </Transition>
+        <div
+          ref={(el) => {
+            if (!el) return;
+            refs.current[0] = el;
+          }}
+          className="dt-w-full dt-h-full"
+        >
+          <Notifications onModalClose={close} {...props} />
+        </div>
+      </Transition>
+    </>
   );
 }
 
@@ -61,7 +76,7 @@ export default function NotificationsModal(
   props: NotificationsModalProps
 ): JSX.Element {
   return (
-    <div className={clsx('dialect dt-w-full dt-h-full', props?.className)}>
+    <div className={clsx('dialect dt-w-full dt-h-full')}>
       <InnerNotificationsModal {...props} />
     </div>
   );

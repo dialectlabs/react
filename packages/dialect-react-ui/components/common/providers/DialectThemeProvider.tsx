@@ -43,6 +43,7 @@ export type ThemeTextStyles =
   | 'bigText'
   | 'header'
   | 'input'
+  | 'subscribeRow'
   | 'buttonText'
   | 'link'
   | 'label';
@@ -212,6 +213,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
       input: 'dt-font-inter',
+      subscribeRow: 'dt-font-inter dt-text-[15px]',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
       xsmall: 'dt-font-inter dt-text-[0.6875rem] dt-font-normal',
@@ -256,7 +258,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     outlinedInput:
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
     subscribeRow:
-      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-pl-3.5 dt-pr-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
+      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3.5 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
     textArea:
       'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none disabled:dt-text-neutral-800/50',
     messageBubble: 'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',
@@ -314,6 +316,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
       input: 'dt-font-inter',
+      subscribeRow: 'dt-font-inter dt-text-[15px]',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
       xsmall: 'dt-font-inter dt-text-[0.6875rem] dt-font-normal',
@@ -358,7 +361,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     outlinedInput:
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
     subscribeRow:
-      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-pl-3.5 dt-pr-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
+      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3.5 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
     textArea:
       'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 dt-outline-none disabled:dt-text-neutral-200/50',
     messageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',

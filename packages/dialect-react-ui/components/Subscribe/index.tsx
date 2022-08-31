@@ -13,13 +13,11 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
-import ThreadEncyprionWrapper from '../../entities/wrappers/ThreadEncryptionWrapper';
 import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
 import { useTheme } from '../common/providers/DialectThemeProvider';
-import { Router } from '../common/providers/Router';
 import type { Channel } from '../common/types';
 import SubscribeRow from './SubscribeRow';
-import NotificationModal from '../NotificationsModal';
+import NotificationsModal from '../NotificationsModal';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { useCallback } from 'react';
 import { shortenAddress } from '../../utils/displayUtils';
@@ -222,18 +220,22 @@ function InnerSubscribe({
   onWalletConnect,
   channels,
 }: SubscribeProps) {
-  const { open: openModal, ui } = useDialectUiId(DIALECT_UI_ID);
+  const { open: openModal } = useDialectUiId(DIALECT_UI_ID);
 
   return (
     <div className="dt-w-full">
       <WalletStatesWrapper>
-        {({ isWalletConnected }) => {
-          if (!isWalletConnected) {
+        {({ isWalletConnected, isSigningMessage }) => {
+          if (!isWalletConnected || isSigningMessage) {
             return (
               <SubscribeRow
-                label="Connect wallet"
+                label={
+                  isSigningMessage
+                    ? 'Waiting for wallet...'
+                    : 'Connect wallet...'
+                }
                 isSubscribed={false}
-                isLoading={false}
+                isLoading={isSigningMessage}
                 onSubscribe={onWalletConnect}
               />
             );
@@ -241,18 +243,18 @@ function InnerSubscribe({
           return <ConnectedSubscribe onOpenMoreOptions={openModal} />;
         }}
       </WalletStatesWrapper>
-      <NotificationModal
+      <NotificationsModal
         wrapperClassName="!dt-fixed !dt-top-0 !dt-bottom-0 !dt-left-0 !dt-right-0 dt-m-auto"
-        className={clsx('dt-modal-overflow', ui?.open ? 'dt-z-10' : '-dt-z-10')}
         dialectId={DIALECT_UI_ID}
         channels={channels}
+        animationStyle="bottomSlide"
+        settingsOnly
       />
     </div>
   );
 }
 
-export default function Subscribe({ gatedView, ...props }: SubscribeProps) {
-  const { dappAddress } = useDialectDapp();
+export default function Subscribe(props: SubscribeProps) {
   const { colors } = useTheme();
 
   return (
@@ -263,8 +265,9 @@ export default function Subscribe({ gatedView, ...props }: SubscribeProps) {
           colors.textPrimary
         )}
       >
-        {/* TODO: remove ledger for this component */}
-        {/* TODO: connection, etc wrappers */}
+        {/* TODO: do not initiate sign until user interaction */}
+        {/* TODO: remove ledger toggle for this component */}
+        {/* TODO: connection wrapper */}
         <InnerSubscribe {...props} />
       </div>
     </div>
