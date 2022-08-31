@@ -5,6 +5,7 @@ import BottomChat from './components/BottomChat';
 import Notifications from './components/Notifications';
 import NotificationsButton from './components/NotificationsButton';
 import NotificationsModal from './components/NotificationsModal';
+import SubscribeButton from './components/SubscribeButton';
 import Inbox from './components/Inbox';
 import useDappAudience from './hooks/useDappAudience';
 import useBalance from './hooks/useBalance';
@@ -92,6 +93,7 @@ export {
   useDappAudience,
   useBalance,
   // UI components
+  SubscribeButton,
   Email,
   Sms,
   Telegram,
