@@ -3,9 +3,12 @@ import NoConnectionError from '../errors/ui/NoConnectionError';
 
 // Only renders children if connected to successfully some backend
 
+type ConnectionValue = {
+  isSomeBackendConnected: boolean;
+};
 interface ConnectionWrapperProps {
   header?: JSX.Element | null;
-  children?: React.ReactNode;
+  children?: JSX.Element | ((val: ConnectionValue) => JSX.Element | null);
 }
 
 // FIXME: trigger some hook to check connection
@@ -33,11 +36,15 @@ export default function ConnectionWrapper({
     refreshInterval: 5000,
   });
 
-  const someBackendConnected =
+  const isSomeBackendConnected =
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
 
-  if (!someBackendConnected) {
+  if (typeof children === 'function') {
+    return children({ isSomeBackendConnected });
+  }
+
+  if (!isSomeBackendConnected) {
     return (
       <>
         {header}
