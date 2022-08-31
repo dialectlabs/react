@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- feature: add unread messages indicator for chat components
+
 ## [1.0.0-beta.51] - 2022-08-30
 
 - feature: support dapp-configured telegram bots 
