@@ -1,6 +1,6 @@
 import { AddressType, useNotificationChannel } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Button } from '../../../common';
 import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -12,7 +12,7 @@ interface IVerificationInputProps {
   description?: string;
   addressType: AddressType;
   onCancel: () => void;
-  customText?: React.ReactNode;
+  customText?: ReactNode;
 }
 
 const VERIFICATION_CODE_REGEX = '^[0-9]{6}$';
@@ -28,7 +28,7 @@ export const VerificationInput = ({
   const { verify: verifyCode, resend } = useNotificationChannel({
     addressType,
   });
-  const { textStyles, addormentButton } = useTheme();
+  const { textStyles, adornmentButton } = useTheme();
 
   const sendCode = async () => {
     try {
@@ -77,7 +77,7 @@ export const VerificationInput = ({
         rightAdornment={
           <Button
             onClick={sendCode}
-            className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+            className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
           >
             Submit
           </Button>
