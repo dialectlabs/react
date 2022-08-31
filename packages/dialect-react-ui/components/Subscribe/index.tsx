@@ -178,6 +178,10 @@ function ConnectedSubscribe({
       return createWalletThread();
     }
 
+    if (thread && !subscriptionEnabled) {
+      return toggleSubscription({ enabled: true });
+    }
+
     /* when thread exists but no address
     Probably this is a *very* old users case */
     if (thread && !walletAddress) {
@@ -187,7 +191,9 @@ function ConnectedSubscribe({
     createWalletAddress,
     createWalletThread,
     fullEnableWallet,
+    subscriptionEnabled,
     thread,
+    toggleSubscription,
     walletAddress,
   ]);
 
@@ -198,7 +204,7 @@ function ConnectedSubscribe({
     isCreatingAddress ||
     isToggling;
 
-  const isSubscribed = Boolean(thread && walletAddress);
+  const isSubscribed = Boolean(thread && walletAddress && subscriptionEnabled);
 
   return (
     <SubscribeRow
