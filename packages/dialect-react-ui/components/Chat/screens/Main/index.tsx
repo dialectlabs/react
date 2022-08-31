@@ -46,8 +46,6 @@ const Main = () => {
     [navigate]
   );
 
-  console.log(unreadCount);
-
   return (
     <Router initialRoute={MainRouteName.Thread}>
       <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
