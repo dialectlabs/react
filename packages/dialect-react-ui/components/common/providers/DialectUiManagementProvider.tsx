@@ -1,6 +1,5 @@
 import React, {
   createContext,
-  FunctionComponent,
   useCallback,
   useContext,
   useEffect,

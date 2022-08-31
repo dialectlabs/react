@@ -21,9 +21,6 @@ type ChatType = 'inbox' | 'popup' | 'vertical-slider';
 
 interface InnerChatProps {
   dialectId: string;
-  type: ChatType;
-  wrapperClassName?: string;
-  contentWrapperClassName?: string;
 }
 
 function InnerChat({ dialectId }: InnerChatProps): JSX.Element {
@@ -61,6 +58,7 @@ interface ChatProps {
   contentWrapperClassName?: string;
   onChatClose?: () => void;
   onChatOpen?: () => void;
+  pollingInterval?: number;
 }
 
 export default function Chat({
@@ -68,6 +66,7 @@ export default function Chat({
   contentWrapperClassName,
   onChatOpen,
   onChatClose,
+  pollingInterval,
   ...props
 }: ChatProps) {
   const { dialectId, type } = props;
@@ -99,6 +98,7 @@ export default function Chat({
         type={type}
         onChatOpen={onChatOpen}
         onChatClose={onChatClose}
+        pollingInterval={pollingInterval}
       >
         <div
           className={clsx(
@@ -117,7 +117,10 @@ export default function Chat({
             )}
           >
             <WalletStatesWrapper header={defaultHeader}>
-              <ConnectionWrapper header={defaultHeader}>
+              <ConnectionWrapper
+                header={defaultHeader}
+                pollingInterval={pollingInterval}
+              >
                 <InnerChat {...props} />
               </ConnectionWrapper>
             </WalletStatesWrapper>

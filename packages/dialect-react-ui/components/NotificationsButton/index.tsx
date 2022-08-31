@@ -10,6 +10,8 @@ import NotificationModal from '../NotificationsModal';
 import type { NotificationType } from '../Notifications';
 import type { Channel } from '../common/types';
 
+const DEFAULT_POLLING_FOR_NOTIFICATIONS = 15000; // 15 sec refresh default
+
 export type PropTypes = {
   dialectId: string;
   bellClassName?: string;
@@ -70,11 +72,16 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
 
 export default function NotificationsButton({
   channels = DEFAULT_NOTIFICATIONS_CHANNELS,
+  pollingInterval = DEFAULT_POLLING_FOR_NOTIFICATIONS,
   ...props
 }: PropTypes): JSX.Element {
   return (
     <div className="dialect">
-      <WrappedNotificationsButton channels={channels} {...props} />
+      <WrappedNotificationsButton
+        channels={channels}
+        pollingInterval={pollingInterval}
+        {...props}
+      />
     </div>
   );
 }

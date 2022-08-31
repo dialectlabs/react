@@ -11,6 +11,7 @@ type PropTypes = {
   dialectId: string;
   bellClassName?: string;
   bellStyle?: object;
+  pollingInterval?: number;
 };
 
 function WrappedChatButton(
@@ -56,7 +57,12 @@ function WrappedChatButton(
           }}
           className="dt-w-full dt-h-full"
         >
-          <Chat dialectId={props.dialectId} type="popup" onChatClose={close} />
+          <Chat
+            dialectId={props.dialectId}
+            type="popup"
+            onChatClose={close}
+            pollingInterval={props.pollingInterval}
+          />
         </div>
       </Transition>
     </div>

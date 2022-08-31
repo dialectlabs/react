@@ -2,6 +2,14 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.51] - 2022-08-30
+
+- feature: support dapp-configured telegram bots 
+
+## [1.0.0-beta.50] - 2022-08-26
+
+- fix: polling for chat components
+
 ## [1.0.0-beta.49] - 2022-08-25
 
 - feature: expose package version

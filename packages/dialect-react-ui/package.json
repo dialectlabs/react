@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "1.0.0-beta.49",
+  "version": "1.0.0-beta.51",
   "description": "Dialect's react UI components",
   "license": "MIT",
   "private": false,
@@ -33,7 +33,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@dialectlabs/react-sdk": "1.0.0-beta.28",
+    "@dialectlabs/react-sdk": "1.0.0-beta.29",
     "@headlessui/react": "^1.2.0",
     "clsx": "^1.1.1",
     "focus-visible": "^5.2.0",
