@@ -7,7 +7,7 @@ import {
   DialectUiManagementProvider,
   DialectWalletAdapter,
   IncomingThemeVariables,
-  NotificationsButton,
+  SubscribeButton,
 } from '@dialectlabs/react-ui';
 import * as anchor from '@project-serum/anchor';
 import {
@@ -15,14 +15,16 @@ import {
   useWallet,
   WalletContextState,
 } from '@solana/wallet-adapter-react';
+import {
+  useWalletModal,
+  WalletModalProvider,
+} from '@solana/wallet-adapter-react-ui';
 import Head from 'next/head';
 import { useEffect, useMemo, useState } from 'react';
 import { Wallet as WalletButton } from '../components/Wallet';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  // 'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
-  'DEVoZqSnDkpb9M4fPCoXMj9rza63kJZkbMsg3AABzYHA'
-  // 'EN4K6GM79QK5cuqgrDihQGFE1i4pppe28JHiaA6dEV1B'
+  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
 );
 
 export const themeVariables: IncomingThemeVariables = {
@@ -70,6 +72,9 @@ const walletToDialectWallet = (
 type ThemeType = 'light' | 'dark' | undefined;
 
 function AuthedHome() {
+  // const { select } = useWallet();
+  const { setVisible } = useWalletModal();
+
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-black">
       <Head>
@@ -85,24 +90,37 @@ function AuthedHome() {
         />
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <NotificationsButton
-          dialectId="dialect-notifications"
-          notifications={[
-            {
-              name: 'Example notification',
-              detail:
-                'This is an example notification that is never sent. More examples coming soon',
-            },
-          ]}
-          pollingInterval={15000}
-          channels={['web3', 'email', 'sms', 'telegram']}
-        />
         <WalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">
-        <code className="text-center text-neutral-400 dark:text-neutral-100">
-          🌚 Dev Dapp
+        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
+          @dialectlabs/react
         </code>
+        <code className="text-center text-neutral-400 dark:text-neutral-600">
+          examples/
+          <code className="text-neutral-900 dark:text-neutral-100">
+            subscribe
+          </code>
+        </code>
+        <div className="flex justify-center p-4">
+          <div className="min-w-[22rem]">
+            <SubscribeButton
+              dialectId="dialect-subscribe"
+              onWalletConnect={() => {
+                setVisible(true);
+              }}
+              notifications={[
+                {
+                  name: 'Example notification',
+                  detail:
+                    'This is an example notification that is never sent. More examples coming soon',
+                },
+              ]}
+              pollingInterval={15000}
+              channels={['web3', 'email', 'sms', 'telegram']}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -122,8 +140,8 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo(
     (): Config => ({
-      backends: [Backend.DialectCloud, Backend.Solana],
-      environment: 'production',
+      backends: [Backend.DialectCloud],
+      environment: 'development',
       dialectCloud: {
         tokenStore: 'local-storage',
       },
@@ -152,19 +170,21 @@ export default function Home(): JSX.Element {
   }, []);
 
   return (
-    <DialectContextProvider
-      wallet={dialectWalletAdapter}
-      config={dialectConfig}
-      dapp={DIALECT_PUBLIC_KEY}
-      gate={() =>
-        new Promise((resolve) => setTimeout(() => resolve(true), 3000))
-      }
-    >
-      <DialectThemeProvider theme={theme} variables={themeVariables}>
-        <DialectUiManagementProvider>
-          <AuthedHome />
-        </DialectUiManagementProvider>
-      </DialectThemeProvider>
-    </DialectContextProvider>
+    <WalletModalProvider>
+      <DialectContextProvider
+        wallet={dialectWalletAdapter}
+        config={dialectConfig}
+        dapp={DIALECT_PUBLIC_KEY}
+        gate={() =>
+          new Promise((resolve) => setTimeout(() => resolve(true), 3000))
+        }
+      >
+        <DialectThemeProvider theme={theme} variables={themeVariables}>
+          <DialectUiManagementProvider>
+            <AuthedHome />
+          </DialectUiManagementProvider>
+        </DialectThemeProvider>
+      </DialectContextProvider>
+    </WalletModalProvider>
   );
 }
