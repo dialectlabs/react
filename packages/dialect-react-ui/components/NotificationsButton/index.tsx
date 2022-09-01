@@ -16,7 +16,7 @@ export type PropTypes = {
   dialectId: string;
   bellClassName?: string;
   bellStyle?: object;
-  notifications: NotificationType[];
+  notifications?: NotificationType[];
   gatedView?: string | JSX.Element;
   channels?: Channel[];
   onBackClick?: () => void;
