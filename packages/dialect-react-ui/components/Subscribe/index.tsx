@@ -19,7 +19,7 @@ import type { Channel } from '../common/types';
 import SubscribeRow from './SubscribeRow';
 import NotificationsModal from '../NotificationsModal';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { shortenAddress } from '../../utils/displayUtils';
 
 export type NotificationType = {
@@ -77,11 +77,13 @@ function SafeSubscribe({ onOpenMoreOptions }: SafeSubscribeProps) {
 }
 
 interface ConnectedSubscribeProps {
+  autoSubscribe?: boolean;
   onOpenMoreOptions: () => void;
   onSubscribe?: (thread: Thread) => void;
 }
 
 function ConnectedSubscribe({
+  autoSubscribe,
   onOpenMoreOptions,
   onSubscribe,
 }: ConnectedSubscribeProps): JSX.Element {
@@ -95,6 +97,8 @@ function ConnectedSubscribe({
   }
 
   const { create: createThread, isCreatingThread } = useThreads();
+
+  const [isAutoSubscribed, setAutoSubscribed] = useState(false);
 
   const {
     globalAddress: walletAddress,
@@ -127,7 +131,7 @@ function ConnectedSubscribe({
       ? Backend.Solana
       : Backend.DialectCloud;
 
-  const { thread } = useThread({
+  const { thread, isFetchingThread } = useThread({
     findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
 
@@ -196,6 +200,7 @@ function ConnectedSubscribe({
   ]);
 
   const isLoading =
+    isFetchingThread ||
     isFetchingSubscriptions ||
     isCreatingThread ||
     isDeletingAddress ||
@@ -203,6 +208,19 @@ function ConnectedSubscribe({
     isToggling;
 
   const isSubscribed = Boolean(thread && walletAddress && subscriptionEnabled);
+
+  useEffect(() => {
+    if (!autoSubscribe || !isAutoSubscribed || isSubscribed || isLoading)
+      return;
+    handleSubscribe();
+    setAutoSubscribed(true);
+  }, [
+    autoSubscribe,
+    handleSubscribe,
+    isAutoSubscribed,
+    isLoading,
+    isSubscribed,
+  ]);
 
   return (
     <SubscribeRow
@@ -221,6 +239,7 @@ function InnerSubscribe({
   channels,
 }: SubscribeProps) {
   const { open: openModal } = useDialectUiId(DIALECT_UI_ID);
+  const [autoSubscribe, setAutoSubscribe] = useState(false);
 
   return (
     <div className="dt-w-full">
@@ -236,19 +255,28 @@ function InnerSubscribe({
                 }
                 isSubscribed={false}
                 isLoading={isSigningMessage}
-                onSubscribe={onWalletConnect}
+                onSubscribe={() => {
+                  onWalletConnect();
+                  setAutoSubscribe(true);
+                }}
               />
             );
           }
-          return <ConnectedSubscribe onOpenMoreOptions={openModal} />;
+          return (
+            <ConnectedSubscribe
+              autoSubscribe={autoSubscribe}
+              onOpenMoreOptions={openModal}
+            />
+          );
         }}
       </WalletStatesWrapper>
       <NotificationsModal
-        wrapperClassName="!dt-fixed !dt-top-0 !dt-bottom-0 !dt-left-0 !dt-right-0 dt-m-auto"
+        standalone
+        settingsOnly
+        wrapperClassName="!dt-fixed !dt-top-0 !dt-bottom-0 !dt-left-0 !dt-right-0 dt-m-auto dt-text-left"
         dialectId={DIALECT_UI_ID}
         channels={channels}
         animationStyle="bottomSlide"
-        settingsOnly
       />
     </div>
   );
