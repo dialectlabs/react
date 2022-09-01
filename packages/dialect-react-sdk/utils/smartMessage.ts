@@ -52,16 +52,12 @@ export function parseMessage(text: string, you: PublicKey): ParsedMessage {
   // TODO: Support transaction requests
 
   // Probably a smart message
-  console.log({text});
   let startPosition = text.indexOf('solana:');
   let url = new URL(text.slice(startPosition).split(' ')[0]!)
   const text_ = text.slice(0, startPosition);
-  console.log({text_});
   // Find the start of the solana:
   // let url = new URL(text.slice(startPosition, endPosition));
   let recipient = url.pathname;
-  console.log({recipient});
-  console.log({url});
   let amount = url.searchParams.get('amount') || undefined;
   let splToken = url.searchParams.get('spl-token') || undefined;
   let reference = url.searchParams.get('reference') || undefined;
