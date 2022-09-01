@@ -271,10 +271,10 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationsDivider: 'dt-hidden',
     notificationHeader: 'dt-border-b dt-border-neutral-300',
     modalWrapper:
-      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+      'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
-      'dt-fixed dt-z-50 dt-top-0 dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
+      'dt-fixed dt-z-[100] dt-top-0 dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
@@ -374,10 +374,10 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationsDivider: 'dt-hidden',
     notificationHeader: 'dt-border-b dt-border-neutral-900',
     modalWrapper:
-      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+      'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
-      'dt-fixed dt-z-50 dt-top-auto dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',
+      'dt-fixed dt-z-[100] dt-top-auto dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
