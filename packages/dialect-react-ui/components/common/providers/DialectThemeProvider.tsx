@@ -115,6 +115,7 @@ export type IncomingThemeValues = {
   sendButton?: string;
   linkButton?: string;
   modalWrapper?: string;
+  modalBackdrop?: string;
   modal?: string;
   sliderWrapper?: string;
   slider?: string;
@@ -272,6 +273,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationHeader: 'dt-border-b dt-border-neutral-300',
     modalWrapper:
       'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+    modalBackdrop:
+      'dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
       'dt-fixed dt-z-[100] dt-top-0 dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
@@ -375,6 +378,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationHeader: 'dt-border-b dt-border-neutral-900',
     modalWrapper:
       'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+    modalBackdrop:
+      'dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
       'dt-fixed dt-z-[100] dt-top-auto dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',

@@ -34,7 +34,7 @@ const NotificationsModal = forwardRef(function InnerNotificationsModalWithRef(
   }: NotificationsModalProps,
   ref
 ) {
-  const { modalWrapper, animations } = useTheme();
+  const { modalWrapper, modalBackdrop, animations } = useTheme();
   const { ui, close } = useDialectUiId(dialectId);
 
   const isMobile = useMobile();
@@ -58,10 +58,8 @@ const NotificationsModal = forwardRef(function InnerNotificationsModalWithRef(
 
   return (
     <div className="dialect dt-w-full dt-h-full">
-      {/* Page content overflow */}
-      {ui?.open && standalone ? (
-        <div className="dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50" />
-      ) : null}
+      {/* Modal backdrop */}
+      {ui?.open && standalone ? <div className={modalBackdrop} /> : null}
       <Transition
         className={clsx(modalWrapper, wrapperClassName)}
         show={ui?.open ?? false}
