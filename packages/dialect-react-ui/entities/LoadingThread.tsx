@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Centered, Loader } from '../components/common';
-import { H3, P } from '../components/common/preflighted';
+import { H3 } from '../components/common/preflighted';
 import { useTheme } from '../components/common/providers/DialectThemeProvider';
 
 const LoadingThread = () => {

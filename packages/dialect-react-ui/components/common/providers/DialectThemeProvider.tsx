@@ -130,7 +130,7 @@ export type IncomingThemeValues = {
   toast?: string;
   disabledButton?: string;
   notificationHeader?: string;
-  addormentButton?: string;
+  adornmentButton?: string;
 };
 
 export type IncomingThemeVariables = Partial<
@@ -201,9 +201,9 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       // toggle background on
       toggleBackgroundActive: 'dt-bg-[#528E5B]',
       // circle in toggle
-      toggleThumb: 'dt-bg-[#1F1F1F]',
+      toggleThumb: 'dt-bg-dark-night',
       // notification badge
-      notificationBadgeColor: 'dt-bg-red-500',
+      notificationBadgeColor: 'dt-bg-accent dt-text-white',
       // input label
       label: 'dt-text-black/60',
     },
@@ -256,10 +256,10 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
     textArea:
       'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none disabled:dt-text-neutral-800/50',
-    messageBubble: 'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',
-    message: 'dt-bg-transparent dt-border dt-border-neutral-300 ',
+    messageBubble: 'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-text-black',
+    message: 'dt-bg-transparent dt-border dt-border-neutral-300',
     otherMessage: 'dt-bg-neutral-100',
-    messageOnChain: 'dt-bg-[#6F2AFF]',
+    messageOnChain: 'dt-bg-accent',
     otherMessageOnChain: 'dt-bg-neutral-100',
     notificationMessage: 'dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
@@ -292,7 +292,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-bg-subtle-day dt-text-black/40 dt-border dt-border-outline-day',
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
-    addormentButton:
+    adornmentButton:
       'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
   },
   dark: {
@@ -304,8 +304,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       highlightSolid: 'dt-bg-[#262626]',
       toggleBackground: 'dt-bg-white/60',
       toggleBackgroundActive: 'dt-bg-[#528E5B]',
-      toggleThumb: 'dt-bg-[#1F1F1F]',
-      notificationBadgeColor: 'dt-bg-red-500',
+      toggleThumb: 'dt-bg-dark-night',
+      notificationBadgeColor: 'dt-bg-accent dt-text-white',
       label: 'dt-text-white/60',
     },
     textStyles: {
@@ -359,7 +359,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     messageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',
     message: 'dt-bg-transparent dt-border dt-border-neutral-800 ',
     otherMessage: 'dt-bg-neutral-900 dt-border-neutral-900',
-    messageOnChain: 'dt-bg-[#6F2AFF]',
+    messageOnChain: 'dt-bg-accent',
     otherMessageOnChain: 'dt-bg-neutral-900 dt-border-neutral-900',
     notificationMessage: 'dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
@@ -392,7 +392,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-bg-subtle-night dt-text-white/40 dt-border dt-border-outline-night',
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
-    addormentButton:
+    adornmentButton:
       'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
   },
 };

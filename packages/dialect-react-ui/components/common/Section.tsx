@@ -1,11 +1,11 @@
-import React from 'react';
 import clsx from 'clsx';
 import { useTheme } from './providers/DialectThemeProvider';
 import { Divider } from './primitives';
+import type { ReactNode } from 'react';
 
 export default function Section(props: {
-  title: React.ReactNode | string;
-  children: React.ReactNode;
+  title: ReactNode | string;
+  children: ReactNode;
   className?: string;
   defaultExpanded?: boolean;
 }) {

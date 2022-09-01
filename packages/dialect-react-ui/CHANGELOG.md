@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- feature: add unread messages indicator for chat components
+- chore: fix typo in theme variable name for adornmentButton (BREAKING)
+
 ## [1.0.0-beta.51] - 2022-08-30
 
 - feature: support dapp-configured telegram bots 

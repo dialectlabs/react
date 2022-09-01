@@ -23,12 +23,6 @@ import { Wallet as WalletButton } from '../components/Wallet';
 import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
 import { SNSIdentityResolver } from '@dialectlabs/identity-sns';
 import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal';
-// pink: #B852DC
-// teal: #59C29D
-// dark: #353535
-// light: #F6F6F6
-// border-light: #F0F0F0
-// blue: #448EF7
 
 const walletToDialectWallet = (
   wallet: WalletContextState
@@ -63,19 +57,19 @@ export const themeVariables: IncomingThemeVariables = {
   },
   light: {
     bellButton:
-      'w-12 h-12 shadow-md hover:shadow-lg shadow-neutral-300 hover:shadow-neutral-400 text-[#59C29D]',
+      'w-12 h-12 shadow-md hover:shadow-lg shadow-neutral-300 hover:shadow-neutral-400 text-teal',
     slider:
-      'sm:border-t sm:border-l sm:border-r border-[#F0F0F0] shadow-lg shadow-neutral-300 sm:rounded-t-3xl',
+      'sm:border-t sm:border-l sm:border-r border-border-light shadow-lg shadow-neutral-300 sm:rounded-t-3xl',
     colors: {
-      primary: 'text-[#353535]',
+      textPrimary: 'text-dark',
     },
-    button: `${defaultVariables.light.button} border-none bg-[#B852DC]`,
-    highlighted: `${defaultVariables.light.highlighted} bg-[#F6F6F6] border border-[#F0F0F0]`,
-    input: `${defaultVariables.light.input} border-b-[#59C29D] focus:ring-[#59C29D] text-[#59C29D]`,
-    iconButton: `${defaultVariables.light.iconButton} hover:text-[#59C29D] hover:opacity-100`,
-    avatar: `${defaultVariables.light.avatar} bg-[#F6F6F6]`,
-    messageBubble: `${defaultVariables.light.messageBubble} border-none bg-[#448EF7] text-white`,
-    sendButton: `${defaultVariables.light.sendButton} bg-[#59C29D]`,
+    button: `${defaultVariables.light.button} border-none bg-pink`,
+    highlighted: `${defaultVariables.light.highlighted} bg-light border border-border-light`,
+    input: `${defaultVariables.light.input} border-b-teal focus:ring-teal text-teal`,
+    iconButton: `${defaultVariables.light.iconButton} hover:text-teal hover:opacity-100`,
+    avatar: `${defaultVariables.light.avatar} bg-light`,
+    messageBubble: `${defaultVariables.light.messageBubble} border-none bg-blue text-black`,
+    sendButton: `${defaultVariables.light.sendButton} bg-teal`,
   },
 };
 

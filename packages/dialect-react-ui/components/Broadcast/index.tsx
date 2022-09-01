@@ -5,8 +5,9 @@ import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
 import BroadcastForm from './BroadcastForm';
 import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
 import DashboardWrapper from '../../entities/wrappers/DashboardWrapper';
+import type { ComponentPropsWithoutRef } from 'react';
 
-const Wrapper = (props) => {
+const Wrapper = (props: ComponentPropsWithoutRef<'div'>) => {
   const { textStyles, colors } = useTheme();
   return (
     <div

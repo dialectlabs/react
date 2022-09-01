@@ -10,13 +10,17 @@ import { Route, Router, useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName, ThreadRouteName } from '../../constants';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect';
+import { UnreadMessagesBadge } from '../../../common';
+import { useUnreadMessages } from '@dialectlabs/react-sdk';
 
 const Main = () => {
   const { navigate, current } = useRoute();
   const { type, onChatClose, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const [hideList, setHideList] = useState(false);
+  const { unreadCount } = useUnreadMessages();
   const inbox = type === 'inbox';
+  const bottomChat = type === 'vertical-slider';
 
   const { icons } = useTheme();
 
@@ -61,7 +65,17 @@ const Main = () => {
             onHeaderClick={onChatOpen}
             isWindowOpen={ui?.open}
           >
-            <Header.Title>Messages</Header.Title>
+            <Header.Title>
+              <div className="dt-flex dt-items-center">
+                Messages{' '}
+                {!ui?.open && bottomChat && (
+                  <UnreadMessagesBadge
+                    amount={unreadCount}
+                    className="dt-ml-2 dt-mt-1"
+                  />
+                )}
+              </div>
+            </Header.Title>
             <Header.Icons>
               <Header.Icon
                 icon={<icons.compose />}

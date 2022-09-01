@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import type { ReactNode } from 'react';
 import { Toggle, ValueRow } from '../common';
 import { useTheme } from './providers/DialectThemeProvider';
 
 type PropsType = {
-  title: string | React.ReactNode;
+  title: string | ReactNode;
   className?: string;
   checked: boolean;
   disabled?: boolean;
   hideToggle?: boolean;
   noBorder?: boolean;
   onChange?: (nextValue: boolean) => void;
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
 export default function ToggleSection({
