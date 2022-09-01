@@ -18,7 +18,7 @@ module.exports = {
         'secondary-back-night': '#171717',
         'error-night': '#DE5454',
         'utility-active': '#25BC3B',
-        'on-chain': '#6F2AFF',
+        accent: '#6F2AFF',
       },
     },
   },
