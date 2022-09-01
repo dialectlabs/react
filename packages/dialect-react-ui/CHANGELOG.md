@@ -2,9 +2,11 @@
 
 ## [UNRELEASED]
 
+- feature: introduce `<SubscribeButton />` component
+
 ## [1.0.0-beta.51] - 2022-08-30
 
-- feature: support dapp-configured telegram bots 
+- feature: support dapp-configured telegram bots
 
 ## [1.0.0-beta.50] - 2022-08-26
 
