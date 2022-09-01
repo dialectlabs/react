@@ -18,6 +18,7 @@ export interface ParsedMessage {
   imageUrl?: string;
   label?: string;
   type: MessageType;
+  onClick?: () => void;
 }
 
 // Parse a user message and decide if this is a smart message or a simple message
