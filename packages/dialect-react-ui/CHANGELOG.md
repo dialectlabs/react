@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.52] - 2022-09-01
+
 - feature: add unread messages indicator for chat components
 - chore: fix typo in theme variable name for adornmentButton (BREAKING)
 
