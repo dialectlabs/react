@@ -1,6 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, forwardRef } from 'react';
 import { Transition } from '@headlessui/react';
-import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
@@ -25,19 +24,18 @@ interface NotificationsModalProps {
   onBackClick?: () => void;
 }
 
-// TODO: deprecate or reuse?
-function InnerNotificationsModal({
-  wrapperClassName,
-  animationStyle,
-  dialectId,
-  standalone,
-  ...props
-}: NotificationsModalProps): JSX.Element {
+const NotificationsModal = forwardRef(function InnerNotificationsModalWithRef(
+  {
+    wrapperClassName,
+    animationStyle,
+    dialectId,
+    standalone,
+    ...props
+  }: NotificationsModalProps,
+  ref
+) {
   const { modalWrapper, animations } = useTheme();
-  const { ui, open, close } = useDialectUiId(dialectId);
-
-  const refs = useRef<HTMLDivElement[]>([]);
-  useOutsideAlerter(refs, close);
+  const { ui, close } = useDialectUiId(dialectId);
 
   const isMobile = useMobile();
 
@@ -59,7 +57,7 @@ function InnerNotificationsModal({
   const animationProps = animations[animationKey];
 
   return (
-    <>
+    <div className="dialect dt-w-full dt-h-full">
       {/* Page content overflow */}
       {ui?.open && standalone ? (
         <div className="dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50" />
@@ -69,26 +67,13 @@ function InnerNotificationsModal({
         show={ui?.open ?? false}
         {...animationProps}
       >
-        <div
-          ref={(el) => {
-            if (!el) return;
-            refs.current[0] = el;
-          }}
-          className="dt-w-full dt-h-full"
-        >
+        {/* TODO: fix type error */}
+        <div ref={ref} className="dt-w-full dt-h-full">
           <Notifications onModalClose={close} {...props} />
         </div>
       </Transition>
-    </>
-  );
-}
-
-export default function NotificationsModal(
-  props: NotificationsModalProps
-): JSX.Element {
-  return (
-    <div className={clsx('dialect dt-w-full dt-h-full')}>
-      <InnerNotificationsModal {...props} />
     </div>
   );
-}
+});
+
+export default NotificationsModal;

@@ -65,7 +65,14 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
         icon={<icons.bell className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={ui?.open ? close : open}
       />
-      <NotificationModal {...props} />
+      <NotificationModal
+        ref={(el) => {
+          console.log({ el });
+          if (!el) return;
+          refs.current[0] = el;
+        }}
+        {...props}
+      />
     </div>
   );
 }

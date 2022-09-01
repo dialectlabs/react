@@ -19,8 +19,9 @@ import type { Channel } from '../common/types';
 import SubscribeRow from './SubscribeRow';
 import NotificationsModal from '../NotificationsModal';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { shortenAddress } from '../../utils/displayUtils';
+import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 
 export type NotificationType = {
   name: string;
@@ -28,6 +29,7 @@ export type NotificationType = {
 };
 
 interface SubscribeProps {
+  dialectId: string;
   onWalletConnect: () => void;
   onModalClose: () => void;
   notifications?: NotificationType[];
@@ -39,15 +41,16 @@ interface SubscribeProps {
 }
 
 const addressType = AddressType.Wallet;
-const DIALECT_UI_ID = 'subscribe';
-
 interface SafeSubscribeProps {
   onWalletConnect: () => void;
+  onOpenMoreOptions: () => void;
   onSubscribe?: (thread: Thread) => void;
 }
 
-function SafeSubscribe({ onWalletConnect }: SafeSubscribeProps) {
-  const { open: openModal } = useDialectUiId(DIALECT_UI_ID);
+function SafeSubscribe({
+  onWalletConnect,
+  onOpenMoreOptions,
+}: SafeSubscribeProps) {
   const [autoSubscribe, setAutoSubscribe] = useState(false);
 
   return (
@@ -71,7 +74,7 @@ function SafeSubscribe({ onWalletConnect }: SafeSubscribeProps) {
         return (
           <ConnectedSubscribe
             autoSubscribe={autoSubscribe}
-            onOpenMoreOptions={openModal}
+            onOpenMoreOptions={onOpenMoreOptions}
           />
         );
       }}
@@ -236,21 +239,34 @@ function ConnectedSubscribe({
 }
 
 function InnerSubscribe({
+  dialectId,
   onSubscribe,
   onWalletConnect,
   channels,
 }: SubscribeProps) {
+  const { open: openModal, close: closeModal } = useDialectUiId(dialectId);
+
+  const refs = useRef<HTMLElement[]>([]);
+  useOutsideAlerter(refs, closeModal);
+
   return (
     <div className="dt-w-full">
       <SafeSubscribe
         onSubscribe={onSubscribe}
         onWalletConnect={onWalletConnect}
+        onOpenMoreOptions={openModal}
       />
       <NotificationsModal
+        ref={(el) => {
+          if (!el) {
+            return;
+          }
+          refs.current[0] = el;
+        }}
         standalone
         settingsOnly
         wrapperClassName="!dt-fixed !dt-top-0 !dt-bottom-0 !dt-left-0 !dt-right-0 dt-m-auto dt-text-left"
-        dialectId={DIALECT_UI_ID}
+        dialectId={dialectId}
         channels={channels}
         animationStyle="bottomSlide"
       />
