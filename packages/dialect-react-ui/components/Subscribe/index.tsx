@@ -42,38 +42,41 @@ const addressType = AddressType.Wallet;
 const DIALECT_UI_ID = 'subscribe';
 
 interface SafeSubscribeProps {
-  onOpenMoreOptions: () => void;
+  onWalletConnect: () => void;
   onSubscribe?: (thread: Thread) => void;
 }
 
-function SafeSubscribe({ onOpenMoreOptions }: SafeSubscribeProps) {
-  const {
-    adapter: wallet,
-    isSigningMessage,
-    isEncrypting,
-    isSigningFreeTransaction,
-  } = useDialectWallet();
-  const isWalletConnected = wallet.connected;
+function SafeSubscribe({ onWalletConnect }: SafeSubscribeProps) {
+  const { open: openModal } = useDialectUiId(DIALECT_UI_ID);
+  const [autoSubscribe, setAutoSubscribe] = useState(false);
 
-  const isWalletLoading =
-    isSigningMessage || isEncrypting || isSigningFreeTransaction;
-
-  const connectWallet = () => {
-    // TODO: initiate wallet connection;
-  };
-
-  if (!isWalletConnected) {
-    return (
-      <SubscribeRow
-        label="Connect wallet"
-        isSubscribed={false}
-        isLoading={isWalletLoading}
-        onSubscribe={connectWallet}
-      />
-    );
-  }
-
-  return <ConnectedSubscribe onOpenMoreOptions={onOpenMoreOptions} />;
+  return (
+    <WalletStatesWrapper>
+      {({ isWalletConnected, isSigningMessage }) => {
+        if (!isWalletConnected || isSigningMessage) {
+          return (
+            <SubscribeRow
+              label={
+                isSigningMessage ? 'Waiting for wallet...' : 'Connect wallet...'
+              }
+              isSubscribed={false}
+              isLoading={isSigningMessage}
+              onSubscribe={() => {
+                onWalletConnect();
+                setAutoSubscribe(true);
+              }}
+            />
+          );
+        }
+        return (
+          <ConnectedSubscribe
+            autoSubscribe={autoSubscribe}
+            onOpenMoreOptions={openModal}
+          />
+        );
+      }}
+    </WalletStatesWrapper>
+  );
 }
 
 interface ConnectedSubscribeProps {
@@ -210,8 +213,7 @@ function ConnectedSubscribe({
   const isSubscribed = Boolean(thread && walletAddress && subscriptionEnabled);
 
   useEffect(() => {
-    if (!autoSubscribe || !isAutoSubscribed || isSubscribed || isLoading)
-      return;
+    if (!autoSubscribe || isAutoSubscribed || isSubscribed || isLoading) return;
     handleSubscribe();
     setAutoSubscribed(true);
   }, [
@@ -238,38 +240,12 @@ function InnerSubscribe({
   onWalletConnect,
   channels,
 }: SubscribeProps) {
-  const { open: openModal } = useDialectUiId(DIALECT_UI_ID);
-  const [autoSubscribe, setAutoSubscribe] = useState(false);
-
   return (
     <div className="dt-w-full">
-      <WalletStatesWrapper>
-        {({ isWalletConnected, isSigningMessage }) => {
-          if (!isWalletConnected || isSigningMessage) {
-            return (
-              <SubscribeRow
-                label={
-                  isSigningMessage
-                    ? 'Waiting for wallet...'
-                    : 'Connect wallet...'
-                }
-                isSubscribed={false}
-                isLoading={isSigningMessage}
-                onSubscribe={() => {
-                  onWalletConnect();
-                  setAutoSubscribe(true);
-                }}
-              />
-            );
-          }
-          return (
-            <ConnectedSubscribe
-              autoSubscribe={autoSubscribe}
-              onOpenMoreOptions={openModal}
-            />
-          );
-        }}
-      </WalletStatesWrapper>
+      <SafeSubscribe
+        onSubscribe={onSubscribe}
+        onWalletConnect={onWalletConnect}
+      />
       <NotificationsModal
         standalone
         settingsOnly
