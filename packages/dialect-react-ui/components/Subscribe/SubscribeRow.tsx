@@ -59,7 +59,7 @@ const SubscribeRow = ({
 
       <div
         className={clsx(
-          // !isSubscribed && 'dt-opacity-0 dt-pointer-events-none',
+          !isSubscribed && 'dt-opacity-0 dt-pointer-events-none',
           'dt-flex dt-flex-row dt-space-x-2 dt-items-center dt-mt-2'
         )}
       >

@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { DEFAULT_NOTIFICATIONS_CHANNELS } from '../common/constants';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import type { Channel } from '../common/types';
 import type { NotificationType } from '../Notifications';
@@ -28,7 +29,7 @@ function WrappedSubscribeButton(props: PropTypes): JSX.Element {
 }
 
 export default function SubscribeButton({
-  channels = ['web3', 'telegram', 'sms', 'email'],
+  channels = DEFAULT_NOTIFICATIONS_CHANNELS,
   ...props
 }: PropTypes): JSX.Element {
   return (

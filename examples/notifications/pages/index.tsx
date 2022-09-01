@@ -20,9 +20,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Wallet as WalletButton } from '../components/Wallet';
 
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  // 'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
-  'DEVoZqSnDkpb9M4fPCoXMj9rza63kJZkbMsg3AABzYHA'
-  // 'EN4K6GM79QK5cuqgrDihQGFE1i4pppe28JHiaA6dEV1B'
+  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
 );
 
 export const themeVariables: IncomingThemeVariables = {

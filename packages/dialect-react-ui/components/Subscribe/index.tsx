@@ -31,7 +31,6 @@ export type NotificationType = {
 interface SubscribeProps {
   dialectId: string;
   onWalletConnect: () => void;
-  onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
