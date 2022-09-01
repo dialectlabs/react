@@ -7,10 +7,7 @@ import Subscribe from '../Subscribe';
 export type PropTypes = {
   onWalletConnect: () => void;
   dialectId: string;
-  bellClassName?: string;
-  bellStyle?: object;
-  notifications: NotificationType[];
-  gatedView?: string | JSX.Element;
+  notifications?: NotificationType[];
   channels?: Channel[];
   onBackClick?: () => void;
   pollingInterval?: number;
