@@ -12,12 +12,13 @@ const readableSplTokens: {[key: string]: string} = {
 
 export interface ParsedMessage {
   text: string;
-  amount?: string; // TODO: Should this be an integer?
+  amount?: Number;
   splToken?: string,
   reference?: string,
   imageUrl?: string;
   label?: string;
   type: MessageType;
+  onClick?: () => void; 
 }
 
 // Parse a user message and decide if this is a smart message or a simple message
@@ -74,11 +75,12 @@ export function parseMessage(text: string, you: PublicKey): ParsedMessage {
     // Invalid url
     throw Error("Invalid solana pay url");
   }
+  let parsedAmount = parseInt(amount);
 
   // TODO: ImageURL 
   return {
     text: text_,
-    amount,
+    amount: parsedAmount,
     splToken,
     imageUrl: 'https://solanapay.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fsolanapay-logo.e34e7b7f.svg&w=384&q=75',
     reference, 
