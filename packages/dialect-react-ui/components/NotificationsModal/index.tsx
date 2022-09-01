@@ -13,6 +13,7 @@ interface NotificationsModalProps {
   className?: string;
   animationStyle?: string;
   settingsOnly?: boolean;
+  standalone?: boolean;
 
   dialectId: string;
 
@@ -25,9 +26,15 @@ interface NotificationsModalProps {
 }
 
 // TODO: deprecate or reuse?
-function InnerNotificationsModal(props: NotificationsModalProps): JSX.Element {
+function InnerNotificationsModal({
+  wrapperClassName,
+  animationStyle,
+  dialectId,
+  standalone,
+  ...props
+}: NotificationsModalProps): JSX.Element {
   const { modalWrapper, animations } = useTheme();
-  const { ui, open, close } = useDialectUiId(props.dialectId);
+  const { ui, open, close } = useDialectUiId(dialectId);
 
   const refs = useRef<HTMLDivElement[]>([]);
   useOutsideAlerter(refs, close);
@@ -36,14 +43,18 @@ function InnerNotificationsModal(props: NotificationsModalProps): JSX.Element {
 
   useEffect(() => {
     // Prevent scrolling of backdrop content on mobile
-    document.documentElement.classList[ui?.open && isMobile ? 'add' : 'remove'](
-      'dt-overflow-hidden',
-      'dt-static',
-      'sm:dt-overflow-auto'
+    document.documentElement.classList[
+      ui?.open && (isMobile || standalone) ? 'add' : 'remove'
+    ](
+      ...clsx(
+        'dt-overflow-hidden',
+        'dt-static',
+        !standalone && 'sm:dt-overflow-auto'
+      ).split(' ')
     );
-  }, [ui?.open, isMobile]);
+  }, [ui?.open, isMobile, standalone]);
 
-  const animationKey = props.animationStyle || 'popup';
+  const animationKey = animationStyle || 'popup';
   // TODO: fix types
   const animationProps = animations[animationKey];
 
@@ -54,7 +65,7 @@ function InnerNotificationsModal(props: NotificationsModalProps): JSX.Element {
         <div className="dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[49] dt-bg-black/50" />
       ) : null}
       <Transition
-        className={clsx(modalWrapper, props.wrapperClassName)}
+        className={clsx(modalWrapper, wrapperClassName)}
         show={ui?.open ?? false}
         {...animationProps}
       >
