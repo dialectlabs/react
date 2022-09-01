@@ -40,7 +40,6 @@
     "immer": "^9.0.14",
     "react-linkify": "^1.0.0-alpha",
     "react-media-hook": "^0.4.9",
-    "react-phone-number-input": "^3.2.11",
     "react-transition-group": "^4.4.2",
     "swr": "^1.3.0"
   },
