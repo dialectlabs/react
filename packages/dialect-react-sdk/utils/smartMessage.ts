@@ -1,4 +1,5 @@
-import type { PublicKey } from '@solana/web3.js';
+import { Connection, clusterApiUrl, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
+import { createTransferInstruction } from '@solana/spl-token';
 
 export enum MessageType {
   Simple = 'Simple',
@@ -18,7 +19,7 @@ export interface ParsedMessage {
   imageUrl?: string;
   label?: string;
   type: MessageType;
-  onClick?: () => void; 
+  onClick?: (sender: PublicKey, recipient: PublicKey, amount: number) => void; 
 }
 
 // Parse a user message and decide if this is a smart message or a simple message
@@ -50,19 +51,14 @@ export function parseMessage(text: string, you: PublicKey): ParsedMessage {
     }
   }
 
-  // TODO: Support transaction requests
-
   // Probably a smart message
   let startPosition = text.indexOf('solana:');
   let url = new URL(text.slice(startPosition).split(' ')[0]!)
   const text_ = text.slice(0, startPosition);
-  // Find the start of the solana:
-  // let url = new URL(text.slice(startPosition, endPosition));
   let recipient = url.pathname;
   let amount = url.searchParams.get('amount') || undefined;
   let splToken = url.searchParams.get('spl-token') || undefined;
   let reference = url.searchParams.get('reference') || undefined;
-  // let label = url.searchParams.get('label') || undefined;
   let label = `${amount} ${readableSplTokens[splToken ?? ""]}`
   if (recipient === you.toBase58()) {
     label = `Requested ${label}`;
@@ -76,6 +72,16 @@ export function parseMessage(text: string, you: PublicKey): ParsedMessage {
     throw Error("Invalid solana pay url");
   }
   let parsedAmount = parseInt(amount);
+  if (isTransferRequest) {
+    return {
+      text: text_,
+      amount: parsedAmount,
+      splToken,
+      type: MessageType.Smart,
+      onClick: () => initiateTransfer(you, new PublicKey(recipient), parsedAmount),
+    }
+  }
+  // Likely a transaction request
 
   // TODO: ImageURL 
   return {
@@ -87,4 +93,15 @@ export function parseMessage(text: string, you: PublicKey): ParsedMessage {
     label,
     type: MessageType.Smart,
   }
+}
+
+// Send a transfer request to solana 
+export function initiateTransfer(sender: PublicKey, recipient: PublicKey, amount: number) {
+  let transfer = createTransferInstruction(sender, recipient, sender, amount); 
+
+  const connection = new Connection(
+    clusterApiUrl("devnet"),
+    "confirmed"
+  );
+  await sendAndConfirmTransaction(connection, transfer, [fromKeypair]);
 }

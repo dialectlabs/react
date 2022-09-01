@@ -47,5 +47,8 @@
   "engines": {
     "node": ">=15.10 <17"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "dependencies": {
+    "yarn-dedupe": "^0.2.3"
+  }
 }
