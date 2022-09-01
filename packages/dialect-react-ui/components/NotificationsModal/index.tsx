@@ -61,8 +61,8 @@ function InnerNotificationsModal({
   return (
     <>
       {/* Page content overflow */}
-      {ui?.open ? (
-        <div className="dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[49] dt-bg-black/50" />
+      {ui?.open && standalone ? (
+        <div className="dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50" />
       ) : null}
       <Transition
         className={clsx(modalWrapper, wrapperClassName)}
