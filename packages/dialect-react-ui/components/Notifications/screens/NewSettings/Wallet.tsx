@@ -34,7 +34,7 @@ const Wallet = ({
 }: Web3Props) => {
   const { adapter: wallet } = useDialectWallet();
   const { dappAddress } = useDialectDapp();
-  const { textStyles, outlinedInput, addormentButton, icons, colors } =
+  const { textStyles, outlinedInput, adornmentButton, icons, colors } =
     useTheme();
   const { create: createThread, isCreatingThread } = useThreads();
 
@@ -154,7 +154,7 @@ const Wallet = ({
             </span>
             {walletEnabled && !isLoading && (
               <IconButton
-                className={clsx(addormentButton, 'dt-w-9 dt-h-9')}
+                className={clsx(adornmentButton, 'dt-w-9 dt-h-9')}
                 icon={<icons.trash />}
                 onClick={deleteThread}
               />
@@ -163,7 +163,7 @@ const Wallet = ({
             {!thread && !walletAddress && !isLoading && (
               <Button
                 onClick={fullEnableWallet}
-                className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+                className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
               >
                 Enable
               </Button>
@@ -172,7 +172,7 @@ const Wallet = ({
             {walletAddress && !thread && !isLoading && (
               <Button
                 onClick={createWalletThread}
-                className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+                className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
               >
                 Enable
               </Button>
@@ -182,7 +182,7 @@ const Wallet = ({
             {thread && !walletAddress && !isLoading && (
               <Button
                 onClick={createWalletAddress}
-                className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+                className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
               >
                 Enable
               </Button>

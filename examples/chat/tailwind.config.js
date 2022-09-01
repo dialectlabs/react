@@ -15,13 +15,14 @@ module.exports = {
         full: '100%',
         120: '120px',
       },
-      backgroundColor: (theme) => ({
-        ...theme('colors'),
-        night: '#252525',
-        // TODO: remove after update to tailwind v3
-        'white/5': 'rgba(255,255,255,.05)',
-        'night/5': 'rgba(37,37,37,.05)',
-      }),
+      colors: {
+        pink: '#B852DC',
+        teal: '#59C29D',
+        dark: '#353535',
+        light: '#F6F6F6',
+        'border-light': '#F0F0F0',
+        blue: '#448EF7',
+      },
     },
   },
   variants: {

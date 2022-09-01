@@ -1,10 +1,11 @@
 import {
   Backend,
-  Message,
+  LocalThreadMessage,
   ThreadId,
   useDialectSdk,
   useThread as useThreadInternal,
   useThreadMessages,
+  useUnreadMessages,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { formatTimestamp } from '../../../../../utils/timeUtils';
@@ -12,7 +13,7 @@ import Avatar from '../../../../Avatar';
 import { useTheme } from '../../../../common/providers/DialectThemeProvider';
 import { DisplayAddress } from '../../../../DisplayAddress';
 import MessageStatus from '../../../MessageStatus';
-import { OnChainIndicator } from '../../../../common';
+import { OnChainIndicator, UnreadMessagesBadge } from '../../../../common';
 import { Encrypted } from '../../../../Icon';
 
 type PropsType = {
@@ -26,7 +27,7 @@ function FirstMessage({
   firstMessage,
   isEncrypted,
 }: {
-  firstMessage?: Message;
+  firstMessage?: LocalThreadMessage;
   isEncrypted: boolean;
 }) {
   const {
@@ -70,6 +71,9 @@ export default function MessagePreview({
   // TODO: ensure there is no re-renders
   const { thread } = useThreadInternal({ findParams: { id: threadId } });
   const { messages } = useThreadMessages({ id: threadId });
+  const { unreadCount } = useUnreadMessages({
+    otherMembers: thread?.otherMembers.map((m) => m.publicKey) ?? [],
+  });
   const { colors } = useTheme();
   const [firstMessage] = messages ?? [];
   const connection = dialectProgram?.provider.connection;
@@ -110,7 +114,7 @@ export default function MessagePreview({
             isEncrypted={thread.encryptionEnabled}
           />
         </div>
-        <div className="dt-items-end dt-text-xs">
+        <div className="dt-flex dt-flex-col dt-items-end dt-text-xs">
           <span className="dt-opacity-30">
             {timestamp ? (
               timestamp
@@ -121,6 +125,7 @@ export default function MessagePreview({
               />
             )}
           </span>
+          <UnreadMessagesBadge amount={unreadCount} className="dt-mt-1" />
         </div>
       </div>
     </div>

@@ -13,11 +13,13 @@ export function isObject(item: unknown) {
  * Deep merge two objects.
  * @param target
  * @param ...sources
+ *
+ * TODO: `any` isn't great, ideally we describe these with generics
  */
 export default function deepMerge(
-  target: object,
-  ...sources: object[]
-): object {
+  target: Record<any, any>,
+  ...sources: Record<any, any>[]
+): Record<any, any> {
   if (!sources.length) return target;
   const source = sources.shift();
 

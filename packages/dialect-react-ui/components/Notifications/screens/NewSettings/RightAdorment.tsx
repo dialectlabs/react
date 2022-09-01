@@ -28,7 +28,7 @@ export const RightAdornment = ({
   isDeleting,
   deleteConfirm,
 }: IRightAdorment) => {
-  const { icons, addormentButton } = useTheme();
+  const { icons, adornmentButton } = useTheme();
 
   const getIcon = () => {
     if (loading) {
@@ -47,7 +47,7 @@ export const RightAdornment = ({
       return (
         <Button
           onClick={onSaveCallback}
-          className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+          className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
         >
           Submit
         </Button>
@@ -57,7 +57,7 @@ export const RightAdornment = ({
     if (isSaved && isVerified && !isDeleting && !isChanging) {
       return (
         <IconButton
-          className={clsx('dt-w-9 dt-h-9', addormentButton)}
+          className={clsx('dt-w-9 dt-h-9', adornmentButton)}
           icon={<icons.trash />}
           onClick={() => {
             deleteConfirm(true);
@@ -70,7 +70,7 @@ export const RightAdornment = ({
       return (
         <Button
           onClick={onDeleteCallback}
-          className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+          className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
         >
           Delete
         </Button>
@@ -84,7 +84,7 @@ export const RightAdornment = ({
       {isChanging && isChanging && (
         <Button
           onClick={onUpdateCallback}
-          className={clsx(addormentButton, 'dt-w-16 dt-h-9')}
+          className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
         >
           Submit
         </Button>

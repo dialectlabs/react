@@ -19,7 +19,6 @@ type PropsType = {
 export default function MessageInput({
   text,
   setText,
-  error,
   setError,
   onSubmit,
   onEnterPress,
@@ -27,13 +26,6 @@ export default function MessageInput({
   inputDisabled,
 }: PropsType): JSX.Element {
   const { icons, textArea, sendButton } = useTheme();
-  // const { data } = useSWR(
-  //   connection && wallet ? ['/owner', wallet, connection] : null,
-  //   ownerFetcher
-  // );
-  // const balance: number | undefined = data?.lamports
-  //   ? data.lamports / 1e9
-  //   : undefined;
   return (
     <div>
       <div className="dt-flex dt-flex-col dt-pb-2 dt-mb-2">
