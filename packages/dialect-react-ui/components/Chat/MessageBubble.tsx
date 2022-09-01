@@ -4,10 +4,11 @@ import Avatar from '../Avatar';
 import { ButtonLink, LinkifiedText } from '../common';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import MessageStatus from './MessageStatus';
-import type { Message } from '@dialectlabs/react-sdk';
+import type { ThreadMessage } from '@dialectlabs/react-sdk';
+import { parseMessage, MessageType, useDialectWallet } from '@dialectlabs/react-sdk';
 import { formatTimestamp } from '../../utils/timeUtils';
 
-type MessageBubbleProps = Message & {
+type MessageBubbleProps = ThreadMessage & {
   isOnChain: boolean;
   isYou: boolean;
   isSending?: boolean;
@@ -38,7 +39,8 @@ export default function MessageBubble({
     messageOnChain,
     otherMessageOnChain,
   } = useTheme();
-
+  const { adapter } = useDialectWallet();
+  const {text: plaintext, splToken, type, imageUrl, label } = parseMessage(text, adapter.publicKey!);
   return (
     <div
       className={clsx(
@@ -69,6 +71,7 @@ export default function MessageBubble({
               isYou ? 'dt-max-w-full ' : 'dt-max-w-xs dt-flex-shrink dt-ml-1'
             )}
           >
+            {/* Message content */}
             <div className="dt-items-end">
               <div
                 className={clsx(
@@ -76,22 +79,32 @@ export default function MessageBubble({
                   isYou ? 'dt-text-right' : 'dt-text-left'
                 )}
               >
-                <LinkifiedText>{text}</LinkifiedText>
+                <LinkifiedText>{plaintext}</LinkifiedText>
+                {type === MessageType.Smart && (
+                  <>
+                    <img src={imageUrl} />
+                    <div>{label}</div>
+                  </>
+                )}
               </div>
-              <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>
-                {isSending
-                  ? 'Sending...'
-                  : formatTimestamp(timestamp.getTime())}
-              </div>
+              {/* Timestamps TODO: Find way to show even if smart message. */}
+              {type === MessageType.Simple && (
+                <div className={'dt-opacity-50 dt-text-xs dt-text-right'}>
+                  {isSending
+                    ? 'Sending...'
+                    : formatTimestamp(timestamp.getTime())}
+                </div>
+              )}
             </div>
           </div>
+          {/* Status */}
           <div className="dt-inline-flex dt-w-4 dt-ml-1">
             {showStatus || isSending || error?.message ? (
               <MessageStatus isSending={isSending} error={error?.message} />
             ) : null}
           </div>
         </div>
-
+        {/* On error */}
         <CSSTransition in={Boolean(error)} timeout={300}>
           {(state) => (
             <div
