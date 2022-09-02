@@ -1,4 +1,8 @@
-import { useDialectConnectionInfo, useThreads } from '@dialectlabs/react-sdk';
+import {
+  useDialectConnectionInfo,
+  useDialectSdk,
+} from '@dialectlabs/react-sdk';
+import useSWR from 'swr';
 import NoConnectionError from '../errors/ui/NoConnectionError';
 
 // Only renders children if connected to successfully some backend
@@ -12,6 +16,37 @@ interface ConnectionWrapperProps {
 }
 
 // FIXME: trigger some hook to check connection
+
+interface UseDialectHealthProps {
+  baseUrl: string;
+  error: string;
+  pollingInterval: number;
+}
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+const useDialectHealth = ({
+  baseUrl,
+  pollingInterval,
+}: UseDialectHealthProps) => {
+  const { data, error, isValidating } = useSWR(
+    `${baseUrl}/api/v1/health`,
+    fetcher,
+    {
+      refreshInterval: pollingInterval,
+      revalidateOnReconnect: true,
+      refreshWhenHidden: true,
+    }
+  );
+
+  const isLoading = data === undefined && !error;
+
+  return {
+    isLoading,
+    error: error?.message,
+    isOK: data?.status === 'ok' && !error,
+  };
+};
 
 const DEFAULT_CONNECTIVITY_POLLING_INTERVAL = 5000;
 
@@ -36,24 +71,43 @@ export default function ConnectionWrapper({
     },
   } = useDialectConnectionInfo();
 
-  // FIXME: trigger some fetch from some of backends to get connection state
-  useThreads({
-    refreshInterval: pollingInterval,
+  const {
+    info: {
+      config: {
+        dialectCloud: { url: baseUrl },
+      },
+    },
+  } = useDialectSdk();
+
+  const { isOK, error, isLoading } = useDialectHealth({
+    baseUrl,
+    pollingInterval,
   });
 
   const isSomeBackendConnected =
     (isSolanaShouldConnect && isSolanaConnected) ||
     (isDialectCloudShouldConnect && isDialectCloudConnected);
 
+  const isConnected = isSomeBackendConnected && isOK;
+
   if (typeof children === 'function') {
-    return children({ isSomeBackendConnected });
+    return children({ error, isConnected, isLoading });
   }
 
-  if (!isSomeBackendConnected) {
+  const connectingTo = [
+    isDialectCloudShouldConnect &&
+      (!isDialectCloudConnected || !isOK) &&
+      'Dialect Cloud',
+    isSolanaShouldConnect && !isSomeBackendConnected && 'Solana',
+  ]
+    .filter(Boolean)
+    .join(' and ');
+
+  if (!isConnected && !isLoading) {
     return (
       <>
         {header}
-        <NoConnectionError />
+        <NoConnectionError message={`Error connecting to ${connectingTo}`} />
       </>
     );
   }
