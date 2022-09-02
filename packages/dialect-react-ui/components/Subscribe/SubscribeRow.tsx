@@ -85,7 +85,7 @@ const SubscribeRow = ({
       >
         <P className={clsx('dt-opacity-50', textStyles.subscribeRow)}>
           <ButtonLink onClick={onOpenMoreOptions} className="dt-space-x-1">
-            <PlusCircle /> <span>More options</span>
+            <PlusCircle /> <span>Add Telegram, SMS or Email</span>
           </ButtonLink>
         </P>
       </div>
