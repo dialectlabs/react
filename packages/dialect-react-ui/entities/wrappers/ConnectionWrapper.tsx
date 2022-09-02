@@ -95,10 +95,6 @@ export default function ConnectionWrapper({
 
   const isConnected = isSomeBackendConnected && isOK;
 
-  if (typeof children === 'function') {
-    return children({ error, isConnected, isLoading });
-  }
-
   const connectingTo = [
     isDialectCloudShouldConnect &&
       (!isDialectCloudConnected || !isOK) &&
@@ -108,11 +104,21 @@ export default function ConnectionWrapper({
     .filter(Boolean)
     .join(' and ');
 
+  const errorMessage = `Error connecting to ${connectingTo}`;
+
+  if (typeof children === 'function') {
+    return children({
+      errorMessage: error && errorMessage,
+      isConnected,
+      isLoading,
+    });
+  }
+
   if (!isConnected && !isLoading) {
     return (
       <>
         {header}
-        <NoConnectionError message={`Error connecting to ${connectingTo}`} />
+        <NoConnectionError message={errorMessage} />
       </>
     );
   }
