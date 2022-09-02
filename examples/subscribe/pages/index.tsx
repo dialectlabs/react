@@ -107,7 +107,7 @@ function AuthedHome() {
           <div className="min-w-[22rem]">
             <SubscribeButton
               dialectId="dialect-subscribe"
-              label="Dialect product updates"
+              label="Dial app waitlist"
               onWalletConnect={() => {
                 showWalletModal(true);
               }}

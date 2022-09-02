@@ -9,6 +9,8 @@ export type SubscribeButtonProps = {
   dialectId: string;
   channels?: Channel[];
   label?: string;
+  buttonLabel?: string;
+  successLabel?: string;
   pollingInterval?: number;
   // TODO: depricate
   notifications?: NotificationType[];

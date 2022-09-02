@@ -5,10 +5,11 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 import { PlusCircle } from '../Icon';
 
 interface SubscribeRowProps {
-  buttonLabel: string;
-  description: string;
-  error?: string;
   label?: string;
+  buttonLabel?: string;
+  description: string;
+  successLabel?: string;
+  error?: string;
   isWalletConnected: boolean;
   isSubscribed: boolean;
   isLoading: boolean;
@@ -17,10 +18,11 @@ interface SubscribeRowProps {
 }
 
 const SubscribeRow = ({
-  buttonLabel,
-  description,
-  error,
   label,
+  description,
+  buttonLabel = 'Subscribe',
+  successLabel = 'Subscribed ✓',
+  error,
   isWalletConnected,
   isSubscribed,
   isLoading,
@@ -58,12 +60,12 @@ const SubscribeRow = ({
             </span>
             {!isLoading && isSubscribed && !error ? (
               <ButtonLink onClick={onOpenMoreOptions} className="dt-opacity-50">
-                Subscribed ✓
+                {successLabel}
               </ButtonLink>
             ) : null}
             {!isLoading && !isSubscribed && !error ? (
               <Button onClick={onSubscribe} className={clsx(button, 'dt-h-9')}>
-                {buttonLabel || 'Subscribe'}
+                {buttonLabel}
               </Button>
             ) : null}
 
@@ -82,12 +84,18 @@ const SubscribeRow = ({
 
       <div
         className={clsx(
-          !isSubscribed && 'dt-opacity-0 dt-pointer-events-none',
+          (!isSubscribed || isLoading) && 'dt-opacity-0 dt-pointer-events-none',
           'dt-flex dt-flex-row dt-space-x-2 dt-items-center dt-mt-2'
         )}
       >
-        <P className={clsx('dt-opacity-50', textStyles.subscribeRow)}>
-          <ButtonLink onClick={onOpenMoreOptions} className="dt-space-x-1">
+        <P
+          className={clsx(
+            'dt-opacity-50 dt-px-1 dt-flex dt-w-full dt-items-center dt-justify-between dt-space-x-4',
+            textStyles.subscribeRow
+          )}
+        >
+          <ButtonLink onClick={onOpenMoreOptions} className="dt-space-x-1.5">
+            {/* TODO: show actuall channels */}
             <PlusCircle /> <span>Add Telegram, SMS or Email</span>
           </ButtonLink>
         </P>
