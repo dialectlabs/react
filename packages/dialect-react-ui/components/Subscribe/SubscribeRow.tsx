@@ -7,6 +7,7 @@ import { PlusCircle } from '../Icon';
 interface SubscribeRowProps {
   buttonLabel: string;
   description: string;
+  error?: string;
   label?: string;
   isWalletConnected: boolean;
   isSubscribed: boolean;
@@ -18,6 +19,7 @@ interface SubscribeRowProps {
 const SubscribeRow = ({
   buttonLabel,
   description,
+  error,
   label,
   isWalletConnected,
   isSubscribed,
@@ -48,17 +50,18 @@ const SubscribeRow = ({
             <span
               className={clsx(
                 'dt-ml-2',
-                (isSubscribed || !isWalletConnected) && 'dt-opacity-50'
+                (isSubscribed || !isWalletConnected) && 'dt-opacity-50',
+                error && 'dt-text-red-500'
               )}
             >
-              {description}
+              {error || description}
             </span>
-            {!isLoading && isSubscribed ? (
+            {!isLoading && isSubscribed && !error ? (
               <ButtonLink onClick={onOpenMoreOptions} className="dt-opacity-50">
                 Subscribed ✓
               </ButtonLink>
             ) : null}
-            {!isLoading && !isSubscribed ? (
+            {!isLoading && !isSubscribed && !error ? (
               <Button onClick={onSubscribe} className={clsx(button, 'dt-h-9')}>
                 {buttonLabel || 'Subscribe'}
               </Button>

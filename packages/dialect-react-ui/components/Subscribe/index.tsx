@@ -76,12 +76,33 @@ function SafeSubscribe({
             />
           );
         }
+
         return (
-          <ConnectedSubscribe
-            label={label}
-            autoSubscribe={autoSubscribe}
-            onOpenMoreOptions={onOpenMoreOptions}
-          />
+          <ConnectionWrapper>
+            {({ error, isConnected, isLoading }) => {
+              if (!isConnected) {
+                return (
+                  <SubscribeRow
+                    label={label}
+                    error={error ? `Error: ${error}` : undefined}
+                    buttonLabel="Subscribe"
+                    description="Waiting for connection..."
+                    isWalletConnected={isWalletConnected}
+                    isSubscribed={false}
+                    isLoading={isLoading}
+                    onSubscribe={() => {}}
+                  />
+                );
+              }
+              return (
+                <ConnectedSubscribe
+                  label={label}
+                  autoSubscribe={autoSubscribe}
+                  onOpenMoreOptions={onOpenMoreOptions}
+                />
+              );
+            }}
+          </ConnectionWrapper>
         );
       }}
     </WalletStatesWrapper>
