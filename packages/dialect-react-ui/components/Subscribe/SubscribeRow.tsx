@@ -51,7 +51,7 @@ const SubscribeRow = ({
               className={clsx(
                 'dt-ml-2',
                 (isSubscribed || !isWalletConnected) && 'dt-opacity-50',
-                error && 'dt-text-red-500'
+                error && 'dt-opacity-50'
               )}
             >
               {error || description}

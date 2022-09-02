@@ -79,12 +79,12 @@ function SafeSubscribe({
 
         return (
           <ConnectionWrapper>
-            {({ error, isConnected, isLoading }) => {
+            {({ errorMessage, isConnected, isLoading }) => {
               if (!isConnected) {
                 return (
                   <SubscribeRow
                     label={label}
-                    error={error ? `Error: ${error}` : undefined}
+                    error={errorMessage}
                     buttonLabel="Subscribe"
                     description="Waiting for connection..."
                     isWalletConnected={isWalletConnected}
