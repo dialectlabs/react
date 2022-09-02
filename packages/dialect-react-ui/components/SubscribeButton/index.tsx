@@ -5,16 +5,18 @@ import type { Channel } from '../common/types';
 import type { NotificationType } from '../Notifications';
 import Subscribe from '../Subscribe';
 
-export type PropTypes = {
-  onWalletConnect: () => void;
+export type SubscribeButtonProps = {
   dialectId: string;
-  notifications?: NotificationType[];
   channels?: Channel[];
-  onBackClick?: () => void;
+  label?: string;
   pollingInterval?: number;
+  // TODO: depricate
+  notifications?: NotificationType[];
+  onWalletConnect: () => void;
+  onBackClick?: () => void;
 };
 
-function WrappedSubscribeButton(props: PropTypes): JSX.Element {
+function WrappedSubscribeButton(props: SubscribeButtonProps): JSX.Element {
   const { colors } = useTheme();
   return (
     <div
@@ -31,7 +33,7 @@ function WrappedSubscribeButton(props: PropTypes): JSX.Element {
 export default function SubscribeButton({
   channels = DEFAULT_NOTIFICATIONS_CHANNELS,
   ...props
-}: PropTypes): JSX.Element {
+}: SubscribeButtonProps): JSX.Element {
   return (
     <div className="dialect">
       <WrappedSubscribeButton channels={channels} {...props} />

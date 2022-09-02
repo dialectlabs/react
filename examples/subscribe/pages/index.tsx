@@ -103,10 +103,11 @@ function AuthedHome() {
             subscribe
           </code>
         </code>
-        <div className="flex justify-center p-4">
+        <div className="flex justify-center mt-8 p-4">
           <div className="min-w-[22rem]">
             <SubscribeButton
               dialectId="dialect-subscribe"
+              label="Dialect product updates"
               onWalletConnect={() => {
                 showWalletModal(true);
               }}

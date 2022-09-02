@@ -3,10 +3,12 @@ import { Button, ButtonLink, Loader } from '../common';
 import { P } from '../common/preflighted';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { PlusCircle } from '../Icon';
-import IconButton from '../IconButton';
 
 interface SubscribeRowProps {
-  label: string;
+  buttonLabel: string;
+  description: string;
+  label?: string;
+  isWalletConnected: boolean;
   isSubscribed: boolean;
   isLoading: boolean;
   onOpenMoreOptions?: () => void;
@@ -14,16 +16,27 @@ interface SubscribeRowProps {
 }
 
 const SubscribeRow = ({
+  buttonLabel,
+  description,
   label,
-  onOpenMoreOptions,
-  onSubscribe,
+  isWalletConnected,
   isSubscribed,
   isLoading,
+  onOpenMoreOptions,
+  onSubscribe,
 }: SubscribeRowProps) => {
-  const { textStyles, subscribeRow, button } = useTheme();
+  const { colors, textStyles, subscribeRow, button } = useTheme();
 
   return (
     <div>
+      {label && (
+        <label
+          htmlFor="settings-email"
+          className={clsx(colors.label, textStyles.label, 'dt-block dt-mb-1')}
+        >
+          {label}
+        </label>
+      )}
       <div className={clsx('dt-flex dt-items-center dt-border', subscribeRow)}>
         <div
           className={clsx(
@@ -32,15 +45,22 @@ const SubscribeRow = ({
           )}
         >
           <div className="dt-flex dt-justify-between dt-items-center">
-            <span className={clsx('dt-ml-2', isSubscribed && 'dt-opacity-50')}>
-              {label}
+            <span
+              className={clsx(
+                'dt-ml-2',
+                (isSubscribed || !isWalletConnected) && 'dt-opacity-50'
+              )}
+            >
+              {description}
             </span>
             {!isLoading && isSubscribed ? (
-              <span className="dt-opacity-50">Subscribed ✓</span>
+              <ButtonLink onClick={onOpenMoreOptions} className="dt-opacity-50">
+                Subscribed ✓
+              </ButtonLink>
             ) : null}
             {!isLoading && !isSubscribed ? (
               <Button onClick={onSubscribe} className={clsx(button, 'dt-h-9')}>
-                Subscribe
+                {buttonLabel || 'Subscribe'}
               </Button>
             ) : null}
 

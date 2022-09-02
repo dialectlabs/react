@@ -30,6 +30,7 @@ export type NotificationType = {
 
 interface SubscribeProps {
   dialectId: string;
+  label?: string;
   onWalletConnect: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
@@ -41,12 +42,14 @@ interface SubscribeProps {
 
 const addressType = AddressType.Wallet;
 interface SafeSubscribeProps {
+  label?: string;
   onWalletConnect: () => void;
   onOpenMoreOptions: () => void;
   onSubscribe?: (thread: Thread) => void;
 }
 
 function SafeSubscribe({
+  label,
   onWalletConnect,
   onOpenMoreOptions,
 }: SafeSubscribeProps) {
@@ -58,9 +61,12 @@ function SafeSubscribe({
         if (!isWalletConnected || isSigningMessage) {
           return (
             <SubscribeRow
-              label={
+              label={label}
+              buttonLabel="Subscribe"
+              description={
                 isSigningMessage ? 'Waiting for wallet...' : 'Connect wallet...'
               }
+              isWalletConnected={isWalletConnected}
               isSubscribed={false}
               isLoading={isSigningMessage}
               onSubscribe={() => {
@@ -72,6 +78,7 @@ function SafeSubscribe({
         }
         return (
           <ConnectedSubscribe
+            label={label}
             autoSubscribe={autoSubscribe}
             onOpenMoreOptions={onOpenMoreOptions}
           />
@@ -82,12 +89,14 @@ function SafeSubscribe({
 }
 
 interface ConnectedSubscribeProps {
+  label?: string;
   autoSubscribe?: boolean;
   onOpenMoreOptions: () => void;
   onSubscribe?: (thread: Thread) => void;
 }
 
 function ConnectedSubscribe({
+  label,
   autoSubscribe,
   onOpenMoreOptions,
   onSubscribe,
@@ -228,7 +237,10 @@ function ConnectedSubscribe({
 
   return (
     <SubscribeRow
-      label={shortenAddress(wallet.publicKey || '')}
+      isWalletConnected={true}
+      buttonLabel="Subscribe"
+      label={label}
+      description={shortenAddress(wallet.publicKey || '')}
       isSubscribed={isSubscribed}
       isLoading={isLoading}
       onOpenMoreOptions={onOpenMoreOptions}
@@ -239,6 +251,7 @@ function ConnectedSubscribe({
 
 function InnerSubscribe({
   dialectId,
+  label,
   onSubscribe,
   onWalletConnect,
   channels,
@@ -251,6 +264,7 @@ function InnerSubscribe({
   return (
     <div className="dt-w-full">
       <SafeSubscribe
+        label={label}
         onSubscribe={onSubscribe}
         onWalletConnect={onWalletConnect}
         onOpenMoreOptions={openModal}
