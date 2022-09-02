@@ -19,8 +19,13 @@ interface ConnectionWrapperProps {
 
 interface UseDialectHealthProps {
   baseUrl: string;
-  error: string;
   pollingInterval: number;
+}
+
+interface UseDialectHealthValue {
+  isOK: boolean;
+  isLoading: boolean;
+  error?: string;
 }
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -28,7 +33,7 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 const useDialectHealth = ({
   baseUrl,
   pollingInterval,
-}: UseDialectHealthProps) => {
+}: UseDialectHealthProps): UseDialectHealthValue => {
   const { data, error, isValidating } = useSWR(
     `${baseUrl}/api/v1/health`,
     fetcher,
