@@ -293,10 +293,7 @@ export default function Subscribe(props: SubscribeProps) {
   return (
     <div className="dialect dt-w-full">
       <div
-        className={clsx(
-          'dt-flex dt-flex-col dt-h-full dt-overflow-hidden',
-          colors.textPrimary
-        )}
+        className={clsx('dt-flex dt-flex-col dt-h-full', colors.textPrimary)}
       >
         {/* TODO: do not initiate sign until user interaction */}
         {/* TODO: remove ledger toggle for this component */}
