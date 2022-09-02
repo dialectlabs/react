@@ -7,7 +7,9 @@ import NoConnectionError from '../errors/ui/NoConnectionError';
 
 // Only renders children if connected to successfully some backend
 type ConnectionValue = {
-  isSomeBackendConnected: boolean;
+  errorMessage: string;
+  isConnected: boolean;
+  isLoading: boolean;
 };
 interface ConnectionWrapperProps {
   header?: JSX.Element | null;
