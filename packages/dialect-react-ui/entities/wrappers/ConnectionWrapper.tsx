@@ -30,21 +30,18 @@ interface UseDialectHealthValue {
   error?: string;
 }
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+// TODO: fix type
+const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json());
 
 const useDialectHealth = ({
   baseUrl,
   pollingInterval,
 }: UseDialectHealthProps): UseDialectHealthValue => {
-  const { data, error, isValidating } = useSWR(
-    `${baseUrl}/api/v1/health`,
-    fetcher,
-    {
-      refreshInterval: pollingInterval,
-      revalidateOnReconnect: true,
-      refreshWhenHidden: true,
-    }
-  );
+  const { data, error } = useSWR(`${baseUrl}/api/v1/health`, fetcher, {
+    refreshInterval: pollingInterval,
+    revalidateOnReconnect: true,
+    refreshWhenHidden: true,
+  });
 
   const isLoading = data === undefined && !error;
 
@@ -63,7 +60,7 @@ export default function ConnectionWrapper({
   // potentially can be a separate setting completely, TBD.
   pollingInterval = DEFAULT_CONNECTIVITY_POLLING_INTERVAL,
   children,
-}: ConnectionWrapperProps): JSX.Element {
+}: ConnectionWrapperProps): JSX.Element | null {
   // TODO: take into account offline
   const {
     connected: {
@@ -110,7 +107,7 @@ export default function ConnectionWrapper({
 
   if (typeof children === 'function') {
     return children({
-      errorMessage: error && errorMessage,
+      errorMessage: error ? errorMessage : '',
       isConnected,
       isLoading,
     });

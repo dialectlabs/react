@@ -68,6 +68,8 @@ export type ThemeIcons =
   | 'offline'
   | 'x';
 
+export type ThemeAnimations = 'popup' | 'bottomSlide' | 'toast';
+
 export type TransitionProps = {
   enter: string;
   enterFrom: string;

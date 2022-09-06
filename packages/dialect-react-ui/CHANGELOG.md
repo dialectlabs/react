@@ -2,7 +2,17 @@
 
 ## [UNRELEASED]
 
-- feature: introduce `<SubscribeButton />` component
+## [1.0.0-beta.55] - 2022-09-06
+
+- feature: introduce `<SubscribeButton />` component in `react-ui`
+
+## [1.0.0-beta.54] - 2022-09-01
+
+- rollback to 1.0.0-beta.52
+
+## [1.0.0-beta.53] - 2022-09-01
+
+- failed release
 
 ## [1.0.0-beta.52] - 2022-09-01
 

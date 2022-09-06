@@ -3,7 +3,10 @@ import { Transition } from '@headlessui/react';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
-import { useTheme } from '../common/providers/DialectThemeProvider';
+import {
+  ThemeAnimations,
+  useTheme,
+} from '../common/providers/DialectThemeProvider';
 import useMobile from '../../utils/useMobile';
 import clsx from 'clsx';
 
@@ -52,7 +55,7 @@ const NotificationsModal = forwardRef(function InnerNotificationsModalWithRef(
     );
   }, [ui?.open, isMobile, standalone]);
 
-  const animationKey = animationStyle || 'popup';
+  const animationKey = (animationStyle || 'popup') as ThemeAnimations;
   // TODO: fix types
   const animationProps = animations[animationKey];
 
