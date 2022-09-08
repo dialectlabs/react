@@ -67,7 +67,6 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
       />
       <NotificationModal
         ref={(el: HTMLElement) => {
-          console.log({ el });
           if (!el) return;
           refs.current[0] = el;
         }}
