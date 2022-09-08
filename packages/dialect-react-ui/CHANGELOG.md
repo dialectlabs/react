@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: subscribe button causing an infinite sign message loop if the wallet is connected but token is not present
+
 ## [1.0.0-beta.55] - 2022-09-06
 
 - feature: introduce `<SubscribeButton />` component in `react-ui`

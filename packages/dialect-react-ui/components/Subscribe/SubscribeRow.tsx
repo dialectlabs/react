@@ -52,7 +52,8 @@ const SubscribeRow = ({
             <span
               className={clsx(
                 'dt-ml-2',
-                (isSubscribed || !isWalletConnected) && 'dt-opacity-50',
+                (isSubscribed || !isWalletConnected || isLoading) &&
+                  'dt-opacity-50',
                 error && 'dt-opacity-50'
               )}
             >

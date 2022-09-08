@@ -13,7 +13,6 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
-import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import type { Channel } from '../common/types';
 import SubscribeRow from './SubscribeRow';
@@ -43,6 +42,8 @@ interface SubscribeProps {
 }
 
 const addressType = AddressType.Wallet;
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const EMPTY_FN = () => {};
 interface SafeSubscribeProps {
   label?: string;
   buttonLabel?: string;
@@ -60,62 +61,87 @@ function SafeSubscribe({
   onOpenMoreOptions,
 }: SafeSubscribeProps) {
   const [autoSubscribe, setAutoSubscribe] = useState(false);
+  const {
+    isSigningMessage,
+    isSigningFreeTransaction,
+    connectionInitiated: isConnectionInitiated,
+    initiateConnection: initiateWalletVerification,
+    adapter: { connected: isWalletConnected },
+  } = useDialectWallet();
+
+  useEffect(
+    function skipNoAuthorizedScreen() {
+      // Do not initiate wallet verification if wallet isn't connected or if user hadn't clicked on subscribe
+      if (!isWalletConnected || !autoSubscribe) {
+        return;
+      }
+      initiateWalletVerification();
+    },
+    [isWalletConnected, autoSubscribe, initiateWalletVerification]
+  );
+
+  if (!isWalletConnected || isSigningMessage || !isConnectionInitiated) {
+    let description = 'Connect wallet...';
+
+    if (isSigningMessage || isSigningFreeTransaction) {
+      description = 'Waiting for wallet verification...';
+    }
+
+    if (isWalletConnected && !isConnectionInitiated) {
+      description = 'Verify wallet...';
+    }
+
+    return (
+      <SubscribeRow
+        label={label}
+        successLabel={successLabel}
+        buttonLabel={buttonLabel}
+        description={description}
+        isWalletConnected={isWalletConnected}
+        isSubscribed={false}
+        isLoading={isSigningMessage}
+        onSubscribe={async () => {
+          if (!isWalletConnected) {
+            onWalletConnect();
+          }
+          if (isWalletConnected && !isConnectionInitiated) {
+            initiateWalletVerification();
+          }
+          setAutoSubscribe(true);
+        }}
+      />
+    );
+  }
 
   return (
-    <WalletStatesWrapper>
-      {({ isWalletConnected, isSigningMessage }) => {
-        if (!isWalletConnected || isSigningMessage) {
+    <ConnectionWrapper>
+      {({ errorMessage, isConnected, isLoading }) => {
+        if (!isConnected) {
           return (
             <SubscribeRow
               label={label}
-              successLabel={successLabel}
+              error={errorMessage}
               buttonLabel={buttonLabel}
-              description={
-                isSigningMessage ? 'Waiting for wallet...' : 'Connect wallet...'
-              }
+              successLabel={successLabel}
+              description="Waiting for connection..."
               isWalletConnected={isWalletConnected}
               isSubscribed={false}
-              isLoading={isSigningMessage}
-              onSubscribe={() => {
-                onWalletConnect();
-                setAutoSubscribe(true);
-              }}
+              isLoading={isLoading}
+              onSubscribe={EMPTY_FN}
             />
           );
         }
-
         return (
-          <ConnectionWrapper>
-            {({ errorMessage, isConnected, isLoading }) => {
-              if (!isConnected) {
-                return (
-                  <SubscribeRow
-                    label={label}
-                    error={errorMessage}
-                    buttonLabel={buttonLabel}
-                    successLabel={successLabel}
-                    description="Waiting for connection..."
-                    isWalletConnected={isWalletConnected}
-                    isSubscribed={false}
-                    isLoading={isLoading}
-                    onSubscribe={() => {}}
-                  />
-                );
-              }
-              return (
-                <ConnectedSubscribe
-                  label={label}
-                  buttonLabel={buttonLabel}
-                  successLabel={successLabel}
-                  autoSubscribe={autoSubscribe}
-                  onOpenMoreOptions={onOpenMoreOptions}
-                />
-              );
-            }}
-          </ConnectionWrapper>
+          <ConnectedSubscribe
+            label={label}
+            buttonLabel={buttonLabel}
+            successLabel={successLabel}
+            autoSubscribe={autoSubscribe}
+            onOpenMoreOptions={onOpenMoreOptions}
+          />
         );
       }}
-    </WalletStatesWrapper>
+    </ConnectionWrapper>
   );
 }
 
@@ -136,7 +162,7 @@ function ConnectedSubscribe({
   onOpenMoreOptions,
   onSubscribe,
 }: ConnectedSubscribeProps): JSX.Element {
-  const { adapter: wallet, initiateConnection } = useDialectWallet();
+  const { adapter: wallet } = useDialectWallet();
 
   const { dappAddress } = useDialectDapp();
   if (!dappAddress) {
@@ -148,6 +174,7 @@ function ConnectedSubscribe({
   const { create: createThread, isCreatingThread } = useThreads();
 
   const [isAutoSubscribed, setAutoSubscribed] = useState(false);
+  const [isSubscribing, setSubscribing] = useState(false);
 
   const {
     globalAddress: walletAddress,
@@ -185,7 +212,6 @@ function ConnectedSubscribe({
   });
 
   const createWalletThread = useCallback(async () => {
-    console.log('createWalletThread');
     if (!dappAddress) return;
     return createThread({
       me: { scopes: [ThreadMemberScope.ADMIN] },
@@ -198,7 +224,6 @@ function ConnectedSubscribe({
   }, [backend, createThread, dappAddress]);
 
   const createWalletAddress = useCallback(async () => {
-    console.log('createWalletAddress');
     if (!wallet.publicKey) {
       return;
     }
@@ -206,7 +231,6 @@ function ConnectedSubscribe({
   }, [createAddress, wallet.publicKey]);
 
   const fullEnableWallet = useCallback(async () => {
-    console.log('fullEnableWallet');
     const address = await createWalletAddress();
     const thread = await createWalletThread();
     if (!thread) {
@@ -221,26 +245,36 @@ function ConnectedSubscribe({
     toggleSubscription,
   ]);
 
-  const handleSubscribe = useCallback(() => {
-    console.log('handleSubscribe');
+  const handleSubscribe = useCallback(async () => {
+    setSubscribing(true);
+    // The order of checks is very important, keep it please!
+
     /* when no address and thread */
     if (!thread && !walletAddress) {
-      return fullEnableWallet();
+      await fullEnableWallet();
+      setSubscribing(false);
+      return;
     }
 
     /* when address exists but no thread */
     if (!thread && walletAddress) {
-      return createWalletThread();
-    }
-
-    if (thread && !subscriptionEnabled) {
-      return toggleSubscription({ enabled: true });
+      await createWalletThread();
+      setSubscribing(false);
+      return;
     }
 
     /* when thread exists but no address
     Probably this is a *very* old users case */
     if (thread && !walletAddress) {
-      return createWalletAddress();
+      await createWalletAddress();
+      setSubscribing(false);
+      return;
+    }
+
+    if (thread && !subscriptionEnabled) {
+      await toggleSubscription({ enabled: true });
+      setSubscribing(false);
+      return;
     }
   }, [
     createWalletAddress,
@@ -260,22 +294,18 @@ function ConnectedSubscribe({
     isCreatingAddress ||
     isToggling;
 
+  // TODO: optimistic UI: show "subscribed" instantly, in case of error — show error
   const isSubscribed = Boolean(thread && walletAddress && subscriptionEnabled);
 
   useEffect(
     function checkForAutoSubscribe() {
       if (!autoSubscribe || isAutoSubscribed || isSubscribed || isLoading)
         return;
-      console.log('checkForAutoSubscribe - passed check');
       handleSubscribe();
       setAutoSubscribed(true);
     },
     [autoSubscribe, handleSubscribe, isAutoSubscribed, isLoading, isSubscribed]
   );
-
-  useEffect(function skipNoAuthorizedScreen() {
-    initiateConnection();
-  }, []);
 
   return (
     <SubscribeRow
@@ -283,7 +313,11 @@ function ConnectedSubscribe({
       buttonLabel={buttonLabel}
       successLabel={successLabel}
       isWalletConnected={true}
-      description={shortenAddress(wallet.publicKey || '')}
+      description={
+        isSubscribing
+          ? 'Subscribing...'
+          : shortenAddress(wallet.publicKey || '')
+      }
       isSubscribed={isSubscribed}
       isLoading={isLoading}
       onOpenMoreOptions={onOpenMoreOptions}

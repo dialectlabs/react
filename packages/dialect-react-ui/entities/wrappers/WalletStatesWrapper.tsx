@@ -12,6 +12,7 @@ interface WalletStatesValue {
   isSigningMessage: boolean;
   isEncrypting: boolean;
   isConnectionInitiated: boolean;
+  initiateConnection: () => void;
 }
 
 interface WalletStatesWrapperProps {
@@ -30,6 +31,7 @@ function WalletStatesWrapper({
     isSigningFreeTransaction,
     isEncrypting,
     connectionInitiated: isConnectionInitiated,
+    initiateConnection,
     adapter: { connected: isWalletConnected },
   } = useDialectWallet();
 
@@ -39,6 +41,7 @@ function WalletStatesWrapper({
       isSigningMessage,
       isEncrypting,
       isConnectionInitiated,
+      initiateConnection,
     });
   }
 
