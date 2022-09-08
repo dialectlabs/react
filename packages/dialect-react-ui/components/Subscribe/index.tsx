@@ -174,6 +174,7 @@ function ConnectedSubscribe({
   const { create: createThread, isCreatingThread } = useThreads();
 
   const [isAutoSubscribed, setAutoSubscribed] = useState(false);
+  const [isSubscribing, setSubscribing] = useState(false);
 
   const {
     globalAddress: walletAddress,
@@ -244,27 +245,36 @@ function ConnectedSubscribe({
     toggleSubscription,
   ]);
 
-  const handleSubscribe = useCallback(() => {
+  const handleSubscribe = useCallback(async () => {
+    setSubscribing(true);
     // The order of checks is very important, keep it please!
 
     /* when no address and thread */
     if (!thread && !walletAddress) {
-      return fullEnableWallet();
+      await fullEnableWallet();
+      setSubscribing(false);
+      return;
     }
 
     /* when address exists but no thread */
     if (!thread && walletAddress) {
-      return createWalletThread();
+      await createWalletThread();
+      setSubscribing(false);
+      return;
     }
 
     /* when thread exists but no address
     Probably this is a *very* old users case */
     if (thread && !walletAddress) {
-      return createWalletAddress();
+      await createWalletAddress();
+      setSubscribing(false);
+      return;
     }
 
     if (thread && !subscriptionEnabled) {
-      return toggleSubscription({ enabled: true });
+      await toggleSubscription({ enabled: true });
+      setSubscribing(false);
+      return;
     }
   }, [
     createWalletAddress,
@@ -303,7 +313,11 @@ function ConnectedSubscribe({
       buttonLabel={buttonLabel}
       successLabel={successLabel}
       isWalletConnected={true}
-      description={shortenAddress(wallet.publicKey || '')}
+      description={
+        isSubscribing
+          ? 'Subscribing...'
+          : shortenAddress(wallet.publicKey || '')
+      }
       isSubscribed={isSubscribed}
       isLoading={isLoading}
       onOpenMoreOptions={onOpenMoreOptions}
