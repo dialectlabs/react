@@ -1,50 +1,80 @@
-import { useRef } from 'react';
-import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import { useEffect, forwardRef } from 'react';
+import { Transition } from '@headlessui/react';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import type { Channel } from '../common/types';
 import Notifications, { NotificationType } from '../Notifications';
-import type { PropTypes } from '../NotificationsButton';
+import {
+  ThemeAnimations,
+  useTheme,
+} from '../common/providers/DialectThemeProvider';
+import useMobile from '../../utils/useMobile';
+import clsx from 'clsx';
 
-type ModalProps = {
+interface NotificationsModalProps {
+  wrapperClassName?: string;
+  className?: string;
+  animationStyle?: string;
+  settingsOnly?: boolean;
+  standalone?: boolean;
+
   dialectId: string;
-  notifications: NotificationType[];
+
+  notifications?: NotificationType[];
   channels?: Channel[];
+  gatedView?: string | JSX.Element;
+  pollingInterval?: number;
+
   onBackClick?: () => void;
-};
-
-// TODO: deprecate or reuse?
-function Modal({ channels = ['web3'], ...props }: ModalProps): JSX.Element {
-  const { close } = useDialectUiId(props.dialectId);
-
-  const wrapperRef = useRef(null);
-  const bellRef = useRef(null);
-
-  useOutsideAlerter(wrapperRef, bellRef, close);
-
-  return (
-    <div
-      ref={wrapperRef}
-      className="dt-w-full dt-h-full"
-      // TODO: investigate blur
-      // className="dt-w-full dt-h-full bg-white/10"
-      // style={{ backdropFilter: 'blur(132px)' }}
-    >
-      <Notifications
-        channels={channels}
-        notifications={props?.notifications}
-        onModalClose={close}
-        onBackClick={props?.onBackClick}
-      />
-    </div>
-  );
 }
 
-export default function NotificationModal({
-  ...props
-}: PropTypes): JSX.Element {
+const NotificationsModal = forwardRef(function InnerNotificationsModalWithRef(
+  {
+    wrapperClassName,
+    animationStyle,
+    dialectId,
+    standalone,
+    ...props
+  }: NotificationsModalProps,
+  ref
+) {
+  const { modalWrapper, modalBackdrop, animations } = useTheme();
+  const { ui, close } = useDialectUiId(dialectId);
+
+  const isMobile = useMobile();
+
+  useEffect(() => {
+    // Prevent scrolling of backdrop content on mobile
+    document.documentElement.classList[
+      ui?.open && (isMobile || standalone) ? 'add' : 'remove'
+    ](
+      ...clsx(
+        'dt-overflow-hidden',
+        'dt-static',
+        !standalone && 'sm:dt-overflow-auto'
+      ).split(' ')
+    );
+  }, [ui?.open, isMobile, standalone]);
+
+  const animationKey = (animationStyle || 'popup') as ThemeAnimations;
+  // TODO: fix types
+  const animationProps = animations[animationKey];
+
   return (
     <div className="dialect dt-w-full dt-h-full">
-      <Modal {...props} />
+      {/* Modal backdrop */}
+      {ui?.open && standalone ? <div className={modalBackdrop} /> : null}
+      <Transition
+        className={clsx(modalWrapper, wrapperClassName)}
+        show={ui?.open ?? false}
+        {...animationProps}
+      >
+        {/* TODO: fix type error */}
+        <div ref={ref} className="dt-w-full dt-h-full">
+          <Notifications onModalClose={close} {...props} />
+        </div>
+      </Transition>
     </div>
   );
-}
+});
+
+export default NotificationsModal;

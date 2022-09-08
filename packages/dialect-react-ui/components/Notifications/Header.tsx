@@ -5,13 +5,16 @@ import { useRoute } from '../common/providers/Router';
 import IconButton from '../IconButton';
 import { RouteName } from './constants';
 
-function Header(props: {
+interface HeaderProps {
   isReady: boolean;
   isWeb3Enabled: boolean;
+  settingsOnly?: boolean;
   onModalClose: () => void;
   onBackClick?: () => void;
   threadId?: ThreadId;
-}) {
+}
+
+function Header(props: HeaderProps) {
   const { navigate, current } = useRoute();
   const { colors, textStyles, icons, header, notificationHeader } = useTheme();
   const isSettingsOpen = current?.name === RouteName.Settings;
@@ -55,7 +58,7 @@ function Header(props: {
     <>
       <div className="dt-flex">
         <SettingsButton />
-        <div className="sm:dt-hidden dt-ml-3">
+        <div className={clsx(!props.settingsOnly && 'sm:dt-hidden', 'dt-ml-3')}>
           <CloseButton />
         </div>
       </div>
@@ -73,7 +76,7 @@ function Header(props: {
       >
         {isSettingsOpen ? (
           <div className="dt-flex dt-flex-row dt-items-center">
-            {props.isWeb3Enabled && <BackButton />}
+            {props.isWeb3Enabled && !props.settingsOnly && <BackButton />}
             {!props.isWeb3Enabled && <MasterBackButton />}
             <span className={clsx(textStyles.header, colors.accent)}>
               Settings

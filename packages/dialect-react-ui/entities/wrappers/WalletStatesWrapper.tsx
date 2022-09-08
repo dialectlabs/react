@@ -7,10 +7,18 @@ import SignTransactionInfo from '../wallet-states/SignTransactionInfo';
 
 // Only renders children if wallet is connected, access token and encryption keys are created
 
+interface WalletStatesValue {
+  isWalletConnected: boolean;
+  isSigningMessage: boolean;
+  isEncrypting: boolean;
+  isConnectionInitiated: boolean;
+  initiateConnection: () => void;
+}
+
 interface WalletStatesWrapperProps {
   notConnectedMessage?: string | JSX.Element;
   header?: JSX.Element | null;
-  children: JSX.Element;
+  children: JSX.Element | ((obj: WalletStatesValue) => JSX.Element | null);
 }
 
 function WalletStatesWrapper({
@@ -22,9 +30,20 @@ function WalletStatesWrapper({
     isSigningMessage,
     isSigningFreeTransaction,
     isEncrypting,
-    connectionInitiated,
+    connectionInitiated: isConnectionInitiated,
+    initiateConnection,
     adapter: { connected: isWalletConnected },
   } = useDialectWallet();
+
+  if (typeof children === 'function') {
+    return children({
+      isWalletConnected,
+      isSigningMessage,
+      isEncrypting,
+      isConnectionInitiated,
+      initiateConnection,
+    });
+  }
 
   if (!isWalletConnected) {
     return (
@@ -35,7 +54,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (!connectionInitiated) {
+  if (!isConnectionInitiated) {
     return (
       <>
         {header}

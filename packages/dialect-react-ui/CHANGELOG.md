@@ -2,6 +2,22 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.55] - 2022-09-08
+
+- fix: subscribe button causing an infinite sign message loop if the wallet is connected but token is not present
+
+## [1.0.0-beta.55] - 2022-09-06
+
+- feature: introduce `<SubscribeButton />` component in `react-ui`
+
+## [1.0.0-beta.54] - 2022-09-01
+
+- rollback to 1.0.0-beta.52
+
+## [1.0.0-beta.53] - 2022-09-01
+
+- failed release
+
 ## [1.0.0-beta.52] - 2022-09-01
 
 - feature: add unread messages indicator for chat components
@@ -9,7 +25,7 @@
 
 ## [1.0.0-beta.51] - 2022-08-30
 
-- feature: support dapp-configured telegram bots 
+- feature: support dapp-configured telegram bots
 
 ## [1.0.0-beta.50] - 2022-08-26
 

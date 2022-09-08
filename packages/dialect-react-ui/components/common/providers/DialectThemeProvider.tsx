@@ -43,6 +43,7 @@ export type ThemeTextStyles =
   | 'bigText'
   | 'header'
   | 'input'
+  | 'subscribeRow'
   | 'buttonText'
   | 'link'
   | 'label';
@@ -66,6 +67,8 @@ export type ThemeIcons =
   | 'trash'
   | 'offline'
   | 'x';
+
+export type ThemeAnimations = 'popup' | 'bottomSlide' | 'toast';
 
 export type TransitionProps = {
   enter: string;
@@ -99,6 +102,7 @@ export type IncomingThemeValues = {
   sectionHeader?: string;
   input?: string;
   outlinedInput?: string;
+  subscribeRow?: string;
   textArea?: string;
   messageBubble?: string;
   message?: string;
@@ -113,6 +117,7 @@ export type IncomingThemeValues = {
   sendButton?: string;
   linkButton?: string;
   modalWrapper?: string;
+  modalBackdrop?: string;
   modal?: string;
   sliderWrapper?: string;
   slider?: string;
@@ -211,6 +216,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
       input: 'dt-font-inter',
+      subscribeRow: 'dt-font-inter dt-text-[15px]',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
       xsmall: 'dt-font-inter dt-text-[0.6875rem] dt-font-normal',
@@ -254,6 +260,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0 disabled:dt-text-neutral-700/50',
     outlinedInput:
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
+    subscribeRow:
+      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3.5 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
     textArea:
       'dt-text-sm dt-text-neutral-800 dt-bg-white dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-300 dt-placeholder-neutral-400 dt-pr-10 dt-outline-none disabled:dt-text-neutral-800/50',
     messageBubble: 'dt-text-black dt-px-4 dt-py-2 dt-rounded-2xl dt-text-black',
@@ -266,10 +274,12 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationsDivider: 'dt-hidden',
     notificationHeader: 'dt-border-b dt-border-neutral-300',
     modalWrapper:
-      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+      'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+    modalBackdrop:
+      'dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
-      'dt-fixed dt-z-50 dt-top-0 dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
+      'dt-fixed dt-z-[100] dt-top-0 dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
@@ -311,6 +321,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',
       input: 'dt-font-inter',
+      subscribeRow: 'dt-font-inter dt-text-[15px]',
       body: 'dt-font-inter dt-text-sm dt-font-normal',
       small: 'dt-font-inter dt-text-xs dt-font-normal',
       xsmall: 'dt-font-inter dt-text-[0.6875rem] dt-font-normal',
@@ -354,6 +365,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white disabled:dt-text-white/50',
     outlinedInput:
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
+    subscribeRow:
+      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3.5 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
     textArea:
       'dt-text-sm dt-text-neutral-200 dt-bg-black dt-border dt-rounded-2xl dt-px-2 dt-py-1 dt-border-neutral-600 dt-placeholder-neutral-600 dt-pr-10 dt-outline-none disabled:dt-text-neutral-200/50',
     messageBubble: 'dt-px-4 dt-py-2 dt-rounded-2xl dt-text-white',
@@ -366,10 +379,12 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     notificationsDivider: 'dt-hidden',
     notificationHeader: 'dt-border-b dt-border-neutral-900',
     modalWrapper:
-      'dt-fixed dt-z-50 dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+      'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
+    modalBackdrop:
+      'dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50',
     modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
     sliderWrapper:
-      'dt-fixed dt-z-50 dt-top-auto dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',
+      'dt-fixed dt-z-[100] dt-top-auto dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
       'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
