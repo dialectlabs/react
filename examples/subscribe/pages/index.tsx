@@ -107,8 +107,9 @@ function AuthedHome() {
           <div className="min-w-[22rem]">
             <SubscribeButton
               dialectId="dialect-subscribe"
-              label="Dial app waitlist"
+              label="Subscribe to dApp updates"
               onWalletConnect={() => {
+                // Or call any other function which triggers wallet connection for user in your dApp
                 showWalletModal(true);
               }}
               notifications={[
