@@ -47,5 +47,8 @@
   "engines": {
     "node": ">=15.10 <17"
   },
+  "resolutions": {
+    "graceful-fs": "4.2.10"
+  },
   "engineStrict": true
 }
