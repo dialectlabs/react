@@ -86,7 +86,7 @@ export const VerificationInput = ({
       <div
         className={clsx(
           textStyles.small,
-          'display: inline-flex',
+          'dt-inline-flex dt-items-center',
           'dt-mb-1 dt-mt-1'
         )}
       >
@@ -97,7 +97,7 @@ export const VerificationInput = ({
             <span className="dt-opacity-50">{description}</span>
             <span
               onClick={onCancel}
-              className="dt-inline-block dt-cursor-pointer"
+              className="dt-inline-flex dt-items-center dt-cursor-pointer"
             >
               <CancelIcon
                 className={clsx('dt-inline-block dt-mr-0.5 dt-mb-0.5')}
@@ -108,7 +108,7 @@ export const VerificationInput = ({
             </span>
             <span
               onClick={resendCode}
-              className="dt-inline-block dt-cursor-pointer"
+              className="dt-inline-flex dt-items-center dt-cursor-pointer"
             >
               <ResendIcon
                 className={clsx('dt-inline-block dt-ml-1 dt-mr-0.5 dt-mb-0.5')}

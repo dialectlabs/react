@@ -170,7 +170,7 @@ const Email = () => {
         <div
           className={clsx(
             textStyles.small,
-            'display: inline-flex',
+            'dt-inline-flex dt-items-center',
             'dt-mb-1 dt-mt-1'
           )}
         >
@@ -182,7 +182,7 @@ const Email = () => {
               </span>
               <span
                 onClick={() => setIsDeleting(false)}
-                className="dt-inline-block dt-cursor-pointer"
+                className="dt-inline-flex dt-items-center dt-cursor-pointer"
               >
                 <CancelIcon
                   className={clsx('dt-inline-block dt-mr-0.5 dt-mb-0.5')}
@@ -203,7 +203,7 @@ const Email = () => {
                 onClick={() => {
                   setEmail(emailAddress?.value || '');
                 }}
-                className="dt-inline-block dt-cursor-pointer"
+                className="dt-inline-flex dt-items-center dt-cursor-pointer"
               >
                 <CancelIcon
                   className={clsx('dt-inline-block dt-mr-0.5 dt-mb-0.5')}

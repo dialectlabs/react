@@ -2,6 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.62] - 2022-09-09
+- chore: minor stylistic changes
+
+## [1.0.0-beta.60] - 2022-09-09
+- feat: support for international phone numbers
+
 ## [1.0.0-beta.59] - 2022-09-09
 - chore: minor stylistic changes
 
