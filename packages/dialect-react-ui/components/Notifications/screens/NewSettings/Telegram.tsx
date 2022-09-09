@@ -12,7 +12,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { RightAdornment } from './RightAdorment';
 import { VerificationInput } from './VerificationInput';
-import { P } from '../../../common/preflighted';
+import { A, P } from '../../../common/preflighted';
 import OutlinedInput from '../../../common/primitives/OutlinedInput';
 import CancelIcon from '../../../Icon/Cancel';
 
@@ -156,7 +156,7 @@ const Telegram = () => {
           addressType={addressType}
           customText={
             <>
-              <a
+              <A
                 className={clsx(textStyles.small)}
                 href={botURL}
                 target="_blank"
@@ -169,10 +169,10 @@ const Telegram = () => {
                 </span>
                 <span className="dt-underline">this bot</span>
                 <span className="dt-opacity-50"> with command: /start </span>
-              </a>
+              </A>
               <span
                 onClick={deleteTelegram}
-                className="dt-inline-block dt-cursor-pointer"
+                className="dt-inline-flex dt-cursor-pointer dt-items-center"
               >
                 <CancelIcon
                   className={clsx('dt-inline-block dt-mr-0.5 dt-mb-0.5')}

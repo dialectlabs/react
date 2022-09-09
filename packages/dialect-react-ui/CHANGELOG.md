@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.59] - 2022-09-09
+- chore: minor stylistic changes
+
 ## [1.0.0-beta.57] - 2022-09-09
 
 - fix: swap out solscan for solanafm in all account links in react web
