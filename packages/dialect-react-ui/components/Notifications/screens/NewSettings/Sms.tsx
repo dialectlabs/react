@@ -14,6 +14,7 @@ import { Toggle } from '../../../common';
 import CancelIcon from '../../../Icon/Cancel';
 
 const addressType = AddressType.PhoneNumber;
+const phoneRegex = /^(\+)?([ 0-9]){10,16}$/gm;
 
 const Sms = () => {
   const {
@@ -122,39 +123,41 @@ const Sms = () => {
       ) : (
         <OutlinedInput
           id="settings-sms"
-          placeholder="+15554443333 (+1 required, US only)"
+          placeholder="+15554443333 (country code required)"
           type="tel"
           value={smsNumber}
           rightAdornment={
-            <RightAdornment
-              loading={isLoading}
-              currentVal={smsNumber}
-              isSaved={isSmsNumberSaved}
-              isChanging={isEditing}
-              isVerified={isVerified}
-              onSaveCallback={saveSmsNumber}
-              onDeleteCallback={deleteSmsNumber}
-              onUpdateCallback={updateSmsNumber}
-              deleteConfirm={(isDelete) => {
-                setIsDeleting(isDelete);
-              }}
-              isDeleting={isDeleting}
-            />
+            smsNumber.match(phoneRegex) && (
+              <RightAdornment
+                loading={isLoading}
+                currentVal={smsNumber}
+                isSaved={isSmsNumberSaved}
+                isChanging={isEditing}
+                isVerified={isVerified}
+                onSaveCallback={saveSmsNumber}
+                onDeleteCallback={deleteSmsNumber}
+                onUpdateCallback={updateSmsNumber}
+                deleteConfirm={(isDelete) => {
+                  setIsDeleting(isDelete);
+                }}
+                isDeleting={isDeleting}
+              />
+            )
           }
           onChange={onChange}
           onBlur={(e) =>
             e.target.checkValidity()
               ? setError(null)
               : setError({
-                  name: 'incorrectEmail',
-                  message: 'Please enter a valid email',
+                  name: 'incorrectPhone',
+                  message: 'Please enter a valid phone',
                 })
           }
           onInvalid={(e) => {
             e.preventDefault();
             setError({
-              name: 'incorrectEmail',
-              message: 'Please enter a valid email',
+              name: 'incorrectPhone',
+              message: 'Please enter a valid phone',
             });
           }}
         />
