@@ -2,10 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.57] - 2022-09-09
+
 - fix: swap out solscan for solanafm in all account links in react web
 - fix: useDappAudience() if there're no notifications type set up for dapp, return all unique users count
 
-## [1.0.0-beta.55] - 2022-09-08
+## [1.0.0-beta.56] - 2022-09-08
 
 - fix: subscribe button causing an infinite sign message loop if the wallet is connected but token is not present
 
