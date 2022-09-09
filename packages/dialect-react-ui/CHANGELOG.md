@@ -3,6 +3,7 @@
 ## [UNRELEASED]
 
 - fix: swap out solscan for solanafm in all account links in react web
+- fix: useDappAudience() if there're no notifications type set up for dapp, return all unique users count
 
 ## [1.0.0-beta.55] - 2022-09-08
 
