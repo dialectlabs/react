@@ -17,7 +17,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { Wallet } from '../components/Wallet';
 
-import { CivicIdentityResolver } from '@dialect/civic-identity';
+import { CivicIdentityResolver } from '@dialectlabs/identity-civic';
 import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
 import { SNSIdentityResolver } from '@dialectlabs/identity-sns';
 import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal';
