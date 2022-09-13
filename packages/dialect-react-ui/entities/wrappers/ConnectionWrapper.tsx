@@ -30,8 +30,8 @@ interface UseDialectHealthValue {
   error?: string;
 }
 
-// TODO: fix type
-const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json());
+const fetcher = (...args: Parameters<typeof fetch>) =>
+  fetch(...args).then((res) => res.json());
 
 const useDialectHealth = ({
   baseUrl,

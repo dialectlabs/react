@@ -34,7 +34,10 @@ interface UiManagementContextType {
   open(id: string): void;
   close(id: string): void;
   register(id: string): void;
-  configure<N>(id: string, config: ManagementConfig<N> | null): void;
+  configure<N extends Record<string, any>>(
+    id: string,
+    config: ManagementConfig<N> | null
+  ): void;
 }
 
 export const DialectUiManagementContext =
