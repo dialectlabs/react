@@ -6,7 +6,7 @@ import type {
 } from '@dialectlabs/sdk';
 
 export interface ThreadMessage extends SdkThreadMessage {
-  id: string;
+  deduplicationId: string;
 }
 
 export interface LocalThreadMessage extends ThreadMessage {

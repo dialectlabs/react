@@ -17,6 +17,7 @@ import {
   CACHE_KEY_THREAD_SUMMARY_FN,
 } from './internal/swrCache';
 import useThread from './useThread';
+import { nanoid } from 'nanoid';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
   id?: string;
@@ -80,37 +81,38 @@ const useThreadMessages = ({
     if (!thread) {
       return EMPTY_ARR;
     }
-    let merged = false;
     const localThreadMessages =
       localMessages[thread.id.toString()] || EMPTY_ARR;
-    const [firstRemote] = remoteMessages;
-    const [firstLocal] = localThreadMessages;
-    // we check if we can replace last local message with the remote one
-    if (firstLocal?.text === firstRemote?.text && firstLocal?.isSending) {
-      deleteLocalMessage(thread.id.toString(), firstLocal.id);
-      merged = true;
-    }
 
-    const mergedMessages = [
-      ...remoteMessages,
-      ...(merged ? localThreadMessages.slice(1) : localThreadMessages),
-    ]
+    const filteredLocalMessages = localThreadMessages.filter((lm) => {
+      const remoteMessage = remoteMessages.find(
+        (rm) => rm.deduplicationId === lm.deduplicationId
+      );
+
+      if (remoteMessage) {
+        deleteLocalMessage(thread.id.toString(), lm.deduplicationId);
+      }
+
+      return !remoteMessage;
+    });
+
+    return [...remoteMessages, ...filteredLocalMessages]
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-      .map((msg, idx, arr) => ({
-        ...msg,
-        id: (arr.length - idx - 1).toString(),
+      .map((m) => ({
+        ...m,
+        deduplicationId: m.deduplicationId ?? m.timestamp.getTime().toString(),
       }));
-    return mergedMessages;
   }, [remoteMessages, thread, localMessages, deleteLocalMessage]);
 
   const sendMessage = useCallback(
-    async (cmd: SendMessageCommand) => {
+    async (cmd: Omit<SendMessageCommand, 'deduplicationId'>) => {
       if (!threadInternal) return;
       setIsSendingMessage(true);
       setErrorSendingMessage(null);
       const threadAddr = threadInternal.id.toString();
+      const deduplicationId = nanoid();
       const optimisticMessage: LocalThreadMessage = {
-        id: cmd.id || messages.length.toString(),
+        deduplicationId,
         text: cmd.text,
         timestamp: new Date(),
         author: threadInternal.me,
@@ -118,7 +120,7 @@ const useThreadMessages = ({
       };
       try {
         putLocalMessage(threadAddr, optimisticMessage);
-        await threadInternal.send(cmd);
+        await threadInternal.send({ ...cmd, deduplicationId });
         mutate();
         // Mutate threads to update threads sort
         globalMutate(CACHE_KEY_THREADS);
