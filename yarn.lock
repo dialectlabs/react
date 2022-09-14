@@ -1331,10 +1331,10 @@
   dependencies:
     "@cardinal/namespaces" "^4.1.55"
 
-"@dialectlabs/identity-civic@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/identity-civic/-/identity-civic-0.0.2.tgz#aabe6d08d3e0f1eca15b4faf3fe0ec4280e91cac"
-  integrity sha512-i3aNsucZnEK46yXGhLwptO3aQH+S8tBsIZo5xuSnhjNpr0mVoMnWIp23pMUpHJybJ6dkGOqDKmaOTQffVxXyFw==
+"@dialectlabs/identity-civic@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/identity-civic/-/identity-civic-0.0.3.tgz#e4bc8722a1e28735df44445b0a7979ac614948a0"
+  integrity sha512-M4dJup8zKI10i7r/kinV+6X5Ir0wDXSh2MeiM+jBCvCd5d9oGYrxJyQYrnzk50kl59yA3RxkFqkpZAW0tU+9nA==
   dependencies:
     "@civic/profile" "^0.0.3"
 
