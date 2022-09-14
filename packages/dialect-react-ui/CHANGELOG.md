@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.63] - 2022-09-14
+
 - fix: fix duplicate messages in threads (optimistic messages)
 
 ## [1.0.0-beta.62] - 2022-09-09
