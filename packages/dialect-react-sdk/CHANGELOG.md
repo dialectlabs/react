@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.31] - 2022-09-14
+
 - chore: downgrade nanoid to have support for cjs
 
 ## [1.0.0-beta.30] - 2022-09-14

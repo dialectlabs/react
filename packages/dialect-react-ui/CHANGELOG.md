@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.64] - 2022-09-14
+
+- chore: bump @dialectlabs/react-sdk version
+
 ## [1.0.0-beta.63] - 2022-09-14
 
 - fix: fix duplicate messages in threads (optimistic messages)
