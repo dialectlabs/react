@@ -351,7 +351,7 @@ function InnerSubscribe({
         onOpenMoreOptions={openModal}
       />
       <NotificationsModal
-        ref={(el: HTMLElement) => {
+        ref={(el) => {
           if (!el) {
             return;
           }

@@ -1331,10 +1331,10 @@
   dependencies:
     "@cardinal/namespaces" "^4.1.55"
 
-"@dialectlabs/identity-civic@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/identity-civic/-/identity-civic-0.0.2.tgz#aabe6d08d3e0f1eca15b4faf3fe0ec4280e91cac"
-  integrity sha512-i3aNsucZnEK46yXGhLwptO3aQH+S8tBsIZo5xuSnhjNpr0mVoMnWIp23pMUpHJybJ6dkGOqDKmaOTQffVxXyFw==
+"@dialectlabs/identity-civic@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/identity-civic/-/identity-civic-0.0.3.tgz#e4bc8722a1e28735df44445b0a7979ac614948a0"
+  integrity sha512-M4dJup8zKI10i7r/kinV+6X5Ir0wDXSh2MeiM+jBCvCd5d9oGYrxJyQYrnzk50kl59yA3RxkFqkpZAW0tU+9nA==
   dependencies:
     "@civic/profile" "^0.0.3"
 
@@ -1350,10 +1350,10 @@
   dependencies:
     "@bonfida/spl-name-service" "^0.1.49"
 
-"@dialectlabs/sdk@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.8.0.tgz#13a7be13d827b604e7715528716e657f4b889175"
-  integrity sha512-1E/eKLnwc9HPfXVUI2Xa1RJrkj2ID9yA0VHwml2TtMK1xwbpluIfLS864A9jcuXhLY9TVncK2YC1tvqiliArxQ==
+"@dialectlabs/sdk@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-0.8.1.tgz#54b97ff20db9856066dd67c54805d5ac663f6935"
+  integrity sha512-x//3o2FVcvGpRA6FNn9ts7JMy1T6Wjx4v5Rxd5AwPDVkTmZqPLNu7dbqmJvXAsW5r2juNEKkiiLpocB6iayoYA==
   dependencies:
     "@dialectlabs/web3" "^0.3.2"
     "@project-serum/anchor" "0.23.0"

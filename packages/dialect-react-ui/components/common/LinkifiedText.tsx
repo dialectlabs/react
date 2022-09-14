@@ -1,4 +1,3 @@
-import type React from 'react';
 import Linkify from 'react-linkify';
 import { A } from './preflighted';
 import { useTheme } from './providers/DialectThemeProvider';
@@ -6,11 +5,7 @@ import { useTheme } from './providers/DialectThemeProvider';
 // Similar to twitter
 const MAX_LINK_TEXT_LENGTH = 32;
 
-export default function LinkifiedText({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function LinkifiedText({ children }: { children: string }) {
   const { textStyles } = useTheme();
   return (
     <Linkify

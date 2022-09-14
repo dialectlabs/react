@@ -28,7 +28,9 @@ function useLocalMessages(): LocalMessagesState {
           ...prev,
           [threadAddr]: [
             msg,
-            ...threadMessages.filter((prevMsg) => prevMsg.id !== msg.id),
+            ...threadMessages.filter(
+              (prevMsg) => prevMsg.deduplicationId !== msg.deduplicationId
+            ),
           ],
         };
       });
@@ -47,7 +49,9 @@ function useLocalMessages(): LocalMessagesState {
       }
       return {
         ...prev,
-        [threadAddr]: threadMessages.filter((prevMsg) => prevMsg.id !== id),
+        [threadAddr]: threadMessages.filter(
+          (prevMsg) => prevMsg.deduplicationId !== id
+        ),
       };
     });
   }, []);

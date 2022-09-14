@@ -101,7 +101,7 @@ export default function Thread({ threadId }: ThreadProps) {
             // TODO: fix transition after message is sent (e.g. key/props shouldn't change)
             return (
               <CSSTransition
-                key={message.id}
+                key={message.deduplicationId}
                 timeout={{
                   enter: 400,
                   exit: 200,
@@ -115,7 +115,7 @@ export default function Thread({ threadId }: ThreadProps) {
                 }}
               >
                 {/* additional div wrapper is needed to avoid paddings /margins interfere with animation */}
-                <div data-key={`message-${message.id}`}>
+                <div data-key={`message-${message.deduplicationId}`}>
                   <MessageBubble
                     {...message}
                     isOnChain={isOnChain}
