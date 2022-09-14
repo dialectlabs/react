@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: fix duplicate messages in threads (optimistic messages)
+
 ## [1.0.0-beta.29] - 2022-08-30
 
 - feature: support dapp-configured telegram bots
