@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.65] - 2022-09-15
+
 - fix: crash when thread gets deleted by other member
 
 ## [1.0.0-beta.64] - 2022-09-14
