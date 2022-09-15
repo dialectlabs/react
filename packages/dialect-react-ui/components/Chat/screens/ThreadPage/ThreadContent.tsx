@@ -43,8 +43,7 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
   const otherMemberPK =
     thread?.otherMembers[0] && thread.otherMembers[0].publicKey;
 
-  // TODO: ! is unsafe
-  const { identity } = useIdentity({ publicKey: otherMemberPK! });
+  const { identity } = useIdentity({ publicKey: otherMemberPK });
 
   const isOnChain = thread?.backend === Backend.Solana;
 

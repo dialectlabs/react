@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: crash when thread gets deleted by other member
+
 ## [1.0.0-beta.64] - 2022-09-14
 
 - chore: bump @dialectlabs/react-sdk version

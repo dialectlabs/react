@@ -64,5 +64,5 @@ export const DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
   dapp: Dapp | null
 ) => 'DAPP_NOTIFICATION_SUBSCRIPTIONS_' + dapp?.publicKey?.toBase58();
 
-export const IDENTITY_CACHE_KEY_FN = (publicKey: PublicKey) =>
-  `IDENTITY_${publicKey.toString()}`;
+export const IDENTITY_CACHE_KEY_FN = (publicKey?: PublicKey) =>
+  `IDENTITY_${publicKey?.toString()}`;
