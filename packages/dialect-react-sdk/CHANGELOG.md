@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: crash when thread gets deleted by other member (handle undefined pk safely)
+
 ## [1.0.0-beta.31] - 2022-09-14
 
 - chore: downgrade nanoid to have support for cjs
