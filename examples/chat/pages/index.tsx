@@ -23,6 +23,7 @@ import {
 } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
 import { Wallet as WalletButton } from '../components/Wallet';
+import { CivicIdentityResolver } from '@dialectlabs/identity-civic';
 
 // TODO: Use useTheme instead of explicitly importing defaultVariables
 export const themeVariables: IncomingThemeVariables = {
@@ -155,6 +156,7 @@ export default function Home(): JSX.Element {
           new DialectDappsIdentityResolver(),
           new SNSIdentityResolver(connection),
           new CardinalTwitterIdentityResolver(connection),
+          new CivicIdentityResolver(connection),
         ],
       },
     }),
