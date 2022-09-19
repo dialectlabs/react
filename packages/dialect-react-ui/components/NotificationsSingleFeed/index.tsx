@@ -1,5 +1,6 @@
 import { useSingleFeed } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
+import LoadingThread from '../../entities/LoadingThread';
 import { Notification } from '../../entities/notifications/Notification';
 import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
 import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
@@ -17,12 +18,13 @@ const NotificationsSingleFeedInternal = ({
   onModalClose,
 }: NotificationsSingleFeedProps) => {
   const { scrollbar } = useTheme();
-  const { data } = useSingleFeed({ pollingInterval });
+  const { data, isLoading } = useSingleFeed({ pollingInterval });
 
   return (
     <div className="dt-h-full dt-pb-[3.5rem]">
       <Header onModalClose={onModalClose} />
       <div className={clsx('dt-h-full dt-overflow-y-auto dt-p-4', scrollbar)}>
+        {isLoading && <LoadingThread />}
         {data.map((msg, index) => {
           return (
             <Notification

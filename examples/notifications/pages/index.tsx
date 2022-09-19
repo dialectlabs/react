@@ -86,11 +86,9 @@ function AuthedHome() {
         <title>Notifications Button Example | Dialect</title>
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <NotificationsButton
-          dialectId="dialect-singlefeed-notifications"
-          pollingInterval={15000}
-          Component={NotificationsSingleFeed}
-        />
+        <p className="text-[#6F2BFF] animate-pulse">
+          Typical dapp notifications widget ➡️
+        </p>
         <NotificationsButton
           dialectId="dialect-notifications"
           notifications={[
@@ -102,6 +100,17 @@ function AuthedHome() {
           ]}
           pollingInterval={15000}
           channels={['web3', 'email', 'sms', 'telegram']}
+        />
+        <WalletButton />
+      </div>
+      <div className="flex flex-row justify-end p-2 items-center space-x-2">
+        <p className="text-[#6F2BFF] animate-pulse">
+          Single feed notifications widget ➡️
+        </p>
+        <NotificationsButton
+          dialectId="dialect-singlefeed-notifications"
+          pollingInterval={15000}
+          Component={NotificationsSingleFeed}
         />
         <WalletButton />
       </div>
