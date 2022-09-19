@@ -9,18 +9,20 @@ import { Header } from './Header';
 
 interface NotificationsSingleFeedProps {
   pollingInterval?: number;
+  onModalClose?: () => void;
 }
 
 const NotificationsSingleFeedInternal = ({
   pollingInterval,
+  onModalClose,
 }: NotificationsSingleFeedProps) => {
   const { scrollbar } = useTheme();
   const { data } = useSingleFeed({ pollingInterval });
 
   return (
     <div className="dt-h-full dt-pb-[3.5rem]">
-      <Header />
-      <div className={clsx('dt-h-full dt-overflow-y-auto dt-px-4', scrollbar)}>
+      <Header onModalClose={onModalClose} />
+      <div className={clsx('dt-h-full dt-overflow-y-auto dt-p-4', scrollbar)}>
         {data.map((msg, index) => {
           return (
             <Notification
@@ -38,11 +40,12 @@ const NotificationsSingleFeedInternal = ({
 };
 
 export const NotificationsSingleFeed = ({
+  onModalClose,
   pollingInterval,
 }: NotificationsSingleFeedProps) => {
-  const { colors } = useTheme();
+  const { colors, modal } = useTheme();
 
-  const header = <Header />;
+  const header = <Header onModalClose={onModalClose} />;
 
   return (
     <div className="dialect dt-h-full">
@@ -50,7 +53,8 @@ export const NotificationsSingleFeed = ({
         className={clsx(
           'dt-flex dt-flex-col dt-h-full dt-overflow-hidden',
           colors.textPrimary,
-          colors.bg
+          colors.bg,
+          modal
         )}
       >
         <WalletStatesWrapper header={header}>

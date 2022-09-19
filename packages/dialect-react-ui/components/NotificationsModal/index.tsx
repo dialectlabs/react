@@ -25,6 +25,8 @@ interface NotificationsModalProps {
   pollingInterval?: number;
 
   onBackClick?: () => void;
+
+  Component?: (props: any) => JSX.Element;
 }
 
 const NotificationsModal = forwardRef<HTMLDivElement, NotificationsModalProps>(
@@ -34,6 +36,7 @@ const NotificationsModal = forwardRef<HTMLDivElement, NotificationsModalProps>(
       animationStyle,
       dialectId,
       standalone,
+      Component = Notifications,
       ...props
     }: NotificationsModalProps,
     ref
@@ -71,7 +74,7 @@ const NotificationsModal = forwardRef<HTMLDivElement, NotificationsModalProps>(
         >
           {/* TODO: fix type error */}
           <div ref={ref} className="dt-w-full dt-h-full">
-            <Notifications onModalClose={close} {...props} />
+            <Component onModalClose={close} {...props} />
           </div>
         </Transition>
       </div>

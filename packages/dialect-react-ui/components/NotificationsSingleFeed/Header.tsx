@@ -7,7 +7,7 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps) => {
-  const { colors, textStyles, header, icons } = useTheme();
+  const { colors, textStyles, header, notificationHeader, icons } = useTheme();
 
   const CloseButton = () => (
     <IconButton icon={<icons.x />} onClick={props.onModalClose} />
@@ -26,10 +26,9 @@ export const Header = (props: HeaderProps) => {
   return (
     <div
       className={clsx(
-        'dt-flex dt-items-center dt-justify-between',
-        colors.textPrimary,
-        colors.bg,
-        header
+        'dt-flex dt-flex-row dt-items-center dt-justify-between',
+        header,
+        notificationHeader
       )}
     >
       <span className={clsx(textStyles.header, colors.accent)}>

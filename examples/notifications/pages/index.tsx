@@ -8,7 +8,9 @@ import {
   DialectWalletAdapter,
   IncomingThemeVariables,
   NotificationsButton,
+  NotificationsSingleFeed,
 } from '@dialectlabs/react-ui';
+import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
 import * as anchor from '@project-serum/anchor';
 import {
   useConnection,
@@ -85,6 +87,11 @@ function AuthedHome() {
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <NotificationsButton
+          dialectId="dialect-singlefeed-notifications"
+          pollingInterval={15000}
+          Component={NotificationsSingleFeed}
+        />
+        <NotificationsButton
           dialectId="dialect-notifications"
           notifications={[
             {
@@ -128,6 +135,9 @@ export default function Home(): JSX.Element {
       },
       solana: {
         rpcUrl: connection.rpcEndpoint,
+      },
+      identity: {
+        resolvers: [new DialectDappsIdentityResolver()],
       },
     }),
     [connection]
