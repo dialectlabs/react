@@ -14,3 +14,4 @@ export { default as useNotificationChannelDappSubscription } from './useNotifica
 export { default as useDialectGate } from './useDialectGate';
 export { default as useNotificationSubscriptions } from './useNotificationSubscriptions';
 export { default as useDappNotificationSubscriptions } from './useDappNotificationSubscriptions';
+export { default as useSingleFeed } from './useSingleFeed';

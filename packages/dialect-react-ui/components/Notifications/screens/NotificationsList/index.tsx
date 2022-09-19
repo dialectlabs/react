@@ -4,7 +4,7 @@ import { Divider } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../common/providers/Router';
 import NoNotifications from './NoNotifications';
-import { Notification } from './Notification';
+import { Notification } from '../../../../entities/notifications/Notification';
 
 interface NotificationsListProps {
   refreshInterval?: number;
