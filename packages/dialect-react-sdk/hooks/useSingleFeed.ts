@@ -25,14 +25,11 @@ const useSingleFeed = ({
 }: UseSingleFeedParams = {}): UseSingleFeedValue => {
   const sdk = useDialectSdk();
 
-  const query: FindDappMessageQuery = useMemo(
-    () => ({
-      dappVerified: !nonVerifiedDapps,
-      take,
-      skip,
-    }),
-    [nonVerifiedDapps, skip, take]
-  );
+  const query: FindDappMessageQuery = {
+    dappVerified: !nonVerifiedDapps,
+    take,
+    skip,
+  };
 
   const { data, error } = useSWR(
     SINGLE_FEED_CACHE_KEY_FN(query),
