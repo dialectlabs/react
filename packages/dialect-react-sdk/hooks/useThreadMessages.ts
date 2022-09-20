@@ -133,11 +133,11 @@ const useThreadMessages = ({
   );
 
   const offChainSendMessage = useCallback(
-    async (t: Thread, cmd: Omit<SendMessageCommand, 'deduplicationId'>) => {
+    async (t: Thread, cmd: SendMessageCommand) => {
       setIsSendingMessage(true);
       setErrorSendingMessage(null);
       const threadAddr = t.id.toString();
-      const deduplicationId = nanoid();
+      const deduplicationId = cmd.deduplicationId ?? nanoid();
       const optimisticMessage: LocalThreadMessage = {
         deduplicationId,
         text: cmd.text,
@@ -169,7 +169,7 @@ const useThreadMessages = ({
   );
 
   const sendMessage = useCallback(
-    async (cmd: Omit<SendMessageCommand, 'deduplicationId'>) => {
+    async (cmd: SendMessageCommand) => {
       if (!threadInternal) return;
 
       const sendMessageFn =
