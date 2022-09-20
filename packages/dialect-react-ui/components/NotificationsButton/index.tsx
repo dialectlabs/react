@@ -67,7 +67,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
         onClick={ui?.open ? close : open}
       />
       <NotificationsModal
-        ref={(el: any) => {
+        ref={(el) => {
           if (!el) return;
           refs.current[0] = el;
         }}
