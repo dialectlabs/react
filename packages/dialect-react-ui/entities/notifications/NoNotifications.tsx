@@ -1,5 +1,5 @@
-import { Centered } from '../../../common';
-import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { Centered } from '../../components/common';
+import { useTheme } from '../../components/common/providers/DialectThemeProvider';
 
 const NoNotifications = () => {
   const { icons } = useTheme();

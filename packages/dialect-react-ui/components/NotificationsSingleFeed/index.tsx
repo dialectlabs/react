@@ -1,6 +1,7 @@
 import { useSingleFeed } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import LoadingThread from '../../entities/LoadingThread';
+import NoNotifications from '../../entities/notifications/NoNotifications';
 import { Notification } from '../../entities/notifications/Notification';
 import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
 import WalletStatesWrapper from '../../entities/wrappers/WalletStatesWrapper';
@@ -23,8 +24,14 @@ const NotificationsSingleFeedInternal = ({
   return (
     <div className="dt-h-full dt-pb-[3.5rem]">
       <Header onModalClose={onModalClose} />
-      <div className={clsx('dt-h-full dt-overflow-y-auto dt-p-4', scrollbar)}>
+      <div
+        className={clsx(
+          'dt-h-full dt-overflow-y-auto dt-p-4 dt-pb-0',
+          scrollbar
+        )}
+      >
         {isLoading && <LoadingThread />}
+        {!data.length && <NoNotifications />}
         {data.map((msg, index) => (
           <Notification
             key={index}
