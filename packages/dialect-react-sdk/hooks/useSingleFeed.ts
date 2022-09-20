@@ -1,5 +1,4 @@
 import type { DappMessage, FindDappMessageQuery } from '@dialectlabs/sdk';
-import { useMemo } from 'react';
 import useSWR from 'swr';
 import { EMPTY_ARR } from '../utils';
 import { SINGLE_FEED_CACHE_KEY_FN } from './internal/swrCache';
@@ -37,7 +36,7 @@ const useSingleFeed = ({
     { refreshInterval: pollingInterval }
   );
 
-  const isLoading = data === undefined && !error;
+  const isLoading = !data && !error;
 
   return {
     data: data || EMPTY_ARR,
