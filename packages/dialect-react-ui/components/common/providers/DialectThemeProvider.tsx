@@ -109,6 +109,7 @@ export type IncomingThemeValues = {
   otherMessage?: string;
   messageOnChain?: string;
   otherMessageOnChain?: string;
+  notificationAuthor?: string;
   notificationMessage?: string;
   notificationTimestamp?: string;
   notificationsDivider?: string;
@@ -269,6 +270,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     otherMessage: 'dt-bg-neutral-100',
     messageOnChain: 'dt-bg-accent',
     otherMessageOnChain: 'dt-bg-neutral-100',
+    notificationAuthor: 'dt-mb-2',
     notificationMessage: 'dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',
@@ -374,6 +376,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     otherMessage: 'dt-bg-neutral-900 dt-border-neutral-900',
     messageOnChain: 'dt-bg-accent',
     otherMessageOnChain: 'dt-bg-neutral-900 dt-border-neutral-900',
+    notificationAuthor: 'dt-mb-2',
     notificationMessage: 'dt-rounded-2xl dt-py-3 dt-px-3 dt-mb-2',
     notificationTimestamp: 'dt-text-right',
     notificationsDivider: 'dt-hidden',

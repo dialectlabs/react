@@ -5,6 +5,7 @@ import BottomChat from './components/BottomChat';
 import Notifications from './components/Notifications';
 import NotificationsButton from './components/NotificationsButton';
 import NotificationsModal from './components/NotificationsModal';
+import { NotificationsSingleFeed } from './components/NotificationsSingleFeed';
 import SubscribeButton from './components/SubscribeButton';
 import Inbox from './components/Inbox';
 import useDappAudience from './hooks/useDappAudience';
@@ -52,7 +53,7 @@ import Sms from './components/Notifications/screens/NewSettings/Sms';
 import Telegram from './components/Notifications/screens/NewSettings/Telegram';
 import Wallet from './components/Notifications/screens/NewSettings/Wallet';
 import { NotificationToggle } from './components/Notifications/screens/Settings';
-import { Notification } from './components/Notifications/screens/NotificationsList/Notification';
+import { Notification } from './entities/notifications/Notification';
 import ToastMessage from './components/common/ToastMessage';
 import * as Icons from './components/Icon';
 
@@ -72,6 +73,7 @@ export {
   NotificationsButton,
   NotificationsModal,
   Notifications,
+  NotificationsSingleFeed,
   Inbox,
   defaultVariables,
   ThemeProvider,

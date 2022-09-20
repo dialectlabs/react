@@ -6,7 +6,7 @@ import { DEFAULT_NOTIFICATIONS_CHANNELS } from '../common/constants';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import IconButton from '../IconButton';
-import NotificationModal from '../NotificationsModal';
+import NotificationsModal from '../NotificationsModal';
 import type { NotificationType } from '../Notifications';
 import type { Channel } from '../common/types';
 
@@ -21,6 +21,7 @@ export type PropTypes = {
   channels?: Channel[];
   onBackClick?: () => void;
   pollingInterval?: number;
+  Component?: (props: any) => JSX.Element;
 };
 
 function WrappedNotificationsButton(props: PropTypes): JSX.Element {
@@ -65,7 +66,7 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
         icon={<icons.bell className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />}
         onClick={ui?.open ? close : open}
       />
-      <NotificationModal
+      <NotificationsModal
         ref={(el) => {
           if (!el) return;
           refs.current[0] = el;

@@ -3,6 +3,7 @@ import type {
   DialectWalletAdapter,
   Dapp,
   Wallets,
+  FindDappMessageQuery,
 } from '@dialectlabs/sdk';
 import type { PublicKey } from '@solana/web3.js';
 
@@ -66,3 +67,6 @@ export const DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
 
 export const IDENTITY_CACHE_KEY_FN = (publicKey?: PublicKey) =>
   `IDENTITY_${publicKey?.toString()}`;
+
+export const SINGLE_FEED_CACHE_KEY_FN = (query: FindDappMessageQuery) =>
+  `SINGLE_FEED_${query.dappVerified}_${query.take}_${query.skip}`;

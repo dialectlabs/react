@@ -10,7 +10,7 @@ const LoadingThread = () => {
       <H3
         className={clsx(textStyles.header, 'dt-flex dt-items-center dt-mb-1')}
       >
-        <Loader className="dt-mr-2" /> Loading notifications settings
+        <Loader className="dt-mr-2" /> Loading notifications
       </H3>
     </Centered>
   );

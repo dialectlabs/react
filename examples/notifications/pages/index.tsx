@@ -8,7 +8,9 @@ import {
   DialectWalletAdapter,
   IncomingThemeVariables,
   NotificationsButton,
+  NotificationsSingleFeed,
 } from '@dialectlabs/react-ui';
+import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
 import * as anchor from '@project-serum/anchor';
 import {
   useConnection,
@@ -84,18 +86,29 @@ function AuthedHome() {
         <title>Notifications Button Example | Dialect</title>
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <NotificationsButton
-          dialectId="dialect-notifications"
-          notifications={[
-            {
-              name: 'Example notification',
-              detail:
-                'This is an example notification that is never sent. More examples coming soon',
-            },
-          ]}
-          pollingInterval={15000}
-          channels={['web3', 'email', 'sms', 'telegram']}
-        />
+        <div className="flex flex-row justify-end p-2 items-center space-x-2">
+          <p className="text-white animate-pulse">Typical dapp →</p>
+          <NotificationsButton
+            dialectId="dialect-notifications"
+            notifications={[
+              {
+                name: 'Example notification',
+                detail:
+                  'This is an example notification that is never sent. More examples coming soon',
+              },
+            ]}
+            pollingInterval={15000}
+            channels={['web3', 'email', 'sms', 'telegram']}
+          />
+        </div>
+        <div className="flex flex-row justify-end p-2 items-center space-x-2">
+          <p className="text-white animate-pulse">Single feed →</p>
+          <NotificationsButton
+            dialectId="dialect-singlefeed-notifications"
+            pollingInterval={15000}
+            Component={NotificationsSingleFeed}
+          />
+        </div>
         <WalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">
@@ -128,6 +141,9 @@ export default function Home(): JSX.Element {
       },
       solana: {
         rpcUrl: connection.rpcEndpoint,
+      },
+      identity: {
+        resolvers: [new DialectDappsIdentityResolver()],
       },
     }),
     [connection]
