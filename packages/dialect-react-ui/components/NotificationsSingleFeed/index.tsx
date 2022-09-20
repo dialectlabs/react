@@ -25,16 +25,14 @@ const NotificationsSingleFeedInternal = ({
       <Header onModalClose={onModalClose} />
       <div className={clsx('dt-h-full dt-overflow-y-auto dt-p-4', scrollbar)}>
         {isLoading && <LoadingThread />}
-        {data.map((msg, index) => {
-          return (
-            <Notification
-              key={index}
-              message={msg.text}
-              timestamp={msg.timestamp}
-              author={msg.author}
-            />
-          );
-        })}
+        {data.map((msg, index) => (
+          <Notification
+            key={index}
+            message={msg.text}
+            timestamp={msg.timestamp}
+            author={msg.author}
+          />
+        ))}
         <Footer />
       </div>
     </div>
