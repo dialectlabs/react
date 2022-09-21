@@ -66,7 +66,9 @@ export const NotificationsSingleFeed = ({
       >
         <WalletStatesWrapper header={header}>
           <ConnectionWrapper header={header} pollingInterval={pollingInterval}>
-            <NotificationsSingleFeedInternal />
+            <NotificationsSingleFeedInternal
+              pollingInterval={pollingInterval}
+            />
           </ConnectionWrapper>
         </WalletStatesWrapper>
       </div>
