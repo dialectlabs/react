@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.66] - 2022-09-23
+
+- chore: bump @dialectlabs/react-sdk version
+
 ## [1.0.0-beta.65] - 2022-09-15
 
 - fix: crash when thread gets deleted by other member
@@ -15,12 +19,15 @@
 - fix: fix duplicate messages in threads (optimistic messages)
 
 ## [1.0.0-beta.62] - 2022-09-09
+
 - chore: minor stylistic changes
 
 ## [1.0.0-beta.60] - 2022-09-09
+
 - feat: support for international phone numbers
 
 ## [1.0.0-beta.59] - 2022-09-09
+
 - chore: minor stylistic changes
 
 ## [1.0.0-beta.57] - 2022-09-09

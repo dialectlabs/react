@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.33] - 2022-09-23
+
+- chore: bump sdk
+
 ## [1.0.0-beta.32] - 2022-09-15
 
 - fix: crash when thread gets deleted by other member (handle undefined pk safely)
