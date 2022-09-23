@@ -20,7 +20,7 @@ const displayCustomIdentityName = (identity: Identity) => {
     }
     case 'CARDINAL_TWITTER': {
       return (
-        <div className="flex flex-row items-center">
+        <div className="dt-flex dt-flex-row dt-items-center">
           <div>@{identity.name}</div>
           <div className="dt-pl-2">
             <TwitterIcon height={15} width={15} />
@@ -61,7 +61,7 @@ export function DisplayAddress({
   };
 
   return (
-    <div className="flex flex-row items-center">
+    <div className="dt-flex dt-flex-row dt-items-center">
       {loading ? (
         <div className="dt-pl-2">
           <Loader />
