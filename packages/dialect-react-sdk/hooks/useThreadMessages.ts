@@ -69,7 +69,6 @@ const useThreadMessages = ({
 
   const {
     data: remoteMessages = EMPTY_ARR,
-    isValidating: isFetchingMessages,
     error: errorFetchingMessages = null,
     mutate,
   } = useSWR<SdkThreadMessage[], DialectSdkError>(
@@ -211,7 +210,8 @@ const useThreadMessages = ({
     cancel: cancelMessage,
     setLastReadMessageTime,
 
-    isFetchingMessages,
+    // Do not use `isValidating` since it will produce visual flickering
+    isFetchingMessages: messages !== EMPTY_ARR && !errorFetchingMessages,
     errorFetchingMessages,
     isSendingMessage,
     errorSendingMessage,

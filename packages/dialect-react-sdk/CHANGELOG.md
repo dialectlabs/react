@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: `isFetching` prop on `useThreadMessages()` and `useThreads()`
+
 ## [1.0.0-beta.33] - 2022-09-23
 
 - chore: bump sdk

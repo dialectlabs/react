@@ -33,7 +33,6 @@ const useThreads = ({
 
   const {
     data: threads = EMPTY_ARR,
-    isValidating: isFetchingThreads,
     error: errorFetchingThreads,
     mutate,
   } = useSWR(CACHE_KEY_THREADS, () => threadsApi.findAll(), {
@@ -81,7 +80,8 @@ const useThreads = ({
     threads,
     create: createThread,
 
-    isFetchingThreads,
+    // Do not use `isValidating` since it will produce visual flickering
+    isFetchingThreads: threads !== EMPTY_ARR && !errorFetchingThreads,
     errorFetchingThreads,
     isCreatingThread,
     errorCreatingThread,
