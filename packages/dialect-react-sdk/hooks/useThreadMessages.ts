@@ -103,7 +103,7 @@ const useThreadMessages = ({
       return null;
     }
 
-    // For backends other than `DialectCloud` we return undefined if no remote meessages
+    // For backends other than `DialectCloud` we return null if no remote meessages
     if (thread?.backend !== Backend.DialectCloud && remoteMessages === null) {
       return null;
     }
