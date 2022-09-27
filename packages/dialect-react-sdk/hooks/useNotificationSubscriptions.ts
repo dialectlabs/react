@@ -1,15 +1,15 @@
 import {
+  AccountAddress,
   DialectSdkError,
   UpsertNotificationSubscriptionCommand,
   WalletNotificationSubscription,
 } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import type { PublicKey } from '@solana/web3.js';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import { WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from './internal/swrCache';
-import useDialectSdk from './useDialectSdk';
 import useDialectDapp from './useDialectDapp';
+import useDialectSdk from './useDialectSdk';
 
 interface UseNotificationSubscriptionsValue {
   subscriptions: WalletNotificationSubscription[];
@@ -26,18 +26,19 @@ type UpdateNotificationSubscriptionCommand =
   UpsertNotificationSubscriptionCommand;
 
 interface UseUseNotificationSubscriptions {
-  dappPublicKey?: PublicKey;
+  dappAddress?: AccountAddress;
   refreshInterval?: number;
 }
 
 function useNotificationSubscriptions({
-  dappPublicKey: dappPublicKeyOverride,
+  dappAddress: dappAddressOverride,
   refreshInterval,
 }: UseUseNotificationSubscriptions = EMPTY_OBJ): UseNotificationSubscriptionsValue {
-  const { dappAddress: globalDappPublicKey } = useDialectDapp();
-  const dappPublicKey = dappPublicKeyOverride || globalDappPublicKey;
-  const { wallet: walletsApi } = useDialectSdk();
-  const { notificationSubscriptions } = walletsApi;
+  const { dappAddress: globalDappAddress } = useDialectDapp();
+  const dappAddress = dappAddressOverride || globalDappAddress;
+  const {
+    wallet: { address: walletAddress, notificationSubscriptions },
+  } = useDialectSdk();
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorUpdating, setErrorUpdating] = useState<DialectSdkError | null>(
@@ -49,10 +50,11 @@ function useNotificationSubscriptions({
     error: errorFetching = null,
     mutate,
   } = useSWR(
-    WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(walletsApi, dappPublicKey),
-    !(notificationSubscriptions && dappPublicKey)
-      ? null
-      : () => notificationSubscriptions.findAll({ dappPublicKey }),
+    WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(walletAddress, dappAddress),
+    notificationSubscriptions && dappAddress
+      ? () =>
+          notificationSubscriptions.findAll({ dappAccountAddress: dappAddress })
+      : null,
     {
       refreshInterval,
       refreshWhenOffline: true,

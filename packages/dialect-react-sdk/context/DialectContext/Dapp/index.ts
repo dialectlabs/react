@@ -1,13 +1,17 @@
-import type { PublicKey } from '@solana/web3.js';
+import type { AccountAddress } from '@dialectlabs/sdk';
 import { createContainer } from '../../../utils/container';
 
-export interface DialectDappState {
-  dappAddress?: PublicKey;
+interface DialectDappProps {
+  dappAddress?: AccountAddress;
 }
 
-function useDialectDapp(dapp?: PublicKey): DialectDappState {
+export interface DialectDappState {
+  dappAddress?: AccountAddress;
+}
+
+function useDialectDapp({ dappAddress }: DialectDappProps): DialectDappState {
   return {
-    dappAddress: dapp,
+    dappAddress: dappAddress,
   };
 }
 

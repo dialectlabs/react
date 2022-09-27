@@ -1,4 +1,3 @@
-import { Backend } from '@dialectlabs/sdk';
 import { useState } from 'react';
 import { EMPTY_ARR } from '../../../utils';
 import { createContainer } from '../../../utils/container';

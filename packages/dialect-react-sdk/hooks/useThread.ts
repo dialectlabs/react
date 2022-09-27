@@ -17,7 +17,10 @@ type UseThreadParams = {
 
 interface UseThreadValue {
   // sdk
-  thread: Omit<Thread, 'messages' | 'send' | 'delete'> | null;
+  thread: Omit<
+    Thread,
+    'messages' | 'send' | 'delete' | 'setLastReadMessageTime'
+  > | null;
 
   delete(): Promise<void>;
 

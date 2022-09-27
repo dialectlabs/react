@@ -1,7 +1,7 @@
 import {
   DialectCloudUnreachableError,
   DialectSdkError,
-  DisconnectedFromChainError,
+  DisconnectedFromChainError
 } from '@dialectlabs/sdk';
 import { useEffect } from 'react';
 import { DialectConnectionInfo } from '.';

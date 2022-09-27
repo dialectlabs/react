@@ -1,7 +1,6 @@
-import type { Address, AddressType } from '@dialectlabs/sdk';
+import type { AccountAddress, Address, AddressType } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import type { PublicKey } from '@solana/web3.js';
 import { EMPTY_ARR } from '../utils';
 import { WALLET_DAPP_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
 import useDialectDapp from './useDialectDapp';
@@ -10,7 +9,7 @@ import useNotificationChannel from './useNotificationChannel';
 
 interface UseNotificationChannelDappSubscriptionParams {
   addressType: AddressType;
-  dappPublicKey?: PublicKey;
+  dappAddress?: AccountAddress;
 }
 
 interface ToggleSubscriptionParams {
@@ -26,11 +25,11 @@ interface UseNotificationChannelDappSubscriptionValue {
 }
 
 const useNotificationChannelDappSubscription = ({
-  dappPublicKey: dappPublicKeyOverride,
+  dappAddress: dappAddressOverride,
   addressType,
 }: UseNotificationChannelDappSubscriptionParams): UseNotificationChannelDappSubscriptionValue => {
-  const { dappAddress: globalDappPublicKey } = useDialectDapp();
-  const dappPublicKey = dappPublicKeyOverride || globalDappPublicKey;
+  const { dappAddress: globalDappAddress } = useDialectDapp();
+  const dappAddress = dappAddressOverride || globalDappAddress;
   const { wallet: walletsApi } = useDialectSdk();
   const { globalAddress } = useNotificationChannel({ addressType });
 
@@ -41,13 +40,11 @@ const useNotificationChannelDappSubscription = ({
     error: errorFetchingDappAddresses = null,
     mutate: mutateDappAddresses,
   } = useSWR(
-    WALLET_DAPP_ADDRESSES_CACHE_KEY_FN(walletsApi, dappPublicKey),
-    walletsApi && dappPublicKey
-      ? () =>
-          walletsApi.dappAddresses.findAll({
-            dappPublicKey,
-          })
-      : null
+    WALLET_DAPP_ADDRESSES_CACHE_KEY_FN(walletsApi.address, dappAddress),
+    () =>
+      walletsApi.dappAddresses.findAll({
+        addressIds: [dappAddress],
+      })
   );
 
   const currentSubscription = globalAddress
@@ -56,7 +53,7 @@ const useNotificationChannelDappSubscription = ({
 
   const toggleSubscription = useCallback(
     async ({ enabled, address = globalAddress }: ToggleSubscriptionParams) => {
-      if (!address || !dappPublicKey || isToggling) {
+      if (!address || !dappAddress || isToggling) {
         return;
       }
       setIsToggling(true);
@@ -74,7 +71,7 @@ const useNotificationChannelDappSubscription = ({
             } else {
               const newSub = await walletsApi.dappAddresses.create({
                 addressId: address.id,
-                dappPublicKey,
+                dappAccountAddress: dappAddress,
                 enabled,
               });
               return [...dappSubscriptions, newSub];
@@ -104,7 +101,7 @@ const useNotificationChannelDappSubscription = ({
     },
     [
       currentSubscription,
-      dappPublicKey,
+      dappAddress,
       dappSubscriptions,
       globalAddress,
       isToggling,
@@ -114,9 +111,7 @@ const useNotificationChannelDappSubscription = ({
   );
 
   const isFetchingSubscriptions =
-    Boolean(walletsApi) &&
-    !errorFetchingDappAddresses &&
-    dappSubscriptions === undefined;
+    !errorFetchingDappAddresses && !dappSubscriptions;
 
   return {
     enabled: currentSubscription?.enabled || false,

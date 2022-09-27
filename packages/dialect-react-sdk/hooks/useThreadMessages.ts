@@ -1,24 +1,24 @@
 import {
-  Backend,
   DialectSdkError,
   SendMessageCommand as DialectSdkSendMessageCommand,
   Thread,
   ThreadId,
   ThreadMessage as SdkThreadMessage,
+  ThreadMessage,
 } from '@dialectlabs/sdk';
+import { nanoid } from 'nanoid';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
-import type { LocalThreadMessage, ThreadMessage } from '../types';
+import type { LocalThreadMessage } from '../types';
 import { EMPTY_ARR } from '../utils';
 import {
   CACHE_KEY_MESSAGES_FN,
-  CACHE_KEY_THREAD_SUMMARY_FN,
   CACHE_KEY_THREADS,
+  CACHE_KEY_THREAD_SUMMARY_FN,
 } from './internal/swrCache';
 import useThread from './useThread';
-import { nanoid } from 'nanoid';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
   id?: string;
@@ -91,7 +91,7 @@ const useThreadMessages = ({
         (rm) => rm.deduplicationId === lm.deduplicationId
       );
 
-      if (remoteMessage) {
+      if (remoteMessage && lm.deduplicationId) {
         deleteLocalMessage(thread.id.toString(), lm.deduplicationId);
       }
 
@@ -104,17 +104,17 @@ const useThreadMessages = ({
     }
 
     // For backends other than `DialectCloud` we return null if no remote meessages
-    if (thread?.backend !== Backend.DialectCloud && !remoteMessages) {
+    if (thread?.type !== 'dialect-cloud' && !remoteMessages) {
       return null;
     }
 
     // If there are remote messages add them to the `messageArray`
-    if (thread?.backend === Backend.DialectCloud && remoteMessages) {
+    if (thread?.type === 'dialect-cloud' && remoteMessages) {
       messageArray = messageArray.concat(remoteMessages);
     }
 
     // If there are local messages add them to the `messageArray` as well
-    if (thread?.backend === Backend.DialectCloud && filteredLocalMessages) {
+    if (thread?.type === 'dialect-cloud' && filteredLocalMessages) {
       messageArray = messageArray.concat(filteredLocalMessages);
     }
 
@@ -189,7 +189,7 @@ const useThreadMessages = ({
       if (!threadInternal) return;
 
       const sendMessageFn =
-        threadInternal.backend === Backend.DialectCloud
+        threadInternal.type === 'dialect-cloud'
           ? offChainSendMessage
           : onChainSendMessage;
 
@@ -210,15 +210,15 @@ const useThreadMessages = ({
 
   const setLastReadMessageTime = useCallback(
     async (time: Date) => {
-      if (!thread) return;
-      await thread.setLastReadMessageTime(time);
+      if (!threadInternal) return;
+      await threadInternal.setLastReadMessageTime(time);
       globalMutate(
         CACHE_KEY_THREAD_SUMMARY_FN(
-          thread.otherMembers.map((it) => it.publicKey)
+          threadInternal.otherMembers.map((it) => it.address)
         )
       );
     },
-    [globalMutate, thread]
+    [globalMutate, threadInternal]
   );
 
   return {
