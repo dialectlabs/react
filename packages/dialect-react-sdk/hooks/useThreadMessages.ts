@@ -99,12 +99,12 @@ const useThreadMessages = ({
     });
 
     // If both local and remote messages have not been fetched yet return null to keep accurate `isFetching` state
-    if (filteredLocalMessages === null && remoteMessages === null) {
+    if (!filteredLocalMessages && !remoteMessages) {
       return null;
     }
 
     // For backends other than `DialectCloud` we return null if no remote meessages
-    if (thread?.backend !== Backend.DialectCloud && remoteMessages === null) {
+    if (thread?.backend !== Backend.DialectCloud && !remoteMessages) {
       return null;
     }
 
@@ -228,7 +228,7 @@ const useThreadMessages = ({
     setLastReadMessageTime,
 
     // Do not use `isValidating` since it will produce visual flickering
-    isFetchingMessages: messages === null && !errorFetchingMessages,
+    isFetchingMessages: !messages && !errorFetchingMessages,
     errorFetchingMessages,
     isSendingMessage,
     errorSendingMessage,
