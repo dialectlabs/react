@@ -25,14 +25,24 @@ type PropsType = {
 
 function FirstMessage({
   firstMessage,
+  isFetching,
   isEncrypted,
 }: {
   firstMessage?: LocalThreadMessage;
+  isFetching: boolean;
   isEncrypted: boolean;
 }) {
   const {
     info: { wallet },
   } = useDialectSdk();
+
+  if (isFetching) {
+    return (
+      <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-items-center dt-space-x-1">
+        <span className="dt-min-w-0 dt-truncate">Loading...</span>
+      </div>
+    );
+  }
 
   if (isEncrypted) {
     return (
@@ -70,7 +80,7 @@ export default function MessagePreview({
   } = useDialectSdk();
   // TODO: ensure there is no re-renders
   const { thread } = useThreadInternal({ findParams: { id: threadId } });
-  const { messages } = useThreadMessages({ id: threadId });
+  const { messages, isFetchingMessages } = useThreadMessages({ id: threadId });
   const { unreadCount } = useUnreadMessages({
     otherMembers: thread?.otherMembers.map((m) => m.publicKey) ?? [],
   });
@@ -110,6 +120,7 @@ export default function MessagePreview({
             </div>
           ) : null}
           <FirstMessage
+            isFetching={isFetchingMessages}
             firstMessage={firstMessage}
             isEncrypted={thread.encryptionEnabled}
           />
