@@ -68,8 +68,7 @@ const useThreadMessages = ({
     LocalMessages.useContainer();
 
   const {
-    data: remoteMessages = EMPTY_ARR,
-    isValidating: isFetchingMessages,
+    data: remoteMessages,
     error: errorFetchingMessages = null,
     mutate,
   } = useSWR<SdkThreadMessage[], DialectSdkError>(
@@ -78,15 +77,17 @@ const useThreadMessages = ({
     { refreshInterval, refreshWhenOffline: true }
   );
 
-  const messages: ThreadMessage[] = useMemo(() => {
-    if (!thread) {
-      return EMPTY_ARR;
-    }
-    const localThreadMessages =
-      localMessages[thread.id.toString()] || EMPTY_ARR;
+  const messages: ThreadMessage[] | null = useMemo(() => {
+    let messageArray: SdkThreadMessage[] = [];
 
-    const filteredLocalMessages = localThreadMessages.filter((lm) => {
-      const remoteMessage = remoteMessages.find(
+    if (!thread) {
+      return null;
+    }
+
+    const localThreadMessages = localMessages[thread.id.toString()];
+
+    const filteredLocalMessages = localThreadMessages?.filter((lm) => {
+      const remoteMessage = remoteMessages?.find(
         (rm) => rm.deduplicationId === lm.deduplicationId
       );
 
@@ -97,10 +98,25 @@ const useThreadMessages = ({
       return !remoteMessage;
     });
 
-    const messageArray =
-      thread?.backend === Backend.DialectCloud
-        ? [...remoteMessages, ...filteredLocalMessages]
-        : remoteMessages;
+    // If both local and remote messages have not been fetched yet return null to keep accurate `isFetching` state
+    if (!filteredLocalMessages && !remoteMessages) {
+      return null;
+    }
+
+    // For backends other than `DialectCloud` we return null if no remote meessages
+    if (thread?.backend !== Backend.DialectCloud && !remoteMessages) {
+      return null;
+    }
+
+    // If there are remote messages add them to the `messageArray`
+    if (thread?.backend === Backend.DialectCloud && remoteMessages) {
+      messageArray = messageArray.concat(remoteMessages);
+    }
+
+    // If there are local messages add them to the `messageArray` as well
+    if (thread?.backend === Backend.DialectCloud && filteredLocalMessages) {
+      messageArray = messageArray.concat(filteredLocalMessages);
+    }
 
     return messageArray
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
@@ -206,12 +222,13 @@ const useThreadMessages = ({
   );
 
   return {
-    messages,
+    messages: messages || EMPTY_ARR,
     send: sendMessage,
     cancel: cancelMessage,
     setLastReadMessageTime,
 
-    isFetchingMessages,
+    // Do not use `isValidating` since it will produce visual flickering
+    isFetchingMessages: !messages && !errorFetchingMessages,
     errorFetchingMessages,
     isSendingMessage,
     errorSendingMessage,

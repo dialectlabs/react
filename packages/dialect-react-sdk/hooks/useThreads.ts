@@ -32,8 +32,7 @@ const useThreads = ({
     useState<DialectSdkError | null>(null);
 
   const {
-    data: threads = EMPTY_ARR,
-    isValidating: isFetchingThreads,
+    data: threads,
     error: errorFetchingThreads,
     mutate,
   } = useSWR(CACHE_KEY_THREADS, () => threadsApi.findAll(), {
@@ -78,10 +77,11 @@ const useThreads = ({
   );
 
   return {
-    threads,
+    threads: threads || EMPTY_ARR,
     create: createThread,
 
-    isFetchingThreads,
+    // Do not use `isValidating` since it will produce visual flickering
+    isFetchingThreads: threads == undefined && !errorFetchingThreads,
     errorFetchingThreads,
     isCreatingThread,
     errorCreatingThread,
