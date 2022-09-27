@@ -31,11 +31,17 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
     return (
       <Centered className="dt-text-center">
         <span>
-          This wallet is not eligible for broadcasting, <br />
-          please contact us through twitter{' '}
-          <A href="https://twitter.com/saydialect" target="_blank">
-            @saydialect
-          </A>
+          This wallet is not yet registered.{' '}
+          <A
+            target="_blank"
+            href={
+              'https://docs.dialect.to/documentation/notifications/dapp-setup#register-your-dapp'
+            }
+            className="dt-underline"
+          >
+            Register
+          </A>{' '}
+          and get started sending messages
         </span>
       </Centered>
     );

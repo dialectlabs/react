@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.34] - 2022-09-27
+
 - fix: `isFetching` prop on `useThreadMessages()` and `useThreads()`
 
 ## [1.0.0-beta.33] - 2022-09-23
