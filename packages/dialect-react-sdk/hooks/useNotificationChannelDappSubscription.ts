@@ -1,6 +1,7 @@
 import type { Address, AddressType } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
+import type { PublicKey } from '@solana/web3.js';
 import { EMPTY_ARR } from '../utils';
 import { WALLET_DAPP_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
 import useDialectDapp from './useDialectDapp';
@@ -9,11 +10,11 @@ import useNotificationChannel from './useNotificationChannel';
 
 interface UseNotificationChannelDappSubscriptionParams {
   addressType: AddressType;
+  dappPublicKey?: PublicKey;
 }
 
 interface ToggleSubscriptionParams {
   enabled: boolean;
-
   address?: Address | null; // This is hack for telegram use case until it got refactored on backend
 }
 
@@ -25,11 +26,13 @@ interface UseNotificationChannelDappSubscriptionValue {
 }
 
 const useNotificationChannelDappSubscription = ({
+  dappPublicKey: dappPublicKeyOverride,
   addressType,
 }: UseNotificationChannelDappSubscriptionParams): UseNotificationChannelDappSubscriptionValue => {
+  const { dappAddress: globalDappPublicKey } = useDialectDapp();
+  const dappPublicKey = dappPublicKeyOverride || globalDappPublicKey;
   const { wallet: walletsApi } = useDialectSdk();
   const { globalAddress } = useNotificationChannel({ addressType });
-  const { dappAddress: dappPublicKey } = useDialectDapp();
 
   const [isToggling, setIsToggling] = useState(false);
 

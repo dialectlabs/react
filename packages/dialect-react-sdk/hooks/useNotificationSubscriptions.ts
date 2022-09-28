@@ -5,6 +5,7 @@ import {
 } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
+import type { PublicKey } from '@solana/web3.js';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import { WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
@@ -25,13 +26,16 @@ type UpdateNotificationSubscriptionCommand =
   UpsertNotificationSubscriptionCommand;
 
 interface UseUseNotificationSubscriptions {
+  dappPublicKey?: PublicKey;
   refreshInterval?: number;
 }
 
 function useNotificationSubscriptions({
+  dappPublicKey: dappPublicKeyOverride,
   refreshInterval,
 }: UseUseNotificationSubscriptions = EMPTY_OBJ): UseNotificationSubscriptionsValue {
-  const { dappAddress: dappPublicKey } = useDialectDapp();
+  const { dappAddress: globalDappPublicKey } = useDialectDapp();
+  const dappPublicKey = dappPublicKeyOverride || globalDappPublicKey;
   const { wallet: walletsApi } = useDialectSdk();
   const { notificationSubscriptions } = walletsApi;
 
