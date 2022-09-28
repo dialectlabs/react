@@ -17,10 +17,9 @@ interface DialectSdkState {
   sdk: DialectSdkType<BlockchainSdk> | null;
 }
 
-function useDialectSdk({
-  config,
-  blockchainSdkFactory,
-}: DialectSdkProps): DialectSdkState {
+function useDialectSdk(
+  { config, blockchainSdkFactory }: DialectSdkProps = {} as DialectSdkProps
+): DialectSdkState {
   // const { adapter, initiateConnection } = DialectWallet.useContainer();
 
   // The idea is to check if we already has token stored somewhere to skip NotAuthorized screen

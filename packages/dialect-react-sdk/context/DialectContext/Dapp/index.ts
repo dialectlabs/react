@@ -9,7 +9,9 @@ export interface DialectDappState {
   dappAddress?: AccountAddress;
 }
 
-function useDialectDapp({ dappAddress }: DialectDappProps): DialectDappState {
+function useDialectDapp({
+  dappAddress,
+}: DialectDappProps = {}): DialectDappState {
   return {
     dappAddress: dappAddress,
   };
