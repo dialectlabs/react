@@ -5,15 +5,14 @@ import {
   CACHE_KEY_THREADS_SUMMARY,
 } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
-import type {
-  ThreadsGeneralSummary,
-  ThreadSummary,
-} from '../../../../sdk/packages/sdk';
+
 import { EMPTY_OBJ } from '../utils';
+import type { ThreadsGeneralSummary, ThreadSummary } from '@dialectlabs/sdk';
 
 interface BaseUseUnreadMessagesParams {
   refreshInterval?: number;
 }
+
 interface PerThreadUseUnreadMessagesParams extends BaseUseUnreadMessagesParams {
   otherMembers: PublicKey[];
 }
