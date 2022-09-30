@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.35] - 2022-09-30
+
 - refactor: add optional dappPublicKey argument to `useNotificationChannelDappSubscription()` and `useNotificationSubscriptions()`
 
 ## [1.0.0-beta.34] - 2022-09-27

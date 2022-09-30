@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- chore: bump @dialectlabs/react-sdk version
+
 ## [1.0.0-beta.67] - 2022-09-27
 
 - fix: wording in `<DashboardWrapper />`
