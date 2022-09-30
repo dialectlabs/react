@@ -4,41 +4,32 @@ import { createContainer } from '../../../utils/container';
 
 interface DialectBackendConnectionInfo {
   connected: boolean;
-  shouldConnect: boolean;
 }
 
 export interface DialectConnectionInfo {
-  solana: DialectBackendConnectionInfo;
   dialectCloud: DialectBackendConnectionInfo;
 }
 
 export interface DialectConnectionInfoState {
-  connected: DialectConnectionInfo;
+  connectionInfo: DialectConnectionInfo;
 
-  _updateConnectionInfo(
-    fn: (prevInfo: DialectConnectionInfo) => DialectConnectionInfo
-  ): void;
+  // _updateConnectionInfo(
+  //   fn: (prevInfo: DialectConnectionInfo) => DialectConnectionInfo
+  // ): void;
 }
-
-function useDialectConnectionInfo(
-  backends: Backend[] = EMPTY_ARR
-): DialectConnectionInfoState {
+//TODO: should use some kind of health checks
+function useDialectConnectionInfo(): DialectConnectionInfoState {
   const [connectionInfo, setConnectionInfo] = useState<DialectConnectionInfo>(
     () => ({
-      solana: {
-        connected: Boolean(backends.includes(Backend.Solana)),
-        shouldConnect: Boolean(backends.includes(Backend.Solana)),
-      },
       dialectCloud: {
-        connected: Boolean(backends.includes(Backend.DialectCloud)),
-        shouldConnect: Boolean(backends.includes(Backend.DialectCloud)),
+        connected: true,
       },
     })
   );
 
   return {
-    connected: connectionInfo,
-    _updateConnectionInfo: setConnectionInfo,
+    connectionInfo,
+    // _updateConnectionInfo: setConnectionInfo,
   };
 }
 

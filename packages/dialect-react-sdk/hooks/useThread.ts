@@ -1,7 +1,6 @@
 import { DialectSdkError, FindThreadQuery, Thread } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { EMPTY_ARR } from '../utils';
 import { isAdminable, isWritable } from '../utils/scopes';
 import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
@@ -56,8 +55,6 @@ const useThread = ({
       refreshWhenOffline: true,
     }
   );
-
-  useDialectErrorsHandler(errorFetchingThread, errorDeletingThread);
 
   const deleteThread = useCallback(async () => {
     if (!thread) return;

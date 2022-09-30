@@ -9,7 +9,6 @@ import {
 import { nanoid } from 'nanoid';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
 import type { LocalThreadMessage } from '../types';
 import { EMPTY_ARR } from '../utils';
@@ -205,8 +204,6 @@ const useThreadMessages = ({
     },
     [thread, deleteLocalMessage]
   );
-
-  useDialectErrorsHandler(errorFetchingMessages, errorSendingMessage);
 
   const setLastReadMessageTime = useCallback(
     async (time: Date) => {

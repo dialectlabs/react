@@ -15,10 +15,9 @@ export const DialectContext = React.createContext<null>(null);
 
 type DialectContextProviderProps<ChainSdk extends BlockchainSdk> = {
   config: ConfigProps;
-  blockchainSdkFactory: BlockchainSdkFactory<ChainSdk>;
+  blockchainSdkFactory?: BlockchainSdkFactory<ChainSdk> | null;
   dappAddress?: AccountAddress;
   gate?: Gate;
-  // autoConnect?: boolean;
   children?: React.ReactNode;
 };
 
@@ -27,17 +26,15 @@ export const DialectContextProvider: React.FC<
 > = ({ config, blockchainSdkFactory, dappAddress, gate, children }) => {
   return (
     <DialectContext.Provider value={null}>
-      {/* <DialectWallet.Provider initialState={{ adapter: wallet, autoConnect }}> */}
       <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
         <DialectGate.Provider initialState={gate}>
           <DialectDapp.Provider initialState={{ dappAddress }}>
-            <DialectConnectionInfo.Provider initialState={config.backends}>
+            <DialectConnectionInfo.Provider>
               <LocalMessages.Provider>{children}</LocalMessages.Provider>
             </DialectConnectionInfo.Provider>
           </DialectDapp.Provider>
         </DialectGate.Provider>
       </DialectSdk.Provider>
-      {/* </DialectWallet.Provider> */}
     </DialectContext.Provider>
   );
 };
