@@ -49,7 +49,7 @@ function useNotificationSubscriptions({
     error: errorFetching = null,
     mutate,
   } = useSWR(
-    WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(walletsApi),
+    WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(walletsApi, dappPublicKey),
     !(notificationSubscriptions && dappPublicKey)
       ? null
       : () => notificationSubscriptions.findAll({ dappPublicKey }),
