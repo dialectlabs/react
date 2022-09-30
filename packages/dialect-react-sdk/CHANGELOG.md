@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.0.0-beta.36] - 2022-09-30
+
+- fix: include `dappPublicKey` in SWR cache
+
 ## [1.0.0-beta.35] - 2022-09-30
 
 - refactor: add optional dappPublicKey argument to `useNotificationChannelDappSubscription()` and `useNotificationSubscriptions()`
