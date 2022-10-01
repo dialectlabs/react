@@ -1324,6 +1324,14 @@
   resolved "https://registry.yarnpkg.com/@csstools/selector-specificity/-/selector-specificity-2.0.2.tgz#1bfafe4b7ed0f3e4105837e056e0a89b108ebe36"
   integrity sha512-IkpVW/ehM1hWKln4fCA3NzJU8KwD+kIOvPZA4cqxoJHtE21CCzjyp+Kxbu0i5I4tBNOlXPL9mjwnWlL0VEG4Fg==
 
+"@dialectlabs/blockchain-sdk-solana@1.0.0-beta.3":
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.0.0-beta.3.tgz#4f480f9b8a767c1882f528f216e97221c615964d"
+  integrity sha512-cXpVZu2DyqyC9ukc1xHRBmmroqCR4sofIKW5USbaaARtmfGl94QH0XgeSnLUBbFv4rpuxohdxq/CmxVeNUqn0Q==
+  dependencies:
+    "@dialectlabs/web3" "^0.3.2"
+    "@project-serum/anchor" "0.23.0"
+
 "@dialectlabs/identity-cardinal@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@dialectlabs/identity-cardinal/-/identity-cardinal-0.0.2.tgz#4716e334e8d35fd6d7dc5c33470058c9741df7bd"

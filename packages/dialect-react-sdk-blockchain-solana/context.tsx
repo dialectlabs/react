@@ -1,6 +1,5 @@
 import {
   DialectSolanaWalletAdapter,
-  SolanaConfigProps,
   SolanaSdkFactory,
 } from '@dialectlabs/blockchain-sdk-solana';
 import {
@@ -10,17 +9,11 @@ import {
 } from '@dialectlabs/react-sdk';
 import { PublicKey } from '@solana/web3.js';
 import React, { useCallback, useMemo } from 'react';
-
-type WalletOptional<T extends { wallet: DialectSolanaWalletAdapter }> = Omit<
-  T,
-  'wallet'
-> & {
-  wallet?: DialectSolanaWalletAdapter;
-};
+import type { SolanaConfigProps } from './types';
 
 interface DialectSolanaSdkProps {
   config: ConfigProps;
-  solanaConfig: WalletOptional<SolanaConfigProps>;
+  solanaConfig: SolanaConfigProps;
   children: React.ReactNode;
 }
 

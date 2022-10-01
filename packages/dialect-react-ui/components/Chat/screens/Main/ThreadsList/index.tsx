@@ -25,9 +25,8 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
   } = useRoute<{ threadId?: ThreadId }>();
   const { pollingInterval } = useChatInternal();
   const { threads } = useThreads({ refreshInterval: pollingInterval });
-  const {
-    info: { apiAvailability },
-  } = useDialectSdk();
+  const { encryptionKeysProvider } = useDialectSdk();
+  const canEncrypt = encryptionKeysProvider.isAvailable();
   const hasEncryptedMessages = useMemo(
     () => threads.some((thread) => thread.encryptionEnabled),
     [threads]
@@ -45,7 +44,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
       )}
     >
       <div className="dt-min-h-full">
-        {!apiAvailability.canEncrypt && hasEncryptedMessages && (
+        {!canEncrypt && hasEncryptedMessages && (
           <div
             className={clsx(
               colors.highlight,
@@ -74,9 +73,7 @@ const ThreadsList = ({ onThreadClick }: ThreadsListProps) => {
               <div className="dt-overflow-hidden dt-shrink-0">
                 <MessagePreview
                   threadId={thread.id}
-                  disabled={
-                    !apiAvailability.canEncrypt && thread.encryptionEnabled
-                  }
+                  disabled={!canEncrypt && thread.encryptionEnabled}
                   onClick={() => {
                     // Do not trigger open if this thread already opened
                     if (threadId?.equals(thread.id)) return;

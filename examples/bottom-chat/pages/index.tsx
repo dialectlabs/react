@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import {
-  Backend,
+  DialectSolanaSdk,
+  DialectSolanaWalletAdapter,
+  SolanaConfigProps,
+} from '@dialectlabs/react-sdk-blockchain-solana';
+import {
   BottomChat,
   ChatNavigationHelpers,
-  Config,
+  ConfigProps,
   defaultVariables,
-  DialectContextProvider,
   DialectThemeProvider,
   DialectUiManagementProvider,
-  DialectWalletAdapter,
   IncomingThemeVariables,
   useDialectUiId,
 } from '@dialectlabs/react-ui';
@@ -20,32 +22,35 @@ import {
 } from '@solana/wallet-adapter-react';
 import Head from 'next/head';
 import { Wallet as WalletButton } from '../components/Wallet';
-import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
-import { SNSIdentityResolver } from '@dialectlabs/identity-sns';
-import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal';
 
 const walletToDialectWallet = (
   wallet: WalletContextState
-): DialectWalletAdapter => ({
-  publicKey: wallet.publicKey!,
-  connected:
-    wallet.connected &&
-    !wallet.connecting &&
-    !wallet.disconnecting &&
-    Boolean(wallet.publicKey),
-  signMessage: wallet.signMessage,
-  signTransaction: wallet.signTransaction,
-  signAllTransactions: wallet.signAllTransactions,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
-    ? async (pubKey) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
-      }
-    : undefined,
-});
+): DialectSolanaWalletAdapter | null => {
+  if (
+    !wallet.connected ||
+    wallet.connecting ||
+    wallet.disconnecting ||
+    !wallet.publicKey
+  ) {
+    return null;
+  }
+
+  return {
+    publicKey: wallet.publicKey!,
+    signMessage: wallet.signMessage,
+    signTransaction: wallet.signTransaction,
+    signAllTransactions: wallet.signAllTransactions,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
+      ? async (pubKey: any) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
+        }
+      : undefined,
+  };
+};
 
 // TODO: Use useTheme instead of explicitly importing defaultVariables
 export const themeVariables: IncomingThemeVariables = {
@@ -135,7 +140,7 @@ export default function Home(): JSX.Element {
   const { connection } = useConnection();
   const wallet = useWallet();
   const [dialectWalletAdapter, setDialectWalletAdapter] =
-    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
+    useState<DialectSolanaWalletAdapter | null>(null);
 
   useEffect(() => {
     setDialectWalletAdapter(walletToDialectWallet(wallet));
@@ -161,36 +166,35 @@ export default function Home(): JSX.Element {
   }, []);
 
   const dialectConfig = useMemo(
-    (): Config => ({
-      backends: [Backend.DialectCloud, Backend.Solana],
-      environment: 'production',
+    (): ConfigProps => ({
+      environment: 'development',
       dialectCloud: {
         tokenStore: 'local-storage',
       },
-      solana: {
-        rpcUrl: connection.rpcEndpoint,
-      },
-      identity: {
-        resolvers: [
-          new DialectDappsIdentityResolver(),
-          new SNSIdentityResolver(connection),
-          new CardinalTwitterIdentityResolver(connection),
-        ],
-      },
+      // identity: {
+      //   resolvers: [
+      //     new DialectDappsIdentityResolver(),
+      //     new SNSIdentityResolver(connection),
+      //     new CardinalTwitterIdentityResolver(connection),
+      //   ],
+      // },
     }),
     [connection]
   );
 
+  const solanaConfig: SolanaConfigProps = useMemo(() => {
+    return {
+      wallet: dialectWalletAdapter,
+    };
+  }, [dialectWalletAdapter]);
+
   return (
-    <DialectContextProvider
-      config={dialectConfig}
-      wallet={dialectWalletAdapter}
-    >
+    <DialectSolanaSdk config={dialectConfig} solanaConfig={solanaConfig}>
       <DialectUiManagementProvider>
         <DialectThemeProvider theme={theme} variables={themeVariables}>
           <AuthedHome />
         </DialectThemeProvider>
       </DialectUiManagementProvider>
-    </DialectContextProvider>
+    </DialectSolanaSdk>
   );
 }

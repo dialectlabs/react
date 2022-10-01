@@ -1,4 +1,4 @@
-import { useDialectWallet } from '@dialectlabs/react-sdk';
+import { useDialectSdk, useDialectWallet } from '@dialectlabs/react-sdk';
 import NotAuthorizedError from '../errors/ui/NotAuthorizedError';
 import NoWalletError from '../errors/ui/NoWalletError';
 import EncryptionInfo from '../wallet-states/EncryptionInfo';
@@ -8,11 +8,10 @@ import SignTransactionInfo from '../wallet-states/SignTransactionInfo';
 // Only renders children if wallet is connected, access token and encryption keys are created
 
 interface WalletStatesValue {
-  isWalletConnected: boolean;
   isSigningMessage: boolean;
   isEncrypting: boolean;
   isConnectionInitiated: boolean;
-  initiateConnection: () => void;
+  setConnectionInitiated: (arg: boolean) => void;
 }
 
 interface WalletStatesWrapperProps {
@@ -26,22 +25,26 @@ function WalletStatesWrapper({
   notConnectedMessage,
   children,
 }: WalletStatesWrapperProps) {
+  const sdk = useDialectSdk(true);
+  // since sdk initialized only after wallet connected
+  const isWalletConnected = Boolean(sdk);
+
   const {
-    isSigningMessage,
-    isSigningFreeTransaction,
-    isEncrypting,
-    connectionInitiated: isConnectionInitiated,
-    initiateConnection,
-    adapter: { connected: isWalletConnected },
+    isSigningMessageState: { get: isSigningMessage },
+    connectionInitiatedState: {
+      get: isConnectionInitiated,
+      set: setConnectionInitiated,
+    },
+    isSigningFreeTransactionState: { get: isSigningFreeTransaction },
+    isEncryptingState: { get: isEncrypting },
   } = useDialectWallet();
 
   if (typeof children === 'function') {
     return children({
-      isWalletConnected,
-      isSigningMessage,
-      isEncrypting,
-      isConnectionInitiated,
-      initiateConnection,
+      isSigningMessage: isSigningMessage(),
+      isEncrypting: isEncrypting(),
+      isConnectionInitiated: isConnectionInitiated(),
+      setConnectionInitiated,
     });
   }
 
@@ -54,7 +57,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (!isConnectionInitiated) {
+  if (!isConnectionInitiated()) {
     return (
       <>
         {header}
@@ -63,7 +66,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (isSigningMessage) {
+  if (isSigningMessage()) {
     return (
       <>
         {header}
@@ -72,7 +75,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (isSigningFreeTransaction) {
+  if (isSigningFreeTransaction()) {
     return (
       <>
         {header}
@@ -81,7 +84,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (isEncrypting) {
+  if (isEncrypting()) {
     return (
       <>
         {header}

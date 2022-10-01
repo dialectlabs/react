@@ -11,9 +11,8 @@ export default function ActionCaption({
   creationError: DialectSdkError | null;
 }) {
   const { textStyles, xPaddedText } = useTheme();
-  const {
-    info: { apiAvailability },
-  } = useDialectSdk();
+  const { encryptionKeysProvider } = useDialectSdk();
+  const canEncrypt = encryptionKeysProvider.isAvailable();
 
   if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
     return (
@@ -29,7 +28,7 @@ export default function ActionCaption({
     );
   }
 
-  if (!apiAvailability.canEncrypt) {
+  if (!canEncrypt) {
     return (
       <P
         className={clsx(textStyles.small, xPaddedText, 'dt-text-left dt-mt-2')}

@@ -9,7 +9,6 @@ import { NotificationsSingleFeed } from './components/NotificationsSingleFeed';
 import SubscribeButton from './components/SubscribeButton';
 import Inbox from './components/Inbox';
 import useDappAudience from './hooks/useDappAudience';
-import useBalance from './hooks/useBalance';
 
 import Broadcast, {
   UnwrappedBroadcastForm as BroadcastForm,
@@ -93,7 +92,6 @@ export {
   DashboardWrapper,
   ThreadEncyprionWrapper,
   useDappAudience,
-  useBalance,
   // UI components
   SubscribeButton,
   Email,

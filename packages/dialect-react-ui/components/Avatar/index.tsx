@@ -1,5 +1,4 @@
-import { useIdentity } from '@dialectlabs/react-sdk';
-import type { PublicKey } from '@solana/web3.js';
+import { AccountAddress, useIdentity } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 
 import { Img } from '../common/preflighted';
@@ -18,14 +17,14 @@ const textStyleMap = {
 };
 
 type PropTypes = {
-  publicKey: PublicKey;
+  address: AccountAddress;
   size: 'regular' | 'small' | 'extra-small';
 };
 
-export default function Avatar({ publicKey, size = 'regular' }: PropTypes) {
+export default function Avatar({ address, size = 'regular' }: PropTypes) {
   const { avatar } = useTheme();
-  const placeholder = publicKey.toString().substr(0, 2);
-  const { identity, loading } = useIdentity({ publicKey });
+  const placeholder = address.toString().substring(0, 2);
+  const { identity, loading } = useIdentity({ address });
 
   return (
     <div
