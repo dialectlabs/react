@@ -52,7 +52,7 @@ export const WALLET_DAPP_ADDRESSES_CACHE_KEY_FN = (
 
 export const WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
   walletAddress: AccountAddress,
-  dappAddress?: AccountAddress = ''
+  dappAddress: AccountAddress = ''
 ) => `WALLET_NOTIFICATION_SUBSCRIPTIONS_${walletAddress}${dappAddress}`;
 
 export const DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
