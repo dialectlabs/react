@@ -1,5 +1,5 @@
+import type { ThreadId } from '@dialectlabs/react-sdk';
 import { useEffect } from 'react';
-import { ThreadId, useDialectSdk } from '@dialectlabs/react-sdk';
 import { useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName } from '../../constants';
 import NoMessages from './NoMessages';
@@ -10,18 +10,13 @@ const ThreadPage = () => {
     navigate,
     params: { threadId },
   } = useRoute<{ threadId?: ThreadId }>();
-  const {
-    info: { wallet },
-  } = useDialectSdk();
 
   useEffect(() => {
-    if (wallet) {
-      return;
-    }
-
     // In case wallet resets, we reset dialect address and navigate to main
-    navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
-  }, [navigate, wallet]);
+    return () => {
+      navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
+    };
+  }, [navigate]);
 
   if (!threadId) {
     return <NoMessages />;
