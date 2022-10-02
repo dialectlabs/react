@@ -8,7 +8,7 @@ import {
   DialectWalletStatesHolder,
 } from '@dialectlabs/react-sdk';
 import { PublicKey } from '@solana/web3.js';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import type { SolanaConfigProps } from './types';
 
 interface DialectSolanaSdkProps {
@@ -23,6 +23,7 @@ const SolanaBlockchainSdkWrapper = ({
   ...props
 }: DialectSolanaSdkProps) => {
   const {
+    walletConnected: { set: setWalletConnected },
     connectionInitiatedState: { set: setConnectionInitiated },
     isSigningFreeTransactionState: { set: setIsSigningFreeTransaction },
     isSigningMessageState: { set: setIsSigningMessage },
@@ -57,7 +58,7 @@ const SolanaBlockchainSdkWrapper = ({
             }
           : undefined,
         signMessage:
-          !isHardwareWalletForced() && adapter.signMessage
+          !isHardwareWalletForced && adapter.signMessage
             ? async (msg) => {
                 setIsSigningMessage(true);
                 try {
@@ -101,6 +102,10 @@ const SolanaBlockchainSdkWrapper = ({
       wallet: wrapDialectWallet(solanaConfig.wallet),
     });
   }, [solanaConfig, wrapDialectWallet]);
+
+  useEffect(() => {
+    setWalletConnected(Boolean(solanaConfig.wallet));
+  }, [solanaConfig, setWalletConnected, blockchainSdkFactory]);
 
   return (
     <DialectContextProvider

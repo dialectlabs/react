@@ -28,21 +28,21 @@ const NotAuthorizedError = () => {
         )}
       >
         To continue, please prove you own this wallet by signing a{' '}
-        {isHardwareWalletForced() ? 'transaction' : 'message'}. It is free and
+        {isHardwareWalletForced ? 'transaction' : 'message'}. It is free and
         does not involve the network.
       </span>
       <div className="dt-w-[80%]">
         <ToggleSection
           noBorder
           title="Using ledger?"
-          checked={isHardwareWalletForced()}
+          checked={isHardwareWalletForced}
           onChange={(next) => setHardwareWalletForced(next)}
         />
         <Button
           onClick={() => setConnectionInitiated(true)}
           className="dt-w-full dt-mt-2"
         >
-          {isHardwareWalletForced() ? 'Sign transaction' : 'Sign message'}
+          {isHardwareWalletForced ? 'Sign transaction' : 'Sign message'}
         </Button>
       </div>
     </Centered>

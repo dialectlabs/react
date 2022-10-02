@@ -26,29 +26,28 @@ function WalletStatesWrapper({
   children,
 }: WalletStatesWrapperProps) {
   const sdk = useDialectSdk(true);
-  // since sdk initialized only after wallet connected
-  const isWalletConnected = Boolean(sdk);
 
   const {
-    isSigningMessageState: { get: isSigningMessage },
+    walletConnected: { get: isWalletConnected },
     connectionInitiatedState: {
       get: isConnectionInitiated,
       set: setConnectionInitiated,
     },
+    isSigningMessageState: { get: isSigningMessage },
     isSigningFreeTransactionState: { get: isSigningFreeTransaction },
     isEncryptingState: { get: isEncrypting },
   } = useDialectWallet();
 
   if (typeof children === 'function') {
     return children({
-      isSigningMessage: isSigningMessage(),
-      isEncrypting: isEncrypting(),
-      isConnectionInitiated: isConnectionInitiated(),
+      isSigningMessage: isSigningMessage,
+      isEncrypting: isEncrypting,
+      isConnectionInitiated: isConnectionInitiated,
       setConnectionInitiated,
     });
   }
 
-  if (!isWalletConnected) {
+  if (!isWalletConnected || (!sdk && isConnectionInitiated)) {
     return (
       <>
         {header}
@@ -57,7 +56,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (!isConnectionInitiated()) {
+  if (!isConnectionInitiated) {
     return (
       <>
         {header}
@@ -66,7 +65,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (isSigningMessage()) {
+  if (isSigningMessage) {
     return (
       <>
         {header}
@@ -75,7 +74,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (isSigningFreeTransaction()) {
+  if (isSigningFreeTransaction) {
     return (
       <>
         {header}
@@ -84,7 +83,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (isEncrypting()) {
+  if (isEncrypting) {
     return (
       <>
         {header}

@@ -2,19 +2,21 @@ import { useState } from 'react';
 import { createContainer } from '../../../utils/container';
 
 interface State<T> {
-  get: () => T;
+  get: T;
   set: (arg: ((prev: T) => T) | T) => void;
 }
 
 export interface DialectWalletStatesHolderState {
-  hardwareWalletForcedState: State<boolean>;
+  walletConnected: State<boolean>;
   connectionInitiatedState: State<boolean>;
+  hardwareWalletForcedState: State<boolean>;
   isSigningFreeTransactionState: State<boolean>;
   isSigningMessageState: State<boolean>;
   isEncryptingState: State<boolean>;
 }
 
 function useDialectWalletStatesHolder(): DialectWalletStatesHolderState {
+  const [walletConnected, setWalletConnected] = useState(false);
   const [connectionInitiated, setConnectionInitiated] = useState(false);
   const [hardwareWalletForced, setHardwareWalletForced] = useState(false);
 
@@ -24,24 +26,28 @@ function useDialectWalletStatesHolder(): DialectWalletStatesHolderState {
   const [isEncrypting, setIsEncrypting] = useState<boolean>(false);
 
   return {
+    walletConnected: {
+      get: walletConnected,
+      set: setWalletConnected,
+    },
     connectionInitiatedState: {
-      get: () => connectionInitiated,
+      get: connectionInitiated,
       set: setConnectionInitiated,
     },
     hardwareWalletForcedState: {
-      get: () => hardwareWalletForced,
+      get: hardwareWalletForced,
       set: setHardwareWalletForced,
     },
     isSigningFreeTransactionState: {
-      get: () => isSigningFreeTransaction,
+      get: isSigningFreeTransaction,
       set: setIsSigningFreeTransaction,
     },
     isSigningMessageState: {
-      get: () => isSigningMessage,
+      get: isSigningMessage,
       set: setIsSigningMessage,
     },
     isEncryptingState: {
-      get: () => isEncrypting,
+      get: isEncrypting,
       set: setIsEncrypting,
     },
   };
