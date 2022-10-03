@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import {
+  AptosConfigProps,
+  DialectAptosSdk,
+  DialectAptosWalletAdapter,
+} from '@dialectlabs/react-sdk-blockchain-aptos';
 import {
   DialectSolanaSdk,
   DialectSolanaWalletAdapter,
@@ -10,47 +15,22 @@ import {
   ChatNavigationHelpers,
   ConfigProps,
   defaultVariables,
+  DialectNoBlockchainSdk,
   DialectThemeProvider,
   DialectUiManagementProvider,
   IncomingThemeVariables,
   useDialectUiId,
 } from '@dialectlabs/react-ui';
 import {
-  useConnection,
-  useWallet,
-  WalletContextState,
-} from '@solana/wallet-adapter-react';
-import Head from 'next/head';
-import { Wallet as WalletButton } from '../components/Wallet';
-
-const walletToDialectWallet = (
-  wallet: WalletContextState
-): DialectSolanaWalletAdapter | null => {
-  if (
-    !wallet.connected ||
-    wallet.connecting ||
-    wallet.disconnecting ||
-    !wallet.publicKey
-  ) {
-    return null;
-  }
-
-  return {
-    publicKey: wallet.publicKey!,
-    signMessage: wallet.signMessage,
-    signTransaction: wallet.signTransaction,
-    signAllTransactions: wallet.signAllTransactions,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
-      ? async (pubKey: any) => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
-        }
-      : undefined,
-  };
-};
+  MartianWalletName,
+  useWallet as useAptosWallet,
+} from '@manahippo/aptos-wallet-adapter';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import { SolanaWalletButton } from '../components/SolanaWallet';
+import {
+  aptosWalletToDialectWallet,
+  solanaWalletToDialectWallet,
+} from '../utils/wallet';
 
 // TODO: Use useTheme instead of explicitly importing defaultVariables
 export const themeVariables: IncomingThemeVariables = {
@@ -78,32 +58,31 @@ export const themeVariables: IncomingThemeVariables = {
   },
 };
 
-type ThemeType = 'light' | 'dark' | undefined;
-
 function AuthedHome() {
-  const wallet = useWallet();
+  const aptosWallet = useAptosWallet();
   const { ui, open, close, navigation } = useDialectUiId<ChatNavigationHelpers>(
     'dialect-bottom-chat'
   );
 
+  useEffect(() => {
+    if (!aptosWallet.autoConnect && aptosWallet?.wallet?.adapter) {
+      aptosWallet.connect();
+    }
+  }, [aptosWallet]);
+
   return (
     <>
-      <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="true"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-
       <div className="flex flex-col h-screen bg-white dark:bg-black">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <WalletButton />
+          <SolanaWalletButton />
+          <button
+            className="text-white"
+            onClick={() => {
+              aptosWallet.select(MartianWalletName);
+            }}
+          >
+            select aptos wallet
+          </button>
         </div>
         <div className="h-full text-2xl flex flex-col justify-center items-center">
           <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
@@ -137,33 +116,24 @@ function AuthedHome() {
 }
 
 export default function Home(): JSX.Element {
-  const { connection } = useConnection();
-  const wallet = useWallet();
-  const [dialectWalletAdapter, setDialectWalletAdapter] =
+  const solanaWallet = useSolanaWallet();
+  const aptosWallet = useAptosWallet();
+
+  const [dialectSolanaWalletAdapter, setDialectSolanaWalletAdapter] =
     useState<DialectSolanaWalletAdapter | null>(null);
+  const [dialectAptosWalletAdapter, setDialectAptosWalletAdapter] =
+    useState<DialectAptosWalletAdapter | null>(null);
 
   useEffect(() => {
-    setDialectWalletAdapter(walletToDialectWallet(wallet));
-  }, [wallet]);
-
-  const [theme, setTheme] = useState<ThemeType>('dark');
+    setDialectSolanaWalletAdapter(solanaWalletToDialectWallet(solanaWallet));
+  }, [solanaWallet]);
 
   useEffect(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
-    window
-      .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', (event) => {
-        const newColorScheme = event.matches ? 'dark' : 'light';
-        setTheme(newColorScheme);
-      });
-  }, []);
+    if (!aptosWallet.wallet) return;
+    setDialectAptosWalletAdapter(
+      aptosWalletToDialectWallet(aptosWallet.wallet.adapter)
+    );
+  }, [aptosWallet]);
 
   const dialectConfig = useMemo(
     (): ConfigProps => ({
@@ -171,30 +141,58 @@ export default function Home(): JSX.Element {
       dialectCloud: {
         tokenStore: 'local-storage',
       },
-      // identity: {
-      //   resolvers: [
-      //     new DialectDappsIdentityResolver(),
-      //     new SNSIdentityResolver(connection),
-      //     new CardinalTwitterIdentityResolver(connection),
-      //   ],
-      // },
     }),
-    [connection]
+    []
   );
 
-  const solanaConfig: SolanaConfigProps = useMemo(() => {
-    return {
-      wallet: dialectWalletAdapter,
-    };
-  }, [dialectWalletAdapter]);
+  const solanaConfig: SolanaConfigProps = useMemo(
+    () => ({
+      wallet: dialectSolanaWalletAdapter,
+    }),
+    [dialectSolanaWalletAdapter]
+  );
+
+  const aptosConfig: AptosConfigProps = useMemo(
+    () => ({
+      wallet: dialectAptosWalletAdapter,
+    }),
+    [dialectAptosWalletAdapter]
+  );
+
+  const DialectImpl: React.FC<{ children: React.ReactNode }> = useCallback(
+    (props: { children: React.ReactNode }) => {
+      if (dialectSolanaWalletAdapter) {
+        return (
+          <DialectSolanaSdk config={dialectConfig} solanaConfig={solanaConfig}>
+            {props.children}
+          </DialectSolanaSdk>
+        );
+      }
+      if (dialectAptosWalletAdapter) {
+        return (
+          <DialectAptosSdk config={dialectConfig} aptosConfig={aptosConfig}>
+            {props.children}
+          </DialectAptosSdk>
+        );
+      }
+      return <DialectNoBlockchainSdk>{props.children}</DialectNoBlockchainSdk>;
+    },
+    [
+      aptosConfig,
+      dialectAptosWalletAdapter,
+      dialectConfig,
+      dialectSolanaWalletAdapter,
+      solanaConfig,
+    ]
+  );
 
   return (
-    <DialectSolanaSdk config={dialectConfig} solanaConfig={solanaConfig}>
+    <DialectImpl>
       <DialectUiManagementProvider>
-        <DialectThemeProvider theme={theme} variables={themeVariables}>
+        <DialectThemeProvider theme="dark" variables={themeVariables}>
           <AuthedHome />
         </DialectThemeProvider>
       </DialectUiManagementProvider>
-    </DialectSolanaSdk>
+    </DialectImpl>
   );
 }

@@ -14,12 +14,12 @@ import {
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
-import { PhantomIcon } from '../Icon';
+import { PhantomIcon } from './Icon';
 
 // Default styles that can be overridden by your app
 require('@solana/wallet-adapter-react-ui/styles.css');
 
-export const Wallet = () => {
+export const SolanaWalletButton = () => {
   return (
     <>
       <WalletModalProvider>
@@ -32,7 +32,7 @@ export const Wallet = () => {
   );
 };
 
-export const WalletContext: FC = (props) => {
+export const SolanaWalletContext: FC = (props) => {
   // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
   const network = WalletAdapterNetwork.Mainnet;
 
