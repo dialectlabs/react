@@ -53,7 +53,7 @@ const useDialectHealth = ({
 };
 
 const DEFAULT_CONNECTIVITY_POLLING_INTERVAL = 5000;
-
+// TODO, pinging with sdk?
 export default function ConnectionWrapper({
   header,
   // fallback to a separate value, since this is more about the connection, rather than fetching functionality
@@ -63,47 +63,43 @@ export default function ConnectionWrapper({
 }: ConnectionWrapperProps): JSX.Element | null {
   // TODO: take into account offline
   const {
-    connected: {
-      solana: {
-        connected: isSolanaConnected,
-        shouldConnect: isSolanaShouldConnect,
-      },
-      dialectCloud: {
-        connected: isDialectCloudConnected,
-        shouldConnect: isDialectCloudShouldConnect,
-      },
+    connectionInfo: {
+      dialectCloud: { connected: isDialectCloudConnected },
     },
   } = useDialectConnectionInfo();
 
-  const {
-    info: {
-      config: {
-        dialectCloud: { url: baseUrl },
-      },
-    },
-  } = useDialectSdk();
+  const isLoading = true;
+  const isConnected = true;
 
-  const { isOK, error, isLoading } = useDialectHealth({
-    baseUrl,
-    pollingInterval,
-  });
+  // const {
+  //   info: {
+  //     config: {
+  //       dialectCloud: { url: baseUrl },
+  //     },
+  //   },
+  // } = useDialectSdk();
 
-  const isSomeBackendConnected =
-    (isSolanaShouldConnect && isSolanaConnected) ||
-    (isDialectCloudShouldConnect && isDialectCloudConnected);
+  // const { isOK, error, isLoading } = useDialectHealth({
+  //   baseUrl,
+  //   pollingInterval,
+  // });
 
-  const isConnected = isSomeBackendConnected && isOK;
+  // const isSomeBackendConnected =
+  //   (isSolanaShouldConnect && isSolanaConnected) ||
+  //   (isDialectCloudShouldConnect && isDialectCloudConnected);
 
-  const connectingTo = [
-    isDialectCloudShouldConnect &&
-      (!isDialectCloudConnected || !isOK) &&
-      'Dialect Cloud',
-    isSolanaShouldConnect && !isSomeBackendConnected && 'Solana',
-  ]
-    .filter(Boolean)
-    .join(' and ');
+  // const isConnected = isSomeBackendConnected && isOK;
 
-  const errorMessage = `Error connecting to ${connectingTo}`;
+  // const connectingTo = [
+  //   isDialectCloudShouldConnect &&
+  //     (!isDialectCloudConnected || !isOK) &&
+  //     'Dialect Cloud',
+  //   isSolanaShouldConnect && !isSomeBackendConnected && 'Solana',
+  // ]
+  //   .filter(Boolean)
+  //   .join(' and ');
+
+  const errorMessage = `Error connecting to smth`;
 
   if (typeof children === 'function') {
     return children({

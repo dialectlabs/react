@@ -1,4 +1,5 @@
 import {
+  AccountAddress,
   Backend,
   ThreadId,
   ThreadMemberScope,
@@ -10,7 +11,6 @@ import {
 import type { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import { KeyboardEvent, useCallback, useEffect, useState } from 'react';
-import useBalance from '../../../../hooks/useBalance';
 import debounce from '../../../../utils/debounce';
 import { shortenAddress } from '../../../../utils/displayUtils';
 import tryPublicKey from '../../../../utils/tryPublicKey';
@@ -53,37 +53,37 @@ export default function CreateThread({
   const { type, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const {
-    info: {
-      wallet,
-      config: { solana },
-      apiAvailability: { canEncrypt },
-    },
-    identity,
+    wallet: { address: walletAddress },
+    encryptionKeysProvider,
   } = useDialectSdk();
-  const { balance } = useBalance();
+  const canEncrypt = encryptionKeysProvider.isAvailable();
+
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
-  const [address, setAddress] = useState<string>(receiver || '');
-  const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
+  const [potentialOtherMemberAddress, setPotentialOtherMemberAddress] =
+    useState<string>(receiver || '');
+  const [actualAddress, setActualAddress] = useState<AccountAddress | null>(
+    null
+  );
 
   const [encrypted, setEncrypted] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   // TODO: default to preferred backend
-  const {
-    connected: {
-      solana: { shouldConnect: isSolanaShouldConnect },
-      dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
-    },
-  } = useDialectConnectionInfo();
+  // const {
+  //   connected: {
+  //     solana: { shouldConnect: isSolanaShouldConnect },
+  //     dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
+  //   },
+  // } = useDialectConnectionInfo();
 
-  const isBackendSelectable =
-    isSolanaShouldConnect && isDialectCloudShouldConnect;
-  const [isOffChain, setIsOffChain] = useState(isDialectCloudShouldConnect);
+  // const isBackendSelectable =
+  //   isSolanaShouldConnect && isDialectCloudShouldConnect;
+  // const [isOffChain, setIsOffChain] = useState(isDialectCloudShouldConnect);
 
-  const backend =
-    !isOffChain && isSolanaShouldConnect
-      ? Backend.Solana
-      : Backend.DialectCloud;
+  // const backend =
+  //   !isOffChain && isSolanaShouldConnect
+  //     ? Backend.Solana
+  //     : Backend.DialectCloud;
 
   // FIXME: handle error if [] passed
   const { thread: currentChatWithMember } = useThread({
@@ -93,7 +93,7 @@ export default function CreateThread({
   useEffect(() => {
     // Accessing current here, since we need to set the address if the reference to `current` has changed (route has changed)
     if (!current || !receiver) return;
-    setAddress(receiver);
+    setPotentialOtherMemberAddress(receiver);
     findAddress(receiver);
   }, [current, receiver]);
 
@@ -103,20 +103,20 @@ export default function CreateThread({
       return;
     }
 
-    if (currentChatWithMember && currentChatWithMember.backend === backend) {
-      // FIXME: show error even for diffrent backends
-      onNewThreadCreated?.(currentChatWithMember.id);
-      return;
-    }
+    // if (currentChatWithMember && currentChatWithMember.backend === backend) {
+    //   // FIXME: show error even for diffrent backends
+    //   onNewThreadCreated?.(currentChatWithMember.id);
+    //   return;
+    // }
 
     create({
       me: { scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE] },
       otherMembers: [
-        { publicKey: actualAddress, scopes: [ThreadMemberScope.WRITE] },
+        { address: actualAddress, scopes: [ThreadMemberScope.WRITE] },
       ],
       encrypted,
       // TODO: could select only if multiple provided
-      backend,
+      // backend,
     })
       .then(async (thread) => {
         onNewThreadCreated?.(thread.id);
@@ -139,24 +139,22 @@ export default function CreateThread({
         return;
       }
 
-      const isPk = tryPublicKey(addressString);
-      if (isPk) {
-        if (wallet.publicKey && isPk.equals(wallet.publicKey)) {
-          setActualAddress(null);
-          return;
-        }
-        setActualAddress(isPk);
-        return;
-      }
+      // const isPk = tryPublicKey(addressString);
+      // if (wallet.publicKey && isPk.equals(wallet.publicKey)) {
+      //   setActualAddress(null);
+      //   return;
+      // }
+      setActualAddress(addressString);
+      // return;
 
-      const potentialIdentity = await identity.resolveReverse(addressString);
+      // const potentialIdentity = await identity.resolveReverse(addressString);
 
-      if (potentialIdentity) {
-        setActualAddress(potentialIdentity.publicKey);
-        return;
-      }
+      // if (potentialIdentity) {
+      //   setActualAddress(potentialIdentity.publicKey);
+      //   return;
+      // }
 
-      setActualAddress(null);
+      // setActualAddress(null);
     } finally {
       setIsTyping(false);
     }
@@ -165,7 +163,7 @@ export default function CreateThread({
   const findAddressDebounced = useCallback(debounce(findAddress, 700), []);
 
   const onAddressChange = (addr: string) => {
-    setAddress(addr);
+    setPotentialOtherMemberAddress(addr);
     setIsTyping(true);
     findAddressDebounced(addr);
   };
@@ -206,7 +204,7 @@ export default function CreateThread({
           className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
           placeholder="D1AL...DY5h, @saydialect or dialect.sol"
           type="text"
-          value={address}
+          value={potentialOtherMemberAddress}
           onChange={(e) => {
             onAddressChange(e.target.value);
           }}
@@ -214,14 +212,14 @@ export default function CreateThread({
           disabled={isCreatingThread}
         />
         <div className="dt-mb-2">
-          {isTyping || !address ? (
+          {isTyping || !potentialOtherMemberAddress ? (
             <LinkingCTA />
           ) : (
-            <AddressResult publicKey={actualAddress} />
+            <AddressResult address={actualAddress} />
           )}
         </div>
         <Divider className="dt-my-2 dt-opacity-20" />
-        {isBackendSelectable ? (
+        {/* {isBackendSelectable ? (
           <ValueRow
             className="dt-mb-2"
             label={
@@ -243,8 +241,8 @@ export default function CreateThread({
               />
             </span>
           </ValueRow>
-        ) : null}
-        {!isOffChain ? (
+        ) : null} */}
+        {/* {!isOffChain ? (
           <>
             <ValueRow
               label={
@@ -270,7 +268,7 @@ export default function CreateThread({
               recoverable.
             </P>
           </>
-        ) : null}
+        ) : null} */}
         <div className="dt-flex dt-flex-row dt-gap-x-2 dt-w-full">
           <ValueRow
             label={
