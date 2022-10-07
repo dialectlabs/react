@@ -22,7 +22,7 @@ export default function Thread({ threadId }: ThreadProps) {
   const { thread, isWritable, isFetchingThread } = useThread({
     findParams: { id: threadId },
   });
-  const { messages, send, cancel, setLastReadMessageTime } = useThreadMessages({
+  const { messages, send, cancel, markAsRead } = useThreadMessages({
     id: threadId,
   });
   const { refresh } = useUnreadMessages();
@@ -38,8 +38,8 @@ export default function Thread({ threadId }: ThreadProps) {
 
   useEffect(() => {
     // After resetting the last read timestamp, we need to refetch the global unread message state
-    setLastReadMessageTime(new Date()).then(refresh);
-  }, [setLastReadMessageTime, refresh]);
+    markAsRead().then(refresh);
+  }, [markAsRead, refresh]);
 
   if (!thread) return null;
 

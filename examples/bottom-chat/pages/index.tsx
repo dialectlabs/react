@@ -159,7 +159,7 @@ export default function Home(): JSX.Element {
     [dialectAptosWalletAdapter]
   );
 
-  const DialectImpl: React.FC<{ children: React.ReactNode }> = useCallback(
+  const DialectProviders: React.FC<{ children: React.ReactNode }> = useCallback(
     (props: { children: React.ReactNode }) => {
       if (dialectSolanaWalletAdapter) {
         return (
@@ -187,12 +187,12 @@ export default function Home(): JSX.Element {
   );
 
   return (
-    <DialectImpl>
+    <DialectProviders>
       <DialectUiManagementProvider>
         <DialectThemeProvider theme="dark" variables={themeVariables}>
           <AuthedHome />
         </DialectThemeProvider>
       </DialectUiManagementProvider>
-    </DialectImpl>
+    </DialectProviders>
   );
 }

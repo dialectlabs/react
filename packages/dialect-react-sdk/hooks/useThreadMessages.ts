@@ -39,7 +39,7 @@ interface UseThreadMessagesValue {
   // react-lib
   send(command: SendMessageCommand): Promise<void>;
   cancel(cmd: CancelMessageCommand): Promise<void>;
-  setLastReadMessageTime(time: Date): Promise<void>;
+  markAsRead(): Promise<void>;
 
   isFetchingMessages: boolean;
   errorFetchingMessages: DialectSdkError | null;
@@ -205,24 +205,21 @@ const useThreadMessages = ({
     [thread, deleteLocalMessage]
   );
 
-  const setLastReadMessageTime = useCallback(
-    async (time: Date) => {
-      if (!threadInternal) return;
-      await threadInternal.setLastReadMessageTime(time);
-      globalMutate(
-        CACHE_KEY_THREAD_SUMMARY_FN(
-          threadInternal.otherMembers.map((it) => it.address)
-        )
-      );
-    },
-    [globalMutate, threadInternal]
-  );
+  const markAsRead = useCallback(async () => {
+    if (!threadInternal) return;
+    await threadInternal.markAsRead();
+    globalMutate(
+      CACHE_KEY_THREAD_SUMMARY_FN(
+        threadInternal.otherMembers.map((it) => it.address)
+      )
+    );
+  }, [globalMutate, threadInternal]);
 
   return {
     messages: messages || EMPTY_ARR,
     send: sendMessage,
     cancel: cancelMessage,
-    setLastReadMessageTime,
+    markAsRead,
 
     // Do not use `isValidating` since it will produce visual flickering
     isFetchingMessages: !messages && !errorFetchingMessages,

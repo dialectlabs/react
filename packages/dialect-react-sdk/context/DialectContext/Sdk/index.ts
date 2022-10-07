@@ -5,7 +5,7 @@ import {
   Dialect,
   DialectSdk as DialectSdkType,
 } from '@dialectlabs/sdk';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { createContainer } from '../../../utils/container';
 import { DialectWalletStatesHolder } from '../Wallet';
 
@@ -23,6 +23,7 @@ function useDialectSdk(
 ): DialectSdkState {
   const {
     walletConnected: { get: walletConnected },
+    connectionInitiatedState: { set: setConnectionInitiated },
   } = DialectWalletStatesHolder.useContainer();
 
   const sdk = useMemo(() => {
@@ -36,21 +37,15 @@ function useDialectSdk(
   // so that we check if sdk is about to be configred with local storage
   // and if so, we validate the token
   // if token is valid, then NotAuthorized will be skipped
-  // useEffect(
-  // TODO it requires sdk improvement
-  // function preValidateSdkToken() {
-  // if (!sdk) return;
-  // if (!blockchainSdkFactory || !walletConnected) return;
-  // sdk probe
-  // const sdk = Dialect.sdk(config, blockchainSdkFactory);
-  // const token = sdk.config.
-  // token.then((it) => {
-  //   console.log('token, ', it);
-  //   setConnectionInitiated(Boolean(it));
-  // });
-  //   },
-  //   []
-  // );
+  useEffect(
+    function preValidateSdkToken() {
+      if (!sdk) return;
+      if (sdk.info.hasValidAuthentication) {
+        setConnectionInitiated(true);
+      }
+    },
+    [sdk, setConnectionInitiated]
+  );
 
   return {
     sdk,
