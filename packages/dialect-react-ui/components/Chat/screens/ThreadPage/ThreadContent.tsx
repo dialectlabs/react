@@ -1,10 +1,8 @@
 import {
-  Backend,
+  isOnChain,
   ThreadId,
-  useDialectSdk,
   useIdentity,
   useThread,
-  isOnChain,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { shortenAddress } from '../../../../utils/displayUtils';

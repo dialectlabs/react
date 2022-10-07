@@ -13,9 +13,10 @@ const ThreadPage = () => {
 
   useEffect(() => {
     // In case wallet resets, we reset dialect address and navigate to main
-    return () => {
-      navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
-    };
+    // TODO
+    // return () => {
+    //   navigate(RouteName.Main, { sub: { name: MainRouteName.Thread } });
+    // };
   }, [navigate]);
 
   if (!threadId) {

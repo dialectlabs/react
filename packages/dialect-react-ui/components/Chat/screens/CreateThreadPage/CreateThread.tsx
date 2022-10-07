@@ -1,27 +1,16 @@
 import {
   AccountAddress,
-  Backend,
+  DIALECT_API_TYPE_DIALECT_CLOUD,
   ThreadId,
   ThreadMemberScope,
-  useDialectConnectionInfo,
   useDialectSdk,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
-import type { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import { KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import debounce from '../../../../utils/debounce';
-import { shortenAddress } from '../../../../utils/displayUtils';
-import tryPublicKey from '../../../../utils/tryPublicKey';
-import {
-  Button,
-  Divider,
-  Footer,
-  NetworkBadge,
-  Toggle,
-  ValueRow,
-} from '../../../common';
+import { Button, Divider, Footer, Toggle, ValueRow } from '../../../common';
 import { H1, Input, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
@@ -53,8 +42,13 @@ export default function CreateThread({
   const { type, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const {
+    blockchainSdk: {
+      type: blockchainSdkType,
+      info: { supportsOnChainMessaging },
+    },
     wallet: { address: walletAddress },
     encryptionKeysProvider,
+    identity,
   } = useDialectSdk();
   const canEncrypt = encryptionKeysProvider.isAvailable();
 
@@ -68,22 +62,9 @@ export default function CreateThread({
 
   const [encrypted, setEncrypted] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  // TODO: default to preferred backend
-  // const {
-  //   connected: {
-  //     solana: { shouldConnect: isSolanaShouldConnect },
-  //     dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
-  //   },
-  // } = useDialectConnectionInfo();
 
-  // const isBackendSelectable =
-  //   isSolanaShouldConnect && isDialectCloudShouldConnect;
-  // const [isOffChain, setIsOffChain] = useState(isDialectCloudShouldConnect);
-
-  // const backend =
-  //   !isOffChain && isSolanaShouldConnect
-  //     ? Backend.Solana
-  //     : Backend.DialectCloud;
+  const isBackendSelectable = supportsOnChainMessaging;
+  const [isOnChain, setIsOnChain] = useState(false);
 
   // FIXME: handle error if [] passed
   const { thread: currentChatWithMember } = useThread({
@@ -103,11 +84,11 @@ export default function CreateThread({
       return;
     }
 
-    // if (currentChatWithMember && currentChatWithMember.backend === backend) {
-    //   // FIXME: show error even for diffrent backends
-    //   onNewThreadCreated?.(currentChatWithMember.id);
-    //   return;
-    // }
+    if (currentChatWithMember) {
+      // FIXME: show error even for diffrent backends
+      onNewThreadCreated?.(currentChatWithMember.id);
+      return;
+    }
 
     create({
       me: { scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE] },
@@ -115,8 +96,8 @@ export default function CreateThread({
         { address: actualAddress, scopes: [ThreadMemberScope.WRITE] },
       ],
       encrypted,
-      // TODO: could select only if multiple provided
-      // backend,
+      // undefined should fallback to dialect cloud
+      type: isOnChain ? blockchainSdkType : DIALECT_API_TYPE_DIALECT_CLOUD,
     })
       .then(async (thread) => {
         onNewThreadCreated?.(thread.id);
@@ -139,22 +120,14 @@ export default function CreateThread({
         return;
       }
 
-      // const isPk = tryPublicKey(addressString);
-      // if (wallet.publicKey && isPk.equals(wallet.publicKey)) {
-      //   setActualAddress(null);
-      //   return;
-      // }
+      const potentialIdentity = await identity.resolveReverse(addressString);
+
+      if (potentialIdentity) {
+        setActualAddress(potentialIdentity.address);
+        return;
+      }
+
       setActualAddress(addressString);
-      // return;
-
-      // const potentialIdentity = await identity.resolveReverse(addressString);
-
-      // if (potentialIdentity) {
-      //   setActualAddress(potentialIdentity.publicKey);
-      //   return;
-      // }
-
-      // setActualAddress(null);
     } finally {
       setIsTyping(false);
     }
@@ -219,56 +192,29 @@ export default function CreateThread({
           )}
         </div>
         <Divider className="dt-my-2 dt-opacity-20" />
-        {/* {isBackendSelectable ? (
+        {isBackendSelectable ? (
           <ValueRow
             className="dt-mb-2"
             label={
-              isOffChain ? (
+              isOnChain ? (
                 <span className="dt-flex dt-items-center">
-                  💬&nbsp;&nbsp;Off-chain
+                  ⛓&nbsp;&nbsp;On-chain
                 </span>
               ) : (
                 <span className="dt-flex dt-items-center">
-                  ⛓&nbsp;&nbsp;On-chain
+                  💬&nbsp;&nbsp;Off-chain
                 </span>
               )
             }
           >
             <span className="dt-flex dt-items-center">
               <Toggle
-                checked={isOffChain}
-                onClick={() => setIsOffChain((enc) => !enc)}
+                checked={!isOnChain}
+                onClick={() => setIsOnChain((enc) => !enc)}
               />
             </span>
           </ValueRow>
-        ) : null} */}
-        {/* {!isOffChain ? (
-          <>
-            <ValueRow
-              label={
-                <>
-                  Balance (
-                  {wallet?.publicKey ? shortenAddress(wallet.publicKey) : ''}
-                  ) <NetworkBadge network={solana?.network} />
-                </>
-              }
-              className={clsx('dt-w-full dt-mb-2')}
-            >
-              <span className="dt-text-right">{balance || 0} SOL</span>
-            </ValueRow>
-            <ValueRow
-              label="Rent Deposit (recoverable)"
-              className={clsx('dt-w-full')}
-            >
-              0.058 SOL
-            </ValueRow>
-            <P className={clsx(textStyles.small, 'dt-my-4 dt-px-2')}>
-              All messages are stored on chain, so to start this message thread,
-              you&apos;ll need to deposit a small amount of rent. This rent is
-              recoverable.
-            </P>
-          </>
-        ) : null} */}
+        ) : null}
         <div className="dt-flex dt-flex-row dt-gap-x-2 dt-w-full">
           <ValueRow
             label={
