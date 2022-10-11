@@ -1,10 +1,9 @@
 import {
   AddressType,
-  Backend,
   Thread,
   ThreadMemberScope,
-  useDialectConnectionInfo,
   useDialectDapp,
+  useDialectSdk,
   useDialectWallet,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
@@ -12,15 +11,15 @@ import {
   useThreads,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
-import { useTheme } from '../common/providers/DialectThemeProvider';
-import type { Channel } from '../common/types';
-import SubscribeRow from './SubscribeRow';
-import NotificationsModal from '../NotificationsModal';
-import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
 import { shortenAddress } from '../../utils/displayUtils';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import { useTheme } from '../common/providers/DialectThemeProvider';
+import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
+import type { Channel } from '../common/types';
+import NotificationsModal from '../NotificationsModal';
+import SubscribeRow from './SubscribeRow';
 
 export type NotificationType = {
   name: string;
@@ -62,12 +61,19 @@ function SafeSubscribe({
 }: SafeSubscribeProps) {
   const [autoSubscribe, setAutoSubscribe] = useState(false);
   const {
-    isSigningMessage,
-    isSigningFreeTransaction,
-    connectionInitiated: isConnectionInitiated,
-    initiateConnection: initiateWalletVerification,
-    adapter: { connected: isWalletConnected },
+    isSigningMessageState: { get: isSigningMessage },
+    isSigningFreeTransactionState: { get: isSigningFreeTransaction },
+    connectionInitiatedState: {
+      get: isConnectionInitiated,
+      set: setConnectionInitiated,
+    },
+    walletConnected: { get: isWalletConnected },
   } = useDialectWallet();
+
+  const initiateWalletVerification = useCallback(
+    () => setConnectionInitiated(true),
+    [setConnectionInitiated]
+  );
 
   useEffect(
     function skipNoAuthorizedScreen() {
@@ -162,8 +168,9 @@ function ConnectedSubscribe({
   onOpenMoreOptions,
   onSubscribe,
 }: ConnectedSubscribeProps): JSX.Element {
-  const { adapter: wallet } = useDialectWallet();
-
+  const {
+    wallet: { address: walletAddress },
+  } = useDialectSdk();
   const { dappAddress } = useDialectDapp();
   if (!dappAddress) {
     throw new Error(
@@ -177,7 +184,7 @@ function ConnectedSubscribe({
   const [isSubscribing, setSubscribing] = useState(false);
 
   const {
-    globalAddress: walletAddress,
+    globalAddress: walletNotifsAddress,
     create: createAddress,
     isCreatingAddress,
     isDeletingAddress,
@@ -192,21 +199,6 @@ function ConnectedSubscribe({
     addressType,
   });
 
-  const {
-    connected: {
-      solana: { shouldConnect: isSolanaShouldConnect },
-      dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
-    },
-  } = useDialectConnectionInfo();
-
-  const isBackendSelectable =
-    isSolanaShouldConnect && isDialectCloudShouldConnect;
-
-  const backend =
-    isSolanaShouldConnect && !isBackendSelectable
-      ? Backend.Solana
-      : Backend.DialectCloud;
-
   const { thread, isFetchingThread } = useThread({
     findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
@@ -216,19 +208,16 @@ function ConnectedSubscribe({
     return createThread({
       me: { scopes: [ThreadMemberScope.ADMIN] },
       otherMembers: [
-        { publicKey: dappAddress, scopes: [ThreadMemberScope.WRITE] },
+        { address: dappAddress, scopes: [ThreadMemberScope.WRITE] },
       ],
       encrypted: false,
-      backend,
     });
-  }, [backend, createThread, dappAddress]);
+  }, [createThread, dappAddress]);
 
-  const createWalletAddress = useCallback(async () => {
-    if (!wallet.publicKey) {
-      return;
-    }
-    return createAddress({ value: wallet.publicKey?.toBase58() });
-  }, [createAddress, wallet.publicKey]);
+  const createWalletAddress = useCallback(
+    () => createAddress({ value: walletAddress }),
+    [createAddress, walletAddress]
+  );
 
   const fullEnableWallet = useCallback(async () => {
     const address = await createWalletAddress();
@@ -250,14 +239,14 @@ function ConnectedSubscribe({
     // The order of checks is very important, keep it please!
 
     /* when no address and thread */
-    if (!thread && !walletAddress) {
+    if (!thread && !walletNotifsAddress) {
       await fullEnableWallet();
       setSubscribing(false);
       return;
     }
 
     /* when address exists but no thread */
-    if (!thread && walletAddress) {
+    if (!thread && walletNotifsAddress) {
       await createWalletThread();
       setSubscribing(false);
       return;
@@ -265,7 +254,7 @@ function ConnectedSubscribe({
 
     /* when thread exists but no address
     Probably this is a *very* old users case */
-    if (thread && !walletAddress) {
+    if (thread && !walletNotifsAddress) {
       await createWalletAddress();
       setSubscribing(false);
       return;
@@ -283,7 +272,7 @@ function ConnectedSubscribe({
     subscriptionEnabled,
     thread,
     toggleSubscription,
-    walletAddress,
+    walletNotifsAddress,
   ]);
 
   const isLoading =
@@ -295,7 +284,9 @@ function ConnectedSubscribe({
     isToggling;
 
   // TODO: optimistic UI: show "subscribed" instantly, in case of error — show error
-  const isSubscribed = Boolean(thread && walletAddress && subscriptionEnabled);
+  const isSubscribed = Boolean(
+    thread && walletNotifsAddress && subscriptionEnabled
+  );
 
   useEffect(
     function checkForAutoSubscribe() {
@@ -314,9 +305,7 @@ function ConnectedSubscribe({
       successLabel={successLabel}
       isWalletConnected={true}
       description={
-        isSubscribing
-          ? 'Subscribing...'
-          : shortenAddress(wallet.publicKey || '')
+        isSubscribing ? 'Subscribing...' : shortenAddress(walletAddress)
       }
       isSubscribed={isSubscribed}
       isLoading={isLoading}
