@@ -1,13 +1,10 @@
-import {
-  useDialectConnectionInfo,
-  useDialectSdk,
-} from '@dialectlabs/react-sdk';
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 import useSWR from 'swr';
 import NoConnectionError from '../errors/ui/NoConnectionError';
 
 // Only renders children if connected to successfully some backend
 type ConnectionValue = {
-  errorMessage: string;
+  errorMessage?: string;
   isConnected: boolean;
   isLoading: boolean;
 };
@@ -16,8 +13,6 @@ interface ConnectionWrapperProps {
   pollingInterval?: number;
   children?: JSX.Element | ((val: ConnectionValue) => JSX.Element | null);
 }
-
-// FIXME: trigger some hook to check connection
 
 interface UseDialectHealthProps {
   baseUrl: string;
@@ -29,6 +24,8 @@ interface UseDialectHealthValue {
   isLoading: boolean;
   error?: string;
 }
+
+const ERROR_MESSAGE = 'Error connecting to Dialect Cloud';
 
 const fetcher = (...args: Parameters<typeof fetch>) =>
   fetch(...args).then((res) => res.json());
@@ -61,49 +58,22 @@ export default function ConnectionWrapper({
   pollingInterval = DEFAULT_CONNECTIVITY_POLLING_INTERVAL,
   children,
 }: ConnectionWrapperProps): JSX.Element | null {
-  // TODO: take into account offline
   const {
-    connectionInfo: {
-      dialectCloud: { connected: isDialectCloudConnected },
+    config: {
+      dialectCloud: { url: baseUrl },
     },
-  } = useDialectConnectionInfo();
+  } = useDialectSdk();
 
-  const isLoading = true;
-  const isConnected = true;
+  const { isOK, error, isLoading } = useDialectHealth({
+    baseUrl,
+    pollingInterval,
+  });
 
-  // const {
-  //   info: {
-  //     config: {
-  //       dialectCloud: { url: baseUrl },
-  //     },
-  //   },
-  // } = useDialectSdk();
-
-  // const { isOK, error, isLoading } = useDialectHealth({
-  //   baseUrl,
-  //   pollingInterval,
-  // });
-
-  // const isSomeBackendConnected =
-  //   (isSolanaShouldConnect && isSolanaConnected) ||
-  //   (isDialectCloudShouldConnect && isDialectCloudConnected);
-
-  // const isConnected = isSomeBackendConnected && isOK;
-
-  // const connectingTo = [
-  //   isDialectCloudShouldConnect &&
-  //     (!isDialectCloudConnected || !isOK) &&
-  //     'Dialect Cloud',
-  //   isSolanaShouldConnect && !isSomeBackendConnected && 'Solana',
-  // ]
-  //   .filter(Boolean)
-  //   .join(' and ');
-
-  const errorMessage = `Error connecting to smth`;
+  const isConnected = isOK;
 
   if (typeof children === 'function') {
     return children({
-      errorMessage: error ? errorMessage : '',
+      errorMessage: error ? ERROR_MESSAGE : undefined,
       isConnected,
       isLoading,
     });
@@ -113,7 +83,7 @@ export default function ConnectionWrapper({
     return (
       <>
         {header}
-        <NoConnectionError message={errorMessage} />
+        <NoConnectionError message={ERROR_MESSAGE} />
       </>
     );
   }

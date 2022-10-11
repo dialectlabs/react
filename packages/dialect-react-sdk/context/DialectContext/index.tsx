@@ -5,7 +5,6 @@ import type {
   ConfigProps,
 } from '@dialectlabs/sdk';
 import React from 'react';
-import { DialectConnectionInfo } from './ConnectionInfo';
 import { DialectDapp } from './Dapp';
 import { DialectGate, Gate } from './Gate';
 import { LocalMessages } from './LocalMessages';
@@ -29,9 +28,7 @@ export const DialectContextProvider: React.FC<
       <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
         <DialectGate.Provider initialState={gate}>
           <DialectDapp.Provider initialState={{ dappAddress }}>
-            <DialectConnectionInfo.Provider>
-              <LocalMessages.Provider>{children}</LocalMessages.Provider>
-            </DialectConnectionInfo.Provider>
+            <LocalMessages.Provider>{children}</LocalMessages.Provider>
           </DialectDapp.Provider>
         </DialectGate.Provider>
       </DialectSdk.Provider>
