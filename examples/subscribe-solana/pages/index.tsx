@@ -1,31 +1,27 @@
 import {
-  Backend,
-  Config,
+  DialectSolanaSdk,
+  DialectSolanaWalletAdapter,
+  SolanaConfigProps,
+} from '@dialectlabs/react-sdk-blockchain-solana';
+import {
+  ConfigProps,
   defaultVariables,
-  DialectContextProvider,
   DialectThemeProvider,
   DialectUiManagementProvider,
-  DialectWalletAdapter,
   IncomingThemeVariables,
   SubscribeButton,
 } from '@dialectlabs/react-ui';
-import * as anchor from '@project-serum/anchor';
-import {
-  useConnection,
-  useWallet,
-  WalletContextState,
-} from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import {
   useWalletModal,
   WalletModalProvider,
 } from '@solana/wallet-adapter-react-ui';
 import Head from 'next/head';
 import { useEffect, useMemo, useState } from 'react';
-import { Wallet as WalletButton } from '../components/Wallet';
+import { SolanaWalletButton } from '../components/SolanaWallet';
+import { solanaWalletToDialectWallet } from '../utils/wallet';
 
-const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h'
-);
+const DAPP_EXAMPLE_ADDRESS = 'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h';
 
 export const themeVariables: IncomingThemeVariables = {
   dark: {
@@ -44,30 +40,6 @@ export const themeVariables: IncomingThemeVariables = {
     },
   },
 };
-
-// TODO: move this to react-sdk and export
-const walletToDialectWallet = (
-  wallet: WalletContextState
-): DialectWalletAdapter => ({
-  publicKey: wallet.publicKey!,
-  connected:
-    wallet.connected &&
-    !wallet.connecting &&
-    !wallet.disconnecting &&
-    Boolean(wallet.publicKey),
-  signMessage: wallet.signMessage,
-  signTransaction: wallet.signTransaction,
-  signAllTransactions: wallet.signAllTransactions,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
-  diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
-    ? async (pubKey) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
-      }
-    : undefined,
-});
 
 type ThemeType = 'light' | 'dark' | undefined;
 
@@ -91,7 +63,7 @@ function AuthedHome() {
         <title>Subscribe Button Example | Dialect</title>
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
-        <WalletButton />
+        <SolanaWalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">
         <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
@@ -135,24 +107,29 @@ export default function Home(): JSX.Element {
   const [theme, setTheme] = useState<ThemeType>('dark');
 
   const [dialectWalletAdapter, setDialectWalletAdapter] =
-    useState<DialectWalletAdapter>(() => walletToDialectWallet(wallet));
+    useState<DialectSolanaWalletAdapter | null>(() =>
+      solanaWalletToDialectWallet(wallet)
+    );
 
   useEffect(() => {
-    setDialectWalletAdapter(walletToDialectWallet(wallet));
+    setDialectWalletAdapter(solanaWalletToDialectWallet(wallet));
   }, [wallet]);
 
   const dialectConfig = useMemo(
-    (): Config => ({
-      backends: [Backend.DialectCloud],
+    (): ConfigProps => ({
       environment: 'development',
       dialectCloud: {
         tokenStore: 'local-storage',
       },
-      solana: {
-        rpcUrl: connection.rpcEndpoint,
-      },
     }),
-    [connection]
+    []
+  );
+
+  const solanaConfig: SolanaConfigProps = useMemo(
+    () => ({
+      wallet: dialectWalletAdapter,
+    }),
+    [dialectWalletAdapter]
   );
 
   useEffect(() => {
@@ -174,17 +151,20 @@ export default function Home(): JSX.Element {
 
   return (
     <WalletModalProvider>
-      <DialectContextProvider
-        wallet={dialectWalletAdapter}
+      <DialectSolanaSdk
         config={dialectConfig}
-        dapp={DIALECT_PUBLIC_KEY}
+        solanaConfig={solanaConfig}
+        dappAddress={DAPP_EXAMPLE_ADDRESS}
+        gate={() =>
+          new Promise((resolve) => setTimeout(() => resolve(true), 3000))
+        }
       >
         <DialectThemeProvider theme={theme} variables={themeVariables}>
           <DialectUiManagementProvider>
             <AuthedHome />
           </DialectUiManagementProvider>
         </DialectThemeProvider>
-      </DialectContextProvider>
+      </DialectSolanaSdk>
     </WalletModalProvider>
   );
 }

@@ -3,13 +3,13 @@ import '@dialectlabs/react-ui/index.css';
 import '../styles/globals.css';
 import React from 'react';
 import type { AppProps } from 'next/app';
-import { WalletContext } from '../components/Wallet';
+import { SolanaWalletContext } from '../components/SolanaWallet';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <WalletContext>
+    <SolanaWalletContext>
       <Component {...pageProps} />
-    </WalletContext>
+    </SolanaWalletContext>
   );
 }
 export default MyApp;
