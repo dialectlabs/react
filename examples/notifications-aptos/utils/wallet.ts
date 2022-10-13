@@ -19,7 +19,7 @@ export const aptosWalletToDialectWallet = (
   return {
     address: wallet.publicAccount.address,
     publicKey: wallet.publicAccount.publicKey,
-    // TODO this is for martians only
+    // TODO this is for martians only, because of the problems with aptos-wallet-adapter
     signMessagePayload: (payload) => {
       const res = wallet.signMessage(
         payload

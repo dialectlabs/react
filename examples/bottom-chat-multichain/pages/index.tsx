@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal';
+import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
+import { SNSIdentityResolver } from '@dialectlabs/identity-sns';
 import {
   AptosConfigProps,
   DialectAptosSdk,
@@ -21,11 +24,12 @@ import {
   IncomingThemeVariables,
   useDialectUiId,
 } from '@dialectlabs/react-ui';
+import { useWallet as useAptosWallet } from '@manahippo/aptos-wallet-adapter';
 import {
-  MartianWalletName,
-  useWallet as useAptosWallet,
-} from '@manahippo/aptos-wallet-adapter';
-import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+  useWallet as useSolanaWallet,
+  useConnection as useSolanaConnection,
+} from '@solana/wallet-adapter-react';
+import { AptosWalletButton } from '../components/AptosWallet';
 import { SolanaWalletButton } from '../components/SolanaWallet';
 import {
   aptosWalletToDialectWallet,
@@ -59,30 +63,16 @@ export const themeVariables: IncomingThemeVariables = {
 };
 
 function AuthedHome() {
-  const aptosWallet = useAptosWallet();
   const { ui, open, close, navigation } = useDialectUiId<ChatNavigationHelpers>(
     'dialect-bottom-chat'
   );
-
-  useEffect(() => {
-    if (!aptosWallet.autoConnect && aptosWallet?.wallet?.adapter) {
-      aptosWallet.connect();
-    }
-  }, [aptosWallet]);
 
   return (
     <>
       <div className="flex flex-col h-screen bg-white dark:bg-black">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <SolanaWalletButton />
-          <button
-            className="text-white"
-            onClick={() => {
-              aptosWallet.select(MartianWalletName);
-            }}
-          >
-            select aptos wallet
-          </button>
+          <AptosWalletButton />
         </div>
         <div className="h-full text-2xl flex flex-col justify-center items-center">
           <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
@@ -116,6 +106,7 @@ function AuthedHome() {
 }
 
 export default function Home(): JSX.Element {
+  const { connection: solanaConnection } = useSolanaConnection();
   const solanaWallet = useSolanaWallet();
   const aptosWallet = useAptosWallet();
 
@@ -141,8 +132,15 @@ export default function Home(): JSX.Element {
       dialectCloud: {
         tokenStore: 'local-storage',
       },
+      identity: {
+        resolvers: [
+          new DialectDappsIdentityResolver(),
+          new SNSIdentityResolver(solanaConnection),
+          new CardinalTwitterIdentityResolver(solanaConnection),
+        ],
+      },
     }),
-    []
+    [solanaConnection]
   );
 
   const solanaConfig: SolanaConfigProps = useMemo(
