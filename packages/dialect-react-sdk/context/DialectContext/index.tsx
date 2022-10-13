@@ -12,12 +12,12 @@ import { DialectSdk } from './Sdk';
 
 export const DialectContext = React.createContext<null>(null);
 
-type DialectContextProviderProps<ChainSdk extends BlockchainSdk> = {
+export type DialectContextProviderProps<ChainSdk extends BlockchainSdk> = {
   config: ConfigProps;
   blockchainSdkFactory?: BlockchainSdkFactory<ChainSdk> | null;
   dappAddress?: AccountAddress;
   gate?: Gate;
-  children?: React.ReactNode;
+  children: React.ReactNode;
 };
 
 export const DialectContextProvider: React.FC<

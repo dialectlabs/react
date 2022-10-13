@@ -5,7 +5,6 @@ export { default as useThreads } from './useThreads';
 export { default as useThread } from './useThread';
 export { default as useThreadMessages } from './useThreadMessages';
 export { default as useDialectWallet } from './useDialectWallet';
-export { default as useDialectConnectionInfo } from './useDialectConnectionInfo';
 export { default as useUnreadMessages } from './useUnreadMessages';
 export { default as useDapp } from './useDapp';
 export { default as useDappAddresses } from './useDappAddresses';

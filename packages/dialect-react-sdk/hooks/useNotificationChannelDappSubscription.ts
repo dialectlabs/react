@@ -43,7 +43,7 @@ const useNotificationChannelDappSubscription = ({
     WALLET_DAPP_ADDRESSES_CACHE_KEY_FN(walletsApi.address, dappAddress),
     () =>
       walletsApi.dappAddresses.findAll({
-        addressIds: [dappAddress],
+        dappAccountAddress: dappAddress,
       })
   );
 

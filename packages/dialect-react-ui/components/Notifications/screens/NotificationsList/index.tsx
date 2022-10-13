@@ -34,7 +34,9 @@ const NotificationsList = ({ refreshInterval }: NotificationsListProps) => {
     refreshInterval,
   });
 
-  useEffect(() => markAsRead(), [markAsRead]);
+  useEffect(() => {
+    markAsRead();
+  }, [markAsRead]);
 
   if (!messages.length) {
     return <NoNotifications />;

@@ -19,9 +19,7 @@ import CancelIcon from '../../../Icon/Cancel';
 const addressType = AddressType.Telegram;
 const Telegram = () => {
   const {
-    info: {
-      config: { environment },
-    },
+    config: { environment },
   } = useDialectSdk();
   const {
     globalAddress: telegramAddress,
@@ -131,7 +129,7 @@ const Telegram = () => {
     if (!dappAddress) {
       return defaultBotUrl;
     }
-    const dapp = dapps[dappAddress.toBase58()];
+    const dapp = dapps[dappAddress.toString()];
     if (!dapp) {
       return defaultBotUrl;
     }

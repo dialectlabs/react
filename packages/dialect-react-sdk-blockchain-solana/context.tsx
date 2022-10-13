@@ -1,24 +1,23 @@
 import {
   DialectSolanaWalletAdapter,
+  Solana,
   SolanaSdkFactory,
 } from '@dialectlabs/blockchain-sdk-solana';
 import {
-  ConfigProps,
   DialectContextProvider,
+  DialectContextProviderProps,
   DialectWalletStatesHolder,
 } from '@dialectlabs/react-sdk';
 import { PublicKey } from '@solana/web3.js';
-import React, { useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import type { SolanaConfigProps } from './types';
 
-interface DialectSolanaSdkProps {
-  config: ConfigProps;
+interface DialectSolanaSdkProps
+  extends Omit<DialectContextProviderProps<Solana>, 'blockchainSdkFactory'> {
   solanaConfig: SolanaConfigProps;
-  children: React.ReactNode;
 }
 
 const SolanaBlockchainSdkWrapper = ({
-  config,
   solanaConfig,
   ...props
 }: DialectSolanaSdkProps) => {
@@ -109,7 +108,7 @@ const SolanaBlockchainSdkWrapper = ({
 
   return (
     <DialectContextProvider
-      config={config}
+      {...props}
       blockchainSdkFactory={blockchainSdkFactory}
     >
       {props.children}

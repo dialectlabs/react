@@ -4,6 +4,7 @@ import { DialectContextProvider } from './DialectContext';
 import { DialectWalletStatesHolder } from './DialectContext/Wallet';
 
 export { DialectContextProvider } from './DialectContext';
+export type { DialectContextProviderProps } from './DialectContext';
 export { DialectWalletStatesHolder } from './DialectContext/Wallet';
 
 export const DialectNoBlockchainSdk: React.FC<{ children: React.ReactNode }> = (

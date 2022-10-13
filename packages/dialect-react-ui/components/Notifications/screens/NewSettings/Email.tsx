@@ -80,7 +80,7 @@ const Email = () => {
     } catch (e) {
       setError(e as Error);
     }
-  }, [createAddress, email]);
+  }, [createAddress, email, toggleSubscription]);
 
   const deleteEmail = async () => {
     try {

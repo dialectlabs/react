@@ -187,7 +187,7 @@ export default function Notifications({
               pollingInterval={props.pollingInterval}
             >
               <GatedWrapper gatedView={gatedView}>
-                <ThreadEncyprionWrapper otherMemberPK={dappAddress}>
+                <ThreadEncyprionWrapper otherMemberAddress={dappAddress}>
                   <InnerNotifications {...props} />
                 </ThreadEncyprionWrapper>
               </GatedWrapper>

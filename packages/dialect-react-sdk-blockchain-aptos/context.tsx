@@ -1,23 +1,22 @@
 import {
+  Aptos,
   AptosSdkFactory,
   DialectAptosWalletAdapter,
 } from '@dialectlabs/blockchain-sdk-aptos';
 import {
-  ConfigProps,
   DialectContextProvider,
+  DialectContextProviderProps,
   DialectWalletStatesHolder,
 } from '@dialectlabs/react-sdk';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import type { AptosConfigProps } from './types';
 
-interface DialectAptosSdkProps {
-  config: ConfigProps;
+interface DialectAptosSdkProps
+  extends Omit<DialectContextProviderProps<Aptos>, 'blockchainSdkFactory'> {
   aptosConfig: AptosConfigProps;
-  children: React.ReactNode;
 }
 
 const AptosBlockchainSdkWrapper = ({
-  config,
   aptosConfig,
   ...props
 }: DialectAptosSdkProps) => {
@@ -80,7 +79,7 @@ const AptosBlockchainSdkWrapper = ({
 
   return (
     <DialectContextProvider
-      config={config}
+      {...props}
       blockchainSdkFactory={blockchainSdkFactory}
     >
       {props.children}

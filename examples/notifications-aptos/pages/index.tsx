@@ -1,8 +1,8 @@
 import {
-  DialectSolanaSdk,
-  DialectSolanaWalletAdapter,
-  SolanaConfigProps,
-} from '@dialectlabs/react-sdk-blockchain-solana';
+  AptosConfigProps,
+  DialectAptosSdk,
+  DialectAptosWalletAdapter,
+} from '@dialectlabs/react-sdk-blockchain-aptos';
 import {
   ConfigProps,
   defaultVariables,
@@ -12,11 +12,11 @@ import {
   NotificationsButton,
   NotificationsSingleFeed,
 } from '@dialectlabs/react-ui';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useWallet } from '@manahippo/aptos-wallet-adapter';
 import Head from 'next/head';
+import { AptosWalletButton } from '../components/AptosWallet';
 import { useEffect, useMemo, useState } from 'react';
-import { SolanaWalletButton } from '../components/SolanaWallet';
-import { solanaWalletToDialectWallet } from '../utils/wallet';
+import { aptosWalletToDialectWallet } from '../utils/wallet';
 
 const DAPP_EXAMPLE_ADDRESS = 'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h';
 
@@ -80,7 +80,7 @@ function AuthedHome() {
             Component={NotificationsSingleFeed}
           />
         </div>
-        <SolanaWalletButton />
+        <AptosWalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">
         <code className="text-center text-neutral-400 dark:text-neutral-100">
@@ -95,11 +95,14 @@ export default function Home(): JSX.Element {
   const wallet = useWallet();
   const [theme, setTheme] = useState<ThemeType>('dark');
 
-  const [dialectSolanaWalletAdapter, setDialectSolanaWalletAdapter] =
-    useState<DialectSolanaWalletAdapter | null>(null);
+  const [dialectAptosWalletAdapter, setDialectAptosWalletAdapter] =
+    useState<DialectAptosWalletAdapter | null>(null);
 
   useEffect(() => {
-    setDialectSolanaWalletAdapter(solanaWalletToDialectWallet(wallet));
+    if (!wallet.wallet) return;
+    setDialectAptosWalletAdapter(
+      aptosWalletToDialectWallet(wallet.wallet.adapter)
+    );
   }, [wallet]);
 
   const dialectConfig = useMemo(
@@ -112,11 +115,11 @@ export default function Home(): JSX.Element {
     []
   );
 
-  const solanaConfig: SolanaConfigProps = useMemo(
+  const aptosConfig: AptosConfigProps = useMemo(
     () => ({
-      wallet: dialectSolanaWalletAdapter,
+      wallet: dialectAptosWalletAdapter,
     }),
-    [dialectSolanaWalletAdapter]
+    [dialectAptosWalletAdapter]
   );
 
   useEffect(() => {
@@ -137,9 +140,9 @@ export default function Home(): JSX.Element {
   }, []);
 
   return (
-    <DialectSolanaSdk
+    <DialectAptosSdk
       config={dialectConfig}
-      solanaConfig={solanaConfig}
+      aptosConfig={aptosConfig}
       dappAddress={DAPP_EXAMPLE_ADDRESS}
       gate={() =>
         new Promise((resolve) => setTimeout(() => resolve(true), 3000))
@@ -150,6 +153,6 @@ export default function Home(): JSX.Element {
           <AuthedHome />
         </DialectUiManagementProvider>
       </DialectThemeProvider>
-    </DialectSolanaSdk>
+    </DialectAptosSdk>
   );
 }

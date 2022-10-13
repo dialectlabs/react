@@ -1,15 +1,14 @@
-import 'tailwindcss/tailwind.css';
 import '@dialectlabs/react-ui/index.css';
-import '../styles/globals.css';
-import React from 'react';
 import type { AppProps } from 'next/app';
-import { SolanaWalletContext } from '../components/SolanaWallet';
+import 'tailwindcss/tailwind.css';
+import { AptosWalletContext } from '../components/AptosWallet';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SolanaWalletContext>
+    <AptosWalletContext>
       <Component {...pageProps} />
-    </SolanaWalletContext>
+    </AptosWalletContext>
   );
 }
 export default MyApp;

@@ -46,7 +46,6 @@ export default function CreateThread({
       type: blockchainSdkType,
       info: { supportsOnChainMessaging },
     },
-    wallet: { address: walletAddress },
     encryptionKeysProvider,
     identity,
   } = useDialectSdk();

@@ -4,18 +4,22 @@ import {
   WalletProvider,
 } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import {
+  GlowWalletAdapter,
+  PhantomWalletAdapter,
+  SolletWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
 import {
   WalletModalProvider,
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
-import { PhantomIcon } from '../Icon';
+import { PhantomIcon } from './Icon';
 
 // Default styles that can be overridden by your app
 require('@solana/wallet-adapter-react-ui/styles.css');
 
-export const Wallet = () => {
+export const SolanaWalletButton = () => {
   return (
     <>
       <WalletModalProvider>
@@ -28,7 +32,7 @@ export const Wallet = () => {
   );
 };
 
-export const WalletContext: FC = (props) => {
+export const SolanaWalletContext: FC = (props) => {
   // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
   const network = WalletAdapterNetwork.Mainnet;
 
@@ -43,16 +47,10 @@ export const WalletContext: FC = (props) => {
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
-      // getSlopeWallet(),
-      // getSolflareWallet(),
-      // getTorusWallet({
-      //   options: { clientId: 'Get a client ID @ https://developer.tor.us' }
-      // }),
-      // getLedgerWallet(),
-      // getSolletWallet({ network }),
-      // getSolletExtensionWallet({ network }),
+      new GlowWalletAdapter(),
+      new SolletWalletAdapter({ network }),
     ],
-    []
+    [network]
   );
 
   return (
