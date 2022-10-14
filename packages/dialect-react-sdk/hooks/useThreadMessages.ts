@@ -11,7 +11,7 @@ import { useCallback, useMemo, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
 import type { LocalThreadMessage } from '../types';
-import { EMPTY_ARR } from '../utils';
+import { EMPTY_ARR, isOffChain, isOnChain } from '../utils';
 import {
   CACHE_KEY_MESSAGES_FN,
   CACHE_KEY_THREADS,
@@ -103,17 +103,17 @@ const useThreadMessages = ({
     }
 
     // For backends other than `DialectCloud` we return null if no remote meessages
-    if (thread?.type !== 'dialect-cloud' && !remoteMessages) {
+    if (isOnChain(thread.type) && !remoteMessages) {
       return null;
     }
 
     // If there are remote messages add them to the `messageArray`
-    if (thread?.type === 'dialect-cloud' && remoteMessages) {
+    if (isOffChain(thread.type) && remoteMessages) {
       messageArray = messageArray.concat(remoteMessages);
     }
 
     // If there are local messages add them to the `messageArray` as well
-    if (thread?.type === 'dialect-cloud' && filteredLocalMessages) {
+    if (isOffChain(thread.type) && filteredLocalMessages) {
       messageArray = messageArray.concat(filteredLocalMessages);
     }
 
@@ -187,10 +187,9 @@ const useThreadMessages = ({
     async (cmd: SendMessageCommand) => {
       if (!threadInternal) return;
 
-      const sendMessageFn =
-        threadInternal.type === 'dialect-cloud'
-          ? offChainSendMessage
-          : onChainSendMessage;
+      const sendMessageFn = isOffChain(threadInternal.type)
+        ? offChainSendMessage
+        : onChainSendMessage;
 
       await sendMessageFn(threadInternal, cmd);
     },
