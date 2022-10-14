@@ -1,8 +1,8 @@
 import {
+  AccountAddress,
   AddressType,
   Thread,
   ThreadMemberScope,
-  useDialectDapp,
   useDialectSdk,
   useDialectWallet,
   useNotificationChannel,
@@ -28,6 +28,7 @@ export type NotificationType = {
 
 interface SubscribeProps {
   dialectId: string;
+  dappAddress: AccountAddress;
   buttonLabel?: string;
   successLabel?: string;
   label?: string;
@@ -44,6 +45,7 @@ const addressType = AddressType.Wallet;
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const EMPTY_FN = () => {};
 interface SafeSubscribeProps {
+  dappAddress: AccountAddress;
   label?: string;
   buttonLabel?: string;
   successLabel?: string;
@@ -53,6 +55,7 @@ interface SafeSubscribeProps {
 }
 
 function SafeSubscribe({
+  dappAddress,
   label,
   buttonLabel,
   successLabel,
@@ -139,6 +142,7 @@ function SafeSubscribe({
         }
         return (
           <ConnectedSubscribe
+            dappAddress={dappAddress}
             label={label}
             buttonLabel={buttonLabel}
             successLabel={successLabel}
@@ -152,6 +156,7 @@ function SafeSubscribe({
 }
 
 interface ConnectedSubscribeProps {
+  dappAddress: AccountAddress;
   label?: string;
   buttonLabel?: string;
   successLabel?: string;
@@ -161,6 +166,7 @@ interface ConnectedSubscribeProps {
 }
 
 function ConnectedSubscribe({
+  dappAddress,
   label,
   buttonLabel,
   successLabel,
@@ -171,7 +177,6 @@ function ConnectedSubscribe({
   const {
     wallet: { address: walletAddress },
   } = useDialectSdk();
-  const { dappAddress } = useDialectDapp();
 
   const { create: createThread, isCreatingThread } = useThreads();
 
@@ -192,6 +197,7 @@ function ConnectedSubscribe({
     isFetchingSubscriptions,
   } = useNotificationChannelDappSubscription({
     addressType,
+    dappAddress,
   });
 
   const { thread, isFetchingThread } = useThread({
@@ -312,6 +318,7 @@ function ConnectedSubscribe({
 
 function InnerSubscribe({
   dialectId,
+  dappAddress,
   label,
   buttonLabel,
   successLabel,
@@ -327,6 +334,7 @@ function InnerSubscribe({
   return (
     <div className="dt-w-full">
       <SafeSubscribe
+        dappAddress={dappAddress}
         label={label}
         buttonLabel={buttonLabel}
         successLabel={successLabel}

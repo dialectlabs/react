@@ -1,8 +1,8 @@
 import {
+  AccountAddress,
   AddressType,
   Thread,
   ThreadMemberScope,
-  useDialectDapp,
   useDialectSdk,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
@@ -18,14 +18,16 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import IconButton from '../../../IconButton';
 
 type Web3Props = {
+  dappAddress: AccountAddress;
   onThreadDeleted?: () => void;
   onThreadCreated?: (thread: Thread) => void;
   showLabel?: boolean;
 };
 
-const addressType = AddressType.Wallet;
+const ADDRESS_TYPE = AddressType.Wallet;
 
 const Wallet = ({
+  dappAddress,
   onThreadDeleted,
   onThreadCreated,
   showLabel = true,
@@ -33,7 +35,6 @@ const Wallet = ({
   const {
     wallet: { address: walletAddress },
   } = useDialectSdk();
-  const { dappAddress } = useDialectDapp();
   const { textStyles, outlinedInput, adornmentButton, icons, colors } =
     useTheme();
   const { create: createThread, isCreatingThread } = useThreads();
@@ -44,14 +45,15 @@ const Wallet = ({
     delete: deleteAddress,
     isCreatingAddress,
     isDeletingAddress,
-  } = useNotificationChannel({ addressType });
+  } = useNotificationChannel({ addressType: ADDRESS_TYPE });
 
   const {
     enabled: subscriptionEnabled,
     toggleSubscription,
     isToggling,
   } = useNotificationChannelDappSubscription({
-    addressType,
+    addressType: ADDRESS_TYPE,
+    dappAddress,
   });
 
   const {

@@ -6,9 +6,8 @@ import {
 } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
+import { EMPTY_ARR } from '../utils';
 import { WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from './internal/swrCache';
-import useDialectDapp from './useDialectDapp';
 import useDialectSdk from './useDialectSdk';
 
 interface UseNotificationSubscriptionsValue {
@@ -26,20 +25,14 @@ type UpdateNotificationSubscriptionCommand =
   UpsertNotificationSubscriptionCommand;
 
 interface UseUseNotificationSubscriptions {
-  dappAddress?: AccountAddress;
+  dappAddress: AccountAddress;
   refreshInterval?: number;
 }
 
 function useNotificationSubscriptions({
-  dappAddress: dappAddressOverride,
+  dappAddress,
   refreshInterval,
-}: UseUseNotificationSubscriptions = EMPTY_OBJ): UseNotificationSubscriptionsValue {
-  const { dappAddress: globalDappAddress } = useDialectDapp(true);
-  const dappAddress = dappAddressOverride || globalDappAddress;
-  if (!dappAddress) {
-    throw new Error('No dapp address provided');
-  }
-
+}: UseUseNotificationSubscriptions): UseNotificationSubscriptionsValue {
   const {
     wallet: { address: walletAddress, notificationSubscriptions },
   } = useDialectSdk();
@@ -55,7 +48,7 @@ function useNotificationSubscriptions({
     mutate,
   } = useSWR(
     WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(walletAddress, dappAddress),
-    notificationSubscriptions && dappAddress
+    notificationSubscriptions
       ? () =>
           notificationSubscriptions.findAll({ dappAccountAddress: dappAddress })
       : null,

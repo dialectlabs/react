@@ -61,6 +61,7 @@ function AuthedHome() {
           <p className="text-white animate-pulse">Typical dapp →</p>
           <NotificationsButton
             dialectId="dialect-notifications"
+            dappAddress={DAPP_EXAMPLE_ADDRESS}
             notifications={[
               {
                 name: 'Example notification',
@@ -76,6 +77,7 @@ function AuthedHome() {
           <p className="text-white animate-pulse">Single feed →</p>
           <NotificationsButton
             dialectId="dialect-singlefeed-notifications"
+            dappAddress={DAPP_EXAMPLE_ADDRESS}
             pollingInterval={15000}
             Component={NotificationsSingleFeed}
           />
@@ -143,7 +145,6 @@ export default function Home(): JSX.Element {
     <DialectAptosSdk
       config={dialectConfig}
       aptosConfig={aptosConfig}
-      dappAddress={DAPP_EXAMPLE_ADDRESS}
       gate={() =>
         new Promise((resolve) => setTimeout(() => resolve(true), 3000))
       }

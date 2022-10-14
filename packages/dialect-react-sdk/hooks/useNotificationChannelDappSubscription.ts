@@ -3,13 +3,12 @@ import { useCallback, useState } from 'react';
 import useSWR from 'swr';
 import { EMPTY_ARR } from '../utils';
 import { WALLET_DAPP_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
-import useDialectDapp from './useDialectDapp';
 import useDialectSdk from './useDialectSdk';
 import useNotificationChannel from './useNotificationChannel';
 
 interface UseNotificationChannelDappSubscriptionParams {
   addressType: AddressType;
-  dappAddress?: AccountAddress;
+  dappAddress: AccountAddress;
 }
 
 interface ToggleSubscriptionParams {
@@ -25,15 +24,9 @@ interface UseNotificationChannelDappSubscriptionValue {
 }
 
 const useNotificationChannelDappSubscription = ({
-  dappAddress: dappAddressOverride,
+  dappAddress,
   addressType,
 }: UseNotificationChannelDappSubscriptionParams): UseNotificationChannelDappSubscriptionValue => {
-  const { dappAddress: globalDappAddress } = useDialectDapp(true);
-  const dappAddress = dappAddressOverride || globalDappAddress;
-  if (!dappAddress) {
-    throw new Error('No dapp address provided');
-  }
-
   const { wallet: walletsApi } = useDialectSdk();
   const { globalAddress } = useNotificationChannel({ addressType });
 

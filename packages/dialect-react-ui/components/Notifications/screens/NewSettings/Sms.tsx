@@ -2,6 +2,7 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import clsx from 'clsx';
 import { RightAdornment } from './RightAdorment';
 import {
+  AccountAddress,
   AddressType,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
@@ -16,7 +17,11 @@ import CancelIcon from '../../../Icon/Cancel';
 const addressType = AddressType.PhoneNumber;
 const phoneRegex = /^(\+)?([ 0-9]){10,16}$/gm;
 
-const Sms = () => {
+interface SmsProps {
+  dappAddress: AccountAddress;
+}
+
+const Sms = ({ dappAddress }: SmsProps) => {
   const {
     globalAddress: smsAddress,
     create: createAddress,
@@ -36,7 +41,7 @@ const Sms = () => {
     enabled: subscriptionEnabled,
     isToggling,
     toggleSubscription,
-  } = useNotificationChannelDappSubscription({ addressType });
+  } = useNotificationChannelDappSubscription({ addressType, dappAddress });
 
   const { textStyles, colors } = useTheme();
 

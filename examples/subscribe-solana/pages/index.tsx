@@ -79,6 +79,7 @@ function AuthedHome() {
           <div className="min-w-[22rem]">
             <SubscribeButton
               dialectId="dialect-subscribe"
+              dappAddress={DAPP_EXAMPLE_ADDRESS}
               label="Subscribe to dApp updates"
               onWalletConnect={() => {
                 // Or call any other function which triggers wallet connection for user in your dApp

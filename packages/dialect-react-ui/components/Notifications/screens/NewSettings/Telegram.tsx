@@ -1,23 +1,28 @@
-import { Toggle } from '../../../common';
-import { useTheme } from '../../../common/providers/DialectThemeProvider';
-import clsx from 'clsx';
 import {
+  AccountAddress,
   AddressType,
   useDapp,
-  useDialectDapp,
   useDialectSdk,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
 } from '@dialectlabs/react-sdk';
+import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
-import { RightAdornment } from './RightAdorment';
-import { VerificationInput } from './VerificationInput';
+import { Toggle } from '../../../common';
 import { A, P } from '../../../common/preflighted';
 import OutlinedInput from '../../../common/primitives/OutlinedInput';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import CancelIcon from '../../../Icon/Cancel';
+import { RightAdornment } from './RightAdorment';
+import { VerificationInput } from './VerificationInput';
 
-const addressType = AddressType.Telegram;
-const Telegram = () => {
+const ADDRESS_TYPE = AddressType.Telegram;
+
+interface TelegramProps {
+  dappAddress: AccountAddress;
+}
+
+const Telegram = ({ dappAddress }: TelegramProps) => {
   const {
     config: { environment },
   } = useDialectSdk();
@@ -34,16 +39,18 @@ const Telegram = () => {
     isVerifyingCode,
 
     errorFetching: errorFetchingAddresses,
-  } = useNotificationChannel({ addressType });
+  } = useNotificationChannel({ addressType: ADDRESS_TYPE });
 
   const {
     enabled: subscriptionEnabled,
     toggleSubscription,
     isToggling,
-  } = useNotificationChannelDappSubscription({ addressType });
+  } = useNotificationChannelDappSubscription({
+    addressType: ADDRESS_TYPE,
+    dappAddress,
+  });
 
   const { dapps } = useDapp({ verified: false });
-  const { dappAddress } = useDialectDapp();
 
   const { textStyles, colors } = useTheme();
 
@@ -129,7 +136,7 @@ const Telegram = () => {
     if (!dappAddress) {
       return defaultBotUrl;
     }
-    const dapp = dapps[dappAddress.toString()];
+    const dapp = dapps[dappAddress];
     if (!dapp) {
       return defaultBotUrl;
     }
@@ -151,7 +158,7 @@ const Telegram = () => {
       {isTelegramSaved && !isVerified ? (
         <VerificationInput
           onCancel={deleteTelegram}
-          addressType={addressType}
+          addressType={ADDRESS_TYPE}
           customText={
             <>
               <A
