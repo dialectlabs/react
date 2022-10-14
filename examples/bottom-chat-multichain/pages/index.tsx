@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal';
 import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
@@ -26,8 +26,8 @@ import {
 } from '@dialectlabs/react-ui';
 import { useWallet as useAptosWallet } from '@manahippo/aptos-wallet-adapter';
 import {
-  useWallet as useSolanaWallet,
   useConnection as useSolanaConnection,
+  useWallet as useSolanaWallet,
 } from '@solana/wallet-adapter-react';
 import { AptosWalletButton } from '../components/AptosWallet';
 import { SolanaWalletButton } from '../components/SolanaWallet';
@@ -35,6 +35,7 @@ import {
   aptosWalletToDialectWallet,
   solanaWalletToDialectWallet,
 } from '../utils/wallet';
+import { CivicIdentityResolver } from '@dialectlabs/identity-civic';
 
 // TODO: Use useTheme instead of explicitly importing defaultVariables
 export const themeVariables: IncomingThemeVariables = {
@@ -126,40 +127,28 @@ export default function Home(): JSX.Element {
     );
   }, [aptosWallet]);
 
-  const dialectConfig = useMemo(
-    (): ConfigProps => ({
-      environment: 'development',
-      dialectCloud: {
-        tokenStore: 'local-storage',
-      },
-      identity: {
-        resolvers: [
-          new DialectDappsIdentityResolver(),
-          new SNSIdentityResolver(solanaConnection),
-          new CardinalTwitterIdentityResolver(solanaConnection),
-        ],
-      },
-    }),
-    [solanaConnection]
-  );
-
-  const solanaConfig: SolanaConfigProps = useMemo(
-    () => ({
-      wallet: dialectSolanaWalletAdapter,
-    }),
-    [dialectSolanaWalletAdapter]
-  );
-
-  const aptosConfig: AptosConfigProps = useMemo(
-    () => ({
-      wallet: dialectAptosWalletAdapter,
-    }),
-    [dialectAptosWalletAdapter]
-  );
-
   const DialectProviders: React.FC<{ children: React.ReactNode }> = useCallback(
     (props: { children: React.ReactNode }) => {
+      const dialectConfig: ConfigProps = {
+        environment: 'development',
+        dialectCloud: {
+          tokenStore: 'local-storage',
+        },
+        identity: {
+          resolvers: [
+            new DialectDappsIdentityResolver(),
+            new SNSIdentityResolver(solanaConnection),
+            new CardinalTwitterIdentityResolver(solanaConnection),
+            new CivicIdentityResolver(solanaConnection),
+          ],
+        },
+      };
+
       if (dialectSolanaWalletAdapter) {
+        const solanaConfig: SolanaConfigProps = {
+          wallet: dialectSolanaWalletAdapter,
+        };
+
         return (
           <DialectSolanaSdk config={dialectConfig} solanaConfig={solanaConfig}>
             {props.children}
@@ -167,6 +156,10 @@ export default function Home(): JSX.Element {
         );
       }
       if (dialectAptosWalletAdapter) {
+        const aptosConfig: AptosConfigProps = {
+          wallet: dialectAptosWalletAdapter,
+        };
+
         return (
           <DialectAptosSdk config={dialectConfig} aptosConfig={aptosConfig}>
             {props.children}
@@ -175,13 +168,7 @@ export default function Home(): JSX.Element {
       }
       return <DialectNoBlockchainSdk>{props.children}</DialectNoBlockchainSdk>;
     },
-    [
-      aptosConfig,
-      dialectAptosWalletAdapter,
-      dialectConfig,
-      dialectSolanaWalletAdapter,
-      solanaConfig,
-    ]
+    [solanaConnection, dialectAptosWalletAdapter, dialectSolanaWalletAdapter]
   );
 
   return (
