@@ -28,8 +28,12 @@ const useNotificationChannelDappSubscription = ({
   dappAddress: dappAddressOverride,
   addressType,
 }: UseNotificationChannelDappSubscriptionParams): UseNotificationChannelDappSubscriptionValue => {
-  const { dappAddress: globalDappAddress } = useDialectDapp();
+  const { dappAddress: globalDappAddress } = useDialectDapp(true);
   const dappAddress = dappAddressOverride || globalDappAddress;
+  if (!dappAddress) {
+    throw new Error('No dapp address provided');
+  }
+
   const { wallet: walletsApi } = useDialectSdk();
   const { globalAddress } = useNotificationChannel({ addressType });
 

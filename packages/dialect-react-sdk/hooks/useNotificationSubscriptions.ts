@@ -34,8 +34,12 @@ function useNotificationSubscriptions({
   dappAddress: dappAddressOverride,
   refreshInterval,
 }: UseUseNotificationSubscriptions = EMPTY_OBJ): UseNotificationSubscriptionsValue {
-  const { dappAddress: globalDappAddress } = useDialectDapp();
+  const { dappAddress: globalDappAddress } = useDialectDapp(true);
   const dappAddress = dappAddressOverride || globalDappAddress;
+  if (!dappAddress) {
+    throw new Error('No dapp address provided');
+  }
+
   const {
     wallet: { address: walletAddress, notificationSubscriptions },
   } = useDialectSdk();

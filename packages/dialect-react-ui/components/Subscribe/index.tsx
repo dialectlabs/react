@@ -172,11 +172,6 @@ function ConnectedSubscribe({
     wallet: { address: walletAddress },
   } = useDialectSdk();
   const { dappAddress } = useDialectDapp();
-  if (!dappAddress) {
-    throw new Error(
-      'dapp address should be provided for subscribe button to work'
-    );
-  }
 
   const { create: createThread, isCreatingThread } = useThreads();
 

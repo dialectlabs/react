@@ -46,9 +46,6 @@ function InnerNotifications({
   pollingInterval,
 }: NotificationsProps): JSX.Element {
   const { dappAddress } = useDialectDapp();
-  if (!dappAddress) {
-    throw new Error('dapp address should be provided for notifications');
-  }
   const { thread, isFetchingThread } = useThread({
     findParams: { otherMembers: [dappAddress] },
   });

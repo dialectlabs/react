@@ -10,7 +10,7 @@ const useDialectDapp = <TUnsafe extends boolean = false>(
     return dappContainerState;
   }
   if (!dappContainerState || !dappContainerState.dappAddress) {
-    throw new Error('dapp not initialized');
+    throw new Error('dapp not provided');
   }
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
