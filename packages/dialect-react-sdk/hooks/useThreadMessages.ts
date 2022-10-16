@@ -4,7 +4,6 @@ import {
   Thread,
   ThreadId,
   ThreadMessage as SdkThreadMessage,
-  ThreadMessage,
 } from '@dialectlabs/sdk';
 import { nanoid } from 'nanoid';
 import { useCallback, useMemo, useState } from 'react';
@@ -76,7 +75,7 @@ const useThreadMessages = ({
     { refreshInterval, refreshWhenOffline: true }
   );
 
-  const messages: ThreadMessage[] | null = useMemo(() => {
+  const messages: LocalThreadMessage[] | null = useMemo(() => {
     let messageArray: SdkThreadMessage[] = [];
 
     if (!thread) {

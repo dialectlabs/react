@@ -113,12 +113,7 @@ export default function MessageBubble({
                       state === 'entered' &&
                         'dt-opacity-100 dt-scale-100 dt-transition-transform dt-duration-300'
                     )}
-                    onClick={() =>
-                      onSendMessage(
-                        text,
-                        deduplicationId || message.length.toString()
-                      )
-                    }
+                    onClick={() => onSendMessage(text, deduplicationId)}
                   >
                     <icons.arrowclockwise className="dt-h-3 dt-w-3 dt-mr-0.5" />
                     <span>retry</span>
@@ -137,11 +132,7 @@ export default function MessageBubble({
                       state === 'entered' &&
                         'dt-opacity-100 dt-scale-100 dt-transition-transform dt-duration-300'
                     )}
-                    onClick={() =>
-                      onCancelMessage(
-                        deduplicationId || message.length.toString()
-                      )
-                    }
+                    onClick={() => onCancelMessage(deduplicationId)}
                   >
                     <icons.cancel className="dt-h-3 dt-w-3 dt-mr-0.5" />
                     <span>cancel</span>
