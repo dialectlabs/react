@@ -2,7 +2,7 @@
 
 ## [UNRELEASED]
 
-## [1.1.0-beta.2] - 2022-10-13
+## [1.1.0-beta.3] - 2022-10-13
 
 - feature: major update with breaking changes, migration to multi chain tooling
 
