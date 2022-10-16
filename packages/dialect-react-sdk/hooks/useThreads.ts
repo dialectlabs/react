@@ -1,7 +1,6 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-// import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';

@@ -90,7 +90,7 @@ const useThreadMessages = ({
         (rm) => rm.deduplicationId === lm.deduplicationId
       );
 
-      if (remoteMessage && lm.deduplicationId) {
+      if (remoteMessage) {
         deleteLocalMessage(thread.id.toString(), lm.deduplicationId);
       }
 
