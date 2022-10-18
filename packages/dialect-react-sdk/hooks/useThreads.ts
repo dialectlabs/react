@@ -1,7 +1,6 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
 import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
@@ -47,7 +46,7 @@ const useThreads = ({
     [mutate, threadsApi]
   );
 
-  useDialectErrorsHandler(errorFetchingThreads, errorCreatingThread);
+  // useDialectErrorsHandler(errorFetchingThreads, errorCreatingThread);
 
   const createThread = useCallback(
     async (cmd: CreateThreadCommand) => {
@@ -59,7 +58,7 @@ const useThreads = ({
         await globalMutate(CACHE_KEY_THREAD_FN({ id: res.id }), res);
         await globalMutate(
           CACHE_KEY_THREAD_FN({
-            otherMembers: cmd.otherMembers.map((it) => it.publicKey),
+            otherMembers: cmd.otherMembers.map((it) => it.address),
           }),
           res
         );

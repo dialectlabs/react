@@ -1,6 +1,6 @@
 import {
+  AccountAddress,
   AddressType,
-  useDialectDapp,
   useNotificationChannelDappSubscription,
   useNotificationSubscriptions,
   useThread,
@@ -26,6 +26,7 @@ export type NotificationType = {
 };
 
 interface NotificationsProps {
+  dappAddress: AccountAddress;
   onModalClose: () => void;
   notifications?: NotificationType[];
   channels?: Channel[];
@@ -35,9 +36,10 @@ interface NotificationsProps {
   settingsOnly?: boolean;
 }
 
-const addressType = AddressType.Wallet;
+const ADDRESS_TYPE = AddressType.Wallet;
 
 function InnerNotifications({
+  dappAddress,
   onModalClose,
   onBackClick,
   channels,
@@ -45,10 +47,6 @@ function InnerNotifications({
   settingsOnly,
   pollingInterval,
 }: NotificationsProps): JSX.Element {
-  const { dappAddress } = useDialectDapp();
-  if (!dappAddress) {
-    throw new Error('dapp address should be provided for notifications');
-  }
   const { thread, isFetchingThread } = useThread({
     findParams: { otherMembers: [dappAddress] },
   });
@@ -56,11 +54,12 @@ function InnerNotifications({
   const [isInitialRoutePicked, setInitialRoutePicked] = useState(false);
 
   const subscription = useNotificationChannelDappSubscription({
-    addressType,
+    addressType: ADDRESS_TYPE,
+    dappAddress,
   });
 
   const { isFetching: isFetchingNotificationsSubscriptions } =
-    useNotificationSubscriptions();
+    useNotificationSubscriptions({ dappAddress });
 
   const { scrollbar } = useTheme();
   const { navigate } = useRoute();
@@ -138,6 +137,7 @@ function InnerNotifications({
           <>
             <Route name={RouteName.Settings}>
               <Settings
+                dappAddress={dappAddress}
                 channels={channels || []}
                 notifications={notifications}
               />
@@ -158,7 +158,7 @@ export default function Notifications({
   gatedView,
   ...props
 }: NotificationsProps) {
-  const { dappAddress } = useDialectDapp();
+  const { dappAddress } = props;
   const { colors, modal } = useTheme();
 
   const fallbackHeader = (
@@ -187,7 +187,7 @@ export default function Notifications({
               pollingInterval={props.pollingInterval}
             >
               <GatedWrapper gatedView={gatedView}>
-                <ThreadEncyprionWrapper otherMemberPK={dappAddress}>
+                <ThreadEncyprionWrapper otherMemberAddress={dappAddress}>
                   <InnerNotifications {...props} />
                 </ThreadEncyprionWrapper>
               </GatedWrapper>

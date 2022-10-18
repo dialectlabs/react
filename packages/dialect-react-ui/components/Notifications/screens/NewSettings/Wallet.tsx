@@ -1,11 +1,9 @@
 import {
+  AccountAddress,
   AddressType,
-  Backend,
   Thread,
   ThreadMemberScope,
-  useDialectConnectionInfo,
-  useDialectDapp,
-  useDialectWallet,
+  useDialectSdk,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
   useThread,
@@ -20,54 +18,43 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import IconButton from '../../../IconButton';
 
 type Web3Props = {
+  dappAddress: AccountAddress;
   onThreadDeleted?: () => void;
   onThreadCreated?: (thread: Thread) => void;
   showLabel?: boolean;
 };
 
-const addressType = AddressType.Wallet;
+const ADDRESS_TYPE = AddressType.Wallet;
 
 const Wallet = ({
+  dappAddress,
   onThreadDeleted,
   onThreadCreated,
   showLabel = true,
 }: Web3Props) => {
-  const { adapter: wallet } = useDialectWallet();
-  const { dappAddress } = useDialectDapp();
+  const {
+    wallet: { address: walletAddress },
+  } = useDialectSdk();
   const { textStyles, outlinedInput, adornmentButton, icons, colors } =
     useTheme();
   const { create: createThread, isCreatingThread } = useThreads();
 
   const {
-    globalAddress: walletAddress,
+    globalAddress: walletSubscriptionAddress,
     create: createAddress,
     delete: deleteAddress,
     isCreatingAddress,
     isDeletingAddress,
-  } = useNotificationChannel({ addressType });
+  } = useNotificationChannel({ addressType: ADDRESS_TYPE });
 
   const {
     enabled: subscriptionEnabled,
     toggleSubscription,
     isToggling,
   } = useNotificationChannelDappSubscription({
-    addressType,
+    addressType: ADDRESS_TYPE,
+    dappAddress,
   });
-
-  const {
-    connected: {
-      solana: { shouldConnect: isSolanaShouldConnect },
-      dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
-    },
-  } = useDialectConnectionInfo();
-
-  const isBackendSelectable =
-    isSolanaShouldConnect && isDialectCloudShouldConnect;
-
-  const backend =
-    isSolanaShouldConnect && !isBackendSelectable
-      ? Backend.Solana
-      : Backend.DialectCloud;
 
   const {
     thread,
@@ -88,19 +75,16 @@ const Wallet = ({
     return createThread({
       me: { scopes: [ThreadMemberScope.ADMIN] },
       otherMembers: [
-        { publicKey: dappAddress, scopes: [ThreadMemberScope.WRITE] },
+        { address: dappAddress, scopes: [ThreadMemberScope.WRITE] },
       ],
       encrypted: false,
-      backend,
     });
-  }, [backend, createThread, dappAddress]);
+  }, [createThread, dappAddress]);
 
-  const createWalletAddress = useCallback(async () => {
-    if (!wallet.publicKey) {
-      return;
-    }
-    return createAddress({ value: wallet.publicKey?.toBase58() });
-  }, [createAddress, wallet.publicKey]);
+  const createWalletAddress = useCallback(
+    () => createAddress({ value: walletAddress }),
+    [createAddress, walletAddress]
+  );
 
   const fullEnableWallet = useCallback(async () => {
     const address = await createWalletAddress();
@@ -124,7 +108,7 @@ const Wallet = ({
     isCreatingAddress ||
     isToggling;
 
-  const walletEnabled = thread && walletAddress;
+  const walletEnabled = thread && walletSubscriptionAddress;
 
   return (
     <div>
@@ -150,7 +134,7 @@ const Wallet = ({
         >
           <div className="dt-flex dt-justify-between dt-items-center">
             <span className={'dt-opacity-40'}>
-              {shortenAddress(wallet.publicKey || '')}
+              {shortenAddress(walletAddress || '')}
             </span>
             {walletEnabled && !isLoading && (
               <IconButton
@@ -160,7 +144,7 @@ const Wallet = ({
               />
             )}
             {/* when no address and thread */}
-            {!thread && !walletAddress && !isLoading && (
+            {!thread && !walletSubscriptionAddress && !isLoading && (
               <Button
                 onClick={fullEnableWallet}
                 className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
@@ -169,7 +153,7 @@ const Wallet = ({
               </Button>
             )}
             {/* when address exists but no thread */}
-            {walletAddress && !thread && !isLoading && (
+            {walletSubscriptionAddress && !thread && !isLoading && (
               <Button
                 onClick={createWalletThread}
                 className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
@@ -179,7 +163,7 @@ const Wallet = ({
             )}
             {/* when thread exists but no address
                 Probably this is a *very* old users case */}
-            {thread && !walletAddress && !isLoading && (
+            {thread && !walletSubscriptionAddress && !isLoading && (
               <Button
                 onClick={createWalletAddress}
                 className={clsx(adornmentButton, 'dt-w-16 dt-h-9')}
@@ -215,12 +199,6 @@ const Wallet = ({
           <P className={clsx(textStyles.small, 'dt-opacity-60')}>
             Notifications {subscriptionEnabled ? 'on' : 'off'}
           </P>
-
-          {backend === Backend.Solana && (
-            <P className={clsx(textStyles.small, 'dt-opacity-40')}>
-              | Rent Deposit (recoverable): 0.058 SOL
-            </P>
-          )}
         </div>
       )}
     </div>

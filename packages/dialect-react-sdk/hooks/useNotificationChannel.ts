@@ -59,8 +59,8 @@ function useNotificationChannel({
     error: errorFetchingAddresses = null,
     mutate: mutateAddresses,
   } = useSWR(
-    WALLET_ADDRESSES_CACHE_KEY_FN(walletsApi),
-    walletsApi ? () => walletsApi.addresses.findAll() : null,
+    WALLET_ADDRESSES_CACHE_KEY_FN(walletsApi.address),
+    () => walletsApi.addresses.findAll(),
     {
       refreshInterval,
       refreshWhenOffline: true,
@@ -68,7 +68,7 @@ function useNotificationChannel({
   );
 
   const isFetchingAddresses =
-    Boolean(walletsApi) && !errorFetchingAddresses && addresses === undefined;
+    !errorFetchingAddresses && addresses === undefined;
 
   const address = addresses.find((it) => it.type === addressType);
 

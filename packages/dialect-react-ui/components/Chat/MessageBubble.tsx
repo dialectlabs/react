@@ -55,7 +55,7 @@ export default function MessageBubble({
         >
           {!isYou ? (
             <div className="dt-mr-1">
-              <Avatar size="small" publicKey={author.publicKey} />
+              <Avatar size="small" address={author.address} />
             </div>
           ) : null}
           <div

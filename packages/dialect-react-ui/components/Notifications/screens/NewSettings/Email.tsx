@@ -1,4 +1,5 @@
 import {
+  AccountAddress,
   AddressType,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
@@ -13,9 +14,13 @@ import CancelIcon from '../../../Icon/Cancel';
 import { RightAdornment } from './RightAdorment';
 import { VerificationInput } from './VerificationInput';
 
-const addressType = AddressType.Email;
+const ADDRESS_TYPE = AddressType.Email;
 
-const Email = () => {
+interface EmailProps {
+  dappAddress: AccountAddress;
+}
+
+const Email = ({ dappAddress }: EmailProps) => {
   const { textStyles, colors } = useTheme();
 
   const {
@@ -31,14 +36,15 @@ const Email = () => {
     isVerifyingCode,
 
     errorFetching: errorFetchingAddresses,
-  } = useNotificationChannel({ addressType });
+  } = useNotificationChannel({ addressType: ADDRESS_TYPE });
 
   const {
     enabled: subscriptionEnabled,
     toggleSubscription,
     isToggling,
   } = useNotificationChannelDappSubscription({
-    addressType,
+    addressType: ADDRESS_TYPE,
+    dappAddress,
   });
 
   const [email, setEmail] = useState(emailAddress?.value ?? '');
@@ -80,7 +86,7 @@ const Email = () => {
     } catch (e) {
       setError(e as Error);
     }
-  }, [createAddress, email]);
+  }, [createAddress, email, toggleSubscription]);
 
   const deleteEmail = async () => {
     try {
@@ -122,7 +128,7 @@ const Email = () => {
         <VerificationInput
           description="Check your email for a verification code."
           onCancel={deleteEmail}
-          addressType={addressType}
+          addressType={ADDRESS_TYPE}
         />
       ) : (
         <OutlinedInput

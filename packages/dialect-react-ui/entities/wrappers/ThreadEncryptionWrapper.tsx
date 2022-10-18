@@ -1,26 +1,31 @@
-import { useDialectSdk, useThread } from '@dialectlabs/react-sdk';
+import {
+  AccountAddress,
+  useDialectSdk,
+  useThread,
+} from '@dialectlabs/react-sdk';
 import CantDecryptError from '../errors/ui/CantDecryptError';
-import type { PublicKey } from '@solana/web3.js';
 
 // Only renders children if there's no decrypt error
 
 interface ThreadEncyprionWrapperProps {
   children: JSX.Element;
-  otherMemberPK?: PublicKey;
+  otherMemberAddress?: AccountAddress;
 }
 
 export default function ThreadEncyprionWrapper({
   children,
-  otherMemberPK,
+  otherMemberAddress,
 }: ThreadEncyprionWrapperProps) {
   const { thread } = useThread({
-    findParams: { otherMembers: otherMemberPK ? [otherMemberPK] : [] },
+    findParams: {
+      otherMembers: otherMemberAddress ? [otherMemberAddress] : [],
+    },
   });
   const {
-    info: { apiAvailability },
+    info: { supportsEndToEndEncryption },
   } = useDialectSdk();
   const cannotDecryptDialect =
-    !apiAvailability.canEncrypt && thread?.encryptionEnabled;
+    !supportsEndToEndEncryption && thread?.encryptionEnabled;
 
   if (cannotDecryptDialect) {
     return <CantDecryptError />;

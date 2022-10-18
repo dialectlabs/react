@@ -1,5 +1,4 @@
-import { Identity, useIdentity } from '@dialectlabs/react-sdk';
-import type { PublicKey } from '@solana/web3.js';
+import { AccountAddress, Identity, useIdentity } from '@dialectlabs/react-sdk';
 import { TwitterIcon } from '../Icon/Twitter';
 
 import { shortenAddress } from '../../utils/displayUtils';
@@ -7,7 +6,7 @@ import { Loader } from '../common';
 import { A } from '../common/preflighted';
 
 type DisplayAddressProps = {
-  publicKey: PublicKey;
+  address: AccountAddress;
   isLinkable?: boolean;
 };
 
@@ -35,14 +34,14 @@ const displayCustomIdentityName = (identity: Identity) => {
 };
 
 export function DisplayAddress({
-  publicKey,
+  address,
   isLinkable = false,
 }: DisplayAddressProps) {
-  const { identity, loading } = useIdentity({ publicKey });
+  const { identity, loading } = useIdentity({ address });
 
   const renderIdentity = () => {
     if (!identity) {
-      return <div>{shortenAddress(publicKey)}</div>;
+      return <div>{shortenAddress(address)}</div>;
     }
 
     if (isLinkable && identity.additionals?.link) {

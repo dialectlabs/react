@@ -34,9 +34,7 @@ export const getUsersCount = (
   // If there're no notifications type set up for this dapp, return all unique users count
   if (!subscriptions.length && notificationTypeId === null) {
     return new Set(
-      enabledAndVerifiedAddresses.map((addr) =>
-        addr.address.wallet.publicKey.toBase58()
-      )
+      enabledAndVerifiedAddresses.map((addr) => addr.address.wallet.address)
     ).size;
   }
 
@@ -55,12 +53,13 @@ export const getUsersCount = (
 
   // And intersect subscriptions with addresses
   const filtered = enabledSubscriptionsPKs.filter((subscription) =>
-    enabledAndVerifiedAddresses.find((address) =>
-      address.address.wallet.publicKey.equals(subscription.wallet.publicKey)
+    enabledAndVerifiedAddresses.find(
+      (address) =>
+        address.address.wallet.address === subscription.wallet.address
     )
   );
 
-  return new Set(filtered.map((it) => it.wallet.publicKey.toBase58())).size;
+  return new Set(filtered.map((it) => it.wallet.address)).size;
 };
 
 export const getAddressesCounts = (

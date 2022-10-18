@@ -1,20 +1,22 @@
-import type { PublicKey } from '@solana/web3.js';
 import useSWR, { KeyedMutator } from 'swr';
+import type {
+  AccountAddress,
+  ThreadsGeneralSummary,
+  ThreadSummary,
+} from '../../../../sdk/packages/sdk';
+import { EMPTY_OBJ } from '../utils';
 import {
-  CACHE_KEY_THREAD_SUMMARY_FN,
   CACHE_KEY_THREADS_SUMMARY,
+  CACHE_KEY_THREAD_SUMMARY_FN,
 } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
-
-import { EMPTY_OBJ } from '../utils';
-import type { ThreadsGeneralSummary, ThreadSummary } from '@dialectlabs/sdk';
 
 interface BaseUseUnreadMessagesParams {
   refreshInterval?: number;
 }
 
 interface PerThreadUseUnreadMessagesParams extends BaseUseUnreadMessagesParams {
-  otherMembers: PublicKey[];
+  otherMembers: AccountAddress[];
 }
 
 interface UseUnreadMessageValue {

@@ -1,19 +1,20 @@
-import { useDialectDapp, useUnreadMessages } from '@dialectlabs/react-sdk';
+import { AccountAddress, useUnreadMessages } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useRef } from 'react';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import { DEFAULT_NOTIFICATIONS_CHANNELS } from '../common/constants';
 import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
-import IconButton from '../IconButton';
-import NotificationsModal from '../NotificationsModal';
-import type { NotificationType } from '../Notifications';
 import type { Channel } from '../common/types';
+import IconButton from '../IconButton';
+import type { NotificationType } from '../Notifications';
+import NotificationsModal from '../NotificationsModal';
 
 const DEFAULT_POLLING_FOR_NOTIFICATIONS = 15000; // 15 sec refresh default
 
 export type PropTypes = {
   dialectId: string;
+  dappAddress: AccountAddress;
   bellClassName?: string;
   bellStyle?: object;
   notifications?: NotificationType[];
@@ -25,10 +26,9 @@ export type PropTypes = {
 };
 
 function WrappedNotificationsButton(props: PropTypes): JSX.Element {
+  const { dappAddress } = props;
   const { ui, open, close } = useDialectUiId(props.dialectId);
   const { colors, bellButton, icons } = useTheme();
-
-  const { dappAddress } = useDialectDapp();
 
   const { hasUnreadMessages } = useUnreadMessages({
     otherMembers: dappAddress ? [dappAddress] : [],

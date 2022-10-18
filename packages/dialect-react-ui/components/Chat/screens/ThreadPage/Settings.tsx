@@ -1,20 +1,14 @@
-import {
-  Backend,
-  ThreadId,
-  useDialectSdk,
-  useThread,
-} from '@dialectlabs/react-sdk';
+import { isOnChain, ThreadId, useThread } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { getExplorerAddress } from '../../../../utils/getExplorerAddress';
+import { shortenAddress } from '../../../../utils/displayUtils';
 import { Button, ValueRow } from '../../../common';
-import { A, P } from '../../../common/preflighted';
+import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useRoute } from '../../../common/providers/Router';
 import { MainRouteName, RouteName } from '../../constants';
 import { useChatInternal } from '../../provider';
-import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import type { ChatNavigationHelpers } from '../../types';
-import { shortenAddress } from '../../../../utils/displayUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -24,11 +18,6 @@ interface SettingsProps {
 }
 
 const Settings = ({ threadId }: SettingsProps) => {
-  const {
-    info: {
-      config: { solana },
-    },
-  } = useDialectSdk();
   const {
     thread,
     delete: deleteDialect,
@@ -40,32 +29,21 @@ const Settings = ({ threadId }: SettingsProps) => {
 
   const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
     useTheme();
-  const isOnChain = thread?.backend === Backend.Solana;
+  const onChain = isOnChain(thread?.type || '');
   const { dialectId } = useChatInternal();
   const { navigation } = useDialectUiId<ChatNavigationHelpers>(dialectId);
 
   return (
     <>
       <div className="dt-pt-1">
-        {isOnChain ? (
+        {onChain ? (
           <ValueRow
             label={
               <>
                 <P className={clsx(textStyles.small, 'dt-opacity-60')}>
                   Messages account address
                 </P>
-                <P>
-                  <A
-                    target="_blank"
-                    href={getExplorerAddress(
-                      thread.id.address.toBase58(),
-                      solana?.network
-                    )}
-                    rel="noreferrer"
-                  >
-                    {shortenAddress(thread.id.address)}↗
-                  </A>
-                </P>
+                <P>{shortenAddress(thread?.id.address || '')}</P>
               </>
             }
             className="dt-mt-1 dt-mb-4"
@@ -92,7 +70,7 @@ const Settings = ({ threadId }: SettingsProps) => {
             }}
             loading={isDeletingThread}
           >
-            {isOnChain ? 'Withdraw rent & delete history' : 'Delete thread'}
+            {onChain ? 'Withdraw rent & delete history' : 'Delete thread'}
           </Button>
         )}
         {errorDeletingThread &&

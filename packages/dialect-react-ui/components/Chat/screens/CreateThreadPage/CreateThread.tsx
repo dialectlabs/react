@@ -1,27 +1,16 @@
 import {
-  Backend,
+  AccountAddress,
+  DIALECT_API_TYPE_DIALECT_CLOUD,
   ThreadId,
   ThreadMemberScope,
-  useDialectConnectionInfo,
   useDialectSdk,
   useThread,
   useThreads,
 } from '@dialectlabs/react-sdk';
-import type { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import { KeyboardEvent, useCallback, useEffect, useState } from 'react';
-import useBalance from '../../../../hooks/useBalance';
 import debounce from '../../../../utils/debounce';
-import { shortenAddress } from '../../../../utils/displayUtils';
-import tryPublicKey from '../../../../utils/tryPublicKey';
-import {
-  Button,
-  Divider,
-  Footer,
-  NetworkBadge,
-  Toggle,
-  ValueRow,
-} from '../../../common';
+import { Button, Divider, Footer, Toggle, ValueRow } from '../../../common';
 import { H1, Input, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
@@ -53,37 +42,28 @@ export default function CreateThread({
   const { type, onChatOpen, dialectId } = useChatInternal();
   const { ui } = useDialectUiId(dialectId);
   const {
-    info: {
-      wallet,
-      config: { solana },
-      apiAvailability: { canEncrypt },
+    blockchainSdk: {
+      type: blockchainSdkType,
+      info: { supportsOnChainMessaging },
     },
+    encryptionKeysProvider,
     identity,
   } = useDialectSdk();
-  const { balance } = useBalance();
+  const canEncrypt = encryptionKeysProvider.isAvailable();
+
   const { colors, outlinedInput, textStyles, icons } = useTheme();
 
-  const [address, setAddress] = useState<string>(receiver || '');
-  const [actualAddress, setActualAddress] = useState<PublicKey | null>(null);
+  const [potentialOtherMemberAddress, setPotentialOtherMemberAddress] =
+    useState<string>(receiver || '');
+  const [actualAddress, setActualAddress] = useState<AccountAddress | null>(
+    null
+  );
 
   const [encrypted, setEncrypted] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  // TODO: default to preferred backend
-  const {
-    connected: {
-      solana: { shouldConnect: isSolanaShouldConnect },
-      dialectCloud: { shouldConnect: isDialectCloudShouldConnect },
-    },
-  } = useDialectConnectionInfo();
 
-  const isBackendSelectable =
-    isSolanaShouldConnect && isDialectCloudShouldConnect;
-  const [isOffChain, setIsOffChain] = useState(isDialectCloudShouldConnect);
-
-  const backend =
-    !isOffChain && isSolanaShouldConnect
-      ? Backend.Solana
-      : Backend.DialectCloud;
+  const isBackendSelectable = supportsOnChainMessaging;
+  const [isOnChain, setIsOnChain] = useState(false);
 
   // FIXME: handle error if [] passed
   const { thread: currentChatWithMember } = useThread({
@@ -93,7 +73,7 @@ export default function CreateThread({
   useEffect(() => {
     // Accessing current here, since we need to set the address if the reference to `current` has changed (route has changed)
     if (!current || !receiver) return;
-    setAddress(receiver);
+    setPotentialOtherMemberAddress(receiver);
     findAddress(receiver);
   }, [current, receiver]);
 
@@ -103,7 +83,7 @@ export default function CreateThread({
       return;
     }
 
-    if (currentChatWithMember && currentChatWithMember.backend === backend) {
+    if (currentChatWithMember) {
       // FIXME: show error even for diffrent backends
       onNewThreadCreated?.(currentChatWithMember.id);
       return;
@@ -112,11 +92,11 @@ export default function CreateThread({
     create({
       me: { scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE] },
       otherMembers: [
-        { publicKey: actualAddress, scopes: [ThreadMemberScope.WRITE] },
+        { address: actualAddress, scopes: [ThreadMemberScope.WRITE] },
       ],
       encrypted,
-      // TODO: could select only if multiple provided
-      backend,
+      // undefined should fallback to dialect cloud
+      type: isOnChain ? blockchainSdkType : DIALECT_API_TYPE_DIALECT_CLOUD,
     })
       .then(async (thread) => {
         onNewThreadCreated?.(thread.id);
@@ -139,24 +119,14 @@ export default function CreateThread({
         return;
       }
 
-      const isPk = tryPublicKey(addressString);
-      if (isPk) {
-        if (wallet.publicKey && isPk.equals(wallet.publicKey)) {
-          setActualAddress(null);
-          return;
-        }
-        setActualAddress(isPk);
-        return;
-      }
-
       const potentialIdentity = await identity.resolveReverse(addressString);
 
       if (potentialIdentity) {
-        setActualAddress(potentialIdentity.publicKey);
+        setActualAddress(potentialIdentity.address);
         return;
       }
 
-      setActualAddress(null);
+      setActualAddress(addressString);
     } finally {
       setIsTyping(false);
     }
@@ -165,7 +135,7 @@ export default function CreateThread({
   const findAddressDebounced = useCallback(debounce(findAddress, 700), []);
 
   const onAddressChange = (addr: string) => {
-    setAddress(addr);
+    setPotentialOtherMemberAddress(addr);
     setIsTyping(true);
     findAddressDebounced(addr);
   };
@@ -206,7 +176,7 @@ export default function CreateThread({
           className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
           placeholder="D1AL...DY5h, @saydialect or dialect.sol"
           type="text"
-          value={address}
+          value={potentialOtherMemberAddress}
           onChange={(e) => {
             onAddressChange(e.target.value);
           }}
@@ -214,10 +184,10 @@ export default function CreateThread({
           disabled={isCreatingThread}
         />
         <div className="dt-mb-2">
-          {isTyping || !address ? (
+          {isTyping || !potentialOtherMemberAddress ? (
             <LinkingCTA />
           ) : (
-            <AddressResult publicKey={actualAddress} />
+            <AddressResult address={actualAddress} />
           )}
         </div>
         <Divider className="dt-my-2 dt-opacity-20" />
@@ -225,51 +195,24 @@ export default function CreateThread({
           <ValueRow
             className="dt-mb-2"
             label={
-              isOffChain ? (
+              isOnChain ? (
                 <span className="dt-flex dt-items-center">
-                  💬&nbsp;&nbsp;Off-chain
+                  ⛓&nbsp;&nbsp;On-chain
                 </span>
               ) : (
                 <span className="dt-flex dt-items-center">
-                  ⛓&nbsp;&nbsp;On-chain
+                  💬&nbsp;&nbsp;Off-chain
                 </span>
               )
             }
           >
             <span className="dt-flex dt-items-center">
               <Toggle
-                checked={isOffChain}
-                onClick={() => setIsOffChain((enc) => !enc)}
+                checked={!isOnChain}
+                onClick={() => setIsOnChain((enc) => !enc)}
               />
             </span>
           </ValueRow>
-        ) : null}
-        {!isOffChain ? (
-          <>
-            <ValueRow
-              label={
-                <>
-                  Balance (
-                  {wallet?.publicKey ? shortenAddress(wallet.publicKey) : ''}
-                  ) <NetworkBadge network={solana?.network} />
-                </>
-              }
-              className={clsx('dt-w-full dt-mb-2')}
-            >
-              <span className="dt-text-right">{balance || 0} SOL</span>
-            </ValueRow>
-            <ValueRow
-              label="Rent Deposit (recoverable)"
-              className={clsx('dt-w-full')}
-            >
-              0.058 SOL
-            </ValueRow>
-            <P className={clsx(textStyles.small, 'dt-my-4 dt-px-2')}>
-              All messages are stored on chain, so to start this message thread,
-              you&apos;ll need to deposit a small amount of rent. This rent is
-              recoverable.
-            </P>
-          </>
         ) : null}
         <div className="dt-flex dt-flex-row dt-gap-x-2 dt-w-full">
           <ValueRow

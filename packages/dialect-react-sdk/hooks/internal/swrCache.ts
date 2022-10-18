@@ -1,11 +1,8 @@
 import type {
-  FindThreadQuery,
-  DialectWalletAdapter,
-  Dapp,
-  Wallets,
+  AccountAddress,
   FindDappMessageQuery,
+  FindThreadQuery,
 } from '@dialectlabs/sdk';
-import type { PublicKey } from '@solana/web3.js';
 
 export const CACHE_KEY_THREADS = 'THREADS';
 
@@ -28,7 +25,7 @@ export const CACHE_KEY_THREAD_FN = (findParams: FindThreadQuery): string => {
 
 export const CACHE_KEY_MESSAGES_FN = (id: string) => `MESSAGES_${id}`;
 
-export const CACHE_KEY_THREAD_SUMMARY_FN = (otherMembers: PublicKey[]) =>
+export const CACHE_KEY_THREAD_SUMMARY_FN = (otherMembers: AccountAddress[]) =>
   'THREAD_SUMMARY_' +
   otherMembers
     .filter((it) => it)
@@ -39,38 +36,31 @@ export const CACHE_KEY_THREADS_SUMMARY = 'THREADS_GENERAL_SUMMARY';
 
 export const DAPPS_CACHE_KEY = 'DAPPS';
 
-export const DAPP_CACHE_KEY_FN = (wallet: DialectWalletAdapter) =>
-  'DAPPS_' + wallet?.publicKey?.toBase58();
+export const DAPP_CACHE_KEY_FN = (walletAddress: AccountAddress) =>
+  'DAPPS_' + walletAddress;
 
-export const DAPP_ADDRESSES_CACHE_KEY_FN = (dapp: Dapp | null) =>
-  'DAPP_ADDRESSES_' + dapp?.publicKey;
+export const DAPP_ADDRESSES_CACHE_KEY_FN = (dappAddress?: AccountAddress) =>
+  'DAPP_ADDRESSES_' + dappAddress;
 
-export const WALLET_ADDRESSES_CACHE_KEY_FN = (wallet: Wallets) =>
-  'WALLET_ADDRESSES_' + wallet?.publicKey?.toBase58();
+export const WALLET_ADDRESSES_CACHE_KEY_FN = (walletAddress: AccountAddress) =>
+  'WALLET_ADDRESSES_' + walletAddress;
 
 export const WALLET_DAPP_ADDRESSES_CACHE_KEY_FN = (
-  wallet: Wallets,
-  dappPublicKey?: PublicKey
-) =>
-  'WALLET_DAPP_ADDRESSES_' +
-  wallet?.publicKey?.toBase58() +
-  '_' +
-  dappPublicKey?.toBase58();
+  walletAddress: AccountAddress,
+  dappAddress: AccountAddress
+) => 'WALLET_DAPP_ADDRESSES_' + walletAddress + '_' + dappAddress;
 
 export const WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
-  wallet: Wallets,
-  dappPublicKey?: PublicKey
-) =>
-  `WALLET_NOTIFICATION_SUBSCRIPTIONS_${wallet?.publicKey?.toBase58()}${
-    dappPublicKey ? `_${dappPublicKey.toBase58()}` : ''
-  }`;
+  walletAddress: AccountAddress,
+  dappAddress: AccountAddress = ''
+) => `WALLET_NOTIFICATION_SUBSCRIPTIONS_${walletAddress}${dappAddress}`;
 
 export const DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
-  dapp: Dapp | null
-) => 'DAPP_NOTIFICATION_SUBSCRIPTIONS_' + dapp?.publicKey?.toBase58();
+  dappAddress?: AccountAddress
+) => 'DAPP_NOTIFICATION_SUBSCRIPTIONS_' + dappAddress;
 
-export const IDENTITY_CACHE_KEY_FN = (publicKey?: PublicKey) =>
-  `IDENTITY_${publicKey?.toString()}`;
+export const IDENTITY_CACHE_KEY_FN = (address?: AccountAddress) =>
+  `IDENTITY_${address?.toString()}`;
 
 export const SINGLE_FEED_CACHE_KEY_FN = (query: FindDappMessageQuery) =>
   `SINGLE_FEED_${query.dappVerified}_${query.take}_${query.skip}`;

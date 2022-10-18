@@ -1,24 +1,22 @@
 import {
-  Backend,
   DialectSdkError,
   SendMessageCommand as DialectSdkSendMessageCommand,
   Thread,
   ThreadId,
   ThreadMessage as SdkThreadMessage,
 } from '@dialectlabs/sdk';
+import { nanoid } from 'nanoid';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { useDialectErrorsHandler } from '../context/DialectContext/ConnectionInfo/errors';
 import { LocalMessages } from '../context/DialectContext/LocalMessages';
-import type { LocalThreadMessage, ThreadMessage } from '../types';
-import { EMPTY_ARR } from '../utils';
+import type { LocalThreadMessage } from '../types';
+import { EMPTY_ARR, isOffChain, isOnChain } from '../utils';
 import {
   CACHE_KEY_MESSAGES_FN,
-  CACHE_KEY_THREAD_SUMMARY_FN,
   CACHE_KEY_THREADS,
+  CACHE_KEY_THREAD_SUMMARY_FN,
 } from './internal/swrCache';
 import useThread from './useThread';
-import { nanoid } from 'nanoid';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
   id?: string;
@@ -40,7 +38,7 @@ interface UseThreadMessagesValue {
   // react-lib
   send(command: SendMessageCommand): Promise<void>;
   cancel(cmd: CancelMessageCommand): Promise<void>;
-  setLastReadMessageTime(time: Date): Promise<void>;
+  markAsRead(): Promise<void>;
 
   isFetchingMessages: boolean;
   errorFetchingMessages: DialectSdkError | null;
@@ -77,7 +75,7 @@ const useThreadMessages = ({
     { refreshInterval, refreshWhenOffline: true }
   );
 
-  const messages: ThreadMessage[] | null = useMemo(() => {
+  const messages: LocalThreadMessage[] | null = useMemo(() => {
     let messageArray: SdkThreadMessage[] = [];
 
     if (!thread) {
@@ -104,17 +102,17 @@ const useThreadMessages = ({
     }
 
     // For backends other than `DialectCloud` we return null if no remote meessages
-    if (thread?.backend !== Backend.DialectCloud && !remoteMessages) {
+    if (isOnChain(thread.type) && !remoteMessages) {
       return null;
     }
 
     // If there are remote messages add them to the `messageArray`
-    if (thread?.backend === Backend.DialectCloud && remoteMessages) {
+    if (isOffChain(thread.type) && remoteMessages) {
       messageArray = messageArray.concat(remoteMessages);
     }
 
     // If there are local messages add them to the `messageArray` as well
-    if (thread?.backend === Backend.DialectCloud && filteredLocalMessages) {
+    if (isOffChain(thread.type) && filteredLocalMessages) {
       messageArray = messageArray.concat(filteredLocalMessages);
     }
 
@@ -188,10 +186,9 @@ const useThreadMessages = ({
     async (cmd: SendMessageCommand) => {
       if (!threadInternal) return;
 
-      const sendMessageFn =
-        threadInternal.backend === Backend.DialectCloud
-          ? offChainSendMessage
-          : onChainSendMessage;
+      const sendMessageFn = isOffChain(threadInternal.type)
+        ? offChainSendMessage
+        : onChainSendMessage;
 
       await sendMessageFn(threadInternal, cmd);
     },
@@ -206,26 +203,21 @@ const useThreadMessages = ({
     [thread, deleteLocalMessage]
   );
 
-  useDialectErrorsHandler(errorFetchingMessages, errorSendingMessage);
-
-  const setLastReadMessageTime = useCallback(
-    async (time: Date) => {
-      if (!thread) return;
-      await thread.setLastReadMessageTime(time);
-      globalMutate(
-        CACHE_KEY_THREAD_SUMMARY_FN(
-          thread.otherMembers.map((it) => it.publicKey)
-        )
-      );
-    },
-    [globalMutate, thread]
-  );
+  const markAsRead = useCallback(async () => {
+    if (!threadInternal) return;
+    await threadInternal.markAsRead();
+    globalMutate(
+      CACHE_KEY_THREAD_SUMMARY_FN(
+        threadInternal.otherMembers.map((it) => it.address)
+      )
+    );
+  }, [globalMutate, threadInternal]);
 
   return {
     messages: messages || EMPTY_ARR,
     send: sendMessage,
     cancel: cancelMessage,
-    setLastReadMessageTime,
+    markAsRead,
 
     // Do not use `isValidating` since it will produce visual flickering
     isFetchingMessages: !messages && !errorFetchingMessages,

@@ -6,8 +6,13 @@ import { useTheme } from '../../../components/common/providers/DialectThemeProvi
 
 const NotAuthorizedError = () => {
   const { textStyles } = useTheme();
-  const { hardwareWalletForced, setHardwareWalletForced, initiateConnection } =
-    useDialectWallet();
+  const {
+    hardwareWalletForcedState: {
+      get: isHardwareWalletForced,
+      set: setHardwareWalletForced,
+    },
+    connectionInitiatedState: { set: setConnectionInitiated },
+  } = useDialectWallet();
 
   return (
     <Centered>
@@ -23,18 +28,21 @@ const NotAuthorizedError = () => {
         )}
       >
         To continue, please prove you own this wallet by signing a{' '}
-        {hardwareWalletForced ? 'transaction' : 'message'}. It is free and does
-        not involve the network.
+        {isHardwareWalletForced ? 'transaction' : 'message'}. It is free and
+        does not involve the network.
       </span>
       <div className="dt-w-[80%]">
         <ToggleSection
           noBorder
           title="Using ledger?"
-          checked={hardwareWalletForced}
+          checked={isHardwareWalletForced}
           onChange={(next) => setHardwareWalletForced(next)}
         />
-        <Button onClick={initiateConnection} className="dt-w-full dt-mt-2">
-          {hardwareWalletForced ? 'Sign transaction' : 'Sign message'}
+        <Button
+          onClick={() => setConnectionInitiated(true)}
+          className="dt-w-full dt-mt-2"
+        >
+          {isHardwareWalletForced ? 'Sign transaction' : 'Sign message'}
         </Button>
       </div>
     </Centered>

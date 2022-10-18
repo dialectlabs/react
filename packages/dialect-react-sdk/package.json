@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-sdk",
-  "version": "1.0.0-beta.36",
+  "version": "1.1.0-beta.3",
   "description": "React wrappers for Dialect's web3 notifications",
   "license": "MIT",
   "private": false,
@@ -32,7 +32,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/sdk": "0.11.0",
+    "@dialectlabs/sdk": "1.1.0",
     "nanoid": "^3.3.4",
     "swr": "^1.3.0"
   },

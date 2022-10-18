@@ -1,13 +1,12 @@
+import { AccountAddress, useIdentity } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import type { PublicKey } from '@solana/web3.js';
 import { LinkifiedText } from '../../components/common';
 import { Img, P } from '../../components/common/preflighted';
 import { useTheme } from '../../components/common/providers/DialectThemeProvider';
-import { useIdentity } from '@dialectlabs/react-sdk';
 import { shortenAddress } from '../../utils/displayUtils';
 
 type Props = {
-  author?: PublicKey;
+  author?: AccountAddress;
   message: string;
   timestamp: number | Date;
 };
@@ -21,9 +20,9 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: true,
 });
 
-const NotificationAuthor = ({ author }: { author: PublicKey }) => {
+const NotificationAuthor = ({ author }: { author: AccountAddress }) => {
   const { textStyles, notificationAuthor } = useTheme();
-  const { identity } = useIdentity({ publicKey: author });
+  const { identity } = useIdentity({ address: author });
 
   return (
     <div className={notificationAuthor}>

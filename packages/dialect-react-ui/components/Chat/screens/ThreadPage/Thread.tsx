@@ -1,13 +1,12 @@
 import {
-  Backend,
   DialectSdkError,
+  isOnChain,
   ThreadId,
   useDialectSdk,
   useThread,
   useThreadMessages,
   useUnreadMessages,
 } from '@dialectlabs/react-sdk';
-import { PublicKey } from '@solana/web3.js';
 import clsx from 'clsx';
 import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -23,14 +22,15 @@ export default function Thread({ threadId }: ThreadProps) {
   const { thread, isWritable, isFetchingThread } = useThread({
     findParams: { id: threadId },
   });
-  const { messages, send, cancel, setLastReadMessageTime } = useThreadMessages({
+  const { messages, send, cancel, markAsRead } = useThreadMessages({
     id: threadId,
   });
   const { refresh } = useUnreadMessages();
 
   const {
-    info: { wallet },
+    wallet: { address: walletAddress },
   } = useDialectSdk();
+
   const { scrollbar } = useTheme();
 
   const [text, setText] = useState<string>('');
@@ -38,12 +38,12 @@ export default function Thread({ threadId }: ThreadProps) {
 
   useEffect(() => {
     // After resetting the last read timestamp, we need to refetch the global unread message state
-    setLastReadMessageTime(new Date()).then(refresh);
-  }, [setLastReadMessageTime, refresh]);
+    markAsRead().then(refresh);
+  }, [markAsRead, refresh]);
 
   if (!thread) return null;
 
-  const isOnChain = thread.backend === Backend.Solana;
+  const onChain = isOnChain(thread.type);
 
   const cancelSendingMessage = (id: string) => {
     cancel({ id });
@@ -93,9 +93,7 @@ export default function Thread({ threadId }: ThreadProps) {
         {/* Key added to prevent messages appearing animation while switching threads */}
         <TransitionGroup component={null} key={thread.id.toString()}>
           {messages.map((message, idx) => {
-            const isYou = message.author.publicKey.equals(
-              wallet?.publicKey || PublicKey.default
-            );
+            const isYou = message.author.address === walletAddress;
             const isLast = idx === 0;
 
             // TODO: fix transition after message is sent (e.g. key/props shouldn't change)
@@ -118,7 +116,7 @@ export default function Thread({ threadId }: ThreadProps) {
                 <div data-key={`message-${message.deduplicationId}`}>
                   <MessageBubble
                     {...message}
-                    isOnChain={isOnChain}
+                    isOnChain={onChain}
                     isYou={isYou}
                     showStatus={isYou && isLast}
                     onSendMessage={handleSendMessage}

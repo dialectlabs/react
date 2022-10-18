@@ -26,7 +26,7 @@ function useDappAddresses({
     error = null,
     mutate,
   } = useSWR(
-    DAPP_ADDRESSES_CACHE_KEY_FN(dapp),
+    DAPP_ADDRESSES_CACHE_KEY_FN(dapp?.address),
     dappAddressesApi ? () => dappAddressesApi.findAll() : null,
     {
       refreshInterval,

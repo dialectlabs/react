@@ -2,7 +2,9 @@
 
 ## [UNRELEASED]
 
-- chore: bump @dialectlabs/react-sdk version
+## [1.1.0-beta.4] - 2022-10-13
+
+- feature: major update with breaking changes, migration to multi chain tooling
 
 ## [1.0.0-beta.67] - 2022-09-27
 

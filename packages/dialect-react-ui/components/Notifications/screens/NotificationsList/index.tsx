@@ -29,17 +29,14 @@ const NotificationsList = ({ refreshInterval }: NotificationsListProps) => {
     params: { threadId },
   } = useRoute<{ threadId: ThreadId }>();
 
-  const { messages, setLastReadMessageTime } = useThreadMessages({
+  const { messages, markAsRead } = useThreadMessages({
     id: threadId,
     refreshInterval,
   });
 
-  useEffect(
-    function markAsRead() {
-      setLastReadMessageTime(new Date());
-    },
-    [setLastReadMessageTime]
-  );
+  useEffect(() => {
+    markAsRead();
+  }, [markAsRead]);
 
   if (!messages.length) {
     return <NoNotifications />;

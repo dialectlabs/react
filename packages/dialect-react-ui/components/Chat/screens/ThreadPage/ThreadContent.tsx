@@ -1,7 +1,6 @@
 import {
-  Backend,
+  isOnChain,
   ThreadId,
-  useDialectSdk,
   useIdentity,
   useThread,
 } from '@dialectlabs/react-sdk';
@@ -32,20 +31,13 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
     findParams: { id: threadId },
     refreshInterval: pollingInterval,
   });
-  const {
-    info: {
-      solana: { dialectProgram },
-    },
-  } = useDialectSdk();
+  const onChain = isOnChain(thread?.type || '');
+
   const { icons, xPaddedText } = useTheme();
   const { ui } = useDialectUiId(dialectId);
-  const connection = dialectProgram?.provider.connection;
-  const otherMemberPK =
-    thread?.otherMembers[0] && thread.otherMembers[0].publicKey;
 
-  const { identity } = useIdentity({ publicKey: otherMemberPK });
-
-  const isOnChain = thread?.backend === Backend.Solana;
+  const otherMemberAddress = thread?.otherMembers[0]?.address;
+  const { identity } = useIdentity({ address: otherMemberAddress });
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
@@ -89,32 +81,27 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
           {current?.sub?.name === ThreadRouteName.Settings ? (
             <Header.Title align="center">Chat settings</Header.Title>
           ) : null}
-          {otherMemberPK && current?.sub?.name !== ThreadRouteName.Settings ? (
+          {otherMemberAddress &&
+          current?.sub?.name !== ThreadRouteName.Settings ? (
             <Header.Title align="left">
               <div className="dt-flex dt-space-x-2">
-                <Avatar size="extra-small" publicKey={otherMemberPK} />
+                <Avatar size="extra-small" address={otherMemberAddress} />
                 <div className="dt-flex dt-flex-col">
                   <div className="dt-flex dt-flex-row items-center">
                     <span className="dt-text-base dt-font-medium dt-text">
-                      {connection ? (
-                        <>
-                          <DisplayAddress
-                            publicKey={otherMemberPK}
-                            isLinkable={true}
-                          />
-                        </>
-                      ) : (
-                        'Loading...'
-                      )}
+                      <DisplayAddress
+                        address={otherMemberAddress}
+                        isLinkable={true}
+                      />
                     </span>
-                    {isOnChain && <OnChainIndicator />}
+                    {onChain && <OnChainIndicator />}
                   </div>
                   <span className="dt-text-xs dt-flex dt-items-center dt-space-x-1">
-                    {!identity ? (
+                    {!identity && (
                       <span className="dt-opacity-60">
-                        {shortenAddress(otherMemberPK)}
+                        {shortenAddress(otherMemberAddress)}
                       </span>
-                    ) : null}
+                    )}
                     <EncryptionBadge
                       enabled={Boolean(thread?.encryptionEnabled)}
                     />

@@ -24,10 +24,10 @@ function useDapp({
 }: UseDappParams = EMPTY_OBJ): UseDappValue {
   const { dapps } = useDialectSdk();
   const {
-    info: { wallet },
+    wallet: { address: walletAddress },
   } = useDialectSdk();
   const { data: dapp, error } = useSWR(
-    DAPP_CACHE_KEY_FN(wallet),
+    DAPP_CACHE_KEY_FN(walletAddress),
     () => dapps.find(),
     { refreshInterval, refreshWhenOffline: true }
   );
@@ -46,9 +46,9 @@ function useDapp({
   const allDapps = useMemo(
     () =>
       dappsList.reduce((acc, dapp) => {
-        const pk = dapp.publicKey.toString();
-        if (!acc[pk]) {
-          acc[pk] = dapp;
+        const address = dapp.address;
+        if (!acc[address]) {
+          acc[address] = dapp;
         }
         return acc;
       }, {} as Record<string, ReadOnlyDapp>),

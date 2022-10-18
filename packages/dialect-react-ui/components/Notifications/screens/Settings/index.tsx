@@ -1,17 +1,21 @@
+import {
+  AccountAddress,
+  Thread,
+  useNotificationSubscriptions,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { A, P } from '../../../common/preflighted';
-import type { Channel } from '../../../common/types';
-import { Divider, Footer, Toggle, ValueRow } from '../../../common';
-import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { useCallback } from 'react';
 import type { NotificationType } from '../..';
-import { Thread, useNotificationSubscriptions } from '@dialectlabs/react-sdk';
+import { Divider, Footer, Toggle, ValueRow } from '../../../common';
+import { A, P } from '../../../common/preflighted';
+import { useTheme } from '../../../common/providers/DialectThemeProvider';
+import { useRoute } from '../../../common/providers/Router';
+import type { Channel } from '../../../common/types';
+import { RouteName } from '../../constants';
 import Email from '../NewSettings/Email';
 import Sms from '../NewSettings/Sms';
-import Wallet from '../NewSettings/Wallet';
 import Telegram from '../NewSettings/Telegram';
-import { useCallback } from 'react';
-import { RouteName } from '../../constants';
-import { useRoute } from '../../../common/providers/Router';
+import Wallet from '../NewSettings/Wallet';
 
 interface RenderNotificationTypeParams {
   name: string;
@@ -23,6 +27,7 @@ interface RenderNotificationTypeParams {
 }
 
 interface SettingsProps {
+  dappAddress: AccountAddress;
   channels: Channel[];
   notifications?: NotificationType[];
 }
@@ -60,6 +65,7 @@ export const NotificationToggle = ({
 };
 
 function Settings({
+  dappAddress,
   channels,
   notifications: notificationsTypes,
 }: SettingsProps) {
@@ -70,7 +76,7 @@ function Settings({
     isUpdating,
     errorUpdating: errorUpdatingNotificationSubscription,
     errorFetching: errorFetchingNotificationsConfigs,
-  } = useNotificationSubscriptions();
+  } = useNotificationSubscriptions({ dappAddress });
 
   const { navigate } = useRoute();
 
@@ -94,13 +100,15 @@ function Settings({
         {channels.map((channelSlug) => {
           let form;
           if (channelSlug === 'web3') {
-            form = <Wallet onThreadCreated={showThread} />;
+            form = (
+              <Wallet dappAddress={dappAddress} onThreadCreated={showThread} />
+            );
           } else if (channelSlug === 'email') {
-            form = <Email />;
+            form = <Email dappAddress={dappAddress} />;
           } else if (channelSlug === 'sms') {
-            form = <Sms />;
+            form = <Sms dappAddress={dappAddress} />;
           } else if (channelSlug === 'telegram') {
-            form = <Telegram />;
+            form = <Telegram dappAddress={dappAddress} />;
           }
           return (
             <div key={channelSlug} className="dt-mb-2">

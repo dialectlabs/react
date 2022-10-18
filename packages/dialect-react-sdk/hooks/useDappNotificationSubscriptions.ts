@@ -24,12 +24,8 @@ function useDappNotificationSubscriptions({
   const subscriptionsApi = dapp?.notificationSubscriptions;
 
   const { data: subscriptions, error: errorFetching = null } = useSWR(
-    DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(dapp),
-    subscriptionsApi
-      ? () => {
-          return subscriptionsApi.findAll();
-        }
-      : null,
+    DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN(dapp?.address),
+    subscriptionsApi ? () => subscriptionsApi.findAll() : null,
     {
       refreshInterval,
       refreshWhenOffline: true,

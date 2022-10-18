@@ -1,3 +1,4 @@
+import type { AccountAddress } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { DEFAULT_NOTIFICATIONS_CHANNELS } from '../common/constants';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -7,6 +8,7 @@ import Subscribe from '../Subscribe';
 
 export type SubscribeButtonProps = {
   dialectId: string;
+  dappAddress: AccountAddress;
   channels?: Channel[];
   label?: string;
   buttonLabel?: string;

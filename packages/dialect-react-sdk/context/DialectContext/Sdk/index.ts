@@ -1,23 +1,37 @@
 import {
-  Auth,
+  BlockchainSdk,
+  BlockchainSdkFactory,
   ConfigProps,
   Dialect,
   DialectSdk as DialectSdkType,
-  TokenStore,
 } from '@dialectlabs/sdk';
 import { useEffect, useMemo } from 'react';
-import { EMPTY_ARR } from '../../../utils';
 import { createContainer } from '../../../utils/container';
-import { DialectWallet } from '../Wallet';
+import { DialectWalletStatesHolder } from '../Wallet';
+
+interface DialectSdkProps {
+  config: ConfigProps;
+  blockchainSdkFactory?: BlockchainSdkFactory<BlockchainSdk> | null;
+}
 
 interface DialectSdkState {
-  sdk: DialectSdkType | null;
+  sdk: DialectSdkType<BlockchainSdk> | null;
 }
 
 function useDialectSdk(
-  config: Omit<ConfigProps, 'wallet'> = {}
+  { config, blockchainSdkFactory }: DialectSdkProps = {} as DialectSdkProps
 ): DialectSdkState {
-  const { adapter, initiateConnection } = DialectWallet.useContainer();
+  const {
+    walletConnected: { get: walletConnected },
+    connectionInitiatedState: { set: setConnectionInitiated },
+  } = DialectWalletStatesHolder.useContainer();
+
+  const sdk = useMemo(() => {
+    if (!blockchainSdkFactory || !walletConnected) {
+      return null;
+    }
+    return Dialect.sdk(config, blockchainSdkFactory);
+  }, [config, blockchainSdkFactory, walletConnected]);
 
   // The idea is to check if we already has token stored somewhere to skip NotAuthorized screen
   // so that we check if sdk is about to be configred with local storage
@@ -25,51 +39,13 @@ function useDialectSdk(
   // if token is valid, then NotAuthorized will be skipped
   useEffect(
     function preValidateSdkToken() {
-      const { dialectCloud } = config;
-      // checks if sdk configured to use local storage
-      if (!dialectCloud) return;
-      if (!dialectCloud.tokenStore) return;
-      if (!adapter.publicKey) return;
-      // extract token store
-      let tokenStore: TokenStore;
-      if (typeof dialectCloud.tokenStore === 'string') {
-        if (dialectCloud.tokenStore !== 'local-storage') return;
-        tokenStore = TokenStore.createLocalStorage();
-      } else {
-        tokenStore = dialectCloud.tokenStore;
+      if (!sdk) return;
+      if (sdk.info.hasValidAuthentication) {
+        setConnectionInitiated(true);
       }
-
-      // validates token
-      const token = tokenStore.get(adapter.publicKey);
-      if (!token) return;
-      const tokenValid = Auth.tokens.isValid(token);
-      if (!tokenValid) return;
-      // if token valid, initiate connections will skip NotAuthorized screen
-      initiateConnection();
     },
-    [config, adapter, initiateConnection]
+    [sdk, setConnectionInitiated]
   );
-
-  const sdk = useMemo(() => {
-    if (!adapter.connected) return null;
-    const {
-      environment,
-      solana,
-      dialectCloud,
-      encryptionKeysStore,
-      backends = EMPTY_ARR,
-      identity,
-    } = config;
-    return Dialect.sdk({
-      environment,
-      wallet: adapter,
-      solana,
-      dialectCloud,
-      encryptionKeysStore,
-      backends,
-      identity,
-    });
-  }, [config, adapter]);
 
   return {
     sdk,
