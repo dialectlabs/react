@@ -3,7 +3,7 @@ import type {
   AccountAddress,
   ThreadsGeneralSummary,
   ThreadSummary,
-} from '../../../../sdk/packages/sdk';
+} from '@dialectlabs/sdk';
 import { EMPTY_OBJ } from '../utils';
 import {
   CACHE_KEY_THREADS_SUMMARY,
