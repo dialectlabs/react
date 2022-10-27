@@ -284,7 +284,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-fixed dt-z-[100] dt-top-0 dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
-      'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
+      'dt-bg-black hover:dt-bg-black/80 dt-text-white dt-border dt-border-black ',
     buttonLoading:
       'dt-min-h-[42px] dt-border dt-border-black !dt-opacity-80 !dt-text-black !dt-bg-transparent',
     secondaryButton:
@@ -305,7 +305,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     adornmentButton:
-      'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
+      'dt-bg-[#303030] hover:!dt-bg-[#303030]/[.80] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
   },
   dark: {
     colors: {
@@ -390,7 +390,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-fixed dt-z-[100] dt-top-auto dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
-      'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
+      'dt-bg-white hover:dt-bg-white/80 dt-text-black dt-border dt-border-white hover:dt-border-white/80',
     buttonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-bg-transparent !dt-opacity-80 !dt-text-white',
     secondaryButton:
@@ -411,7 +411,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     adornmentButton:
-      'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center !dt-text-white dt-text-xs dt-border-0',
+      'dt-bg-[#303030] hover:dt-bg-[#303030]/[.80] dt-rounded-full dt-flex dt-items-center dt-justify-center !dt-text-white dt-text-xs dt-border-0 hover:dt-border-0',
   },
 };
 
