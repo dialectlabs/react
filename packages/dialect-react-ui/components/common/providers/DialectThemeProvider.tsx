@@ -411,7 +411,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     adornmentButton:
-      'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
+      'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center !dt-text-white dt-text-xs dt-border-0',
   },
 };
 
