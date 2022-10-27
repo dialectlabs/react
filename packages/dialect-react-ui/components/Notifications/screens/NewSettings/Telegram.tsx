@@ -226,7 +226,7 @@ const Telegram = ({ dappAddress }: TelegramProps) => {
             <div>
               <span className="dt-opacity-60">
                 Deleting your telegram handle here will delete it across all
-                dapps you've signed up.
+                dapps you&apos;ve signed up.
               </span>
               <span
                 onClick={() => setIsUserDeleting(false)}
@@ -245,7 +245,7 @@ const Telegram = ({ dappAddress }: TelegramProps) => {
             <div>
               <span className="dt-opacity-60">
                 Updating your telegram handle here will update it across all
-                dapps you've signed up.
+                dapps you&apos;ve signed up.
               </span>
               <span
                 onClick={() => {
