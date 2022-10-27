@@ -9,7 +9,7 @@
   },
   "scripts": {
     "bootstrap": "yarn build:all",
-    "build:all": "yarn run build:react-sdk; yarn run build:react-ui; yarn run build:react-sdk-blockchain-aptos; yarn run build:react-sdk-blockchain-solana",
+    "build:all": "yarn run build:react-sdk && yarn run build:react-ui && yarn run build:react-solana && yarn run build:react-aptos",
     "build:react-ui": "yarn workspace @dialectlabs/react-ui run build",
     "build:react-sdk-blockchain-aptos": "yarn workspace @dialectlabs/react-sdk-blockchain-aptos run build",
     "build:react-sdk-blockchain-solana": "yarn workspace @dialectlabs/react-sdk-blockchain-solana run build",
