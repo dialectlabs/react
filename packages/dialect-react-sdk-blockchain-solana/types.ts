@@ -1,6 +1,6 @@
 import type {
   DialectSolanaWalletAdapter,
-  SolanaConfigProps as SolanaSdkConfigProps
+  SolanaConfigProps as SolanaSdkConfigProps,
 } from '@dialectlabs/blockchain-sdk-solana';
 
 type WalletOptional<T extends { wallet: DialectSolanaWalletAdapter }> = Omit<

@@ -35,7 +35,7 @@ const Wallet = ({
   const {
     wallet: { address: walletAddress },
   } = useDialectSdk();
-  const { textStyles, outlinedInput, input, adornmentButton, icons, colors } =
+  const { textStyles, outlinedInput, adornmentButton, icons, colors } =
     useTheme();
   const { create: createThread, isCreatingThread } = useThreads();
 
