@@ -11,7 +11,8 @@ import clsx from 'clsx';
 import { KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import debounce from '../../../../utils/debounce';
 import { Button, Divider, Footer, Toggle, ValueRow } from '../../../common';
-import { H1, Input, P } from '../../../common/preflighted';
+import { H1, P } from '../../../common/preflighted';
+import OutlinedInput from '../../../common/primitives/OutlinedInput';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { useRoute } from '../../../common/providers/Router';
@@ -51,7 +52,7 @@ export default function CreateThread({
   } = useDialectSdk();
   const canEncrypt = encryptionKeysProvider.isAvailable();
 
-  const { colors, outlinedInput, textStyles, icons } = useTheme();
+  const { colors, textStyles, icons } = useTheme();
 
   const [potentialOtherMemberAddress, setPotentialOtherMemberAddress] =
     useState<string>(receiver || '');
@@ -172,8 +173,7 @@ export default function CreateThread({
         <P className={clsx(textStyles.small, 'dt-mb-2 dt-px-2')}>
           Enter recipient address, SNS domain or linked Twitter handle
         </P>
-        <Input
-          className={clsx(outlinedInput, 'dt-w-full dt-mb-1')}
+        <OutlinedInput
           placeholder="D1AL...DY5h, @saydialect or dialect.sol"
           type="text"
           value={potentialOtherMemberAddress}
