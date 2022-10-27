@@ -28,15 +28,16 @@ export const RightAdornment = ({
   isDeleting,
   deleteConfirm,
 }: IRightAdorment) => {
-  const { icons, adornmentButton } = useTheme();
+  const { icons, adornmentButton, colors } = useTheme();
 
   const getIcon = () => {
     if (loading) {
       return (
         <div
-          className={
-            'dt-h-9 dt-w-9 dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0 dt-opacity-60'
-          }
+          className={clsx(
+            'dt-h-9 dt-w-9 dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-xs dt-border-0 dt-opacity-60',
+            colors.textPrimary
+          )}
         >
           <Loader />
         </div>
