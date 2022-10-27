@@ -260,7 +260,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0 disabled:dt-text-neutral-700/50',
     outlinedInput:
-      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
+      'dt-text-sm dt-h-[3.75rem] dt-text-black dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black focus-within:dt-text-white focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
     subscribeRow:
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3.5 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
     textArea:
