@@ -72,7 +72,6 @@ const NotificationsModal = forwardRef<HTMLDivElement, NotificationsModalProps>(
           show={ui?.open ?? false}
           {...animationProps}
         >
-          {/* TODO: fix type error */}
           <div ref={ref} className="dt-w-full dt-h-full">
             <Component onModalClose={close} {...props} />
           </div>

@@ -593,6 +593,13 @@
   }
 }
 
+/* Control the behavior when the scroll position of a scroll container reaches the edge of the scrollport. */
+@supports (overscroll-behavior: contain) {
+  .dt-overflow-scroll-contain {
+    overscroll-behavior: contain;
+  }
+}
+
 /* Using the manualy created classes instead of tailwind because there's no way to set different durations for different properties */
 .dt-message-enter {
   max-height: 0;
