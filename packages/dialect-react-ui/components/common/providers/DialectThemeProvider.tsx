@@ -279,7 +279,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modalBackdrop:
       'dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50',
-    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
+    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-xl',
     sliderWrapper:
       'dt-fixed dt-z-[100] dt-top-0 dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
@@ -385,7 +385,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modalBackdrop:
       'dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50',
-    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
+    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-xl',
     sliderWrapper:
       'dt-fixed dt-z-[100] dt-top-auto dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
