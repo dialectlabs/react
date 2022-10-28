@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.1.0-beta.5] - 2022-10-28
+
+- feature: style tunes for Notifications component in light and dark themes
+
 ## [1.1.0-beta.4] - 2022-10-13
 
 - feature: major update with breaking changes, migration to multi chain tooling
