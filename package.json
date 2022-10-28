@@ -45,7 +45,7 @@
     "starters/*"
   ],
   "engines": {
-    "node": ">=15.10 <17"
+    "node": ">=16"
   },
   "resolutions": {
     "graceful-fs": "4.2.10"
