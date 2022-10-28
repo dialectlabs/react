@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+- fix: group chat placeholder
 
 ## [1.1.0-beta.5] - 2022-10-28
 
