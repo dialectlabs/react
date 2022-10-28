@@ -76,6 +76,8 @@ export default function MessagePreview({
 
   if (!thread || !recipient) return null;
 
+  const isGroup = thread != null && thread.otherMembers.length > 1;
+
   const timestamp = !firstMessage?.isSending
     ? formatTimestamp(thread?.updatedAt.getTime())
     : null;
@@ -93,13 +95,18 @@ export default function MessagePreview({
       onClick={!disabled ? onClick : undefined}
     >
       <div className="dt-flex">
-        <Avatar address={recipient.address} size="regular" />
+        <Avatar
+          address={isGroup ? thread.id.address : recipient.address}
+          size="regular"
+        />
       </div>
       <div className="dt-flex dt-items-baseline dt-grow dt-justify-between dt-truncate dt-pr-2">
         <div className="dt-flex dt-flex-col dt-max-w-full dt-truncate">
           {otherMemberAddress ? (
             <div className="dt-flex dt-items-center">
-              <DisplayAddress address={otherMemberAddress} />
+              <DisplayAddress
+                address={isGroup ? thread.id.address : otherMemberAddress}
+              />
               {onChain && <OnChainIndicator />}
             </div>
           ) : null}

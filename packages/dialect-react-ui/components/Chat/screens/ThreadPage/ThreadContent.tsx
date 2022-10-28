@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { shortenAddress } from '../../../../utils/displayUtils';
 import Avatar from '../../../Avatar';
 import { OnChainIndicator } from '../../../common';
+import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
@@ -38,6 +39,18 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
 
   const otherMemberAddress = thread?.otherMembers[0]?.address;
   const { identity } = useIdentity({ address: otherMemberAddress });
+
+  const isGroup = thread != null && thread.otherMembers.length > 1;
+
+  if (isGroup) {
+    return (
+      <div className="dt-hidden md:dt-flex dt-flex-1 dt-justify-center dt-items-center">
+        <div className="dt-flex dt-cursor-pointer dt-opacity-30">
+          <P> 💬 Group chat will be avaliable soon!</P>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
