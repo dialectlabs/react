@@ -6,7 +6,7 @@ import {
   useThread,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import LoadingThread from '../../entities/LoadingThread';
 import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
 import ThreadEncyprionWrapper from '../../entities/wrappers/ThreadEncryptionWrapper';
@@ -118,7 +118,7 @@ function InnerNotifications({
   );
 
   return (
-    <div className="dt-h-full">
+    <React.Fragment>
       <Header
         threadId={thread?.id}
         isWeb3Enabled={isWeb3Enabled}
@@ -129,7 +129,7 @@ function InnerNotifications({
       />
       <div
         className={clsx(
-          'dt-h-full dt-overflow-y-auto dt-px-4 dt-pb-[3.5rem]',
+          'dt-h-full dt-overflow-y-auto dt-overflow-scroll-contain dt-px-4 dt-pb-[1.5rem]',
           scrollbar
         )}
       >
@@ -150,7 +150,7 @@ function InnerNotifications({
           <LoadingThread />
         )}
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 

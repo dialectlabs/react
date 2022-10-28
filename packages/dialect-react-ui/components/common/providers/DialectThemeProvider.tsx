@@ -260,7 +260,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     input:
       'dt-text-xs dt-text-neutral-700 dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-black focus:dt-border-0 disabled:dt-text-neutral-700/50',
     outlinedInput:
-      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
+      'dt-text-sm dt-h-[3.75rem] dt-text-black dt-px-3 dt-py-2.5 dt-border-2 dt-border-[#E5E5E5] dt-rounded-lg focus-within:dt-border-black focus:dt-outline-none dt-rounded-2xl',
     subscribeRow:
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3.5 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
     textArea:
@@ -279,12 +279,12 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modalBackdrop:
       'dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50',
-    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
+    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-xl',
     sliderWrapper:
       'dt-fixed dt-z-[100] dt-top-0 dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto dt-bottom-0',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
-      'dt-bg-black dt-text-white dt-border dt-border-black hover:dt-opacity-60',
+      'dt-bg-black hover:dt-bg-black/80 dt-text-white dt-border dt-border-black ',
     buttonLoading:
       'dt-min-h-[42px] dt-border dt-border-black !dt-opacity-80 !dt-text-black !dt-bg-transparent',
     secondaryButton:
@@ -305,7 +305,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     adornmentButton:
-      'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
+      'dt-bg-[#303030] hover:!dt-bg-[#303030]/[.80] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
   },
   dark: {
     colors: {
@@ -366,7 +366,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     input:
       'dt-text-xs dt-text-white dt-bg-black dt-px-2 dt-py-2 dt-border-b dt-border-neutral-600 focus:dt-rounded-md dt-outline-none focus:dt-ring focus:dt-ring-white disabled:dt-text-white/50',
     outlinedInput:
-      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
+      'dt-text-sm dt-h-[3.75rem] dt-text-white dt-px-3 dt-py-2.5 dt-border-2 dt-border-subtle-night dt-rounded-lg focus-within:dt-border-white focus:dt-outline-none dt-rounded-2xl',
     subscribeRow:
       'dt-text-sm dt-h-[3.75rem] dt-text-white dt-bg-subtle-night dt-px-3.5 dt-py-2.5 dt-border-2 dt-border-neutral-600 dt-rounded-lg focus-within:dt-bg-black  focus-within:dt-border-white focus:dt-outline-none dt-rounded-lg',
     textArea:
@@ -385,12 +385,12 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-fixed dt-z-[100] dt-top-0 dt-w-full dt-h-full dt-right-0 sm:dt-absolute sm:dt-top-16 sm:dt-w-[30rem] sm:dt-h-[40rem]',
     modalBackdrop:
       'dt-fixed dt-top-0 dt-bottom-0 dt-right-0 dt-left-0 dt-w-full dt-h-full dt-z-[99] dt-bg-black/50',
-    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-3xl',
+    modal: 'dt-rounded-none dt-shadow-md sm:dt-rounded-xl',
     sliderWrapper:
       'dt-fixed dt-z-[100] dt-top-auto dt-bottom-0 dt-w-full dt-h-full sm:dt-w-[30rem] sm:dt-h-[40rem] sm:dt-right-10 sm:dt-top-auto',
     slider: 'dt-rounded-none dt-shadow-md sm:dt-rounded-t-3xl',
     button:
-      'dt-bg-white dt-text-black dt-border dt-border-white hover:dt-opacity-60',
+      'dt-bg-white hover:dt-bg-white/80 dt-text-black dt-border dt-border-white hover:dt-border-white/80',
     buttonLoading:
       'dt-min-h-[42px] dt-border dt-border-white dt-bg-transparent !dt-opacity-80 !dt-text-white',
     secondaryButton:
@@ -411,7 +411,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
     toast:
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     adornmentButton:
-      'dt-bg-[#303030] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
+      'dt-bg-[#303030] hover:dt-bg-[#303030]/[.80] dt-rounded-full dt-flex dt-items-center dt-justify-center !dt-text-white dt-text-xs dt-border-0 hover:dt-border-0',
   },
 };
 

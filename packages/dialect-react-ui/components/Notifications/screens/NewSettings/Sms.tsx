@@ -179,8 +179,8 @@ const Sms = ({ dappAddress }: SmsProps) => {
           {isDeleting && (
             <div>
               <span className="dt-opacity-60">
-                Deleting your email here will delete it across all dapps you've
-                signed up.
+                Deleting your email here will delete it across all dapps
+                you&apos;ve signed up.
               </span>
               <span
                 onClick={() => setIsDeleting(false)}
@@ -199,7 +199,7 @@ const Sms = ({ dappAddress }: SmsProps) => {
             <div>
               <span className="dt-opacity-60">
                 Updating your sms number here will update it across all dapps
-                you've signed up.
+                you&apos;ve signed up.
               </span>
               <span
                 onClick={() => {

@@ -183,8 +183,8 @@ const Email = ({ dappAddress }: EmailProps) => {
           {isDeleting && (
             <div>
               <span className="dt-opacity-60">
-                Deleting your email here will delete it for all dapps you're
-                subscribed to.
+                Deleting your email here will delete it for all dapps
+                you&apos;re subscribed to.
               </span>
               <span
                 onClick={() => setIsDeleting(false)}
@@ -202,8 +202,8 @@ const Email = ({ dappAddress }: EmailProps) => {
           {isEditing && (
             <div>
               <span className="dt-opacity-60">
-                Updating your email here will update it across all dapps you've
-                subscribed to.
+                Updating your email here will update it across all dapps
+                you&apos;ve subscribed to.
               </span>
               <span
                 onClick={() => {

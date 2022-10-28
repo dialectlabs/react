@@ -173,9 +173,10 @@ const Wallet = ({
             )}
             {isLoading && (
               <div
-                className={
-                  'dt-h-9 dt-w-9 dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0 dt-opactity-60'
-                }
+                className={clsx(
+                  'dt-h-9 dt-w-9 dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-xs dt-border-0 dt-opactity-60',
+                  colors.textPrimary
+                )}
               >
                 <Loader />
               </div>
