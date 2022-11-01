@@ -89,7 +89,7 @@ export default function Home(): JSX.Element {
   const DialectProviders: React.FC<{ children: React.ReactNode }> = useCallback(
     (props: { children: React.ReactNode }) => {
       const dialectConfig: ConfigProps = {
-        environment: 'development',
+        environment: 'production',
         dialectCloud: {
           tokenStore: 'local-storage',
         },
