@@ -80,7 +80,7 @@ function AuthedHome() {
             @dialectlabs/react
           </code>
           <div>
-            <code className="shrink text-center text-transparent bg-clip-text bg-gradient-to-r from-[#B852DC] to-[#59C29D] mb-2 block">
+            <code className="shrink text-center text-transparent bg-clip-text bg-white mb-2 block">
               examples/bottom-chat
             </code>
             <div className="text-sm space-x-2 flex justify-center">

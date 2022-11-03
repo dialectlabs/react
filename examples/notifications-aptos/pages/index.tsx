@@ -58,15 +58,15 @@ function AuthedHome() {
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <p className="text-white animate-pulse">Typical dapp →</p>
+          <p className="text-white animate-pulse">Single dapp →</p>
           <NotificationsButton
             dialectId="dialect-notifications"
             dappAddress={DAPP_EXAMPLE_ADDRESS}
             notifications={[
               {
-                name: 'Example notification',
+                name: 'Welcome Message',
                 detail:
-                  'This is an example notification that is never sent. More examples coming soon',
+                'Welcome message that is sent on first subscription',
               },
             ]}
             pollingInterval={15000}
@@ -74,7 +74,7 @@ function AuthedHome() {
           />
         </div>
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <p className="text-white animate-pulse">Single feed →</p>
+          <p className="text-white animate-pulse">Universal feed →</p>
           <NotificationsButton
             dialectId="dialect-singlefeed-notifications"
             dappAddress={DAPP_EXAMPLE_ADDRESS}

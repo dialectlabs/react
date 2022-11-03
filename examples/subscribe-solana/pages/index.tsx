@@ -72,7 +72,7 @@ function AuthedHome() {
         <code className="text-center text-neutral-400 dark:text-neutral-600">
           examples/
           <code className="text-neutral-900 dark:text-neutral-100">
-            subscribe
+            subscribe-solana
           </code>
         </code>
         <div className="flex justify-center mt-8 p-4">
