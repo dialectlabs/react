@@ -56,7 +56,7 @@ Existing components are designed to be uncontrolled and very coupled with `react
 
 ### Can I use only Dialect's logic for messaging and notifications experience?
 
-If you'd like greater control over your users' messaging experience, Dialect's React library also comes with a simple hooks API from `@dialectlabs/react-sdk-blockchain-*` and `@dialectlabs/react-sdk` package for interacting with Dialect's data & local state directly.
+If you'd like greater control over your users' messaging experience, Dialect's React library also comes with a simple hooks API from `@dialectlabs/react-sdk-blockchain-*` and `@dialectlabs/react-sdk` packages for interacting with Dialect's data & local state directly.
 
 ## Development
 
