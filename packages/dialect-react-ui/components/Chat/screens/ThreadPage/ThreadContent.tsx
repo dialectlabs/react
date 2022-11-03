@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { shortenAddress } from '../../../../utils/displayUtils';
 import Avatar from '../../../Avatar';
 import { OnChainIndicator } from '../../../common';
-import { P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../../../common/providers/DialectUiManagementProvider';
 import { Route, Router, useRoute } from '../../../common/providers/Router';
@@ -44,9 +43,42 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
 
   if (isGroup) {
     return (
-      <div className="dt-hidden md:dt-flex dt-flex-1 dt-justify-center dt-items-center">
-        <div className="dt-flex dt-cursor-pointer dt-opacity-30">
-          <P> 💬 Group chat will be avaliable soon!</P>
+      <div className="dt-flex dt-flex-1 dt-flex-col dt-border-neutral-600 dt-overflow-hidden dt-w-full">
+        <Header
+          type={type}
+          onOpen={onChatOpen}
+          onHeaderClick={onChatOpen}
+          isWindowOpen={ui?.open}
+        >
+          {type !== 'inbox' && (
+            <Header.Icon
+              icon={<icons.back />}
+              onClick={() => {
+                if (current?.sub?.name === ThreadRouteName.Settings) {
+                  navigate(RouteName.Main, {
+                    sub: {
+                      name: MainRouteName.Thread,
+                      params: { threadId },
+                      sub: { name: ThreadRouteName.Messages },
+                    },
+                  });
+                  return;
+                }
+
+                navigate(RouteName.Main, {
+                  sub: { name: MainRouteName.Thread },
+                });
+              }}
+            />
+          )}
+        </Header>
+
+        <div className="dt-flex-1 dt-overflow-y-auto dt-dark-scrollbar dt-flex dt-items-center dt-justify-center">
+          <div className="dt-text-sm dt-opacity-30 dt-italic dt-mb-2 dt-flex dt-space-x-1">
+            <span className="dt-min-w-0 dt-truncate">
+              💬 Group chat will be avaliable soon!
+            </span>
+          </div>
         </div>
       </div>
     );
