@@ -1,3 +1,4 @@
+import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
 import {
   DialectSolanaSdk,
   DialectSolanaWalletAdapter,
@@ -104,15 +105,17 @@ export default function Home(): JSX.Element {
     setDialectSolanaWalletAdapter(solanaWalletToDialectWallet(wallet));
   }, [wallet]);
 
-  const dialectConfig = useMemo(
-    (): ConfigProps => ({
+  const dialectConfig = useMemo((): ConfigProps => {
+    return {
       environment: 'development',
       dialectCloud: {
         tokenStore: 'local-storage',
       },
-    }),
-    []
-  );
+      identity: {
+        resolvers: [new DialectDappsIdentityResolver()],
+      },
+    };
+  }, []);
 
   const solanaConfig: SolanaConfigProps = useMemo(
     () => ({
