@@ -355,6 +355,7 @@ function InnerSubscribe({
         dialectId={dialectId}
         channels={channels}
         animationStyle="bottomSlide"
+        dappAddress={dappAddress}
       />
     </div>
   );

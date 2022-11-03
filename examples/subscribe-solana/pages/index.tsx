@@ -155,7 +155,6 @@ export default function Home(): JSX.Element {
       <DialectSolanaSdk
         config={dialectConfig}
         solanaConfig={solanaConfig}
-        dappAddress={DAPP_EXAMPLE_ADDRESS}
         gate={() =>
           new Promise((resolve) => setTimeout(() => resolve(true), 3000))
         }

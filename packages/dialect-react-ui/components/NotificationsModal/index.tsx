@@ -9,8 +9,10 @@ import {
 } from '../common/providers/DialectThemeProvider';
 import useMobile from '../../utils/useMobile';
 import clsx from 'clsx';
+import type { AccountAddress } from '@dialectlabs/react-sdk';
 
 interface NotificationsModalProps {
+  dappAddress: AccountAddress;
   wrapperClassName?: string;
   className?: string;
   animationStyle?: string;
