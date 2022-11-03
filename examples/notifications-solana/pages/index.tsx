@@ -59,15 +59,15 @@ function AuthedHome() {
       </Head>
       <div className="flex flex-row justify-end p-2 items-center space-x-2">
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <p className="text-white animate-pulse">Typical dapp →</p>
+          <p className="text-white animate-pulse">Single dapp →</p>
           <NotificationsButton
             dialectId="dialect-notifications"
             dappAddress={DAPP_EXAMPLE_ADDRESS}
             notifications={[
               {
-                name: 'Example notification',
+                name: 'Welcome Message',
                 detail:
-                  'This is an example notification that is never sent. More examples coming soon',
+                  'Welcome message that is sent on first subscription',
               },
             ]}
             pollingInterval={15000}
@@ -75,7 +75,7 @@ function AuthedHome() {
           />
         </div>
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
-          <p className="text-white animate-pulse">Single feed →</p>
+          <p className="text-white animate-pulse">Unified feed →</p>
           <NotificationsButton
             dialectId="dialect-singlefeed-notifications"
             dappAddress={DAPP_EXAMPLE_ADDRESS}
@@ -86,9 +86,14 @@ function AuthedHome() {
         <SolanaWalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">
-        <code className="text-center text-neutral-400 dark:text-neutral-100">
-          🌚 Dev Dapp
+        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
+          @dialectlabs/react
         </code>
+        <div>
+          <code className="shrink text-center text-transparent bg-clip-text bg-white mb-2 block">
+            examples/notifications-solana
+          </code>
+        </div>
       </div>
     </div>
   );
