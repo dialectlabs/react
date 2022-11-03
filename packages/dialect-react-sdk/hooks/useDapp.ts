@@ -1,4 +1,9 @@
-import type { Dapp, DialectSdkError, ReadOnlyDapp } from '@dialectlabs/sdk';
+import type {
+  Dapp,
+  DialectSdkError,
+  ReadOnlyDapp,
+  BlockchainType,
+} from '@dialectlabs/sdk';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
@@ -16,11 +21,13 @@ interface UseDappValue {
 interface UseDappParams {
   refreshInterval?: number;
   verified?: boolean;
+  blockchainType?: BlockchainType;
 }
 
 function useDapp({
   refreshInterval,
   verified = true,
+  blockchainType,
 }: UseDappParams = EMPTY_OBJ): UseDappValue {
   const { dapps } = useDialectSdk();
   const {
@@ -34,7 +41,7 @@ function useDapp({
 
   const { data: dappsList = EMPTY_ARR } = useSWR(
     DAPPS_CACHE_KEY,
-    () => dapps.findAll({ verified }),
+    () => dapps.findAll({ verified, blockchainType }),
     {
       refreshInterval: 0,
       revalidateIfStale: false,
