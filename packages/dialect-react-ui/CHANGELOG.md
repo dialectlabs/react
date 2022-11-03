@@ -1,7 +1,9 @@
 # CHANGELOG
 
 ## [UNRELEASED]
+
 - fix: group chat placeholder
+- hotfix: add navigation to group chat placholder
 
 ## [1.1.0-beta.5] - 2022-10-28
 
