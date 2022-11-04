@@ -85,9 +85,14 @@ function AuthedHome() {
         <AptosWalletButton />
       </div>
       <div className="h-full text-2xl flex flex-col justify-center">
-        <code className="text-center text-neutral-400 dark:text-neutral-100">
-          🌚 Dev Dapp
+        <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
+          @dialectlabs/react
         </code>
+        <div>
+          <code className="shrink text-center text-transparent bg-clip-text bg-white mb-2 block">
+            examples/notifications-aptos
+          </code>
+        </div>
       </div>
     </div>
   );
