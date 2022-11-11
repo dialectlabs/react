@@ -35,9 +35,11 @@ const SolanaBlockchainSdkWrapper = ({
       return {
         ...adapter,
         signTransaction: adapter.signTransaction
-          ? async (tx) => {
+          ? async (tx: any) => {
               const isFreeTx =
-                tx.recentBlockhash === PublicKey.default.toString();
+                (tx.recentBlockhash &&
+                  tx.recentBlockhash === PublicKey.default.toString()) ===
+                PublicKey.default.toString();
               if (isFreeTx) {
                 setIsSigningFreeTransaction(true);
               }

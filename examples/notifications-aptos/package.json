@@ -13,7 +13,7 @@
     "@babel/runtime": "^7.16.7",
     "@dialectlabs/identity-dialect-dapps": "^1.0.0",
     "@dialectlabs/react-sdk-blockchain-aptos": "^1.0.0-beta.4",
-    "@dialectlabs/react-ui": "^1.1.0-beta.5",
+    "@dialectlabs/react-ui": "^1.1.0-beta.7",
     "@manahippo/aptos-wallet-adapter": "^0.4.9",
     "aptos": "^1.3.16",
     "next": "^12.1.5",

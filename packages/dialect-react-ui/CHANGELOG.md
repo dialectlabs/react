@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+## [1.1.0-beta.7] - 2022-11-11
+
+- hotfix: broken build in previous version
 - fix: group chat placeholder
 - hotfix: add navigation to group chat placholder
 
