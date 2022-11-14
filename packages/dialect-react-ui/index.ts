@@ -8,11 +8,6 @@ import NotificationsModal from './components/NotificationsModal';
 import { NotificationsSingleFeed } from './components/NotificationsSingleFeed';
 import SubscribeButton from './components/SubscribeButton';
 import Inbox from './components/Inbox';
-import useDappAudience from './hooks/useDappAudience';
-
-import Broadcast, {
-  UnwrappedBroadcastForm as BroadcastForm,
-} from './components/Broadcast';
 
 import * as PrimitivesInternal from './components/common/primitives';
 import * as Preflighted from './components/common/preflighted';
@@ -84,14 +79,12 @@ export {
   ChatRouteName,
   ChatThreadRouteName,
   ChatMainRouteName,
-  Broadcast,
-  BroadcastForm,
+
   // etc for building custom components
   WalletStatesWrapper,
   ConnectionWrapper,
   DashboardWrapper,
   ThreadEncyprionWrapper,
-  useDappAudience,
   // UI components
   SubscribeButton,
   Email,
