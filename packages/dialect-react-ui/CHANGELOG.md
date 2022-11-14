@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- remove Broadcast component
+
 ## [1.1.0-beta.7] - 2022-11-11
 
 - hotfix: broken build in previous version
