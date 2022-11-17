@@ -46,7 +46,7 @@ export default function MessageBubble({
         isYou && 'dt-ml-10 dt-justify-end'
       )}
     >
-      <div className="dt-flex dt-flex-col">
+      <div className="dt-flex dt-min-w-0 dt-flex-col">
         <div
           className={clsx(
             'dt-flex dt-flex-row',

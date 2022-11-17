@@ -85,8 +85,9 @@ const ThreadContent = ({ threadId }: ThreadContentProps) => {
   }
 
   return (
-    <div className="dt-h-full dt-flex dt-flex-1 dt-justify-between dt-w-full">
-      <div className="dt-flex dt-flex-col dt-flex-1 dt-min-w-[0px]">
+    <div className="dt-h-full dt-flex dt-flex-1 dt-min-w-0 dt-justify-between dt-w-full">
+      <div className="dt-flex dt-flex-col dt-flex-1 dt-min-w-0">
+        {/* ↑ The min-width: 0 is used to prevent the column from overflow the container. Why: https://makandracards.com/makandra/66994-css-flex-and-min-width */}
         <Header
           type={type}
           onClose={onChatClose}
