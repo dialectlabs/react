@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## [1.1.0-beta.8] - 2022-11-18
+
 - remove Broadcast component
 - fix: make long messages don't shrink thread list column
 
