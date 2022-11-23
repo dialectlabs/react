@@ -38,6 +38,7 @@ export default function Thread({ threadId }: ThreadProps) {
 
   useEffect(() => {
     // After resetting the last read timestamp, we need to refetch the global unread message state
+    // FIX: markAsRead() triggers every time messages is fetched, even if there is no new messages
     markAsRead().then(refresh);
   }, [markAsRead, refresh]);
 

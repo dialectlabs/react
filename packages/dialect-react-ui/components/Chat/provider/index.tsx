@@ -19,7 +19,7 @@ interface ChatProviderProps {
   pollingInterval?: number;
 }
 
-export const DEFAULT_POLLING_INTERVAL = 2000;
+export const DEFAULT_POLLING_INTERVAL = 8000;
 
 export const ChatContext = createContext<ChatContextValue | null>(null);
 
