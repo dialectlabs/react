@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+- fix: increase polling intervals for Chat components
+
 ## [1.1.0-beta.8] - 2022-11-18
 
 - remove Broadcast component
