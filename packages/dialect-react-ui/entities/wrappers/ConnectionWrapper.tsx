@@ -49,7 +49,7 @@ const useDialectHealth = ({
   };
 };
 
-const DEFAULT_CONNECTIVITY_POLLING_INTERVAL = 5000;
+const DEFAULT_CONNECTIVITY_POLLING_INTERVAL = 60000;
 // TODO, pinging with sdk?
 export default function ConnectionWrapper({
   header,
