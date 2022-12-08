@@ -2,7 +2,7 @@
 
 ## [UNRELEASED]
 
-## [1.1.0-beta.6] - 2022-11-11
+## [1.1.0-beta.6] - 2022-12-08
 
 - fix: recognized stored token as valid
 
