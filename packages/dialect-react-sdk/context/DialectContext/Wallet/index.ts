@@ -21,9 +21,15 @@ export interface HardwareWalletConfig {
   hardwareWalletEnabled: boolean;
 }
 
-function useDialectWalletStatesHolder(): DialectWalletStatesHolderState {
+function useDialectWalletStatesHolder(
+  {
+    autoConnect = false,
+  }: {
+    autoConnect?: boolean;
+  } = { autoConnect: false }
+): DialectWalletStatesHolderState {
   const [walletConnected, setWalletConnected] = useState(false);
-  const [connectionInitiated, setConnectionInitiated] = useState(false);
+  const [connectionInitiated, setConnectionInitiated] = useState(autoConnect);
 
   const [
     localStorageHardwareWalletConfig,

@@ -120,7 +120,9 @@ const SolanaBlockchainSdkWrapper = ({
 
 export const DialectSolanaSdk = (props: DialectSolanaSdkProps) => {
   return (
-    <DialectWalletStatesHolder.Provider>
+    <DialectWalletStatesHolder.Provider
+      initialState={{ autoConnect: props.autoConnect }}
+    >
       <SolanaBlockchainSdkWrapper {...props} />
     </DialectWalletStatesHolder.Provider>
   );

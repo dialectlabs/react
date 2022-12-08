@@ -89,7 +89,9 @@ const AptosBlockchainSdkWrapper = ({
 
 export const DialectAptosSdk = (props: DialectAptosSdkProps) => {
   return (
-    <DialectWalletStatesHolder.Provider>
+    <DialectWalletStatesHolder.Provider
+      initialState={{ autoConnect: props.autoConnect }}
+    >
       <AptosBlockchainSdkWrapper {...props} />
     </DialectWalletStatesHolder.Provider>
   );

@@ -12,6 +12,7 @@ import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import MessageBubble from '../../MessageBubble';
+import { useChatInternal } from '../../provider';
 import MessageInput from './MessageInput';
 
 type ThreadProps = {
@@ -19,11 +20,14 @@ type ThreadProps = {
 };
 
 export default function Thread({ threadId }: ThreadProps) {
+  const { pollingInterval } = useChatInternal();
+
   const { thread, isWritable, isFetchingThread } = useThread({
     findParams: { id: threadId },
   });
   const { messages, send, cancel, markAsRead } = useThreadMessages({
     id: threadId,
+    refreshInterval: pollingInterval,
   });
   const { refresh } = useUnreadMessages();
 

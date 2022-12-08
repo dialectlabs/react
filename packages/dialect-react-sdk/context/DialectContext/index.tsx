@@ -14,6 +14,7 @@ export type DialectContextProviderProps<ChainSdk extends BlockchainSdk> = {
   config: ConfigProps;
   blockchainSdkFactory?: BlockchainSdkFactory<ChainSdk> | null;
   gate?: Gate;
+  autoConnect?: boolean;
   children: React.ReactNode;
 };
 
