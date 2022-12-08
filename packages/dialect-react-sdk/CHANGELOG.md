@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.1.0-beta.7] - 2022-12-08
+
+- fix: change checking env and add check for localStorage availability
+
 ## [1.1.0-beta.6] - 2022-12-08
 
 - fix: recognized stored token as valid
