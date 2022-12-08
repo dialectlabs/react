@@ -11,7 +11,3 @@ export function isOnChain(type: string): boolean {
 export function isOffChain(type: string): boolean {
   return type === DIALECT_API_TYPE_DIALECT_CLOUD;
 }
-
-export function isBrowser() {
-  return typeof window !== 'undefined';
-}

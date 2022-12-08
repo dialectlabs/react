@@ -1,5 +1,6 @@
 import { Dispatch, useCallback, useState } from 'react';
-import { isBrowser } from '../../utils';
+
+const isLocalStorageAvailable = typeof globalThis.localStorage !== 'undefined';
 
 export function useLocalStorage<T>(
   key: string,
@@ -8,23 +9,23 @@ export function useLocalStorage<T>(
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState<T>(() => {
-    if (!isBrowser) {
+    if (!isLocalStorageAvailable) {
       return initialValue;
     }
     try {
       // Get from local storage by key
-      const item = window.localStorage.getItem(key);
+      const item = globalThis.localStorage.getItem(key);
       if (item !== null) {
         return JSON.parse(item);
       }
 
       // Save initial value
-      localStorage.setItem(key, JSON.stringify(initialValue));
+      globalThis.localStorage.setItem(key, JSON.stringify(initialValue));
       return initialValue;
       // Parse stored json or if none return initialValue
     } catch (error) {
       // If error also return initialValue
-      console.log(error);
+      console.error(error);
       return initialValue;
     }
   });
@@ -33,7 +34,7 @@ export function useLocalStorage<T>(
   // persists the new value to localStorage.
   const setValue: Dispatch<T> = useCallback(
     (value) => {
-      if (!isBrowser) {
+      if (!isLocalStorageAvailable) {
         console.warn(
           `Tried setting localStorage key “${key}” even though environment is not a browser`
         );
@@ -42,12 +43,12 @@ export function useLocalStorage<T>(
         // Save state
         setStoredValue(value);
         // Save to local storage
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(key, JSON.stringify(value));
+        if (isLocalStorageAvailable) {
+          globalThis.localStorage.setItem(key, JSON.stringify(value));
         }
       } catch (error) {
         // Handle the error case
-        console.log(error);
+        console.error(error);
       }
     },
     [key]
