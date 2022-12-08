@@ -2,6 +2,12 @@
 
 ## [UNRELEASED]
 
+## [1.1.0-beta.10] - 2022-12-08
+
+- chore: bump @dialectlabs/react-sdk version
+
+## [1.1.0-beta.9]
+
 - fix: increase polling intervals for Chat components
 
 ## [1.1.0-beta.8] - 2022-11-18
