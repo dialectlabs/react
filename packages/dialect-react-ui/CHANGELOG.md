@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.1.0-beta.12] - 2022-12-09
+
+- chore: bump @dialectlabs/react-sdk version
+
 ## [1.1.0-beta.11] - 2022-12-08
 
 - chore: bump @dialectlabs/react-sdk version

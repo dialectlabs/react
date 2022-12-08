@@ -1132,17 +1132,17 @@
     ramda "^0.28.0"
     tweetnacl "^1.0.3"
 
-"@dialectlabs/blockchain-sdk-aptos@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-aptos/-/blockchain-sdk-aptos-1.0.2.tgz#5a63d72e5fb0160531c0ef459cc624623740e4ab"
-  integrity sha512-ups1JQhwTU4A85oBBiOuw3aHLkUFO4jj8EF/hEW8bhN8flAcDE5/wHDE9L2sVjaqI0FqWG2nGAPZTqXLK1c46w==
+"@dialectlabs/blockchain-sdk-aptos@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-aptos/-/blockchain-sdk-aptos-1.0.3.tgz#a56e0e42184112dbf37a34707303a3b8cc1b8b60"
+  integrity sha512-tsNovwgjG+lbJvsJSexnar3d65YzIslZmRkEcEV6ovMkWO1VdNB4mCyUWNmGw6maNa8k4foXk/wEwvPcmbef3w==
   dependencies:
     tweetnacl "^1.0.3"
 
-"@dialectlabs/blockchain-sdk-solana@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.0.0.tgz#e6aeb2e9cf1f048eab145c08ab1a018fe51e705e"
-  integrity sha512-BI8zLeZtnJ9yKoFQQ4gz9w/jIDjFNRkfCqqpHyPwF3ss+deIj7Qc5GmIparX9Q1ywGAb+uACtxVHx/slnFfKaA==
+"@dialectlabs/blockchain-sdk-solana@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.0.1.tgz#da115357ec2aca34b55708c7a0f1c36f05770d9c"
+  integrity sha512-W/1qN89zAr5IU5V4zoiTlgeeWtDUCGBEaYMZ1hSnJAEs45lcMqvxcUEa9kNjPFVSbJf13QHHgE+EtmDCxA0SmQ==
   dependencies:
     "@dialectlabs/web3" "^0.3.2"
     "@project-serum/anchor" "0.23.0"

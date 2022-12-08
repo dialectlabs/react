@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-sdk-blockchain-aptos",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "license": "MIT",
   "private": false,
   "sideEffects": false,
@@ -31,7 +31,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/blockchain-sdk-aptos": "^1.0.2"
+    "@dialectlabs/blockchain-sdk-aptos": "^1.0.3"
   },
   "peerDependencies": {
     "@dialectlabs/react-sdk": "1.x",
