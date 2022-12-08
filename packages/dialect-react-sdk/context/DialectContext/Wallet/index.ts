@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { createContainer } from '../../../utils/container';
+import { useLocalStorage } from '../../../hooks/internal/useLocalStorage';
+import { DIALECT_WALLET_CONFIG_STORAGE_KEY } from './constants';
 
 interface State<T> {
   get: T;
-  set: (arg: ((prev: T) => T) | T) => void;
+  set: Dispatch<SetStateAction<T>>;
 }
 
 export interface DialectWalletStatesHolderState {
@@ -15,10 +17,38 @@ export interface DialectWalletStatesHolderState {
   isEncryptingState: State<boolean>;
 }
 
+export interface HardwareWalletConfig {
+  hardwareWalletEnabled: boolean;
+}
+
 function useDialectWalletStatesHolder(): DialectWalletStatesHolderState {
   const [walletConnected, setWalletConnected] = useState(false);
   const [connectionInitiated, setConnectionInitiated] = useState(false);
-  const [hardwareWalletForced, setHardwareWalletForced] = useState(false);
+
+  const [
+    localStorageHardwareWalletConfig,
+    setLocalStorageHardwareWalletConfig,
+  ] = useLocalStorage<HardwareWalletConfig>(DIALECT_WALLET_CONFIG_STORAGE_KEY, {
+    hardwareWalletEnabled: false,
+  });
+  const [hardwareWalletForced, setHardwareWalletForced] = useState(
+    localStorageHardwareWalletConfig.hardwareWalletEnabled
+  );
+  const handleSetHardwareWalletForced: Dispatch<SetStateAction<boolean>> =
+    useCallback(
+      (valOrFunc) => {
+        const newState =
+          typeof valOrFunc === 'function'
+            ? valOrFunc(hardwareWalletForced)
+            : valOrFunc;
+
+        setHardwareWalletForced(newState);
+        setLocalStorageHardwareWalletConfig({
+          hardwareWalletEnabled: newState,
+        });
+      },
+      [hardwareWalletForced, setLocalStorageHardwareWalletConfig]
+    );
 
   const [isSigningFreeTransaction, setIsSigningFreeTransaction] =
     useState<boolean>(false);
@@ -36,7 +66,7 @@ function useDialectWalletStatesHolder(): DialectWalletStatesHolderState {
     },
     hardwareWalletForcedState: {
       get: hardwareWalletForced,
-      set: setHardwareWalletForced,
+      set: handleSetHardwareWalletForced,
     },
     isSigningFreeTransactionState: {
       get: isSigningFreeTransaction,
