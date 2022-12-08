@@ -2,6 +2,11 @@
 
 ## [UNRELEASED]
 
+## [1.1.0-beta.6] - 2022-11-11
+
+- fix: recognized stored token as valid
+
+
 ## [1.1.0-beta.5] - 2022-11-11
 
 - hotfix: broken build in previous version
