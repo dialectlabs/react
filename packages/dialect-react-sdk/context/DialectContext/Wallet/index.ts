@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { createContainer } from '../../../utils/container';
 import { useLocalStorage } from '../../../hooks/internal/useLocalStorage';
+import { DIALECT_WALLET_CONFIG_STORAGE_KEY } from './constants';
 
 interface State<T> {
   get: T;
@@ -27,7 +28,7 @@ function useDialectWalletStatesHolder(): DialectWalletStatesHolderState {
   const [
     localStorageHardwareWalletConfig,
     setLocalStorageHardwareWalletConfig,
-  ] = useLocalStorage<HardwareWalletConfig>('dialect-wallet-config', {
+  ] = useLocalStorage<HardwareWalletConfig>(DIALECT_WALLET_CONFIG_STORAGE_KEY, {
     hardwareWalletEnabled: false,
   });
   const [hardwareWalletForced, setHardwareWalletForced] = useState(
