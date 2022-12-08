@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.16.7",
-    "@dialectlabs/react-ui": "^1.1.0-beta.10",
+    "@dialectlabs/react-ui": "^1.1.0-beta.11",
     "@solana/wallet-adapter-base": "^0.9.18",
     "@solana/wallet-adapter-react": "^0.15.24",
     "@solana/wallet-adapter-react-ui": "^0.9.22",
