@@ -30,19 +30,19 @@ const EvmBlockchainSdkWrapper = ({
     (adapter: DialectEvmWalletAdapter): DialectEvmWalletAdapter => {
       return {
         ...adapter,
-        sign: adapter.signMessage
+        sign: adapter.sign
           ? async (msg) => {
-            setIsSigningMessage(true);
-            try {
-              return await adapter.sign!(msg);
-            } catch (e) {
-              // assumint sign message used only for auth
-              setConnectionInitiated(false);
-              throw e;
-            } finally {
-              setIsSigningMessage(false);
+              setIsSigningMessage(true);
+              try {
+                return await adapter.sign!(msg);
+              } catch (e) {
+                // assumint sign message used only for auth
+                setConnectionInitiated(false);
+                throw e;
+              } finally {
+                setIsSigningMessage(false);
+              }
             }
-          }
           : undefined,
       };
     },
@@ -73,7 +73,7 @@ const EvmBlockchainSdkWrapper = ({
   );
 };
 
-export const DialectAptosSdk = (props: DialectEvmSdkProps) => {
+export const DialectEvmSdk = (props: DialectEvmSdkProps) => {
   return (
     <DialectWalletStatesHolder.Provider
       initialState={{ autoConnect: props.autoConnect }}
