@@ -1,6 +1,6 @@
 import type {
   DialectEvmWalletAdapter,
-  EvmConfigProps as EvmSdkConfigProps
+  EvmConfigProps as EvmSdkConfigProps,
 } from '@dialectlabs/blockchain-sdk-evm';
 
 type WalletOptional<T extends { wallet: DialectEvmWalletAdapter }> = Omit<

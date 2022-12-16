@@ -31,7 +31,7 @@ const EvmBlockchainSdkWrapper = ({
       return {
         ...adapter,
         sign: adapter.sign
-          ? async (msg) => {
+          ? async (msg: string | Uint8Array) => {
               setIsSigningMessage(true);
               try {
                 return await adapter.sign!(msg);
