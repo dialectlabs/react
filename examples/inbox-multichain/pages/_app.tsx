@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import 'tailwindcss/tailwind.css';
 import { AptosWalletContext } from '../components/AptosWallet';
+import { EvmWalletContext } from '../components/EvmWallet';
 import { SolanaWalletContext } from '../components/SolanaWallet';
 import '../styles/globals.css';
 
@@ -23,7 +24,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <SolanaWalletContext>
         <AptosWalletContext>
-          <Component {...pageProps} />
+          <EvmWalletContext>
+            <Component {...pageProps} />
+          </EvmWalletContext>
         </AptosWalletContext>
       </SolanaWalletContext>
     </>
