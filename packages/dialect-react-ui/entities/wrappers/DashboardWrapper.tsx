@@ -35,7 +35,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
           <A
             target="_blank"
             href={
-              'https://docs.dialect.to/documentation/notifications/dapp-setup#register-your-dapp'
+              'https://docs.dialect.to/documentation/notifications-and-monitoring/registering-your-dapp'
             }
             className="dt-underline"
           >
