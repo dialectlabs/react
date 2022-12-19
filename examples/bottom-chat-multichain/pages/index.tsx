@@ -36,6 +36,14 @@ import {
   solanaWalletToDialectWallet,
 } from '../utils/wallet';
 import { CivicIdentityResolver } from '@dialectlabs/identity-civic';
+import {
+  DialectEvmSdk,
+  DialectEvmWalletAdapter,
+  EvmConfigProps,
+} from '@dialectlabs/react-sdk-blockchain-evm';
+import { signMessage } from '@wagmi/core';
+import { useAccount } from 'wagmi';
+import { EvmWalletButton } from '../components/EvmWallet';
 
 // TODO: Use useTheme instead of explicitly importing defaultVariables
 export const themeVariables: IncomingThemeVariables = {
@@ -74,6 +82,7 @@ function AuthedHome() {
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
           <SolanaWalletButton />
           <AptosWalletButton />
+          <EvmWalletButton />
         </div>
         <div className="h-full text-2xl flex flex-col justify-center items-center">
           <code className="text-center text-neutral-400 dark:text-neutral-600 text-sm mb-2">
@@ -110,11 +119,30 @@ export default function Home(): JSX.Element {
   const { connection: solanaConnection } = useSolanaConnection();
   const solanaWallet = useSolanaWallet();
   const aptosWallet = useAptosWallet();
+  const { address: evmWallet, isConnected: evmWalletConnected } = useAccount();
 
   const [dialectSolanaWalletAdapter, setDialectSolanaWalletAdapter] =
     useState<DialectSolanaWalletAdapter | null>(null);
   const [dialectAptosWalletAdapter, setDialectAptosWalletAdapter] =
     useState<DialectAptosWalletAdapter | null>(null);
+
+  const [dialectEvmWalletAdapter, setDialectEvmWalletAdapter] =
+    useState<DialectEvmWalletAdapter | null>(null);
+
+  useEffect(() => {
+    if (!evmWalletConnected || !evmWallet) {
+      setDialectEvmWalletAdapter(null);
+    } else {
+      console.log('ADSD');
+      setDialectEvmWalletAdapter({
+        address: evmWallet,
+        sign: async (msg: string | Uint8Array) => {
+          const res = await signMessage({ message: msg });
+          return res as string;
+        },
+      });
+    }
+  }, [evmWallet, evmWalletConnected]);
 
   useEffect(() => {
     setDialectSolanaWalletAdapter(solanaWalletToDialectWallet(solanaWallet));
@@ -166,9 +194,25 @@ export default function Home(): JSX.Element {
           </DialectAptosSdk>
         );
       }
+      if (dialectEvmWalletAdapter) {
+        const evmConfig: EvmConfigProps = {
+          wallet: dialectEvmWalletAdapter,
+        };
+
+        return (
+          <DialectEvmSdk config={dialectConfig} evmConfig={evmConfig}>
+            {props.children}
+          </DialectEvmSdk>
+        );
+      }
       return <DialectNoBlockchainSdk>{props.children}</DialectNoBlockchainSdk>;
     },
-    [solanaConnection, dialectAptosWalletAdapter, dialectSolanaWalletAdapter]
+    [
+      solanaConnection,
+      dialectAptosWalletAdapter,
+      dialectSolanaWalletAdapter,
+      dialectEvmWalletAdapter,
+    ]
   );
 
   return (

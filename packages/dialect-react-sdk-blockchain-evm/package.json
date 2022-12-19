@@ -1,0 +1,39 @@
+{
+  "name": "@dialectlabs/react-sdk-blockchain-evm",
+  "version": "1.0.0-beta.2",
+  "license": "MIT",
+  "private": false,
+  "sideEffects": false,
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/types/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "prebuild": "node ./prebuild.js",
+    "build": "yarn clean && yarn prebuild && yarn build:cjs; yarn build:esm",
+    "build:cjs": "tsc",
+    "build:cjs:watch": "tsc --watch",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:esm:watch": "tsc --project tsconfig.esm.json --watch",
+    "clean": "rm -rf lib",
+    "dev": "yarn clean && yarn prebuild && concurrently \"npm:build:cjs:watch\" \"npm:build:esm:watch\""
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dialectlabs/react"
+  },
+  "dependencies": {
+    "@dialectlabs/blockchain-sdk-evm": "^1.0.1"
+  },
+  "peerDependencies": {
+    "@dialectlabs/react-sdk": "1.x"
+  }
+}

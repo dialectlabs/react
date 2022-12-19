@@ -7,6 +7,8 @@ import Head from 'next/head';
 import { SolanaWalletContext } from '../components/SolanaWallet';
 import { AptosWalletContext } from '../components/AptosWallet';
 
+import { EvmWalletContext } from '../components/EvmWallet';
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -24,7 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <SolanaWalletContext>
         <AptosWalletContext>
-          <Component {...pageProps} />
+          <EvmWalletContext>
+            <Component {...pageProps} />
+          </EvmWalletContext>
         </AptosWalletContext>
       </SolanaWalletContext>
     </>
