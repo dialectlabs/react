@@ -2,6 +2,10 @@
 
 ## [UNRELEASED]
 
+## [1.1.0-beta.13]
+
+- fix: broken dashboard dapp register link fixed
+
 ## [1.1.0-beta.12] - 2022-12-09
 
 - chore: bump @dialectlabs/react-sdk version
