@@ -55,7 +55,7 @@ interface ChatProps {
   dialectId: string;
   type: ChatType;
   wrapperClassName?: string;
-  contentWrapperClassName?: string;
+  contentClassName?: string;
   onChatClose?: () => void;
   onChatOpen?: () => void;
   pollingInterval?: number;
@@ -63,7 +63,7 @@ interface ChatProps {
 
 export default function Chat({
   wrapperClassName,
-  contentWrapperClassName,
+  contentClassName,
   onChatOpen,
   onChatClose,
   pollingInterval,
@@ -111,7 +111,7 @@ export default function Chat({
               'dt-flex dt-flex-col dt-h-full dt-shadow-md dt-overflow-hidden',
               colors.textPrimary,
               colors.bg,
-              contentWrapperClassName,
+              contentClassName,
               { [modal]: type === 'popup' },
               { [slider]: type === 'vertical-slider' }
             )}
