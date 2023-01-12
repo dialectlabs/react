@@ -1232,10 +1232,10 @@
   dependencies:
     "@bonfida/spl-name-service" "^0.1.49"
 
-"@dialectlabs/sdk@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-1.3.0.tgz#328363d9ef8d487b714acc5444067c842a15bd19"
-  integrity sha512-Wwcna/VQ5nmBD8pWk3j//YsEw597eQ315Ssb5x97/bfswpslgUZm5MrJp1ICMT3IyW5DKqk5XROor8iIFPmsng==
+"@dialectlabs/sdk@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-1.5.0.tgz#edd1aa05ba55a7810849430c2d8ed463fbfb1a93"
+  integrity sha512-WZbizezp1VjYBXFuScul+JeDqJCbaCh3oOve9KETGwQZs+mG0oygGbkqivhY8BgV74LeyqhsGFgLITTQf6cyQw==
   dependencies:
     "@stablelib/base64" "^1.0.1"
     axios "^0.27.2"
