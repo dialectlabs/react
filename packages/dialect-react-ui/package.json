@@ -33,7 +33,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@dialectlabs/react-sdk": "1.1.0-beta.9",
+    "@dialectlabs/react-sdk": "1.1.0-beta.10",
     "@headlessui/react": "^1.7.3",
     "clsx": "^1.2.1",
     "focus-visible": "^5.2.0",
