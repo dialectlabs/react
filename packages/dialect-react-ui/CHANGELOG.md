@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- feat: adds `renderAdditional` render property for `NotificationType` type which allows to render custom content in notification settings
+- feat: adds `remoteNotificationExtensions` prop that adds custom content to remote notifications
+
 ## [1.1.0-beta.13]
 
 - fix: broken dashboard dapp register link fixed
