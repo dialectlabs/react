@@ -4,8 +4,8 @@ import {
   useNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useCallback } from 'react';
-import type { NotificationType } from '../..';
+import { ReactNode, useCallback } from 'react';
+import type { RemoteNotificationExtension, NotificationType } from '../..';
 import { Divider, Footer, Toggle, ValueRow } from '../../../common';
 import { A, P } from '../../../common/preflighted';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -24,12 +24,14 @@ interface RenderNotificationTypeParams {
   enabled?: boolean;
   type: 'local' | 'remote';
   onToggle?: (value: boolean) => void;
+  renderAdditional?: (state?: boolean) => ReactNode;
 }
 
 interface SettingsProps {
   dappAddress: AccountAddress;
   channels: Channel[];
   notifications?: NotificationType[];
+  remoteNotificationExtensions?: RemoteNotificationExtension[];
 }
 
 export const NotificationToggle = ({
@@ -39,6 +41,7 @@ export const NotificationToggle = ({
   enabled = true,
   onToggle,
   type,
+  renderAdditional,
 }: RenderNotificationTypeParams) => {
   const { highlighted, colors, textStyles } = useTheme();
   return (
@@ -60,6 +63,9 @@ export const NotificationToggle = ({
           {detail}
         </P>
       )}
+
+      {renderAdditional &&
+        renderAdditional(type === 'remote' ? enabled : undefined)}
     </div>
   );
 };
@@ -68,6 +74,7 @@ function Settings({
   dappAddress,
   channels,
   notifications: notificationsTypes,
+  remoteNotificationExtensions,
 }: SettingsProps) {
   const { textStyles, xPaddedText } = useTheme();
   const {
@@ -139,6 +146,12 @@ function Settings({
                   enabled={subscription.config.enabled}
                   type="remote"
                   detail={notificationType.trigger}
+                  renderAdditional={
+                    remoteNotificationExtensions?.find(
+                      (ext) =>
+                        ext.humanReadableId === notificationType.humanReadableId
+                    )?.renderAdditional
+                  }
                   onToggle={(value) => {
                     if (isUpdating) return;
                     updateNotificationSubscription({

@@ -66,8 +66,12 @@ function AuthedHome() {
             notifications={[
               {
                 name: 'Welcome Message',
-                detail:
-                  'Welcome message that is sent on first subscription',
+                detail: 'Welcome message that is sent on first subscription',
+                renderAdditional: () => (
+                  <div className="text-xs text-neutral-400">
+                    Additional information about the welcome message
+                  </div>
+                ),
               },
             ]}
             pollingInterval={15000}
