@@ -23,12 +23,12 @@ import Settings from './screens/Settings';
 export type NotificationType = {
   name: string;
   detail?: string;
-  renderAdditional?: (state?: boolean) => ReactNode;
+  renderAdditional?: () => ReactNode;
 };
 
 export type RemoteNotificationExtension = {
   humanReadableId: string;
-  renderAdditional?: (state?: boolean) => ReactNode;
+  renderAdditional?: (state: boolean) => ReactNode;
 };
 
 interface NotificationsProps {

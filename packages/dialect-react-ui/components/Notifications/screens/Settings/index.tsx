@@ -17,15 +17,29 @@ import Sms from '../NewSettings/Sms';
 import Telegram from '../NewSettings/Telegram';
 import Wallet from '../NewSettings/Wallet';
 
-interface RenderNotificationTypeParams {
+interface LocalRenderNotificationTypeParams {
   name: string;
   detail?: string;
   id?: string;
   enabled?: boolean;
-  type: 'local' | 'remote';
-  onToggle?: (value: boolean) => void;
-  renderAdditional?: (state?: boolean) => ReactNode;
+  type: 'local';
+  onToggle?: unknown;
+  renderAdditional?: () => ReactNode;
 }
+
+interface RemoteRenderNotificationTypeParams {
+  name: string;
+  detail?: string;
+  id?: string;
+  enabled?: boolean;
+  type: 'remote';
+  onToggle?: (value: boolean) => void;
+  renderAdditional?: (state: boolean) => ReactNode;
+}
+
+type RenderNotificationTypeParams =
+  | LocalRenderNotificationTypeParams
+  | RemoteRenderNotificationTypeParams;
 
 interface SettingsProps {
   dappAddress: AccountAddress;
@@ -65,7 +79,7 @@ export const NotificationToggle = ({
       )}
 
       {renderAdditional &&
-        renderAdditional(type === 'remote' ? enabled : undefined)}
+        (type === 'remote' ? renderAdditional(enabled) : renderAdditional())}
     </div>
   );
 };
