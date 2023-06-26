@@ -2,7 +2,10 @@ import { useEffect, forwardRef } from 'react';
 import { Transition } from '@headlessui/react';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import type { Channel } from '../common/types';
-import Notifications, { NotificationType } from '../Notifications';
+import Notifications, {
+  NotificationType,
+  RemoteNotificationExtension,
+} from '../Notifications';
 import {
   ThemeAnimations,
   useTheme,
@@ -22,6 +25,7 @@ interface NotificationsModalProps {
   dialectId: string;
 
   notifications?: NotificationType[];
+  remoteNotificationExtensions?: RemoteNotificationExtension[];
   channels?: Channel[];
   gatedView?: string | JSX.Element;
   pollingInterval?: number;

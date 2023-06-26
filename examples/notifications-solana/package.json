@@ -13,7 +13,7 @@
     "@babel/runtime": "^7.16.7",
     "@dialectlabs/identity-dialect-dapps": "^1.0.0",
     "@dialectlabs/react-sdk-blockchain-solana": "^1.0.0-beta.4",
-    "@dialectlabs/react-ui": "^1.1.0-beta.12",
+    "@dialectlabs/react-ui": "^1.1.0-beta.14",
     "@solana/wallet-adapter-base": "^0.9.18",
     "@solana/wallet-adapter-react": "^0.15.24",
     "@solana/wallet-adapter-react-ui": "^0.9.22",

@@ -7,7 +7,10 @@ import { useTheme } from '../common/providers/DialectThemeProvider';
 import { useDialectUiId } from '../common/providers/DialectUiManagementProvider';
 import type { Channel } from '../common/types';
 import IconButton from '../IconButton';
-import type { NotificationType } from '../Notifications';
+import type {
+  NotificationType,
+  RemoteNotificationExtension,
+} from '../Notifications';
 import NotificationsModal from '../NotificationsModal';
 
 const DEFAULT_POLLING_FOR_NOTIFICATIONS = 15000; // 15 sec refresh default
@@ -20,6 +23,7 @@ export type PropTypes = {
   notifications?: NotificationType[];
   gatedView?: string | JSX.Element;
   channels?: Channel[];
+  remoteNotificationExtensions?: RemoteNotificationExtension[];
   onBackClick?: () => void;
   pollingInterval?: number;
   Component?: (props: any) => JSX.Element;

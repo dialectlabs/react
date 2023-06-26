@@ -6,7 +6,7 @@ import {
   useThread,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import LoadingThread from '../../entities/LoadingThread';
 import ConnectionWrapper from '../../entities/wrappers/ConnectionWrapper';
 import ThreadEncyprionWrapper from '../../entities/wrappers/ThreadEncryptionWrapper';
@@ -23,12 +23,19 @@ import Settings from './screens/Settings';
 export type NotificationType = {
   name: string;
   detail?: string;
+  renderAdditional?: () => ReactNode;
+};
+
+export type RemoteNotificationExtension = {
+  humanReadableId: string;
+  renderAdditional?: (state: boolean) => ReactNode;
 };
 
 interface NotificationsProps {
   dappAddress: AccountAddress;
   onModalClose: () => void;
   notifications?: NotificationType[];
+  remoteNotificationExtensions?: RemoteNotificationExtension[];
   channels?: Channel[];
   onBackClick?: () => void;
   gatedView?: string | JSX.Element;
@@ -46,6 +53,7 @@ function InnerNotifications({
   notifications,
   settingsOnly,
   pollingInterval,
+  remoteNotificationExtensions,
 }: NotificationsProps): JSX.Element {
   const { thread, isFetchingThread } = useThread({
     findParams: { otherMembers: [dappAddress] },
@@ -140,6 +148,7 @@ function InnerNotifications({
                 dappAddress={dappAddress}
                 channels={channels || []}
                 notifications={notifications}
+                remoteNotificationExtensions={remoteNotificationExtensions}
               />
             </Route>
             <Route name={RouteName.Thread}>
