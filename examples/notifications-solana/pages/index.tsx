@@ -116,7 +116,7 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo((): ConfigProps => {
     return {
-      environment: 'development',
+      environment: 'production',
       dialectCloud: {
         tokenStore: 'local-storage',
       },
