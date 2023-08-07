@@ -1198,10 +1198,10 @@
   dependencies:
     ethers "^5.7.2"
 
-"@dialectlabs/blockchain-sdk-solana@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.0.1.tgz#da115357ec2aca34b55708c7a0f1c36f05770d9c"
-  integrity sha512-W/1qN89zAr5IU5V4zoiTlgeeWtDUCGBEaYMZ1hSnJAEs45lcMqvxcUEa9kNjPFVSbJf13QHHgE+EtmDCxA0SmQ==
+"@dialectlabs/blockchain-sdk-solana@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.0.4.tgz#14901b0c4c6902cfcbbbc916aed130e63d987865"
+  integrity sha512-+aJVj+ej+dJO8z2E2XQCOwTUTmfuk6UYs8Tr7fCbBHuhsk0zByL/87gpaVvU4ZUnzlRK0VhmtG33FBsjUoh8lQ==
   dependencies:
     "@dialectlabs/web3" "^0.3.2"
     "@project-serum/anchor" "0.23.0"
@@ -1232,10 +1232,10 @@
   dependencies:
     "@bonfida/spl-name-service" "^0.1.49"
 
-"@dialectlabs/sdk@^1.5.2":
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-1.5.2.tgz#882b228e2386da6ff00e8532212f9e5fb1554f2c"
-  integrity sha512-Nx0LdJzHvgMMUrA2mRn8Vq2BC+4S2zGxBPgsqYh9VfvRAyIxozxkycUkJ36ML/poeR4uCesSXvhdpFGDlvdUQw==
+"@dialectlabs/sdk@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-1.6.0.tgz#d51c53d4e68bde3daf3fe8095594c2a84adbc359"
+  integrity sha512-Bn3X71ert/Kmq48CobIsa98EtN773oSFconDpSO6rMz+bMx+PEszHndkLwi4rKazlxxnvTdqp1hm/tIWdEfEmQ==
   dependencies:
     "@stablelib/base64" "^1.0.1"
     axios "^0.27.2"
