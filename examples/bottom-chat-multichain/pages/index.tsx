@@ -161,6 +161,7 @@ export default function Home(): JSX.Element {
         environment: 'development',
         dialectCloud: {
           tokenStore: 'local-storage',
+          tokenLifetimeMinutes: 60 * 24 * 7,
         },
         identity: {
           resolvers: [

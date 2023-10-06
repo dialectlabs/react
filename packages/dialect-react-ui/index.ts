@@ -43,7 +43,6 @@ import DashboardWrapper from './entities/wrappers/DashboardWrapper';
 import ThreadEncyprionWrapper from './entities/wrappers/ThreadEncryptionWrapper';
 
 import Email from './components/Notifications/screens/NewSettings/Email';
-import Sms from './components/Notifications/screens/NewSettings/Sms';
 import Telegram from './components/Notifications/screens/NewSettings/Telegram';
 import Wallet from './components/Notifications/screens/NewSettings/Wallet';
 import { NotificationToggle } from './components/Notifications/screens/Settings';
@@ -88,7 +87,6 @@ export {
   // UI components
   SubscribeButton,
   Email,
-  Sms,
   Telegram,
   Wallet,
   NotificationToggle,

@@ -13,7 +13,6 @@ import { useRoute } from '../../../common/providers/Router';
 import type { Channel } from '../../../common/types';
 import { RouteName } from '../../constants';
 import Email from '../NewSettings/Email';
-import Sms from '../NewSettings/Sms';
 import Telegram from '../NewSettings/Telegram';
 import Wallet from '../NewSettings/Wallet';
 
@@ -126,8 +125,6 @@ function Settings({
             );
           } else if (channelSlug === 'email') {
             form = <Email dappAddress={dappAddress} />;
-          } else if (channelSlug === 'sms') {
-            form = <Sms dappAddress={dappAddress} />;
           } else if (channelSlug === 'telegram') {
             form = <Telegram dappAddress={dappAddress} />;
           }

@@ -97,7 +97,7 @@ const SubscribeRow = ({
         >
           <ButtonLink onClick={onOpenMoreOptions} className="dt-space-x-1.5">
             {/* TODO: show actuall channels */}
-            <PlusCircle /> <span>Add Telegram, SMS or Email</span>
+            <PlusCircle /> <span>Add Telegram or Email</span>
           </ButtonLink>
         </P>
       </div>
