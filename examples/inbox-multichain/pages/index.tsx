@@ -121,12 +121,7 @@ export default function Home(): JSX.Element {
           tokenStore: 'local-storage',
         },
         identity: {
-          resolvers: [
-            new DialectDappsIdentityResolver(),
-            new SNSIdentityResolver(solanaConnection),
-            new CardinalTwitterIdentityResolver(solanaConnection),
-            new CivicIdentityResolver(solanaConnection),
-          ],
+          resolvers: [new DialectDappsIdentityResolver()],
         },
       };
 

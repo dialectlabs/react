@@ -9,10 +9,11 @@
   },
   "scripts": {
     "bootstrap": "yarn build:all",
-    "build:all": "yarn run build:react-sdk && yarn run build:react-ui && yarn run build:react-solana && yarn run build:react-aptos",
+    "build:all": "yarn run build:react-sdk && yarn run build:react-ui && yarn run build:react-solana && yarn run build:react-aptos && yarn run build:react-evm",
     "build:react-ui": "yarn workspace @dialectlabs/react-ui run build",
     "build:react-aptos": "yarn workspace @dialectlabs/react-sdk-blockchain-aptos run build",
     "build:react-solana": "yarn workspace @dialectlabs/react-sdk-blockchain-solana run build",
+    "build:react-evm": "yarn workspace @dialectlabs/react-sdk-blockchain-evm run build",
     "build:react-sdk": "yarn workspace @dialectlabs/react-sdk run build",
     "dev:react-ui": "yarn workspace @dialectlabs/react-ui run dev",
     "dev:react-sdk": "yarn workspace @dialectlabs/react-sdk run dev",
@@ -50,5 +51,6 @@
   "resolutions": {
     "graceful-fs": "4.2.10"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "dependencies": {}
 }

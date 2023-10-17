@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { CardinalTwitterIdentityResolver } from '@dialectlabs/identity-cardinal';
 import { DialectDappsIdentityResolver } from '@dialectlabs/identity-dialect-dapps';
-import { SNSIdentityResolver } from '@dialectlabs/identity-sns';
 import {
   AptosConfigProps,
   DialectAptosSdk,
@@ -35,7 +33,6 @@ import {
   aptosWalletToDialectWallet,
   solanaWalletToDialectWallet,
 } from '../utils/wallet';
-import { CivicIdentityResolver } from '@dialectlabs/identity-civic';
 import {
   DialectEvmSdk,
   DialectEvmWalletAdapter,
@@ -164,12 +161,7 @@ export default function Home(): JSX.Element {
           tokenLifetimeMinutes: 60 * 24 * 7,
         },
         identity: {
-          resolvers: [
-            new DialectDappsIdentityResolver(),
-            new SNSIdentityResolver(solanaConnection),
-            new CardinalTwitterIdentityResolver(solanaConnection),
-            new CivicIdentityResolver(solanaConnection),
-          ],
+          resolvers: [new DialectDappsIdentityResolver()],
         },
       };
 
@@ -209,7 +201,6 @@ export default function Home(): JSX.Element {
       return <DialectNoBlockchainSdk>{props.children}</DialectNoBlockchainSdk>;
     },
     [
-      solanaConnection,
       dialectAptosWalletAdapter,
       dialectSolanaWalletAdapter,
       dialectEvmWalletAdapter,
