@@ -9,18 +9,18 @@ interface AddressResultProps {
 }
 
 const AddressResult = ({ address }: AddressResultProps) => {
-  const { textStyles } = useTheme();
+  const { textStyles, colors } = useTheme();
 
   if (!address) {
     return (
-      <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-1 dt-px-2')}>
+      <P className={clsx(textStyles.small, colors.error, 'dt-mt-1 dt-px-2')}>
         Invalid address
       </P>
     );
   }
 
   return (
-    <P className={clsx(textStyles.small, 'dt-text-green-500 dt-mt-1 dt-px-2')}>
+    <P className={clsx(textStyles.small, colors.success, 'dt-mt-1 dt-px-2')}>
       Valid address
     </P>
   );

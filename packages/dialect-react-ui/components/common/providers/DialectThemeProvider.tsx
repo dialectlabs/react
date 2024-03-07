@@ -33,7 +33,9 @@ export type ThemeColors =
   | 'toggleBackground'
   | 'toggleBackgroundActive'
   | 'notificationBadgeColor'
-  | 'label';
+  | 'label'
+  | 'error'
+  | 'success';
 
 export type ThemeTextStyles =
   | 'h1'
@@ -212,6 +214,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       notificationBadgeColor: 'dt-bg-accent dt-text-white',
       // input label
       label: 'dt-text-black/60',
+      error: 'dt-text-red-500',
+      success: 'dt-text-green-500',
     },
     // TODO: simplify setting just font-family
     textStyles: {
@@ -319,6 +323,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       toggleThumb: 'dt-bg-dark-night',
       notificationBadgeColor: 'dt-bg-accent dt-text-white',
       label: 'dt-text-white/60',
+      error: 'dt-text-red-500',
+      success: 'dt-text-green-500',
     },
     textStyles: {
       h1: 'dt-font-inter dt-text-[1.625rem] dt-font-bold',

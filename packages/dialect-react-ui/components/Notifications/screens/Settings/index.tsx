@@ -89,7 +89,7 @@ function Settings({
   notifications: notificationsTypes,
   remoteNotificationExtensions,
 }: SettingsProps) {
-  const { textStyles, xPaddedText } = useTheme();
+  const { textStyles, xPaddedText, colors } = useTheme();
   const {
     subscriptions: notificationSubscriptions,
     update: updateNotificationSubscription,
@@ -141,7 +141,7 @@ function Settings({
       <div>
         {error && !notificationsTypes ? (
           <ValueRow
-            label={<P className={clsx('dt-text-red-500')}>{error.message}</P>}
+            label={<P className={clsx(colors.error)}>{error.message}</P>}
           >
             {''}
           </ValueRow>

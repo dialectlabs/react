@@ -224,7 +224,7 @@ const Email = ({ dappAddress }: EmailProps) => {
       )}
 
       {currentError && (
-        <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+        <P className={clsx(textStyles.small, colors.error, 'dt-mt-2')}>
           {currentError.message}
         </P>
       )}

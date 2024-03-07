@@ -27,8 +27,12 @@ const Settings = ({ threadId }: SettingsProps) => {
   } = useThread({ findParams: { id: threadId } });
   const { navigate } = useRoute();
 
-  const { textStyles, secondaryDangerButton, secondaryDangerButtonLoading } =
-    useTheme();
+  const {
+    textStyles,
+    colors,
+    secondaryDangerButton,
+    secondaryDangerButtonLoading,
+  } = useTheme();
   const onChain = isOnChain(thread?.type || '');
   const { dialectId } = useChatInternal();
   const { navigation } = useDialectUiId<ChatNavigationHelpers>(dialectId);
@@ -78,7 +82,8 @@ const Settings = ({ threadId }: SettingsProps) => {
             <P
               className={clsx(
                 textStyles.small,
-                'dt-text-red-500 dt-text-center dt-mt-2'
+                colors.error,
+                'dt-text-center dt-mt-2'
               )}
             >
               {errorDeletingThread.message}
