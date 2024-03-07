@@ -48,7 +48,8 @@ export type ThemeTextStyles =
   | 'subscribeRow'
   | 'buttonText'
   | 'link'
-  | 'label';
+  | 'label'
+  | 'channelToggle';
 
 export type ThemeIcons =
   | 'arrowclockwise'
@@ -230,6 +231,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       buttonText: 'dt-font-inter dt-text-base',
       link: 'dt-underline dt-decoration-1 dt-break-words',
       label: 'dt-font-inter dt-text-base',
+      channelToggle: 'dt-opacity-60',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
@@ -338,6 +340,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       buttonText: 'dt-font-inter dt-text-base',
       link: 'dt-underline decoration-1 dt-break-words',
       label: 'dt-font-inter dt-text-base',
+      channelToggle: 'dt-opacity-60',
     },
     icons: {
       arrowclockwise: ArrowClockwise,

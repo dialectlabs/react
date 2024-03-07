@@ -241,7 +241,7 @@ const Email = ({ dappAddress }: EmailProps) => {
             }}
           />
 
-          <P className={clsx(textStyles.small, 'dt-opacity-60')}>
+          <P className={clsx(textStyles.small, textStyles.channelToggle)}>
             Notifications {subscriptionEnabled ? 'on' : 'off'}
           </P>
         </div>
