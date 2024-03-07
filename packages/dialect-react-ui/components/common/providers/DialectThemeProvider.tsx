@@ -30,6 +30,7 @@ export type ThemeColors =
   | 'highlight'
   | 'highlightSolid'
   | 'toggleThumb'
+  | 'toggleThumbActive'
   | 'toggleBackground'
   | 'toggleBackgroundActive'
   | 'notificationBadgeColor'
@@ -212,6 +213,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       toggleBackgroundActive: 'dt-bg-[#528E5B]',
       // circle in toggle
       toggleThumb: 'dt-bg-dark-night',
+      toggleThumbActive: '',
       // notification badge
       notificationBadgeColor: 'dt-bg-accent dt-text-white',
       // input label
@@ -325,6 +327,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       toggleBackground: 'dt-bg-white/60',
       toggleBackgroundActive: 'dt-bg-[#528E5B]',
       toggleThumb: 'dt-bg-dark-night',
+      toggleThumbActive: '',
       notificationBadgeColor: 'dt-bg-accent dt-text-white',
       label: 'dt-text-white/60',
       error: 'dt-text-red-500',

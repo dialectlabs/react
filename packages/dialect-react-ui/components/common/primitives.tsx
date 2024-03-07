@@ -153,6 +153,10 @@ export function Toggle({
   const size = toggleSize || 'M';
   const translate =
     size === 'M' ? 'dt-translate-x-[160%]' : 'dt-translate-x-3/4';
+  const thumbColor =
+    checked && colors.toggleThumbActive
+      ? colors.toggleThumbActive
+      : colors.toggleThumb;
 
   return (
     <Label
@@ -184,7 +188,7 @@ export function Toggle({
       <span
         className={clsx(
           'dt-absolute dt-top-1 dt-left-1 dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
-          colors.toggleThumb,
+          thumbColor,
           checked ? translate : ''
         )}
       />
