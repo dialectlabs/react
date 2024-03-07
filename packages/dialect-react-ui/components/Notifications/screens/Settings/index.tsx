@@ -190,12 +190,12 @@ function Settings({
       </div>
       <P
         className={clsx(
-          textStyles.xsmall,
+          textStyles.tos,
           xPaddedText,
           'dt-opacity-50 dt-text-center'
         )}
       >
-        By enabling notifications you agree to our{' '}
+        By enabling notifications you agree to Dialect&apos;s{' '}
         <A
           className="dt-underline"
           target="_blank"

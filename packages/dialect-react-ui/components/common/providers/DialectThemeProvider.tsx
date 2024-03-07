@@ -49,7 +49,8 @@ export type ThemeTextStyles =
   | 'buttonText'
   | 'link'
   | 'label'
-  | 'channelToggle';
+  | 'channelToggle'
+  | 'tos';
 
 export type ThemeIcons =
   | 'arrowclockwise'
@@ -232,6 +233,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       link: 'dt-underline dt-decoration-1 dt-break-words',
       label: 'dt-font-inter dt-text-base',
       channelToggle: 'dt-opacity-60',
+      tos: 'dt-font-inter dt-text-[0.6875rem] dt-font-normal',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
@@ -341,6 +343,7 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       link: 'dt-underline decoration-1 dt-break-words',
       label: 'dt-font-inter dt-text-base',
       channelToggle: 'dt-opacity-60',
+      tos: 'dt-font-inter dt-text-[0.6875rem] dt-font-normal',
     },
     icons: {
       arrowclockwise: ArrowClockwise,
