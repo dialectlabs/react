@@ -1,6 +1,7 @@
 import {
   AccountAddress,
   AddressType,
+  ThreadMessage,
   useNotificationChannelDappSubscription,
   useNotificationSubscriptions,
   useThread,
@@ -41,6 +42,7 @@ interface NotificationsProps {
   gatedView?: string | JSX.Element;
   pollingInterval?: number;
   settingsOnly?: boolean;
+  renderNotificationMessage?: (args: ThreadMessage) => JSX.Element;
 }
 
 const ADDRESS_TYPE = AddressType.Wallet;
@@ -54,6 +56,7 @@ function InnerNotifications({
   settingsOnly,
   pollingInterval,
   remoteNotificationExtensions,
+  renderNotificationMessage,
 }: NotificationsProps): JSX.Element {
   const { thread, isFetchingThread } = useThread({
     findParams: { otherMembers: [dappAddress] },
@@ -137,7 +140,7 @@ function InnerNotifications({
       />
       <div
         className={clsx(
-          'dt-h-full dt-overflow-y-auto dt-overflow-scroll-contain dt-px-4 dt-pb-[1.5rem]',
+          'dt-h-full dt-overflow-y-auto dt-overflow-scroll-contain',
           scrollbar
         )}
       >
@@ -152,7 +155,10 @@ function InnerNotifications({
               />
             </Route>
             <Route name={RouteName.Thread}>
-              <NotificationsList refreshInterval={pollingInterval} />
+              <NotificationsList
+                refreshInterval={pollingInterval}
+                renderNotificationMessage={renderNotificationMessage}
+              />
             </Route>
           </>
         ) : (

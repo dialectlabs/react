@@ -1,4 +1,8 @@
-import { ThreadId, useThreadMessages } from '@dialectlabs/react-sdk';
+import {
+  ThreadId,
+  ThreadMessage,
+  useThreadMessages,
+} from '@dialectlabs/react-sdk';
 import React, { useEffect } from 'react';
 import { Divider } from '../../../common';
 import { useTheme } from '../../../common/providers/DialectThemeProvider';
@@ -8,6 +12,7 @@ import { Notification } from '../../../../entities/notifications/Notification';
 
 interface NotificationsListProps {
   refreshInterval?: number;
+  renderNotificationMessage?: (message: ThreadMessage) => JSX.Element;
 }
 
 const NotificationsListWrapper = (props: NotificationsListProps) => {
@@ -22,8 +27,11 @@ const NotificationsListWrapper = (props: NotificationsListProps) => {
   return <NotificationsList {...props} />;
 };
 
-const NotificationsList = ({ refreshInterval }: NotificationsListProps) => {
-  const { notificationsDivider } = useTheme();
+const NotificationsList = ({
+  refreshInterval,
+  renderNotificationMessage,
+}: NotificationsListProps) => {
+  const { notificationsDivider, notificationsListWrapper } = useTheme();
 
   const {
     params: { threadId },
@@ -43,16 +51,22 @@ const NotificationsList = ({ refreshInterval }: NotificationsListProps) => {
   }
 
   return (
-    <div className="dt-py-4">
-      {messages.map((message, idx) => (
-        <React.Fragment key={idx}>
-          <Notification
-            message={message.text}
-            timestamp={message.timestamp.getTime()}
-          />
-          <Divider className={notificationsDivider} />
-        </React.Fragment>
-      ))}
+    <div className={notificationsListWrapper}>
+      {messages.map((message, idx) =>
+        renderNotificationMessage ? (
+          <React.Fragment key={idx}>
+            {renderNotificationMessage(message)}
+          </React.Fragment>
+        ) : (
+          <React.Fragment key={idx}>
+            <Notification
+              message={message.text}
+              timestamp={message.timestamp.getTime()}
+            />
+            <Divider className={notificationsDivider} />
+          </React.Fragment>
+        )
+      )}
     </div>
   );
 };

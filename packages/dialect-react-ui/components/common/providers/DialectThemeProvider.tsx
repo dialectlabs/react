@@ -143,6 +143,7 @@ export type IncomingThemeValues = {
   notificationHeader?: string;
   adornmentButton?: string;
   notificationsSettingsWrapper?: string;
+  notificationsListWrapper?: string;
 };
 
 export type IncomingThemeVariables = Partial<
@@ -317,7 +318,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     adornmentButton:
       'dt-bg-[#303030] hover:!dt-bg-[#303030]/[.80] dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-white dt-text-xs dt-border-0',
-    notificationsSettingsWrapper: '',
+    notificationsSettingsWrapper: 'dt-px-4 dt-pb-[1.5rem]',
+    notificationsListWrapper: 'dt-px-4 dt-py-4',
   },
   dark: {
     colors: {
@@ -429,7 +431,8 @@ export const defaultVariables: Record<ThemeType, ThemeValues> &
       'dt-border dt-rounded-lg dt-border-subtle-day dt-px-4 dt-py-2 dt-bg-dark-night',
     adornmentButton:
       'dt-bg-[#303030] hover:dt-bg-[#303030]/[.80] dt-rounded-full dt-flex dt-items-center dt-justify-center !dt-text-white dt-text-xs dt-border-0 hover:dt-border-0',
-    notificationsSettingsWrapper: '',
+    notificationsSettingsWrapper: 'dt-px-4 dt-pb-[1.5rem]',
+    notificationsListWrapper: 'dt-px-4 dt-py-4',
   },
 };
 
