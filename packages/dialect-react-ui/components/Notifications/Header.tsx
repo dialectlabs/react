@@ -58,7 +58,7 @@ function Header(props: HeaderProps) {
     <>
       <div className="dt-flex">
         <SettingsButton />
-        <div className={clsx(!props.settingsOnly && 'sm:dt-hidden', 'dt-ml-3')}>
+        <div className={clsx('dt-ml-3')}>
           <CloseButton />
         </div>
       </div>
