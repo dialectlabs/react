@@ -12,7 +12,10 @@ import { Notification } from '../../../../entities/notifications/Notification';
 
 interface NotificationsListProps {
   refreshInterval?: number;
-  renderNotificationMessage?: (message: ThreadMessage) => JSX.Element;
+  renderNotificationMessage?: (
+    message: ThreadMessage,
+    index?: number
+  ) => JSX.Element;
 }
 
 const NotificationsListWrapper = (props: NotificationsListProps) => {
@@ -55,7 +58,7 @@ const NotificationsList = ({
       {messages.map((message, idx) =>
         renderNotificationMessage ? (
           <React.Fragment key={idx}>
-            {renderNotificationMessage(message)}
+            {renderNotificationMessage(message, idx)}
           </React.Fragment>
         ) : (
           <React.Fragment key={idx}>

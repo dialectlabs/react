@@ -42,7 +42,11 @@ interface NotificationsProps {
   gatedView?: string | JSX.Element;
   pollingInterval?: number;
   settingsOnly?: boolean;
-  renderNotificationMessage?: (args: ThreadMessage) => JSX.Element;
+  showCloseButton?: boolean;
+  renderNotificationMessage?: (
+    message: ThreadMessage,
+    index?: number
+  ) => JSX.Element;
 }
 
 const ADDRESS_TYPE = AddressType.Wallet;
@@ -53,6 +57,7 @@ function InnerNotifications({
   onBackClick,
   channels,
   notifications,
+  showCloseButton,
   settingsOnly,
   pollingInterval,
   remoteNotificationExtensions,
@@ -137,6 +142,7 @@ function InnerNotifications({
         onModalClose={onModalClose}
         onBackClick={onBackClick}
         settingsOnly={settingsOnly}
+        showCloseButton={showCloseButton}
       />
       <div
         className={clsx(
