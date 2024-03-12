@@ -10,18 +10,14 @@ export default function ActionCaption({
   encrypted: boolean;
   creationError: DialectSdkError | null;
 }) {
-  const { textStyles, xPaddedText } = useTheme();
+  const { textStyles, colors, xPaddedText } = useTheme();
   const { encryptionKeysProvider } = useDialectSdk();
   const canEncrypt = encryptionKeysProvider.isAvailable();
 
   if (creationError && creationError.type !== 'DISCONNECTED_FROM_CHAIN') {
     return (
       <P
-        className={clsx(
-          textStyles.small,
-          xPaddedText,
-          'dt-text-red-500 dt-mt-2'
-        )}
+        className={clsx(textStyles.small, xPaddedText, colors.error, 'dt-mt-2')}
       >
         {creationError.message}
       </P>

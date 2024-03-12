@@ -1,6 +1,7 @@
 import {
   AccountAddress,
   AddressType,
+  ThreadMessage,
   useNotificationChannelDappSubscription,
   useNotificationSubscriptions,
   useThread,
@@ -41,6 +42,11 @@ interface NotificationsProps {
   gatedView?: string | JSX.Element;
   pollingInterval?: number;
   settingsOnly?: boolean;
+  showCloseButton?: boolean;
+  renderNotificationMessage?: (
+    message: ThreadMessage,
+    index?: number
+  ) => JSX.Element;
 }
 
 const ADDRESS_TYPE = AddressType.Wallet;
@@ -51,9 +57,11 @@ function InnerNotifications({
   onBackClick,
   channels,
   notifications,
+  showCloseButton,
   settingsOnly,
   pollingInterval,
   remoteNotificationExtensions,
+  renderNotificationMessage,
 }: NotificationsProps): JSX.Element {
   const { thread, isFetchingThread } = useThread({
     findParams: { otherMembers: [dappAddress] },
@@ -134,10 +142,11 @@ function InnerNotifications({
         onModalClose={onModalClose}
         onBackClick={onBackClick}
         settingsOnly={settingsOnly}
+        showCloseButton={showCloseButton}
       />
       <div
         className={clsx(
-          'dt-h-full dt-overflow-y-auto dt-overflow-scroll-contain dt-px-4 dt-pb-[1.5rem]',
+          'dt-h-full dt-overflow-y-auto dt-overflow-scroll-contain',
           scrollbar
         )}
       >
@@ -152,7 +161,10 @@ function InnerNotifications({
               />
             </Route>
             <Route name={RouteName.Thread}>
-              <NotificationsList refreshInterval={pollingInterval} />
+              <NotificationsList
+                refreshInterval={pollingInterval}
+                renderNotificationMessage={renderNotificationMessage}
+              />
             </Route>
           </>
         ) : (

@@ -19,7 +19,7 @@ function ToastMessage({
   onClose,
 }: ToastMessageProps) {
   const [hide, setHide] = useState(false);
-  const { icons, toast, animations } = useTheme();
+  const { icons, toast, animations, colors } = useTheme();
 
   let icon = null;
   if (isSuccess) {
@@ -27,7 +27,9 @@ function ToastMessage({
   }
   if (isError) {
     icon = (
-      <icons.error className="dt-w-3 dt-h-3 dt-text-red-500 dt-shrink-0" />
+      <icons.error
+        className={clsx(colors.error, 'dt-w-3 dt-h-3 dt-shrink-0')}
+      />
     );
   }
   const timeout = 150;

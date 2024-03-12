@@ -174,7 +174,7 @@ const Wallet = ({
             {isLoading && (
               <div
                 className={clsx(
-                  'dt-h-9 dt-w-9 dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-xs dt-border-0 dt-opactity-60',
+                  'dt-h-9 dt-w-9 dt-rounded-full dt-flex dt-items-center dt-justify-center dt-text-xs dt-border-0 dt-opacity-60',
                   colors.textPrimary
                 )}
               >
@@ -197,7 +197,7 @@ const Wallet = ({
             }}
           />
 
-          <P className={clsx(textStyles.small, 'dt-opacity-60')}>
+          <P className={clsx(textStyles.small, textStyles.channelToggle)}>
             Notifications {subscriptionEnabled ? 'on' : 'off'}
           </P>
         </div>

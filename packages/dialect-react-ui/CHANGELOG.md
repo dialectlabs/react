@@ -1,6 +1,20 @@
 # CHANGELOG
 
-## [UNRELEASED]
+
+## [1.4.1]
+
+- add 'showCloseButton' prop to `Notifications` component
+
+## [1.4.0]
+
+- add `renderNotificationMessage` render property to `Notifications` component which, if provided, will override default rendering function of a notification message element
+- extract some new styling constants to theme
+
+## [1.3.0]
+
+- remove sms support
+
+## [1.2.0]
 
 - feat: adds `renderAdditional` render property for `NotificationType` type which allows to render custom content in notification settings
 - feat: adds `remoteNotificationExtensions` prop that adds custom content to remote notifications

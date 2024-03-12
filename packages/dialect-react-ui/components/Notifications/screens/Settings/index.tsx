@@ -89,7 +89,8 @@ function Settings({
   notifications: notificationsTypes,
   remoteNotificationExtensions,
 }: SettingsProps) {
-  const { textStyles, xPaddedText } = useTheme();
+  const { textStyles, notificationsSettingsWrapper, xPaddedText, colors } =
+    useTheme();
   const {
     subscriptions: notificationSubscriptions,
     update: updateNotificationSubscription,
@@ -115,109 +116,122 @@ function Settings({
   );
 
   return (
-    <>
-      <div className={clsx('dt-pt-4 dt-pb-2')}>
-        {channels.map((channelSlug) => {
-          let form;
-          if (channelSlug === 'web3') {
-            form = (
-              <Wallet dappAddress={dappAddress} onThreadCreated={showThread} />
+    <div className={notificationsSettingsWrapper}>
+      <div>
+        <div
+          className={clsx(
+            'dialect-settings-channels',
+            'dt-flex dt-flex-col dt-pt-4 dt-pb-2'
+          )}
+        >
+          {channels.map((channelSlug) => {
+            let form;
+            if (channelSlug === 'web3') {
+              form = (
+                <Wallet
+                  dappAddress={dappAddress}
+                  onThreadCreated={showThread}
+                />
+              );
+            } else if (channelSlug === 'email') {
+              form = <Email dappAddress={dappAddress} />;
+            } else if (channelSlug === 'telegram') {
+              form = <Telegram dappAddress={dappAddress} />;
+            }
+            return (
+              <div key={channelSlug} className="dt-mb-2">
+                {form}
+              </div>
             );
-          } else if (channelSlug === 'email') {
-            form = <Email dappAddress={dappAddress} />;
-          } else if (channelSlug === 'telegram') {
-            form = <Telegram dappAddress={dappAddress} />;
-          }
-          return (
-            <div key={channelSlug} className="dt-mb-2">
-              {form}
-            </div>
-          );
-        })}
+          })}
+        </div>
+        <div className="dt-mt-2 dt-mb-6">
+          <Divider />
+        </div>
+        <div className={'dialect-settings-topics'}>
+          {error && !notificationsTypes ? (
+            <ValueRow
+              label={<P className={clsx(colors.error)}>{error.message}</P>}
+            >
+              {''}
+            </ValueRow>
+          ) : null}
+          {notificationSubscriptions.length || notificationsTypes?.length ? (
+            <>
+              {notificationSubscriptions.map(
+                ({ notificationType, subscription }) => (
+                  <NotificationToggle
+                    key={notificationType.id}
+                    id={notificationType.id}
+                    name={notificationType.name}
+                    enabled={subscription.config.enabled}
+                    type="remote"
+                    detail={notificationType.trigger}
+                    renderAdditional={
+                      remoteNotificationExtensions?.find(
+                        (ext) =>
+                          ext.humanReadableId ===
+                          notificationType.humanReadableId
+                      )?.renderAdditional
+                    }
+                    onToggle={(value) => {
+                      if (isUpdating) return;
+                      updateNotificationSubscription({
+                        notificationTypeId: notificationType.id,
+                        config: {
+                          ...subscription.config,
+                          enabled: value,
+                        },
+                      });
+                    }}
+                  />
+                )
+              )}
+              {/* Render manually passed types in case api doesn't return anything */}
+              {!notificationSubscriptions.length &&
+                notificationsTypes?.map((notificationType, idx) => (
+                  <NotificationToggle
+                    key={idx}
+                    {...notificationType}
+                    type="local"
+                  />
+                ))}
+            </>
+          ) : null}
+        </div>
       </div>
-      <div className="dt-mt-2 dt-mb-6">
-        <Divider />
-      </div>
-      <div>
-        {error && !notificationsTypes ? (
-          <ValueRow
-            label={<P className={clsx('dt-text-red-500')}>{error.message}</P>}
+      <div className={clsx('dialect-settings-footer', 'dt-mt-2')}>
+        <P
+          className={clsx(
+            textStyles.tos,
+            xPaddedText,
+            'dt-opacity-50 dt-text-center'
+          )}
+        >
+          By enabling notifications you agree to Dialect&apos;s{' '}
+          <A
+            className="dt-underline"
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.dialect.to/tos"
           >
-            {''}
-          </ValueRow>
-        ) : null}
-        {notificationSubscriptions.length || notificationsTypes?.length ? (
-          <>
-            {notificationSubscriptions.map(
-              ({ notificationType, subscription }) => (
-                <NotificationToggle
-                  key={notificationType.id}
-                  id={notificationType.id}
-                  name={notificationType.name}
-                  enabled={subscription.config.enabled}
-                  type="remote"
-                  detail={notificationType.trigger}
-                  renderAdditional={
-                    remoteNotificationExtensions?.find(
-                      (ext) =>
-                        ext.humanReadableId === notificationType.humanReadableId
-                    )?.renderAdditional
-                  }
-                  onToggle={(value) => {
-                    if (isUpdating) return;
-                    updateNotificationSubscription({
-                      notificationTypeId: notificationType.id,
-                      config: {
-                        ...subscription.config,
-                        enabled: value,
-                      },
-                    });
-                  }}
-                />
-              )
-            )}
-            {/* Render manually passed types in case api doesn't return anything */}
-            {!notificationSubscriptions.length &&
-              notificationsTypes?.map((notificationType, idx) => (
-                <NotificationToggle
-                  key={idx}
-                  {...notificationType}
-                  type="local"
-                />
-              ))}
-          </>
-        ) : null}
+            Terms of Service
+          </A>{' '}
+          and{' '}
+          <A
+            className="dt-underline"
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.dialect.to/privacy"
+          >
+            Privacy Policy
+          </A>
+        </P>
+        <div>
+          <Footer />
+        </div>
       </div>
-      <P
-        className={clsx(
-          textStyles.xsmall,
-          xPaddedText,
-          'dt-opacity-50 dt-text-center'
-        )}
-      >
-        By enabling notifications you agree to our{' '}
-        <A
-          className="dt-underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/tos"
-        >
-          Terms of Service
-        </A>{' '}
-        and{' '}
-        <A
-          className="dt-underline"
-          target="_blank"
-          rel="noreferrer"
-          href="https://www.dialect.to/privacy"
-        >
-          Privacy Policy
-        </A>
-      </P>
-      <div>
-        <Footer />
-      </div>
-    </>
+    </div>
   );
 }
 

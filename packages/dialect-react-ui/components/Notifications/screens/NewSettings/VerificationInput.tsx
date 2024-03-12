@@ -28,7 +28,7 @@ export const VerificationInput = ({
   const { verify: verifyCode, resend } = useNotificationChannel({
     addressType,
   });
-  const { textStyles, adornmentButton } = useTheme();
+  const { textStyles, adornmentButton, colors } = useTheme();
 
   const sendCode = async () => {
     try {
@@ -121,7 +121,7 @@ export const VerificationInput = ({
         )}
       </div>
       {currentError && (
-        <P className={clsx(textStyles.small, 'dt-text-red-500 dt-mt-2')}>
+        <P className={clsx(textStyles.small, colors.error, 'dt-mt-2')}>
           {currentError.message}
         </P>
       )}

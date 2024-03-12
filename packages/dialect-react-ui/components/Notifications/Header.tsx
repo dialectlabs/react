@@ -9,6 +9,7 @@ interface HeaderProps {
   isReady: boolean;
   isWeb3Enabled: boolean;
   settingsOnly?: boolean;
+  showCloseButton?: boolean;
   onModalClose: () => void;
   onBackClick?: () => void;
   threadId?: ThreadId;
@@ -54,11 +55,12 @@ function Header(props: HeaderProps) {
       />
     ) : null;
 
+  const showCloseButton = props.settingsOnly || props.showCloseButton;
   const headerIcons = (
     <>
       <div className="dt-flex">
         <SettingsButton />
-        <div className={clsx(!props.settingsOnly && 'sm:dt-hidden', 'dt-ml-3')}>
+        <div className={clsx(!showCloseButton && 'sm:dt-hidden', 'dt-ml-3')}>
           <CloseButton />
         </div>
       </div>

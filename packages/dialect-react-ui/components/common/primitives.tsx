@@ -151,17 +151,19 @@ export function Toggle({
   const { colors } = useTheme();
 
   const size = toggleSize || 'M';
-  const translate =
-    size === 'M' ? 'dt-translate-x-[160%]' : 'dt-translate-x-3/4';
+  const translate = size === 'M' ? 'dt-translate-x-5' : 'dt-translate-x-4';
+  const thumbColor =
+    checked && colors.toggleThumbActive
+      ? colors.toggleThumbActive
+      : colors.toggleThumb;
 
   return (
     <Label
       className={clsx(
         props.disabled ? 'dt-cursor-not-allowed' : 'dt-cursor-pointer',
-        'dt-flex dt-items-center dt-relative dt-h-5 dt-w-10',
-        size === 'M'
-          ? 'dt-h-5 dt-w-10 dt-rounded-full'
-          : 'dt-h-4 dt-w-7 dt-rounded-full'
+        checked ? colors.toggleBackgroundActive : colors.toggleBackground,
+        'dt-flex dt-items-center dt-relative dt-rounded-full',
+        size === 'M' ? 'dt-h-5 dt-w-10' : 'dt-h-4 dt-w-8'
       )}
     >
       <input
@@ -172,22 +174,23 @@ export function Toggle({
         onChange={() => onChange?.(!checked)}
       />
       {/* Background */}
-      <span
+      <div
         className={clsx(
-          checked ? colors.toggleBackgroundActive : colors.toggleBackground,
+          'dt-rounded-full dt-border-transparent',
           size === 'M'
-            ? 'dt-h-5 dt-w-10 dt-rounded-full'
-            : 'dt-h-4 dt-w-7 dt-rounded-full'
+            ? 'dt-h-5 dt-w-10 dt-border-4'
+            : 'dt-h-4 dt-w-8 dt-border-2'
         )}
-      />
-      {/* Thumb */}
-      <span
-        className={clsx(
-          'dt-absolute dt-top-1 dt-left-1 dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
-          colors.toggleThumb,
-          checked ? translate : ''
-        )}
-      />
+      >
+        {/* Thumb */}
+        <span
+          className={clsx(
+            'dt-absolute dt-rounded-full dt-h-3 dt-w-3 dt-transition dt-shadow-sm',
+            thumbColor,
+            checked ? translate : ''
+          )}
+        />
+      </div>
     </Label>
   );
 }

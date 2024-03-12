@@ -1207,10 +1207,10 @@
   dependencies:
     "@bonfida/spl-name-service" "^0.1.49"
 
-"@dialectlabs/sdk@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-1.6.1.tgz#76210f7d86a82b97ddb47a3c7e031b630b1c3761"
-  integrity sha512-LwhTFh+eI3pVWJoXXVIOiDgY3kLXRDMUmthkD8/U5tCikLZhXgxF4QEgDKvWo+vd+SrPDzALWgC+k8Zeo+F2UQ==
+"@dialectlabs/sdk@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-1.7.0.tgz#a72c93bbb0b8b965a80f940cb1011a9d0870a647"
+  integrity sha512-K60KfuH1j7Y2s+asOwyrpW/0I0Pi2bqjyWH2SvgQ2UGENaxfVdNU/7M3umOdd6J/D0OIGSN9gwzFlcl6Kreweg==
   dependencies:
     "@stablelib/base64" "^1.0.1"
     axios "^0.27.2"
