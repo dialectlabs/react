@@ -9,6 +9,7 @@ import {
   defaultVariables,
   DialectThemeProvider,
   DialectUiManagementProvider,
+  Environment,
   IncomingThemeVariables,
   NotificationsButton,
   NotificationsSingleFeed,
@@ -19,7 +20,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { SolanaWalletButton } from '../components/SolanaWallet';
 import { solanaWalletToDialectWallet } from '../utils/wallet';
 
-const DAPP_EXAMPLE_ADDRESS = 'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h';
+const DAPP_EXAMPLE_ADDRESS =
+  process.env.NEXT_PUBLIC_DAPP_ADDRESS ??
+  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h';
 
 export const themeVariables: IncomingThemeVariables = {
   dark: {
@@ -75,7 +78,7 @@ function AuthedHome() {
               },
             ]}
             pollingInterval={15000}
-            channels={['web3', 'email', 'sms', 'telegram']}
+            channels={['web3', 'email', 'telegram']}
           />
         </div>
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
@@ -116,7 +119,8 @@ export default function Home(): JSX.Element {
 
   const dialectConfig = useMemo((): ConfigProps => {
     return {
-      environment: 'production',
+      environment:
+        (process.env.NEXT_PUBLIC_ENVIRONMENT as Environment) ?? 'production',
       dialectCloud: {
         tokenStore: 'local-storage',
       },

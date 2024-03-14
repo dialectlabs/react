@@ -8,6 +8,7 @@ import { SolanaWalletContext } from '../components/SolanaWallet';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SolanaWalletContext>
+      {/*@ts-ignore*/}
       <Component {...pageProps} />
     </SolanaWalletContext>
   );
