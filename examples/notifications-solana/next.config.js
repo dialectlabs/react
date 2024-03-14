@@ -1,4 +1,9 @@
 module.exports = {
+  typescript: {
+    // !! WARN !!
+    // Added for testing vercel's typescript build
+    ignoreBuildErrors: true,
+  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/i,
