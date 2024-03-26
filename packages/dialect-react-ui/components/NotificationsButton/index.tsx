@@ -1,6 +1,6 @@
 import { AccountAddress, useUnreadMessages } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
 import { DEFAULT_NOTIFICATIONS_CHANNELS } from '../common/constants';
 import { useTheme } from '../common/providers/DialectThemeProvider';
@@ -42,6 +42,14 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
   const refs = useRef<HTMLElement[]>([]);
   useOutsideAlerter(refs, close);
 
+  const onClick = useCallback(() => {
+    if (ui?.open) {
+      close();
+    } else {
+      open();
+    }
+  }, [close, open, ui?.open]);
+
   return (
     <div
       className={clsx(
@@ -68,12 +76,12 @@ function WrappedNotificationsButton(props: PropTypes): JSX.Element {
           bellButton
         )}
         icon={<icons.bell className={clsx('dt-w-6 dt-h-6 dt-rounded-full')} />}
-        onClick={ui?.open ? close : open}
+        onClick={onClick}
       />
       <NotificationsModal
         ref={(el) => {
           if (!el) return;
-          refs.current[0] = el;
+          refs.current[1] = el;
         }}
         {...props}
       />
