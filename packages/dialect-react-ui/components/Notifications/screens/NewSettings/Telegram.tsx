@@ -284,7 +284,7 @@ const Telegram = ({ dappAddress }: TelegramProps) => {
           />
 
           <P className={clsx(textStyles.small, textStyles.channelToggle)}>
-            Notifications {subscriptionEnabled ? 'on' : 'off'}
+            Notifications {subscriptionEnabled ? 'On' : 'Off'}
           </P>
         </div>
       )}

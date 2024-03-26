@@ -51,11 +51,13 @@ import ToastMessage from './components/common/ToastMessage';
 import * as Icons from './components/Icon';
 
 import { useTheme } from './components/common/providers/DialectThemeProvider';
+import { LinkifiedText } from './components/common';
 const ThemeProvider = DialectThemeProvider;
 
 const Primitives = {
   ...PrimitivesInternal,
   ...Preflighted,
+  LinkifiedText,
   ToastMessage,
 };
 
