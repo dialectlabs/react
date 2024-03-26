@@ -117,7 +117,7 @@ const Wallet = ({
           htmlFor="settings-email"
           className={clsx(colors.label, textStyles.label, 'dt-block dt-mb-1')}
         >
-          Wallet
+          In App
         </label>
       )}
       <div
@@ -198,7 +198,7 @@ const Wallet = ({
           />
 
           <P className={clsx(textStyles.small, textStyles.channelToggle)}>
-            Notifications {subscriptionEnabled ? 'on' : 'off'}
+            Notifications {subscriptionEnabled ? 'On' : 'Off'}
           </P>
         </div>
       )}
