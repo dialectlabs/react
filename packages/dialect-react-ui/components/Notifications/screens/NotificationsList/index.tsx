@@ -9,6 +9,7 @@ import { useTheme } from '../../../common/providers/DialectThemeProvider';
 import { useRoute } from '../../../common/providers/Router';
 import NoNotifications from '../../../../entities/notifications/NoNotifications';
 import { Notification } from '../../../../entities/notifications/Notification';
+import LoadingThread from '../../../../entities/LoadingThread';
 
 interface NotificationsListProps {
   refreshInterval?: number;
@@ -40,7 +41,7 @@ const NotificationsList = ({
     params: { threadId },
   } = useRoute<{ threadId: ThreadId }>();
 
-  const { messages, markAsRead } = useThreadMessages({
+  const { messages, isFetchingMessages, markAsRead } = useThreadMessages({
     id: threadId,
     refreshInterval,
   });
@@ -49,6 +50,9 @@ const NotificationsList = ({
     markAsRead();
   }, [markAsRead]);
 
+  if (isFetchingMessages) {
+    return <LoadingThread />;
+  }
   if (!messages.length) {
     return <NoNotifications />;
   }

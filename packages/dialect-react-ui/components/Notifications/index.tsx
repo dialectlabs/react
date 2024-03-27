@@ -188,6 +188,7 @@ export default function Notifications({
       isWeb3Enabled={false}
       onBackClick={props.onBackClick}
       onModalClose={props.onModalClose}
+      showCloseButton={props.showCloseButton}
     />
   );
 
