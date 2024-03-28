@@ -1,3 +1,6 @@
+import * as React from 'react';
+import '../index.css';
+
 /** @type { import('@storybook/react').Preview } */
 const preview = {
   parameters: {
@@ -8,6 +11,13 @@ const preview = {
       },
     },
   },
+  decorators: [
+    (Story) => (
+      <div className="dialect">
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default preview;
