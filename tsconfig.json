@@ -8,7 +8,7 @@
   "compilerOptions": {
     // target
     "lib": ["dom", "ESNext"],
-    "target": "ES2019",
+    "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "node",
     "jsx": "react-jsx",
@@ -30,8 +30,8 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "noErrorTruncation": true,
-    "importsNotUsedAsValues": "error",
     "strictNullChecks": true,
+    "verbatimModuleSyntax": false,
     // sources
     "sourceMap": true,
     "declaration": true,

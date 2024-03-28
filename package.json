@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/workspaces",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "",
   "private": true,
   "repository": {
@@ -8,29 +8,28 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "scripts": {
-    "bootstrap": "yarn build:all",
-    "build:all": "yarn run build:react-sdk && yarn run build:react-ui && yarn run build:react-solana && yarn run build:react-aptos && yarn run build:react-evm",
-    "build:react-ui": "yarn workspace @dialectlabs/react-ui run build",
-    "build:react-aptos": "yarn workspace @dialectlabs/react-sdk-blockchain-aptos run build",
-    "build:react-solana": "yarn workspace @dialectlabs/react-sdk-blockchain-solana run build",
-    "build:react-evm": "yarn workspace @dialectlabs/react-sdk-blockchain-evm run build",
-    "build:react-sdk": "yarn workspace @dialectlabs/react-sdk run build",
-    "dev:react-ui": "yarn workspace @dialectlabs/react-ui run dev",
-    "dev:react-sdk": "yarn workspace @dialectlabs/react-sdk run dev",
+    "pkg": "manypkg run",
+    "bootstrap": "bun build:all",
+    "build:all": "bun run build:react-ui",
+    "build:react-ui": "bun pkg @dialectlabs/react-ui build",
+    "dev:react-ui": "bun pkg @dialectlabs/react-ui dev",
     "lint": "eslint --ext .js --ext .ts --ext .tsx .",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "bun run lint --fix"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.10.1",
-    "@typescript-eslint/parser": "^5.10.1",
+    "@manypkg/cli": "^0.21.3",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
     "concurrently": "^7.1.0",
-    "eslint": "7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
-    "prettier": "^2.4.0",
-    "typescript": "^4.6.3"
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.1.0",
+    "prettier-plugin-organize-imports": "^3.2.4",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "typescript": "^5.4.3"
   },
   "keywords": [],
   "author": "@dialectlabs",

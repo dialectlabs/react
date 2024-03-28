@@ -6,9 +6,9 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react-hooks/recommended",
     "plugin:react/recommended",
-    "prettier"
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": [
