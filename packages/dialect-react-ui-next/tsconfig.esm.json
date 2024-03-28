@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.esm.json",
+  "compilerOptions": {
+    "outDir": "lib/esm",
+    "declarationDir": "lib/types"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib",
+    "tailwind.config.ts"
+  ]
+}
