@@ -1,5 +1,4 @@
-import type { Config } from 'tailwindcss';
-
+/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     './ui/**/*.{js,ts,jsx,tsx}',
@@ -31,7 +30,21 @@ export default {
         error: '#f62d2d',
       },
     },
+    extend: {
+      fontSize: {
+        h2: [
+          '1.0625rem',
+          {
+            fontWeight: 600,
+            lineHeight: '1.25rem',
+          },
+        ],
+        text: ['0.9375rem', '1.125rem'],
+        subtext: ['0.8125rem', '1rem'],
+        caption: ['0.6875rem', '0.875rem'],
+      },
+    },
   },
   plugins: [],
   prefix: 'dt-',
-} satisfies Config;
+};
