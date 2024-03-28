@@ -15,10 +15,10 @@ export function isObject(item: unknown) {
  * @param sources - objects to merge
  *
  */
-export default function deepMerge<T extends Record<any, any>>(
-  target: T,
-  ...sources: Partial<T>[]
-): T {
+export function deepMerge<
+  T extends Record<any, any>,
+  S extends Record<any, any>,
+>(target: T, ...sources: Partial<S>[]): T & S {
   if (!sources.length) return target;
   const source = sources.shift();
 
