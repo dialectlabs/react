@@ -11,6 +11,8 @@
   "exclude": [
     "node_modules",
     "lib",
-    "tailwind.config.ts"
+    "tailwind.config.ts",
+    ".storybook",
+    "stories"
   ]
 }

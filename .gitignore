@@ -40,3 +40,5 @@ yarn-error.log*
 
 # idea
 .idea
+
+*storybook.log

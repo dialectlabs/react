@@ -25,18 +25,26 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:esm:watch": "tsc --project tsconfig.esm.json --watch",
     "build:styles": "bun tailwindcss -i index.css -o lib/index.css --minify",
-    "build:styles:watch": "bun tailwindcss -i index.css -o lib/index.css --watch"
+    "build:styles:watch": "bun tailwindcss -i index.css -o lib/index.css --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.2.25",
+    "@storybook/addon-essentials": "^8.0.5",
+    "@storybook/addon-interactions": "^8.0.5",
+    "@storybook/addon-links": "^8.0.5",
+    "@storybook/addon-onboarding": "^8.0.5",
+    "@storybook/blocks": "^8.0.5",
+    "@storybook/react": "^8.0.5",
+    "@storybook/react-vite": "^8.0.5",
+    "@storybook/test": "^8.0.5",
     "@types/react": "^18.2.73",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
+    "prop-types": "^15.8.1",
+    "storybook": "^8.0.5",
     "tailwindcss": "^3.4.3"
-  },
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
   },
   "repository": {
     "type": "git",
