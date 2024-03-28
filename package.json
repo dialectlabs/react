@@ -42,11 +42,10 @@
   },
   "workspaces": [
     "examples/*",
-    "packages/*",
-    "starters/*"
+    "packages/*"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "resolutions": {
     "graceful-fs": "4.2.10"
