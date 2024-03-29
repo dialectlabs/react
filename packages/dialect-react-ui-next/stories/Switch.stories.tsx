@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import { ThemeProvider } from '../model';
-import { Test } from '../ui/core/Test';
 import { Switch } from '../ui/core/primitives';
 
 export const Main: StoryObj<typeof Switch> = {
@@ -21,4 +20,4 @@ export default {
       </ThemeProvider>
     ),
   ],
-} satisfies Meta<typeof Test>;
+} satisfies Meta<typeof Switch>;

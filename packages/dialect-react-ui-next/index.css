@@ -1,3 +1,28 @@
+:root {
+    --dt-bg-primary: theme('colors.light.100');
+    --dt-bg-secondary: theme('colors.light.80');
+    --dt-bg-tertiary: theme('colors.light.60');
+    --dt-bg-brand: theme('colors.light.60');
+    --dt-input-primary: theme('colors.light.50');
+    --dt-input-secondary: theme('colors.light.100');
+    --dt-input-tertiary: theme('colors.light.60');
+    --dt-input-checked: theme('colors.accent.success');
+    --dt-input-unchecked: theme('colors.light.30');
+    --dt-input-disabled: theme('colors.light.30');
+    --dt-text-primary: theme('colors.dark.100');
+    --dt-text-secondary: theme('colors.dark.80');
+    --dt-text-tertiary: theme('colors.dark.60');
+    --dt-text-inverse: theme('colors.light.100');
+    --dt-stroke-primary: theme('colors.light.50');
+    --dt-icon-primary: theme('colors.dark.90');
+    --dt-icon-secondary: theme('colors.dark.60');
+    --dt-icon-inverse: theme('colors.light.100');
+    --dt-accent-brand: theme('colors.accent.success');
+    --dt-accent-success: theme('colors.accent.success');
+    --dt-accent-warning: theme('colors.accent.warning');
+    --dt-accent-error: theme('colors.accent.error');
+}
+
 /* Prefixed preflight */
 .dialect {
     /*
@@ -430,7 +455,7 @@
 .dt-input::placeholder,
 .dt-textarea::placeholder {
     opacity: 1; /* 1 */
-    color: theme('colors.light.60', #9ca3af); /* 2 */
+    color: theme('colors.dark.60', #9ca3af); /* 2 */
 }
 
 /*

@@ -7,6 +7,8 @@ export default {
   ],
   theme: {
     colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
       dark: {
         100: '#1b1b1c',
         90: '#2a2a2b',

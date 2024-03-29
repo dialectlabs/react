@@ -6,7 +6,6 @@ import { IncomingTheme, Theme, ThemeType, TypedTheme } from './types';
 const ThemeContext = createContext<TypedTheme>({
   type: 'light',
   common: defaultTheme.common,
-  ...defaultTheme.light,
 });
 
 interface ThemeProviderProps {
@@ -26,10 +25,7 @@ const ThemeProvider = ({
   const mergedTheme = useMemo(() => mergeWithDefaultTheme(theme), [theme]);
 
   const typedTheme = useMemo(() => {
-    const typed = mergedTheme[themeType];
-    const common = mergedTheme.common;
-
-    return { type: themeType, common, ...typed } satisfies TypedTheme;
+    return { type: themeType, common: mergedTheme.common } satisfies TypedTheme;
   }, [mergedTheme, themeType]);
 
   return (
