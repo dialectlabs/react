@@ -5,8 +5,13 @@ import { Input } from '../ui/core/primitives';
 export const Main: StoryObj<typeof Input> = {
   args: {
     label: 'Input',
-    value: '',
+    value: undefined,
     placeholder: 'Type here...',
+  },
+  argTypes: {
+    value: {
+      type: 'string',
+    },
   },
 };
 
