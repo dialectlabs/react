@@ -17,7 +17,7 @@
     "@dialectlabs/identity-sns": "^1.0.0",
     "@dialectlabs/react-sdk-blockchain-aptos": "^1.0.0-beta.5",
     "@dialectlabs/react-sdk-blockchain-evm": "^1.0.0-beta.2",
-    "@dialectlabs/react-sdk-blockchain-solana": "^1.2.0",
+    "@dialectlabs/react-sdk-blockchain-solana": "^1.2.1",
     "@dialectlabs/react-ui": "^1.3.0",
     "@solana/wallet-adapter-base": "^0.9.18",
     "@solana/wallet-adapter-react": "^0.15.24",
