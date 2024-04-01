@@ -1,4 +1,4 @@
-:root {
+.dialect {
     --dt-bg-primary: theme('colors.light.100');
     --dt-bg-secondary: theme('colors.light.80');
     --dt-bg-tertiary: theme('colors.light.60');
@@ -21,6 +21,11 @@
     --dt-accent-success: theme('colors.accent.success');
     --dt-accent-warning: theme('colors.accent.warning');
     --dt-accent-error: theme('colors.accent.error');
+}
+
+/* TODO: darkmode */
+.dialect[data-theme='dark'] {
+    --dt-input-secondary: #ff00ff;
 }
 
 /* Prefixed preflight */
