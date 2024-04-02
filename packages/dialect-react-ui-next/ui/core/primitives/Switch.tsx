@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useCallback } from 'react';
-import { ClassTokens } from '../../../model';
+import { ClassTokens } from '../../theme';
 
 export interface SwitchProps {
   children?: string;

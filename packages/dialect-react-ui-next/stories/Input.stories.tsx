@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ThemeProvider } from '../model';
 import { Input } from '../ui/core/primitives';
 
 export const Main: StoryObj<typeof Input> = {
@@ -33,11 +32,9 @@ export default {
   component: Input,
   decorators: [
     (Story) => (
-      <ThemeProvider theme={{}}>
-        <div style={{ width: 400 }}>
-          <Story />
-        </div>
-      </ThemeProvider>
+      <div style={{ width: 400 }}>
+        <Story />
+      </div>
     ),
   ],
 } satisfies Meta<typeof Input>;

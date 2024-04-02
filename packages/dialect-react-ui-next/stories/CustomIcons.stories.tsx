@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { SVGProps } from 'react';
-import { Icons } from '../model/ThemeProvider/defaults';
 import { Button } from '../ui/core/primitives';
+import { Icons } from '../ui/theme';
 
 const MyLoaderIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 100 100" width="1em" height="1em" {...props}>

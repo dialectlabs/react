@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { ThemeProvider } from '../model';
 import { Switch } from '../ui/core/primitives';
 
 export const Main: StoryObj<typeof Switch> = {
@@ -13,11 +12,5 @@ export const Main: StoryObj<typeof Switch> = {
 
 export default {
   component: Switch,
-  decorators: [
-    (Story) => (
-      <ThemeProvider theme={{}}>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
+  decorators: [(Story) => <Story />],
 } satisfies Meta<typeof Switch>;

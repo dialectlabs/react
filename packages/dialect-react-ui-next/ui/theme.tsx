@@ -1,12 +1,5 @@
 import clsx from 'clsx';
 import { SVGProps } from 'react';
-import { Theme } from './types';
-
-export const defaultTheme: Theme = {
-  common: {
-    icons: {},
-  },
-};
 
 export const Icons = {
   Loader: (props: SVGProps<SVGSVGElement>) => (

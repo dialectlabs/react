@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ClassTokens, Icons } from '../../../model';
+import { ClassTokens, Icons } from '../../theme';
 
 export interface ButtonProps {
   children: React.ReactNode;

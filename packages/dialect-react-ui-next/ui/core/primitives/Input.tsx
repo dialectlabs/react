@@ -5,8 +5,8 @@ import {
   ReactNode,
   useMemo,
 } from 'react';
-import { ClassTokens } from '../../../model';
 import { generateIdRandom } from '../../../utils';
+import { ClassTokens } from '../../theme';
 
 export interface InputProps
   extends DetailedHTMLProps<
@@ -20,7 +20,6 @@ export interface InputProps
 export const Input = ({
   id,
   label,
-  className,
   rightAdornment,
   ...inputProps
 }: InputProps) => {
