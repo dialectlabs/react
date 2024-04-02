@@ -24,8 +24,8 @@
     "build:cjs:watch": "tsc --watch",
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:esm:watch": "tsc --project tsconfig.esm.json --watch",
-    "build:styles": "bun tailwindcss -i index.css -o lib/index.css --minify",
-    "build:styles:watch": "bun tailwindcss -i index.css -o lib/index.css --watch",
+    "build:styles": "bun tailwindcss -i index.css -o lib/index.css --postcss",
+    "build:styles:watch": "bun tailwindcss -i index.css -o lib/index.css --watch --postcss",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -42,6 +42,7 @@
     "@types/react": "^18.2.73",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
+    "postcss-prefix-selector": "^1.16.0",
     "prop-types": "^15.8.1",
     "storybook": "^8.0.5",
     "tailwindcss": "^3.4.3",
