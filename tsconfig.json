@@ -1,14 +1,8 @@
 {
-  "exclude": [
-    "node_modules",
-    "lib",
-    "packages/*/*/node_modules",
-    "packages/*/*/lib"
-  ],
   "compilerOptions": {
     // target
     "lib": ["dom", "ESNext"],
-    "target": "ES2022",
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
     "jsx": "react-jsx",
@@ -17,8 +11,6 @@
     "esModuleInterop": true,
     "preserveConstEnums": true,
     "skipLibCheck": true,
-    "importHelpers": true,
-    "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     // linting
@@ -31,11 +23,6 @@
     "forceConsistentCasingInFileNames": true,
     "noErrorTruncation": true,
     "strictNullChecks": true,
-    "verbatimModuleSyntax": false,
-    // sources
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true
+    "verbatimModuleSyntax": false
   }
 }

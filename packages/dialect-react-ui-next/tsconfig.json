@@ -1,17 +1,4 @@
 {
-  "extends": "../../tsconfig.cjs.json",
-  "compilerOptions": {
-    "outDir": "lib/cjs",
-    "declarationDir": "lib/types"
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib",
-    ".storybook",
-    "*.stories.*"
-  ]
+  "extends": "../../tsconfig.json",
+  "include": ["src/*.ts", "src/*.tsx"]
 }
