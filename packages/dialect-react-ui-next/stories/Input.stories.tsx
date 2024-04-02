@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Input } from '../ui/core/primitives';
+import { Input } from '../src/ui/core/primitives';
 
 export const Main: StoryObj<typeof Input> = {
   args: {

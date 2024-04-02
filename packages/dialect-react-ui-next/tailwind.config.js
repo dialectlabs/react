@@ -1,10 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './ui/**/*.{js,ts,jsx,tsx}',
-    './utils/**/*.{js,ts,jsx,tsx}',
-    './model/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     colors: {
       transparent: 'transparent',

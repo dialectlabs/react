@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../ui/core/primitives';
+import { Button } from '../src/ui/core/primitives';
 
 export const Main: StoryObj<typeof Button> = {
   args: {

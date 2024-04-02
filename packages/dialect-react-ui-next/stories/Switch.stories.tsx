@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { Switch } from '../ui/core/primitives';
+import { Switch } from '../src/ui/core/primitives';
 
 export const Main: StoryObj<typeof Switch> = {
   args: {
