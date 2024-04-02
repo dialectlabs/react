@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { SVGProps } from 'react';
+import { ArrowLeftIcon, CloseIcon, SettingsIcon } from './core/icons';
 
 export const Icons = {
   Loader: (props: SVGProps<SVGSVGElement>) => (
@@ -16,12 +17,16 @@ export const Icons = {
       />
     </svg>
   ),
+  Settings: SettingsIcon,
+  ArrowLeft: ArrowLeftIcon,
+  Close: CloseIcon,
 };
 
 export const ClassTokens = {
   Text: {
     Primary: 'dt-text-[--dt-text-primary]',
     Tertiary: 'dt-text-[--dt-text-tertiary]',
+    Brand: 'dt-text-[--dt-accent-brand]',
     Button: {
       Disabled: 'disabled:dt-text-[--dt-text-tertiary]',
     },
@@ -38,10 +43,13 @@ export const ClassTokens = {
       Checked: 'dt-bg-[--dt-input-checked]',
       Unchecked: 'dt-bg-[--dt-input-unchecked]',
     },
+    Primary: 'dt-bg-[--dt-bg-primary]',
+    Secondary: 'dt-bg-[--dt-bg-secondary]',
   },
   Stroke: {
     Input: {
       Primary: 'dt-border-[--dt-input-primary]',
     },
+    Primary: 'dt-border-[--dt-stroke-primary]',
   },
 };

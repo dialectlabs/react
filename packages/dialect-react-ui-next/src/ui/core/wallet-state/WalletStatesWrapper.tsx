@@ -8,16 +8,10 @@ import SigningTransactionState from './SigningTransactionState';
 
 // Only renders children if wallet is connected, access token and encryption keys are created
 
-interface WalletStatesValue {
-  isSigningMessage: boolean;
-  isConnectionInitiated: boolean;
-  setConnectionInitiated: (arg: boolean) => void;
-}
-
 interface WalletStatesWrapperProps {
   notConnectedMessage?: string | JSX.Element;
   header?: JSX.Element | null;
-  children: JSX.Element | ((obj: WalletStatesValue) => JSX.Element | null);
+  children: JSX.Element;
 }
 
 function WalletStatesWrapper({

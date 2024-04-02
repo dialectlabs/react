@@ -1,4 +1,4 @@
-import { ConfigProps } from '@dialectlabs/react-ui';
+import { ConfigProps } from '@dialectlabs/sdk';
 import { PublicKey } from '@solana/web3.js';
 import { createContext, PropsWithChildren } from 'react';
 import { DialectSolanaSdk } from './internal/context/DialectSolanaSdk';

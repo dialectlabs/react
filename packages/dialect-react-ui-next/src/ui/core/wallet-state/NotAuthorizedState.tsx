@@ -1,4 +1,4 @@
-import { useDialectWallet } from '@dialectlabs/react-sdk';
+import useDialectWallet from '../../../model/hooks/useDialectWallet';
 import { Button, Switch } from '../primitives';
 
 const NotAuthorizedState = () => {
