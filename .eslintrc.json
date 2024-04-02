@@ -1,46 +1,16 @@
 {
   "root": true,
   "env": {
-    "node": true,
     "browser": true
   },
   "extends": [
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint",
     "prettier"
   ],
-  "rules": {
-    "no-console": "off",
-    "semi": "warn",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unsafe-member-access": "off",
-    "@typescript-eslint/no-unsafe-call": "off",
-    "@typescript-eslint/no-unsafe-assignment": "off",
-    "quotes": [2, "single", { "avoidEscape": true }],
-    "prettier/prettier": ["error"],
-    "react/react-in-jsx-scope": "off"
-  },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": [
-        "plugin:@typescript-eslint/recommended"
-      ],
-      "parserOptions": {
-        "project": ["./tsconfig.json"]
-      }
-    }
-  ],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  }
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"]
 }
-  
