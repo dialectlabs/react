@@ -4,21 +4,20 @@
   "type": "module",
   "private": false,
   "sideEffects": false,
-  "main": "lib/index.cjs",
-  "module": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./index.css": "./lib/index.css"
+    "./index.css": "./dist/index.css"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
-    "clean": "rm -rf lib",
     "build": "tsup",
     "dev": "tsup --watch",
     "storybook": "storybook dev -p 6006",

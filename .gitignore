@@ -18,6 +18,7 @@
 # production & package dist files
 **/build
 **/lib
+**/dist
 
 # misc
 .DS_Store
