@@ -25,6 +25,7 @@ export const Icons = {
 export const ClassTokens = {
   Text: {
     Primary: 'dt-text-[--dt-text-primary]',
+    Secondary: 'dt-text-[--dt-text-secondary]',
     Tertiary: 'dt-text-[--dt-text-tertiary]',
     Brand: 'dt-text-[--dt-accent-brand]',
     Button: {

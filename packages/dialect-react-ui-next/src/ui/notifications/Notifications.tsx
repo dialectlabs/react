@@ -1,11 +1,12 @@
 import Header from './Header';
-import { Settings } from './Settings';
+import { NotificationsFeed } from './NotificationsFeed';
 
 export const Notifications = () => {
   return (
-    <div className="dt-flex dt-flex-col dt-rounded-xl dt-overflow-hidden">
+    <div className="dt-flex dt-flex-col dt-overflow-hidden dt-rounded-xl dt-border dt-border-[--dt-stroke-primary]">
       <Header />
-      <Settings />
+      {/*<Settings />*/}
+      <NotificationsFeed />
     </div>
   );
 };
