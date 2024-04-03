@@ -10,6 +10,7 @@
   --dt-input-primary: theme('colors.light.50');
   --dt-input-secondary: theme('colors.light.100');
   --dt-input-tertiary: theme('colors.light.60');
+  --dt-input-inverse: theme('colors.dark.90');
   --dt-input-checked: theme('colors.accent.success');
   --dt-input-unchecked: theme('colors.light.30');
   --dt-input-disabled: theme('colors.light.30');
@@ -25,6 +26,7 @@
   --dt-accent-success: theme('colors.accent.success');
   --dt-accent-warning: theme('colors.accent.warning');
   --dt-accent-error: theme('colors.accent.error');
+  --dt-gradient-button: theme('backgroundImage.gradient-button');
 }
 
 /* TODO: darkmode */

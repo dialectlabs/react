@@ -36,8 +36,16 @@ export const ClassTokens = {
     Secondary: 'dt-text-[--dt-text-secondary]',
     Tertiary: 'dt-text-[--dt-text-tertiary]',
     Brand: 'dt-text-[--dt-accent-brand]',
+    Inverse: 'dt-text-[--dt-text-inverse]',
     Button: {
-      Disabled: 'disabled:dt-text-[--dt-text-tertiary]',
+      Primary: {
+        Default: 'dt-text-[--dt-text-inverse]',
+        Disabled: 'disabled:dt-text-[--dt-text-tertiary]',
+      },
+      Secondary: {
+        Default: 'dt-text-[--dt-text-primary]',
+        Disabled: 'disabled:dt-text-[--dt-text-tertiary]',
+      },
     },
   },
   Icon: {
@@ -47,10 +55,19 @@ export const ClassTokens = {
   },
   Background: {
     Button: {
-      Default: 'dt-bg-[--dt-bg-tertiary]',
-      Hover: 'hover:dt-bg-[--dt-input-primary]',
-      Pressed: 'active:dt-bg-[--dt-input-tertiary]',
-      Disabled: 'disabled:dt-bg-[--dt-bg-tertiary]',
+      Primary: {
+        //TODO how to use gradient here???
+        Default: 'dt-bg-[--dt-input-inverse]',
+        Hover: 'hover:dt-bg-[--dt-input-inverse]',
+        Pressed: 'active:dt-bg-[--dt-input-inverse]',
+        Disabled: 'disabled:dt-bg-[--dt-input-inverse]',
+      },
+      Secondary: {
+        Default: 'dt-bg-[--dt-bg-tertiary]',
+        Hover: 'hover:dt-bg-[--dt-input-primary]',
+        Pressed: 'active:dt-bg-[--dt-input-tertiary]',
+        Disabled: 'disabled:dt-bg-[--dt-bg-tertiary]',
+      },
     },
     Input: {
       Secondary: 'dt-bg-[--dt-input-secondary]',

@@ -41,6 +41,10 @@ export default {
         subtext: ['0.8125rem', '1rem'],
         caption: ['0.6875rem', '0.875rem'],
       },
+      backgroundImage: {
+        'gradient-button':
+          'linear-gradient(95deg, #2B2D2D 4.07%, #414445 51.31%, #2B2D2D 95.93%)',
+      },
     },
   },
   plugins: [],

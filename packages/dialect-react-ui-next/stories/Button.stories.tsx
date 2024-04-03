@@ -4,6 +4,17 @@ import { Button } from '../src/ui/core/primitives';
 export const Main: StoryObj<typeof Button> = {
   args: {
     children: 'Press me',
+    variant: 'secondary',
+    // label: 'Input',
+    // value: undefined,
+    // placeholder: 'Type here...',
+  },
+};
+
+export const Primary: StoryObj<typeof Button> = {
+  args: {
+    children: 'Press me',
+    variant: 'primary',
     // label: 'Input',
     // value: undefined,
     // placeholder: 'Type here...',
