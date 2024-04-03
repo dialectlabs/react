@@ -1,11 +1,11 @@
 import clsx from 'clsx';
-import { ClassTokens } from '../../theme';
+import { ClassTokens, Icons } from '../../theme';
 
 const defaultMessageStyles = {
-  shadow: 'dt-shadow-purple-60',
-  iconBackground: 'dt-bg-purple-50',
-  icon: null,
-  link: 'dt-text-purple-50',
+  shadow: 'dt-shadow-[--dt-accent-brand]',
+  iconBackground: 'dt-bg-[--dt-accent-brand]',
+  icon: <Icons.Bell width={12} height={12} />,
+  link: 'dt-text-[--dt-accent-brand]',
   title: '',
 };
 
@@ -14,7 +14,7 @@ export interface Message {
   metadata?: {
     notificationTypeHumanReadableId?: string;
     title?: string;
-    actions?: [{ url?: string; label?: string }];
+    actions?: { url?: string; label?: string }[];
   };
   timestamp: Date;
 }
@@ -27,38 +27,34 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: true,
 });
 export const NotificationMessage = (message: Message) => {
-  //'announcement' or 'filled-order'
-
-  const messageStyles =
-    message.metadata?.notificationTypeHumanReadableId === 'filled-order'
-      ? {
-          shadow: 'dt-shadow-green-50',
-          iconBackground: 'dt-bg-green-50',
-          link: 'dt-text-green-50',
-          icon: null,
-          title: 'dt-text-green-50',
-        }
-      : defaultMessageStyles;
+  const messageStyles = defaultMessageStyles;
 
   return (
-    <div className="dt-relative dt-flex dt-flex-row dt-items-center dt-gap-4 dt-overflow-hidden dt-px-4 dt-py-3">
-      <div className="relative">
+    <div
+      className={clsx(
+        ClassTokens.Stroke.Primary,
+        'dt-relative dt-flex dt-flex-row dt-items-center dt-gap-4 dt-overflow-hidden dt-border-b dt-px-4 dt-py-3',
+      )}
+    >
+      <div className="dt-relative">
         <div
           className={clsx(
-            'dt-absolute dt-left-4 dt-top-4 dt-opacity-20 dt-shadow-[0px_0px_60px_50px] ',
+            'dt-absolute dt-left-1/2 dt-top-1/2 dt-opacity-20 dt-shadow-[0px_0px_60px_50px] ',
             messageStyles.shadow,
           )}
         />
         <div
           className={clsx(
-            'dt-h-8 dt-w-8 dt-rounded-full dt-bg-opacity-10 dt-p-1.5 ',
-            messageStyles.iconBackground,
+            // messageStyles.iconBackground,
+            //TODO bg-opacity doesn't work with variables???
+            'dt-h-8 dt-w-8 dt-rounded-full dt-bg-accent-success dt-bg-opacity-10 dt-p-1.5',
           )}
         >
           <div
             className={clsx(
               'dt-flex dt-h-full dt-w-full dt-items-center dt-justify-center dt-rounded-full ',
               messageStyles.iconBackground,
+              ClassTokens.Icon.Inverse,
             )}
           >
             {messageStyles.icon}
@@ -95,7 +91,7 @@ export const NotificationMessage = (message: Message) => {
             rel="noreferrer"
           >
             {message.metadata.actions[0].label || 'Open Link'}
-            {/*<ArrowRight size={16} />*/}
+            <Icons.ArrowRight />
           </a>
         )}
         <div
