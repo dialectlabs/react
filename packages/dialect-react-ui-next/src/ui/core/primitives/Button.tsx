@@ -12,7 +12,7 @@ export const Button = (props: ButtonProps): JSX.Element => {
   return (
     <button
       className={clsx(
-        'dt-flex dt-items-center dt-justify-center dt-gap-1.5 dt-rounded-lg dt-p-2 dt-text-subtext dt-font-semibold',
+        'dt-flex dt-items-center dt-justify-center dt-gap-1.5 dt-rounded-lg dt-px-2 dt-py-1.5 dt-text-subtext dt-font-semibold',
         ClassTokens.Background.Button.Default,
         ClassTokens.Background.Button.Hover,
         ClassTokens.Background.Button.Pressed,

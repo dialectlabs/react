@@ -12,12 +12,7 @@ export const Settings = () => {
       <div className="dt-px-4">
         <Channels channels={['wallet', 'telegram', 'email']} />
       </div>
-      <div
-        className={clsx(
-          'dt-border-t dt-border-b dt-px-4',
-          ClassTokens.Stroke.Primary,
-        )}
-      >
+      <div className={clsx('dt-border-t dt-px-4', ClassTokens.Stroke.Primary)}>
         <NotificationTypes />
       </div>
       <div className="dt-px-4">
@@ -25,7 +20,7 @@ export const Settings = () => {
       </div>
       <div
         className={clsx(
-          'dt-py-4 dt-px-4 dt-flex dt-flex-col dt-gap-2 dt-border-t',
+          'dt-flex dt-flex-col dt-gap-2 dt-border-t dt-px-4 dt-py-4',
           ClassTokens.Stroke.Primary,
         )}
       >

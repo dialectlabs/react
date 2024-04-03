@@ -41,7 +41,7 @@ export const Input = ({
       <div
         role="textbox"
         className={clsx(
-          'dt-rounded-xl dt-border dt-px-2 dt-h-12 dt-flex dt-items-center dt-gap-2',
+          'dt-flex dt-h-10 dt-items-center dt-gap-2 dt-rounded-xl dt-border dt-pl-2 dt-pr-1.5',
           ClassTokens.Stroke.Input.Primary,
           ClassTokens.Background.Input.Secondary,
         )}
@@ -50,7 +50,7 @@ export const Input = ({
           id={inputId}
           type="text"
           className={clsx(
-            'dt-input dt-text-text dt-font-medium dt-outline-none dt-bg-transparent dt-w-full dt-ml-1',
+            'dt-input dt-ml-1 dt-w-full dt-bg-transparent dt-text-text dt-font-medium dt-outline-none',
             ClassTokens.Text.Primary,
           )}
           {...inputProps}

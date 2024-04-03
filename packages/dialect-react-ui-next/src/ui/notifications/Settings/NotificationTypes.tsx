@@ -16,7 +16,7 @@ const NotificationType = ({ title, description, enabled, onSwitch }: Props) => {
     <div
       className={clsx(
         ClassTokens.Background.Secondary,
-        'dt-flex dt-flex-row dt-gap-3 dt-justify-between dt-items-center dt-p-4 dt-rounded-xl',
+        'dt-flex dt-flex-row dt-items-center dt-justify-between dt-gap-3 dt-rounded-xl dt-px-4 dt-py-3',
       )}
     >
       <div className="dt-flex dt-flex-col dt-gap-1">
@@ -60,7 +60,7 @@ export const NotificationTypes = () => {
   ];
 
   return (
-    <div className="dt-flex dt-flex-col dt-gap-3 dt-py-6">
+    <div className="dt-flex dt-flex-col dt-gap-2 dt-py-4">
       {types.map((it) => (
         <NotificationType
           key={it.id}

@@ -7,7 +7,7 @@ export const TryDialectOperator = () => {
   return (
     <div
       className={clsx(
-        'dt-flex dt-flex-row dt-gap-3 dt-justify-between dt-items-center dt-py-4',
+        'dt-flex dt-flex-row dt-items-center dt-justify-between dt-gap-3 dt-pb-4',
       )}
     >
       <span

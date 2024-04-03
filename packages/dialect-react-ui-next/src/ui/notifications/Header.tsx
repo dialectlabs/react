@@ -11,19 +11,19 @@ function Header(props: HeaderProps) {
 
   const BackButton = () => (
     <button>
-      <Icons.ArrowLeft />
+      <Icons.ArrowLeft width={20} height={20} />
     </button>
   );
 
   const SettingsButton = () => (
     <button>
-      <Icons.Settings />
+      <Icons.Settings width={20} height={20} />
     </button>
   );
 
   const CloseButton = () => (
     <button>
-      <Icons.Close />
+      <Icons.Close width={20} height={20} />
     </button>
   );
 
@@ -40,10 +40,10 @@ function Header(props: HeaderProps) {
     <div
       className={clsx(
         ClassTokens.Background.Secondary,
-        'dt-flex dt-flex-row dt-items-center dt-justify-between dt-gap-4 dt-py-6 dt-px-4',
+        ClassTokens.Icon.Secondary,
+        'dt-flex dt-flex-row dt-items-center dt-justify-between dt-gap-4 dt-px-4 dt-py-4',
       )}
     >
-      {/* TODO icon colors */}
       <div className="dt-flex dt-flex-row dt-items-center dt-gap-2">
         {leftButtons}
         <span

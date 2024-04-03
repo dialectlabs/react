@@ -14,7 +14,7 @@ const Channel = ({ type }: { type: ChannelType }) => {
     return <WalletChannel />;
   };
   return (
-    <div className="dt-py-4">
+    <div className="dt-py-2">
       <ChannelRow />
     </div>
   );
@@ -22,7 +22,7 @@ const Channel = ({ type }: { type: ChannelType }) => {
 
 export const Channels = ({ channels }: Props) => {
   return (
-    <div>
+    <div className="dt-pb-2 dt-pt-3">
       {channels.map((it) => (
         <Channel key={it} type={it} />
       ))}
