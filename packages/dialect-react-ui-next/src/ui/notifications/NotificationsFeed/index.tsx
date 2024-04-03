@@ -1,4 +1,5 @@
-import { NotificationMessage } from './NotificationMessage';
+import { NoNotifications } from './NoNotifications';
+import { NotificationsList } from './NotificationsList';
 
 export const NotificationsFeed = () => {
   const messages = [
@@ -34,11 +35,9 @@ export const NotificationsFeed = () => {
       },
     },
   ];
-  return (
-    <div className="dt-flex dt-flex-col">
-      {messages.map((it) => (
-        <NotificationMessage key={it.id} {...it} />
-      ))}
-    </div>
-  );
+
+  if (!messages.length) {
+    return <NoNotifications />;
+  }
+  return <NotificationsList messages={messages} />;
 };
