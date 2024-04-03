@@ -1,2 +1,2 @@
-export * from './ui/core/primitives';
+export * from './model/DialectProvider';
 export * from './ui/notifications';

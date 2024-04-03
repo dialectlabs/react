@@ -1,14 +1,11 @@
-'use client';
-import { Notifications } from '@dialectlabs/react-ui';
-import '@dialectlabs/react-ui/index.css';
+import { Wallet } from '@/components/wallet';
+import { Dialect } from '@/components/dialect';
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="dialect">
-        {/*<Button loading>test 123</Button>*/}
-        <Notifications />
-      </div>
+      <Wallet />
+      <Dialect />
     </main>
   );
 }

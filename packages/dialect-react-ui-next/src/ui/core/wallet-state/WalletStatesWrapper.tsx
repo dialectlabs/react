@@ -1,3 +1,4 @@
+import React from 'react';
 import useDialectSdk from '../../../model/hooks/useDialectSdk';
 import useDialectWallet from '../../../model/hooks/useDialectWallet';
 
@@ -11,7 +12,7 @@ import SigningTransactionState from './SigningTransactionState';
 interface WalletStatesWrapperProps {
   notConnectedMessage?: string | JSX.Element;
   header?: JSX.Element | null;
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 function WalletStatesWrapper({

@@ -1,3 +1,4 @@
+import useDialectSdk from '../../../model/hooks/useDialectSdk';
 import { NoNotifications } from './NoNotifications';
 import { NotificationsList } from './NotificationsList';
 
@@ -35,6 +36,9 @@ export const NotificationsFeed = () => {
       },
     },
   ];
+
+  const sdk = useDialectSdk();
+  sdk.tokenProvider.get();
 
   if (!messages.length) {
     return <NoNotifications />;

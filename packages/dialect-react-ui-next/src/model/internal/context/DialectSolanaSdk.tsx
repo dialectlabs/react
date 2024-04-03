@@ -32,7 +32,8 @@ const SolanaBlockchainSdkWrapper = ({ config, ...props }: Props) => {
       return {
         publicKey: wallet.publicKey ?? undefined,
         signTransaction: wallet.signTransaction
-          ? async (tx: any) => {
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            async (tx: any) => {
               const isFreeTx =
                 tx.recentBlockhash &&
                 tx.recentBlockhash === PublicKey.default.toString();
@@ -95,8 +96,8 @@ const SolanaBlockchainSdkWrapper = ({ config, ...props }: Props) => {
   }, [wallet, wrapSolanaWallet]);
 
   useEffect(() => {
-    setWalletConnected(Boolean(wallet));
-  }, [setWalletConnected, blockchainSdkFactory, wallet]);
+    setWalletConnected(Boolean(wallet.connected));
+  }, [setWalletConnected, wallet.connected]);
 
   return (
     <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>

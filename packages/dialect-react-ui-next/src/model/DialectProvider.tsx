@@ -17,17 +17,14 @@ const defaultConfig: ConfigProps = {
   },
 };
 
-const DialectProvider = ({
+export const DialectProvider = ({
   dappAddress,
   config = defaultConfig,
   children,
 }: PropsWithChildren<DialectProviderProps>) => {
-  //TODO add ui provider
   return (
     <DialectContext.Provider value={{ dappAddress }}>
       <DialectSolanaSdk config={config}>{children}</DialectSolanaSdk>
     </DialectContext.Provider>
   );
 };
-
-export default DialectProvider;

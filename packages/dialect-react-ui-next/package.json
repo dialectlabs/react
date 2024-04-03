@@ -18,8 +18,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsup-node",
+    "dev": "tsup-node --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -47,9 +47,12 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
+    "@dialectlabs/sdk": "^1.7.2",
+    "@dialectlabs/blockchain-sdk-solana": "^1.1.0",
     "clsx": "^2.1.0"
   },
   "peerDependencies": {
-    "react": ">=18"
+    "react": ">=18",
+    "@solana/wallet-adapter-react": "0.15.x"
   }
 }

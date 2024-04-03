@@ -1,4 +1,4 @@
-import clsx from 'clsx/clsx';
+import clsx from 'clsx';
 import { ClassTokens, Icons } from '../../theme';
 
 export const NoNotifications = () => {
