@@ -1,22 +1,22 @@
 import {
   DialectSdkError,
   SendMessageCommand as DialectSdkSendMessageCommand,
+  ThreadMessage as SdkThreadMessage,
   Thread,
   ThreadId,
-  ThreadMessage as SdkThreadMessage,
 } from '@dialectlabs/sdk';
 import { nanoid } from 'nanoid';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { LocalMessages } from '../context/DialectContext/LocalMessages';
-import type { LocalThreadMessage } from '../types';
-import { EMPTY_ARR, isOffChain, isOnChain } from '../utils';
+import { LocalMessages } from '../internal/context/LocalMessages';
 import {
   CACHE_KEY_MESSAGES_FN,
   CACHE_KEY_THREADS,
   CACHE_KEY_THREAD_SUMMARY_FN,
-} from './internal/swrCache';
-import useThread from './useThread';
+} from '../internal/swrCache';
+import { EMPTY_ARR } from '../internal/utils';
+import type { LocalThreadMessage } from '../types';
+import { useThread } from './useThread';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
   id?: string;
@@ -46,7 +46,7 @@ interface UseThreadMessagesValue {
   errorSendingMessage: DialectSdkError | null;
 }
 
-const useThreadMessages = ({
+export const useThreadMessages = ({
   id,
   refreshInterval,
 }: UseThreadMessagesParams): UseThreadMessagesValue => {
@@ -72,7 +72,7 @@ const useThreadMessages = ({
   } = useSWR<SdkThreadMessage[], DialectSdkError>(
     threadInternal ? CACHE_KEY_MESSAGES_FN(threadInternal.id.toString()) : null,
     () => threadInternal!.messages(),
-    { refreshInterval, refreshWhenOffline: true }
+    { refreshInterval, refreshWhenOffline: true },
   );
 
   const messages: LocalThreadMessage[] | null = useMemo(() => {
@@ -86,7 +86,7 @@ const useThreadMessages = ({
 
     const filteredLocalMessages = localThreadMessages?.filter((lm) => {
       const remoteMessage = remoteMessages?.find(
-        (rm) => rm.deduplicationId === lm.deduplicationId
+        (rm) => rm.deduplicationId === lm.deduplicationId,
       );
 
       if (remoteMessage) {
@@ -101,18 +101,13 @@ const useThreadMessages = ({
       return null;
     }
 
-    // For backends other than `DialectCloud` we return null if no remote meessages
-    if (isOnChain(thread.type) && !remoteMessages) {
-      return null;
-    }
-
     // If there are remote messages add them to the `messageArray`
-    if (isOffChain(thread.type) && remoteMessages) {
+    if (remoteMessages) {
       messageArray = messageArray.concat(remoteMessages);
     }
 
     // If there are local messages add them to the `messageArray` as well
-    if (isOffChain(thread.type) && filteredLocalMessages) {
+    if (filteredLocalMessages) {
       messageArray = messageArray.concat(filteredLocalMessages);
     }
 
@@ -123,28 +118,6 @@ const useThreadMessages = ({
         deduplicationId: m.deduplicationId ?? m.timestamp.getTime().toString(),
       }));
   }, [remoteMessages, thread, localMessages, deleteLocalMessage]);
-
-  const onChainSendMessage = useCallback(
-    async (t: Thread, cmd: Omit<SendMessageCommand, 'deduplicationId'>) => {
-      setErrorSendingMessage(null);
-      setIsSendingMessage(true);
-
-      try {
-        await t.send(cmd);
-        mutate();
-        // Mutate threads to update threads sort
-        globalMutate(CACHE_KEY_THREADS);
-      } catch (e) {
-        if (e instanceof DialectSdkError) {
-          setErrorSendingMessage(e);
-        }
-        throw e;
-      } finally {
-        setIsSendingMessage(false);
-      }
-    },
-    [globalMutate, mutate]
-  );
 
   const offChainSendMessage = useCallback(
     async (t: Thread, cmd: SendMessageCommand) => {
@@ -179,20 +152,18 @@ const useThreadMessages = ({
         setIsSendingMessage(false);
       }
     },
-    [globalMutate, mutate, putLocalMessage]
+    [globalMutate, mutate, putLocalMessage],
   );
 
   const sendMessage = useCallback(
     async (cmd: SendMessageCommand) => {
       if (!threadInternal) return;
 
-      const sendMessageFn = isOffChain(threadInternal.type)
-        ? offChainSendMessage
-        : onChainSendMessage;
+      const sendMessageFn = offChainSendMessage;
 
       await sendMessageFn(threadInternal, cmd);
     },
-    [threadInternal, offChainSendMessage, onChainSendMessage]
+    [threadInternal, offChainSendMessage],
   );
 
   const cancelMessage = useCallback(
@@ -200,7 +171,7 @@ const useThreadMessages = ({
       if (!thread) return;
       deleteLocalMessage(thread.id.toString(), id);
     },
-    [thread, deleteLocalMessage]
+    [thread, deleteLocalMessage],
   );
 
   const markAsRead = useCallback(async () => {
@@ -208,8 +179,8 @@ const useThreadMessages = ({
     await threadInternal.markAsRead();
     globalMutate(
       CACHE_KEY_THREAD_SUMMARY_FN(
-        threadInternal.otherMembers.map((it) => it.address)
-      )
+        threadInternal.otherMembers.map((it) => it.address),
+      ),
     );
   }, [globalMutate, threadInternal]);
 
@@ -226,5 +197,3 @@ const useThreadMessages = ({
     errorSendingMessage,
   };
 };
-
-export default useThreadMessages;

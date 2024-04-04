@@ -30,7 +30,8 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/sdk": "^1.7.2"
+    "@dialectlabs/sdk": "^1.7.2",
+    "swr": "^2.2.5"
   },
   "peerDependencies": {
     "react": ">=18"
