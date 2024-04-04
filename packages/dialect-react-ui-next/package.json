@@ -47,8 +47,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/sdk": "^1.7.2",
-    "@dialectlabs/blockchain-sdk-solana": "^1.1.0",
+    "@dialectlabs/react-sdk": "workspace:*",
     "clsx": "^2.1.0"
   },
   "peerDependencies": {

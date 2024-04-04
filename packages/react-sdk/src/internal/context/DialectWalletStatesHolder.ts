@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
-import { createContainer } from '../../../utils/container';
+import { createContainer } from '../container';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const DIALECT_WALLET_CONFIG_STORAGE_KEY = 'dialect-wallet-config';

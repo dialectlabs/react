@@ -1,5 +1,5 @@
+import { useDialectWallet } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import useDialectWallet from '../../../model/hooks/useDialectWallet';
 import { ClassTokens } from '../../theme';
 import { Button, Switch } from '../primitives';
 

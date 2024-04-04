@@ -6,7 +6,7 @@ import {
   DialectSdk as DialectSdkType,
 } from '@dialectlabs/sdk';
 import { useEffect, useMemo } from 'react';
-import { createContainer } from '../../../utils/container';
+import { createContainer } from '../container';
 import { DialectWalletStatesHolder } from './DialectWalletStatesHolder';
 interface DialectSdkProps {
   config: ConfigProps;

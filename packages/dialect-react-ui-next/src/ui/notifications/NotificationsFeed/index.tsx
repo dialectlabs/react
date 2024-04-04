@@ -1,4 +1,4 @@
-import useDialectSdk from '../../../model/hooks/useDialectSdk';
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 import { NoNotifications } from './NoNotifications';
 import { NotificationsList } from './NotificationsList';
 

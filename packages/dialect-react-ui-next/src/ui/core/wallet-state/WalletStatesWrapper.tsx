@@ -1,6 +1,5 @@
+import { useDialectSdk, useDialectWallet } from '@dialectlabs/react-sdk';
 import React from 'react';
-import useDialectSdk from '../../../model/hooks/useDialectSdk';
-import useDialectWallet from '../../../model/hooks/useDialectWallet';
 
 import NoWalletState from './NoWalletState';
 import NotAuthorizedState from './NotAuthorizedState';
