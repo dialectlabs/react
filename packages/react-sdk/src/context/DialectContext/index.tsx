@@ -26,7 +26,6 @@ export type DialectContextProviderProps<ChainSdk extends BlockchainSdk> = {
 export const DialectContextProvider: React.FC<
   DialectContextProviderProps<BlockchainSdk>
 > = ({ config, blockchainSdkFactory, children, dappAddress }) => {
-  console.log('dialect context provider');
   return (
     <DialectContext.Provider value={{ dappAddress }}>
       <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
