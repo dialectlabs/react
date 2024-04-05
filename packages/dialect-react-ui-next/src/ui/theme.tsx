@@ -6,6 +6,8 @@ import {
   BellIcon,
   CloseIcon,
   SettingsIcon,
+  TrashIcon,
+  XmarkIcon,
 } from './core/icons';
 
 export const Icons = {
@@ -28,6 +30,8 @@ export const Icons = {
   ArrowRight: ArrowRightIcon,
   Close: CloseIcon,
   Bell: BellIcon,
+  Trash: TrashIcon,
+  Xmark: XmarkIcon,
 };
 
 export const ClassTokens = {
@@ -36,6 +40,7 @@ export const ClassTokens = {
     Secondary: 'dt-text-[--dt-text-secondary]',
     Tertiary: 'dt-text-[--dt-text-tertiary]',
     Brand: 'dt-text-[--dt-accent-brand]',
+    Error: 'dt-text-[--dt-accent-error]',
     Inverse: 'dt-text-[--dt-text-inverse]',
     Button: {
       Primary: {
@@ -51,6 +56,7 @@ export const ClassTokens = {
   Icon: {
     Primary: 'dt-text-[--dt-icon-primary]',
     Secondary: 'dt-text-[--dt-icon-secondary]',
+    Tertiary: 'dt-text-[--dt-icon-tertiary]',
     Inverse: 'dt-text-[--dt-icon-inverse]',
   },
   Background: {
@@ -80,7 +86,9 @@ export const ClassTokens = {
   Stroke: {
     Input: {
       Primary: 'dt-border-[--dt-input-primary]',
+      Checked: 'focus-within:dt-border-[--dt-input-checked]',
     },
     Primary: 'dt-border-[--dt-stroke-primary]',
+    Error: 'dt-border-[--dt-accent-error]',
   },
 };

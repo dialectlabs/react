@@ -21,6 +21,7 @@
   --dt-stroke-primary: theme('colors.light.50');
   --dt-icon-primary: theme('colors.dark.90');
   --dt-icon-secondary: theme('colors.dark.60');
+  --dt-icon-tertiary: theme('colors.dark.50');
   --dt-icon-inverse: theme('colors.light.100');
   --dt-accent-brand: theme('colors.accent.success');
   --dt-accent-success: theme('colors.accent.success');

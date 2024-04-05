@@ -1,4 +1,4 @@
-import { ChannelType } from '@dialectlabs/react-sdk';
+import { ChannelType } from '../../../../types';
 import { EmailChannel } from './EmailChannel';
 import { TelegramChannel } from './TelegramChannel';
 import { WalletChannel } from './WalletChannel';

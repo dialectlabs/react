@@ -6,7 +6,7 @@ export const Main: StoryObj<typeof Switch> = {
   args: {
     children: 'Notifications',
     checked: false,
-    onClick: fn(),
+    onChange: fn(),
   },
 };
 

@@ -40,7 +40,7 @@ const NotificationType = ({ title, description, enabled, onSwitch }: Props) => {
         )}
       </div>
       {/*TODO checkbox */}
-      <Switch checked={isEnabled} onClick={() => setEnabled(!isEnabled)} />
+      <Switch checked={isEnabled} onChange={(next) => setEnabled(next)} />
     </div>
   );
 };

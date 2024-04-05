@@ -7,4 +7,5 @@ export { DialectLogo } from './DialectLogo';
 export { ExclamationIcon } from './ExclamationIcon';
 export { SettingsIcon } from './SettingsIcon';
 export { TelegramIcon } from './TelegramIcon';
+export { TrashIcon } from './TrashIcon';
 export { XmarkIcon } from './XmarkIcon';

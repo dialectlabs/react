@@ -35,7 +35,7 @@ const NotAuthorizedState = () => {
           <span>Using ledger?</span>
           <Switch
             checked={isHardwareWalletForced}
-            onClick={() => setHardwareWalletForced(!isHardwareWalletForced)}
+            onChange={(next) => setHardwareWalletForced(next)}
           />
         </div>
         <Button variant="primary" onClick={() => setConnectionInitiated(true)}>
