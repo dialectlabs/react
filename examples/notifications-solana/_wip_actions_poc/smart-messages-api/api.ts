@@ -36,12 +36,10 @@ function createSmartMessageApi() {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (!res.ok) {
           console.warn(`Error creating transaction for ${smartMessageUrl}`);
           return null;
         }
-
         return res.json();
       } catch (e) {
         console.warn(`Error creating transaction for ${smartMessageUrl}`, e);

@@ -1,9 +1,5 @@
 import { Primitives, ThreadMessage } from '@dialectlabs/react-ui';
-import { smartMessageApi } from './smart-messages/api';
-import { useDialectSdk } from '@dialectlabs/react-sdk';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { VersionedTransaction } from '@solana/web3.js';
-import { Buffer } from 'buffer';
+import { useSmartMessage } from '../_wip_actions_poc/hooks/useSmartMessage';
 
 export const DIALECT_ID = 'dialect-notifications';
 
@@ -24,15 +20,10 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: true,
 });
 export const NotificationMessage = (message: ThreadMessage) => {
-  const dialectSdk = useDialectSdk();
-
-  const wallet = useWallet();
-
-  const dialectCloudUrl = dialectSdk.config.dialectCloud.url;
-
-  //'announcement' or 'filled-order'
+  const { handleSmartMessageAction } = useSmartMessage();
   const smartMessage = message.metadata?.smartMessage;
 
+  //'announcement' or 'filled-order'
   const messageStyles =
     message.metadata?.notificationTypeHumanReadableId === 'filled-order'
       ? {
@@ -45,6 +36,7 @@ export const NotificationMessage = (message: ThreadMessage) => {
       : defaultMessageStyles;
 
   const renderIcon = () => {
+    // TODO: update after design is ready
     const smartMessageIcon = smartMessage?.content.layout.icon;
     if (!smartMessageIcon) {
       return messageStyles.icon;
@@ -91,52 +83,12 @@ export const NotificationMessage = (message: ThreadMessage) => {
           return (
             <Primitives.ButtonBase
               key={layoutElement.text}
-              onClick={async () => {
-                try {
-                  // alert('clicked sign tx');
-                  const token = await dialectSdk.tokenProvider.get();
-                  const tx =
-                    await smartMessageApi.createSmartMessageTransaction(
-                      `${dialectCloudUrl}/api/v1/smart-messages/${smartMessage.id}`,
-                      token.rawValue,
-                      {
-                        actionHumanReadableId: buttonAction.humanReadableId,
-                      }
-                    );
-                  if (!tx) {
-                    console.error('Failed to create transaction');
-                    return;
-                  }
-                  if (!wallet.signTransaction) {
-                    console.error(
-                      'Wallet does not support signing transactions'
-                    );
-                    return;
-                  }
-                  const txBase64 = tx.transaction;
-                  const txBuffer = Buffer.from(txBase64, 'base64');
-                  const versionedTransaction =
-                    VersionedTransaction.deserialize(txBuffer);
-                  const signed = await wallet.signTransaction(
-                    versionedTransaction
-                  );
-                  await smartMessageApi.submitSmartMessageTransaction(
-                    `${dialectCloudUrl}/api/v1/smart-messages/${smartMessage.id}`,
-                    token.rawValue,
-                    {
-                      actionHumanReadableId: buttonAction.humanReadableId,
-                      transaction: Buffer.from(signed.serialize()).toString(
-                        'base64'
-                      ),
-                    }
-                  );
-                  // TODO: mutate SWR here
-
-                  console.log(`Created transaction: ${tx?.transaction}`);
-                } catch (e) {
-                  console.error('Failed to sign transaction', e);
-                }
-              }}
+              onClick={() =>
+                handleSmartMessageAction(
+                  smartMessage.id,
+                  buttonAction.humanReadableId
+                )
+              }
             >
               {layoutElement.text}
             </Primitives.ButtonBase>
