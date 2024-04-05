@@ -1,5 +1,8 @@
-import { DialectWalletStatesHolder } from '../internal/context/DialectWalletStatesHolder';
+import { DialectWalletStatesHolder } from '../context/DialectContext/Wallet';
 
-export const useDialectWallet = () => {
-  return DialectWalletStatesHolder.useContainer();
+const useDialectWallet = () => {
+  const walletCtx = DialectWalletStatesHolder.useContainer();
+  return walletCtx;
 };
+
+export default useDialectWallet;

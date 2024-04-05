@@ -4,7 +4,7 @@ const isLocalStorageAvailable = typeof globalThis.localStorage !== 'undefined';
 
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T,
+  initialValue: T
 ): [T, Dispatch<T>] {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
@@ -36,7 +36,7 @@ export function useLocalStorage<T>(
     (value) => {
       if (!isLocalStorageAvailable) {
         console.warn(
-          `Tried setting localStorage key “${key}” even though environment is not a browser`,
+          `Tried setting localStorage key “${key}” even though environment is not a browser`
         );
       }
       try {
@@ -51,7 +51,7 @@ export function useLocalStorage<T>(
         console.error(error);
       }
     },
-    [key],
+    [key]
   );
   return [storedValue, setValue];
 }

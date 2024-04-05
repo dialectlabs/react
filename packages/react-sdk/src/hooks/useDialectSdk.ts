@@ -2,10 +2,10 @@ import type {
   BlockchainSdk,
   DialectSdk as DialectSdkType,
 } from '@dialectlabs/sdk';
-import { DialectSdk } from '../internal/context/DialectSdk';
+import { DialectSdk } from '../context/DialectContext/Sdk';
 
-export const useDialectSdk = <TUnsafe extends boolean = false>(
-  unsafe?: TUnsafe,
+const useDialectSdk = <TUnsafe extends boolean = false>(
+  unsafe?: TUnsafe
 ): TUnsafe extends true
   ? DialectSdkType<BlockchainSdk> | null
   : DialectSdkType<BlockchainSdk> => {
@@ -20,3 +20,5 @@ export const useDialectSdk = <TUnsafe extends boolean = false>(
   }
   return sdk;
 };
+
+export default useDialectSdk;

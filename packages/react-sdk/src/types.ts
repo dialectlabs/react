@@ -1,6 +1,4 @@
-import { DialectSdkError, ThreadMessage } from '@dialectlabs/sdk';
-
-export type ChannelType = 'wallet' | 'email' | 'telegram';
+import type { DialectSdkError, ThreadMessage } from '@dialectlabs/sdk';
 
 export interface LocalThreadMessage extends ThreadMessage {
   deduplicationId: string;

@@ -1,9 +1,9 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from '../internal/swrCache';
-import { EMPTY_ARR, EMPTY_OBJ } from '../internal/utils';
-import { useDialectSdk } from './useDialectSdk';
+import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
+import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
+import useDialectSdk from './useDialectSdk';
 
 interface UseThreadsParams {
   refreshInterval?: number;
@@ -20,7 +20,7 @@ interface UseThreadsValue {
   errorCreatingThread: DialectSdkError | null;
 }
 
-export const useThreads = ({
+const useThreads = ({
   refreshInterval,
 }: UseThreadsParams = EMPTY_OBJ): UseThreadsValue => {
   const { threads: threadsApi } = useDialectSdk();
@@ -43,7 +43,7 @@ export const useThreads = ({
     function invalidateThreads() {
       mutate();
     },
-    [mutate, threadsApi],
+    [mutate, threadsApi]
   );
 
   // useDialectErrorsHandler(errorFetchingThreads, errorCreatingThread);
@@ -60,7 +60,7 @@ export const useThreads = ({
           CACHE_KEY_THREAD_FN({
             otherMembers: cmd.otherMembers.map((it) => it.address),
           }),
-          res,
+          res
         );
         return res;
       } catch (e) {
@@ -72,7 +72,7 @@ export const useThreads = ({
         setIsCreatingThread(false);
       }
     },
-    [threadsApi, mutate, globalMutate],
+    [threadsApi, mutate, globalMutate]
   );
 
   return {
@@ -86,3 +86,5 @@ export const useThreads = ({
     errorCreatingThread,
   };
 };
+
+export default useThreads;

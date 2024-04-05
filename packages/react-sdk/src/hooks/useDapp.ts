@@ -1,14 +1,14 @@
 import type {
-  BlockchainType,
   Dapp,
   DialectSdkError,
   ReadOnlyDapp,
+  BlockchainType,
 } from '@dialectlabs/sdk';
 import { useMemo } from 'react';
 import useSWR from 'swr';
-import { DAPPS_CACHE_KEY, DAPP_CACHE_KEY_FN } from '../internal/swrCache';
-import { EMPTY_ARR, EMPTY_OBJ } from '../internal/utils';
-import { useDialectSdk } from './useDialectSdk';
+import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
+import { DAPPS_CACHE_KEY, DAPP_CACHE_KEY_FN } from './internal/swrCache';
+import useDialectSdk from './useDialectSdk';
 
 interface UseDappValue {
   dapp: Dapp | null;
@@ -24,7 +24,7 @@ interface UseDappParams {
   blockchainType?: BlockchainType;
 }
 
-export function useDapp({
+function useDapp({
   refreshInterval,
   verified = true,
   blockchainType,
@@ -36,7 +36,7 @@ export function useDapp({
   const { data: dapp, error } = useSWR(
     DAPP_CACHE_KEY_FN(walletAddress),
     () => dapps.find(),
-    { refreshInterval, refreshWhenOffline: true },
+    { refreshInterval, refreshWhenOffline: true }
   );
 
   const { data: dappsList = EMPTY_ARR } = useSWR(
@@ -47,22 +47,19 @@ export function useDapp({
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-    },
+    }
   );
 
   const allDapps = useMemo(
     () =>
-      dappsList.reduce(
-        (acc, dapp) => {
-          const address = dapp.address;
-          if (!acc[address]) {
-            acc[address] = dapp;
-          }
-          return acc;
-        },
-        {} as Record<string, ReadOnlyDapp>,
-      ),
-    [dappsList],
+      dappsList.reduce((acc, dapp) => {
+        const address = dapp.address;
+        if (!acc[address]) {
+          acc[address] = dapp;
+        }
+        return acc;
+      }, {} as Record<string, ReadOnlyDapp>),
+    [dappsList]
   );
 
   return {
@@ -73,3 +70,5 @@ export function useDapp({
     dapps: allDapps,
   };
 }
+
+export default useDapp;

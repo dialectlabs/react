@@ -8,15 +8,15 @@ import {
 import { nanoid } from 'nanoid';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { LocalMessages } from '../internal/context/LocalMessages';
+import { LocalMessages } from '../context/DialectContext/LocalMessages';
+import type { LocalThreadMessage } from '../types';
+import { EMPTY_ARR } from '../utils';
 import {
   CACHE_KEY_MESSAGES_FN,
   CACHE_KEY_THREADS,
   CACHE_KEY_THREAD_SUMMARY_FN,
-} from '../internal/swrCache';
-import { EMPTY_ARR } from '../internal/utils';
-import type { LocalThreadMessage } from '../types';
-import { useThread } from './useThread';
+} from './internal/swrCache';
+import useThread from './useThread';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
   id?: string;
@@ -46,7 +46,7 @@ interface UseThreadMessagesValue {
   errorSendingMessage: DialectSdkError | null;
 }
 
-export const useThreadMessages = ({
+const useThreadMessages = ({
   id,
   refreshInterval,
 }: UseThreadMessagesParams): UseThreadMessagesValue => {
@@ -197,3 +197,5 @@ export const useThreadMessages = ({
     errorSendingMessage,
   };
 };
+
+export default useThreadMessages;

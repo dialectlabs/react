@@ -10,9 +10,13 @@
   "scripts": {
     "pkg": "manypkg run",
     "bootstrap": "bun build:all",
-    "build:all": "bun run build:react-ui",
+    "build:all": "bun run build:react-sdk && bun run build:react-sdk-solana && bun run build:react-ui",
     "build:react-ui": "bun pkg @dialectlabs/react-ui build",
     "dev:react-ui": "bun pkg @dialectlabs/react-ui dev",
+    "build:react-sdk": "bun pkg @dialectlabs/react-sdk build",
+    "dev:react-sdk": "bun pkg @dialectlabs/react-sdk dev",
+    "build:react-sdk-solana": "bun pkg @dialectlabs/react-sdk-blockchain-solana build",
+    "dev:react-sdk-solana": "bun pkg @dialectlabs/react-sdk-blockchain-solana dev",
     "lint": "eslint --ext .js --ext .ts --ext .tsx .",
     "lint:fix": "bun run lint --fix"
   },

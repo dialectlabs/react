@@ -2,20 +2,27 @@ import {
   DialectSolanaWalletAdapter,
   SolanaSdkFactory,
 } from '@dialectlabs/blockchain-sdk-solana';
+import {
+  DialectContextProvider,
+  DialectWalletStatesHolder,
+} from '@dialectlabs/react-sdk';
 import { ConfigProps } from '@dialectlabs/sdk';
 import { WalletContextState, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { DialectSdk } from './DialectSdk';
-import { DialectWalletStatesHolder } from './DialectWalletStatesHolder';
+import { EMPTY_OBJ } from './utils';
 
 export type Props = {
-  config: ConfigProps;
+  dappAddress: string;
+  config?: ConfigProps;
   autoConnect?: boolean;
   children: React.ReactNode;
 };
 
-const SolanaBlockchainSdkWrapper = ({ config, ...props }: Props) => {
+const SolanaBlockchainSdkWrapper = ({
+  config = EMPTY_OBJ,
+  ...props
+}: Props) => {
   const wallet = useWallet();
 
   const {
@@ -100,15 +107,19 @@ const SolanaBlockchainSdkWrapper = ({ config, ...props }: Props) => {
   }, [setWalletConnected, wallet.connected]);
 
   return (
-    <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
+    <DialectContextProvider
+      {...props}
+      config={config}
+      blockchainSdkFactory={blockchainSdkFactory}
+    >
       {props.children}
-    </DialectSdk.Provider>
+    </DialectContextProvider>
   );
 };
 
-export const DialectSolanaSdk = ({ autoConnect, ...props }: Props) => {
+export const DialectSolanaSdk = (props: Props) => {
   return (
-    <DialectWalletStatesHolder.Provider initialState={{ autoConnect }}>
+    <DialectWalletStatesHolder.Provider>
       <SolanaBlockchainSdkWrapper {...props}>
         {props.children}
       </SolanaBlockchainSdkWrapper>

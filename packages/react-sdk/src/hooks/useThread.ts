@@ -1,10 +1,10 @@
 import { DialectSdkError, FindThreadQuery, Thread } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { isAdminable, isWritable } from '../internal/scopes';
-import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from '../internal/swrCache';
-import { EMPTY_ARR } from '../internal/utils';
-import { useDialectSdk } from './useDialectSdk';
+import { EMPTY_ARR } from '../utils';
+import { isAdminable, isWritable } from '../utils/scopes';
+import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
+import useDialectSdk from './useDialectSdk';
 
 // TODO support multiple ways to resolve thread, eg. twitter, sns
 type ThreadSearchParams = FindThreadQuery;
@@ -29,7 +29,7 @@ interface UseThreadValue {
   isAdminable: boolean;
 }
 
-export const useThread = ({
+const useThread = ({
   findParams,
   refreshInterval,
 }: UseThreadParams): UseThreadValue => {
@@ -50,7 +50,7 @@ export const useThread = ({
     {
       refreshInterval,
       refreshWhenOffline: true,
-    },
+    }
   );
 
   const deleteThread = useCallback(async () => {
@@ -85,3 +85,5 @@ export const useThread = ({
     isAdminable: isAdminable(thread?.me.scopes || EMPTY_ARR),
   };
 };
+
+export default useThread;

@@ -1,10 +1,10 @@
 import type { AccountAddress, Address, AddressType } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import { EMPTY_ARR } from '../internal/utils';
-import { WALLET_DAPP_ADDRESSES_CACHE_KEY_FN } from '../internal/swrCache';
+import { EMPTY_ARR } from '../utils';
+import { WALLET_DAPP_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
+import useDialectSdk from './useDialectSdk';
 import useNotificationChannel from './useNotificationChannel';
-import { useDialectSdk } from './useDialectSdk';
 
 interface UseNotificationChannelDappSubscriptionParams {
   addressType: AddressType;
@@ -23,7 +23,7 @@ interface UseNotificationChannelDappSubscriptionValue {
   toggleSubscription: (params: ToggleSubscriptionParams) => Promise<void>;
 }
 
-export const useNotificationChannelDappSubscription = ({
+const useNotificationChannelDappSubscription = ({
   dappAddress,
   addressType,
 }: UseNotificationChannelDappSubscriptionParams): UseNotificationChannelDappSubscriptionValue => {
@@ -117,3 +117,5 @@ export const useNotificationChannelDappSubscription = ({
     toggleSubscription,
   };
 };
+
+export default useNotificationChannelDappSubscription;

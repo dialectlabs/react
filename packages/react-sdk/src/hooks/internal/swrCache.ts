@@ -1,4 +1,8 @@
-import type { AccountAddress, FindThreadQuery } from '@dialectlabs/sdk';
+import type {
+  AccountAddress,
+  FindDappMessageQuery,
+  FindThreadQuery,
+} from '@dialectlabs/sdk';
 
 export const CACHE_KEY_THREADS = 'THREADS';
 
@@ -43,14 +47,14 @@ export const WALLET_ADDRESSES_CACHE_KEY_FN = (walletAddress: AccountAddress) =>
 
 export const WALLET_DAPP_ADDRESSES_CACHE_KEY_FN = (
   walletAddress: AccountAddress,
-  dappAddress: AccountAddress,
+  dappAddress: AccountAddress
 ) => 'WALLET_DAPP_ADDRESSES_' + walletAddress + '_' + dappAddress;
 
 export const WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
   walletAddress: AccountAddress,
-  dappAddress: AccountAddress = '',
+  dappAddress: AccountAddress = ''
 ) => `WALLET_NOTIFICATION_SUBSCRIPTIONS_${walletAddress}${dappAddress}`;
 
 export const DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN = (
-  dappAddress?: AccountAddress,
+  dappAddress?: AccountAddress
 ) => 'DAPP_NOTIFICATION_SUBSCRIPTIONS_' + dappAddress;

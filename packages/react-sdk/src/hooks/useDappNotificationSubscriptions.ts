@@ -3,8 +3,8 @@ import type {
   DialectSdkError,
 } from '@dialectlabs/sdk';
 import useSWR from 'swr';
-import { DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from '../internal/swrCache';
-import { EMPTY_ARR, EMPTY_OBJ } from '../internal/utils';
+import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
+import { DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from './internal/swrCache';
 import useDapp from './useDapp';
 
 interface UseDappNotificationSubscriptionsValue {
@@ -17,7 +17,7 @@ interface UseDappNotificationSubscriptions {
   refreshInterval?: number;
 }
 
-export function useDappNotificationSubscriptions({
+function useDappNotificationSubscriptions({
   refreshInterval,
 }: UseDappNotificationSubscriptions = EMPTY_OBJ): UseDappNotificationSubscriptionsValue {
   const { dapp } = useDapp();
@@ -29,7 +29,7 @@ export function useDappNotificationSubscriptions({
     {
       refreshInterval,
       refreshWhenOffline: true,
-    },
+    }
   );
 
   return {
@@ -38,3 +38,5 @@ export function useDappNotificationSubscriptions({
     errorFetching,
   };
 }
+
+export default useDappNotificationSubscriptions;

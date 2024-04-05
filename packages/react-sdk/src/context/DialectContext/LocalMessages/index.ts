@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import type { LocalThreadMessage } from '../../types';
-import { createContainer } from '../container';
+import type { LocalThreadMessage } from '../../../types';
+import { createContainer } from '../../../utils/container';
 
 interface LocalMessagesState {
   localMessages: Record<string, LocalThreadMessage[]>;
@@ -29,13 +29,13 @@ function useLocalMessages(): LocalMessagesState {
           [threadAddr]: [
             msg,
             ...threadMessages.filter(
-              (prevMsg) => prevMsg.deduplicationId !== msg.deduplicationId,
+              (prevMsg) => prevMsg.deduplicationId !== msg.deduplicationId
             ),
           ],
         };
       });
     },
-    [],
+    []
   );
 
   const deleteLocalMessage = useCallback((threadAddr: string, id: string) => {
@@ -50,7 +50,7 @@ function useLocalMessages(): LocalMessagesState {
       return {
         ...prev,
         [threadAddr]: threadMessages.filter(
-          (prevMsg) => prevMsg.deduplicationId !== id,
+          (prevMsg) => prevMsg.deduplicationId !== id
         ),
       };
     });

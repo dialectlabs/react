@@ -6,9 +6,9 @@ import {
 } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import { EMPTY_ARR } from '../internal/utils';
-import { WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from '../internal/swrCache';
-import { useDialectSdk } from './useDialectSdk';
+import { EMPTY_ARR } from '../utils';
+import { WALLET_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from './internal/swrCache';
+import useDialectSdk from './useDialectSdk';
 
 interface UseNotificationSubscriptionsValue {
   subscriptions: WalletNotificationSubscription[];
@@ -29,7 +29,7 @@ interface UseUseNotificationSubscriptions {
   refreshInterval?: number;
 }
 
-export function useNotificationSubscriptions({
+function useNotificationSubscriptions({
   dappAddress,
   refreshInterval,
 }: UseUseNotificationSubscriptions): UseNotificationSubscriptionsValue {
@@ -86,3 +86,5 @@ export function useNotificationSubscriptions({
     errorUpdating,
   };
 }
+
+export default useNotificationSubscriptions;
