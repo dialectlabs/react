@@ -8,20 +8,9 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "scripts": {
-    "pkg": "manypkg run",
-    "bootstrap": "bun build:all",
-    "build:all": "bun run build:react-sdk && bun run build:react-sdk-solana && bun run build:react-ui",
-    "build:react-ui": "bun pkg @dialectlabs/react-ui build",
-    "dev:react-ui": "bun pkg @dialectlabs/react-ui dev",
-    "build:react-sdk": "bun pkg @dialectlabs/react-sdk build",
-    "dev:react-sdk": "bun pkg @dialectlabs/react-sdk dev",
-    "build:react-sdk-solana": "bun pkg @dialectlabs/react-sdk-blockchain-solana build",
-    "dev:react-sdk-solana": "bun pkg @dialectlabs/react-sdk-blockchain-solana dev",
-    "lint": "eslint --ext .js --ext .ts --ext .tsx .",
-    "lint:fix": "bun run lint --fix"
+    "bootstrap": "npm run build -w packages/react-sdk && npm run build -w packages/react-sdk-blockchain-solana && npm run build -w packages/dialect-react-ui-next && npm run build -w packages/react-ui-solana"
   },
   "devDependencies": {
-    "@manypkg/cli": "^0.21.3",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
     "concurrently": "^8.2.2",
@@ -45,7 +34,5 @@
   "engines": {
     "node": ">=18"
   },
-  "dependencies": {
-    "@dialectlabs/react-ui": "workspace:*"
-  }
+  "dependencies": {}
 }

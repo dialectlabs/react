@@ -1,8 +1,7 @@
 {
-  "name": "@dialectlabs/react-sdk-blockchain-solana",
-  "version": "2.0.0",
+  "name": "@dialectlabs/react-ui-solana",
+  "version": "1.0.0",
   "type": "module",
-  "license": "MIT",
   "private": false,
   "sideEffects": false,
   "main": "dist/index.cjs",
@@ -21,15 +20,19 @@
     "build": "tsup-node",
     "dev": "tsup-node --watch"
   },
+  "devDependencies": {
+    "@types/react": "^18.2.73"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/blockchain-sdk-solana": "^1.1.1"
+    "@dialectlabs/react-ui": "^2.0.0",
+    "@dialectlabs/react-sdk": "^2.0.0",
+    "@dialectlabs/react-sdk-blockchain-solana": "^2.0.0"
   },
   "peerDependencies": {
-    "@dialectlabs/react-sdk": "2.x",
-    "@solana/web3.js": "1.x"
+    "react": ">=18"
   }
 }

@@ -15,7 +15,6 @@ import { EMPTY_OBJ } from './utils';
 export type Props = {
   dappAddress: string;
   config?: ConfigProps;
-  autoConnect?: boolean;
   children: React.ReactNode;
 };
 
@@ -111,18 +110,14 @@ const SolanaBlockchainSdkWrapper = ({
       {...props}
       config={config}
       blockchainSdkFactory={blockchainSdkFactory}
-    >
-      {props.children}
-    </DialectContextProvider>
+    />
   );
 };
 
 export const DialectSolanaSdk = (props: Props) => {
   return (
     <DialectWalletStatesHolder.Provider>
-      <SolanaBlockchainSdkWrapper {...props}>
-        {props.children}
-      </SolanaBlockchainSdkWrapper>
+      <SolanaBlockchainSdkWrapper {...props} />
     </DialectWalletStatesHolder.Provider>
   );
 };

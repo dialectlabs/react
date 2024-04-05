@@ -47,7 +47,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/react-sdk": "workspace:*",
+    "@dialectlabs/react-sdk": "^2.0.0",
     "clsx": "^2.1.0"
   },
   "peerDependencies": {
