@@ -11,6 +11,7 @@ import {
   DialectUiManagementProvider,
   Environment,
   IncomingThemeVariables,
+  Notifications,
   NotificationsButton,
   NotificationsSingleFeed,
 } from '@dialectlabs/react-ui';
@@ -19,10 +20,11 @@ import Head from 'next/head';
 import { useEffect, useMemo, useState } from 'react';
 import { SolanaWalletButton } from '../components/SolanaWallet';
 import { solanaWalletToDialectWallet } from '../utils/wallet';
+import { NotificationMessage } from '../components/NotificationMessage';
 
 const DAPP_EXAMPLE_ADDRESS =
   process.env.NEXT_PUBLIC_DAPP_ADDRESS ??
-  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h';
+  '6tBUD4bQzNehG3hQVtVFaGxre2P8rQoH99pubRtgSbSb';
 
 export const themeVariables: IncomingThemeVariables = {
   dark: {
@@ -79,6 +81,12 @@ function AuthedHome() {
             ]}
             pollingInterval={15000}
             channels={['web3', 'email', 'telegram']}
+            Component={(props) => (
+              <Notifications
+                {...props}
+                renderNotificationMessage={NotificationMessage}
+              />
+            )}
           />
         </div>
         <div className="flex flex-row justify-end p-2 items-center space-x-2">
@@ -120,7 +128,7 @@ export default function Home(): JSX.Element {
   const dialectConfig = useMemo((): ConfigProps => {
     return {
       environment:
-        (process.env.NEXT_PUBLIC_ENVIRONMENT as Environment) ?? 'production',
+        (process.env.NEXT_PUBLIC_ENVIRONMENT as Environment) ?? 'development',
       dialectCloud: {
         tokenStore: 'local-storage',
       },
