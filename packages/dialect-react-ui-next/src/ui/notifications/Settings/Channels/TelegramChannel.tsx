@@ -5,18 +5,16 @@ import {
   useNotificationChannel,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Input } from '../../../core/primitives';
 import { ClassTokens, Icons } from '../../../theme';
 import { TelegramHandleInput } from './TelegramHandleInput';
 import { useVerificationCode } from './model/useVerificationCode';
 
-const ADDRESS_TYPE = AddressType.Telegram;
+export const TelegramChannel = () => {
+  //TODO dapp context
+  const dappAddress = '';
 
-interface TelegramProps {
-  dappAddress: string;
-}
-export const TelegramChannel = ({ dappAddress }: TelegramProps) => {
   const { globalAddress: telegramAddress } = useNotificationChannel({
     addressType: AddressType.Telegram,
   });
@@ -26,9 +24,10 @@ export const TelegramChannel = ({ dappAddress }: TelegramProps) => {
   const { dapps } = useDapp({ verified: false });
   const dapp = dapps[dappAddress];
 
+  const verificationNeeded = isTelegramSaved && !isVerified;
   return (
     <div>
-      {isTelegramSaved && !isVerified ? (
+      {verificationNeeded ? (
         <VerificationCodeInput
           dappTelegramName={dapp?.telegramUsername ?? ''}
         />
@@ -38,7 +37,8 @@ export const TelegramChannel = ({ dappAddress }: TelegramProps) => {
     </div>
   );
 };
-const VERIFICATION_CODE_REGEX = '^[0-9]{6}$';
+
+const VERIFICATION_CODE_REGEX = new RegExp('^[0-9]{6}$');
 const VerificationCodeInput = ({
   dappTelegramName,
 }: {
@@ -55,7 +55,7 @@ const VerificationCodeInput = ({
     isSendingCode,
     deleteAddress,
     currentError,
-  } = useVerificationCode(ADDRESS_TYPE);
+  } = useVerificationCode(AddressType.Telegram);
 
   const buildBotUrl = (botUsername: string) =>
     `https://t.me/${botUsername}?start=${botUsername}`;
@@ -72,48 +72,63 @@ const VerificationCodeInput = ({
     return buildBotUrl(dappTelegramName);
   }, [dappTelegramName, defaultBotUrl]);
 
+  const [isCodeValid, setCodeValid] = useState(false);
+  const setCode = (code: string) => {
+    if (VERIFICATION_CODE_REGEX.test(code)) {
+      setCodeValid(true);
+    } else {
+      setCodeValid(false);
+    }
+    setVerificationCode(code);
+  };
+
   return (
-    //TODO check by regex
     <div>
       <Input
         id="settings-verification-code"
         placeholder="Enter verification code"
         type="text"
         value={verificationCode}
-        onChange={(e) => setVerificationCode(e.target.value)}
-        pattern={VERIFICATION_CODE_REGEX}
+        onChange={(e) => setCode(e.target.value)}
         rightAdornment={
-          <Button onClick={sendCode} loading={isSendingCode}>
-            Submit
-          </Button>
+          isSendingCode ? (
+            <div className={clsx(ClassTokens.Icon.Tertiary, 'dt-p-2')}>
+              <Icons.Loader />
+            </div>
+          ) : (
+            <Button onClick={sendCode} disabled={!isCodeValid}>
+              Submit
+            </Button>
+          )
         }
       />
-      <a
-        className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}
-        href={botURL}
-        target="_blank"
-        rel="noreferrer"
-      >
-        🤖 Get verification code by starting
-        <span className={ClassTokens.Text.Brand}> this bot</span>
-        with command: /start
-      </a>
-      <span
-        onClick={deleteAddress}
-        className="dt-inline-flex dt-cursor-pointer dt-items-center"
-      >
-        <Icons.Close
-          className={clsx('dt-mb-0.5 dt-mr-0.5 dt-inline-block')}
-          height={14}
-          width={14}
-        />
-        Cancel
-      </span>
       {currentError && (
         <p className={clsx(ClassTokens.Text.Error, 'dt-mt-2 dt-text-caption')}>
           {currentError.message}
         </p>
       )}
+      <div className="dt-mt-2 dt-flex dt-flex-col dt-gap-2">
+        <a
+          className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}
+          href={botURL}
+          target="_blank"
+          rel="noreferrer"
+        >
+          📟 Get verification code by starting
+          <span className={ClassTokens.Text.Brand}> this bot</span>
+          with command: /start
+        </a>
+        <div
+          className={clsx(
+            ClassTokens.Text.Brand,
+            'dt-text-semibold dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1 dt-text-subtext',
+          )}
+          onClick={deleteAddress}
+        >
+          <Icons.Xmark height={12} width={12} />
+          Cancel
+        </div>
+      </div>
     </div>
   );
 };

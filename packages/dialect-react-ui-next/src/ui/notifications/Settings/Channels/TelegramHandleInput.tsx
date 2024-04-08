@@ -111,9 +111,9 @@ export const TelegramHandleInput = ({
     if (!telegramUsername) return null;
     if (isLoading) {
       return (
-        <Button disabled>
+        <div className={clsx(ClassTokens.Icon.Tertiary, 'dt-p-2')}>
           <Icons.Loader />
-        </Button>
+        </div>
       );
     }
     if (isUserDeleting) {
@@ -123,7 +123,14 @@ export const TelegramHandleInput = ({
       return <Button onClick={updateTelegram}>Submit</Button>;
     }
     if (isVerified) {
-      return <Icons.Trash onClick={() => setIsUserDeleting(true)} />;
+      return (
+        <div
+          className={clsx(ClassTokens.Icon.Tertiary, 'dt-p-2')}
+          onClick={() => setIsUserDeleting(true)}
+        >
+          <Icons.Trash />
+        </div>
+      );
     }
 
     return <Button onClick={saveTelegram}>Submit</Button>;
@@ -141,67 +148,60 @@ export const TelegramHandleInput = ({
         }}
         rightAdornment={getButton()}
       />
-      <div className="dt-mt-1 dt-flex dt-flex-row dt-items-center dt-space-x-2">
-        <ChannelNotificationsToggle
-          enabled={subscriptionEnabled}
-          onChange={toggleTelegram}
-        />
-      </div>
 
-      <div className="dt-mb-1 dt-mt-1 dt-inline-flex dt-items-center">
-        {isUserDeleting && (
-          <div>
-            <span
-              className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}
-            >
-              Deleting your telegram handle here will delete it across all dapps
-              you&apos;ve signed up.
-            </span>
-            <span
-              onClick={() => setIsUserDeleting(false)}
-              className={clsx(
-                ClassTokens.Text.Brand,
-                'dt-text-semibold dt-inline-flex dt-cursor-pointer dt-items-center dt-text-subtext',
-              )}
-            >
-              <Icons.Xmark
-                className={clsx('dt-mb-0.5 dt-mr-0.5 dt-inline-block')}
-                height={12}
-                width={12}
-              />
-              Cancel
-            </span>
-          </div>
-        )}
-        {isUserEditing && (
-          <div>
-            <span className={clsx(ClassTokens.Text.Error, 'dt-text-caption')}>
-              Updating your telegram handle here will update it across all dapps
-              you&apos;ve signed up.
-            </span>
-            <span
-              onClick={() => {
-                setTelegramUsername(telegramAddress?.value || '');
-              }}
-              className={clsx(
-                ClassTokens.Text.Brand,
-                'dt-text-semibold dt-inline-flex dt-cursor-pointer dt-items-center dt-text-subtext',
-              )}
-            >
-              <Icons.Xmark
-                className={clsx('dt-mb-0.5 dt-mr-0.5 dt-inline-block')}
-                height={12}
-                width={12}
-              />
-              Cancel
-            </span>
-          </div>
-        )}
-      </div>
+      {isTelegramSaved && isVerified && !isUserEditing && !isUserDeleting && (
+        <div className="dt-mt-2">
+          <ChannelNotificationsToggle
+            enabled={subscriptionEnabled}
+            onChange={toggleTelegram}
+          />
+        </div>
+      )}
+
       {currentError && (
         <p className={clsx(ClassTokens.Text.Error, 'dt-mt-2 dt-text-caption')}>
           {currentError.message}
         </p>
+      )}
+
+      {isUserDeleting && (
+        <div className="dt-mt-2 dt-flex dt-flex-col dt-gap-2">
+          <p className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}>
+            Deleting your Telegram handle here will delete it across all dapps
+            you’ve signed up.
+          </p>
+          <div
+            onClick={() => setIsUserDeleting(false)}
+            className={clsx(
+              ClassTokens.Text.Brand,
+              'dt-text-semibold dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1 dt-text-subtext',
+            )}
+          >
+            <Icons.Xmark height={12} width={12} />
+            Cancel
+          </div>
+        </div>
+      )}
+
+      {isUserEditing && (
+        <div className="dt-mt-2 dt-flex dt-flex-col dt-gap-2">
+          <p className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}>
+            Updating your Telegram handle here will update it across all dapps
+            you’ve signed up.
+          </p>
+          <div
+            onClick={() => {
+              setTelegramUsername(telegramAddress?.value || '');
+            }}
+            className={clsx(
+              ClassTokens.Text.Brand,
+              'dt-text-semibold dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1 dt-text-subtext',
+            )}
+          >
+            <Icons.Xmark height={12} width={12} />
+            Cancel
+          </div>
+        </div>
       )}
     </div>
   );

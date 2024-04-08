@@ -101,8 +101,7 @@ export const WalletChannel = () => {
     walletSubscriptionAddress,
   ]);
 
-  const isWalletSetUp = true;
-  // const isWalletSetUp = thread && walletSubscriptionAddress;
+  const isWalletSetUp = thread && walletSubscriptionAddress;
   const RightAdornment = useCallback(() => {
     if (isLoading)
       return (
