@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 import { ClassTokens, Icons } from '../../theme';
+import { useNotification } from './context';
+import { Message } from './types';
 
 const defaultMessageStyles = {
   shadow: 'dt-shadow-[--dt-accent-brand]',
@@ -9,15 +11,6 @@ const defaultMessageStyles = {
   title: '',
 };
 
-export interface Message {
-  text: string;
-  metadata?: {
-    notificationTypeHumanReadableId?: string;
-    title?: string;
-    actions?: { url?: string; label?: string }[];
-  };
-  timestamp: Date;
-}
 const timeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'short',
@@ -26,6 +19,7 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   minute: '2-digit',
   hour12: true,
 });
+
 export const NotificationMessage = (message: Message) => {
   const messageStyles = defaultMessageStyles;
 
@@ -102,4 +96,15 @@ export const NotificationMessage = (message: Message) => {
       </div>
     </div>
   );
+};
+
+NotificationMessage.Container = function NotificationMessageContainer({
+  id,
+}: {
+  id: Message['id'];
+}) {
+  const notification = useNotification(id);
+
+  // TODO: custom component injection
+  return notification ? <NotificationMessage {...notification} /> : null;
 };

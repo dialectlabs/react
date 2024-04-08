@@ -1,9 +1,9 @@
-import { useDialectSdk } from '@dialectlabs/react-sdk';
 import { NoNotifications } from './NoNotifications';
 import { NotificationsList } from './NotificationsList';
+import { Message } from './types';
 
 export const NotificationsFeed = () => {
-  const messages = [
+  const messages: Message[] = [
     {
       id: 1,
       text: 'Your Tensorian #5672 sold for 44 SOL.',
@@ -36,9 +36,6 @@ export const NotificationsFeed = () => {
       },
     },
   ];
-
-  const sdk = useDialectSdk();
-  sdk.tokenProvider.get();
 
   if (!messages.length) {
     return <NoNotifications />;
