@@ -5,6 +5,7 @@ import {
   BellIcon,
   CloseIcon,
   LoaderIcon,
+  ResendIcon,
   SettingsIcon,
   TrashIcon,
   XmarkIcon,
@@ -20,6 +21,7 @@ export const Icons = {
   BellButton: BellButtonIcon,
   Trash: TrashIcon,
   Xmark: XmarkIcon,
+  Resend: ResendIcon,
 };
 
 export const ClassTokens = {

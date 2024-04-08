@@ -85,8 +85,9 @@ const VerificationCodeInput = ({
   return (
     <div>
       <Input
-        id="settings-verification-code"
+        id="settings-verification-code-telegram"
         placeholder="Enter verification code"
+        label="Telegram"
         type="text"
         value={verificationCode}
         onChange={(e) => setCode(e.target.value)}

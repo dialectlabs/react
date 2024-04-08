@@ -7,6 +7,7 @@ export { CloseIcon } from './CloseIcon';
 export { DialectLogo } from './DialectLogo';
 export { ExclamationIcon } from './ExclamationIcon';
 export { LoaderIcon } from './LoaderIcon';
+export { ResendIcon } from './ResendIcon';
 export { SettingsIcon } from './SettingsIcon';
 export { TelegramIcon } from './TelegramIcon';
 export { TrashIcon } from './TrashIcon';
