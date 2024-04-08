@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('@solana/wallet-adapter-react-ui/styles.css');
+
+body,
+html {
+  background-color: theme('backgroundColor.light.100');
+  color: theme('textColor.dark.100');
+  -webkit-font-smoothing: antialiased;
+}
+
+.wallet-adapter-dropdown {
+  @apply relative flex w-full;
+}
+
+.wallet-adapter-button-trigger {
+  @apply bg-gradient-button text-button text-light-80 flex flex-1 items-center justify-center truncate whitespace-nowrap rounded-xl p-4 font-medium hover:opacity-90;
+}
+
+.wallet-adapter-dropdown-list {
+  background-color: theme('backgroundColor.dark.90');
+}
+.wallet-adapter-dropdown-list-item:not([disabled]):hover {
+  background-color: theme('backgroundColor.dark.80');
+}
