@@ -40,5 +40,5 @@ export const NotificationsFeed = () => {
   if (!messages.length) {
     return <NoNotifications />;
   }
-  return <NotificationsList messages={messages} />;
+  return <NotificationsList.Container messages={messages} />;
 };

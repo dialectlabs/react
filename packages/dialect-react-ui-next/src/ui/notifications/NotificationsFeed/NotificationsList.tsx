@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { NotificationMessage } from './NotificationMessage';
 import {
   NotificationsItemsContext,
@@ -6,7 +6,16 @@ import {
 } from './context';
 import { Message } from './types';
 
-export const NotificationsList = ({ messages }: { messages: Message[] }) => {
+export const NotificationsList = ({ children }: { children?: ReactNode }) => {
+  return <div className="dt-flex dt-flex-col">{children}</div>;
+};
+
+NotificationsList.Container = function NotificationListContainer({
+  messages,
+}: {
+  messages: Message[];
+}) {
+  // potentially move to useSWR, since messages will change on every new fetch
   const context: NotificationsItemsProviderValue = useMemo(() => {
     return {
       list: messages.map((it) => it.id),
@@ -15,12 +24,12 @@ export const NotificationsList = ({ messages }: { messages: Message[] }) => {
   }, [messages]);
 
   return (
-    <div className="dt-flex dt-flex-col">
-      <NotificationsItemsContext.Provider value={context}>
+    <NotificationsItemsContext.Provider value={context}>
+      <NotificationsList>
         {messages.map((it) => (
           <NotificationMessage.Container key={it.id} id={it.id} />
         ))}
-      </NotificationsItemsContext.Provider>
-    </div>
+      </NotificationsList>
+    </NotificationsItemsContext.Provider>
   );
 };
