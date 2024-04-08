@@ -76,7 +76,7 @@ export const ClassTokens = {
   Stroke: {
     Input: {
       Primary: 'dt-border-[--dt-input-primary]',
-      Checked: 'focus-within:dt-border-[--dt-input-checked]',
+      Checked: 'dt-border-[--dt-input-checked]',
     },
     Primary: 'dt-border-[--dt-stroke-primary]',
     Error: 'dt-border-[--dt-accent-error]',

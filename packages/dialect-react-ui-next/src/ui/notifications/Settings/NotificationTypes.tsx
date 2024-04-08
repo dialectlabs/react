@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useState } from 'react';
-import { Switch } from '../../core/primitives';
+import { Checkbox } from '../../core/primitives';
 import { ClassTokens } from '../../theme';
 
 interface Props {
@@ -39,8 +39,7 @@ const NotificationType = ({ title, description, enabled, onSwitch }: Props) => {
           </span>
         )}
       </div>
-      {/*TODO checkbox */}
-      <Switch checked={isEnabled} onChange={(next) => setEnabled(next)} />
+      <Checkbox checked={isEnabled} onChange={(next) => setEnabled(next)} />
     </div>
   );
 };
