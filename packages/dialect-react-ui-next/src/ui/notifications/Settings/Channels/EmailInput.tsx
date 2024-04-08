@@ -161,7 +161,7 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
           setEmailValue(e.target.value);
         }}
         onBlur={() => {
-          if (!isEmailValid) setValidationError(true);
+          if (email && !isEmailValid) setValidationError(true);
         }}
         rightAdornment={getButton()}
       />
