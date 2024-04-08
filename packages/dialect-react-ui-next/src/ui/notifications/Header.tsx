@@ -11,19 +11,19 @@ function Header(props: HeaderProps) {
 
   const BackButton = () => (
     <button>
-      <Icons.ArrowLeft width={20} height={20} />
+      <Icons.ArrowLeft />
     </button>
   );
 
   const SettingsButton = () => (
     <button>
-      <Icons.Settings width={20} height={20} />
+      <Icons.Settings />
     </button>
   );
 
   const CloseButton = () => (
     <button>
-      <Icons.Close width={20} height={20} />
+      <Icons.Close />
     </button>
   );
 

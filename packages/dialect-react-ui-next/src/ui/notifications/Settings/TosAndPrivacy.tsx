@@ -3,7 +3,12 @@ import { ClassTokens } from '../../theme';
 
 export const TosAndPrivacy = () => (
   <div>
-    <p className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}>
+    <p
+      className={clsx(
+        ClassTokens.Text.Tertiary,
+        'dt-text-center dt-text-caption',
+      )}
+    >
       By enabling notifications you agree to Dialect&apos;s{' '}
       <a
         className={clsx(ClassTokens.Text.Brand, 'dt-underline')}
