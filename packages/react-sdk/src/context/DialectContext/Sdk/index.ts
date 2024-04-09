@@ -10,7 +10,7 @@ import { createContainer } from '../../../utils/container';
 import { DialectWalletStatesHolder } from '../Wallet';
 
 interface DialectSdkProps {
-  config: ConfigProps;
+  config?: ConfigProps;
   blockchainSdkFactory?: BlockchainSdkFactory<BlockchainSdk> | null;
 }
 
@@ -18,8 +18,18 @@ interface DialectSdkState {
   sdk: DialectSdkType<BlockchainSdk> | null;
 }
 
+const DEFAULT_CONFIG: ConfigProps = {
+  dialectCloud: {
+    tokenStore: 'local-storage',
+    tokenLifetimeMinutes: 43200, // 1 month
+  },
+};
+
 function useDialectSdk(
-  { config, blockchainSdkFactory }: DialectSdkProps = {} as DialectSdkProps
+  {
+    config = DEFAULT_CONFIG,
+    blockchainSdkFactory,
+  }: DialectSdkProps = {} as DialectSdkProps,
 ): DialectSdkState {
   const {
     walletConnected: { get: walletConnected },
@@ -30,7 +40,7 @@ function useDialectSdk(
     if (!blockchainSdkFactory || !walletConnected) {
       return null;
     }
-    return Dialect.sdk(config, blockchainSdkFactory);
+    return Dialect.sdk({ ...DEFAULT_CONFIG, ...config }, blockchainSdkFactory);
   }, [config, blockchainSdkFactory, walletConnected]);
 
   // The idea is to check if we already has token stored somewhere to skip NotAuthorized screen
@@ -44,7 +54,7 @@ function useDialectSdk(
         setConnectionInitiated(true);
       }
     },
-    [sdk, setConnectionInitiated]
+    [sdk, setConnectionInitiated],
   );
 
   return {

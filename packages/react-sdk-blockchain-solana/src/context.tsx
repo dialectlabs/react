@@ -10,7 +10,6 @@ import { ConfigProps } from '@dialectlabs/sdk';
 import { WalletContextState, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { EMPTY_OBJ } from './utils';
 
 export type Props = {
   dappAddress: string;
@@ -18,10 +17,7 @@ export type Props = {
   children: React.ReactNode;
 };
 
-const SolanaBlockchainSdkWrapper = ({
-  config = EMPTY_OBJ,
-  ...props
-}: Props) => {
+const SolanaBlockchainSdkWrapper = (props: Props) => {
   const wallet = useWallet();
 
   const {
@@ -108,7 +104,6 @@ const SolanaBlockchainSdkWrapper = ({
   return (
     <DialectContextProvider
       {...props}
-      config={config}
       blockchainSdkFactory={blockchainSdkFactory}
     />
   );

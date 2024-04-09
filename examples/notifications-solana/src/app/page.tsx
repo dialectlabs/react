@@ -6,7 +6,7 @@ import { PublicKey } from '@solana/web3.js';
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col px-8 py-5">
-      <header className="flex justify-end items-center gap-3">
+      <header className="flex items-center justify-end gap-3">
         <DialectSolanaNotificationsButton
           dappAddress={PublicKey.default.toString()}
         />

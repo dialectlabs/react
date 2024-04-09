@@ -17,7 +17,7 @@ export const DialectContext = React.createContext<DialectContextValue>(
 
 export type DialectContextProviderProps<ChainSdk extends BlockchainSdk> = {
   dappAddress: string;
-  config: ConfigProps;
+  config?: ConfigProps;
   blockchainSdkFactory?: BlockchainSdkFactory<ChainSdk> | null;
   // gate?: Gate;
   children: React.ReactNode;
