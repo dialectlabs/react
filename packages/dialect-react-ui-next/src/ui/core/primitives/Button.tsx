@@ -2,34 +2,39 @@ import clsx from 'clsx';
 import React from 'react';
 import { ClassTokens, Icons } from '../../theme';
 
+export enum ButtonType {
+  Primary = 'Primary',
+  Secondary = 'Secondary',
+  Destructive = 'Destructive',
+}
 export interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
-  variant?: 'primary' | 'secondary';
+  type?: ButtonType;
+  destructive?: boolean;
+  size?: 'medium' | 'large';
+  stretch?: boolean;
 }
 
 export const Button = ({
-  variant = 'secondary',
+  type = ButtonType.Secondary,
+  size = 'medium',
+  stretch = false,
   ...props
 }: ButtonProps): JSX.Element => {
-  const backgroundTokens =
-    variant === 'primary'
-      ? ClassTokens.Background.Button.Primary
-      : ClassTokens.Background.Button.Secondary;
-  const textTokens =
-    variant === 'primary'
-      ? ClassTokens.Text.Button.Primary
-      : ClassTokens.Text.Button.Secondary;
+  const backgroundTokens = ClassTokens.Background.Button[type];
+  const textTokens = ClassTokens.Text.Button[type];
   const styles =
-    variant === 'primary'
+    size === 'large'
       ? 'dt-px-6 dt-py-4 dt-text-text dt-font-semibold dt-rounded-xl'
       : 'dt-px-2 dt-py-1.5 dt-text-subtext dt-font-semibold dt-rounded-lg';
   return (
     <button
       className={clsx(
         'dt-flex dt-items-center dt-justify-center dt-gap-1.5',
+        { 'dt-w-full': stretch },
         backgroundTokens.Default,
         backgroundTokens.Hover,
         backgroundTokens.Pressed,

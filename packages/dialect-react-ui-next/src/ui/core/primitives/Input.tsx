@@ -15,12 +15,14 @@ export interface InputProps
   > {
   label?: string;
   rightAdornment?: ReactNode;
+  error?: boolean;
 }
 
 export const Input = ({
   id,
   label,
   rightAdornment,
+  error = false,
   ...inputProps
 }: InputProps) => {
   const inputId = useMemo(() => id || `dt-input-${generateIdRandom()}`, [id]);
@@ -42,9 +44,10 @@ export const Input = ({
         role="textbox"
         className={clsx(
           'dt-flex dt-h-10 dt-items-center dt-gap-2 dt-rounded-xl dt-border dt-pl-2 dt-pr-1.5',
-          ClassTokens.Stroke.Input.Primary,
-          //TODO focus-within
-          // ClassTokens.Stroke.Input.Checked,
+          error
+            ? ClassTokens.Stroke.Input.Error
+            : ClassTokens.Stroke.Input.Primary,
+          ClassTokens.Stroke.Input.Focused,
           ClassTokens.Background.Input.Secondary,
         )}
       >

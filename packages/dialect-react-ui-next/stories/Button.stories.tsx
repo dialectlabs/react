@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../src/ui/core/primitives';
+import { Button, ButtonType } from '../src/ui/core';
 
 export const Main: StoryObj<typeof Button> = {
   args: {
     children: 'Press me',
-    variant: 'secondary',
+    type: ButtonType.Secondary,
     // label: 'Input',
     // value: undefined,
     // placeholder: 'Type here...',
@@ -14,7 +14,7 @@ export const Main: StoryObj<typeof Button> = {
 export const Primary: StoryObj<typeof Button> = {
   args: {
     children: 'Press me',
-    variant: 'primary',
+    type: ButtonType.Primary,
     // label: 'Input',
     // value: undefined,
     // placeholder: 'Type here...',

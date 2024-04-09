@@ -1,7 +1,7 @@
 import { useDialectWallet } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { ClassTokens } from '../../theme';
-import { Button, Switch } from '../primitives';
+import { Button, ButtonType, Switch } from '../primitives';
 
 const NotAuthorizedState = () => {
   const {
@@ -38,7 +38,12 @@ const NotAuthorizedState = () => {
             onChange={(next) => setHardwareWalletForced(next)}
           />
         </div>
-        <Button variant="primary" onClick={() => setConnectionInitiated(true)}>
+        <Button
+          type={ButtonType.Primary}
+          size="large"
+          stretch={true}
+          onClick={() => setConnectionInitiated(true)}
+        >
           {isHardwareWalletForced ? 'Sign transaction' : 'Sign message'}
         </Button>
       </div>

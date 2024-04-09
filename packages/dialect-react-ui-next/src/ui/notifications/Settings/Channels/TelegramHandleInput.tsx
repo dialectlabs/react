@@ -5,7 +5,7 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { Button, Input } from '../../../core/primitives';
+import { Button, ButtonType, Input } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
 
@@ -117,7 +117,11 @@ export const TelegramHandleInput = ({
       );
     }
     if (isUserDeleting) {
-      return <Button onClick={deleteTelegram}>Delete</Button>;
+      return (
+        <Button onClick={deleteTelegram} type={ButtonType.Destructive}>
+          Delete
+        </Button>
+      );
     }
     if (isUserEditing) {
       return <Button onClick={updateTelegram}>Submit</Button>;

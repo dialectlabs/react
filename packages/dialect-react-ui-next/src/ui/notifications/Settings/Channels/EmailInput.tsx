@@ -5,7 +5,7 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';
-import { Button, Input } from '../../../core/primitives';
+import { Button, ButtonType, Input } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
 
@@ -123,7 +123,11 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
       );
     }
     if (isUserDeleting) {
-      return <Button onClick={deleteEmail}>Delete</Button>;
+      return (
+        <Button onClick={deleteEmail} type={ButtonType.Destructive}>
+          Delete
+        </Button>
+      );
     }
     if (isUserEditing) {
       return (

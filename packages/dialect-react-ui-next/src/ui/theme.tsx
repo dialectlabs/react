@@ -41,6 +41,10 @@ export const ClassTokens = {
         Default: 'dt-text-[--dt-text-primary]',
         Disabled: 'disabled:dt-text-[--dt-text-tertiary]',
       },
+      Destructive: {
+        Default: 'dt-text-[--dt-accent-error]',
+        Disabled: 'disabled:dt-text-[--dt-accent-error]',
+      },
     },
   },
   Icon: {
@@ -59,10 +63,16 @@ export const ClassTokens = {
         Disabled: 'disabled:dt-bg-[--dt-input-inverse]',
       },
       Secondary: {
-        Default: 'dt-bg-[--dt-bg-tertiary]',
+        Default: 'dt-bg-[--dt-input-tertiary]',
         Hover: 'hover:dt-bg-[--dt-input-primary]',
         Pressed: 'active:dt-bg-[--dt-input-tertiary]',
-        Disabled: 'disabled:dt-bg-[--dt-bg-tertiary]',
+        Disabled: 'disabled:dt-bg-[--dt-input-tertiary]',
+      },
+      Destructive: {
+        Default: 'dt-bg-[--dt-input-tertiary]',
+        Hover: 'hover:dt-bg-[--dt-input-primary]',
+        Pressed: 'active:dt-bg-[--dt-input-tertiary]',
+        Disabled: 'disabled:dt-bg-[--dt-input-tertiary]',
       },
     },
     Input: {
@@ -77,6 +87,8 @@ export const ClassTokens = {
     Input: {
       Primary: 'dt-border-[--dt-input-primary]',
       Checked: 'dt-border-[--dt-input-checked]',
+      Error: 'dt-border-[--dt-accent-error]',
+      Focused: 'focus-within:dt-border-[--dt-input-checked]',
     },
     Primary: 'dt-border-[--dt-stroke-primary]',
     Error: 'dt-border-[--dt-accent-error]',
