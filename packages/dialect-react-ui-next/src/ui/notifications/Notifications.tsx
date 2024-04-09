@@ -5,7 +5,7 @@ import { Route, Router } from './internal/Router';
 
 export const Notifications = () => {
   return (
-    <div className="dt-flex dt-min-h-[600px] dt-w-[420px] dt-flex-col dt-overflow-hidden dt-rounded-xl dt-border dt-border-[--dt-stroke-primary]">
+    <div className="dt-flex dt-h-[600px] dt-w-[420px] dt-flex-col dt-overflow-hidden dt-rounded-xl dt-border dt-border-[--dt-stroke-primary]">
       <WalletStatesWrapper>
         <Router initialRoute={Route.Notifications}>
           {(route) => (

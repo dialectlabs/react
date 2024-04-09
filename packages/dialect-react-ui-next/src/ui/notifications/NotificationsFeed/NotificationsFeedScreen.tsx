@@ -3,9 +3,11 @@ import { NotificationsFeedHeaderContainer } from './NotificationsFeedHeaderConta
 
 export const NotificationsFeedScreen = () => {
   return (
-    <div className="dt-flex dt-flex-col">
+    <div className="dt-flex dt-h-full dt-flex-col">
       <NotificationsFeedHeaderContainer />
-      <NotificationsFeed.Container />
+      <section className="dt-overflow-y-scroll">
+        <NotificationsFeed.Container />
+      </section>
     </div>
   );
 };

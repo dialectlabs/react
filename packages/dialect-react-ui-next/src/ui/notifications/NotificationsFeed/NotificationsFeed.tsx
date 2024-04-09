@@ -36,6 +36,18 @@ export const NotificationsFeed = () => {
         actions: [{ url: 'https://dialect.to', label: 'Trade now' }],
       },
     },
+    {
+      id: 5,
+      text: 'You received a new highest bid of 150 SOL on your MadLad #1234.',
+      timestamp: new Date(),
+      metadata: { title: 'You received a new highest bid' },
+    },
+    {
+      id: 6,
+      text: 'You received a new highest bid of 150 SOL on your MadLad #1234.',
+      timestamp: new Date(),
+      metadata: { title: 'You received a new highest bid' },
+    },
   ];
 
   if (!messages.length) {
