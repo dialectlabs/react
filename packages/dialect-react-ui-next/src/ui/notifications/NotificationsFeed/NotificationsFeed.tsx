@@ -1,3 +1,4 @@
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 import { NoNotifications } from './NoNotifications';
 import { NotificationsList } from './NotificationsList';
 import { Message } from './types';
@@ -41,4 +42,11 @@ export const NotificationsFeed = () => {
     return <NoNotifications />;
   }
   return <NotificationsList.Container messages={messages} />;
+};
+
+NotificationsFeed.Container = function NotificationsFeeContainer() {
+  const sdk = useDialectSdk();
+  sdk.tokenProvider.get();
+
+  return <NotificationsFeed />;
 };

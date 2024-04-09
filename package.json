@@ -8,7 +8,11 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "scripts": {
-    "bootstrap": "npm run build -w packages/react-sdk && npm run build -w packages/react-sdk-blockchain-solana && npm run build -w packages/dialect-react-ui-next && npm run build -w packages/react-ui-solana"
+    "bootstrap": "npm run build -w packages/react-sdk && npm run build -w packages/react-sdk-blockchain-solana && npm run build -w packages/dialect-react-ui-next && npm run build -w packages/react-ui-solana",
+    "dev:react-sdk": "npm run dev -w packages/react-sdk",
+    "dev:react-sdk-blockchain-solana": "npm run dev -w packages/react-sdk-blockchain-solana",
+    "dev:react-ui": "npm run dev -w packages/dialect-react-ui-next",
+    "dev:all": "concurrently \"npm:dev:*(!all)\""
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.5.0",

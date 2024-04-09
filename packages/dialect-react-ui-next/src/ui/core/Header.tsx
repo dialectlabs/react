@@ -1,28 +1,39 @@
 import clsx from 'clsx';
 import { ClassTokens, Icons } from '../theme';
 
-interface HeaderProps {}
+interface HeaderProps {
+  title: string;
+  showBackButton: boolean;
+  showSettingsButton: boolean;
+  showCloseButton: boolean;
+  onBackClick?: () => void;
+  onSettingsClick?: () => void;
+  onCloseClick?: () => void;
+}
 
-function Header(props: HeaderProps) {
-  const title = 'Notifications';
-  const showBackButton = true;
-  const showSettingsButton = true;
-  const showCloseButton = true;
-
+export function Header({
+  title,
+  showCloseButton = true,
+  showSettingsButton = true,
+  showBackButton = true,
+  onSettingsClick,
+  onBackClick,
+  onCloseClick,
+}: HeaderProps) {
   const BackButton = () => (
-    <button>
+    <button onClick={onBackClick}>
       <Icons.ArrowLeft />
     </button>
   );
 
   const SettingsButton = () => (
-    <button>
+    <button onClick={onSettingsClick}>
       <Icons.Settings />
     </button>
   );
 
   const CloseButton = () => (
-    <button>
+    <button onClick={onCloseClick}>
       <Icons.Close />
     </button>
   );
@@ -56,5 +67,3 @@ function Header(props: HeaderProps) {
     </div>
   );
 }
-
-export default Header;

@@ -18,9 +18,9 @@ export const NotificationsButton = () => {
         <Icons.BellButton />
       </button>
       {isOpen && (
-        <dialog className="dt-absolute -dt-right-32 dt-top-14 dt-overflow-hidden dt-rounded-xl dt-bg-transparent dt-shadow-xl">
+        <div className="dt-absolute -dt-right-32 dt-top-14 dt-overflow-hidden dt-rounded-xl dt-bg-transparent dt-shadow-xl">
           {<Notifications />}
-        </dialog>
+        </div>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { NotificationsFeed } from '../src/ui/notifications/NotificationsFeed';
+import { NotificationsFeed } from '../src/ui/notifications/NotificationsFeed/NotificationsFeed';
 
 export const Main: StoryObj<typeof NotificationsFeed> = {
   args: {},
