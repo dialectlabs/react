@@ -22,7 +22,7 @@ export const ModalStateProvider = ({
   );
 };
 
-// no null check, since Notification can be used without a modal
+// no null check, since Notifications can be used without a modal
 export const useModalState = () => {
   return useContext(ModalStateContext);
 };

@@ -1,7 +1,7 @@
 import WalletStatesWrapper from '../core/wallet-state/WalletStatesWrapper';
 import { NotificationsFeedScreen } from './NotificationsFeed';
-import { Route, Router } from './Router';
 import { SettingsScreen } from './Settings';
+import { Route, Router } from './internal/Router';
 
 export const Notifications = () => {
   return (

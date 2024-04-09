@@ -1,5 +1,5 @@
 import { Icons } from '../theme';
-import { ModalStateProvider } from './ModalStateProvider';
+import { ModalStateProvider } from './internal/ModalStateProvider';
 import { Notifications } from './Notifications';
 
 export const NotificationsButton = () => {

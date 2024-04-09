@@ -1,6 +1,6 @@
 import { Header } from '../../core';
-import { useModalState } from '../ModalStateProvider';
-import { Route, useRouter } from '../Router';
+import { useModalState } from '../internal/ModalStateProvider';
+import { Route, useRouter } from '../internal/Router';
 
 export const NotificationsFeedHeaderContainer = () => {
   const modelState = useModalState();
