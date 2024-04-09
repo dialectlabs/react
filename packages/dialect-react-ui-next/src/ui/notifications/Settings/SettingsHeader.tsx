@@ -1,7 +1,9 @@
 import { Header } from '../../core';
+import { useModalState } from '../ModalStateProvider';
 import { Route, useRouter } from '../Router';
 
 export const SettingsHeader = () => {
+  const modelState = useModalState();
   const { setRoute } = useRouter();
 
   return (
@@ -9,8 +11,9 @@ export const SettingsHeader = () => {
       title="Notifications Settings"
       showBackButton={true}
       showSettingsButton={false}
-      showCloseButton={true}
+      showCloseButton={!!modelState}
       onBackClick={() => setRoute(Route.Notifications)}
+      onCloseClick={() => modelState?.setOpen(false)}
     />
   );
 };
