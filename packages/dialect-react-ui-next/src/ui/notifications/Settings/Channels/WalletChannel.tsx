@@ -1,6 +1,7 @@
 import {
   AddressType,
   ThreadMemberScope,
+  useDialectContext,
   useDialectSdk,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
@@ -10,15 +11,14 @@ import {
 import clsx from 'clsx';
 import { useCallback } from 'react';
 import { displayAddress } from '../../../../utils/displayAddress';
-import { Button, Input } from '../../../core/primitives';
+import { Button, Input } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
 
 const ADDRESS_TYPE = AddressType.Wallet;
 
 export const WalletChannel = () => {
-  //TODO dapp context
-  const dappAddress = '';
+  const { dappAddress } = useDialectContext();
   const {
     wallet: { address: walletAddress },
   } = useDialectSdk();
@@ -124,7 +124,7 @@ export const WalletChannel = () => {
   return (
     <div className="dt-flex dt-flex-col dt-gap-2">
       <Input
-        label="Wallet" //TODO 'In App' instead of 'Wallet' ?
+        label="In App"
         disabled
         value={displayAddress(walletAddress)}
         rightAdornment={<RightAdornment />}

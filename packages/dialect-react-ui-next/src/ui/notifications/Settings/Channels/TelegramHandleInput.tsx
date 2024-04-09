@@ -5,7 +5,7 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { Button, ButtonType, Input } from '../../../core';
+import { Button, ButtonType, Input, TextButton } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
 
@@ -174,16 +174,10 @@ export const TelegramHandleInput = ({
             Deleting your Telegram handle here will delete it across all dapps
             you’ve signed up.
           </p>
-          <div
-            onClick={() => setIsUserDeleting(false)}
-            className={clsx(
-              ClassTokens.Text.Brand,
-              'dt-text-semibold dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1 dt-text-subtext',
-            )}
-          >
+          <TextButton onClick={() => setIsUserDeleting(false)}>
             <Icons.Xmark height={12} width={12} />
             Cancel
-          </div>
+          </TextButton>
         </div>
       )}
 
@@ -193,18 +187,14 @@ export const TelegramHandleInput = ({
             Updating your Telegram handle here will update it across all dapps
             you’ve signed up.
           </p>
-          <div
+          <TextButton
             onClick={() => {
               setTelegramUsername(telegramAddress?.value || '');
             }}
-            className={clsx(
-              ClassTokens.Text.Brand,
-              'dt-text-semibold dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1 dt-text-subtext',
-            )}
           >
             <Icons.Xmark height={12} width={12} />
             Cancel
-          </div>
+          </TextButton>
         </div>
       )}
     </div>

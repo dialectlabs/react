@@ -46,6 +46,14 @@ export const ClassTokens = {
         Disabled: 'disabled:dt-text-[--dt-accent-error]',
       },
     },
+    TextButton: {
+      //TODO naming???
+      Common: 'dt-text-[--dt-text-primary]',
+      Default: 'dt-text-[--dt-accent-brand]',
+      Success: 'dt-text-[--dt-accent-success]',
+      Warning: 'dt-text-[--dt-accent-warning]',
+      Error: 'dt-text-[--dt-accent-error]',
+    },
   },
   Icon: {
     Primary: 'dt-text-[--dt-icon-primary]',

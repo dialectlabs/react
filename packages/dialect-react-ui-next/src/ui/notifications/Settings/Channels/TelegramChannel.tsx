@@ -1,19 +1,19 @@
 import {
   AddressType,
   useDapp,
+  useDialectContext,
   useDialectSdk,
   useNotificationChannel,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
-import { Button, Input } from '../../../core/primitives';
+import { Button, Input, TextButton } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { TelegramHandleInput } from './TelegramHandleInput';
 import { useVerificationCode } from './model/useVerificationCode';
 
 export const TelegramChannel = () => {
-  //TODO dapp context
-  const dappAddress = '';
+  const { dappAddress } = useDialectContext();
 
   const { globalAddress: telegramAddress } = useNotificationChannel({
     addressType: AddressType.Telegram,
@@ -116,19 +116,13 @@ const VerificationCodeInput = ({
           rel="noreferrer"
         >
           📟 Get verification code by starting
-          <span className={ClassTokens.Text.Brand}> this bot</span>
+          <span className={ClassTokens.Text.Brand}> this bot </span>
           with command: /start
         </a>
-        <div
-          className={clsx(
-            ClassTokens.Text.Brand,
-            'dt-text-semibold dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1 dt-text-subtext',
-          )}
-          onClick={deleteAddress}
-        >
+        <TextButton onClick={deleteAddress}>
           <Icons.Xmark height={12} width={12} />
           Cancel
-        </div>
+        </TextButton>
       </div>
     </div>
   );

@@ -1,14 +1,17 @@
-import { AddressType, useNotificationChannel } from '@dialectlabs/react-sdk';
+import {
+  AddressType,
+  useDialectContext,
+  useNotificationChannel,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useState } from 'react';
-import { Button, Input } from '../../../core/primitives';
+import { Button, Input, TextButton } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { EmailInput } from './EmailInput';
 import { useVerificationCode } from './model/useVerificationCode';
 
 export const EmailChannel = () => {
-  //TODO dapp context
-  const dappAddress = '';
+  const { dappAddress } = useDialectContext();
   const { globalAddress: emailAddress } = useNotificationChannel({
     addressType: AddressType.Email,
   });
@@ -72,38 +75,29 @@ const VerificationCodeInput = ({ email }: { email: string }) => {
           )
         }
       />
-      <div className="dt-mt-2 dt-flex dt-flex-col dt-gap-2">
-        <p className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}>
-          Check your <span className={ClassTokens.Text.Primary}>{email} </span>
-          Email for a verification code.
-        </p>
-        <div
-          className={clsx(
-            ClassTokens.Text.Brand,
-            'dt-text-semibold dt-flex dt-flex-row dt-items-center dt-gap-8 dt-text-subtext',
-          )}
-        >
-          <div
-            className="dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1"
-            onClick={deleteAddress}
-          >
-            <Icons.Xmark height={12} width={12} />
-            Cancel
-          </div>
-          <div
-            className="dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1"
-            onClick={resendCode}
-          >
-            <Icons.Resend height={12} width={12} />
-            Resend Code
-          </div>
-        </div>
-      </div>
+
       {currentError && (
         <p className={clsx(ClassTokens.Text.Error, 'dt-mt-2 dt-text-caption')}>
           {currentError.message}
         </p>
       )}
+
+      <div className="dt-mt-2 dt-flex dt-flex-col dt-gap-2">
+        <p className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}>
+          Check your <span className={ClassTokens.Text.Primary}>{email} </span>
+          Email for a verification code.
+        </p>
+        <div className="dt-flex dt-flex-row dt-items-center dt-gap-8">
+          <TextButton onClick={deleteAddress}>
+            <Icons.Xmark height={12} width={12} />
+            Cancel
+          </TextButton>
+          <TextButton onClick={resendCode}>
+            <Icons.Resend height={12} width={12} />
+            Resend Code
+          </TextButton>
+        </div>
+      </div>
     </div>
   );
 };

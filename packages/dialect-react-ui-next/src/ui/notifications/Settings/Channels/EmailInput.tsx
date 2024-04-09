@@ -5,7 +5,7 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';
-import { Button, ButtonType, Input } from '../../../core';
+import { Button, ButtonType, Input, TextButton } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
 
@@ -197,16 +197,10 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
             Deleting your email here will delete it across all dapps you’ve
             signed up.
           </p>
-          <div
-            onClick={() => setIsUserDeleting(false)}
-            className={clsx(
-              ClassTokens.Text.Brand,
-              'dt-text-semibold dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1 dt-text-subtext',
-            )}
-          >
+          <TextButton onClick={() => setIsUserDeleting(false)}>
             <Icons.Xmark height={12} width={12} />
             Cancel
-          </div>
+          </TextButton>
         </div>
       )}
 
@@ -216,18 +210,14 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
             Updating your email here will update it across all dapps you’ve
             signed up.
           </p>
-          <div
+          <TextButton
             onClick={() => {
               setEmail(emailAddress?.value || '');
             }}
-            className={clsx(
-              ClassTokens.Text.Brand,
-              'dt-text-semibold dt-flex dt-cursor-pointer dt-flex-row dt-items-center dt-gap-1 dt-text-subtext',
-            )}
           >
             <Icons.Xmark height={12} width={12} />
             Cancel
-          </div>
+          </TextButton>
         </div>
       )}
     </div>
