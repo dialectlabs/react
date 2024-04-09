@@ -1,17 +1,19 @@
+import {
+  useDialectContext,
+  useNotificationSubscriptions,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useState } from 'react';
-import { Checkbox } from '../../core/primitives';
+import { Checkbox } from '../../core';
 import { ClassTokens } from '../../theme';
 
 interface Props {
   title: string;
   description?: string;
   enabled: boolean;
-  onSwitch: () => void;
+  onChange: (newValue: boolean) => void;
 }
 
-const NotificationType = ({ title, description, enabled, onSwitch }: Props) => {
-  const [isEnabled, setEnabled] = useState(enabled);
+const NotificationType = ({ title, description, enabled, onChange }: Props) => {
   return (
     <div
       className={clsx(
@@ -39,34 +41,51 @@ const NotificationType = ({ title, description, enabled, onSwitch }: Props) => {
           </span>
         )}
       </div>
-      <Checkbox checked={isEnabled} onChange={(next) => setEnabled(next)} />
+      <Checkbox checked={enabled} onChange={onChange} />
     </div>
   );
 };
 
 export const NotificationTypes = () => {
-  const types = [
-    {
-      id: '1',
-      title: 'Price Action',
-      description: 'Price change alerts for your open contracts.',
-    },
-    {
-      id: '2',
-      title: 'Stop Loss and Profit Takes',
-      description: 'Alerts when your Stop Loss or Take Profit orders fill.',
-    },
-  ];
+  const { dappAddress } = useDialectContext();
+
+  const {
+    subscriptions: notificationSubscriptions,
+    update: updateNotificationSubscription,
+    isUpdating,
+    errorUpdating: errorUpdatingNotificationSubscription,
+    errorFetching: errorFetchingNotificationsConfigs,
+  } = useNotificationSubscriptions({ dappAddress });
+  const error =
+    errorFetchingNotificationsConfigs || errorUpdatingNotificationSubscription;
 
   return (
-    <div className="dt-flex dt-flex-col dt-gap-2 dt-py-4">
-      {types.map((it) => (
+    <div className="dt-flex dt-flex-col dt-gap-2">
+      {error && <p className={clsx(ClassTokens.Text.Error)}>{error.message}</p>}
+      <p
+        className={clsx(
+          ClassTokens.Text.Tertiary,
+          'dt-text-subtext dt-font-semibold',
+        )}
+      >
+        Notification Type
+      </p>
+      {notificationSubscriptions.map(({ notificationType, subscription }) => (
         <NotificationType
-          key={it.id}
-          title={it.title}
-          description={it.description}
-          enabled={true}
-          onSwitch={() => {}}
+          key={notificationType.id}
+          title={notificationType.name}
+          description={notificationType.trigger}
+          enabled={subscription.config.enabled}
+          onChange={(value) => {
+            if (isUpdating) return;
+            updateNotificationSubscription({
+              notificationTypeId: notificationType.id,
+              config: {
+                ...subscription.config,
+                enabled: value,
+              },
+            });
+          }}
         />
       ))}
     </div>

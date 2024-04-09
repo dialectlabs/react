@@ -3,7 +3,7 @@ import type {
   BlockchainSdkFactory,
   ConfigProps,
 } from '@dialectlabs/sdk';
-import React from 'react';
+import React, { useContext } from 'react';
 import { LocalMessages } from './LocalMessages';
 import { DialectSdk } from './Sdk';
 
@@ -21,6 +21,10 @@ export type DialectContextProviderProps<ChainSdk extends BlockchainSdk> = {
   blockchainSdkFactory?: BlockchainSdkFactory<ChainSdk> | null;
   // gate?: Gate;
   children: React.ReactNode;
+};
+
+export const useDialectContext = () => {
+  return useContext(DialectContext);
 };
 
 export const DialectContextProvider: React.FC<

@@ -22,7 +22,7 @@ const Channel = ({ type }: { type: ChannelType }) => {
 
 export const Channels = ({ channels }: Props) => {
   return (
-    <div className="dt-pb-2 dt-pt-3">
+    <div>
       {channels.map((it) => (
         <Channel key={it} type={it} />
       ))}

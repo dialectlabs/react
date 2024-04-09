@@ -30,9 +30,7 @@ export const Checkbox = ({
       <span
         className={clsx(
           'dt-flex dt-h-5 dt-w-5 dt-items-center dt-justify-center dt-rounded-sm dt-border-2 dt-transition-colors dt-ease-in-out',
-          checked
-            ? ClassTokens.Background.Input.Checked
-            : ClassTokens.Background.Primary,
+          checked ? ClassTokens.Background.Input.Checked : 'dt-bg-transparent', //TODO input color?
           checked
             ? ClassTokens.Stroke.Input.Checked
             : ClassTokens.Stroke.Input.Primary,
