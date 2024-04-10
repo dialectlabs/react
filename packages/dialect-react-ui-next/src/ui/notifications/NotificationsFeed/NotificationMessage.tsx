@@ -61,7 +61,7 @@ export const NotificationMessage = (message: Message) => {
       )}
     >
       <div
-        className="dt-absolute -dt-bottom-[36%] -dt-top-[36%] dt-left-0 dt-w-[240px] -dt-translate-x-1/2 dt-transform"
+        className="dt-pointer-events-none dt-absolute -dt-bottom-[36%] -dt-top-[36%] dt-left-0 dt-w-[240px] -dt-translate-x-1/2 dt-transform"
         style={{
           background: messageStyles.gradientStartColor
             ? `radial-gradient(50% 50% at 50% 50%, ${getColor(messageStyles.gradientStartColor)} 0%, transparent 100%)`
