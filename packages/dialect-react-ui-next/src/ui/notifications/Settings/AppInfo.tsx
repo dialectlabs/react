@@ -1,4 +1,6 @@
+import { REACT_SDK_VERSION } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
+import { version as REACT_UI_VERSION } from '../../../../package.json';
 import { DialectLogo } from '../../core/icons';
 import { ClassTokens } from '../../theme';
 export const AppInfo = () => {
@@ -25,9 +27,7 @@ export const AppInfo = () => {
 
       <div className="dt-flex dt-items-center dt-justify-center">
         <span className={clsx('dt-text-caption', ClassTokens.Text.Tertiary)}>
-          {/* TODO versions*/}
-          {/*{UI_VERSION} / {SDK_VERSION}*/}
-          2.0.0 / 1.2.1
+          {REACT_UI_VERSION} / {REACT_SDK_VERSION}
         </span>
       </div>
     </div>
