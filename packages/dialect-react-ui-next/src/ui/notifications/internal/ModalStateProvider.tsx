@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 
-interface ModalState {
+export interface ModalState {
   open: boolean;
   setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
 }
