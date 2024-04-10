@@ -7,11 +7,12 @@
   --dt-bg-secondary: theme('colors.light.80');
   --dt-bg-tertiary: theme('colors.light.60');
   --dt-bg-brand: theme('colors.light.60');
+  --dt-bg-brand-transparent: theme('colors.dark.50' / 10%);
   --dt-input-primary: theme('colors.light.50');
   --dt-input-secondary: theme('colors.light.100');
   --dt-input-tertiary: theme('colors.light.60');
   --dt-input-inverse: theme('colors.dark.90');
-  --dt-input-checked: theme('colors.accent.success');
+  --dt-input-checked: theme('colors.accent.success.DEFAULT');
   --dt-input-unchecked: theme('colors.light.30');
   --dt-input-disabled: theme('colors.light.30');
   --dt-text-primary: theme('colors.dark.100');
@@ -23,10 +24,11 @@
   --dt-icon-secondary: theme('colors.dark.60');
   --dt-icon-tertiary: theme('colors.dark.50');
   --dt-icon-inverse: theme('colors.light.100');
-  --dt-accent-brand: theme('colors.accent.success');
-  --dt-accent-success: theme('colors.accent.success');
-  --dt-accent-warning: theme('colors.accent.warning');
-  --dt-accent-error: theme('colors.accent.error');
+  --dt-accent-brand: theme('colors.accent.success.DEFAULT');
+  --dt-accent-brand-transparent: theme('colors.dark.50');
+  --dt-accent-success: theme('colors.accent.success.DEFAULT');
+  --dt-accent-warning: theme('colors.accent.warning.DEFAULT');
+  --dt-accent-error: theme('colors.accent.error.DEFAULT');
   --dt-gradient-button: theme('backgroundImage.gradient-button');
 }
 

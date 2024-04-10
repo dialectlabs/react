@@ -1,3 +1,4 @@
+import { NotificationStyleMap } from '../types';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -23,6 +24,8 @@ export const Icons = {
   Xmark: XmarkIcon,
   Resend: ResendIcon,
 };
+
+export const NotificationTypeStyles: NotificationStyleMap = {};
 
 export const ClassTokens = {
   Text: {
@@ -90,6 +93,8 @@ export const ClassTokens = {
     },
     Primary: 'dt-bg-[--dt-bg-primary]',
     Secondary: 'dt-bg-[--dt-bg-secondary]',
+    Brand: 'dt-bg-[--dt-bg-brand]',
+    BrandTransparent: 'dt-bg-[--dt-bg-brand-transparent]',
   },
   Stroke: {
     Input: {
