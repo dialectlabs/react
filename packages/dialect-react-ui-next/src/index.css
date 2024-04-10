@@ -27,7 +27,9 @@
   --dt-accent-success: theme('colors.accent.success');
   --dt-accent-warning: theme('colors.accent.warning');
   --dt-accent-error: theme('colors.accent.error');
-  --dt-gradient-button: theme('backgroundImage.gradient-button');
+  --dt-border-radius-s: 0.5rem;
+  --dt-border-radius-m: 0.75rem;
+  --dt-border-radius-l: 1rem;
 }
 
 /* TODO: darkmode */

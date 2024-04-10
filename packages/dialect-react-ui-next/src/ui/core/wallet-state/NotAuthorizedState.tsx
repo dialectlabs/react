@@ -29,7 +29,8 @@ const NotAuthorizedState = () => {
         <div
           className={clsx(
             ClassTokens.Stroke.Input.Primary,
-            'dt-mb-4 dt-flex dt-h-12 dt-w-full dt-flex-row dt-items-center dt-justify-between dt-rounded-xl dt-border dt-px-3 dt-py-2',
+            ClassTokens.Radius.Medium,
+            'dt-mb-4 dt-flex dt-h-12 dt-w-full dt-flex-row dt-items-center dt-justify-between dt-border dt-px-3 dt-py-2',
           )}
         >
           <span>Using ledger?</span>

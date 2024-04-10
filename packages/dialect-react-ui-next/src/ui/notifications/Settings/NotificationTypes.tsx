@@ -18,7 +18,8 @@ const NotificationType = ({ title, description, enabled, onChange }: Props) => {
     <div
       className={clsx(
         ClassTokens.Background.Secondary,
-        'dt-flex dt-flex-row dt-items-center dt-justify-between dt-gap-3 dt-rounded-xl dt-px-4 dt-py-3',
+        ClassTokens.Radius.Medium,
+        'dt-flex dt-flex-row dt-items-center dt-justify-between dt-gap-3 dt-px-4 dt-py-3',
       )}
     >
       <div className="dt-flex dt-flex-col dt-gap-1">

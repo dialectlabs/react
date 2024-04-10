@@ -43,7 +43,8 @@ export const Input = ({
       <div
         role="textbox"
         className={clsx(
-          'dt-flex dt-h-10 dt-items-center dt-gap-2 dt-rounded-xl dt-border dt-pl-2 dt-pr-1.5',
+          'dt-flex dt-h-10 dt-items-center dt-gap-2 dt-border dt-pl-2 dt-pr-1.5',
+          ClassTokens.Radius.Medium,
           error
             ? ClassTokens.Stroke.Input.Error
             : ClassTokens.Stroke.Input.Primary,

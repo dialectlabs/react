@@ -6,7 +6,8 @@ export const AppInfo = () => {
     <div className="dt-flex dt-flex-col dt-items-center dt-justify-center dt-gap-2.5">
       <div
         className={clsx(
-          'dt-inline-flex dt-items-center dt-justify-center dt-rounded-2xl dt-px-2 dt-py-1 dt-text-caption',
+          'dt-inline-flex dt-items-center dt-justify-center dt-px-2 dt-py-1 dt-text-caption',
+          ClassTokens.Radius.Large,
           ClassTokens.Background.Secondary,
           ClassTokens.Text.Tertiary,
         )}

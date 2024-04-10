@@ -101,4 +101,9 @@ export const ClassTokens = {
     Primary: 'dt-border-[--dt-stroke-primary]',
     Error: 'dt-border-[--dt-accent-error]',
   },
+  Radius: {
+    Small: 'dt-rounded-[--dt-border-radius-s]',
+    Medium: 'dt-rounded-[--dt-border-radius-m]',
+    Large: 'dt-rounded-[--dt-border-radius-l]',
+  },
 };

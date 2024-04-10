@@ -28,8 +28,10 @@ export const Button = ({
   const textTokens = ClassTokens.Text.Button[type];
   const styles =
     size === 'large'
-      ? 'dt-px-6 dt-py-4 dt-text-text dt-font-semibold dt-rounded-xl'
-      : 'dt-px-2 dt-py-1.5 dt-text-subtext dt-font-semibold dt-rounded-lg';
+      ? 'dt-px-6 dt-py-4 dt-text-text dt-font-semibold ' +
+        ClassTokens.Radius.Medium
+      : 'dt-px-2.5 dt-py-1.5 dt-text-subtext dt-font-semibold ' +
+        ClassTokens.Radius.Small;
   return (
     <button
       className={clsx(
