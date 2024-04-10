@@ -4,7 +4,7 @@ import {
   useNotificationChannel,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { Button, Input, TextButton } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { EmailInput } from './EmailInput';
@@ -44,15 +44,11 @@ const VerificationCodeInput = ({ email }: { email: string }) => {
     currentError,
   } = useVerificationCode(AddressType.Email);
 
-  const [isCodeValid, setCodeValid] = useState(false);
-  const setCode = (code: string) => {
-    if (VERIFICATION_CODE_REGEX.test(code)) {
-      setCodeValid(true);
-    } else {
-      setCodeValid(false);
-    }
-    setVerificationCode(code);
-  };
+  const isCodeValid = useMemo(
+    () => VERIFICATION_CODE_REGEX.test(verificationCode),
+    [verificationCode],
+  );
+  const isLoading = isSendingCode || isResendingCode;
 
   return (
     <div>
@@ -62,14 +58,17 @@ const VerificationCodeInput = ({ email }: { email: string }) => {
         label="Email"
         type="text"
         value={verificationCode}
-        onChange={(e) => setCode(e.target.value)}
+        onChange={(e) => setVerificationCode(e.target.value)}
         rightAdornment={
-          isSendingCode || isResendingCode ? (
+          isLoading ? (
             <div className={clsx(ClassTokens.Icon.Tertiary, 'dt-p-2')}>
               <Icons.Loader />
             </div>
           ) : (
-            <Button onClick={sendCode} disabled={!isCodeValid}>
+            <Button
+              onClick={isCodeValid ? sendCode : undefined}
+              disabled={!isCodeValid}
+            >
               Submit
             </Button>
           )
@@ -88,11 +87,11 @@ const VerificationCodeInput = ({ email }: { email: string }) => {
           Email for a verification code.
         </p>
         <div className="dt-flex dt-flex-row dt-items-center dt-gap-8">
-          <TextButton onClick={deleteAddress}>
+          <TextButton onClick={deleteAddress} disabled={isLoading}>
             <Icons.Xmark height={12} width={12} />
             Cancel
           </TextButton>
-          <TextButton onClick={resendCode}>
+          <TextButton onClick={resendCode} disabled={isLoading}>
             <Icons.Resend height={12} width={12} />
             Resend Code
           </TextButton>

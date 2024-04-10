@@ -29,7 +29,7 @@ export const TextButton = ({
         ClassTokens.Text.TextButton[type],
         'hover:dt-opacity-80 disabled:dt-opacity-50',
       )}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       disabled={disabled}
     >
       {children}

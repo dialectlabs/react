@@ -6,7 +6,7 @@ import {
   useNotificationChannel,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Button, Input, TextButton } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { TelegramHandleInput } from './TelegramHandleInput';
@@ -72,15 +72,10 @@ const VerificationCodeInput = ({
     return buildBotUrl(dappTelegramName);
   }, [dappTelegramName, defaultBotUrl]);
 
-  const [isCodeValid, setCodeValid] = useState(false);
-  const setCode = (code: string) => {
-    if (VERIFICATION_CODE_REGEX.test(code)) {
-      setCodeValid(true);
-    } else {
-      setCodeValid(false);
-    }
-    setVerificationCode(code);
-  };
+  const isCodeValid = useMemo(
+    () => VERIFICATION_CODE_REGEX.test(verificationCode),
+    [verificationCode],
+  );
 
   return (
     <div>
@@ -90,14 +85,17 @@ const VerificationCodeInput = ({
         label="Telegram"
         type="text"
         value={verificationCode}
-        onChange={(e) => setCode(e.target.value)}
+        onChange={(e) => setVerificationCode(e.target.value)}
         rightAdornment={
           isSendingCode ? (
             <div className={clsx(ClassTokens.Icon.Tertiary, 'dt-p-2')}>
               <Icons.Loader />
             </div>
           ) : (
-            <Button onClick={sendCode} disabled={!isCodeValid}>
+            <Button
+              onClick={isCodeValid ? sendCode : undefined}
+              disabled={!isCodeValid}
+            >
               Submit
             </Button>
           )
@@ -119,7 +117,7 @@ const VerificationCodeInput = ({
           <span className={ClassTokens.Text.Brand}> this bot </span>
           with command: /start
         </a>
-        <TextButton onClick={deleteAddress}>
+        <TextButton onClick={deleteAddress} disabled={isSendingCode}>
           <Icons.Xmark height={12} width={12} />
           Cancel
         </TextButton>
