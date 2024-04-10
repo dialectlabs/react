@@ -14,11 +14,7 @@ export const NotificationsButton = () => {
             >
               <Icons.BellButton />
             </button>
-            {open && (
-              <div className="dt-absolute -dt-right-32 dt-top-14 dt-overflow-hidden dt-rounded-xl dt-bg-transparent dt-shadow-xl">
-                {<Notifications />}
-              </div>
-            )}
+            {open && <div className="modal">{<Notifications />}</div>}
           </>
         )}
       </ModalStateProvider>

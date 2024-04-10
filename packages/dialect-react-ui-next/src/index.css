@@ -41,3 +41,12 @@
 .dialect[data-theme='dark'] {
   --dt-input-secondary: #ff00ff;
 }
+
+.dialect .modal {
+  /* mobile */
+  @apply dt-fixed dt-right-0 dt-top-0 dt-z-[100] dt-h-full dt-w-full;
+  /* non mobile */
+  @apply sm:dt-absolute sm:dt-top-16 sm:dt-h-[600px] sm:dt-w-[420px];
+  /* styles */
+  @apply dt-overflow-hidden dt-rounded-xl dt-border dt-border-[--dt-stroke-primary];
+}

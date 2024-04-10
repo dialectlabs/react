@@ -8,7 +8,7 @@ export default {
       prefix: '.dialect',
       includeFiles: ['index.css'],
       transform: function (prefix, selector, prefixedSelector) {
-        if (selector === '.dialect') {
+        if (selector.startsWith('.dialect')) {
           return selector;
         }
         if (prefixOverrideList.includes(selector)) {
