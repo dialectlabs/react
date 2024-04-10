@@ -18,7 +18,7 @@
   --dt-button-primary-disabled: theme('colors.dark.70');
   --dt-button-secondary: theme('colors.light.60');
   --dt-button-secondary-hover: theme('colors.light.80');
-  --dt-button-secondary-disabled: theme('colors.light.90');
+  --dt-button-secondary-disabled: theme('colors.light.80');
   --dt-text-primary: theme('colors.dark.100');
   --dt-text-secondary: theme('colors.dark.80');
   --dt-text-tertiary: theme('colors.dark.60');
