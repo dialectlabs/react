@@ -4,7 +4,7 @@ import {
   useNotificationChannelDappSubscription,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, ButtonType, Input, TextButton } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
@@ -37,18 +37,18 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
   });
 
   const [email, setEmail] = useState(emailAddress?.value || '');
+  const isEmailValid = useMemo(() => EMAIL_REGEX.test(email), [email]);
+  const isEmailEmpty = useMemo(() => !email, [email]);
 
-  const [isEmailValid, setEmailValid] = useState(false);
+  //for actually showing error
   const [validationError, setValidationError] = useState(false);
-  const setEmailValue = (email: string) => {
-    if (EMAIL_REGEX.test(email) || !email) {
-      setEmailValid(true);
+
+  //for removing error as soon as it is fixed
+  useEffect(() => {
+    if (isEmailEmpty || isEmailValid) {
       setValidationError(false);
-    } else {
-      setEmailValid(false);
     }
-    setEmail(email);
-  };
+  }, [isEmailEmpty, isEmailValid]);
 
   const [error, setError] = useState<Error | null>(null);
   const [isUserDeleting, setIsUserDeleting] = useState(false);
@@ -66,8 +66,7 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
   const currentError = error || errorFetchingAddresses;
 
   const updateEmail = useCallback(async () => {
-    if (!isEmailValid) setValidationError(true);
-    else {
+    {
       try {
         await updateAddress({ value: email });
         setError(null);
@@ -75,11 +74,10 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
         setError(e as Error);
       }
     }
-  }, [email, isEmailValid, updateAddress]);
+  }, [email, updateAddress]);
 
   const saveEmail = useCallback(async () => {
-    if (!isEmailValid) setValidationError(true);
-    else {
+    {
       try {
         const address = await createAddress({ value: email });
         await toggleSubscription({ enabled: true, address });
@@ -88,17 +86,18 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
         setError(e as Error);
       }
     }
-  }, [createAddress, email, isEmailValid, toggleSubscription]);
+  }, [createAddress, email, toggleSubscription]);
 
-  const deleteEmail = async () => {
+  const deleteEmail = useCallback(async () => {
     try {
       await deleteAddress();
+      setEmail('');
       setIsUserDeleting(false);
       setError(null);
     } catch (e) {
       setError(e as Error);
     }
-  };
+  }, [deleteAddress]);
 
   const toggleEmail = async (nextValue: boolean) => {
     try {
@@ -113,8 +112,8 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
 
   const isUserEditing = emailAddress?.value !== email && isEmailSaved;
 
-  const getButton = () => {
-    if (!email) return null;
+  const getButton = useCallback(() => {
+    if (isEmailEmpty) return null;
     if (isLoading) {
       return (
         <div className={clsx(ClassTokens.Icon.Tertiary, 'dt-p-2')}>
@@ -131,7 +130,16 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
     }
     if (isUserEditing) {
       return (
-        <Button onClick={updateEmail} disabled={!isEmailValid || !email}>
+        <Button
+          onClick={() => {
+            if (!isEmailValid) {
+              setValidationError(true);
+            } else {
+              updateEmail();
+            }
+          }}
+          disabled={!isEmailValid}
+        >
           Submit
         </Button>
       );
@@ -148,11 +156,30 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
     }
 
     return (
-      <Button onClick={saveEmail} disabled={!isEmailValid || !email}>
+      <Button
+        onClick={() => {
+          if (!isEmailValid) {
+            setValidationError(true);
+          } else {
+            saveEmail();
+          }
+        }}
+        disabled={!isEmailValid}
+      >
         Submit
       </Button>
     );
-  };
+  }, [
+    deleteEmail,
+    isEmailEmpty,
+    isEmailValid,
+    isLoading,
+    isUserDeleting,
+    isUserEditing,
+    isVerified,
+    saveEmail,
+    updateEmail,
+  ]);
 
   return (
     <div>
@@ -161,12 +188,12 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
         placeholder="Enter you Email"
         id="settings-email"
         value={email}
+        error={validationError}
+        disabled={isLoading || isUserDeleting}
         onChange={(e) => {
-          setEmailValue(e.target.value);
+          setEmail(e.target.value);
         }}
-        onBlur={() => {
-          if (email && !isEmailValid) setValidationError(true);
-        }}
+        onBlur={() => setValidationError(!isEmailEmpty && !isEmailValid)}
         rightAdornment={getButton()}
       />
 
@@ -197,7 +224,10 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
             Deleting your email here will delete it across all dapps you’ve
             signed up.
           </p>
-          <TextButton onClick={() => setIsUserDeleting(false)}>
+          <TextButton
+            disabled={isLoading}
+            onClick={() => setIsUserDeleting(false)}
+          >
             <Icons.Xmark height={12} width={12} />
             Cancel
           </TextButton>
@@ -211,6 +241,7 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
             signed up.
           </p>
           <TextButton
+            disabled={isLoading}
             onClick={() => {
               setEmail(emailAddress?.value || '');
             }}

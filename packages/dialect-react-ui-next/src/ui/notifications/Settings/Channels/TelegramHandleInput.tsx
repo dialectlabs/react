@@ -86,6 +86,7 @@ export const TelegramHandleInput = ({
   const deleteTelegram = async () => {
     try {
       await deleteAddress();
+      setTelegramUsername('');
       setIsUserDeleting(false);
       setError(null);
     } catch (e) {

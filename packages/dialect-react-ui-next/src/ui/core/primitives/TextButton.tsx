@@ -9,7 +9,7 @@ export enum TextButtonType {
   Warning = 'Warning',
   Error = 'Error',
 }
-export interface ButtonProps {
+export interface TextButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
@@ -21,7 +21,7 @@ export const TextButton = ({
   disabled,
   children,
   type = TextButtonType.Common,
-}: ButtonProps): JSX.Element => {
+}: TextButtonProps): JSX.Element => {
   return (
     <button
       className={clsx(
