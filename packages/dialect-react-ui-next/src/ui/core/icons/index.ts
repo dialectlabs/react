@@ -11,4 +11,5 @@ export { ResendIcon } from './ResendIcon';
 export { SettingsIcon } from './SettingsIcon';
 export { TelegramIcon } from './TelegramIcon';
 export { TrashIcon } from './TrashIcon';
+export { WalletIcon } from './WalletIcon';
 export { XmarkIcon } from './XmarkIcon';

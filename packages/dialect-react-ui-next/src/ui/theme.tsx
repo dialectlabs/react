@@ -9,6 +9,7 @@ import {
   ResendIcon,
   SettingsIcon,
   TrashIcon,
+  WalletIcon,
   XmarkIcon,
 } from './core/icons';
 
@@ -23,6 +24,7 @@ export const Icons = {
   Trash: TrashIcon,
   Xmark: XmarkIcon,
   Resend: ResendIcon,
+  Wallet: WalletIcon,
 };
 
 export const NotificationTypeStyles: NotificationStyleMap = {};
