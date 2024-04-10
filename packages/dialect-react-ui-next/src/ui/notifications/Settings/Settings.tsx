@@ -8,13 +8,14 @@ import { TryDialectOperator } from './TryDialectOperator';
 
 export const Settings = () => {
   return (
-    <div>
+    <div className="dt-flex dt-h-full dt-flex-col">
       <div className="dt-px-4 dt-py-3">
         <Channels channels={['wallet', 'telegram', 'email']} />
       </div>
       <div className="dt-px-4">
         <NotificationTypes />
       </div>
+      <div className="dt-flex-1" />
       <div className="dt-px-4 dt-py-4">
         <TryDialectOperator />
       </div>
