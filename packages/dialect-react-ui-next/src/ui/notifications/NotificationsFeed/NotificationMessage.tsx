@@ -77,7 +77,7 @@ export const NotificationMessage = (message: Message) => {
         >
           <div
             className={clsx(
-              'dt-flex dt-h-full dt-w-full dt-items-center dt-justify-center dt-rounded-full ',
+              'dt-flex dt-h-full dt-w-full dt-items-center dt-justify-center dt-rounded-full',
             )}
             style={{
               background: getColor(messageStyles.iconBackgroundColor),

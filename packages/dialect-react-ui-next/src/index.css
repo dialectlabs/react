@@ -25,7 +25,6 @@
   --dt-icon-tertiary: theme('colors.dark.50');
   --dt-icon-inverse: theme('colors.light.100');
   --dt-accent-brand: theme('colors.accent.success.DEFAULT');
-  --dt-accent-brand-transparent: theme('colors.dark.50');
   --dt-accent-success: theme('colors.accent.success.DEFAULT');
   --dt-accent-warning: theme('colors.accent.warning.DEFAULT');
   --dt-accent-error: theme('colors.accent.error.DEFAULT');

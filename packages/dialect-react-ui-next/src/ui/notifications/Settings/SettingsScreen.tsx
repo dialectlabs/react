@@ -3,9 +3,11 @@ import { SettingsHeader } from './SettingsHeader';
 
 export const SettingsScreen = () => {
   return (
-    <div className="dt-flex dt-flex-col">
+    <div className="dt-flex dt-h-full dt-flex-col">
       <SettingsHeader />
-      <Settings />
+      <section className="dt-overflow-y-scroll">
+        <Settings />
+      </section>
     </div>
   );
 };
