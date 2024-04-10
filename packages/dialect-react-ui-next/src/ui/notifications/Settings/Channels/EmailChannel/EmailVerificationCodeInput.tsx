@@ -1,38 +1,12 @@
-import {
-  AddressType,
-  useDialectContext,
-  useNotificationChannel,
-} from '@dialectlabs/react-sdk';
+import { AddressType } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { Button, Input, TextButton } from '../../../core';
-import { ClassTokens, Icons } from '../../../theme';
-import { EmailInput } from './EmailInput';
-import { useVerificationCode } from './model/useVerificationCode';
-
-export const EmailChannel = () => {
-  const { dappAddress } = useDialectContext();
-  const { globalAddress: emailAddress } = useNotificationChannel({
-    addressType: AddressType.Email,
-  });
-  const isEmailSaved = Boolean(emailAddress);
-  const isVerified = Boolean(emailAddress?.verified);
-
-  const verificationNeeded = isEmailSaved && !isVerified;
-
-  return (
-    <div>
-      {verificationNeeded ? (
-        <VerificationCodeInput email={emailAddress?.value ?? ''} />
-      ) : (
-        <EmailInput dappAddress={dappAddress} />
-      )}
-    </div>
-  );
-};
+import { Button, Input, TextButton } from '../../../../core';
+import { ClassTokens, Icons } from '../../../../theme';
+import { useVerificationCode } from '../model/useVerificationCode';
 
 const VERIFICATION_CODE_REGEX = new RegExp('^[0-9]{6}$');
-const VerificationCodeInput = ({ email }: { email: string }) => {
+export const EmailVerificationCodeInput = ({ email }: { email: string }) => {
   const {
     verificationCode,
     setVerificationCode,

@@ -5,9 +5,9 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, ButtonType, Input, TextButton } from '../../../core';
-import { ClassTokens, Icons } from '../../../theme';
-import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
+import { Button, ButtonType, Input, TextButton } from '../../../../core';
+import { ClassTokens, Icons } from '../../../../theme';
+import { ChannelNotificationsToggle } from '../ChannelNotificationsToggle';
 
 const EMAIL_REGEX = new RegExp('^\\S+@\\S+\\.\\S+$');
 

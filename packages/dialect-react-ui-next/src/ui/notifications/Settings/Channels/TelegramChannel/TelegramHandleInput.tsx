@@ -5,9 +5,9 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { Button, ButtonType, Input, TextButton } from '../../../core';
-import { ClassTokens, Icons } from '../../../theme';
-import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
+import { Button, ButtonType, Input, TextButton } from '../../../../core';
+import { ClassTokens, Icons } from '../../../../theme';
+import { ChannelNotificationsToggle } from '../ChannelNotificationsToggle';
 
 export const TelegramHandleInput = ({
   dappAddress,
@@ -148,6 +148,7 @@ export const TelegramHandleInput = ({
         placeholder="Enter you Telegram @Username"
         id="settings-telegram"
         value={telegramUsername}
+        disabled={isLoading || isUserDeleting}
         onChange={(e) => {
           setTelegramUsername(e.target.value);
         }}

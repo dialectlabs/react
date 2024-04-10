@@ -1,45 +1,12 @@
-import {
-  AddressType,
-  useDapp,
-  useDialectContext,
-  useDialectSdk,
-  useNotificationChannel,
-} from '@dialectlabs/react-sdk';
+import { AddressType, useDialectSdk } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { Button, Input, TextButton } from '../../../core';
-import { ClassTokens, Icons } from '../../../theme';
-import { TelegramHandleInput } from './TelegramHandleInput';
-import { useVerificationCode } from './model/useVerificationCode';
-
-export const TelegramChannel = () => {
-  const { dappAddress } = useDialectContext();
-
-  const { globalAddress: telegramAddress } = useNotificationChannel({
-    addressType: AddressType.Telegram,
-  });
-  const isTelegramSaved = Boolean(telegramAddress);
-  const isVerified = Boolean(telegramAddress?.verified);
-
-  const { dapps } = useDapp({ verified: false });
-  const dapp = dapps[dappAddress];
-
-  const verificationNeeded = isTelegramSaved && !isVerified;
-  return (
-    <div>
-      {verificationNeeded ? (
-        <VerificationCodeInput
-          dappTelegramName={dapp?.telegramUsername ?? ''}
-        />
-      ) : (
-        <TelegramHandleInput dappAddress={dappAddress} />
-      )}
-    </div>
-  );
-};
+import { Button, Input, TextButton } from '../../../../core';
+import { ClassTokens, Icons } from '../../../../theme';
+import { useVerificationCode } from '../model/useVerificationCode';
 
 const VERIFICATION_CODE_REGEX = new RegExp('^[0-9]{6}$');
-const VerificationCodeInput = ({
+export const TelegramVerificationCodeInput = ({
   dappTelegramName,
 }: {
   dappTelegramName: string;
