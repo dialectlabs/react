@@ -67,23 +67,22 @@ export const ClassTokens = {
   Background: {
     Button: {
       Primary: {
-        //TODO how to use gradient here???
-        Default: 'dt-bg-[--dt-input-inverse]',
-        Hover: 'hover:dt-bg-[--dt-input-inverse]',
-        Pressed: 'active:dt-bg-[--dt-input-inverse]',
-        Disabled: 'disabled:dt-bg-[--dt-input-inverse]',
+        Default: 'dt-bg-[--dt-button-primary]',
+        Hover: 'hover:dt-bg-[--dt-button-primary-hover]',
+        Pressed: 'active:dt-bg-[--dt-button-primary]',
+        Disabled: 'disabled:dt-bg-[--dt-button-primary-disabled]',
       },
       Secondary: {
-        Default: 'dt-bg-[--dt-input-tertiary]',
-        Hover: 'hover:dt-bg-[--dt-input-primary]',
-        Pressed: 'active:dt-bg-[--dt-input-tertiary]',
-        Disabled: 'disabled:dt-bg-[--dt-input-tertiary]',
+        Default: 'dt-bg-[--dt-button-secondary]',
+        Hover: 'hover:dt-bg-[--dt-button-secondary-hover]',
+        Pressed: 'active:dt-bg-[--dt-button-secondary]',
+        Disabled: 'disabled:dt-bg-[--dt-button-secondary-disabled]',
       },
       Destructive: {
-        Default: 'dt-bg-[--dt-input-tertiary]',
-        Hover: 'hover:dt-bg-[--dt-input-primary]',
-        Pressed: 'active:dt-bg-[--dt-input-tertiary]',
-        Disabled: 'disabled:dt-bg-[--dt-input-tertiary]',
+        Default: 'dt-bg-[--dt-button-secondary]',
+        Hover: 'hover:dt-bg-[--dt-button-secondary-hover]',
+        Pressed: 'active:dt-bg-[--dt-button-secondary]',
+        Disabled: 'disabled:dt-bg-[--dt-button-secondary-disabled]',
       },
     },
     Input: {

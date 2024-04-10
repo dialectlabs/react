@@ -10,11 +10,15 @@
   --dt-bg-brand-transparent: theme('colors.dark.50' / 10%);
   --dt-input-primary: theme('colors.light.50');
   --dt-input-secondary: theme('colors.light.100');
-  --dt-input-tertiary: theme('colors.light.60');
-  --dt-input-inverse: theme('colors.dark.90');
   --dt-input-checked: theme('colors.accent.success.DEFAULT');
   --dt-input-unchecked: theme('colors.light.30');
   --dt-input-disabled: theme('colors.light.30');
+  --dt-button-primary: theme('colors.dark.90');
+  --dt-button-primary-hover: theme('colors.dark.80');
+  --dt-button-primary-disabled: theme('colors.dark.70');
+  --dt-button-secondary: theme('colors.light.60');
+  --dt-button-secondary-hover: theme('colors.light.80');
+  --dt-button-secondary-disabled: theme('colors.light.90');
   --dt-text-primary: theme('colors.dark.100');
   --dt-text-secondary: theme('colors.dark.80');
   --dt-text-tertiary: theme('colors.dark.60');

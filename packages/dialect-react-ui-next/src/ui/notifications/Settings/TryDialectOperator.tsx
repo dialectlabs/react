@@ -16,9 +16,10 @@ export const TryDialectOperator = () => {
           'dt-text-text dt-font-semibold',
         )}
       >
-        Try out Dialect Operator here
+        Try out Dialect Operator
       </span>
       <Button>
+        {/*TODO on click*/}
         <TelegramIcon width={12} height={12} />
         <span>Try it out</span>
       </Button>
