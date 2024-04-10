@@ -19,6 +19,7 @@ export const NotificationsFeed = () => {
         title:
           'Your 200 SOL offer on Mad Lad #9477 has been outbid, at 205 SOL.',
         actions: [{ url: 'https://dialect.to', label: 'Trade now' }],
+        notificationTypeHumanReadableId: 'offer_outbid',
       },
     },
     {

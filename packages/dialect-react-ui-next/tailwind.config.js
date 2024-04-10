@@ -22,10 +22,18 @@ export default {
         30: '#d7d7d7',
       },
       accent: {
-        brand: '#5169e2',
-        success: '#09cbbf',
-        warning: '#ff9900',
-        error: '#f62d2d',
+        success: {
+          DEFAULT: '#09cbbf',
+          transparent: '#09CBBF1A',
+        },
+        warning: {
+          DEFAULT: '#ff9900',
+          transparent: '#FF99001A',
+        },
+        error: {
+          DEFAULT: '#f62d2d',
+          transparent: '#f62d2d1a',
+        },
       },
     },
     extend: {

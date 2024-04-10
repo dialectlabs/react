@@ -1,14 +1,19 @@
 import clsx from 'clsx';
-import { ClassTokens, Icons } from '../../theme';
+import {
+  NotificationStyle,
+  NotificationStyleToggleColor,
+} from '../../../types';
+import { ClassTokens, Icons, NotificationTypeStyles } from '../../theme';
 import { useNotification } from './context';
 import { Message } from './types';
 
-const defaultMessageStyles = {
-  shadow: 'dt-shadow-[--dt-accent-brand]',
-  iconBackground: 'dt-bg-[--dt-accent-brand]',
-  icon: <Icons.Bell width={12} height={12} />,
-  link: 'dt-text-[--dt-accent-brand]',
-  title: '',
+const DefaultMessageStyles: NotificationStyle = {
+  Icon: <Icons.Bell width={12} height={12} />,
+  iconColor: 'var(--dt-icon-primary)',
+  iconBackgroundColor: 'var(--dt-bg-brand)',
+  iconBackgroundBackdropColor: 'var(--dt-bg-brand-transparent)',
+  linkColor: 'var(--dt-accent-success)',
+  gradientStartColor: 'transparent',
 };
 
 const timeFormatter = new Intl.DateTimeFormat('en-US', {
@@ -20,8 +25,33 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: true,
 });
 
+const getColor = (
+  color?: string | NotificationStyleToggleColor,
+  theme?: 'light' | 'dark',
+): string | undefined => {
+  if (!color) {
+    return;
+  }
+
+  if (typeof color === 'string') {
+    return color;
+  }
+
+  return color[theme || 'light'];
+};
+
+const getStyles = (notificationType?: string) => {
+  if (notificationType) {
+    return NotificationTypeStyles[notificationType] ?? DefaultMessageStyles;
+  }
+
+  return DefaultMessageStyles;
+};
+
 export const NotificationMessage = (message: Message) => {
-  const messageStyles = defaultMessageStyles;
+  const messageStyles = getStyles(
+    message.metadata?.notificationTypeHumanReadableId,
+  );
 
   return (
     <div
@@ -30,28 +60,31 @@ export const NotificationMessage = (message: Message) => {
         'dt-relative dt-flex dt-flex-row dt-items-center dt-gap-4 dt-overflow-hidden dt-border-b dt-px-4 dt-py-3',
       )}
     >
+      <div
+        className="dt-absolute -dt-bottom-[36%] -dt-top-[36%] dt-left-0 dt-w-[240px] -dt-translate-x-1/2 dt-transform"
+        style={{
+          background: messageStyles.gradientStartColor
+            ? `radial-gradient(50% 50% at 50% 50%, ${getColor(messageStyles.gradientStartColor)} 0%, transparent 100%)`
+            : 'transparent',
+        }}
+      />
       <div className="dt-relative">
         <div
-          className={clsx(
-            'dt-absolute dt-left-1/2 dt-top-1/2 dt-opacity-20 dt-shadow-[0px_0px_60px_50px] ',
-            messageStyles.shadow,
-          )}
-        />
-        <div
-          className={clsx(
-            // messageStyles.iconBackground,
-            //TODO bg-opacity doesn't work with variables???
-            'dt-h-8 dt-w-8 dt-rounded-full dt-bg-accent-success dt-bg-opacity-10 dt-p-1.5',
-          )}
+          className={clsx('dt-h-8 dt-w-8 dt-rounded-full dt-p-1.5')}
+          style={{
+            background: getColor(messageStyles.iconBackgroundBackdropColor),
+          }}
         >
           <div
             className={clsx(
               'dt-flex dt-h-full dt-w-full dt-items-center dt-justify-center dt-rounded-full ',
-              messageStyles.iconBackground,
-              ClassTokens.Icon.Inverse,
             )}
+            style={{
+              background: getColor(messageStyles.iconBackgroundColor),
+              color: getColor(messageStyles.iconColor),
+            }}
           >
-            {messageStyles.icon}
+            {messageStyles.Icon}
           </div>
         </div>
       </div>
@@ -80,8 +113,10 @@ export const NotificationMessage = (message: Message) => {
             target="_blank"
             className={clsx(
               'dt-flex dt-flex-row dt-items-center dt-gap-0.5 dt-pt-3 dt-text-subtext dt-font-semibold',
-              messageStyles.link,
             )}
+            style={{
+              color: getColor(messageStyles.linkColor),
+            }}
             rel="noreferrer"
           >
             {message.metadata.actions[0].label || 'Open Link'}

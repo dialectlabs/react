@@ -1,7 +1,18 @@
+'use client';
 import { SolanaWalletButton } from '@/components/wallet';
+import { Icons, NotificationTypeStyles } from '@dialectlabs/react-ui';
 import { DialectSolanaNotificationsButton } from '@dialectlabs/react-ui-solana';
 import '@dialectlabs/react-ui/index.css';
 import { PublicKey } from '@solana/web3.js';
+
+NotificationTypeStyles.offer_outbid = {
+  Icon: <Icons.Bell width={12} height={12} />,
+  iconColor: '#FFFFFF',
+  iconBackgroundColor: '#FF0000',
+  iconBackgroundBackdropColor: '#FF00001A',
+  linkColor: '#FF0000',
+  gradientStartColor: '#FF00001A',
+};
 
 export default function Home() {
   return (
