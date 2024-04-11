@@ -14,7 +14,14 @@ const NoWalletState = ({
         <Icons.Wallet width={24} height={24} />
       </div>
 
-      <h3 className="dt-pb-2 dt-pt-6 dt-text-h2 dt-font-semibold">{message}</h3>
+      <h3
+        className={clsx(
+          'dt-pb-2 dt-pt-6 dt-text-h2 dt-font-semibold',
+          ClassTokens.Text.Primary,
+        )}
+      >
+        {message}
+      </h3>
     </div>
   );
 };

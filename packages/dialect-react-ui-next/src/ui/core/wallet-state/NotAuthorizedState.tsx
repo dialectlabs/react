@@ -14,7 +14,14 @@ const NotAuthorizedState = () => {
 
   return (
     <div className="dt-flex dt-flex-1 dt-flex-col dt-items-center dt-justify-center dt-px-4">
-      <h3 className="dt-pb-2 dt-text-h2 dt-font-semibold">Verify Wallet</h3>
+      <h3
+        className={clsx(
+          'dt-pb-2 dt-pt-6 dt-text-h2 dt-font-semibold',
+          ClassTokens.Text.Primary,
+        )}
+      >
+        Verify Wallet
+      </h3>
       <span
         className={clsx(
           'dt-text-center dt-text-text',
@@ -29,6 +36,7 @@ const NotAuthorizedState = () => {
         <div
           className={clsx(
             ClassTokens.Stroke.Input.Primary,
+            ClassTokens.Text.Primary,
             ClassTokens.Radius.Medium,
             'dt-mb-4 dt-flex dt-h-12 dt-w-full dt-flex-row dt-items-center dt-justify-between dt-border dt-px-3 dt-py-2',
           )}

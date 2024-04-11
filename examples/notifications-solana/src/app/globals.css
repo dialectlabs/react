@@ -4,10 +4,21 @@
 
 @import url('@solana/wallet-adapter-react-ui/styles.css');
 
-body,
-html {
-  background-color: theme('backgroundColor.light.100');
-  color: theme('textColor.dark.100');
+
+:root {
+  --background: theme('colors.light.100');
+  --textColor: theme('colors.dark.100');
+}
+
+[data-theme="dark"] {
+  --background: theme('colors.dark.100');
+  --textColor: theme('colors.light.100');
+}
+
+
+body, html {
+  background-color: var(--background);
+  color: var(--textColor);
   -webkit-font-smoothing: antialiased;
 }
 

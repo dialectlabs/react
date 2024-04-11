@@ -34,7 +34,7 @@ export const Checkbox = ({
           checked
             ? ClassTokens.Stroke.Input.Checked
             : ClassTokens.Stroke.Input.Primary,
-          ClassTokens.Icon.Inverse,
+          'dt-text-[--dt-input-secondary]',
           { 'dt-opacity-50': disabled },
         )}
       >

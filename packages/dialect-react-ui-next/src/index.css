@@ -5,28 +5,28 @@
 .dialect {
   --dt-bg-primary: theme('colors.light.100');
   --dt-bg-secondary: theme('colors.light.80');
-  --dt-bg-tertiary: theme('colors.light.60');
-  --dt-bg-brand: theme('colors.light.60');
-  --dt-bg-brand-transparent: theme('colors.dark.50' / 10%);
-  --dt-input-primary: theme('colors.light.50');
+  --dt-bg-tertiary: theme('colors.light.70');
+  --dt-bg-brand: theme('colors.light.70');
+  --dt-bg-brand-transparent: theme('colors.light.30' / 10%);
+  --dt-input-primary: theme('colors.light.60');
   --dt-input-secondary: theme('colors.light.100');
   --dt-input-checked: theme('colors.accent.success.DEFAULT');
-  --dt-input-unchecked: theme('colors.light.30');
-  --dt-input-disabled: theme('colors.light.30');
-  --dt-button-primary: theme('colors.dark.90');
-  --dt-button-primary-hover: theme('colors.dark.80');
-  --dt-button-primary-disabled: theme('colors.dark.70');
-  --dt-button-secondary: theme('colors.light.60');
+  --dt-input-unchecked: theme('colors.light.50');
+  --dt-input-disabled: theme('colors.light.50');
+  --dt-button-primary: theme('colors.dark.80');
+  --dt-button-primary-hover: theme('colors.dark.50');
+  --dt-button-primary-disabled: theme('colors.dark.40');
+  --dt-button-secondary: theme('colors.light.70');
   --dt-button-secondary-hover: theme('colors.light.80');
   --dt-button-secondary-disabled: theme('colors.light.80');
   --dt-text-primary: theme('colors.dark.100');
-  --dt-text-secondary: theme('colors.dark.80');
-  --dt-text-tertiary: theme('colors.dark.60');
+  --dt-text-secondary: theme('colors.dark.50');
+  --dt-text-tertiary: theme('colors.dark.20');
   --dt-text-inverse: theme('colors.light.100');
-  --dt-stroke-primary: theme('colors.light.50');
-  --dt-icon-primary: theme('colors.dark.90');
-  --dt-icon-secondary: theme('colors.dark.60');
-  --dt-icon-tertiary: theme('colors.dark.50');
+  --dt-stroke-primary: theme('colors.light.60');
+  --dt-icon-primary: theme('colors.dark.80');
+  --dt-icon-secondary: theme('colors.dark.20');
+  --dt-icon-tertiary: theme('colors.light.30');
   --dt-icon-inverse: theme('colors.light.100');
   --dt-accent-brand: theme('colors.accent.success.DEFAULT');
   --dt-accent-success: theme('colors.accent.success.DEFAULT');
@@ -37,10 +37,35 @@
   --dt-border-radius-l: 1rem;
 }
 
-/* TODO: darkmode */
 .dialect[data-theme='dark'] {
-  --dt-input-secondary: #ff00ff;
+  --dt-bg-primary: theme('colors.dark.100');
+  --dt-bg-secondary: theme('colors.dark.80');
+  --dt-bg-tertiary: theme('colors.dark.70');
+  --dt-bg-brand: theme('colors.accent.success.DEFAULT');
+  --dt-bg-brand-transparent: theme('colors.accent.success.transparent');
+  --dt-input-primary: theme('colors.dark.50');
+  --dt-input-secondary: theme('colors.dark.100');
+  --dt-input-checked: theme('colors.accent.success.DEFAULT');
+  --dt-input-unchecked: theme('colors.dark.40');
+  --dt-input-disabled: theme('colors.dark.50');
+  --dt-button-primary: theme('colors.accent.success.DEFAULT');
+  --dt-button-primary-hover: theme('colors.accent.dark');
+  --dt-button-primary-disabled: theme('colors.accent.transparent');
+  --dt-button-secondary: theme('colors.dark.60');
+  --dt-button-secondary-hover: theme('colors.dark.50');
+  --dt-button-secondary-disabled: theme('colors.dark.70');
+  --dt-text-primary: theme('colors.light.100');
+  --dt-text-secondary: theme('colors.light.40');
+  --dt-text-tertiary: theme('colors.dark.20');
+  --dt-text-inverse: theme('colors.dark.100');
+  --dt-stroke-primary: theme('colors.dark.60');
+  --dt-icon-primary: theme('colors.dark.100');
+  --dt-icon-secondary: theme('colors.dark.20');
+  --dt-icon-tertiary: theme('colors.dark.30');
+  --dt-icon-inverse: theme('colors.light.100');
+  --dt-accent-brand: theme('colors.light.30');
 }
+
 
 .dialect .modal {
   /* mobile */
@@ -48,5 +73,5 @@
   /* non mobile */
   @apply sm:dt-absolute sm:dt-top-16 sm:dt-h-[600px] sm:dt-w-[420px];
   /* styles */
-  @apply dt-overflow-hidden dt-rounded-xl dt-border dt-border-[--dt-stroke-primary];
+  @apply dt-overflow-hidden dt-rounded-[--dt-border-radius-l] dt-bg-[--dt-bg-primary] dt-border dt-border-[--dt-stroke-primary];
 }

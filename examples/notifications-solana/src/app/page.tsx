@@ -1,4 +1,5 @@
 'use client';
+import { ThemeSwitch } from '@/components/theme';
 import { SolanaWalletButton } from '@/components/wallet';
 import { Icons, NotificationTypeStyles } from '@dialectlabs/react-ui';
 import { DialectSolanaNotificationsButton } from '@dialectlabs/react-ui-solana';
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col px-8 py-5">
       <header className="flex items-center justify-end gap-3">
+        <ThemeSwitch />
         <DialectSolanaNotificationsButton
           dappAddress={PublicKey.default.toString()}
         />
