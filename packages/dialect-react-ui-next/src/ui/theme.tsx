@@ -94,8 +94,10 @@ export const ClassTokens = {
     },
     Primary: 'dt-bg-[--dt-bg-primary]',
     Secondary: 'dt-bg-[--dt-bg-secondary]',
+    Tertiary: 'dt-bg-[--dt-bg-tertiary]',
     Brand: 'dt-bg-[--dt-bg-brand]',
     BrandTransparent: 'dt-bg-[--dt-bg-brand-transparent]',
+    Success: 'dt-bg-[--dt-accent-success]',
   },
   Stroke: {
     Input: {
