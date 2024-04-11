@@ -1,7 +1,11 @@
 import clsx from 'clsx';
+import { Button, ButtonType } from '../../core';
 import { ClassTokens, Icons } from '../../theme';
+import { Route, useRouter } from '../internal/Router';
 
 export const NoNotifications = () => {
+  const router = useRouter();
+
   return (
     <div className="dt-flex dt-h-full dt-flex-1 dt-flex-col dt-items-center dt-justify-center dt-px-4">
       <div className={clsx(ClassTokens.Icon.Secondary)}>
@@ -16,6 +20,23 @@ export const NoNotifications = () => {
       >
         You don’t have any notifications yet
       </h3>
+
+      <p
+        className={clsx(
+          'dt-mb-4 dt-text-center dt-text-text',
+          ClassTokens.Text.Secondary,
+        )}
+      >
+        Enable your wallet to receive notifications.
+      </p>
+
+      <Button
+        type={ButtonType.Primary}
+        size="large"
+        onClick={() => router.setRoute(Route.Settings)}
+      >
+        <Icons.Settings /> Set up notifications
+      </Button>
     </div>
   );
 };

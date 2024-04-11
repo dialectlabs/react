@@ -13,7 +13,6 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   type?: ButtonType;
-  destructive?: boolean;
   size?: 'medium' | 'large';
   stretch?: boolean;
 }
