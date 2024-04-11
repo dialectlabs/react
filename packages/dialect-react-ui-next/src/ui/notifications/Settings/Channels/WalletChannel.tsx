@@ -108,12 +108,15 @@ export const WalletChannel = () => {
       );
     if (isWalletSetUp)
       return (
-        <div
+        <button
           onClick={deleteWalletThread}
-          className={clsx(ClassTokens.Icon.Tertiary, 'dt-p-2')}
+          className={clsx(
+            ClassTokens.Icon.Tertiary,
+            'dt-p-2 dt-transition-opacity hover:dt-opacity-70',
+          )}
         >
           <Icons.Trash />
-        </div>
+        </button>
       );
     return <Button onClick={setUpWallet}>Enable</Button>;
   }, [deleteWalletThread, isLoading, isWalletSetUp, setUpWallet]);

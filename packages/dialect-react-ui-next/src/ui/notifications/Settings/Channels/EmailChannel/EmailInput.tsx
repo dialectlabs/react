@@ -146,12 +146,15 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
     }
     if (isVerified) {
       return (
-        <div
-          className={clsx(ClassTokens.Icon.Tertiary, 'dt-p-2')}
+        <button
+          className={clsx(
+            ClassTokens.Icon.Tertiary,
+            'dt-p-2 dt-transition-opacity hover:dt-opacity-70',
+          )}
           onClick={() => setIsUserDeleting(true)}
         >
           <Icons.Trash />
-        </div>
+        </button>
       );
     }
 
