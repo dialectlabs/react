@@ -4,6 +4,7 @@ import type {
   ConfigProps,
 } from '@dialectlabs/sdk';
 import React, { useContext } from 'react';
+import { SWRConfig } from 'swr';
 import { LocalMessages } from './LocalMessages';
 import { DialectSdk } from './Sdk';
 
@@ -31,12 +32,14 @@ export const DialectContextProvider: React.FC<
   DialectContextProviderProps<BlockchainSdk>
 > = ({ config, blockchainSdkFactory, children, dappAddress }) => {
   return (
-    <DialectContext.Provider value={{ dappAddress }}>
-      <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
-        {/* <DialectGate.Provider initialState={gate}> */}
-        <LocalMessages.Provider>{children}</LocalMessages.Provider>
-        {/* </DialectGate.Provider> */}
-      </DialectSdk.Provider>
-    </DialectContext.Provider>
+    <SWRConfig>
+      <DialectContext.Provider value={{ dappAddress }}>
+        <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
+          {/* <DialectGate.Provider initialState={gate}> */}
+          <LocalMessages.Provider>{children}</LocalMessages.Provider>
+          {/* </DialectGate.Provider> */}
+        </DialectSdk.Provider>
+      </DialectContext.Provider>
+    </SWRConfig>
   );
 };
