@@ -74,5 +74,5 @@
   /* non mobile */
   @apply sm:dt-absolute sm:dt-top-16 sm:dt-h-[600px] sm:dt-w-[420px];
   /* styles */
-  @apply dt-overflow-hidden dt-rounded-[--dt-border-radius-l] dt-bg-[--dt-bg-primary] dt-border dt-border-[--dt-stroke-primary];
+  @apply dt-overflow-hidden dt-rounded-[--dt-border-radius-l] dt-border dt-border-[--dt-stroke-primary];
 }

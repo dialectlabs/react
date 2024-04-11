@@ -5,16 +5,16 @@ import {
   BellButtonIcon,
   BellIcon,
   CloseIcon,
-  LoaderIcon,
   ResendIcon,
   SettingsIcon,
+  SpinnerDots,
   TrashIcon,
   WalletIcon,
   XmarkIcon,
 } from './core/icons';
 
 export const Icons = {
-  Loader: LoaderIcon,
+  Loader: SpinnerDots,
   Settings: SettingsIcon,
   ArrowLeft: ArrowLeftIcon,
   ArrowRight: ArrowRightIcon,

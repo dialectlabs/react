@@ -9,6 +9,7 @@ export { ExclamationIcon } from './ExclamationIcon';
 export { LoaderIcon } from './LoaderIcon';
 export { ResendIcon } from './ResendIcon';
 export { SettingsIcon } from './SettingsIcon';
+export { SpinnerDots } from './SpinnerDots';
 export { TelegramIcon } from './TelegramIcon';
 export { TrashIcon } from './TrashIcon';
 export { WalletIcon } from './WalletIcon';
