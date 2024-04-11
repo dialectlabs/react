@@ -1,5 +1,9 @@
 import useSWR from 'swr';
-import { CACHE_KEY_MESSAGES_FN } from './internal/swrCache';
+import useSWRMutation from 'swr/mutation';
+import {
+  CACHE_KEY_MESSAGES_FN,
+  CACHE_KEY_THREAD_SUMMARY_FN,
+} from './internal/swrCache';
 import useNotificationThread from './useNotificationThread';
 
 interface UseNotificationThreadMessagesParams {
@@ -26,11 +30,27 @@ const useNotificationThreadMessages = (
     },
   );
 
+  const { trigger: markAsRead } = useSWRMutation(
+    thread
+      ? CACHE_KEY_THREAD_SUMMARY_FN(
+          thread.otherMembers.map((member) => member.address),
+        )
+      : null,
+    async () => {
+      if (!thread) {
+        return;
+      }
+
+      await thread.markAsRead();
+    },
+  );
+
   return {
     messages: messages ?? [],
     isMessagesLoading: isLoading || isThreadLoading,
     errorLoadingMessages: error,
     refreshMessages: mutate,
+    markAsRead,
   };
 };
 

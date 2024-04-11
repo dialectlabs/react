@@ -1,13 +1,13 @@
-import useSWR, { KeyedMutator } from 'swr';
 import type {
   AccountAddress,
   ThreadsGeneralSummary,
   ThreadSummary,
 } from '@dialectlabs/sdk';
+import useSWR, { KeyedMutator } from 'swr';
 import { EMPTY_OBJ } from '../utils';
 import {
-  CACHE_KEY_THREADS_SUMMARY,
   CACHE_KEY_THREAD_SUMMARY_FN,
+  CACHE_KEY_THREADS_SUMMARY,
 } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
 
@@ -26,18 +26,18 @@ interface UseUnreadMessageValue {
 }
 
 const isParamsExtended = (
-  params: BaseUseUnreadMessagesParams | PerThreadUseUnreadMessagesParams
+  params: BaseUseUnreadMessagesParams | PerThreadUseUnreadMessagesParams,
 ): params is PerThreadUseUnreadMessagesParams =>
   Boolean((params as PerThreadUseUnreadMessagesParams).otherMembers);
 
 const isDataPerThread = (
-  data: ThreadSummary | ThreadsGeneralSummary | undefined | null
+  data: ThreadSummary | ThreadsGeneralSummary | undefined | null,
 ): data is ThreadSummary => !!(data as ThreadSummary)?.me;
 
 function useUnreadMessages(
   params:
     | BaseUseUnreadMessagesParams
-    | PerThreadUseUnreadMessagesParams = EMPTY_OBJ
+    | PerThreadUseUnreadMessagesParams = EMPTY_OBJ,
 ): UseUnreadMessageValue {
   const { refreshInterval } = params;
   const sdk = useDialectSdk(true);
@@ -57,7 +57,7 @@ function useUnreadMessages(
     {
       refreshInterval,
       refreshWhenOffline: true,
-    }
+    },
   );
 
   if (isDataPerThread(data)) {
