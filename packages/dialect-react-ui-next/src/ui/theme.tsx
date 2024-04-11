@@ -108,6 +108,7 @@ export const ClassTokens = {
     Error: 'dt-border-[--dt-accent-error]',
   },
   Radius: {
+    XSmall: 'dt-rounded-[--dt-border-radius-xs]',
     Small: 'dt-rounded-[--dt-border-radius-s]',
     Medium: 'dt-rounded-[--dt-border-radius-m]',
     Large: 'dt-rounded-[--dt-border-radius-l]',

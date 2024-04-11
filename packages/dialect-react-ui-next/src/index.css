@@ -32,6 +32,7 @@
   --dt-accent-success: theme('colors.accent.success.DEFAULT');
   --dt-accent-warning: theme('colors.accent.warning.DEFAULT');
   --dt-accent-error: theme('colors.accent.error.DEFAULT');
+  --dt-border-radius-xs: 0.375rem;
   --dt-border-radius-s: 0.5rem;
   --dt-border-radius-m: 0.75rem;
   --dt-border-radius-l: 1rem;

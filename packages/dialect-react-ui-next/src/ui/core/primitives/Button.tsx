@@ -31,7 +31,7 @@ export const Button = ({
       ? 'dt-px-6 dt-py-4 dt-text-text dt-font-semibold ' +
         ClassTokens.Radius.Medium
       : 'dt-px-2.5 dt-py-1.5 dt-text-subtext dt-font-semibold ' +
-        ClassTokens.Radius.Small;
+        ClassTokens.Radius.XSmall;
   return (
     <button
       className={clsx(

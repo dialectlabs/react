@@ -44,7 +44,7 @@ export const Input = ({
         role="textbox"
         className={clsx(
           'dt-flex dt-h-[42px] dt-items-center dt-gap-2 dt-border dt-pl-2 dt-pr-1.5',
-          ClassTokens.Radius.Medium,
+          ClassTokens.Radius.Small,
           error
             ? ClassTokens.Stroke.Input.Error
             : ClassTokens.Stroke.Input.Primary,
