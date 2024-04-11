@@ -8,10 +8,10 @@ interface UseNotificationThreadMessagesParams {
 
 const useNotificationThreadMessages = (
   { refreshInterval }: UseNotificationThreadMessagesParams = {
-    refreshInterval: 5000,
+    refreshInterval: 10000,
   },
 ) => {
-  const { thread } = useNotificationThread();
+  const { thread, isThreadLoading } = useNotificationThread();
 
   const {
     data: messages,
@@ -28,7 +28,7 @@ const useNotificationThreadMessages = (
 
   return {
     messages: messages ?? [],
-    isMessagesLoading: isLoading,
+    isMessagesLoading: isLoading || isThreadLoading,
     errorLoadingMessages: error,
     refreshMessages: mutate,
   };

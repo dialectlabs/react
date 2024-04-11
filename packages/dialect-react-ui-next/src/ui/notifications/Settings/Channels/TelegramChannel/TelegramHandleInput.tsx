@@ -145,7 +145,7 @@ export const TelegramHandleInput = ({
     <div>
       <Input
         label="Telegram"
-        placeholder="Enter you Telegram @Username"
+        placeholder="Enter your Telegram @Username"
         id="settings-telegram"
         value={telegramUsername}
         disabled={isLoading || isUserDeleting}

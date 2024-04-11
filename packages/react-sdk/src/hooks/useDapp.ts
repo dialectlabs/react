@@ -1,8 +1,8 @@
 import type {
+  BlockchainType,
   Dapp,
   DialectSdkError,
   ReadOnlyDapp,
-  BlockchainType,
 } from '@dialectlabs/sdk';
 import { useMemo } from 'react';
 import useSWR from 'swr';
@@ -36,7 +36,7 @@ function useDapp({
   const { data: dapp, error } = useSWR(
     DAPP_CACHE_KEY_FN(walletAddress),
     () => dapps.find(),
-    { refreshInterval, refreshWhenOffline: true }
+    { refreshInterval, refreshWhenOffline: true },
   );
 
   const { data: dappsList = EMPTY_ARR } = useSWR(
@@ -47,19 +47,22 @@ function useDapp({
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-    }
+    },
   );
 
   const allDapps = useMemo(
     () =>
-      dappsList.reduce((acc, dapp) => {
-        const address = dapp.address;
-        if (!acc[address]) {
-          acc[address] = dapp;
-        }
-        return acc;
-      }, {} as Record<string, ReadOnlyDapp>),
-    [dappsList]
+      dappsList.reduce(
+        (acc, dapp) => {
+          const address = dapp.address;
+          if (!acc[address]) {
+            acc[address] = dapp;
+          }
+          return acc;
+        },
+        {} as Record<string, ReadOnlyDapp>,
+      ),
+    [dappsList],
   );
 
   return {

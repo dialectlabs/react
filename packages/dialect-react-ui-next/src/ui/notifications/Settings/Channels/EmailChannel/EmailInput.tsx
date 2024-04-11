@@ -185,7 +185,7 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
     <div>
       <Input
         label="Email"
-        placeholder="Enter you Email"
+        placeholder="Enter your Email"
         id="settings-email"
         value={email}
         error={validationError}
