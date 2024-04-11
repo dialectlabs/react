@@ -5,8 +5,7 @@ import {
   useDialectSdk,
   useNotificationChannel,
   useNotificationChannelDappSubscription,
-  useThread,
-  useThreads,
+  useNotificationThread,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback } from 'react';
@@ -23,7 +22,13 @@ export const WalletChannel = () => {
     wallet: { address: walletAddress },
   } = useDialectSdk();
 
-  const { create: createThread, isCreatingThread } = useThreads();
+  const {
+    thread,
+    create: createThread,
+    isCreatingThread,
+    delete: deleteThread,
+    isDeletingThread,
+  } = useNotificationThread();
 
   const {
     globalAddress: walletSubscriptionAddress,
@@ -40,14 +45,6 @@ export const WalletChannel = () => {
   } = useNotificationChannelDappSubscription({
     addressType: ADDRESS_TYPE,
     dappAddress,
-  });
-
-  const {
-    thread,
-    delete: deleteThread,
-    isDeletingThread,
-  } = useThread({
-    findParams: { otherMembers: dappAddress ? [dappAddress] : [] },
   });
 
   const deleteWalletThread = useCallback(async () => {

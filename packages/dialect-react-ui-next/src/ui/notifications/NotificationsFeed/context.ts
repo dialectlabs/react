@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 import { Message } from './types';
 
+// TODO: update to ThreadMessages, once `id` is returned
 export interface NotificationsItemsProviderValue {
   list: Message['id'][]; // list of ids, for order
   map: Record<Message['id'], Message>;
