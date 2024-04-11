@@ -10,7 +10,7 @@ import {
 import clsx from 'clsx';
 import { useCallback } from 'react';
 import { displayAddress } from '../../../../utils/displayAddress';
-import { Button, Input } from '../../../core';
+import { Button, IconButton, Input } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
 
@@ -108,15 +108,11 @@ export const WalletChannel = () => {
       );
     if (isWalletSetUp)
       return (
-        <button
+        <IconButton
+          className={'dt-p-2 ' + ClassTokens.Icon.Tertiary}
           onClick={deleteWalletThread}
-          className={clsx(
-            ClassTokens.Icon.Tertiary,
-            'dt-p-2 dt-transition-opacity hover:dt-opacity-70',
-          )}
-        >
-          <Icons.Trash />
-        </button>
+          icon={<Icons.Trash />}
+        />
       );
     return <Button onClick={setUpWallet}>Enable</Button>;
   }, [deleteWalletThread, isLoading, isWalletSetUp, setUpWallet]);

@@ -5,7 +5,13 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, ButtonType, Input, TextButton } from '../../../../core';
+import {
+  Button,
+  ButtonType,
+  IconButton,
+  Input,
+  TextButton,
+} from '../../../../core';
 import { ClassTokens, Icons } from '../../../../theme';
 import { ChannelNotificationsToggle } from '../ChannelNotificationsToggle';
 
@@ -146,15 +152,11 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
     }
     if (isVerified) {
       return (
-        <button
-          className={clsx(
-            ClassTokens.Icon.Tertiary,
-            'dt-p-2 dt-transition-opacity hover:dt-opacity-70',
-          )}
+        <IconButton
+          className={'dt-p-2 ' + ClassTokens.Icon.Tertiary}
           onClick={() => setIsUserDeleting(true)}
-        >
-          <Icons.Trash />
-        </button>
+          icon={<Icons.Trash />}
+        />
       );
     }
 

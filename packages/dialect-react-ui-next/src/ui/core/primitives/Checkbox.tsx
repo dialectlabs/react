@@ -23,7 +23,7 @@ export const Checkbox = ({
 
   return (
     <label
-      className="dt-label dt-inline-flex dt-items-center dt-gap-2 dt-text-subtext dt-font-semibold"
+      className="dt-label dt-inline-flex dt-cursor-pointer dt-items-center dt-gap-2 dt-text-subtext dt-font-semibold "
       onClick={onClick}
     >
       <input type="hidden" checked={checked} onChange={onClick} />

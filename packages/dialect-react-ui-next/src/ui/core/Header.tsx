@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { ClassTokens, Icons } from '../theme';
+import { IconButton } from './primitives';
 
 interface HeaderProps {
   title: string;
@@ -21,21 +22,27 @@ export function Header({
   onCloseClick,
 }: HeaderProps) {
   const BackButton = () => (
-    <button onClick={onBackClick}>
-      <Icons.ArrowLeft />
-    </button>
+    <IconButton
+      className={ClassTokens.Icon.Secondary}
+      onClick={onBackClick}
+      icon={<Icons.ArrowLeft />}
+    />
   );
 
   const SettingsButton = () => (
-    <button onClick={onSettingsClick}>
-      <Icons.Settings />
-    </button>
+    <IconButton
+      className={ClassTokens.Icon.Secondary}
+      onClick={onSettingsClick}
+      icon={<Icons.Settings />}
+    />
   );
 
   const CloseButton = () => (
-    <button onClick={onCloseClick}>
-      <Icons.Close />
-    </button>
+    <IconButton
+      className={ClassTokens.Icon.Secondary}
+      onClick={onCloseClick}
+      icon={<Icons.Close />}
+    />
   );
 
   const leftButtons = <>{showBackButton && <BackButton />}</>;
@@ -51,7 +58,6 @@ export function Header({
     <div
       className={clsx(
         ClassTokens.Background.Secondary,
-        ClassTokens.Icon.Secondary,
         'dt-flex dt-flex-row dt-items-center dt-justify-between dt-gap-4 dt-px-4 dt-py-4',
       )}
     >
