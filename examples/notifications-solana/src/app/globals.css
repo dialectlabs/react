@@ -8,11 +8,13 @@
 :root {
   --background: theme('colors.light.100');
   --textColor: theme('colors.dark.100');
+  --themeSwitchBg: theme('colors.light.70');
 }
 
 [data-theme="dark"] {
   --background: theme('colors.dark.100');
   --textColor: theme('colors.light.100');
+  --themeSwitchBg: theme('colors.dark.70');
 }
 
 
