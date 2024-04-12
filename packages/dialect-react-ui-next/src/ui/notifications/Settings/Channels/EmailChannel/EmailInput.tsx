@@ -213,7 +213,7 @@ export const EmailInput = ({ dappAddress }: { dappAddress: string }) => {
 
       {validationError && (
         <p className={clsx(ClassTokens.Text.Error, 'dt-mt-2 dt-text-caption')}>
-          Please enter a valid Email.
+          Please enter a valid Email
         </p>
       )}
 
