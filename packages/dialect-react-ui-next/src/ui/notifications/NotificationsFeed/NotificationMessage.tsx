@@ -6,7 +6,6 @@ import {
   NotificationStyle,
   NotificationStyleToggleColor,
 } from '../../../types';
-import { Link } from '../../core';
 import { TextButton } from '../../core';
 import { ClassTokens, Icons, NotificationTypeStyles } from '../../theme';
 import { useNotification } from './context';
@@ -72,18 +71,18 @@ export const NotificationMessage = (message: ThreadMessage) => {
   const messageText = useMemo(
     () =>
       linkify(message.text, ({ url, key }) => (
-        <Link
+        <a
           key={key}
-          url={url}
+          href={url}
           target={getTarget(url)}
-          style={{ color: getColor(messageStyles.linkColor) }}
+          className="dt-font-medium dt-underline"
         >
           {url.length > MAX_URL_LENGTH
             ? `${url.slice(0, MAX_URL_LENGTH)}...`
             : url}
-        </Link>
+        </a>
       )),
-    [message.text, messageStyles.linkColor],
+    [message.text],
   );
 
   return (
