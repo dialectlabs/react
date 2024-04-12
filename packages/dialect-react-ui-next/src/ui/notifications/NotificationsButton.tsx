@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { ChannelType } from '../../types';
 import { ClassTokens, Icons } from '../theme';
 import { Notifications } from './Notifications';
 import { useClickAway } from './internal/useClickAway';
@@ -19,6 +20,7 @@ const Modal = forwardRef<
   {
     open: boolean;
     setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
+    channels?: ChannelType[];
   }
 >(function Modal(props, modalRef) {
   if (!props.open) {
@@ -86,27 +88,32 @@ interface NotificationsButtonProps {
     setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     children: ReactNode;
   }) => ReactNode;
+  channels?: ChannelType[];
 }
 
 NotificationsButtonPresentation.Container =
-  function NotificationButtonContainer({
+  function NotificationsButtonContainer({
+    channels,
     renderModalComponent,
     children,
   }: NotificationsButtonProps) {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const modalRef = useRef<HTMLDivElement | null>(null);
 
+    const [open, setOpen] = useState(false);
+
     const { dappAddress } = useDialectContext();
     const { unreadCount } = useUnreadMessages({
       otherMembers: [dappAddress],
-      refreshInterval: 20000,
+      refreshInterval: open ? 0 : 10000,
     });
-
-    const [open, setOpen] = useState(false);
 
     useClickAway([buttonRef, modalRef], () => setOpen(false));
 
-    const externalProps = useMemo(() => ({ open, setOpen }), [open]);
+    const externalProps = useMemo(
+      () => ({ open, setOpen, channels }),
+      [open, channels],
+    );
     const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
     return (
@@ -128,7 +135,7 @@ NotificationsButtonPresentation.Container =
             open,
             setOpen,
             ref: modalRef,
-            children: <Notifications {...externalProps} />, // MUST BE USED
+            children: <Notifications {...externalProps} />, // `children` MUST BE USED
           })
         ) : (
           <Modal ref={modalRef} {...externalProps} />

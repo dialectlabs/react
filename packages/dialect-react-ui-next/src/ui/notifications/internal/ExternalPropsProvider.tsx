@@ -1,6 +1,8 @@
 import { createContext, ReactNode, useContext } from 'react';
+import { ChannelType } from '../../../types';
 
 export interface ExternalProps {
+  channels: ChannelType[];
   open?: boolean;
   setOpen?: (open: boolean | ((prev: boolean) => boolean)) => void;
 }
