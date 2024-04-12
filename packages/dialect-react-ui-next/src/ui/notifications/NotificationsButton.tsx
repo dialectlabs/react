@@ -80,10 +80,12 @@ interface NotificationsButtonProps {
     open: boolean;
     setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     unreadCount: number;
-    ref: RefObject<HTMLElement | null>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ref: RefObject<any>;
   }) => ReactNode | ReactNode[];
   renderModalComponent?: (args: {
-    ref: RefObject<HTMLElement | null>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ref: RefObject<any>;
     open: boolean;
     setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     children: ReactNode;
