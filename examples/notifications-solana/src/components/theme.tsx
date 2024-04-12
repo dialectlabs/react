@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState } from 'react';
 
 export const ThemeSwitch = () => {
   const [theme, setTheme] = useState(
-    window.localStorage.getItem('data-theme') ?? 'light',
+    typeof window !== 'undefined'
+      ? window.localStorage.getItem('data-theme') ?? 'light'
+      : 'light',
   );
 
   useEffect(() => {
