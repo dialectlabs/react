@@ -6,6 +6,7 @@ import {
   RefObject,
   forwardRef,
   useCallback,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -79,10 +80,19 @@ interface NotificationsButtonProps {
     unreadCount: number;
     ref: RefObject<HTMLElement | null>;
   }) => ReactNode | ReactNode[];
+  renderModalComponent?: (args: {
+    ref: RefObject<HTMLElement | null>;
+    open: boolean;
+    setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
+    children: ReactNode;
+  }) => ReactNode;
 }
 
 NotificationsButtonPresentation.Container =
-  function NotificationButtonContainer({ children }: NotificationsButtonProps) {
+  function NotificationButtonContainer({
+    renderModalComponent,
+    children,
+  }: NotificationsButtonProps) {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -94,12 +104,14 @@ NotificationsButtonPresentation.Container =
 
     const [open, setOpen] = useState(false);
 
-    const toggle = useCallback(() => setOpen((prev) => !prev), []);
-
     useClickAway([buttonRef, modalRef], () => setOpen(false));
+
+    const externalProps = useMemo(() => ({ open, setOpen }), [open]);
+    const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
     return (
       <NotificationsButtonPresentation>
+        {/* Button Render */}
         {children ? (
           children({ open, setOpen, unreadCount, ref: buttonRef })
         ) : (
@@ -110,7 +122,17 @@ NotificationsButtonPresentation.Container =
             unread={unreadCount > 0}
           />
         )}
-        <Modal ref={modalRef} open={open} setOpen={setOpen} />
+        {/* Modal Render */}
+        {renderModalComponent ? (
+          renderModalComponent({
+            open,
+            setOpen,
+            ref: modalRef,
+            children: <Notifications {...externalProps} />, // MUST BE USED
+          })
+        ) : (
+          <Modal ref={modalRef} {...externalProps} />
+        )}
       </NotificationsButtonPresentation>
     );
   };

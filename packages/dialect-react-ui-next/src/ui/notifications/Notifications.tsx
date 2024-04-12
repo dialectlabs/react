@@ -8,7 +8,7 @@ import { ExternalPropsProvider } from './internal/ExternalPropsProvider';
 import { Route, Router } from './internal/Router';
 
 export interface NotificationsProps {
-  open: boolean;
+  open?: boolean;
   setOpen?: (open: boolean | ((prev: boolean) => boolean)) => void;
 }
 
