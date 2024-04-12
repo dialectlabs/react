@@ -18,7 +18,7 @@ const SigningTransactionState = () => {
       </h3>
       <p
         className={clsx(
-          'dt-text-center dt-text-text',
+          'dt-text-center dt-text-text dt-font-normal',
           ClassTokens.Text.Secondary,
         )}
       >

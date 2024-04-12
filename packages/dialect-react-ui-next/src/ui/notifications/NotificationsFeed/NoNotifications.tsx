@@ -23,7 +23,7 @@ export const NoNotifications = () => {
 
       <p
         className={clsx(
-          'dt-mb-4 dt-text-center dt-text-text',
+          'dt-mb-4 dt-text-center dt-text-text dt-font-normal',
           ClassTokens.Text.Secondary,
         )}
       >

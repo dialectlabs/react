@@ -56,7 +56,7 @@ export const Input = ({
           id={inputId}
           type="text"
           className={clsx(
-            'dt-input dt-ml-1 dt-w-full dt-bg-transparent dt-text-text dt-font-medium dt-outline-none',
+            'dt-input dt-ml-1 dt-w-full dt-bg-transparent dt-text-text dt-font-normal dt-outline-none',
             ClassTokens.Text.Primary,
           )}
           {...inputProps}

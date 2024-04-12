@@ -2,7 +2,12 @@ import { useMemo } from 'react';
 
 const POINTS = [0, 45, 90, 135, 180, 225, 270, 315];
 
-export const SpinnerDots = ({ size = 16 }: { size?: number }) => {
+export const SpinnerDots = ({
+  width = 16,
+}: {
+  width?: number;
+  height?: number;
+}) => {
   const dots = useMemo(
     () =>
       POINTS.map((point, index) => (
@@ -23,7 +28,7 @@ export const SpinnerDots = ({ size = 16 }: { size?: number }) => {
       <style>{'@keyframes spin{to{transform:rotate(360deg)}}'}</style>
       <svg
         viewBox="0 0 48 48"
-        width={size}
+        width={width}
         fill="currentColor"
         data-testid="rotating-dots-svg"
         aria-label="rotating-dots-loading"

@@ -35,7 +35,7 @@ const NotificationType = ({ title, description, enabled, onChange }: Props) => {
           <span
             className={clsx(
               ClassTokens.Text.Tertiary,
-              'dt-text-subtext dt-font-medium',
+              'dt-text-subtext dt-font-normal',
             )}
           >
             {description}

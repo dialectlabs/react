@@ -24,7 +24,7 @@ const NotAuthorizedState = () => {
       </h3>
       <span
         className={clsx(
-          'dt-text-center dt-text-text',
+          'dt-text-center dt-text-text dt-font-normal',
           ClassTokens.Text.Secondary,
         )}
       >
