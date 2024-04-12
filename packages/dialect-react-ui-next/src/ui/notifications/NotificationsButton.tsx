@@ -12,7 +12,7 @@ import {
 } from 'react';
 import { ChannelType } from '../../types';
 import { ClassTokens, Icons } from '../theme';
-import { Notifications } from './Notifications';
+import { NotificationsBase } from './Notifications';
 import { useClickAway } from './internal/useClickAway';
 
 const Modal = forwardRef<
@@ -28,7 +28,7 @@ const Modal = forwardRef<
   }
   return (
     <div ref={modalRef} className="dt-modal">
-      <Notifications {...props} />
+      <NotificationsBase {...props} />
     </div>
   );
 });
@@ -135,7 +135,7 @@ NotificationsButtonPresentation.Container =
             open,
             setOpen,
             ref: modalRef,
-            children: <Notifications {...externalProps} />, // `children` MUST BE USED
+            children: <NotificationsBase {...externalProps} />, // `children` MUST BE USED
           })
         ) : (
           <Modal ref={modalRef} {...externalProps} />

@@ -17,7 +17,7 @@ export interface NotificationsProps {
   setOpen?: (open: boolean | ((prev: boolean) => boolean)) => void;
 }
 
-export const Notifications = (
+export const NotificationsBase = (
   { channels = DEFAULT_CHANNELS, ...props }: NotificationsProps = {
     channels: DEFAULT_CHANNELS,
   },
@@ -62,5 +62,13 @@ export const Notifications = (
         </WalletStatesWrapper>
       </div>
     </ExternalPropsProvider>
+  );
+};
+
+export const Notifications = (props: NotificationsProps) => {
+  return (
+    <div className="dialect">
+      <NotificationsBase {...props} />
+    </div>
   );
 };
