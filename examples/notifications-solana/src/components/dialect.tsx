@@ -1,5 +1,7 @@
 'use client';
 
+import '@dialectlabs/react-ui/index.css';
+
 import { DialectSolanaSdk } from '@dialectlabs/react-sdk-blockchain-solana';
 import {
   Icons,

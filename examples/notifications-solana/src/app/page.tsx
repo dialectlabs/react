@@ -1,7 +1,6 @@
 import { DialectSolanaNotificationsButton } from '@/components/dialect';
 import { ThemeSwitch } from '@/components/theme';
 import { SolanaWalletButton } from '@/components/wallet';
-import '@dialectlabs/react-ui/index.css';
 
 export default function Home() {
   return (
