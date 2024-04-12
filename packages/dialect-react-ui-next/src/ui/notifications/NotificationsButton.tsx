@@ -64,16 +64,7 @@ const DefaultNotificationIconButton = forwardRef<
   );
 });
 
-const NotificationsButtonPresentation = ({
-  clickAwayRefs,
-  setOpen,
-  children,
-}: PropsWithChildren<{
-  setOpen: (open: boolean) => void;
-  clickAwayRefs: RefObject<HTMLElement | null>[];
-}>) => {
-  useClickAway(clickAwayRefs, () => setOpen(false));
-
+const NotificationsButtonPresentation = ({ children }: PropsWithChildren) => {
   return (
     <div className="dialect">
       <div className="dt-relative">{children}</div>
@@ -105,11 +96,10 @@ NotificationsButtonPresentation.Container =
 
     const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
+    useClickAway([buttonRef, modalRef], () => setOpen(false));
+
     return (
-      <NotificationsButtonPresentation
-        clickAwayRefs={[buttonRef, modalRef]}
-        setOpen={setOpen}
-      >
+      <NotificationsButtonPresentation>
         {children ? (
           children({ open, setOpen, unreadCount, ref: buttonRef })
         ) : (
