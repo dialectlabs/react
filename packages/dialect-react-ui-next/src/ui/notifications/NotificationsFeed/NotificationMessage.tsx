@@ -7,6 +7,7 @@ import {
   NotificationStyleToggleColor,
 } from '../../../types';
 import { Link } from '../../core';
+import { TextButton } from '../../core';
 import { ClassTokens, Icons, NotificationTypeStyles } from '../../theme';
 import { useNotification } from './context';
 
@@ -140,17 +141,16 @@ export const NotificationMessage = (message: ThreadMessage) => {
         {message.metadata?.actions?.[0]?.url && (
           <a
             href={message.metadata.actions[0].url}
-            target="_blank"
+            target={getTarget(message.metadata.actions[0].url)}
             className={clsx(
               'dt-flex dt-flex-row dt-items-center dt-gap-0.5 dt-pt-3 dt-text-subtext dt-font-semibold',
             )}
-            style={{
-              color: getColor(messageStyles.linkColor),
-            }}
             rel="noreferrer"
           >
-            {message.metadata.actions[0].label || 'Open Link'}
-            <Icons.ArrowRight />
+            <TextButton color={getColor(messageStyles.linkColor)}>
+              {message.metadata.actions[0].label || 'Open Link'}
+              <Icons.ArrowRight width={12} height={12} />
+            </TextButton>
           </a>
         )}
         <div

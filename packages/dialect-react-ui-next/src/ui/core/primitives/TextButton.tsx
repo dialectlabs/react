@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { JSX } from 'react';
 import { ClassTokens } from '../../theme';
 
 export enum TextButtonType {
@@ -13,20 +13,21 @@ export interface TextButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
-  type?: TextButtonType;
+  color?: string;
 }
 
 export const TextButton = ({
   onClick,
   disabled,
   children,
-  type = TextButtonType.Common,
+  color,
 }: TextButtonProps): JSX.Element => {
   return (
     <button
+      style={{ color }}
       className={clsx(
         'dt-flex dt-cursor-pointer dt-items-center dt-gap-1 dt-text-subtext dt-font-semibold',
-        ClassTokens.Text.TextButton[type],
+        { [ClassTokens.Text.Primary]: !color },
         'hover:dt-opacity-80 disabled:dt-opacity-50',
       )}
       onClick={disabled ? undefined : onClick}

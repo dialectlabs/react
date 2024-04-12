@@ -18,11 +18,12 @@ export const TryDialectOperator = () => {
       >
         Try out Dialect Operator
       </span>
-      <Button>
-        {/*TODO on click*/}
-        <TelegramIcon width={12} height={12} />
-        <span>Try it out</span>
-      </Button>
+      <a href="https://t.me/dialectbot" target="_blank" rel="noreferrer">
+        <Button>
+          <TelegramIcon width={12} height={12} />
+          <span>Try it out</span>
+        </Button>
+      </a>
     </div>
   );
 };
