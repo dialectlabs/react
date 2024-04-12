@@ -1,6 +1,7 @@
 export { ArrowLeftIcon } from './ArrowLeftIcon';
 export { ArrowRightIcon } from './ArrowRightIcon';
 export { BellButtonIcon } from './BellButtonIcon';
+export { BellButtonIconOutline } from './BellButtonIconOutline';
 export { BellIcon } from './BellIcon';
 export { CheckIcon } from './CheckIcon';
 export { CloseIcon } from './CloseIcon';

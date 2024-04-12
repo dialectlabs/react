@@ -29,29 +29,33 @@ const Modal = forwardRef<HTMLDivElement, { open: boolean }>(function Modal(
 const DefaultNotificationIconButton = forwardRef<
   HTMLButtonElement,
   {
+    open: boolean;
     onClick: () => void;
     unread?: boolean;
   }
->(function DefaultNotificationIconButton({ onClick, unread }, ref) {
+>(function DefaultNotificationIconButton({ open, onClick, unread }, ref) {
   return (
     <button
       ref={ref}
       onClick={onClick}
       className={clsx(
-        'dt-relative dt-p-3',
-        ClassTokens.Background.Tertiary,
+        'dt-group dt-relative dt-p-3 dt-transition-colors dt-duration-200 dt-ease-in-out',
+        ClassTokens.Background.Button.Secondary.Default,
+        ClassTokens.Background.Button.Secondary.Hover,
         ClassTokens.Radius.Medium,
       )}
     >
-      {unread && (
-        <span
-          className={clsx(
-            'dt-absolute -dt-right-1 -dt-top-1 dt-h-3 dt-w-3 dt-rounded-full',
-            ClassTokens.Background.Success,
-          )}
-        />
-      )}
-      <Icons.BellButton />
+      <div className="dt-relative">
+        {unread && (
+          <span
+            className={clsx(
+              'dt-absolute dt-right-0 dt-top-[1px] dt-h-2 dt-w-2 dt-rounded-full dt-border-2 dt-border-[--dt-button-secondary] dt-transition-colors dt-duration-200 dt-ease-in-out group-hover:dt-border-[--dt-button-secondary-hover]',
+              ClassTokens.Background.Success,
+            )}
+          />
+        )}
+        {open ? <Icons.BellButton /> : <Icons.BellButtonOutline />}
+      </div>
     </button>
   );
 });
@@ -101,6 +105,7 @@ NotificationsButtonPresentation.Container =
             ) : (
               <DefaultNotificationIconButton
                 ref={buttonRef}
+                open={open}
                 onClick={() => setOpen((prev) => !prev)}
                 unread={unreadCount > 0}
               />
