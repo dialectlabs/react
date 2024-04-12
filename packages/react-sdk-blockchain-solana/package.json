@@ -26,10 +26,10 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
+    "@dialectlabs/react-sdk": "^2.0.0",
     "@dialectlabs/blockchain-sdk-solana": "^1.1.1"
   },
   "peerDependencies": {
-    "@dialectlabs/react-sdk": "2.x",
     "@solana/web3.js": "1.x"
   }
 }
