@@ -13,7 +13,7 @@ const DefaultMessageStyles: NotificationStyle = {
   iconBackgroundColor: 'var(--dt-bg-brand)',
   iconBackgroundBackdropColor: 'var(--dt-bg-brand-transparent)',
   linkColor: 'var(--dt-accent-success)',
-  gradientStartColor: 'transparent',
+  actionGradientStartColor: 'transparent',
 };
 
 const timeFormatter = new Intl.DateTimeFormat('en-US', {
@@ -63,9 +63,11 @@ export const NotificationMessage = (message: Message) => {
       <div
         className="dt-pointer-events-none dt-absolute -dt-bottom-[36%] -dt-top-[36%] dt-left-0 dt-w-[240px] -dt-translate-x-1/2 dt-transform"
         style={{
-          background: messageStyles.gradientStartColor
-            ? `radial-gradient(50% 50% at 50% 50%, ${getColor(messageStyles.gradientStartColor)} 0%, transparent 100%)`
-            : 'transparent',
+          background:
+            message.metadata?.actions?.length &&
+            messageStyles.actionGradientStartColor
+              ? `radial-gradient(50% 50% at 50% 50%, ${getColor(messageStyles.actionGradientStartColor)} 0%, transparent 100%)`
+              : 'transparent',
         }}
       />
       <div className="dt-relative">

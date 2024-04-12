@@ -10,7 +10,7 @@ export interface NotificationStyle {
   iconBackgroundColor?: string | NotificationStyleToggleColor;
   iconBackgroundBackdropColor?: string | NotificationStyleToggleColor;
   linkColor?: string | NotificationStyleToggleColor;
-  gradientStartColor?: string | NotificationStyleToggleColor;
+  actionGradientStartColor?: string | NotificationStyleToggleColor;
 }
 
 export interface NotificationStyleMap {
