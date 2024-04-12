@@ -4,8 +4,8 @@
 
 .dialect {
   --dt-bg-primary: theme('colors.light.100');
-  --dt-bg-secondary: theme('colors.light.80');
-  --dt-bg-tertiary: theme('colors.light.70');
+  --dt-bg-secondary: theme('colors.light.90');
+  --dt-bg-tertiary: theme('colors.light.80');
   --dt-bg-brand: theme('colors.light.70');
   --dt-bg-brand-transparent: theme('colors.light.30' / 10%);
   --dt-input-primary: theme('colors.light.60');
@@ -19,15 +19,15 @@
   --dt-button-secondary: theme('colors.light.70');
   --dt-button-secondary-hover: theme('colors.light.80');
   --dt-button-secondary-disabled: theme('colors.light.80');
-  --dt-text-primary: theme('colors.dark.100');
+  --dt-text-primary: theme('colors.dark.90');
   --dt-text-secondary: theme('colors.dark.50');
-  --dt-text-tertiary: theme('colors.dark.20');
-  --dt-text-inverse: theme('colors.light.100');
+  --dt-text-tertiary: theme('colors.dark.30');
+  --dt-text-inverse: theme('colors.light.60');
   --dt-stroke-primary: theme('colors.light.60');
   --dt-icon-primary: theme('colors.dark.80');
   --dt-icon-secondary: theme('colors.dark.20');
   --dt-icon-tertiary: theme('colors.light.30');
-  --dt-icon-inverse: theme('colors.light.100');
+  --dt-icon-inverse: theme('colors.light.60');
   --dt-accent-brand: theme('colors.accent.success.DEFAULT');
   --dt-accent-success: theme('colors.accent.success.DEFAULT');
   --dt-accent-warning: theme('colors.accent.warning.DEFAULT');
@@ -40,10 +40,9 @@
 
 .dialect[data-theme='dark'] {
   --dt-bg-primary: theme('colors.dark.100');
-  --dt-bg-secondary: theme('colors.dark.80');
-  --dt-bg-tertiary: theme('colors.dark.70');
-  --dt-bg-brand: theme('colors.accent.success.DEFAULT');
-  --dt-bg-brand-transparent: theme('colors.accent.success.transparent');
+  --dt-bg-secondary: theme('colors.dark.90');
+  --dt-bg-tertiary: theme('colors.dark.80');
+  --dt-bg-brand: theme('colors.dark.40');
   --dt-input-primary: theme('colors.dark.50');
   --dt-input-secondary: theme('colors.dark.100');
   --dt-input-checked: theme('colors.accent.success.DEFAULT');
@@ -52,19 +51,19 @@
   --dt-button-primary: theme('colors.accent.success.DEFAULT');
   --dt-button-primary-hover: theme('colors.accent.dark');
   --dt-button-primary-disabled: theme('colors.accent.transparent');
-  --dt-button-secondary: theme('colors.dark.60');
-  --dt-button-secondary-hover: theme('colors.dark.50');
-  --dt-button-secondary-disabled: theme('colors.dark.70');
+  --dt-button-secondary: theme('colors.dark.70');
+  --dt-button-secondary-hover: theme('colors.dark.60');
+  --dt-button-secondary-disabled: theme('colors.dark.50');
+  --dt-accent-error: #FF4747;
   --dt-text-primary: theme('colors.light.100');
   --dt-text-secondary: theme('colors.light.40');
   --dt-text-tertiary: theme('colors.dark.20');
   --dt-text-inverse: theme('colors.dark.100');
-  --dt-stroke-primary: theme('colors.dark.60');
-  --dt-icon-primary: theme('colors.dark.100');
+  --dt-stroke-primary: theme('colors.dark.70');
+  --dt-icon-primary: theme('colors.light.100');
   --dt-icon-secondary: theme('colors.dark.20');
   --dt-icon-tertiary: theme('colors.dark.30');
-  --dt-icon-inverse: theme('colors.light.100');
-  --dt-accent-brand: theme('colors.light.30');
+  --dt-icon-inverse: theme('colors.dark.100');
 }
 
 
