@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { AnchorHTMLAttributes, DetailedHTMLProps, forwardRef } from 'react';
+import { ClassTokens } from '../../theme';
 
 export interface LinkProps
   extends DetailedHTMLProps<
@@ -17,7 +18,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     <a
       href={url}
       ref={ref}
-      className={clsx('dt-underline', className)}
+      className={clsx(ClassTokens.Text.Brand, 'dt-underline', className)}
       {...props}
     >
       {children}

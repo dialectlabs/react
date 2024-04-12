@@ -16,7 +16,7 @@ const DefaultMessageStyles: NotificationStyle = {
   iconColor: 'var(--dt-icon-primary)',
   iconBackgroundColor: 'var(--dt-bg-brand)',
   iconBackgroundBackdropColor: 'var(--dt-bg-brand-transparent)',
-  linkColor: 'var(--dt-accent-success)',
+  linkColor: 'var(--dt-accent-brand)',
   actionGradientStartColor: 'transparent',
 };
 
@@ -62,6 +62,8 @@ const getTarget = (url: string) => {
   return '_blank';
 };
 
+const MAX_URL_LENGTH = 32;
+
 export const NotificationMessage = (message: ThreadMessage) => {
   const messageStyles = getStyles(
     message.metadata?.notificationTypeHumanReadableId,
@@ -73,13 +75,15 @@ export const NotificationMessage = (message: ThreadMessage) => {
         <Link
           key={key}
           url={url}
-          className="dt-underline"
           target={getTarget(url)}
+          style={{ color: getColor(messageStyles.linkColor) }}
         >
-          {url.length > 32 ? `${url.slice(0, 32)}...` : url}
+          {url.length > MAX_URL_LENGTH
+            ? `${url.slice(0, MAX_URL_LENGTH)}...`
+            : url}
         </Link>
       )),
-    [message.text],
+    [message.text, messageStyles.linkColor],
   );
 
   return (

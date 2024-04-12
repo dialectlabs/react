@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Link } from '../../core';
 import { ClassTokens } from '../../theme';
 
 export const TosAndPrivacy = () => (
@@ -10,23 +11,17 @@ export const TosAndPrivacy = () => (
       )}
     >
       By enabling notifications you agree to Dialect&apos;s{' '}
-      <a
-        className={clsx(ClassTokens.Text.Brand, 'dt-underline')}
-        target="_blank"
-        rel="noreferrer"
-        href="https://www.dialect.to/tos"
-      >
+      <Link target="_blank" rel="noreferrer" url="https://www.dialect.to/tos">
         Terms of Service
-      </a>{' '}
+      </Link>{' '}
       and{' '}
-      <a
-        className={clsx(ClassTokens.Text.Brand, 'dt-underline')}
+      <Link
         target="_blank"
         rel="noreferrer"
-        href="https://www.dialect.to/privacy"
+        url="https://www.dialect.to/privacy"
       >
         Privacy Policy
-      </a>
+      </Link>
     </p>
   </div>
 );
