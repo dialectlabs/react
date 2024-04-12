@@ -1,9 +1,12 @@
 import { ThreadMessage } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
+import { useMemo } from 'react';
+import linkify from 'react-tiny-linkify';
 import {
   NotificationStyle,
   NotificationStyleToggleColor,
 } from '../../../types';
+import { Link } from '../../core';
 import { ClassTokens, Icons, NotificationTypeStyles } from '../../theme';
 import { useNotification } from './context';
 
@@ -48,9 +51,34 @@ const getStyles = (notificationType?: string) => {
   return DefaultMessageStyles;
 };
 
+const getTarget = (url: string) => {
+  const urlObj = new URL(url);
+
+  if (urlObj.hostname === window.location.hostname) {
+    return '_self';
+  }
+
+  return '_blank';
+};
+
 export const NotificationMessage = (message: ThreadMessage) => {
   const messageStyles = getStyles(
     message.metadata?.notificationTypeHumanReadableId,
+  );
+
+  const messageText = useMemo(
+    () =>
+      linkify(message.text, ({ url, key }) => (
+        <Link
+          key={key}
+          url={url}
+          className="dt-underline"
+          target={getTarget(url)}
+        >
+          {url.length > 32 ? `${url.slice(0, 32)}...` : url}
+        </Link>
+      )),
+    [message.text],
   );
 
   return (
@@ -107,7 +135,7 @@ export const NotificationMessage = (message: ThreadMessage) => {
             'dt-whitespace-pre-wrap dt-break-words dt-text-subtext',
           )}
         >
-          {message.text}
+          {messageText}
         </div>
         {message.metadata?.actions?.[0]?.url && (
           <a

@@ -48,10 +48,11 @@
   },
   "dependencies": {
     "@dialectlabs/react-sdk": "^2.0.0",
-    "clsx": "^2.1.0"
+    "clsx": "^2.1.0",
+    "react-tiny-linkify": "^1.2.0"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "@solana/wallet-adapter-react": "0.15.x"
+    "@solana/wallet-adapter-react": "0.15.x",
+    "react": ">=18"
   }
 }
