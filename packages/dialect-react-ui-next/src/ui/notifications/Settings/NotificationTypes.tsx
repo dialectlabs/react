@@ -63,32 +63,38 @@ export const NotificationTypes = () => {
   return (
     <div className="dt-flex dt-flex-col dt-gap-2">
       {error && <p className={clsx(ClassTokens.Text.Error)}>{error.message}</p>}
-      <p
-        className={clsx(
-          ClassTokens.Text.Tertiary,
-          'dt-text-subtext dt-font-semibold',
-        )}
-      >
-        Notification Type
-      </p>
-      {notificationSubscriptions.map(({ notificationType, subscription }) => (
-        <NotificationType
-          key={notificationType.id}
-          title={notificationType.name}
-          description={notificationType.trigger}
-          enabled={subscription.config.enabled}
-          onChange={(value) => {
-            if (isUpdating) return;
-            updateNotificationSubscription({
-              notificationTypeId: notificationType.id,
-              config: {
-                ...subscription.config,
-                enabled: value,
-              },
-            });
-          }}
-        />
-      ))}
+      {Boolean(notificationSubscriptions.length) && (
+        <>
+          <p
+            className={clsx(
+              ClassTokens.Text.Tertiary,
+              'dt-text-subtext dt-font-semibold',
+            )}
+          >
+            Notification Type
+          </p>
+          {notificationSubscriptions.map(
+            ({ notificationType, subscription }) => (
+              <NotificationType
+                key={notificationType.id}
+                title={notificationType.name}
+                description={notificationType.trigger}
+                enabled={subscription.config.enabled}
+                onChange={(value) => {
+                  if (isUpdating) return;
+                  updateNotificationSubscription({
+                    notificationTypeId: notificationType.id,
+                    config: {
+                      ...subscription.config,
+                      enabled: value,
+                    },
+                  });
+                }}
+              />
+            ),
+          )}
+        </>
+      )}
     </div>
   );
 };
