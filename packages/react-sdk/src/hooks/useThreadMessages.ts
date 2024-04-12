@@ -126,6 +126,7 @@ const useThreadMessages = ({
       const threadAddr = t.id.toString();
       const deduplicationId = cmd.deduplicationId ?? nanoid();
       const optimisticMessage: LocalThreadMessage = {
+        id: deduplicationId,
         deduplicationId,
         text: cmd.text,
         timestamp: new Date(),

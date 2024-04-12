@@ -42,7 +42,7 @@ const DefaultNotificationIconButton = forwardRef<
         'dt-group dt-relative dt-p-3 dt-transition-colors dt-duration-200 dt-ease-in-out',
         ClassTokens.Background.Button.Secondary.Default,
         ClassTokens.Background.Button.Secondary.Hover,
-        ClassTokens.Radius.Medium,
+        ClassTokens.Radius.Small,
       )}
     >
       <div className="dt-relative">

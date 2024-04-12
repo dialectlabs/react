@@ -1,3 +1,4 @@
+import { ThreadMessage } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import {
   NotificationStyle,
@@ -5,7 +6,6 @@ import {
 } from '../../../types';
 import { ClassTokens, Icons, NotificationTypeStyles } from '../../theme';
 import { useNotification } from './context';
-import { Message } from './types';
 
 const DefaultMessageStyles: NotificationStyle = {
   Icon: <Icons.Bell width={12} height={12} />,
@@ -48,7 +48,7 @@ const getStyles = (notificationType?: string) => {
   return DefaultMessageStyles;
 };
 
-export const NotificationMessage = (message: Message) => {
+export const NotificationMessage = (message: ThreadMessage) => {
   const messageStyles = getStyles(
     message.metadata?.notificationTypeHumanReadableId,
   );
@@ -138,7 +138,7 @@ export const NotificationMessage = (message: Message) => {
 NotificationMessage.Container = function NotificationMessageContainer({
   id,
 }: {
-  id: Message['id'];
+  id: ThreadMessage['id'];
 }) {
   const notification = useNotification(id);
 

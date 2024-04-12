@@ -1,16 +1,16 @@
+import { ThreadMessage } from '@dialectlabs/react-sdk';
 import { createContext, useContext } from 'react';
-import { Message } from './types';
 
 // TODO: update to ThreadMessages, once `id` is returned
 export interface NotificationsItemsProviderValue {
-  list: Message['id'][]; // list of ids, for order
-  map: Record<Message['id'], Message>;
+  list: ThreadMessage['id'][]; // list of ids, for order
+  map: Record<ThreadMessage['id'], ThreadMessage>;
 }
 
 export const NotificationsItemsContext =
   createContext<NotificationsItemsProviderValue>({ list: [], map: {} });
 
-export const useNotification = (id: Message['id']) => {
+export const useNotification = (id: ThreadMessage['id']) => {
   const items = useContext(NotificationsItemsContext);
 
   return items.map[id];

@@ -1,10 +1,10 @@
+import { ThreadMessage } from '@dialectlabs/react-sdk';
 import { ReactNode, useMemo } from 'react';
 import { NotificationMessage } from './NotificationMessage';
 import {
   NotificationsItemsContext,
   NotificationsItemsProviderValue,
 } from './context';
-import { Message } from './types';
 
 export const NotificationsList = ({ children }: { children?: ReactNode }) => {
   return <div className="dt-flex dt-flex-col">{children}</div>;
@@ -13,7 +13,7 @@ export const NotificationsList = ({ children }: { children?: ReactNode }) => {
 NotificationsList.Container = function NotificationListContainer({
   messages,
 }: {
-  messages: Message[];
+  messages: ThreadMessage[];
 }) {
   // potentially move to useSWR, since messages will change on every new fetch
   const context: NotificationsItemsProviderValue = useMemo(() => {
