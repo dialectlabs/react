@@ -28,7 +28,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/sdk": "^1.7.5",
+    "@dialectlabs/sdk": "^1.7.6",
     "swr": "^2.2.5"
   },
   "peerDependencies": {
