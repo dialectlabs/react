@@ -5,23 +5,27 @@ import {
   ReactNode,
   RefObject,
   forwardRef,
+  useCallback,
   useRef,
+  useState,
 } from 'react';
 import { ClassTokens, Icons } from '../theme';
 import { Notifications } from './Notifications';
-import { ModalStateProvider } from './internal/ModalStateProvider';
 import { useClickAway } from './internal/useClickAway';
 
-const Modal = forwardRef<HTMLDivElement, { open: boolean }>(function Modal(
-  { open },
-  modalRef,
-) {
-  if (!open) {
+const Modal = forwardRef<
+  HTMLDivElement,
+  {
+    open: boolean;
+    setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
+  }
+>(function Modal(props, modalRef) {
+  if (!props.open) {
     return null;
   }
   return (
     <div ref={modalRef} className="dt-modal">
-      {<Notifications />}
+      <Notifications {...props} />
     </div>
   );
 });
@@ -80,7 +84,7 @@ const NotificationsButtonPresentation = ({
 interface NotificationsButtonProps {
   children?: (args: {
     open: boolean;
-    setOpen: (open: boolean) => void;
+    setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     unreadCount: number;
     ref: RefObject<HTMLElement | null>;
   }) => ReactNode | ReactNode[];
@@ -97,27 +101,27 @@ NotificationsButtonPresentation.Container =
       refreshInterval: 20000,
     });
 
+    const [open, setOpen] = useState(false);
+
+    const toggle = useCallback(() => setOpen((prev) => !prev), []);
+
     return (
-      <ModalStateProvider>
-        {({ open, setOpen }) => (
-          <NotificationsButtonPresentation
-            clickAwayRefs={[buttonRef, modalRef]}
-            setOpen={setOpen}
-          >
-            {children ? (
-              children({ open, setOpen, unreadCount, ref: buttonRef })
-            ) : (
-              <DefaultNotificationIconButton
-                ref={buttonRef}
-                open={open}
-                onClick={() => setOpen((prev) => !prev)}
-                unread={unreadCount > 0}
-              />
-            )}
-            <Modal ref={modalRef} open={open} />
-          </NotificationsButtonPresentation>
+      <NotificationsButtonPresentation
+        clickAwayRefs={[buttonRef, modalRef]}
+        setOpen={setOpen}
+      >
+        {children ? (
+          children({ open, setOpen, unreadCount, ref: buttonRef })
+        ) : (
+          <DefaultNotificationIconButton
+            ref={buttonRef}
+            open={open}
+            onClick={toggle}
+            unread={unreadCount > 0}
+          />
         )}
-      </ModalStateProvider>
+        <Modal ref={modalRef} open={open} setOpen={setOpen} />
+      </NotificationsButtonPresentation>
     );
   };
 

@@ -4,7 +4,7 @@ import { JSX } from 'react';
 interface Props {
   icon: JSX.Element;
   className: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 export const IconButton = ({ icon, onClick, className }: Props) => {
   return (

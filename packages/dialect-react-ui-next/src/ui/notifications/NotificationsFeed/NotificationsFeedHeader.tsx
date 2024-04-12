@@ -1,9 +1,9 @@
 import { Header } from '../../core';
-import { useModalState } from '../internal/ModalStateProvider';
+import { useExternalProps } from '../internal/ExternalPropsProvider';
 import { Route, useRouter } from '../internal/Router';
 
-export const NotificationsFeedHeaderContainer = () => {
-  const modelState = useModalState();
+export const NotificationsFeedHeader = () => {
+  const { setOpen } = useExternalProps();
   const { setRoute } = useRouter();
 
   return (
@@ -11,9 +11,9 @@ export const NotificationsFeedHeaderContainer = () => {
       title="Notifications"
       showBackButton={false}
       showSettingsButton={true}
-      showCloseButton={!!modelState}
+      showCloseButton={!!setOpen}
       onSettingsClick={() => setRoute(Route.Settings)}
-      onCloseClick={() => modelState?.setOpen(false)}
+      onCloseClick={() => setOpen?.(false)}
     />
   );
 };
