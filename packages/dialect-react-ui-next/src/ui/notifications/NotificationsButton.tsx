@@ -70,7 +70,11 @@ const NotificationsButtonPresentation = ({
 }>) => {
   useClickAway(clickAwayRefs, () => setOpen(false));
 
-  return <div className="dt-relative">{children}</div>;
+  return (
+    <div className="dialect">
+      <div className="dt-relative">{children}</div>
+    </div>
+  );
 };
 
 interface NotificationsButtonProps {

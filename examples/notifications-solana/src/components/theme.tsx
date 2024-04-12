@@ -10,7 +10,7 @@ export const ThemeSwitch = () => {
   useEffect(() => {
     const dialect = document.getElementsByClassName('dialect')[0];
     document.documentElement.setAttribute('data-theme', theme);
-    dialect.setAttribute('data-theme', theme);
+    dialect?.setAttribute('data-theme', theme);
     window.localStorage.setItem('data-theme', theme);
   }, [theme]);
 

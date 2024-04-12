@@ -22,10 +22,8 @@ NotificationTypeStyles.offer_outbid = {
 
 export const DialectSolanaNotificationsButton = () => {
   return (
-    <div className="dialect">
-      <DialectSolanaSdk dappAddress={DAPP_ADDRESS}>
-        <NotificationsButton />
-      </DialectSolanaSdk>
-    </div>
+    <DialectSolanaSdk dappAddress={DAPP_ADDRESS}>
+      <NotificationsButton />
+    </DialectSolanaSdk>
   );
 };
