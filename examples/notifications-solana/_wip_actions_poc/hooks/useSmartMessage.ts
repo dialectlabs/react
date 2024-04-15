@@ -10,8 +10,8 @@ export interface UseSmartMessageValue {
     smartMessageId: string,
     actionHumanReadableId: string
   ) => Promise<void>;
-  isExecutingSmartMessageAction: boolean;
-  smartMessageActionError: string | null;
+  // isExecutingSmartMessageAction: boolean;
+  // smartMessageActionError: string | null;
 }
 
 export const useSmartMessage = (): UseSmartMessageValue => {
@@ -19,30 +19,31 @@ export const useSmartMessage = (): UseSmartMessageValue => {
   const wallet = useWallet();
   const dialectCloudUrl = dialectSdk.config.dialectCloud.url;
 
-  const [isExecuting, setIsExecuting] = useState(false);
-  const [actionError, setActionError] = useState<string | null>(null);
+  // const [isExecuting, setIsExecuting] = useState(false);
+  // const [actionError, setActionError] = useState<string | null>(null);
 
   const handleAction = async (
     smartMessageId: string,
     actionHumanReadableId: string
   ) => {
-    setIsExecuting(true);
-    setActionError(null);
+    // setIsExecuting(true);
+    // setActionError(null);
     try {
       if (!wallet.signTransaction) {
-        setActionError('Wallet does not support transaction signing');
+        // setActionError('Wallet does not support transaction signing');
         return;
       }
 
       const token = await dialectSdk.tokenProvider.get();
       const txResponse = await smartMessageApi.createSmartMessageTransaction(
-        `${dialectCloudUrl}/api/v1/smart-messages/${smartMessageId}`,
+        dialectCloudUrl,
+        smartMessageId,
         token.rawValue,
         { actionHumanReadableId }
       );
 
       if (!txResponse) {
-        setActionError('Failed to create transaction');
+        // setActionError('Failed to create transaction');
         return;
       }
       const versionedTransaction = VersionedTransaction.deserialize(
@@ -50,7 +51,8 @@ export const useSmartMessage = (): UseSmartMessageValue => {
       );
       const signed = await wallet.signTransaction(versionedTransaction);
       await smartMessageApi.submitSmartMessageTransaction(
-        `${dialectCloudUrl}/api/v1/smart-messages/${smartMessageId}`,
+        dialectCloudUrl,
+        smartMessageId,
         token.rawValue,
         {
           actionHumanReadableId,
@@ -58,15 +60,15 @@ export const useSmartMessage = (): UseSmartMessageValue => {
         }
       );
     } catch (e) {
-      setActionError('Failed to handle action');
+      // setActionError('Failed to handle action');
     } finally {
-      setIsExecuting(false);
+      // setIsExecuting(false);
     }
   };
 
   return {
     handleSmartMessageAction: handleAction,
-    isExecutingSmartMessageAction: isExecuting,
-    smartMessageActionError: actionError,
+    // isExecutingSmartMessageAction: isExecuting,
+    // smartMessageActionError: actionError,
   };
 };
