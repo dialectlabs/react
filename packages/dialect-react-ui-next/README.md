@@ -1,6 +1,6 @@
 # Dialect React UI
 
-Reusable React UI components to integrate web3 notifications.
+Reusable React UI components to integrate web3 alerts.
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ See root README.
 ## Build
 
 ```shell
-yarn build
+npm run build
 ```
 
 This would generate a production version of `@dialectlabs/react-ui`
