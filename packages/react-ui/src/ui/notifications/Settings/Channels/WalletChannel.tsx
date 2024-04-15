@@ -117,6 +117,8 @@ export const WalletChannel = () => {
     return <Button onClick={setUpWallet}>Enable</Button>;
   }, [deleteWalletThread, isLoading, isWalletSetUp, setUpWallet]);
 
+  // console.log(isWalletSetUp);
+
   return (
     <div className="dt-flex dt-flex-col dt-gap-2">
       <Input

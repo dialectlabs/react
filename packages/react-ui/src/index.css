@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 .dialect {
+  font-family: inherit;
   --dt-bg-primary: theme('colors.light.100');
   --dt-bg-secondary: theme('colors.light.90');
   --dt-bg-tertiary: theme('colors.light.80');

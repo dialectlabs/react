@@ -1,9 +1,9 @@
 import {
+  AddressType,
   useDialectContext,
   useNotificationChannelDappSubscription,
   useNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
-import { AddressType } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { ClassTokens } from '../../theme';
 import { useExternalProps } from '../internal/ExternalPropsProvider';

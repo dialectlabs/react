@@ -3,6 +3,7 @@ import {
   useNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
+import { memo } from 'react';
 import { Checkbox } from '../../core';
 import { ClassTokens } from '../../theme';
 
@@ -47,7 +48,7 @@ const NotificationType = ({ title, description, enabled, onChange }: Props) => {
   );
 };
 
-export const NotificationTypes = () => {
+export const NotificationTypes = memo(function NotificationTypes() {
   const { dappAddress } = useDialectContext();
 
   const {
@@ -97,4 +98,4 @@ export const NotificationTypes = () => {
       )}
     </div>
   );
-};
+});

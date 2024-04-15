@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { ChannelType } from '../../../../types';
 import { EmailChannel } from './EmailChannel';
 import { TelegramChannel } from './TelegramChannel';
@@ -20,7 +21,7 @@ const Channel = ({ type }: { type: ChannelType }) => {
   );
 };
 
-export const Channels = ({ channels }: Props) => {
+export const Channels = memo(function Channels({ channels }: Props) {
   return (
     <div>
       {channels.map((it) => (
@@ -28,4 +29,4 @@ export const Channels = ({ channels }: Props) => {
       ))}
     </div>
   );
-};
+});
