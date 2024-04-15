@@ -10,7 +10,9 @@ import {
   ThemeType,
 } from '@dialectlabs/react-ui';
 
-const DAPP_ADDRESS = 'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h';
+const DAPP_ADDRESS =
+  process.env.NEXT_PUBLIC_DAPP_ADDRESS ??
+  'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h';
 
 NotificationTypeStyles.offer_outbid = {
   Icon: <Icons.Bell width={12} height={12} />,
@@ -25,7 +27,12 @@ export const DialectSolanaNotificationsButton = (props: {
   theme: ThemeType;
 }) => {
   return (
-    <DialectSolanaSdk dappAddress={DAPP_ADDRESS}>
+    <DialectSolanaSdk
+      dappAddress={DAPP_ADDRESS}
+      config={{
+        environment: process.env.NEXT_PUBLIC_ENVIRONMENT ?? 'production',
+      }}
+    >
       <NotificationsButton theme={props.theme} />
     </DialectSolanaSdk>
   );
