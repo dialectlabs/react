@@ -58,7 +58,7 @@ export const EmailVerificationCodeInput = ({ email }: { email: string }) => {
       <div className="dt-mt-2 dt-flex dt-flex-col dt-gap-2">
         <p className={clsx(ClassTokens.Text.Tertiary, 'dt-text-caption')}>
           Check your <span className={ClassTokens.Text.Primary}>{email} </span>
-          Email for a verification code.
+          inbox for a verification code.
         </p>
         <div className="dt-flex dt-flex-row dt-items-center dt-gap-8">
           <TextButton onClick={deleteAddress} disabled={isLoading}>
