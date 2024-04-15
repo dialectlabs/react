@@ -82,13 +82,18 @@ export const NotificationTypes = () => {
                 enabled={subscription.config.enabled}
                 onChange={(value) => {
                   if (isUpdating) return;
-                  updateNotificationSubscription({
-                    notificationTypeId: notificationType.id,
-                    config: {
-                      ...subscription.config,
-                      enabled: value,
+                  updateNotificationSubscription(
+                    {
+                      notificationTypeId: notificationType.id,
+                      config: {
+                        ...subscription.config,
+                        enabled: value,
+                      },
                     },
-                  });
+                    {
+                      optimisticData: {},
+                    },
+                  );
                 }}
               />
             ),

@@ -39,7 +39,7 @@ function useNotificationSubscriptions({
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorUpdating, setErrorUpdating] = useState<DialectSdkError | null>(
-    null
+    null,
   );
 
   const {
@@ -55,7 +55,7 @@ function useNotificationSubscriptions({
     {
       refreshInterval,
       refreshWhenOffline: true,
-    }
+    },
   );
 
   const update = useCallback(
@@ -63,6 +63,26 @@ function useNotificationSubscriptions({
       setIsUpdating(true);
       setErrorUpdating(null);
       try {
+        await mutate(
+          (prev) => {
+            if (prev) {
+              return prev.map((it) =>
+                it.notificationType.id === command.notificationTypeId
+                  ? {
+                      ...it,
+                      subscription: {
+                        ...it.subscription,
+                        config: command.config,
+                      },
+                    }
+                  : it,
+              );
+            }
+            return prev;
+          },
+          { revalidate: false }, // optimistic change first
+        );
+
         await notificationSubscriptions.upsert(command);
         await mutate();
       } catch (e) {
@@ -74,7 +94,7 @@ function useNotificationSubscriptions({
         setIsUpdating(false);
       }
     },
-    [mutate, notificationSubscriptions]
+    [mutate, notificationSubscriptions],
   );
 
   return {
