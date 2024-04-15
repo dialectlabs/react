@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useDialectSdk } from '@dialectlabs/react-sdk';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { VersionedTransaction } from '@solana/web3.js';
