@@ -58,6 +58,7 @@ export const Input = ({
           className={clsx(
             'dt-input dt-ml-1 dt-w-full dt-bg-transparent dt-text-text dt-font-normal dt-outline-none',
             ClassTokens.Text.Primary,
+            ClassTokens.Text.Input.Placeholder,
           )}
           {...inputProps}
         />

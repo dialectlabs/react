@@ -61,6 +61,9 @@ export const ClassTokens = {
       Warning: 'dt-text-[--dt-accent-warning]',
       Error: 'dt-text-[--dt-accent-error]',
     },
+    Input: {
+      Placeholder: 'placeholder:dt-text-[--dt-text-quaternary]',
+    },
   },
   Icon: {
     Primary: 'dt-text-[--dt-icon-primary]',

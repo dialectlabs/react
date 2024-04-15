@@ -23,6 +23,7 @@
   --dt-text-primary: theme('colors.dark.90');
   --dt-text-secondary: theme('colors.dark.50');
   --dt-text-tertiary: theme('colors.dark.30');
+  --dt-text-quaternary: theme('colors.dark.20');
   --dt-text-inverse: theme('colors.light.60');
   --dt-stroke-primary: theme('colors.light.60');
   --dt-icon-primary: theme('colors.dark.80');
@@ -59,6 +60,7 @@
   --dt-text-primary: theme('colors.light.100');
   --dt-text-secondary: theme('colors.light.40');
   --dt-text-tertiary: theme('colors.dark.20');
+  --dt-text-quaternary: theme('colors.dark.20');
   --dt-text-inverse: theme('colors.dark.100');
   --dt-stroke-primary: theme('colors.dark.70');
   --dt-icon-primary: theme('colors.light.100');
