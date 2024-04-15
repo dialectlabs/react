@@ -1,25 +1,29 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { ThemeType } from '@dialectlabs/react-ui';
+import { useCallback, useEffect } from 'react';
 
-export const ThemeSwitch = () => {
-  const [theme, setTheme] = useState(
-    typeof window !== 'undefined'
-      ? window.localStorage.getItem('data-theme') ?? 'light'
-      : 'light',
-  );
+export const getInitialTheme = (): ThemeType => {
+  return typeof window !== 'undefined'
+    ? (window.localStorage.getItem('data-theme') as ThemeType) ?? 'light'
+    : 'light';
+};
+
+export const ThemeSwitch = (props: {
+  theme: ThemeType;
+  onThemeChange: (theme: ThemeType) => void;
+}) => {
+  const { theme, onThemeChange } = props;
 
   useEffect(() => {
-    const dialect = document.getElementsByClassName('dialect')[0];
     document.documentElement.setAttribute('data-theme', theme);
-    dialect?.setAttribute('data-theme', theme);
     window.localStorage.setItem('data-theme', theme);
   }, [theme]);
 
   const changeTheme = useCallback(() => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(nextTheme);
-  }, [theme]);
+    onThemeChange(nextTheme);
+  }, [theme, onThemeChange]);
 
   const translation = theme === 'dark' ? 'translate-x-4' : 'translate-x-0';
 

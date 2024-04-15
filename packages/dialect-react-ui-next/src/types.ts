@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 
 export type ChannelType = 'wallet' | 'email' | 'telegram';
 
+export type ThemeType = 'light' | 'dark';
+
 export type NotificationStyleToggleColor = { dark: string; light: string };
 
 export interface NotificationStyle {

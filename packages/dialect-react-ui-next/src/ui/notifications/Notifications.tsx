@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { ChannelType } from '../../types';
+import { ChannelType, ThemeType } from '../../types';
 import { Header } from '../core';
 import WalletStatesWrapper from '../core/wallet-state/WalletStatesWrapper';
 import { ClassTokens } from '../theme';
@@ -15,6 +15,7 @@ export interface NotificationsProps {
   channels?: ChannelType[];
   open?: boolean;
   setOpen?: (open: boolean | ((prev: boolean) => boolean)) => void;
+  theme?: ThemeType;
 }
 
 export const NotificationsBase = (
@@ -67,7 +68,7 @@ export const NotificationsBase = (
 
 export const Notifications = (props: NotificationsProps) => {
   return (
-    <div className="dialect">
+    <div className="dialect" data-theme={props.theme}>
       <NotificationsBase {...props} />
     </div>
   );

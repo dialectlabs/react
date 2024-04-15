@@ -7,6 +7,7 @@ import {
   Icons,
   NotificationTypeStyles,
   NotificationsButton,
+  ThemeType,
 } from '@dialectlabs/react-ui';
 
 const DAPP_ADDRESS = 'D1ALECTfeCZt9bAbPWtJk7ntv24vDYGPmyS7swp7DY5h';
@@ -20,10 +21,12 @@ NotificationTypeStyles.offer_outbid = {
   actionGradientStartColor: '#FF00001A',
 };
 
-export const DialectSolanaNotificationsButton = () => {
+export const DialectSolanaNotificationsButton = (props: {
+  theme: ThemeType;
+}) => {
   return (
     <DialectSolanaSdk dappAddress={DAPP_ADDRESS}>
-      <NotificationsButton />
+      <NotificationsButton theme={props.theme} />
     </DialectSolanaSdk>
   );
 };

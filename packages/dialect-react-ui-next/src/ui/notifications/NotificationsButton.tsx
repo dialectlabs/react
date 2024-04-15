@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { ChannelType } from '../../types';
+import { ChannelType, ThemeType } from '../../types';
 import { ClassTokens, Icons } from '../theme';
 import { NotificationsBase } from './Notifications';
 import { useClickAway } from './internal/useClickAway';
@@ -21,6 +21,7 @@ const Modal = forwardRef<
     open: boolean;
     setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     channels?: ChannelType[];
+    theme?: ThemeType;
   }
 >(function Modal(props, modalRef) {
   if (!props.open) {
@@ -67,10 +68,15 @@ const DefaultNotificationIconButton = forwardRef<
   );
 });
 
-const NotificationsButtonPresentation = ({ children }: PropsWithChildren) => {
+const NotificationsButtonPresentation = ({
+  theme,
+  children,
+}: PropsWithChildren<{ theme?: ThemeType }>) => {
   return (
-    <div className="dialect">
-      <div className="dt-relative">{children}</div>
+    <div className="dialect" data-theme={theme}>
+      <div className={clsx('dt-relative', ClassTokens.Text.Primary)}>
+        {children}
+      </div>
     </div>
   );
 };
@@ -91,6 +97,7 @@ interface NotificationsButtonProps {
     children: ReactNode;
   }) => ReactNode;
   channels?: ChannelType[];
+  theme?: ThemeType;
 }
 
 NotificationsButtonPresentation.Container =
@@ -98,6 +105,7 @@ NotificationsButtonPresentation.Container =
     channels,
     renderModalComponent,
     children,
+    theme,
   }: NotificationsButtonProps) {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const modalRef = useRef<HTMLDivElement | null>(null);
@@ -113,13 +121,13 @@ NotificationsButtonPresentation.Container =
     useClickAway([buttonRef, modalRef], () => setOpen(false));
 
     const externalProps = useMemo(
-      () => ({ open, setOpen, channels }),
-      [open, channels],
+      () => ({ open, setOpen, channels, theme }),
+      [open, channels, theme],
     );
     const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
     return (
-      <NotificationsButtonPresentation>
+      <NotificationsButtonPresentation theme={theme}>
         {/* Button Render */}
         {children ? (
           children({ open, setOpen, unreadCount, ref: buttonRef })
