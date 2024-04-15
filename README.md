@@ -35,7 +35,7 @@ yarn add @dialectlabs/react-sdk-blockchain-solana
 ### Prerequisites
 
 - Git
-- NPM (>=10)
+- yarn 1
 - Nodejs (>=18)
 
 ### Get Started
@@ -55,7 +55,7 @@ For example you want to make changes in `react-ui` library
 Run
 
 ```shell
-npm run dev:react-ui
+yarn run dev:react-ui
 ```
 
 All of the above changes require restarting the next server and clearing cache (just in case), if you've already started it.
@@ -67,9 +67,9 @@ You can now run the example by following the instructions in the next section.
 To get started, launch example's next dev server:
 
 ```shell
-npm install # in root dir
+yarn install # in root dir
 cd examples/notifications-solana
-npm run dev
+yarn run dev
 ```
 
 Now you have a hot reload of the packages in the workspace.
@@ -79,7 +79,7 @@ Now you have a hot reload of the packages in the workspace.
 1. 
 
 ```shell
-npm run build:all
+yarn run build:all
 pushd packages/react-sdk/
 npm publish --access public
 popd
