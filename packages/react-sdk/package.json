@@ -21,7 +21,8 @@
     "dev": "tsup-node --watch"
   },
   "devDependencies": {
-    "@types/react": "^18.2.73"
+    "@types/react": "^18.2.73",
+    "tsup": "^8.0.2"
   },
   "repository": {
     "type": "git",
