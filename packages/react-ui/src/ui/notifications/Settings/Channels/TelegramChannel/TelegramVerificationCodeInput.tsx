@@ -80,7 +80,7 @@ export const TelegramVerificationCodeInput = ({
           target="_blank"
           rel="noreferrer"
         >
-          Message<span className={ClassTokens.Text.Brand}> this bot </span>
+          Message<span className={ClassTokens.Text.Accent}> this bot </span>
           on Telegram to get your verification code.
         </a>
         <TextButton onClick={deleteAddress} disabled={isSendingCode}>

@@ -18,7 +18,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     <a
       href={url}
       ref={ref}
-      className={clsx(ClassTokens.Text.Brand, 'dt-underline', className)}
+      className={clsx(ClassTokens.Text.Accent, 'dt-underline', className)}
       {...props}
     >
       {children}

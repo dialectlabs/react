@@ -14,7 +14,7 @@ const DefaultMessageStyles: NotificationStyle = {
   Icon: <Icons.Bell width={12} height={12} />,
   iconColor: 'var(--dt-icon-primary)',
   iconBackgroundColor: 'var(--dt-bg-brand)',
-  iconBackgroundBackdropColor: 'var(--dt-bg-brand-transparent)',
+  iconBackgroundBackdropColor: 'var(--dt-brand-transparent)',
   linkColor: 'var(--dt-accent-brand)',
   actionGradientStartColor: 'transparent',
 };
