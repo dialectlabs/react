@@ -32,7 +32,7 @@ export default function Home() {
               rel="noreferrer"
             >
               <GitHubIcon />
-              GitHub
+              View the Code
             </a>
           </div>
           <div className="flex items-center gap-3">
