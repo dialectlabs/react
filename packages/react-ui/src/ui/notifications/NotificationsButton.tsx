@@ -47,7 +47,7 @@ const DefaultNotificationIconButton = forwardRef<
       ref={ref}
       onClick={onClick}
       className={clsx(
-        'dt-group dt-relative dt-p-3 dt-transition-colors dt-duration-200 dt-ease-in-out',
+        'dt-group dt-relative dt-flex dt-h-10 dt-w-10 dt-items-center dt-justify-center dt-transition-colors dt-duration-200 dt-ease-in-out',
         ClassTokens.Background.Button.Secondary.Default,
         ClassTokens.Background.Button.Secondary.Hover,
         ClassTokens.Radius.Small,
