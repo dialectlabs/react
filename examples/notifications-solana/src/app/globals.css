@@ -6,18 +6,18 @@
 
 
 :root {
-  --background: theme('colors.light.100');
-  --textColor: theme('colors.dark.100');
+  --background: theme('colors.light.90');
+  --textColor: theme('colors.dark.90');
   --themeSwitchBg: theme('colors.light.70');
   --buttonBg: theme('backgroundImage.gradient-button');
-  --buttonTextColor: theme('colors.light.100');
+  --buttonTextColor: white;
 }
 
 [data-theme="dark"] {
-  --background: theme('colors.dark.100');
-  --textColor: theme('colors.light.100');
+  --background: black;
+  --textColor: white;
   --themeSwitchBg: theme('colors.dark.70');
-  --buttonBg: theme('backgroundColor.light.100');
+  --buttonBg: theme('colors.light.100');
   --buttonTextColor: theme('colors.dark.100');
 }
 
@@ -26,6 +26,10 @@ body, html {
   background-color: var(--background);
   color: var(--textColor);
   -webkit-font-smoothing: antialiased;
+}
+
+.dt-modal {
+  box-shadow: 0 16px 40px 0 rgba(27, 27, 28, 0.16);
 }
 
 .wallet-adapter-dropdown {
