@@ -9,12 +9,16 @@
   --background: theme('colors.light.100');
   --textColor: theme('colors.dark.100');
   --themeSwitchBg: theme('colors.light.70');
+  --buttonBg: theme('backgroundImage.gradient-button');
+  --buttonTextColor: theme('colors.light.100');
 }
 
 [data-theme="dark"] {
   --background: theme('colors.dark.100');
   --textColor: theme('colors.light.100');
   --themeSwitchBg: theme('colors.dark.70');
+  --buttonBg: theme('backgroundColor.light.100');
+  --buttonTextColor: theme('colors.dark.100');
 }
 
 
@@ -29,7 +33,16 @@ body, html {
 }
 
 .wallet-adapter-button-trigger {
-  @apply bg-gradient-button text-button text-light-80 flex flex-1 items-center justify-center truncate whitespace-nowrap rounded-xl p-4 font-medium hover:opacity-90;
+  @apply text-button flex flex-1 items-center justify-center truncate whitespace-nowrap rounded-lg h-10 p-4 font-medium hover:opacity-90;
+}
+
+.wallet-adapter-button-trigger, .wallet-adapter-button-trigger:not([disabled]):hover {
+  background: var(--buttonBg);
+  color: var(--buttonTextColor);
+}
+
+.wallet-adapter-button > * > svg > path{
+  fill: var(--buttonTextColor);
 }
 
 .wallet-adapter-dropdown-list {

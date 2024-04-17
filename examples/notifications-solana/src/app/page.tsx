@@ -15,7 +15,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col px-8 py-5">
       <header className="flex items-center justify-between gap-3">
         <NoSSR>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-6">
             <a
               className="text-button flex items-center justify-center gap-1.5 font-semibold hover:opacity-80"
               href="https://docs.dialect.to/documentation/notifications-quick-start"
