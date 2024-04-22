@@ -1078,15 +1078,15 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dialectlabs/blockchain-sdk-solana@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.1.1.tgz#cbd0897580ad6eaba7abb9870f88bb6419baf086"
-  integrity sha512-8vGAGJVtdyaBkOXbDW45616d+4YdNA8p+vpPjCZt1Y0AIevyKkRgPYqBOdJF+n4Yrty46ApynDKQZlviXeEiCg==
+"@dialectlabs/blockchain-sdk-solana@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.2.0.tgz#9bc73519d0ba326b6e5dda90972e617f8d8e5265"
+  integrity sha512-gluOP6+xEWmL59BCvZBQhisn91+lrGRE8NJ5oRRjgbRjgsLOR0xYGzNe4LSfB6CYG26Yv1kLPIRGsqHZQf+pNg==
 
-"@dialectlabs/sdk@^1.7.7":
-  version "1.7.7"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-1.7.7.tgz#9990e5f399d84e3fac0ac60e00d36182743b80c0"
-  integrity sha512-G4TGzYhfV4hLJGJ6Dz9ga4Wxr5gf9LeSFLPFGpIItMZpTSvMh7J1rMX/cuvN+WXVueKQmaC7PzaIvQX13IArNA==
+"@dialectlabs/sdk@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-1.8.0.tgz#d6f3678234963ff26d6217612f4bf2e68919357e"
+  integrity sha512-sirckfAAFHg9i2wYxlNcqo86U0aJcheAhJwo0Fw9dsc/4SYsEpHFFiyjAxTXziaUGKpRqkHvJWTJQ1Q15owP0g==
   dependencies:
     "@stablelib/base64" "^1.0.1"
     axios "^0.27.2"

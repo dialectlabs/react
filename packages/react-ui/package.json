@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "type": "module",
   "private": false,
   "sideEffects": false,
@@ -48,7 +48,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/react-sdk": "^2.0.0",
+    "@dialectlabs/react-sdk": "^2.0.1",
     "clsx": "^2.1.0",
     "react-tiny-linkify": "^1.2.0"
   },

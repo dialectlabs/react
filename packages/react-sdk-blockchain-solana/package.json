@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-sdk-blockchain-solana",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "license": "MIT",
   "private": false,
@@ -26,8 +26,8 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/blockchain-sdk-solana": "^1.1.1",
-    "@dialectlabs/react-sdk": "^2.0.0"
+    "@dialectlabs/blockchain-sdk-solana": "^1.2.0",
+    "@dialectlabs/react-sdk": "^2.0.1"
   },
   "peerDependencies": {
     "@solana/web3.js": "1.x"
