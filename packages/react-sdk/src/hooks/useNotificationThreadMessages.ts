@@ -79,8 +79,10 @@ const useNotificationThreadMessages = (
       }
     }
 
-    setRefreshInterval(executingAction ? FASTER_INTERVAL : DEFAULT_INTERVAL);
-  }, [messages]);
+    setRefreshInterval(
+      executingAction ? FASTER_INTERVAL : initialRefreshInterval,
+    );
+  }, [messages, initialRefreshInterval]);
 
   return {
     messages: messages ?? [],
