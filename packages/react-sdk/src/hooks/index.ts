@@ -14,3 +14,4 @@ export { default as useThread } from './useThread';
 export { default as useThreadMessages } from './useThreadMessages';
 export { default as useThreads } from './useThreads';
 export { default as useUnreadMessages } from './useUnreadMessages';
+export { default as useUnreadNotifications } from './useUnreadNotifications';
