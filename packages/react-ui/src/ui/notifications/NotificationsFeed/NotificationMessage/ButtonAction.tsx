@@ -11,7 +11,7 @@ export const ButtonAction = ({ onClick, disabled, label, loading }: Props) => {
   return (
     <Button
       size="medium"
-      type={ButtonType.Primary}
+      type={disabled ? ButtonType.Secondary : ButtonType.Primary}
       disabled={disabled}
       onClick={onClick}
       loading={loading}

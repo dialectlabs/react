@@ -62,7 +62,7 @@ export const useSmartMessage = (): UseSmartMessageValue => {
           },
         );
 
-        refreshMessages();
+        await refreshMessages();
       } finally {
         setIsInitiating(false);
       }
