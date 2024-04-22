@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@dialectlabs/react-ui": "^2.0.2",
-    "@dialectlabs/react-sdk-blockchain-solana": "^2.0.0",
+    "@dialectlabs/react-sdk-blockchain-solana": "^2.0.2",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/web3.js": "^1.91.3",
