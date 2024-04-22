@@ -27,6 +27,9 @@ export const NotificationMessage = (message: ThreadMessage) => {
         overrideIconUrl={message.metadata?.smartMessage?.content.layout.icon}
       />
       <div className="dt-min-w-0">
+        <NotificationMessage.ActionStatus
+          action={message.metadata?.smartMessage}
+        />
         <NotificationMessage.Title>
           {message.metadata?.title}
         </NotificationMessage.Title>
@@ -47,7 +50,7 @@ NotificationMessage.Timestamp = function NotificationTimestamp({
   timestamp: Date;
 }) {
   return (
-    <div className={clsx('dt-pt-3 dt-text-caption', ClassTokens.Text.Tertiary)}>
+    <div className={clsx('dt-mt-3 dt-text-caption', ClassTokens.Text.Tertiary)}>
       {timeFormatter.format(timestamp.getTime())}
     </div>
   );
@@ -81,7 +84,7 @@ NotificationMessage.Text = function NotificationMessageText({
     <div
       className={clsx(
         ClassTokens.Text.Primary,
-        'dt-whitespace-pre-wrap dt-break-words dt-pb-2 dt-text-text dt-font-semibold',
+        'dt-whitespace-pre-wrap dt-break-words dt-text-subtext',
       )}
     >
       {messageText}
@@ -98,7 +101,7 @@ NotificationMessage.Title = function NotificationTitle({
     <div
       className={clsx(
         ClassTokens.Text.Primary,
-        'dt-whitespace-pre-wrap dt-break-words dt-pb-2 dt-text-text dt-font-semibold',
+        'dt-mb-1 dt-whitespace-pre-wrap dt-break-words dt-text-text dt-font-semibold',
       )}
     >
       {children}
@@ -138,7 +141,7 @@ NotificationMessage.Icon = function NotificationIcon({
             <img
               src={overrideIconUrl}
               alt=""
-              className="dt-object-cover dt-object-center"
+              className="dt-h-full dt-w-full dt-object-cover"
             />
           </div>
         ) : (
@@ -190,58 +193,70 @@ NotificationMessage.Actions = function NotificationActions({
   }
 
   return (
-    <div className="dt-gap dt-flex dt-flex-row dt-items-center dt-gap-2">
-      {layoutElements.map((layoutElement, index) => {
-        // `label` is an inactive button
-        if (layoutElement.type === 'label') {
+    <div className="dt-mt-3">
+      <div className="dt-flex dt-flex-row dt-items-center dt-gap-2">
+        {layoutElements.map((layoutElement, index) => {
+          // `label` is an inactive button
+          if (layoutElement.type === 'label') {
+            return (
+              <ButtonAction
+                key={`label-${index}`}
+                label={layoutElement.text}
+                disabled={true}
+              />
+            );
+          }
+
+          if (layoutElement.action.type === 'SIGN_TRANSACTION') {
+            const buttonAction = layoutElement.action;
+            return (
+              <ButtonAction
+                key={`button-sign-${index}`}
+                label={layoutElement.text}
+                disabled={isCancellingSmartMessage || isInitiatingSmartMessage}
+                loading={isInitiatingSmartMessage}
+                onClick={() =>
+                  handleSmartMessageAction(
+                    action.id,
+                    buttonAction.humanReadableId,
+                  )
+                }
+              />
+            );
+          }
+
+          if (layoutElement.action.type === 'CANCEL') {
+            return (
+              <ButtonAction
+                key={`button-cancel-${index}`}
+                label={layoutElement.text}
+                disabled={isCancellingSmartMessage || isInitiatingSmartMessage}
+                loading={isCancellingSmartMessage}
+                onClick={() => handleSmartMessageCancel(action.id)}
+              />
+            );
+          }
+
           return (
-            <ButtonAction
-              key={`label-${index}`}
+            <LinkAction
+              key={`button-link-${index}`}
+              url={layoutElement.action.link}
+              styles={styles}
               label={layoutElement.text}
-              disabled={true}
             />
           );
-        }
-
-        if (layoutElement.action.type === 'SIGN_TRANSACTION') {
-          const buttonAction = layoutElement.action;
-          return (
-            <ButtonAction
-              key={`button-sign-${index}`}
-              label={layoutElement.text}
-              disabled={isCancellingSmartMessage || isInitiatingSmartMessage}
-              loading={isInitiatingSmartMessage}
-              onClick={() =>
-                handleSmartMessageAction(
-                  action.id,
-                  buttonAction.humanReadableId,
-                )
-              }
-            />
-          );
-        }
-
-        if (layoutElement.action.type === 'CANCEL') {
-          return (
-            <ButtonAction
-              key={`button-cancel-${index}`}
-              label={layoutElement.text}
-              disabled={isCancellingSmartMessage || isInitiatingSmartMessage}
-              loading={isCancellingSmartMessage}
-              onClick={() => handleSmartMessageCancel(action.id)}
-            />
-          );
-        }
-
-        return (
-          <LinkAction
-            key={`button-link-${index}`}
-            url={layoutElement.action.link}
-            styles={styles}
-            label={layoutElement.text}
-          />
-        );
-      })}
+        })}
+      </div>
+      {action.content.layout.description && (
+        <div
+          className={clsx(
+            'dt-mt-1 dt-text-caption',
+            ClassTokens.Text.Secondary,
+          )}
+        >
+          {action.content.layout.description}
+        </div>
+      )}
     </div>
   );
 };
@@ -258,7 +273,7 @@ const getBadgeVariant = (state: SmartMessageStateDto): BadgeVariant => {
 };
 
 const actionStateTextMap: Record<SmartMessageStateDto, string> = {
-  [SmartMessageStateDto.Created]: 'Ready for Execution',
+  [SmartMessageStateDto.Created]: 'Ready',
   [SmartMessageStateDto.ReadyForExecution]: 'Executing',
   [SmartMessageStateDto.Executing]: 'Executing',
   [SmartMessageStateDto.Succeeded]: 'Succeeded',
@@ -276,9 +291,11 @@ NotificationMessage.ActionStatus = function NotificationActionStatus({
   }
 
   return (
-    <Badge variant={getBadgeVariant(action.content.state)}>
-      {actionStateTextMap[action.content.state]}
-    </Badge>
+    <div className="dt-mb-1.5">
+      <Badge variant={getBadgeVariant(action.content.state)}>
+        {actionStateTextMap[action.content.state]}
+      </Badge>
+    </div>
   );
 };
 

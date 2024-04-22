@@ -20,7 +20,7 @@ export const LinkAction = ({
       href={url}
       target={getMessageURLTarget(url)}
       className={clsx(
-        'dt-flex dt-flex-row dt-items-center dt-gap-0.5 dt-pt-3 dt-text-subtext dt-font-semibold',
+        'dt-flex dt-flex-row dt-items-center dt-gap-0.5 dt-text-subtext dt-font-semibold',
       )}
       rel="noreferrer"
     >

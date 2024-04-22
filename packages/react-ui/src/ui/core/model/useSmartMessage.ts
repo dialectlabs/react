@@ -1,4 +1,7 @@
-import { useDialectSdk } from '@dialectlabs/react-sdk';
+import {
+  useDialectSdk,
+  useNotificationThreadMessages,
+} from '@dialectlabs/react-sdk';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { VersionedTransaction } from '@solana/web3.js';
 import { Buffer } from 'buffer';
@@ -19,6 +22,8 @@ export const useSmartMessage = (): UseSmartMessageValue => {
   const dialectSdk = useDialectSdk();
   const wallet = useWallet();
   const dialectCloudUrl = dialectSdk.config.dialectCloud.url;
+
+  const { refreshMessages } = useNotificationThreadMessages();
 
   const [isInitiating, setIsInitiating] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
@@ -56,11 +61,13 @@ export const useSmartMessage = (): UseSmartMessageValue => {
             transaction: Buffer.from(signed.serialize()).toString('base64'),
           },
         );
+
+        refreshMessages();
       } finally {
         setIsInitiating(false);
       }
     },
-    [dialectCloudUrl, dialectSdk.tokenProvider, wallet],
+    [dialectCloudUrl, dialectSdk.tokenProvider, wallet, refreshMessages],
   );
 
   const handleCancel = useCallback(

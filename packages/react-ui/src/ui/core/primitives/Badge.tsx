@@ -7,6 +7,7 @@ export type BadgeVariant = 'default' | 'success' | 'error';
 export interface BadgeProps {
   children: ReactNode | ReactNode[];
   variant?: BadgeVariant;
+  className?: string;
 }
 
 const variantClassMap: Record<BadgeVariant, string> = {
@@ -24,12 +25,17 @@ const variantClassMap: Record<BadgeVariant, string> = {
   ),
 };
 
-export const Badge = ({ variant = 'default', children }: BadgeProps) => {
+export const Badge = ({
+  variant = 'default',
+  children,
+  className,
+}: BadgeProps) => {
   return (
     <span
       className={clsx(
         variantClassMap[variant],
-        'dt-rounded-full dt-px-2.5 dt-py-0.5 dt-blur-xl',
+        'dt-rounded-full dt-px-2.5 dt-py-0.5 dt-text-caption dt-font-semibold',
+        className,
       )}
     >
       {children}

@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
+import { ThreadMessage } from '../../../../../sdk/packages/sdk';
 import {
   CACHE_KEY_MESSAGES_FN,
   CACHE_KEY_THREAD_SUMMARY_FN,
@@ -10,11 +12,30 @@ interface UseNotificationThreadMessagesParams {
   refreshInterval?: number;
 }
 
+const DEFAULT_INTERVAL = 10000;
+const FASTER_INTERVAL = 3000;
+
+const hasRunningAction = (message: ThreadMessage): boolean => {
+  if (!message.metadata?.smartMessage?.content.state) {
+    return false;
+  }
+
+  // TODO: get actual state enum from sdk
+  return ['READY_FOR_EXECUTION', 'EXECUTING'].includes(
+    message.metadata.smartMessage.content.state,
+  );
+};
+
 const useNotificationThreadMessages = (
-  { refreshInterval }: UseNotificationThreadMessagesParams = {
-    refreshInterval: 10000,
+  {
+    refreshInterval: initialRefreshInterval = DEFAULT_INTERVAL,
+  }: UseNotificationThreadMessagesParams = {
+    refreshInterval: DEFAULT_INTERVAL,
   },
 ) => {
+  const [refreshInterval, setRefreshInterval] = useState<number>(
+    initialRefreshInterval,
+  );
   const { thread, isThreadLoading } = useNotificationThread();
 
   const {
@@ -44,6 +65,22 @@ const useNotificationThreadMessages = (
       await thread.markAsRead();
     },
   );
+
+  useEffect(() => {
+    if (!messages) {
+      return;
+    }
+
+    let executingAction = false;
+    for (const message of messages) {
+      if (hasRunningAction(message)) {
+        executingAction = true;
+        break;
+      }
+    }
+
+    setRefreshInterval(executingAction ? FASTER_INTERVAL : DEFAULT_INTERVAL);
+  }, [messages]);
 
   return {
     messages: messages ?? [],

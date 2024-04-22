@@ -1,4 +1,4 @@
-import { Button } from '../../../core';
+import { Button, ButtonType } from '../../../core';
 
 interface Props {
   disabled?: boolean;
@@ -11,6 +11,7 @@ export const ButtonAction = ({ onClick, disabled, label, loading }: Props) => {
   return (
     <Button
       size="medium"
+      type={ButtonType.Primary}
       disabled={disabled}
       onClick={onClick}
       loading={loading}
