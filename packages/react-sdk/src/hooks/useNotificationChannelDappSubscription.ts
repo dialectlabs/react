@@ -41,7 +41,7 @@ const useNotificationChannelDappSubscription = ({
     () =>
       walletsApi.dappAddresses.findAll({
         dappAccountAddress: dappAddress,
-      })
+      }),
   );
 
   const currentSubscription = globalAddress
@@ -63,7 +63,7 @@ const useNotificationChannelDappSubscription = ({
                 enabled,
               });
               return dappSubscriptions.map((it) =>
-                it.id === updatedSub.id ? updatedSub : it
+                it.id === updatedSub.id ? updatedSub : it,
               );
             } else {
               const newSub = await walletsApi.dappAddresses.create({
@@ -76,10 +76,10 @@ const useNotificationChannelDappSubscription = ({
           },
           {
             optimisticData: dappSubscriptions.find(
-              (it) => it.id === currentSubscription?.id
+              (it) => it.id === currentSubscription?.id,
             )
               ? dappSubscriptions.map((it) =>
-                  it.id === currentSubscription?.id ? { ...it, enabled } : it
+                  it.id === currentSubscription?.id ? { ...it, enabled } : it,
                 )
               : [
                   ...dappSubscriptions,
@@ -87,10 +87,11 @@ const useNotificationChannelDappSubscription = ({
                     id: 'optimistic-dapp-subscription',
                     enabled,
                     address: address,
+                    dappId: dappAddress,
                   },
                 ],
             rollbackOnError: true,
-          }
+          },
         );
       } finally {
         setIsToggling(false);
@@ -104,7 +105,7 @@ const useNotificationChannelDappSubscription = ({
       isToggling,
       mutateDappAddresses,
       walletsApi.dappAddresses,
-    ]
+    ],
   );
 
   const isFetchingSubscriptions =

@@ -1078,10 +1078,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dialectlabs/blockchain-sdk-solana@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.1.1.tgz#cbd0897580ad6eaba7abb9870f88bb6419baf086"
-  integrity sha512-8vGAGJVtdyaBkOXbDW45616d+4YdNA8p+vpPjCZt1Y0AIevyKkRgPYqBOdJF+n4Yrty46ApynDKQZlviXeEiCg==
+"@dialectlabs/blockchain-sdk-solana@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-1.2.0.tgz#9bc73519d0ba326b6e5dda90972e617f8d8e5265"
+  integrity sha512-gluOP6+xEWmL59BCvZBQhisn91+lrGRE8NJ5oRRjgbRjgsLOR0xYGzNe4LSfB6CYG26Yv1kLPIRGsqHZQf+pNg==
 
 "@dialectlabs/sdk@^1.9.0":
   version "1.9.0"

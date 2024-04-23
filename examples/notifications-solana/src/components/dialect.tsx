@@ -2,7 +2,10 @@
 
 import '@dialectlabs/react-ui/index.css';
 
-import { DialectSolanaSdk } from '@dialectlabs/react-sdk-blockchain-solana';
+import {
+  DialectSolanaSdk,
+  Environment,
+} from '@dialectlabs/react-sdk-blockchain-solana';
 import {
   Icons,
   NotificationTypeStyles,
@@ -30,7 +33,8 @@ export const DialectSolanaNotificationsButton = (props: {
     <DialectSolanaSdk
       dappAddress={DAPP_ADDRESS}
       config={{
-        environment: process.env.NEXT_PUBLIC_ENVIRONMENT ?? 'production',
+        environment:
+          (process.env.NEXT_PUBLIC_ENVIRONMENT as Environment) ?? 'production',
       }}
     >
       <NotificationsButton theme={props.theme} />

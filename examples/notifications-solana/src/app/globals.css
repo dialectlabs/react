@@ -6,15 +6,19 @@
 
 
 :root {
-  --background: theme('colors.light.100');
-  --textColor: theme('colors.dark.100');
+  --background: theme('colors.light.90');
+  --textColor: theme('colors.dark.90');
   --themeSwitchBg: theme('colors.light.70');
+  --buttonBg: theme('backgroundImage.gradient-button');
+  --buttonTextColor: white;
 }
 
 [data-theme="dark"] {
-  --background: theme('colors.dark.100');
-  --textColor: theme('colors.light.100');
+  --background: black;
+  --textColor: white;
   --themeSwitchBg: theme('colors.dark.70');
+  --buttonBg: theme('colors.light.100');
+  --buttonTextColor: theme('colors.dark.100');
 }
 
 
@@ -24,12 +28,25 @@ body, html {
   -webkit-font-smoothing: antialiased;
 }
 
+.dt-modal {
+  box-shadow: 0 16px 40px 0 rgba(27, 27, 28, 0.16);
+}
+
 .wallet-adapter-dropdown {
   @apply relative flex w-full;
 }
 
 .wallet-adapter-button-trigger {
-  @apply bg-gradient-button text-button text-light-80 flex flex-1 items-center justify-center truncate whitespace-nowrap rounded-xl p-4 font-medium hover:opacity-90;
+  @apply text-button flex flex-1 items-center justify-center truncate whitespace-nowrap rounded-lg h-10 p-4 font-medium hover:opacity-90;
+}
+
+.wallet-adapter-button-trigger, .wallet-adapter-button-trigger:not([disabled]):hover {
+  background: var(--buttonBg);
+  color: var(--buttonTextColor);
+}
+
+.wallet-adapter-button > * > svg > path{
+  fill: var(--buttonTextColor);
 }
 
 .wallet-adapter-dropdown-list {

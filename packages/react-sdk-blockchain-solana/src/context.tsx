@@ -1,24 +1,39 @@
 import {
-  DialectSolanaWalletAdapter,
+  DialectSolanaWalletAdapter as DialectSdkSolanaWalletAdapter,
   SolanaSdkFactory,
 } from '@dialectlabs/blockchain-sdk-solana';
 import {
   DialectContextProvider,
   DialectWalletStatesHolder,
 } from '@dialectlabs/react-sdk';
-import { ConfigProps } from '@dialectlabs/sdk';
+import type { ConfigProps } from '@dialectlabs/sdk';
 import { WalletContextState, useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
 export type Props = {
   dappAddress: string;
   config?: ConfigProps;
+  customWalletAdapter?: DialectSolanaWalletAdapter;
   children: React.ReactNode;
 };
 
+export interface DialectSolanaWalletAdapter {
+  publicKey?: PublicKey | null;
+  signTransaction?: <T extends Transaction | VersionedTransaction>(
+    tx: T,
+  ) => Promise<T>;
+  signMessage?: (msg: Uint8Array) => Promise<Uint8Array>;
+}
+
+type UnifiedWallet = WalletContextState | DialectSolanaWalletAdapter;
+
 const SolanaBlockchainSdkWrapper = (props: Props) => {
-  const wallet = useWallet();
+  const walletFromContext = useWallet();
+  const isWalletFromContext = props.customWalletAdapter === undefined;
+  const wallet = isWalletFromContext
+    ? walletFromContext
+    : props.customWalletAdapter;
 
   const {
     walletConnected: { set: setWalletConnected },
@@ -30,7 +45,7 @@ const SolanaBlockchainSdkWrapper = (props: Props) => {
 
   //used to pass solana wallet context state to internal state holder
   const wrapSolanaWallet = useCallback(
-    (wallet: WalletContextState): DialectSolanaWalletAdapter => {
+    (wallet: UnifiedWallet): DialectSdkSolanaWalletAdapter => {
       return {
         publicKey: wallet.publicKey ?? undefined,
         signTransaction: wallet.signTransaction
@@ -83,13 +98,7 @@ const SolanaBlockchainSdkWrapper = (props: Props) => {
   );
 
   const blockchainSdkFactory = useMemo(() => {
-    if (
-      !wallet ||
-      !wallet.connected ||
-      wallet.connecting ||
-      wallet.disconnecting ||
-      !wallet.publicKey
-    ) {
+    if (!wallet || !wallet.publicKey) {
       return null;
     }
     return SolanaSdkFactory.create({
@@ -98,8 +107,8 @@ const SolanaBlockchainSdkWrapper = (props: Props) => {
   }, [wallet, wrapSolanaWallet]);
 
   useEffect(() => {
-    setWalletConnected(Boolean(wallet.connected));
-  }, [setWalletConnected, wallet.connected]);
+    setWalletConnected(Boolean(wallet && wallet.publicKey));
+  }, [setWalletConnected, wallet]);
 
   return (
     <DialectContextProvider

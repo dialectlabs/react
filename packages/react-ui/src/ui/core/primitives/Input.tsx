@@ -48,7 +48,7 @@ export const Input = ({
           error
             ? ClassTokens.Stroke.Input.Error
             : ClassTokens.Stroke.Input.Primary,
-          !error && ClassTokens.Stroke.Input.Focused,
+          !error && !inputProps.disabled && ClassTokens.Stroke.Input.Focused,
           ClassTokens.Background.Input.Secondary,
         )}
       >

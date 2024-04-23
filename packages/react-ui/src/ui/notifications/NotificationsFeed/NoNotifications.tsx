@@ -23,7 +23,7 @@ export const NoNotifications = () => {
 
       <p
         className={clsx(
-          'dt-mb-4 dt-text-center dt-text-text dt-font-normal',
+          'dt-mb-6 dt-text-center dt-text-text dt-font-normal',
           ClassTokens.Text.Secondary,
         )}
       >
@@ -33,6 +33,7 @@ export const NoNotifications = () => {
       <Button
         type={ButtonType.Primary}
         size="large"
+        stretch={true}
         onClick={() => router.setRoute(Route.Settings)}
       >
         <Icons.Settings /> Set up notifications
