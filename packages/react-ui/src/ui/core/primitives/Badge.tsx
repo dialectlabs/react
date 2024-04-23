@@ -19,10 +19,7 @@ const variantClassMap: Record<BadgeVariant, string> = {
     ClassTokens.Text.Success,
     ClassTokens.Background.SuccessTransparent,
   ),
-  error: clsx(
-    ClassTokens.Text.Warning,
-    ClassTokens.Background.WarningTransparent,
-  ),
+  error: clsx(ClassTokens.Text.Error, ClassTokens.Background.ErrorTransparent),
 };
 
 export const Badge = ({

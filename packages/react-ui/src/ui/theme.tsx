@@ -108,6 +108,8 @@ export const ClassTokens = {
     SuccessTransparent: 'dt-bg-[--dt-success-transparent]',
     Warning: 'dt-bg-[--dt-accent-warning]',
     WarningTransparent: 'dt-bg-[--dt-warning-transparent]',
+    Error: 'dt-bg-[--dt-accent-error]',
+    ErrorTransparent: 'dt-bg-[--dt-error-transparent]',
   },
   Stroke: {
     Input: {
