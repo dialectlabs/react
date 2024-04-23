@@ -1,4 +1,5 @@
 import { ThreadMessage } from '@dialectlabs/react-sdk';
+import { ActionType } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import linkify from 'react-tiny-linkify';
@@ -250,7 +251,7 @@ NotificationMessage.Actions = function NotificationActions({
       {action.content.layout.description && (
         <div
           className={clsx(
-            'dt-mt-1 dt-text-caption',
+            'dt-mt-1.5 dt-text-caption',
             ClassTokens.Text.Secondary,
           )}
         >
@@ -286,7 +287,14 @@ NotificationMessage.ActionStatus = function NotificationActionStatus({
 }: {
   action?: Required<ThreadMessage>['metadata']['smartMessage'];
 }) {
-  if (!action) {
+  if (
+    !action ||
+    action.content.layout.elements
+      .flat()
+      .every(
+        (el) => el.type === 'button' && el.action.type === ActionType.OpenLink,
+      )
+  ) {
     return null;
   }
 
