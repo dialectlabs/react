@@ -6,6 +6,7 @@ import {
   useNotificationChannel,
   useNotificationChannelDappSubscription,
   useNotificationThread,
+  useUnreadNotifications,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback } from 'react';
@@ -29,6 +30,10 @@ export const WalletChannel = () => {
     delete: deleteThread,
     isDeletingThread,
   } = useNotificationThread();
+
+  const { refresh: refreshUnreadNotifications } = useUnreadNotifications({
+    revalidateOnMount: false,
+  });
 
   const {
     globalAddress: walletSubscriptionAddress,
@@ -81,6 +86,7 @@ export const WalletChannel = () => {
     let notificationsThread;
     if (!thread) {
       notificationsThread = await createWalletThread();
+      refreshUnreadNotifications();
     }
     let walletAddress;
     if (!walletSubscriptionAddress) {
@@ -93,6 +99,7 @@ export const WalletChannel = () => {
     createWalletAddress,
     createWalletThread,
     isLoading,
+    refreshUnreadNotifications,
     thread,
     toggleSubscription,
     walletSubscriptionAddress,
