@@ -1,7 +1,7 @@
+import { SmartMessageStateDto, ThreadMessage } from '@dialectlabs/sdk';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
-import { ThreadMessage } from '../../../../../sdk/packages/sdk';
 import {
   CACHE_KEY_MESSAGES_FN,
   CACHE_KEY_THREAD_SUMMARY_FN,
@@ -20,10 +20,10 @@ const hasRunningAction = (message: ThreadMessage): boolean => {
     return false;
   }
 
-  // TODO: get actual state enum from sdk
-  return ['READY_FOR_EXECUTION', 'EXECUTING'].includes(
-    message.metadata.smartMessage.content.state,
-  );
+  return [
+    SmartMessageStateDto.ReadyForExecution,
+    SmartMessageStateDto.Executing,
+  ].includes(message.metadata.smartMessage.content.state);
 };
 
 const useNotificationThreadMessages = (
