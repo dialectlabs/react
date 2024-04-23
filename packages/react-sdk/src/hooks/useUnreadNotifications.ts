@@ -8,6 +8,7 @@ import useDialectSdk from './useDialectSdk';
 interface UseUnreadNotificationsParams {
   refreshInterval?: number;
   revalidateOnMount?: boolean;
+  revalidateOnFocus?: boolean;
 }
 
 interface UseUnreadMessageValue {
@@ -20,6 +21,7 @@ interface UseUnreadMessageValue {
 function useUnreadNotifications({
   refreshInterval,
   revalidateOnMount = true,
+  revalidateOnFocus = true,
 }: UseUnreadNotificationsParams = EMPTY_OBJ): UseUnreadMessageValue {
   const sdk = useDialectSdk(true);
   const { dappAddress } = useDialectContext();
@@ -34,6 +36,7 @@ function useUnreadNotifications({
       refreshInterval,
       refreshWhenOffline: true,
       revalidateOnMount,
+      revalidateOnFocus,
     },
   );
 

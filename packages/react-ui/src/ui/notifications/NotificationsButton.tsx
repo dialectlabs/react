@@ -117,6 +117,7 @@ NotificationsButtonPresentation.Container =
     const [refreshInterval, setRefreshInterval] = useState(DEFAULT_INTERVAL);
     const { unreadCount, hasNotificationsThread } = useUnreadNotifications({
       refreshInterval,
+      revalidateOnFocus: Boolean(refreshInterval),
     });
 
     useEffect(() => {
