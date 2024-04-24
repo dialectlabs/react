@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dialectlabs/react-ui": "^2.0.5",
+    "@dialectlabs/react-ui": "^2.0.6",
     "@dialectlabs/react-sdk-blockchain-solana": "^2.0.3",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
