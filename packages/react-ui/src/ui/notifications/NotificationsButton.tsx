@@ -5,6 +5,7 @@ import {
   ReactNode,
   RefObject,
   forwardRef,
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -164,4 +165,4 @@ NotificationsButtonPresentation.Container =
     );
   };
 
-export const NotificationsButton = NotificationsButtonPresentation.Container;
+export const NotificationsButton = memo(NotificationsButtonPresentation.Container);

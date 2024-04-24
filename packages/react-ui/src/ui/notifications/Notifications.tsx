@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { ChannelType, ThemeType } from '../../types';
 import { Header } from '../core';
 import WalletStatesWrapper from '../core/wallet-state/WalletStatesWrapper';
@@ -66,10 +66,12 @@ export const NotificationsBase = (
   );
 };
 
-export const Notifications = (props: NotificationsProps) => {
+export const Notifications = memo(function Notifications(
+  props: NotificationsProps,
+) {
   return (
     <div className="dialect" data-theme={props.theme}>
       <NotificationsBase {...props} />
     </div>
   );
-};
+});
