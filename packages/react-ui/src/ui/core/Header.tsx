@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import React from 'react';
 import { ClassTokens, Icons } from '../theme';
 import { IconButton } from './primitives';
 
@@ -12,6 +13,36 @@ interface HeaderProps {
   onCloseClick?: () => void;
 }
 
+const BackButton: React.FC<{ onBackClick: HeaderProps['onBackClick'] }> = ({
+  onBackClick,
+}) => (
+  <IconButton
+    className={ClassTokens.Icon.Secondary}
+    onClick={onBackClick}
+    icon={<Icons.ArrowLeft />}
+  />
+);
+
+const SettingsButton: React.FC<{
+  onSettingsClick: HeaderProps['onSettingsClick'];
+}> = ({ onSettingsClick }) => (
+  <IconButton
+    className={ClassTokens.Icon.Secondary}
+    onClick={onSettingsClick}
+    icon={<Icons.Settings />}
+  />
+);
+
+const CloseButton: React.FC<{
+  onCloseClick: HeaderProps['onCloseClick'];
+}> = ({ onCloseClick }) => (
+  <IconButton
+    className={ClassTokens.Icon.Secondary}
+    onClick={onCloseClick}
+    icon={<Icons.Close />}
+  />
+);
+
 export function Header({
   title,
   showCloseButton = true,
@@ -21,36 +52,16 @@ export function Header({
   onBackClick,
   onCloseClick,
 }: HeaderProps) {
-  const BackButton = () => (
-    <IconButton
-      className={ClassTokens.Icon.Secondary}
-      onClick={onBackClick}
-      icon={<Icons.ArrowLeft />}
-    />
+  const leftButtons = (
+    <>{showBackButton && <BackButton onBackClick={onBackClick} />}</>
   );
-
-  const SettingsButton = () => (
-    <IconButton
-      className={ClassTokens.Icon.Secondary}
-      onClick={onSettingsClick}
-      icon={<Icons.Settings />}
-    />
-  );
-
-  const CloseButton = () => (
-    <IconButton
-      className={ClassTokens.Icon.Secondary}
-      onClick={onCloseClick}
-      icon={<Icons.Close />}
-    />
-  );
-
-  const leftButtons = <>{showBackButton && <BackButton />}</>;
 
   const rightButtons = (
     <div className="dt-flex dt-gap-3">
-      {showSettingsButton && <SettingsButton />}
-      {showCloseButton && <CloseButton />}
+      {showSettingsButton && (
+        <SettingsButton onSettingsClick={onSettingsClick} />
+      )}
+      {showCloseButton && <CloseButton onCloseClick={onCloseClick} />}
     </div>
   );
 

@@ -19,18 +19,18 @@ export interface NotificationsProps {
 }
 
 export const NotificationsBase = (
-  { channels = DEFAULT_CHANNELS, ...props }: NotificationsProps = {
+  { channels = DEFAULT_CHANNELS, open, setOpen, theme }: NotificationsProps = {
     channels: DEFAULT_CHANNELS,
   },
 ) => {
-  const { setOpen } = props;
-
   const normalizedExtProps = useMemo(
     () => ({
-      ...props,
+      open,
+      setOpen,
+      theme,
       channels: Array.from(new Set(channels)),
     }),
-    [props, channels],
+    [open, setOpen, theme, channels],
   );
 
   return (
