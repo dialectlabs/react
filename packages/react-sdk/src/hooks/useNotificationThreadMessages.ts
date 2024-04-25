@@ -1,3 +1,5 @@
+import { SmartMessageStateDto, ThreadMessage } from '@dialectlabs/sdk';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import {
@@ -10,11 +12,30 @@ interface UseNotificationThreadMessagesParams {
   refreshInterval?: number;
 }
 
+const DEFAULT_INTERVAL = 10000;
+const FASTER_INTERVAL = 3000;
+
+const hasRunningAction = (message: ThreadMessage): boolean => {
+  if (!message.metadata?.smartMessage?.content.state) {
+    return false;
+  }
+
+  return [
+    SmartMessageStateDto.ReadyForExecution,
+    SmartMessageStateDto.Executing,
+  ].includes(message.metadata.smartMessage.content.state);
+};
+
 const useNotificationThreadMessages = (
-  { refreshInterval }: UseNotificationThreadMessagesParams = {
-    refreshInterval: 10000,
+  {
+    refreshInterval: initialRefreshInterval = DEFAULT_INTERVAL,
+  }: UseNotificationThreadMessagesParams = {
+    refreshInterval: DEFAULT_INTERVAL,
   },
 ) => {
+  const [refreshInterval, setRefreshInterval] = useState<number>(
+    initialRefreshInterval,
+  );
   const { thread, isThreadLoading } = useNotificationThread();
 
   const {
@@ -44,6 +65,24 @@ const useNotificationThreadMessages = (
       await thread.markAsRead();
     },
   );
+
+  useEffect(() => {
+    if (!messages) {
+      return;
+    }
+
+    let executingAction = false;
+    for (const message of messages) {
+      if (hasRunningAction(message)) {
+        executingAction = true;
+        break;
+      }
+    }
+
+    setRefreshInterval(
+      executingAction ? FASTER_INTERVAL : initialRefreshInterval,
+    );
+  }, [messages, initialRefreshInterval]);
 
   return {
     messages: messages ?? [],

@@ -29,6 +29,7 @@
   --dt-button-secondary: #ebebeb;
   --dt-button-secondary-disabled: #f2f3f5;
   --dt-button-secondary-hover: #f2f3f5;
+  --dt-error-transparent: #f62d2d1a;
   --dt-icon-inverse: #ffffff;
   --dt-icon-primary: #2a2a2b;
   --dt-icon-secondary: #888989;
@@ -39,12 +40,14 @@
   --dt-input-secondary: #ffffff;
   --dt-input-unchecked: #d7d7d7;
   --dt-stroke-primary: #dee1e7;
+  --dt-success-transparent: #09cbbf1a;
   --dt-text-accent: #08c0b4;
   --dt-text-inverse: #ffffff;
   --dt-text-primary: #232324;
   --dt-text-quaternary: #888989;
   --dt-text-secondary: #434445;
   --dt-text-tertiary: #737373;
+  --dt-warning-transparent: #ff99001a;
 }
 
 .dialect[data-theme='dark'] {

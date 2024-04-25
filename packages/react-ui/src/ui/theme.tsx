@@ -37,6 +37,8 @@ export const ClassTokens = {
     Secondary: 'dt-text-[--dt-text-secondary]',
     Tertiary: 'dt-text-[--dt-text-tertiary]',
     Accent: 'dt-text-[--dt-text-accent]',
+    Success: 'dt-text-[--dt-accent-success]',
+    Warning: 'dt-text-[--dt-accent-warning]',
     Error: 'dt-text-[--dt-accent-error]',
     Inverse: 'dt-text-[--dt-text-inverse]',
     Button: {
@@ -103,6 +105,11 @@ export const ClassTokens = {
     Brand: 'dt-bg-[--dt-bg-brand]',
     BrandTransparent: 'dt-bg-[--dt-brand-transparent]',
     Success: 'dt-bg-[--dt-accent-success]',
+    SuccessTransparent: 'dt-bg-[--dt-success-transparent]',
+    Warning: 'dt-bg-[--dt-accent-warning]',
+    WarningTransparent: 'dt-bg-[--dt-warning-transparent]',
+    Error: 'dt-bg-[--dt-accent-error]',
+    ErrorTransparent: 'dt-bg-[--dt-error-transparent]',
   },
   Stroke: {
     Input: {
