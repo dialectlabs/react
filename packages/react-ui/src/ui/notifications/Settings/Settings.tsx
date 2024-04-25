@@ -43,7 +43,7 @@ export const Settings = () => {
       <div className="dt-flex-1" />
       <div
         className={clsx(
-          'dt-flex dt-flex-col dt-gap-2 dt-border-t dt-px-4 dt-py-4',
+          'dt-flex dt-flex-col dt-gap-2 dt-px-4 dt-py-4',
           ClassTokens.Stroke.Primary,
         )}
       >
