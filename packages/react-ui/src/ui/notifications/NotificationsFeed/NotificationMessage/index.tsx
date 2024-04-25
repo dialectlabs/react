@@ -251,7 +251,7 @@ NotificationMessage.Actions = function NotificationActions({
       {action.content.layout.description && (
         <div
           className={clsx(
-            'dt-mt-1.5 dt-text-caption',
+            'dt-mt-3 dt-text-caption',
             ClassTokens.Text.Secondary,
           )}
         >
@@ -299,7 +299,7 @@ NotificationMessage.ActionStatus = function NotificationActionStatus({
   }
 
   return (
-    <div className="dt-mb-1.5">
+    <div className="dt-mb-2">
       <Badge variant={getBadgeVariant(action.content.state)}>
         {actionStateTextMap[action.content.state]}
       </Badge>
