@@ -1,11 +1,13 @@
-import { useDialectContext, useUnreadMessages } from '@dialectlabs/react-sdk';
+import { useUnreadNotifications } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import {
   PropsWithChildren,
   ReactNode,
   RefObject,
   forwardRef,
+  memo,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -99,6 +101,7 @@ interface NotificationsButtonProps {
   channels?: ChannelType[];
   theme?: ThemeType;
 }
+const DEFAULT_INTERVAL = 10000;
 
 NotificationsButtonPresentation.Container =
   function NotificationsButtonContainer({
@@ -112,11 +115,19 @@ NotificationsButtonPresentation.Container =
 
     const [open, setOpen] = useState(false);
 
-    const { dappAddress } = useDialectContext();
-    const { unreadCount } = useUnreadMessages({
-      otherMembers: [dappAddress],
-      refreshInterval: open ? 0 : 10000,
+    const [refreshInterval, setRefreshInterval] = useState(DEFAULT_INTERVAL);
+    const { unreadCount, hasNotificationsThread } = useUnreadNotifications({
+      refreshInterval,
+      revalidateOnFocus: Boolean(refreshInterval),
     });
+
+    useEffect(() => {
+      if (open || !hasNotificationsThread) {
+        setRefreshInterval(0);
+      } else {
+        setRefreshInterval(DEFAULT_INTERVAL);
+      }
+    }, [hasNotificationsThread, open]);
 
     useClickAway([buttonRef, modalRef], () => setOpen(false));
 
@@ -154,4 +165,4 @@ NotificationsButtonPresentation.Container =
     );
   };
 
-export const NotificationsButton = NotificationsButtonPresentation.Container;
+export const NotificationsButton = memo(NotificationsButtonPresentation.Container);

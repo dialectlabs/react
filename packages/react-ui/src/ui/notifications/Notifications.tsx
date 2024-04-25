@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { ChannelType, ThemeType } from '../../types';
 import { Header } from '../core';
 import WalletStatesWrapper from '../core/wallet-state/WalletStatesWrapper';
@@ -19,18 +19,18 @@ export interface NotificationsProps {
 }
 
 export const NotificationsBase = (
-  { channels = DEFAULT_CHANNELS, ...props }: NotificationsProps = {
+  { channels = DEFAULT_CHANNELS, open, setOpen, theme }: NotificationsProps = {
     channels: DEFAULT_CHANNELS,
   },
 ) => {
-  const { setOpen } = props;
-
   const normalizedExtProps = useMemo(
     () => ({
-      ...props,
+      open,
+      setOpen,
+      theme,
       channels: Array.from(new Set(channels)),
     }),
-    [props, channels],
+    [open, setOpen, theme, channels],
   );
 
   return (
@@ -66,10 +66,12 @@ export const NotificationsBase = (
   );
 };
 
-export const Notifications = (props: NotificationsProps) => {
+export const Notifications = memo(function Notifications(
+  props: NotificationsProps,
+) {
   return (
     <div className="dialect" data-theme={props.theme}>
       <NotificationsBase {...props} />
     </div>
   );
-};
+});
