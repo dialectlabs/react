@@ -14,7 +14,7 @@ export const NoNotifications = () => {
 
       <h3
         className={clsx(
-          'dt-pb-2 dt-pt-6 dt-text-h2 dt-font-semibold',
+          'dt-pb-2 dt-pt-6 dt-text-center dt-text-h2 dt-font-semibold',
           ClassTokens.Text.Primary,
         )}
       >
