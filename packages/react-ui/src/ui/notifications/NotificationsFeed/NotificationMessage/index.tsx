@@ -2,7 +2,7 @@ import { ThreadMessage } from '@dialectlabs/react-sdk';
 import { ActionType } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import linkify from 'react-tiny-linkify';
+import { LinkIt } from 'react-linkify-it';
 import { NotificationStyle } from '../../../../types';
 import { Badge, BadgeVariant, useSmartMessage } from '../../../core';
 import { SmartMessageStateDto } from '../../../core/model/api/smart-messages.types';
@@ -58,6 +58,8 @@ NotificationMessage.Timestamp = function NotificationTimestamp({
 };
 
 const MAX_URL_LENGTH = 32;
+const URL_REGEX =
+  /(https?:\/\/|www\.)([-\w.]+\/[\p{L}\p{Emoji}\p{Emoji_Component}!#$%&'"()*+,./\\:;=_?@[\]~-]*[^\s'",.;:\b)\]}?]|(([\w-]+\.)+[\w-]+[\w/-]))/u;
 
 NotificationMessage.Text = function NotificationMessageText({
   children,
@@ -65,19 +67,25 @@ NotificationMessage.Text = function NotificationMessageText({
   children: string;
 }) {
   const messageText = useMemo(
-    () =>
-      linkify(children, ({ url, key }) => (
-        <a
-          key={key}
-          href={url}
-          target={getMessageURLTarget(url)}
-          className="dt-font-medium dt-underline"
-        >
-          {url.length > MAX_URL_LENGTH
-            ? `${url.slice(0, MAX_URL_LENGTH)}...`
-            : url}
-        </a>
-      )),
+    () => (
+      <LinkIt
+        regex={URL_REGEX}
+        component={(url, key) => (
+          <a
+            key={key}
+            href={url}
+            target={getMessageURLTarget(url)}
+            className="dt-font-medium dt-underline"
+          >
+            {url.length > MAX_URL_LENGTH
+              ? `${url.slice(0, MAX_URL_LENGTH)}...`
+              : url}
+          </a>
+        )}
+      >
+        {children}
+      </LinkIt>
+    ),
     [children],
   );
 
