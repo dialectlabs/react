@@ -2,6 +2,7 @@
   "name": "@dialectlabs/react-ui",
   "version": "2.1.1",
   "type": "module",
+  "license": "Apache-2.0",
   "private": false,
   "sideEffects": false,
   "main": "dist/index.cjs",
@@ -50,7 +51,7 @@
   "dependencies": {
     "@dialectlabs/react-sdk": "^2.1.0",
     "clsx": "^2.1.0",
-    "react-tiny-linkify": "^1.2.0"
+    "react-linkify-it": "^1.0.8"
   },
   "peerDependencies": {
     "@solana/wallet-adapter-react": "0.15.x",

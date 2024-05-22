@@ -6840,15 +6840,15 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-linkify-it@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-linkify-it/-/react-linkify-it-1.0.8.tgz#6ab17ff06c0ca4129b7badece870dbb3d0471f9b"
+  integrity sha512-QjwhIaCXmJ2CiFIl4mIOYN+Z+OhwRLHNMKmWG9SSAzKgpltOnOQjzvj8ruhnvOhgKRc6yqjW0vH0J6LEbTm50Q==
+
 react-refresh@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.0.tgz#4e02825378a5f227079554d4284889354e5f553e"
   integrity sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==
-
-react-tiny-linkify@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-tiny-linkify/-/react-tiny-linkify-1.2.0.tgz#9182750e51f2c7d10103d1d8d0b7b2926671e77f"
-  integrity sha512-+h9harQ/FKMpb24CLfEE29ITaCvhuaM0pueS47rIRxOw35f3z+35rgsu47ZrUBawcsNnbWax5jZxbouiKUwJGQ==
 
 "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18:
   version "18.2.0"
