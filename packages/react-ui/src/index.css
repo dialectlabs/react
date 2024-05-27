@@ -17,7 +17,6 @@
   --dt-accent-brand: #09cbbf;
   --dt-accent-error: #f62d2d;
   --dt-accent-success: #09cbbf;
-  --dt-accent-warning: #ff9900;
   --dt-bg-brand: #ebebeb;
   --dt-bg-primary: #ffffff;
   --dt-bg-secondary: #f9f9f9;
@@ -30,12 +29,10 @@
   --dt-button-secondary-disabled: #f2f3f5;
   --dt-button-secondary-hover: #f2f3f5;
   --dt-error-transparent: #f62d2d1a;
-  --dt-icon-inverse: #ffffff;
   --dt-icon-primary: #2a2a2b;
   --dt-icon-secondary: #888989;
   --dt-icon-tertiary: #b3b3b3;
   --dt-input-checked: #09cbbf;
-  --dt-input-disabled: #d7d7d7;
   --dt-input-primary: #dee1e7;
   --dt-input-secondary: #ffffff;
   --dt-input-unchecked: #d7d7d7;
@@ -47,14 +44,12 @@
   --dt-text-quaternary: #888989;
   --dt-text-secondary: #434445;
   --dt-text-tertiary: #737373;
-  --dt-warning-transparent: #ff99001a;
 }
 
 .dialect[data-theme='dark'] {
   --dt-accent-brand: #09cbbf;
   --dt-accent-error: #ff4747;
   --dt-accent-success: #09cbbf;
-  --dt-accent-warning: #ff9900;
   --dt-bg-brand: #656564;
   --dt-bg-primary: #1b1b1c;
   --dt-bg-secondary: #232324;
@@ -67,12 +62,10 @@
   --dt-button-secondary-disabled: #434445;
   --dt-button-secondary-hover: #383a3c;
   --dt-error-transparent: #f62d2d1a;
-  --dt-icon-inverse: #1b1b1c;
   --dt-icon-primary: #ffffff;
   --dt-icon-secondary: #888989;
   --dt-icon-tertiary: #737373;
   --dt-input-checked: #09cbbf;
-  --dt-input-disabled: #434445;
   --dt-input-primary: #434445;
   --dt-input-secondary: #1b1b1c;
   --dt-input-unchecked: #656564;
@@ -84,7 +77,6 @@
   --dt-text-quaternary: #888989;
   --dt-text-secondary: #c4c6c8;
   --dt-text-tertiary: #888989;
-  --dt-warning-transparent: #ff99001a;
 }
 
 .dialect .dt-modal {

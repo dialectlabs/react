@@ -38,7 +38,6 @@ export const ClassTokens = {
     Tertiary: 'dt-text-[--dt-text-tertiary]',
     Accent: 'dt-text-[--dt-text-accent]',
     Success: 'dt-text-[--dt-accent-success]',
-    Warning: 'dt-text-[--dt-accent-warning]',
     Error: 'dt-text-[--dt-accent-error]',
     Inverse: 'dt-text-[--dt-text-inverse]',
     Button: {
@@ -55,14 +54,6 @@ export const ClassTokens = {
         Disabled: 'disabled:dt-text-[--dt-accent-error]',
       },
     },
-    TextButton: {
-      //TODO naming???
-      Common: 'dt-text-[--dt-text-primary]',
-      Default: 'dt-text-[--dt-accent-brand]',
-      Success: 'dt-text-[--dt-accent-success]',
-      Warning: 'dt-text-[--dt-accent-warning]',
-      Error: 'dt-text-[--dt-accent-error]',
-    },
     Input: {
       Placeholder: 'placeholder:dt-text-[--dt-text-quaternary]',
     },
@@ -71,7 +62,6 @@ export const ClassTokens = {
     Primary: 'dt-text-[--dt-icon-primary]',
     Secondary: 'dt-text-[--dt-icon-secondary]',
     Tertiary: 'dt-text-[--dt-icon-tertiary]',
-    Inverse: 'dt-text-[--dt-icon-inverse]',
   },
   Background: {
     Button: {
@@ -102,14 +92,10 @@ export const ClassTokens = {
     Primary: 'dt-bg-[--dt-bg-primary]',
     Secondary: 'dt-bg-[--dt-bg-secondary]',
     Tertiary: 'dt-bg-[--dt-bg-tertiary]',
-    Brand: 'dt-bg-[--dt-bg-brand]',
     BrandTransparent: 'dt-bg-[--dt-brand-transparent]',
-    Success: 'dt-bg-[--dt-accent-success]',
     SuccessTransparent: 'dt-bg-[--dt-success-transparent]',
-    Warning: 'dt-bg-[--dt-accent-warning]',
-    WarningTransparent: 'dt-bg-[--dt-warning-transparent]',
-    Error: 'dt-bg-[--dt-accent-error]',
     ErrorTransparent: 'dt-bg-[--dt-error-transparent]',
+    AccentBrand: 'dt-bg-[--dt-accent-brand]',
   },
   Stroke: {
     Input: {

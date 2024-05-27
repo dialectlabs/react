@@ -2,13 +2,6 @@ import clsx from 'clsx';
 import React, { JSX } from 'react';
 import { ClassTokens } from '../../theme';
 
-export enum TextButtonType {
-  Common = 'Common',
-  Default = 'Default',
-  Success = 'Success',
-  Warning = 'Warning',
-  Error = 'Error',
-}
 export interface TextButtonProps {
   children: React.ReactNode;
   onClick?: () => void;

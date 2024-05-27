@@ -60,7 +60,7 @@ const DefaultNotificationIconButton = forwardRef<
           <span
             className={clsx(
               'dt-absolute dt-right-0 dt-top-[1px] dt-h-2 dt-w-2 dt-rounded-full dt-border-2 dt-border-[--dt-button-secondary] dt-transition-colors dt-duration-200 dt-ease-in-out group-hover:dt-border-[--dt-button-secondary-hover]',
-              ClassTokens.Background.Success,
+              ClassTokens.Background.AccentBrand,
             )}
           />
         )}
