@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-sdk",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "private": false,
   "sideEffects": false,
@@ -29,7 +29,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/sdk": "^1.9.0",
+    "@dialectlabs/sdk": "^1.9.4",
     "swr": "^2.2.5"
   },
   "peerDependencies": {
