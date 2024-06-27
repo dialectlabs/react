@@ -92,3 +92,6 @@ popd
 ```
 
 2. Update all versions of packages to the new one(e.g. bump react, react-ui version in examples, starters folder)
+
+
+This project is tested with BrowserStack.
