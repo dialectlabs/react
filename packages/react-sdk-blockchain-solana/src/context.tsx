@@ -16,6 +16,7 @@ export type Props = {
   config?: ConfigProps;
   customWalletAdapter?: DialectSolanaWalletAdapter;
   children: React.ReactNode;
+  customNotificationsUi?: React.ReactNode;
 };
 
 export interface DialectSolanaWalletAdapter {
