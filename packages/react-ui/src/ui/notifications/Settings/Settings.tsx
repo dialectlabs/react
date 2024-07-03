@@ -14,7 +14,7 @@ import { SettingsLoading } from './SettingsLoading';
 import { TosAndPrivacy } from './TosAndPrivacy';
 
 export const Settings = () => {
-  const { dappAddress } = useDialectContext();
+  const { dappAddress, customNotificationsUi } = useDialectContext();
 
   const subscription = useNotificationChannelDappSubscription({
     addressType: AddressType.Wallet,
@@ -40,6 +40,7 @@ export const Settings = () => {
       <div className="dt-px-4">
         <NotificationTypes />
       </div>
+      {customNotificationsUi}
       <div className="dt-flex-1" />
       <div
         className={clsx(
