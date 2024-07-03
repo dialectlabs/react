@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { ChannelType, ThemeType } from '../../types';
 import { Header } from '../core';
 import WalletStatesWrapper from '../core/wallet-state/WalletStatesWrapper';
@@ -16,10 +16,17 @@ export interface NotificationsProps {
   open?: boolean;
   setOpen?: (open: boolean | ((prev: boolean) => boolean)) => void;
   theme?: ThemeType;
+  renderAdditionalSettingsUi?: (args: Record<string, never>) => React.ReactNode;
 }
 
 export const NotificationsBase = (
-  { channels = DEFAULT_CHANNELS, open, setOpen, theme }: NotificationsProps = {
+  {
+    channels = DEFAULT_CHANNELS,
+    open,
+    setOpen,
+    theme,
+    renderAdditionalSettingsUi,
+  }: NotificationsProps = {
     channels: DEFAULT_CHANNELS,
   },
 ) => {
@@ -55,7 +62,11 @@ export const NotificationsBase = (
           <Router initialRoute={Route.Notifications}>
             {(route) => (
               <>
-                {route === Route.Settings && <SettingsScreen />}
+                {route === Route.Settings && (
+                  <SettingsScreen
+                    renderAdditionalSettingsUi={renderAdditionalSettingsUi}
+                  />
+                )}
                 {route === Route.Notifications && <NotificationsFeedScreen />}
               </>
             )}

@@ -1,6 +1,6 @@
 import { useUnreadNotifications } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import {
+import React, {
   PropsWithChildren,
   ReactNode,
   RefObject,
@@ -24,6 +24,9 @@ const Modal = forwardRef<
     setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     channels?: ChannelType[];
     theme?: ThemeType;
+    renderAdditionalSettingsUi?: (
+      args: Record<string, never>,
+    ) => React.ReactNode;
   }
 >(function Modal(props, modalRef) {
   if (!props.open) {
@@ -98,6 +101,8 @@ interface NotificationsButtonProps {
     setOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
     children: ReactNode;
   }) => ReactNode;
+  // tmp empty object for now
+  renderAdditionalSettingsUi?: (args: Record<string, never>) => React.ReactNode;
   channels?: ChannelType[];
   theme?: ThemeType;
 }
@@ -109,6 +114,7 @@ NotificationsButtonPresentation.Container =
     renderModalComponent,
     children,
     theme,
+    renderAdditionalSettingsUi,
   }: NotificationsButtonProps) {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const modalRef = useRef<HTMLDivElement | null>(null);
@@ -132,8 +138,8 @@ NotificationsButtonPresentation.Container =
     useClickAway([buttonRef, modalRef], () => setOpen(false));
 
     const externalProps = useMemo(
-      () => ({ open, setOpen, channels, theme }),
-      [open, channels, theme],
+      () => ({ open, setOpen, channels, theme, renderAdditionalSettingsUi }),
+      [open, channels, theme, renderAdditionalSettingsUi],
     );
     const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
@@ -165,4 +171,6 @@ NotificationsButtonPresentation.Container =
     );
   };
 
-export const NotificationsButton = memo(NotificationsButtonPresentation.Container);
+export const NotificationsButton = memo(
+  NotificationsButtonPresentation.Container,
+);

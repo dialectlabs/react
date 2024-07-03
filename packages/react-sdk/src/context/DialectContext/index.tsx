@@ -10,7 +10,6 @@ import { DialectSdk } from './Sdk';
 
 interface DialectContextValue {
   dappAddress: string;
-  customNotificationsUi?: React.ReactNode;
 }
 
 export const DialectContext = React.createContext<DialectContextValue>(
@@ -23,7 +22,6 @@ export type DialectContextProviderProps<ChainSdk extends BlockchainSdk> = {
   blockchainSdkFactory?: BlockchainSdkFactory<ChainSdk> | null;
   // gate?: Gate;
   children: React.ReactNode;
-  customNotificationsUi?: React.ReactNode;
 };
 
 export const useDialectContext = () => {
@@ -32,16 +30,10 @@ export const useDialectContext = () => {
 
 export const DialectContextProvider: React.FC<
   DialectContextProviderProps<BlockchainSdk>
-> = ({
-  config,
-  blockchainSdkFactory,
-  children,
-  dappAddress,
-  customNotificationsUi,
-}) => {
+> = ({ config, blockchainSdkFactory, children, dappAddress }) => {
   return (
     <SWRConfig>
-      <DialectContext.Provider value={{ dappAddress, customNotificationsUi }}>
+      <DialectContext.Provider value={{ dappAddress }}>
         <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
           {/* <DialectGate.Provider initialState={gate}> */}
           <LocalMessages.Provider>{children}</LocalMessages.Provider>

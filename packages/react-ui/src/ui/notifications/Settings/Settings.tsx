@@ -5,6 +5,7 @@ import {
   useNotificationSubscriptions,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
+import { ReactNode } from 'react';
 import { ClassTokens } from '../../theme';
 import { useExternalProps } from '../internal/ExternalPropsProvider';
 import { AppInfo } from './AppInfo';
@@ -13,8 +14,12 @@ import { NotificationTypes } from './NotificationTypes';
 import { SettingsLoading } from './SettingsLoading';
 import { TosAndPrivacy } from './TosAndPrivacy';
 
-export const Settings = () => {
-  const { dappAddress, customNotificationsUi } = useDialectContext();
+export const Settings = ({
+  renderAdditionalSettingsUi,
+}: {
+  renderAdditionalSettingsUi?: (args: Record<string, never>) => ReactNode;
+}) => {
+  const { dappAddress } = useDialectContext();
 
   const subscription = useNotificationChannelDappSubscription({
     addressType: AddressType.Wallet,
@@ -40,7 +45,7 @@ export const Settings = () => {
       <div className="dt-px-4">
         <NotificationTypes />
       </div>
-      {customNotificationsUi}
+      {renderAdditionalSettingsUi?.({})}
       <div className="dt-flex-1" />
       <div
         className={clsx(
