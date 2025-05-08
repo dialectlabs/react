@@ -11,6 +11,7 @@ export interface Topic {
   slug: string;
 }
 
+// todo: replace with sdk types
 export interface ActionElement {
   type: 'link';
   label: string;
@@ -23,7 +24,7 @@ export interface App {
   icon?: string;
 }
 
-export interface Alert {
+export interface HistoricalAlert {
   id: string;
   timestamp: string;
   title: string;
@@ -35,7 +36,7 @@ export interface Alert {
 }
 
 export interface History {
-  alerts: Array<Alert>;
+  alerts: Array<HistoricalAlert>;
   summary: {
     unreadCount: number;
     lastRead?: {

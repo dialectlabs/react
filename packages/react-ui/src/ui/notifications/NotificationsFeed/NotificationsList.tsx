@@ -1,4 +1,4 @@
-import { Alert } from '@dialectlabs/react-sdk';
+import { HistoricalAlert } from '@dialectlabs/react-sdk';
 import { ReactNode, useMemo } from 'react';
 import { NotificationMessage } from './NotificationMessage';
 import {
@@ -13,7 +13,7 @@ export const NotificationsList = ({ children }: { children?: ReactNode }) => {
 NotificationsList.Container = function NotificationListContainer({
   alerts,
 }: {
-  alerts: Alert[];
+  alerts: HistoricalAlert[];
 }) {
   // potentially move to useSWR, since messages will change on every new fetch
   const context: NotificationsItemsProviderValue = useMemo(() => {

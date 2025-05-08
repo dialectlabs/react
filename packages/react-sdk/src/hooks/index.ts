@@ -10,7 +10,13 @@ export { default as useNotificationDapp } from './useNotificationDapp';
 export { default as useNotificationSubscriptions } from './useNotificationSubscriptions';
 
 export { default as useHistory } from './useHistory';
-export type { ActionElement, Alert, App, History, Topic } from './useHistory';
+export type {
+  ActionElement,
+  App,
+  HistoricalAlert,
+  History,
+  Topic,
+} from './useHistory';
 export { default as useReadHistory } from './useReadHistory';
 export { default as useSubscribe } from './useSubscribe';
 export { default as useUnreadSummary } from './useUnreadSummary';

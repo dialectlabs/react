@@ -1,4 +1,8 @@
-import { ActionElement, Alert, ThreadMessage } from '@dialectlabs/react-sdk';
+import {
+  ActionElement,
+  HistoricalAlert,
+  ThreadMessage,
+} from '@dialectlabs/react-sdk';
 import { ActionType } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
@@ -11,7 +15,7 @@ import { useNotification } from '../context';
 import { LinkAction } from './LinkAction';
 import { getColor, getMessageURLTarget, timeFormatter } from './utils';
 
-export const NotificationMessage = (alert: Alert) => {
+export const NotificationMessage = (alert: HistoricalAlert) => {
   const styles = getStyles(alert.topic?.slug);
 
   return (
