@@ -1,9 +1,9 @@
 import type { ThreadSummary } from '@dialectlabs/sdk';
 import useSWR, { KeyedMutator } from 'swr';
-import { useDialectContext } from '../context';
-import { EMPTY_OBJ } from '../utils';
-import { CACHE_KEY_THREAD_SUMMARY_FN } from './internal/swrCache';
-import useDialectSdk from './useDialectSdk';
+import { useDialectContext } from '../../context';
+import { EMPTY_OBJ } from '../../utils';
+import { CACHE_KEY_THREAD_SUMMARY_FN } from '../internal/swrCache';
+import useDialectSdk from '../useDialectSdk';
 
 interface UseUnreadNotificationsParams {
   refreshInterval?: number;
@@ -18,6 +18,9 @@ interface UseUnreadMessageValue {
   hasUnreadMessages: boolean;
 }
 
+/**
+ * @deprecated - old api, use `useUnreadSummary` instead
+ */
 function useUnreadNotifications({
   refreshInterval,
   revalidateOnMount = true,

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type ChannelType = 'wallet' | 'email' | 'telegram';
+export type ChannelType = 'email' | 'telegram';
 
 export type ThemeType = 'light' | 'dark';
 

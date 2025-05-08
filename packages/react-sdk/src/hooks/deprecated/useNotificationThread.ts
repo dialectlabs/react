@@ -1,14 +1,17 @@
 import { CreateThreadCommand } from '@dialectlabs/sdk';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
-import { useDialectContext } from '../context';
-import { CACHE_KEY_THREAD_FN } from './internal/swrCache';
-import useDialectSdk from './useDialectSdk';
+import { useDialectContext } from '../../context';
+import { CACHE_KEY_THREAD_FN } from '../internal/swrCache';
+import useDialectSdk from '../useDialectSdk';
 
 interface UseNotificationThreadParams {
   refreshInterval?: number;
 }
 
+/**
+ * @deprecated - old api, use `useHistory` instead
+ */
 const useNotificationThread = ({
   refreshInterval,
 }: UseNotificationThreadParams = {}) => {

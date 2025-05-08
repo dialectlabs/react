@@ -1,9 +1,9 @@
 import { CreateThreadCommand, DialectSdkError, Thread } from '@dialectlabs/sdk';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
-import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from './internal/swrCache';
-import useDialectSdk from './useDialectSdk';
+import { EMPTY_ARR, EMPTY_OBJ } from '../../utils';
+import { CACHE_KEY_THREADS, CACHE_KEY_THREAD_FN } from '../internal/swrCache';
+import useDialectSdk from '../useDialectSdk';
 
 interface UseThreadsParams {
   refreshInterval?: number;
@@ -20,6 +20,9 @@ interface UseThreadsValue {
   errorCreatingThread: DialectSdkError | null;
 }
 
+/**
+ * @deprecated - old api, wallet no longer supports multiple threads
+ */
 const useThreads = ({
   refreshInterval,
 }: UseThreadsParams = EMPTY_OBJ): UseThreadsValue => {
@@ -43,7 +46,7 @@ const useThreads = ({
     function invalidateThreads() {
       mutate();
     },
-    [mutate, threadsApi]
+    [mutate, threadsApi],
   );
 
   // useDialectErrorsHandler(errorFetchingThreads, errorCreatingThread);
@@ -60,7 +63,7 @@ const useThreads = ({
           CACHE_KEY_THREAD_FN({
             otherMembers: cmd.otherMembers.map((it) => it.address),
           }),
-          res
+          res,
         );
         return res;
       } catch (e) {
@@ -72,7 +75,7 @@ const useThreads = ({
         setIsCreatingThread(false);
       }
     },
-    [threadsApi, mutate, globalMutate]
+    [threadsApi, mutate, globalMutate],
   );
 
   return {

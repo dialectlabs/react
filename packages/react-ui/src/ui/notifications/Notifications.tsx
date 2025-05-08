@@ -1,5 +1,6 @@
+import { useSubscribe, useUnreadSummary } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { ChannelType, ThemeType } from '../../types';
 import { Header } from '../core';
 import WalletStatesWrapper from '../core/wallet-state/WalletStatesWrapper';
@@ -9,7 +10,7 @@ import { SettingsScreen } from './Settings';
 import { ExternalPropsProvider } from './internal/ExternalPropsProvider';
 import { Route, Router } from './internal/Router';
 
-const DEFAULT_CHANNELS: ChannelType[] = ['wallet', 'telegram', 'email'];
+const DEFAULT_CHANNELS: ChannelType[] = ['telegram', 'email'];
 
 export interface NotificationsProps {
   channels?: ChannelType[];
@@ -19,17 +20,35 @@ export interface NotificationsProps {
   renderAdditionalSettingsUi?: (args: Record<string, never>) => React.ReactNode;
 }
 
-export const NotificationsBase = (
-  {
-    channels = DEFAULT_CHANNELS,
-    open,
-    setOpen,
-    theme,
-    renderAdditionalSettingsUi,
-  }: NotificationsProps = {
-    channels: DEFAULT_CHANNELS,
-  },
-) => {
+// separate component before routes, but after wallet states have been passed
+const SubscribeExecutor = ({ children }: { children: React.ReactNode }) => {
+  const { subscribe } = useSubscribe();
+  const { refresh, summary } = useUnreadSummary({
+    revalidateOnMount: false,
+    revalidateOnFocus: false,
+  });
+
+  useEffect(() => {
+    subscribe().then(() => {
+      // could lead to minor race conditions, potentially revisit
+      if (!summary?.subscribed) {
+        refresh();
+      }
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return children;
+};
+
+export const NotificationsBase = ({
+  channels = DEFAULT_CHANNELS,
+  open,
+  setOpen,
+  theme,
+  renderAdditionalSettingsUi,
+}: NotificationsProps) => {
   const normalizedExtProps = useMemo(
     () => ({
       open,
@@ -59,18 +78,20 @@ export const NotificationsBase = (
             />
           }
         >
-          <Router initialRoute={Route.Notifications}>
-            {(route) => (
-              <>
-                {route === Route.Settings && (
-                  <SettingsScreen
-                    renderAdditionalSettingsUi={renderAdditionalSettingsUi}
-                  />
-                )}
-                {route === Route.Notifications && <NotificationsFeedScreen />}
-              </>
-            )}
-          </Router>
+          <SubscribeExecutor>
+            <Router initialRoute={Route.Notifications}>
+              {(route) => (
+                <>
+                  {route === Route.Settings && (
+                    <SettingsScreen
+                      renderAdditionalSettingsUi={renderAdditionalSettingsUi}
+                    />
+                  )}
+                  {route === Route.Notifications && <NotificationsFeedScreen />}
+                </>
+              )}
+            </Router>
+          </SubscribeExecutor>
         </WalletStatesWrapper>
       </div>
     </ExternalPropsProvider>

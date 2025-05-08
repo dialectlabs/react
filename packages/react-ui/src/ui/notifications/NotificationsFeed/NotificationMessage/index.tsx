@@ -1,19 +1,18 @@
-import { ThreadMessage } from '@dialectlabs/react-sdk';
+import { ActionElement, Alert, ThreadMessage } from '@dialectlabs/react-sdk';
 import { ActionType } from '@dialectlabs/sdk';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { LinkIt } from 'react-linkify-it';
 import { NotificationStyle } from '../../../../types';
-import { Badge, BadgeVariant, useSmartMessage } from '../../../core';
+import { Badge, BadgeVariant } from '../../../core';
 import { SmartMessageStateDto } from '../../../core/model/api/smart-messages.types';
 import { ClassTokens, Icons, NotificationTypeStyles } from '../../../theme';
 import { useNotification } from '../context';
-import { ButtonAction } from './ButtonAction';
 import { LinkAction } from './LinkAction';
 import { getColor, getMessageURLTarget, timeFormatter } from './utils';
 
-export const NotificationMessage = (message: ThreadMessage) => {
-  const styles = getStyles(message.metadata?.notificationTypeHumanReadableId);
+export const NotificationMessage = (alert: Alert) => {
+  const styles = getStyles(alert.topic?.slug);
 
   return (
     <div
@@ -24,22 +23,14 @@ export const NotificationMessage = (message: ThreadMessage) => {
     >
       <NotificationMessage.Icon
         styles={styles}
-        isActionable={Boolean(message.metadata?.smartMessage)}
-        overrideIconUrl={message.metadata?.smartMessage?.content.layout.icon}
+        isActionable={!!alert.actions && alert.actions.length > 0}
+        overrideIconUrl={alert.image}
       />
       <div className="dt-min-w-0">
-        <NotificationMessage.ActionStatus
-          action={message.metadata?.smartMessage}
-        />
-        <NotificationMessage.Title>
-          {message.metadata?.title}
-        </NotificationMessage.Title>
-        <NotificationMessage.Text>{message.text}</NotificationMessage.Text>
-        <NotificationMessage.Actions
-          styles={styles}
-          action={message.metadata?.smartMessage}
-        />
-        <NotificationMessage.Timestamp timestamp={message.timestamp} />
+        <NotificationMessage.Title>{alert.title}</NotificationMessage.Title>
+        <NotificationMessage.Text>{alert.body}</NotificationMessage.Text>
+        <NotificationMessage.Actions styles={styles} actions={alert.actions} />
+        <NotificationMessage.Timestamp timestamp={alert.timestamp} />
       </div>
     </div>
   );
@@ -48,11 +39,13 @@ export const NotificationMessage = (message: ThreadMessage) => {
 NotificationMessage.Timestamp = function NotificationTimestamp({
   timestamp,
 }: {
-  timestamp: Date;
+  timestamp: string;
 }) {
+  const date = useMemo(() => new Date(timestamp), [timestamp]);
+
   return (
     <div className={clsx('dt-mt-3 dt-text-caption', ClassTokens.Text.Tertiary)}>
-      {timeFormatter.format(timestamp.getTime())}
+      {timeFormatter.format(date.getTime())}
     </div>
   );
 };
@@ -179,93 +172,34 @@ NotificationMessage.Icon = function NotificationIcon({
 };
 
 NotificationMessage.Actions = function NotificationActions({
-  action,
+  actions,
   styles,
 }: {
-  action?: Required<ThreadMessage>['metadata']['smartMessage'];
+  actions?: ActionElement[];
   styles: NotificationStyle;
 }) {
-  const {
-    handleSmartMessageAction,
-    isInitiatingSmartMessage,
-    handleSmartMessageCancel,
-    isCancellingSmartMessage,
-  } = useSmartMessage();
-
-  const layoutElements = useMemo(
-    () => action?.content.layout.elements.flat() ?? [],
-    [action],
-  );
-
-  if (!action) {
+  if (!actions) {
     return null;
   }
 
   return (
     <div className="dt-mt-3">
       <div className="dt-flex dt-flex-row dt-items-center dt-gap-2">
-        {layoutElements.map((layoutElement, index) => {
-          // `label` is an inactive button
-          if (layoutElement.type === 'label') {
+        {actions.map((action, index) => {
+          if (action.type === 'link') {
             return (
-              <ButtonAction
-                key={`label-${index}`}
-                label={layoutElement.text}
-                disabled={true}
+              <LinkAction
+                key={`button-link-${index}`}
+                url={action.url}
+                styles={styles}
+                label={action.label}
               />
             );
           }
 
-          if (layoutElement.action.type === 'SIGN_TRANSACTION') {
-            const buttonAction = layoutElement.action;
-            return (
-              <ButtonAction
-                key={`button-sign-${index}`}
-                label={layoutElement.text}
-                disabled={isCancellingSmartMessage || isInitiatingSmartMessage}
-                loading={isInitiatingSmartMessage}
-                onClick={() =>
-                  handleSmartMessageAction(
-                    action.id,
-                    buttonAction.humanReadableId,
-                  )
-                }
-              />
-            );
-          }
-
-          if (layoutElement.action.type === 'CANCEL') {
-            return (
-              <ButtonAction
-                key={`button-cancel-${index}`}
-                label={layoutElement.text}
-                disabled={isCancellingSmartMessage || isInitiatingSmartMessage}
-                loading={isCancellingSmartMessage}
-                onClick={() => handleSmartMessageCancel(action.id)}
-              />
-            );
-          }
-
-          return (
-            <LinkAction
-              key={`button-link-${index}`}
-              url={layoutElement.action.link}
-              styles={styles}
-              label={layoutElement.text}
-            />
-          );
+          return null;
         })}
       </div>
-      {action.content.layout.description && (
-        <div
-          className={clsx(
-            'dt-mt-3 dt-text-caption',
-            ClassTokens.Text.Secondary,
-          )}
-        >
-          {action.content.layout.description}
-        </div>
-      )}
     </div>
   );
 };

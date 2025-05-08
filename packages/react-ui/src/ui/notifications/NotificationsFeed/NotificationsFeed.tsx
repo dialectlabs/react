@@ -1,4 +1,8 @@
-import { useNotificationThreadMessages } from '@dialectlabs/react-sdk';
+import {
+  useHistory,
+  useReadHistory,
+  useSubscribe,
+} from '@dialectlabs/react-sdk';
 import { PropsWithChildren, useEffect } from 'react';
 import { NoNotifications } from './NoNotifications';
 import { NotificationsList } from './NotificationsList';
@@ -21,21 +25,25 @@ export const NotificationsFeed = ({
 };
 
 NotificationsFeed.Container = function NotificationsFeeContainer() {
-  const { messages, isMessagesLoading, markAsRead } =
-    useNotificationThreadMessages();
+  const { history, isLoading: isHistoryLoading } = useHistory();
+
+  const { isLoading: isSubscribeLoading } = useSubscribe();
+  const { read } = useReadHistory();
+
+  const alertsLength = history?.alerts.length || 0;
 
   useEffect(() => {
-    if (messages.length > 0) {
-      markAsRead();
+    if (alertsLength > 0) {
+      read();
     }
-  }, [messages.length, markAsRead]);
+  }, [alertsLength, read]);
 
   return (
     <NotificationsFeed
-      isEmpty={messages.length === 0}
-      isLoading={isMessagesLoading}
+      isEmpty={alertsLength === 0}
+      isLoading={isHistoryLoading || isSubscribeLoading}
     >
-      <NotificationsList.Container messages={messages} />
+      <NotificationsList.Container alerts={history?.alerts ?? []} />
     </NotificationsFeed>
   );
 };

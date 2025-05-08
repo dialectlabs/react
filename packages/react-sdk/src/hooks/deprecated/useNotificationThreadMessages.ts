@@ -5,7 +5,7 @@ import useSWRMutation from 'swr/mutation';
 import {
   CACHE_KEY_MESSAGES_FN,
   CACHE_KEY_THREAD_SUMMARY_FN,
-} from './internal/swrCache';
+} from '../internal/swrCache';
 import useNotificationThread from './useNotificationThread';
 
 interface UseNotificationThreadMessagesParams {
@@ -26,6 +26,9 @@ const hasRunningAction = (message: ThreadMessage): boolean => {
   ].includes(message.metadata.smartMessage.content.state);
 };
 
+/**
+ * @deprecated - old api, use `useHistory` instead
+ */
 const useNotificationThreadMessages = (
   {
     refreshInterval: initialRefreshInterval = DEFAULT_INTERVAL,

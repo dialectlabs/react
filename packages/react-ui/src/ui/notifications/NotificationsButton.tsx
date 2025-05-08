@@ -1,4 +1,4 @@
-import { useUnreadNotifications } from '@dialectlabs/react-sdk';
+import { useUnreadSummary } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import React, {
   PropsWithChildren,
@@ -122,18 +122,20 @@ NotificationsButtonPresentation.Container =
     const [open, setOpen] = useState(false);
 
     const [refreshInterval, setRefreshInterval] = useState(DEFAULT_INTERVAL);
-    const { unreadCount, hasNotificationsThread } = useUnreadNotifications({
+    const { summary } = useUnreadSummary({
       refreshInterval,
-      revalidateOnFocus: Boolean(refreshInterval),
+      revalidateOnFocus: refreshInterval > 0,
     });
 
+    const unreadCount = summary?.unreadCount ?? 0;
+
     useEffect(() => {
-      if (open || !hasNotificationsThread) {
+      if (open || summary?.subscribed === false) {
         setRefreshInterval(0);
       } else {
         setRefreshInterval(DEFAULT_INTERVAL);
       }
-    }, [hasNotificationsThread, open]);
+    }, [open, summary?.subscribed]);
 
     useClickAway([buttonRef, modalRef], () => setOpen(false));
 

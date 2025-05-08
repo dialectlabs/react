@@ -8,14 +8,14 @@ import {
 import { nanoid } from 'nanoid';
 import { useCallback, useMemo, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { LocalMessages } from '../context/DialectContext/LocalMessages';
-import type { LocalThreadMessage } from '../types';
-import { EMPTY_ARR } from '../utils';
+import { LocalMessages } from '../../context/DialectContext/LocalMessages';
+import type { LocalThreadMessage } from '../../types';
+import { EMPTY_ARR } from '../../utils';
 import {
   CACHE_KEY_MESSAGES_FN,
   CACHE_KEY_THREADS,
   CACHE_KEY_THREAD_SUMMARY_FN,
-} from './internal/swrCache';
+} from '../internal/swrCache';
 import useThread from './useThread';
 
 interface SendMessageCommand extends DialectSdkSendMessageCommand {
@@ -46,6 +46,9 @@ interface UseThreadMessagesValue {
   errorSendingMessage: DialectSdkError | null;
 }
 
+/**
+ * @deprecated - old api, use `useHistory` instead
+ */
 const useThreadMessages = ({
   id,
   refreshInterval,

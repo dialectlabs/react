@@ -5,11 +5,18 @@ import type {
 } from '@dialectlabs/sdk';
 import React, { useContext } from 'react';
 import { SWRConfig } from 'swr';
+import { useDappMapper } from '../../hooks/internal/useDappMapper';
 import { LocalMessages } from './LocalMessages';
 import { DialectSdk } from './Sdk';
 
 interface DialectContextValue {
+  // dappAddress is the legacy way to identify the dapp. Gets mapped to the appId, will later be replaced with appId completely
   dappAddress: string;
+  app: {
+    id: string | null;
+    isLoading: boolean;
+    refresh: () => void;
+  };
 }
 
 export const DialectContext = React.createContext<DialectContextValue>(
@@ -33,13 +40,29 @@ export const DialectContextProvider: React.FC<
 > = ({ config, blockchainSdkFactory, children, dappAddress }) => {
   return (
     <SWRConfig>
-      <DialectContext.Provider value={{ dappAddress }}>
-        <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
-          {/* <DialectGate.Provider initialState={gate}> */}
+      <DialectSdk.Provider initialState={{ config, blockchainSdkFactory }}>
+        <DialectContextWithLoader dappAddress={dappAddress}>
           <LocalMessages.Provider>{children}</LocalMessages.Provider>
-          {/* </DialectGate.Provider> */}
-        </DialectSdk.Provider>
-      </DialectContext.Provider>
+        </DialectContextWithLoader>
+      </DialectSdk.Provider>
     </SWRConfig>
+  );
+};
+
+const DialectContextWithLoader = ({
+  dappAddress,
+  children,
+}: {
+  dappAddress: string;
+  children: React.ReactNode;
+}) => {
+  const { appId, isLoading, refresh } = useDappMapper(dappAddress);
+
+  return (
+    <DialectContext.Provider
+      value={{ dappAddress, app: { id: appId, isLoading, refresh } }}
+    >
+      {children}
+    </DialectContext.Provider>
   );
 };

@@ -6,7 +6,7 @@ import {
   useNotificationChannel,
   useNotificationChannelDappSubscription,
   useNotificationThread,
-  useUnreadNotifications,
+  useUnreadSummary,
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { useCallback } from 'react';
@@ -17,6 +17,7 @@ import { ChannelNotificationsToggle } from './ChannelNotificationsToggle';
 
 const ADDRESS_TYPE = AddressType.Wallet;
 
+// no longer used, left here just in case, likely to be removed
 export const WalletChannel = () => {
   const { dappAddress } = useDialectContext();
   const {
@@ -31,7 +32,7 @@ export const WalletChannel = () => {
     isDeletingThread,
   } = useNotificationThread();
 
-  const { refresh: refreshUnreadNotifications } = useUnreadNotifications({
+  const { refresh: refreshUnreadNotifications } = useUnreadSummary({
     revalidateOnMount: false,
   });
 

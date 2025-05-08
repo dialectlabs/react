@@ -8,9 +8,12 @@ export { default as useNotificationChannel } from './useNotificationChannel';
 export { default as useNotificationChannelDappSubscription } from './useNotificationChannelDappSubscription';
 export { default as useNotificationDapp } from './useNotificationDapp';
 export { default as useNotificationSubscriptions } from './useNotificationSubscriptions';
-export { default as useNotificationThread } from './useNotificationThread';
-export { default as useNotificationThreadMessages } from './useNotificationThreadMessages';
-export { default as useThread } from './useThread';
-export { default as useThreadMessages } from './useThreadMessages';
-export { default as useThreads } from './useThreads';
-export { default as useUnreadNotifications } from './useUnreadNotifications';
+
+export { default as useHistory } from './useHistory';
+export type { ActionElement, Alert, App, History, Topic } from './useHistory';
+export { default as useReadHistory } from './useReadHistory';
+export { default as useSubscribe } from './useSubscribe';
+export { default as useUnreadSummary } from './useUnreadSummary';
+export type { UnreadSummary } from './useUnreadSummary';
+
+export * from './deprecated';

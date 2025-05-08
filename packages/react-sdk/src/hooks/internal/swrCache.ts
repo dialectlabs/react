@@ -1,5 +1,26 @@
 import type { AccountAddress, FindThreadQuery } from '@dialectlabs/sdk';
 
+// v2 cache keys
+
+export const CACHE_KEY_HISTORY = (appId: string) => ['HISTORY', appId];
+
+export const CACHE_KEY_HISTORY_SUMMARY = (
+  walletAddress: string,
+  appId: string,
+) => ['HISTORY_SUMMARY', walletAddress, appId];
+
+export const CACHE_KEY_SUBSCRIBE_MUTATION = (appId: string) => [
+  'SUBSCRIBE',
+  appId,
+];
+
+export const CACHE_KEY_READ_MUTATION = (appId: string) => [
+  'READ_HISTORY',
+  appId,
+];
+
+// v1 cache keys
+
 export const CACHE_KEY_THREADS = 'THREADS';
 
 export const CACHE_KEY_THREAD_FN = (findParams: FindThreadQuery): string => {

@@ -1,6 +1,12 @@
-import { useDialectSdk, useDialectWallet } from '@dialectlabs/react-sdk';
+import {
+  useDialectContext,
+  useDialectSdk,
+  useDialectWallet,
+} from '@dialectlabs/react-sdk';
 import React from 'react';
 
+import AppLoadingState from './AppLoadingState';
+import AppNotLoadedState from './AppNotLoadedState';
 import NoWalletState from './NoWalletState';
 import NotAuthorizedState from './NotAuthorizedState';
 import SigningMessageState from './SigningMessageState';
@@ -28,11 +34,35 @@ function WalletStatesWrapper({
     isSigningFreeTransactionState: { get: isSigningFreeTransaction },
   } = useDialectWallet();
 
+  const {
+    app: { id: appId, isLoading: isAppDataLoading },
+  } = useDialectContext();
+
   if (!isWalletConnected || (!sdk && isConnectionInitiated)) {
     return (
       <>
         {header}
         <NoWalletState message={notConnectedMessage} />
+      </>
+    );
+  }
+
+  // 2 extra states to handle appId mapping
+  // likely to be removed once fully migrated to appId
+  if (isAppDataLoading) {
+    return (
+      <>
+        {header}
+        <AppLoadingState />
+      </>
+    );
+  }
+
+  if (!appId) {
+    return (
+      <>
+        {header}
+        <AppNotLoadedState />
       </>
     );
   }
