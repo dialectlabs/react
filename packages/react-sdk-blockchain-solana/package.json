@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "build": "tsup-node",
-    "dev": "tsup-node --watch"
+    "dev": "rm -rf dist && tsup-node --watch"
   },
   "repository": {
     "type": "git",
