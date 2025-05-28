@@ -1085,17 +1085,17 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dialectlabs/blockchain-sdk-solana@^2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-2.0.0-beta.1.tgz#cf6a6d3695ee3b92c7feb801ee30e27566437887"
-  integrity sha512-aBXSkrlr8sCeuscAADW4IKEq9sVMDKTK/qUAQmHxTk4w4BbwyFJ/ubmnac0ftUKDyQAWSF0fbJbHHCcLR6y5iw==
+"@dialectlabs/blockchain-sdk-solana@^2.0.0-beta.3":
+  version "2.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/blockchain-sdk-solana/-/blockchain-sdk-solana-2.0.0-beta.3.tgz#ddaf713ed0f16d30776f3cf9467581a754630f39"
+  integrity sha512-1J4ge2aSsq1iUwwMAFPRkXCnuD+k0+rC5lf05w31KEnA3wlLxWGfgKLkMFZBczUSBDc2GJIjSC7b2FHJmH+lbg==
   dependencies:
     "@solana/web3.js" "^1.95.2"
 
-"@dialectlabs/sdk@^2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-2.0.0-beta.1.tgz#a6e6ae2aee48015679cf1d7b62b3cb04773af2d5"
-  integrity sha512-3pHZ1oCKv/sZhsueXrbobQq7hGspPvJ10U2pfWNhreJHIz96iS3tGgg8BXU774nJ3EziCknYlxAN6tHXHFBzxQ==
+"@dialectlabs/sdk@^2.0.0-beta.3":
+  version "2.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-2.0.0-beta.3.tgz#cf8ae8e7b3257dbe0f1fb35991ebc8c3fa6f2f2b"
+  integrity sha512-G/yUbU7lGfkergVwVeDi2PtapD5fe5WDRLTzMfouNTkxzJpebIJ/cgsgQ0lJ8Vtve1oQ+91jzvQbmdZEcxATPg==
   dependencies:
     "@stablelib/base64" "^1.0.1"
     axios "^0.27.2"

@@ -6,14 +6,15 @@ import useDialectSdk from './useDialectSdk';
 
 export default function useReadHistory() {
   const {
+    clientKey,
     app: { id: appId },
   } = useDialectContext();
   const sdk = useDialectSdk();
 
   const { trigger, isMutating, error } = useSWRMutation(
-    appId ? CACHE_KEY_READ_MUTATION(appId) : null,
+    appId && clientKey ? CACHE_KEY_READ_MUTATION(appId) : null,
     async () => {
-      if (!appId) {
+      if (!appId || !clientKey) {
         return;
       }
 
@@ -24,7 +25,7 @@ export default function useReadHistory() {
           body: JSON.stringify({
             appId,
           }),
-          headers: await getRequestHeaders(sdk),
+          headers: await getRequestHeaders(sdk, clientKey),
         },
       );
 

@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import { ClassTokens, Icons } from '../../theme';
 
-export const NoNotifications = () => {
+export const ErrorNotifications = () => {
   return (
     <div className="dt-flex dt-h-full dt-flex-1 dt-flex-col dt-items-center dt-justify-center dt-px-4">
       <div className={clsx(ClassTokens.Icon.Secondary)}>
-        <Icons.Bell width={24} height={24} />
+        <Icons.Close width={24} height={24} />
       </div>
 
       <h3
@@ -14,7 +14,7 @@ export const NoNotifications = () => {
           ClassTokens.Text.Primary,
         )}
       >
-        You don’t have any notifications yet
+        Failed to fetch notifications.
       </h3>
 
       <p
@@ -23,7 +23,7 @@ export const NoNotifications = () => {
           ClassTokens.Text.Secondary,
         )}
       >
-        Enable your wallet to receive notifications.
+        Please try again later, or reach out to the development team.
       </p>
     </div>
   );

@@ -57,6 +57,7 @@ export default function useHistory({
   refreshInterval = DEFAULT_INTERVAL,
 }: UseHistoryParams = EMPTY_OBJ) {
   const {
+    clientKey,
     app: { id: appId },
   } = useDialectContext();
   const sdk = useDialectSdk();
@@ -67,9 +68,9 @@ export default function useHistory({
     error,
     mutate,
   } = useSWR(
-    appId ? CACHE_KEY_HISTORY(appId) : null,
+    appId && clientKey ? CACHE_KEY_HISTORY(appId) : null,
     async () => {
-      if (!appId) {
+      if (!appId || !clientKey) {
         return;
       }
 
@@ -78,7 +79,7 @@ export default function useHistory({
 
       const response = await fetch(url, {
         method: 'GET',
-        headers: await getRequestHeaders(sdk),
+        headers: await getRequestHeaders(sdk, clientKey),
       });
 
       if (!response.ok) {

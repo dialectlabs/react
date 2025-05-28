@@ -35,6 +35,7 @@ function WalletStatesWrapper({
   } = useDialectWallet();
 
   const {
+    clientKey,
     app: { id: appId, isLoading: isAppDataLoading },
   } = useDialectContext();
 
@@ -58,7 +59,7 @@ function WalletStatesWrapper({
     );
   }
 
-  if (!appId) {
+  if (!appId || !clientKey) {
     return (
       <>
         {header}

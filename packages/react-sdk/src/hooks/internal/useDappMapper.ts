@@ -4,6 +4,7 @@ import useDialectSdk from '../useDialectSdk';
 interface MappedApp {
   id: string;
   name: string;
+  clientKey?: string | null;
 }
 
 export const useDappMapper = (dappAddress: string) => {
@@ -42,6 +43,7 @@ export const useDappMapper = (dappAddress: string) => {
 
   return {
     appId: data?.id || null,
+    clientKey: data?.clientKey || null,
     isLoading,
     error,
     refresh: mutate,

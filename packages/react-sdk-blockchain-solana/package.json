@@ -26,7 +26,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/blockchain-sdk-solana": "^2.0.0-beta.1",
+    "@dialectlabs/blockchain-sdk-solana": "^2.0.0-beta.3",
     "@dialectlabs/react-sdk": "^3.0.0-beta.1",
     "@solana/web3.js": "^1.95.2"
   },

@@ -12,6 +12,7 @@ import { DialectSdk } from './Sdk';
 interface DialectContextValue {
   // dappAddress is the legacy way to identify the dapp. Gets mapped to the appId, will later be replaced with appId completely
   dappAddress: string;
+  clientKey: string | null;
   app: {
     id: string | null;
     isLoading: boolean;
@@ -56,11 +57,11 @@ const DialectContextWithLoader = ({
   dappAddress: string;
   children: React.ReactNode;
 }) => {
-  const { appId, isLoading, refresh } = useDappMapper(dappAddress);
+  const { appId, clientKey, isLoading, refresh } = useDappMapper(dappAddress);
 
   return (
     <DialectContext.Provider
-      value={{ dappAddress, app: { id: appId, isLoading, refresh } }}
+      value={{ dappAddress, clientKey, app: { id: appId, isLoading, refresh } }}
     >
       {children}
     </DialectContext.Provider>

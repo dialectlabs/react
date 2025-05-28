@@ -4,6 +4,7 @@ import {
   useSubscribe,
 } from '@dialectlabs/react-sdk';
 import { PropsWithChildren, useEffect } from 'react';
+import { ErrorNotifications } from './ErrorNotifications';
 import { NoNotifications } from './NoNotifications';
 import { NotificationsList } from './NotificationsList';
 import { NotificationsLoading } from './NotificationsLoading';
@@ -12,9 +13,18 @@ export const NotificationsFeed = ({
   children,
   isEmpty,
   isLoading,
-}: PropsWithChildren<{ isLoading: boolean; isEmpty: boolean }>) => {
+  isError,
+}: PropsWithChildren<{
+  isLoading: boolean;
+  isEmpty: boolean;
+  isError: boolean;
+}>) => {
   if (isLoading) {
     return <NotificationsLoading />;
+  }
+
+  if (isError) {
+    return <ErrorNotifications />;
   }
 
   if (isEmpty) {
@@ -25,9 +35,14 @@ export const NotificationsFeed = ({
 };
 
 NotificationsFeed.Container = function NotificationsFeeContainer() {
-  const { history, isLoading: isHistoryLoading } = useHistory();
+  const {
+    history,
+    isLoading: isHistoryLoading,
+    error: historyError,
+  } = useHistory();
 
-  const { isLoading: isSubscribeLoading } = useSubscribe();
+  const { isLoading: isSubscribeLoading, error: subscribeError } =
+    useSubscribe();
   const { read } = useReadHistory();
 
   const alertsLength = history?.alerts.length || 0;
@@ -41,6 +56,7 @@ NotificationsFeed.Container = function NotificationsFeeContainer() {
   return (
     <NotificationsFeed
       isEmpty={alertsLength === 0}
+      isError={!!subscribeError || !!historyError}
       isLoading={isHistoryLoading || isSubscribeLoading}
     >
       <NotificationsList.Container alerts={history?.alerts ?? []} />
