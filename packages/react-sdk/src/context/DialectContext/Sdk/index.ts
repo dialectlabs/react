@@ -25,6 +25,7 @@ const DEFAULT_CONFIG: ConfigProps = {
   },
 };
 
+// TODO: move auth related functionality away from sdk hook
 function useDialectSdk(
   {
     config = DEFAULT_CONFIG,
@@ -33,7 +34,14 @@ function useDialectSdk(
 ): DialectSdkState {
   const {
     walletConnected: { get: walletConnected },
-    connectionInitiatedState: { set: setConnectionInitiated },
+    connectionInitiatedState: {
+      get: isConnectionInitated,
+      set: setConnectionInitiated,
+    },
+    isAuthDataFetchingState: {
+      get: isAuthDataFetching,
+      set: setIsAuthDataFetching,
+    },
   } = DialectWalletStatesHolder.useContainer();
 
   const sdk = useMemo(() => {
@@ -48,14 +56,36 @@ function useDialectSdk(
   // and if so, we validate the token
   // if token is valid, then NotAuthorized will be skipped
   useEffect(
-    function preValidateSdkToken() {
-      if (!sdk) return;
-      if (sdk.info.hasValidAuthentication) {
-        setConnectionInitiated(true);
+    function validateSdkToken() {
+      async function innerValidateSdkToken() {
+        if (!sdk) return;
+
+        const info = await sdk.info();
+        if (info.hasValidAuthentication) {
+          setConnectionInitiated(true);
+        }
       }
+
+      innerValidateSdkToken();
     },
     [sdk, setConnectionInitiated],
   );
+
+  // trigger auth check, on state changes
+  // PSA: state changes the following way:
+  // 1. initial:        authFetching: false, isSigning: false
+  // 2. on sign press:  authFetching: true,  isSigning: false
+  // 3. after prepare:  authFetching: true,  isSigning: true
+  // 4. after sign:     authFetching: true,  isSigning: false
+  // 5. after verify:   authFetching: false, isSigning: false
+  useEffect(() => {
+    if (!sdk) return;
+
+    if (isConnectionInitated && !isAuthDataFetching) {
+      setIsAuthDataFetching(true);
+      sdk.tokenProvider.get().finally(() => setIsAuthDataFetching(false));
+    }
+  }, [isAuthDataFetching, isConnectionInitated, sdk, setIsAuthDataFetching]);
 
   return {
     sdk,

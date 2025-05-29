@@ -7,6 +7,7 @@ import React from 'react';
 
 import AppLoadingState from './AppLoadingState';
 import AppNotLoadedState from './AppNotLoadedState';
+import AuthProcessingState from './AuthProcessingState';
 import NoWalletState from './NoWalletState';
 import NotAuthorizedState from './NotAuthorizedState';
 import SigningMessageState from './SigningMessageState';
@@ -32,6 +33,7 @@ function WalletStatesWrapper({
     connectionInitiatedState: { get: isConnectionInitiated },
     isSigningMessageState: { get: isSigningMessage },
     isSigningFreeTransactionState: { get: isSigningFreeTransaction },
+    isAuthDataFetchingState: { get: isFetchingAuthData },
   } = useDialectWallet();
 
   const {
@@ -91,6 +93,15 @@ function WalletStatesWrapper({
       <>
         {header}
         <SigningTransactionState />
+      </>
+    );
+  }
+
+  if (isFetchingAuthData) {
+    return (
+      <>
+        {header}
+        <AuthProcessingState />
       </>
     );
   }

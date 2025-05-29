@@ -45,21 +45,26 @@ NotificationsFeed.Container = function NotificationsFeeContainer() {
     useSubscribe();
   const { read } = useReadHistory();
 
-  const alertsLength = history?.alerts.length || 0;
+  const notifications = history?.alerts ?? [];
+  const notificationsCount = notifications.length;
+
+  const isLoading = isHistoryLoading || isSubscribeLoading;
+  const hasError = !!subscribeError || !!historyError;
+  const isEmpty = notificationsCount === 0;
 
   useEffect(() => {
-    if (alertsLength > 0) {
+    if (notificationsCount > 0) {
       read();
     }
-  }, [alertsLength, read]);
+  }, [notificationsCount, read]);
 
   return (
     <NotificationsFeed
-      isEmpty={alertsLength === 0}
-      isError={!!subscribeError || !!historyError}
-      isLoading={isHistoryLoading || isSubscribeLoading}
+      isEmpty={isEmpty}
+      isError={hasError}
+      isLoading={isLoading}
     >
-      <NotificationsList.Container alerts={history?.alerts ?? []} />
+      <NotificationsList.Container alerts={notifications} />
     </NotificationsFeed>
   );
 };

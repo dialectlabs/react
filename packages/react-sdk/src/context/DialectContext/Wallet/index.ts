@@ -12,6 +12,7 @@ export interface DialectWalletStatesHolderState {
   walletConnected: State<boolean>;
   connectionInitiatedState: State<boolean>;
   hardwareWalletForcedState: State<boolean>;
+  isAuthDataFetchingState: State<boolean>;
   isSigningFreeTransactionState: State<boolean>;
   isSigningMessageState: State<boolean>;
 }
@@ -52,6 +53,7 @@ function useDialectWalletStatesHolder(): DialectWalletStatesHolderState {
   const [isSigningFreeTransaction, setIsSigningFreeTransaction] =
     useState<boolean>(false);
   const [isSigningMessage, setIsSigningMessage] = useState<boolean>(false);
+  const [isAuthFetching, setIsAuthFetching] = useState<boolean>(false);
 
   return {
     walletConnected: {
@@ -65,6 +67,10 @@ function useDialectWalletStatesHolder(): DialectWalletStatesHolderState {
     hardwareWalletForcedState: {
       get: hardwareWalletForced,
       set: handleSetHardwareWalletForced,
+    },
+    isAuthDataFetchingState: {
+      get: isAuthFetching,
+      set: setIsAuthFetching,
     },
     isSigningFreeTransactionState: {
       get: isSigningFreeTransaction,
