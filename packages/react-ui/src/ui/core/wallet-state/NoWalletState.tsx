@@ -1,8 +1,9 @@
 import clsx from 'clsx';
+import { ReactNode } from 'react';
 import { ClassTokens, Icons } from '../../theme';
 
 interface NoWalletErrorProps {
-  message?: string | JSX.Element;
+  message?: string | ReactNode;
 }
 
 const NoWalletState = ({

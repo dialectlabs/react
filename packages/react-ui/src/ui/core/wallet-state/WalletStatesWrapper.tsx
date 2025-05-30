@@ -3,7 +3,7 @@ import {
   useDialectSdk,
   useDialectWallet,
 } from '@dialectlabs/react-sdk';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import AppLoadingState from './AppLoadingState';
 import AppNotLoadedState from './AppNotLoadedState';
@@ -16,8 +16,8 @@ import SigningTransactionState from './SigningTransactionState';
 // Only renders children if wallet is connected, access token and encryption keys are created
 
 interface WalletStatesWrapperProps {
-  notConnectedMessage?: string | JSX.Element;
-  header?: JSX.Element | null;
+  notConnectedMessage?: string | ReactNode;
+  header?: ReactNode;
   children: React.ReactNode;
 }
 
