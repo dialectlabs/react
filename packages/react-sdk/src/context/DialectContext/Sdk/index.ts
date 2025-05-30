@@ -35,7 +35,7 @@ function useDialectSdk(
   const {
     walletConnected: { get: walletConnected },
     connectionInitiatedState: {
-      get: isConnectionInitated,
+      get: isConnectionInitiated,
       set: setConnectionInitiated,
     },
     isAuthDataFetchingState: {
@@ -81,11 +81,11 @@ function useDialectSdk(
   useEffect(() => {
     if (!sdk) return;
 
-    if (isConnectionInitated && !isAuthDataFetching) {
+    if (isConnectionInitiated && !isAuthDataFetching) {
       setIsAuthDataFetching(true);
       sdk.tokenProvider.get().finally(() => setIsAuthDataFetching(false));
     }
-  }, [isAuthDataFetching, isConnectionInitated, sdk, setIsAuthDataFetching]);
+  }, [isAuthDataFetching, isConnectionInitiated, sdk, setIsAuthDataFetching]);
 
   return {
     sdk,
