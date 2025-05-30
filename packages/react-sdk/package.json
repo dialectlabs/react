@@ -21,7 +21,7 @@
     "dev": "rm -rf dist && tsup-node --watch"
   },
   "devDependencies": {
-    "@types/react": "^18.2.73",
+    "@types/react": "^19",
     "tsup": "^8.0.2"
   },
   "repository": {
