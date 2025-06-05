@@ -28,13 +28,14 @@ NotificationTypeStyles.offer_outbid = {
 
 export const DialectSolanaNotificationsButton = (props: {
   theme: ThemeType;
+  dappAddress?: string | null;
 }) => {
   return (
     <DialectSolanaSdk
-      dappAddress={DAPP_ADDRESS}
+      dappAddress={props.dappAddress ?? DAPP_ADDRESS}
       config={{
         environment:
-          (process.env.NEXT_PUBLIC_ENVIRONMENT as Environment) ?? 'production',
+          (process.env.NEXT_PUBLIC_ENVIRONMENT as Environment) ?? 'development',
       }}
     >
       <NotificationsButton theme={props.theme} />

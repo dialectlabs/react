@@ -7,10 +7,15 @@ import { SolanaWalletButton } from '@/components/wallet';
 import { BookIcon } from '@/icons/BookIcon';
 import { GitHubIcon } from '@/icons/GitHubIcon';
 import { ThemeType } from '@dialectlabs/react-ui';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Home() {
   const [theme, setTheme] = useState<ThemeType>(getInitialTheme());
+  const searchParams = useSearchParams();
+
+  const dappAddress = searchParams.get('dappAddress');
+
   return (
     <div className="flex min-h-screen flex-col px-8 py-5">
       <header className="flex items-center justify-between gap-3">
@@ -37,7 +42,10 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3">
             <ThemeSwitch theme={theme} onThemeChange={setTheme} />
-            <DialectSolanaNotificationsButton theme={theme} />
+            <DialectSolanaNotificationsButton
+              theme={theme}
+              dappAddress={dappAddress}
+            />
             <SolanaWalletButton />
           </div>
         </NoSSR>
@@ -46,6 +54,10 @@ export default function Home() {
         <div className="flex flex-col items-center gap-2">
           <p className="text-[15px] text-[#888989]">@dialectlabs/react</p>
           <p className="text-2xl font-bold">examples/notifications-solana</p>
+          <p className="text-[15px] text-[#CCCCCC]">
+            Hint: if you want to test your own app instead, pass{' '}
+            <code>dappAddress</code> query parameter
+          </p>
         </div>
         <SolanaWalletButton />
       </main>
