@@ -1,6 +1,6 @@
 {
   "name": "@dialectlabs/react-ui",
-  "version": "3.0.0-beta.3",
+  "version": "3.0.0-beta.4",
   "type": "module",
   "license": "Apache-2.0",
   "private": false,
@@ -49,7 +49,7 @@
     "url": "https://github.com/dialectlabs/react"
   },
   "dependencies": {
-    "@dialectlabs/react-sdk": "3.0.0-beta.3",
+    "@dialectlabs/react-sdk": "3.0.0-beta.4",
     "clsx": "^2.1.0",
     "react-linkify-it": "^1.0.8"
   },

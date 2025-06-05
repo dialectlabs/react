@@ -16,15 +16,6 @@ export const NoNotifications = () => {
       >
         You don’t have any notifications yet
       </h3>
-
-      <p
-        className={clsx(
-          'dt-mb-6 dt-text-center dt-text-text dt-font-normal',
-          ClassTokens.Text.Secondary,
-        )}
-      >
-        Enable your wallet to receive notifications.
-      </p>
     </div>
   );
 };
