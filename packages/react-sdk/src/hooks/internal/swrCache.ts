@@ -9,10 +9,10 @@ export const CACHE_KEY_HISTORY_SUMMARY = (
   appId: string,
 ) => ['HISTORY_SUMMARY', walletAddress, appId];
 
-export const CACHE_KEY_SUBSCRIBE_MUTATION = (appId: string) => [
-  'SUBSCRIBE',
-  appId,
-];
+export const CACHE_KEY_SUBSCRIBE_MUTATION = (
+  appId: string,
+  channel: string | string[],
+) => ['SUBSCRIBE', appId, channel];
 
 export const CACHE_KEY_READ_MUTATION = (appId: string) => [
   'READ_HISTORY',
