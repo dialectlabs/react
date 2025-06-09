@@ -2,6 +2,7 @@ import {
   useHistory,
   useReadHistory,
   useSubscribe,
+  useUnreadSummary,
 } from '@dialectlabs/react-sdk';
 import { PropsWithChildren, useEffect } from 'react';
 import { ErrorNotifications } from './ErrorNotifications';
@@ -44,6 +45,10 @@ NotificationsFeed.Container = function NotificationsFeeContainer() {
   const { isLoading: isSubscribeLoading, error: subscribeError } =
     useSubscribe();
   const { read } = useReadHistory();
+  const { refresh: refreshSummary } = useUnreadSummary({
+    revalidateOnMount: false,
+    revalidateOnFocus: false,
+  });
 
   const notifications = history?.alerts ?? [];
   const notificationsCount = notifications.length;
@@ -54,9 +59,11 @@ NotificationsFeed.Container = function NotificationsFeeContainer() {
 
   useEffect(() => {
     if (notificationsCount > 0) {
-      read();
+      read().then(() => refreshSummary());
     }
-  }, [notificationsCount, read]);
+    // ignoring fn deps
+    // eslint-disable-next-line
+  }, [notificationsCount]);
 
   return (
     <NotificationsFeed
