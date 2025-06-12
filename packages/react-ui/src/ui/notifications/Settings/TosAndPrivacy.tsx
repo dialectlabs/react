@@ -11,14 +11,14 @@ export const TosAndPrivacy = () => (
       )}
     >
       By enabling notifications you agree to Dialect&apos;s{' '}
-      <Link target="_blank" rel="noreferrer" url="https://www.dialect.to/tos">
+      <Link target="_blank" rel="noreferrer" url="https://legal.dialect.to/tos">
         Terms of Service
       </Link>{' '}
       and{' '}
       <Link
         target="_blank"
         rel="noreferrer"
-        url="https://www.dialect.to/privacy"
+        url="https://legal.dialect.to/privacy"
       >
         Privacy Policy
       </Link>
