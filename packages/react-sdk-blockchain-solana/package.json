@@ -31,6 +31,6 @@
     "@solana/web3.js": "^1.95.2"
   },
   "devDependencies": {
-    "tsup": "^8.0.2"
+    "tsup": "^8.5.0"
   }
 }

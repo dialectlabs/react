@@ -38,10 +38,7 @@ function useDialectSdk(
       get: isConnectionInitiated,
       set: setConnectionInitiated,
     },
-    isAuthDataFetchingState: {
-      get: isAuthDataFetching,
-      set: setIsAuthDataFetching,
-    },
+    isAuthDataFetchingState: { set: setIsAuthDataFetching },
   } = DialectWalletStatesHolder.useContainer();
 
   const sdk = useMemo(() => {
@@ -72,7 +69,7 @@ function useDialectSdk(
   );
 
   // trigger auth check, on state changes
-  // PSA: state changes the following way:
+  // PSA: state changes the following way (for the tokenProvider.get()):
   // 1. initial:        authFetching: false, isSigning: false
   // 2. on sign press:  authFetching: true,  isSigning: false
   // 3. after prepare:  authFetching: true,  isSigning: true
@@ -81,11 +78,12 @@ function useDialectSdk(
   useEffect(() => {
     if (!sdk) return;
 
-    if (isConnectionInitiated && !isAuthDataFetching) {
+    if (isConnectionInitiated) {
       setIsAuthDataFetching(true);
       sdk.tokenProvider.get().finally(() => setIsAuthDataFetching(false));
     }
-  }, [isAuthDataFetching, isConnectionInitiated, sdk, setIsAuthDataFetching]);
+    // eslint-disable-next-line
+  }, [isConnectionInitiated, sdk]);
 
   return {
     sdk,

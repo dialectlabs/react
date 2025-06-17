@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@types/react": "^19",
-    "tsup": "^8.0.2"
+    "tsup": "^8.5.0"
   },
   "repository": {
     "type": "git",
