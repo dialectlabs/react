@@ -23,12 +23,16 @@ export interface NotificationsProps {
 // separate component before routes, but after wallet states have been passed
 const SubscribeExecutor = ({ children }: { children: React.ReactNode }) => {
   const { subscribe } = useSubscribe();
-  const { refresh, summary } = useUnreadSummary({
+  const { refresh, summary, isLoading } = useUnreadSummary({
     revalidateOnMount: false,
     revalidateOnFocus: false,
   });
 
   useEffect(() => {
+    if (summary?.subscribed || isLoading) {
+      return;
+    }
+
     subscribe().then(() => {
       // could lead to minor race conditions, potentially revisit
       if (!summary?.subscribed) {
@@ -37,7 +41,7 @@ const SubscribeExecutor = ({ children }: { children: React.ReactNode }) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [summary?.subscribed, isLoading]);
 
   return children;
 };

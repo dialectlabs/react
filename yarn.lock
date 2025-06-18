@@ -1092,10 +1092,10 @@
   dependencies:
     "@solana/web3.js" "^1.95.2"
 
-"@dialectlabs/sdk@2.0.0-beta.4":
-  version "2.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-2.0.0-beta.4.tgz#bc839428cf8d99250df05f5d6608c7c139c67e06"
-  integrity sha512-CGZe46uSQq1AtB7n71tabHVABMM2D5FAGOc3GV3O4KIePTU1+3nhCCCNMpT8zpz7IOXzRQCZdGiJ738xKNuFSg==
+"@dialectlabs/sdk@2.0.0-beta.7":
+  version "2.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@dialectlabs/sdk/-/sdk-2.0.0-beta.7.tgz#3f4ef1d27c41345a4ae51085dcf59250e401f93d"
+  integrity sha512-4m2Uh0nt3MYOZ0mQZB/Y37JibRI/p1EVfBH41fzZrFPEHKVOsII9y/5cJ+hVZFSinNnfsJIwITW4N1fbUzYLSw==
   dependencies:
     "@stablelib/base64" "^1.0.1"
     axios "^0.27.2"
