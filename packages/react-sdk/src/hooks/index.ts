@@ -9,6 +9,8 @@ export { default as useNotificationChannelDappSubscription } from './useNotifica
 export { default as useNotificationDapp } from './useNotificationDapp';
 export { default as useNotificationSubscriptions } from './useNotificationSubscriptions';
 
+export { default as useChannels } from './useChannels';
+export type { UseChannelsOptions, UseChannelsValue } from './useChannels';
 export { default as useHistory } from './useHistory';
 export type {
   ActionElement,
@@ -21,5 +23,8 @@ export { default as useReadHistory } from './useReadHistory';
 export { default as useSubscribe } from './useSubscribe';
 export { default as useUnreadSummary } from './useUnreadSummary';
 export type { UnreadSummary } from './useUnreadSummary';
+
+// Internal hooks for react-ui package
+export * as Internal from './internal';
 
 export * from './deprecated';

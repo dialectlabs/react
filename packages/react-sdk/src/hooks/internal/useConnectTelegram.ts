@@ -1,0 +1,64 @@
+import useSWRMutation from 'swr/mutation';
+import { useDialectContext } from '../../context';
+import { getRequestHeaders } from './api-v2-helpers';
+import { CACHE_KEY_TELEGRAM_PREPARE_MUTATION } from './swrCache';
+import useDialectSdk from '../useDialectSdk';
+import { SubscriberChannel } from '../types';
+
+export type TelegramPrepareResponse = SubscriberChannel & {
+  verification: {
+    link: string;
+  }
+};
+
+export interface UseConnectTelegramValue {
+  prepare: () => Promise<TelegramPrepareResponse>;
+  isPreparing: boolean;
+  errorPreparing: Error | null;
+}
+
+/**
+ * @internal
+ * This hook is intended for internal use within the Dialect React UI package.
+ * It provides Telegram connection functionality using non-public APIs.
+ * Third-party developers should not use this hook directly.
+ */
+export default function useConnectTelegram(): UseConnectTelegramValue {
+  const {
+    clientKey,
+  } = useDialectContext();
+  const sdk = useDialectSdk();
+
+  const {
+    trigger: triggerPrepare,
+    isMutating: isPreparing,
+    error: errorPreparing,
+  } = useSWRMutation(
+    clientKey ? CACHE_KEY_TELEGRAM_PREPARE_MUTATION() : null,
+    async () => {
+      if (!clientKey) {
+        throw new Error('Client key not available');
+      }
+
+      const response = await fetch(
+        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/telegram/prepare`,
+        {
+          method: 'POST',
+          headers: await getRequestHeaders(sdk, clientKey),
+        },
+      );
+
+      if (!response.ok) {
+        throw await response.json();
+      }
+
+      return response.json() as Promise<TelegramPrepareResponse>;
+    },
+  );
+
+  return {
+    prepare: triggerPrepare,
+    isPreparing,
+    errorPreparing,
+  };
+} 

@@ -14,6 +14,17 @@ export const CACHE_KEY_SUBSCRIBE_MUTATION = (
   channel: string | string[],
 ) => ['SUBSCRIBE', appId, channel];
 
+export const CACHE_KEY_EMAIL_PREPARE_MUTATION = () => ['EMAIL_PREPARE'];
+
+export const CACHE_KEY_EMAIL_VERIFY_MUTATION = () => ['EMAIL_VERIFY'];
+
+export const CACHE_KEY_TELEGRAM_PREPARE_MUTATION = () => ['TELEGRAM_PREPARE'];
+
+export const CACHE_KEY_CHANNELS = (appId?: string | null) => [
+  'CHANNELS',
+  appId,
+];
+
 export const CACHE_KEY_READ_MUTATION = (appId: string) => [
   'READ_HISTORY',
   appId,
