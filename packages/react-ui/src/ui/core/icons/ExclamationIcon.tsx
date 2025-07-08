@@ -2,16 +2,27 @@ import { SVGProps } from 'react';
 
 export const ExclamationIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
-    width={16}
-    height={16}
-    viewBox="0 0 16 16"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    width={14}
+    height={14}
+    viewBox="0 0 14 14"
+    preserveAspectRatio="xMidYMid meet"
+    fill="none"
     {...props}
   >
-    <path
-      d="M9.127 1.714v8.135c0 .624-.52 1.11-1.11 1.11-.624 0-1.109-.486-1.109-1.11V1.714c0-.59.485-1.11 1.11-1.11.589 0 1.109.52 1.109 1.11zm-1.11 13.681c-.52 0-.97-.242-1.213-.693-.243-.416-.243-.936 0-1.387a1.398 1.398 0 011.213-.693c.486 0 .936.277 1.179.693.243.451.243.971 0 1.387-.243.45-.693.693-1.179.693z"
-      fill="currentColor"
-    />
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.333}
+      clipPath="url(#a)"
+    >
+      <path d="M7 12.833A5.833 5.833 0 1 0 7 1.167a5.833 5.833 0 0 0 0 11.666ZM7 4.667V7M7 9.333h.007" />
+    </g>
+    <defs>
+      <clipPath id="a">
+        <path fill="#fff" d="M0 0h14v14H0z" />
+      </clipPath>
+    </defs>
   </svg>
 );

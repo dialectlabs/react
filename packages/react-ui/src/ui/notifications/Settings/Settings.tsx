@@ -1,16 +1,15 @@
 import { useChannels, useTopics } from '@dialectlabs/react-sdk';
 import { ReactNode } from 'react';
 import { Tab, TabList, Tabs } from '../../core';
-import { useExternalProps } from '../internal/ExternalPropsProvider';
 import { Channels } from './Channels';
 import { NotificationTypes } from './NotificationTypes';
 import { SettingsLoading } from './SettingsLoading';
 
-export const Settings = (props: {
+export const Settings = ({
+  renderAdditionalSettingsUi,
+}: {
   renderAdditionalSettingsUi?: (args: Record<string, never>) => ReactNode;
 }) => {
-  const { channels } = useExternalProps();
-
   const { topics, isLoading: isLoadingTopics } = useTopics();
   const isAppWithTopics = topics.length > 0;
 
@@ -45,7 +44,7 @@ export const Settings = (props: {
       )}
       <Tab name="channels">
         <section className="dt-py-4">
-          <Channels channels={channels} />
+          <Channels renderAdditionalSettingsUi={renderAdditionalSettingsUi} />
         </section>
       </Tab>
     </Tabs>

@@ -7,6 +7,8 @@ import {
   BellIcon,
   CloseIcon,
   EnvelopeIcon,
+  ExclamationIcon,
+  GearsIcon,
   LoaderIcon,
   ResendIcon,
   SettingsIcon,
@@ -29,6 +31,8 @@ export const Icons = {
   Resend: ResendIcon,
   Wallet: WalletIcon,
   Email: EnvelopeIcon,
+  ManageChannels: GearsIcon,
+  Warning: ExclamationIcon,
 };
 
 export const NotificationTypeStyles: NotificationStyleMap = {};
@@ -41,6 +45,7 @@ export const ClassTokens = {
     Accent: 'dt-text-[--dt-text-accent]',
     Success: 'dt-text-[--dt-accent-success]',
     Error: 'dt-text-[--dt-accent-error]',
+    Warning: 'dt-text-[--dt-accent-warning]',
     Inverse: 'dt-text-[--dt-text-inverse]',
     Button: {
       Primary: {
@@ -97,6 +102,7 @@ export const ClassTokens = {
     BrandTransparent: 'dt-bg-[--dt-brand-transparent]',
     SuccessTransparent: 'dt-bg-[--dt-success-transparent]',
     ErrorTransparent: 'dt-bg-[--dt-error-transparent]',
+    WarningTransparent: 'dt-bg-[--dt-warning-transparent]',
     AccentBrand: 'dt-bg-[--dt-accent-brand]',
   },
   Stroke: {

@@ -6,13 +6,22 @@ import {
 } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { ReactNode, useEffect, useState } from 'react';
-import { Badge, Button, ButtonType, IconButton, Input } from '../../../../core';
+import {
+  Badge,
+  Button,
+  ButtonType,
+  IconButton,
+  Input,
+  TextButton,
+} from '../../../../core';
 import { Label } from '../../../../core/primitives/Label';
 import { ClassTokens, Icons } from '../../../../theme';
 
 const RESEND_DELAY_MS = 60 * 1000; // 60 seconds
 const CLEAR_ERRORS_DELAY_MS = 5 * 1000; // 5 seconds
 
+// todo: make optimistic refresh?
+// todo: show other errors (prepare, unlink, etc)
 export const EmailChannel = ({
   allowConnecting = true,
   keyAction,
@@ -51,6 +60,14 @@ export const EmailChannel = ({
   const isEmailSaved = Boolean(channel?.value);
   const isVerified = Boolean(channel?.verified);
   const verificationNeeded = isEmailSaved && !isVerified;
+
+  const isHandlingPrepare = isChannelsLoading || isPreparing;
+  const isHandlingUnlink = isChannelsLoading || isUnlinking;
+  const isHandlingVerify = isChannelsLoading || isVerifying;
+  const isHandlingResend = isResending;
+
+  const isAnyVerifyActionActive =
+    isHandlingVerify || isHandlingResend || isHandlingUnlink;
 
   // Email validation
   const isEmailInvalid =
@@ -140,14 +157,6 @@ export const EmailChannel = ({
     }
   }, [errorResending, resetResending]);
 
-  const isHandlingPrepare = isChannelsLoading || isPreparing;
-  const isHandlingUnlink = isChannelsLoading || isUnlinking;
-  const isHandlingVerify = isChannelsLoading || isVerifying;
-  const isHandlingResend = isResending;
-
-  const isAnyVerifyActionActive =
-    isHandlingVerify || isHandlingResend || isHandlingUnlink;
-
   // Render
   if (isEmailSaved && isVerified) {
     // Connected & verified
@@ -230,17 +239,13 @@ export const EmailChannel = ({
             {errorResending?.message ?? 'Check your Email for a code'}
           </span>
           {resendCountdownSecond === null ? (
-            <button
-              className={clsx(
-                'dt-inline-flex dt-items-center dt-gap-1.5 dt-text-nowrap dt-text-subtext dt-font-medium disabled:dt-opacity-50',
-                ClassTokens.Text.Primary,
-              )}
+            <TextButton
               disabled={isAnyVerifyActionActive || resendCodeTimeout !== null}
               onClick={handleResend}
             >
               <Icons.Resend />
               Resend Code
-            </button>
+            </TextButton>
           ) : (
             <span
               className={clsx(

@@ -19,7 +19,7 @@ export const TextButton = ({
     <button
       style={{ color }}
       className={clsx(
-        'dt-flex dt-cursor-pointer dt-items-center dt-gap-1 dt-text-subtext dt-font-semibold',
+        'dt-flex dt-cursor-pointer dt-items-center dt-gap-1.5 dt-text-text dt-font-semibold',
         { [ClassTokens.Text.Primary]: !color },
         'hover:dt-opacity-80 disabled:dt-opacity-50',
       )}

@@ -8,6 +8,7 @@ export { CloseIcon } from './CloseIcon';
 export { DialectLogo } from './DialectLogo';
 export { EnvelopeIcon } from './EnvelopeIcon';
 export { ExclamationIcon } from './ExclamationIcon';
+export { GearsIcon } from './GearsIcon';
 export { LoaderIcon } from './LoaderIcon';
 export { ResendIcon } from './ResendIcon';
 export { SettingsIcon } from './SettingsIcon';

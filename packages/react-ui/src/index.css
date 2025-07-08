@@ -17,6 +17,7 @@
   --dt-accent-brand: #09cbbf;
   --dt-accent-error: #f62d2d;
   --dt-accent-success: #09cbbf;
+  --dt-accent-warning: #fbb066;
   --dt-bg-brand: #ebebeb;
   --dt-bg-primary: #ffffff;
   --dt-bg-secondary: #f9f9f9;
@@ -38,6 +39,7 @@
   --dt-input-unchecked: #d7d7d7;
   --dt-stroke-primary: #dee1e7;
   --dt-success-transparent: #09cbbf1a;
+  --dt-warning-transparent: #fbb0661a;
   --dt-text-accent: #08c0b4;
   --dt-text-inverse: #ffffff;
   --dt-text-primary: #232324;
@@ -50,6 +52,7 @@
   --dt-accent-brand: #09cbbf;
   --dt-accent-error: #ff4747;
   --dt-accent-success: #09cbbf;
+  --dt-accent-warning: #fbb066;
   --dt-bg-brand: #656564;
   --dt-bg-primary: #1b1b1c;
   --dt-bg-secondary: #232324;
@@ -71,6 +74,7 @@
   --dt-input-unchecked: #656564;
   --dt-stroke-primary: #323335;
   --dt-success-transparent: #09cbbf1a;
+  --dt-warning-transparent: #fbb0661a;
   --dt-text-accent: #09cbbf;
   --dt-text-inverse: #1b1b1c;
   --dt-text-primary: #ffffff;
@@ -83,7 +87,7 @@
   /* mobile */
   @apply dt-fixed dt-right-0 dt-top-0 dt-z-[100] dt-h-full dt-w-full;
   /* non mobile */
-  @apply sm:dt-absolute sm:dt-top-16 sm:dt-h-[600px] sm:dt-w-[420px] sm:dt-rounded-[--dt-border-radius-l] ;
+  @apply sm:dt-absolute sm:dt-top-16 sm:dt-h-[550px] sm:dt-w-[330px] sm:dt-rounded-[--dt-border-radius-l] ;
   /* styles */
   @apply dt-overflow-hidden dt-border dt-border-[--dt-stroke-primary];
 }
