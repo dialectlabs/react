@@ -4,12 +4,7 @@ import { EMPTY_OBJ } from '../utils';
 import { getRequestHeaders } from './internal/api-v2-helpers';
 import { CACHE_KEY_HISTORY } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
-
-export interface Topic {
-  id: string;
-  name: string;
-  slug: string;
-}
+import { HistoricalTopic } from './types';
 
 // todo: replace with sdk types
 export interface ActionElement {
@@ -31,7 +26,7 @@ export interface HistoricalAlert {
   body: string;
   image?: string;
   actions?: ActionElement[];
-  topic?: Topic;
+  topic?: HistoricalTopic;
   app?: App;
 }
 

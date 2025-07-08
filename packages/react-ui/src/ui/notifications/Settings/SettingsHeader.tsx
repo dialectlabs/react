@@ -8,7 +8,7 @@ export const SettingsHeader = () => {
 
   return (
     <Header
-      title="Notifications Settings"
+      title="Settings"
       showBackButton={true}
       showSettingsButton={false}
       showCloseButton={!!setOpen}

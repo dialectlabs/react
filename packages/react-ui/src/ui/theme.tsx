@@ -6,16 +6,17 @@ import {
   BellButtonIconOutline,
   BellIcon,
   CloseIcon,
+  EnvelopeIcon,
+  LoaderIcon,
   ResendIcon,
   SettingsIcon,
-  SpinnerDots,
   TrashIcon,
   WalletIcon,
   XmarkIcon,
 } from './core/icons';
 
 export const Icons = {
-  Loader: SpinnerDots,
+  Loader: LoaderIcon,
   Settings: SettingsIcon,
   ArrowLeft: ArrowLeftIcon,
   ArrowRight: ArrowRightIcon,
@@ -27,6 +28,7 @@ export const Icons = {
   Xmark: XmarkIcon,
   Resend: ResendIcon,
   Wallet: WalletIcon,
+  Email: EnvelopeIcon,
 };
 
 export const NotificationTypeStyles: NotificationStyleMap = {};

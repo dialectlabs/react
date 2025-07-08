@@ -1,7 +1,4 @@
-import {
-  useDialectContext,
-  useNotificationSubscriptions,
-} from '@dialectlabs/react-sdk';
+import { useManageTopics, useTopics } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { memo } from 'react';
 import { Checkbox } from '../../core';
@@ -18,7 +15,7 @@ const NotificationType = ({ title, description, enabled, onChange }: Props) => {
   return (
     <div
       className={clsx(
-        ClassTokens.Background.Tertiary,
+        ClassTokens.Background.Secondary,
         ClassTokens.Radius.Medium,
         'dt-flex dt-flex-row dt-items-center dt-justify-between dt-gap-3 dt-px-4 dt-py-3',
       )}
@@ -49,53 +46,45 @@ const NotificationType = ({ title, description, enabled, onChange }: Props) => {
 };
 
 export const NotificationTypes = memo(function NotificationTypes() {
-  const { dappAddress } = useDialectContext();
+  const {
+    topics,
+    isLoading: isLoadingTopics,
+    error: errorFetchingTopics,
+  } = useTopics();
 
   const {
-    subscriptions: notificationSubscriptions,
-    update: updateNotificationSubscription,
-    isUpdating,
-    errorUpdating: errorUpdatingNotificationSubscription,
-    errorFetching: errorFetchingNotificationsConfigs,
-  } = useNotificationSubscriptions({ dappAddress });
-  const error =
-    errorFetchingNotificationsConfigs || errorUpdatingNotificationSubscription;
+    subscribe,
+    unsubscribe,
+    isSubscribing,
+    isUnsubscribing,
+    errorSubscribing,
+    errorUnsubscribing,
+  } = useManageTopics();
+
+  const error = errorFetchingTopics || errorSubscribing || errorUnsubscribing;
+  const isLoading = isLoadingTopics || isSubscribing || isUnsubscribing;
 
   return (
     <div className="dt-flex dt-flex-col dt-gap-2">
       {error && <p className={clsx(ClassTokens.Text.Error)}>{error.message}</p>}
-      {Boolean(notificationSubscriptions.length) && (
-        <>
-          <p
-            className={clsx(
-              ClassTokens.Text.Tertiary,
-              'dt-text-subtext dt-font-semibold',
-            )}
-          >
-            Notification Type
-          </p>
-          {notificationSubscriptions.map(
-            ({ notificationType, subscription }) => (
-              <NotificationType
-                key={notificationType.id}
-                title={notificationType.name}
-                description={notificationType.trigger}
-                enabled={subscription.config.enabled}
-                onChange={(value) => {
-                  if (isUpdating) return;
-                  updateNotificationSubscription({
-                    notificationTypeId: notificationType.id,
-                    config: {
-                      ...subscription.config,
-                      enabled: value,
-                    },
-                  });
-                }}
-              />
-            ),
-          )}
-        </>
-      )}
+      <p className={clsx(ClassTokens.Text.Tertiary, 'dt-mb-4 dt-text-text')}>
+        Pick your topics and choose what you want to keep track of:
+      </p>
+      {topics.map((topic) => (
+        <NotificationType
+          key={topic.id}
+          title={topic.name}
+          description={topic.description}
+          enabled={topic.subscribed}
+          onChange={async (value) => {
+            if (isLoading) return;
+
+            const changeAction = value ? subscribe : unsubscribe;
+
+            await changeAction({ topicId: topic.id });
+          }}
+        />
+      ))}
     </div>
   );
 });

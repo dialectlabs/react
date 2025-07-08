@@ -15,7 +15,14 @@ export default {
             lineHeight: '1.25rem',
           },
         ],
-        text: ['0.9375rem', '1.125rem'],
+        label: [
+          '0.875rem',
+          {
+            fontWeight: 500,
+            lineHeight: '1rem',
+          },
+        ],
+        text: ['0.875rem', '1rem'],
         subtext: ['0.8125rem', '1rem'],
         caption: ['0.6875rem', '0.875rem'],
       },

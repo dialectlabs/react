@@ -6,6 +6,7 @@ export { BellIcon } from './BellIcon';
 export { CheckIcon } from './CheckIcon';
 export { CloseIcon } from './CloseIcon';
 export { DialectLogo } from './DialectLogo';
+export { EnvelopeIcon } from './EnvelopeIcon';
 export { ExclamationIcon } from './ExclamationIcon';
 export { LoaderIcon } from './LoaderIcon';
 export { ResendIcon } from './ResendIcon';

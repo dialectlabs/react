@@ -4,11 +4,16 @@ export interface Application {
   icon?: string;
 }
 
-export type SubscriberChannelType = 'EMAIL' | 'TELEGRAM';
+export type SubscriptableChannelType = 'IN_APP' | 'EMAIL' | 'TELEGRAM';
+
+export type ExternalChannelType = Extract<
+  SubscriptableChannelType,
+  'EMAIL' | 'TELEGRAM'
+>;
 
 export interface SubscriberChannel {
   id: string;
-  type: SubscriberChannelType;
+  type: ExternalChannelType;
   value: string;
   verified: boolean;
   subscribed: boolean;
@@ -16,5 +21,15 @@ export interface SubscriberChannel {
 }
 
 export type SubscriberChannels = {
-  [channelType in SubscriberChannelType]?: SubscriberChannel;
+  [channelType in ExternalChannelType]?: SubscriberChannel;
 };
+
+export interface Topic {
+  id: string;
+  name: string;
+  description?: string;
+  slug: string;
+  subscribed: boolean;
+}
+
+export type HistoricalTopic = Pick<Topic, 'id' | 'name' | 'slug'>;

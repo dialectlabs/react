@@ -8,7 +8,7 @@ export enum ButtonType {
   Destructive = 'Destructive',
 }
 export interface ButtonProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
@@ -22,7 +22,7 @@ export const Button = ({
   size = 'medium',
   stretch = false,
   ...props
-}: ButtonProps): JSX.Element => {
+}: ButtonProps) => {
   const backgroundTokens = ClassTokens.Background.Button[type];
   const textTokens = ClassTokens.Text.Button[type];
   const styles =

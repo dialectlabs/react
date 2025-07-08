@@ -14,11 +14,22 @@ export const CACHE_KEY_SUBSCRIBE_MUTATION = (
   channel: string | string[],
 ) => ['SUBSCRIBE', appId, channel];
 
+export const CACHE_KEY_UNSUBSCRIBE_MUTATION = (
+  appId: string,
+  channel: string | string[],
+) => ['UNSUBSCRIBE', appId, channel];
+
 export const CACHE_KEY_EMAIL_PREPARE_MUTATION = () => ['EMAIL_PREPARE'];
 
 export const CACHE_KEY_EMAIL_VERIFY_MUTATION = () => ['EMAIL_VERIFY'];
 
+export const CACHE_KEY_EMAIL_UNLINK_MUTATION = () => ['EMAIL_UNLINK'];
+
+export const CACHE_KEY_EMAIL_RESEND_MUTATION = () => ['EMAIL_RESEND'];
+
 export const CACHE_KEY_TELEGRAM_PREPARE_MUTATION = () => ['TELEGRAM_PREPARE'];
+
+export const CACHE_KEY_TELEGRAM_UNLINK_MUTATION = () => ['TELEGRAM_UNLINK'];
 
 export const CACHE_KEY_CHANNELS = (appId?: string | null) => [
   'CHANNELS',

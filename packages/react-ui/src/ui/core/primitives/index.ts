@@ -6,3 +6,4 @@ export * from './Input';
 export * from './Link';
 export * from './Switch';
 export * from './TextButton';
+export * from './Tabs';

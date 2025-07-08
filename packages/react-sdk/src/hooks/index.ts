@@ -17,12 +17,22 @@ export type {
   App,
   HistoricalAlert,
   History,
-  Topic,
 } from './useHistory';
 export { default as useReadHistory } from './useReadHistory';
 export { default as useSubscribe } from './useSubscribe';
 export { default as useUnreadSummary } from './useUnreadSummary';
 export type { UnreadSummary } from './useUnreadSummary';
+export { default as useUnsubscribe } from './useUnsubscribe';
+
+export { default as useManageTopics } from './useManageTopics';
+export type {
+  ManageTopicRequest,
+  UseManageTopicsValue,
+} from './useManageTopics';
+export { default as useTopics } from './useTopics';
+export type { UseTopicsOptions, UseTopicsValue } from './useTopics';
+
+export type * from './types';
 
 // Internal hooks for react-ui package
 export * as Internal from './internal';

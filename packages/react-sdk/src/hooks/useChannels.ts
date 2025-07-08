@@ -2,12 +2,14 @@ import useSWR from 'swr';
 import { useDialectContext } from '../context';
 import { getRequestHeaders } from './internal/api-v2-helpers';
 import { CACHE_KEY_CHANNELS } from './internal/swrCache';
+import { getAppId } from './internal/utils';
 import { SubscriberChannels } from './types';
 import useDialectSdk from './useDialectSdk';
 
 export interface UseChannelsValue {
   channels: SubscriberChannels;
-  isFetching: boolean;
+  refresh: () => Promise<SubscriberChannels | void>;
+  isLoading: boolean;
   error: Error | null;
 }
 
@@ -16,16 +18,8 @@ export interface UseChannelsOptions {
   refreshInterval?: number;
 }
 
-function getAppId(argAppId: string | boolean, globalAppId?: string | null) {
-  if (typeof argAppId === 'string') {
-    return argAppId;
-  }
-
-  return argAppId ? globalAppId ?? null : null;
-}
-
 export default function useChannels(
-  { appId = true, ...options }: UseChannelsOptions = { appId: true },
+  { appId: argAppId = true, ...options }: UseChannelsOptions = { appId: true },
 ): UseChannelsValue {
   const {
     clientKey,
@@ -33,14 +27,15 @@ export default function useChannels(
   } = useDialectContext();
   const sdk = useDialectSdk();
 
-  const finalAppId = getAppId(appId, globalAppId);
+  const appId = getAppId(argAppId, globalAppId);
 
   const {
     data: channels,
     error,
     isLoading,
+    mutate,
   } = useSWR(
-    clientKey ? CACHE_KEY_CHANNELS(finalAppId) : null,
+    clientKey ? CACHE_KEY_CHANNELS(appId) : null,
     async () => {
       if (!clientKey) {
         throw new Error('Client key not available');
@@ -49,8 +44,8 @@ export default function useChannels(
       const requestUrl = new URL(
         `${sdk.config.dialectCloud.v2Url}/v2/channels`,
       );
-      if (finalAppId) {
-        requestUrl.searchParams.set('appId', finalAppId);
+      if (appId) {
+        requestUrl.searchParams.set('appId', appId);
       }
 
       const response = await fetch(requestUrl, {
@@ -71,7 +66,8 @@ export default function useChannels(
 
   return {
     channels: channels || {},
-    isFetching: isLoading,
+    isLoading,
     error,
+    refresh: mutate,
   };
 }
