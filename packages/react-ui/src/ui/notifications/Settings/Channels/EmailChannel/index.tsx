@@ -20,8 +20,6 @@ import { ClassTokens, Icons } from '../../../../theme';
 const RESEND_DELAY_MS = 60 * 1000; // 60 seconds
 const CLEAR_ERRORS_DELAY_MS = 5 * 1000; // 5 seconds
 
-// todo: make optimistic refresh?
-// todo: show other errors (prepare, unlink, etc)
 export const EmailChannel = ({
   allowConnecting = true,
   keyAction,
@@ -33,7 +31,6 @@ export const EmailChannel = ({
     channels,
     refresh,
     isLoading: isChannelsLoading,
-    isValidating: isChannelsUpdating,
   } = useChannels({ type: 'EMAIL' });
   const channel = channels?.EMAIL;
 
@@ -69,7 +66,7 @@ export const EmailChannel = ({
   const isVerified = Boolean(channel?.verified);
   const verificationNeeded = isEmailSaved && !isVerified;
 
-  const isHandlingPrepare = isPreparing || isChannelsUpdating;
+  const isHandlingPrepare = isPreparing;
   const isHandlingUnlink = isUnlinking;
   const isHandlingVerify = isVerifying || isSubscribing;
   const isHandlingResend = isResending;
@@ -90,7 +87,15 @@ export const EmailChannel = ({
       setResendCodeTimeout(
         setTimeout(() => setResendCodeTimeout(null), RESEND_DELAY_MS),
       );
-      await refresh();
+      await refresh({
+        EMAIL: {
+          id: 'optimistic-id',
+          value: inputValue,
+          type: 'EMAIL',
+          subscribed: false,
+          verified: false,
+        },
+      });
     } catch (error) {
       // noop
     }

@@ -231,7 +231,7 @@ export const TelegramKeyAction = {
 const TelegramLabel = ({ telegram }: { telegram?: string }) => {
   return (
     <Label className="dt-inline-flex dt-items-center dt-gap-2">
-      <Icons.Email />
+      <Icons.Telegram />
       <div className="dt-flex dt-flex-col dt-gap-0.5">
         <span>Telegram</span>
         {telegram && (

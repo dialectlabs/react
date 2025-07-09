@@ -1,7 +1,7 @@
 import { ExternalChannelType } from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { ReactNode, useState } from 'react';
-import { TextButton } from '../../../core';
+import { Button, ButtonType } from '../../../core';
 import { ClassTokens, Icons } from '../../../theme';
 import { useExternalProps } from '../../internal/ExternalPropsProvider';
 import { TosAndPrivacy } from '../TosAndPrivacy';
@@ -93,10 +93,10 @@ const ChannelSubscriptions = ({
             Get alerts not just in the app, wherever it’s convenient for you:
           </p>
         </div>
-        <TextButton onClick={onManage}>
+        <Button onClick={onManage}>
           Manage
           <Icons.ManageChannels />
-        </TextButton>
+        </Button>
       </div>
       <section>
         {channels.map((it) => (
@@ -133,7 +133,9 @@ const ChannelManagement = ({ onDone }: { onDone: () => void }) => {
             Get alerts not just in the app, wherever it’s convenient for you:
           </p>
         </div>
-        <TextButton onClick={onDone}>Done</TextButton>
+        <Button type={ButtonType.Primary} onClick={onDone}>
+          Done
+        </Button>
       </div>
       <div className="dt-px-3">
         <div

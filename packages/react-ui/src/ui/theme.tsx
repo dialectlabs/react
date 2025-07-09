@@ -12,6 +12,7 @@ import {
   LoaderIcon,
   ResendIcon,
   SettingsIcon,
+  TelegramIcon,
   TrashIcon,
   WalletIcon,
   XmarkIcon,
@@ -31,6 +32,7 @@ export const Icons = {
   Resend: ResendIcon,
   Wallet: WalletIcon,
   Email: EnvelopeIcon,
+  Telegram: TelegramIcon,
   ManageChannels: GearsIcon,
   Warning: ExclamationIcon,
 };

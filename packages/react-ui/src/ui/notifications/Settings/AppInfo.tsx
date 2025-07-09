@@ -5,15 +5,13 @@ import { DialectLogo } from '../../core/icons';
 import { ClassTokens } from '../../theme';
 export const AppInfo = () => {
   return (
-    <div className="dt-flex dt-flex-col dt-items-center dt-justify-center dt-gap-2.5">
-      <div
-        className={clsx(
-          'dt-inline-flex dt-items-center dt-justify-center dt-px-2 dt-py-1 dt-text-caption',
-          ClassTokens.Radius.Large,
-          ClassTokens.Background.Secondary,
-          ClassTokens.Text.Tertiary,
-        )}
-      >
+    <div
+      className={clsx(
+        'dt-sticky dt-bottom-0 dt-z-10 dt-flex dt-items-center dt-justify-between dt-gap-2.5 dt-px-3 dt-py-4',
+        ClassTokens.Background.Primary,
+      )}
+    >
+      <span className="dt-inline-flex dt-items-center dt-text-caption">
         Powered By{' '}
         <a
           href="https://dialect.to"
@@ -23,7 +21,7 @@ export const AppInfo = () => {
         >
           <DialectLogo className="-dt-mt-[1px] dt-ml-[3px]" />
         </a>
-      </div>
+      </span>
 
       <div className="dt-flex dt-items-center dt-justify-center">
         <span className={clsx('dt-text-caption', ClassTokens.Text.Tertiary)}>
