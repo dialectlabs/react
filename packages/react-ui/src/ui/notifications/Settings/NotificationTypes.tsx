@@ -101,6 +101,7 @@ export const NotificationTypes = memo(function NotificationTypes() {
                     value,
                     appId,
                   ),
+                  revalidate: false,
                 },
               );
             }}
