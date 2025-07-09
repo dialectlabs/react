@@ -1,9 +1,9 @@
 import type { DappAddress, DialectSdkError } from '@dialectlabs/sdk';
 import { useEffect } from 'react';
 import useSWR from 'swr';
-import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
-import { DAPP_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
-import useDapp from './useDapp';
+import { EMPTY_ARR, EMPTY_OBJ } from '../../utils';
+import { DAPP_ADDRESSES_CACHE_KEY_FN } from '../internal/swrCache';
+import useDapp from '../useDapp';
 
 interface UseDappAddressesValue {
   addresses: DappAddress[];
@@ -15,6 +15,9 @@ interface UseDappAddressesParams {
   refreshInterval?: number;
 }
 
+/**
+ * @deprecated - old api, use `useChannels` instead
+ */
 function useDappAddresses({
   refreshInterval,
 }: UseDappAddressesParams = EMPTY_OBJ): UseDappAddressesValue {
@@ -31,14 +34,14 @@ function useDappAddresses({
     {
       refreshInterval,
       refreshWhenOffline: true,
-    }
+    },
   );
 
   useEffect(
     function invalidateAddresses() {
       mutate();
     },
-    [mutate, dappAddressesApi]
+    [mutate, dappAddressesApi],
   );
 
   return {

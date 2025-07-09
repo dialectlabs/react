@@ -1,9 +1,9 @@
 import type { Address, AddressType, DialectSdkError } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import { EMPTY_ARR } from '../utils';
-import { WALLET_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
-import useDialectSdk from './useDialectSdk';
+import { EMPTY_ARR } from '../../utils';
+import { WALLET_ADDRESSES_CACHE_KEY_FN } from '../internal/swrCache';
+import useDialectSdk from '../useDialectSdk';
 
 interface CreateParams {
   value: string;
@@ -40,7 +40,9 @@ interface UseNotificationChannelParams {
   addressType: AddressType;
   refreshInterval?: number;
 }
-
+/**
+ * @deprecated - old api
+ */
 function useNotificationChannel({
   addressType,
   refreshInterval,
@@ -64,7 +66,7 @@ function useNotificationChannel({
     {
       refreshInterval,
       refreshWhenOffline: true,
-    }
+    },
   );
 
   const isFetchingAddresses =
@@ -96,7 +98,7 @@ function useNotificationChannel({
         setCreatingAddress(false);
       }
     },
-    [addressType, isCreatingAddress, mutateAddresses, walletsApi]
+    [addressType, isCreatingAddress, mutateAddresses, walletsApi],
   );
 
   const updateAddress = useCallback(
@@ -118,7 +120,7 @@ function useNotificationChannel({
         setUpdatingAddress(false);
       }
     },
-    [address, addressType, isUpdatingAddress, mutateAddresses, walletsApi]
+    [address, addressType, isUpdatingAddress, mutateAddresses, walletsApi],
   );
 
   const deleteAddress = useCallback(async () => {
@@ -150,7 +152,7 @@ function useNotificationChannel({
         setVerifyingCode(false);
       }
     },
-    [address, isVerifyingCode, mutateAddresses, walletsApi]
+    [address, isVerifyingCode, mutateAddresses, walletsApi],
   );
 
   const resendCode = useCallback(async () => {

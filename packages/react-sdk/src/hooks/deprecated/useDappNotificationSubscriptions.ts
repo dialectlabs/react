@@ -3,9 +3,9 @@ import type {
   DialectSdkError,
 } from '@dialectlabs/sdk';
 import useSWR from 'swr';
-import { EMPTY_ARR, EMPTY_OBJ } from '../utils';
-import { DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from './internal/swrCache';
-import useDapp from './useDapp';
+import { EMPTY_ARR, EMPTY_OBJ } from '../../utils';
+import { DAPP_NOTIFICATION_SUBSCRIPTIONS_CACHE_KEY_FN } from '../internal/swrCache';
+import useDapp from '../useDapp';
 
 interface UseDappNotificationSubscriptionsValue {
   subscriptions: DappNotificationSubscription[];
@@ -17,6 +17,9 @@ interface UseDappNotificationSubscriptions {
   refreshInterval?: number;
 }
 
+/**
+ * @deprecated - old api, use `useChannels` instead
+ */
 function useDappNotificationSubscriptions({
   refreshInterval,
 }: UseDappNotificationSubscriptions = EMPTY_OBJ): UseDappNotificationSubscriptionsValue {
@@ -29,7 +32,7 @@ function useDappNotificationSubscriptions({
     {
       refreshInterval,
       refreshWhenOffline: true,
-    }
+    },
   );
 
   return {

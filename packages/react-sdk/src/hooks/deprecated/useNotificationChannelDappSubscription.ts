@@ -1,9 +1,9 @@
 import type { AccountAddress, Address, AddressType } from '@dialectlabs/sdk';
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import { EMPTY_ARR } from '../utils';
-import { WALLET_DAPP_ADDRESSES_CACHE_KEY_FN } from './internal/swrCache';
-import useDialectSdk from './useDialectSdk';
+import { EMPTY_ARR } from '../../utils';
+import { WALLET_DAPP_ADDRESSES_CACHE_KEY_FN } from '../internal/swrCache';
+import useDialectSdk from '../useDialectSdk';
 import useNotificationChannel from './useNotificationChannel';
 
 interface UseNotificationChannelDappSubscriptionParams {
@@ -23,6 +23,9 @@ interface UseNotificationChannelDappSubscriptionValue {
   toggleSubscription: (params: ToggleSubscriptionParams) => Promise<void>;
 }
 
+/**
+ * @deprecated - old api, use `useManageTopics` instead
+ */
 const useNotificationChannelDappSubscription = ({
   dappAddress,
   addressType,

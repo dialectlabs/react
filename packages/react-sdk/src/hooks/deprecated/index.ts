@@ -1,3 +1,9 @@
+export { default as useDappAddresses } from './useDappAddresses';
+export { default as useDappNotificationSubscriptions } from './useDappNotificationSubscriptions';
+export { default as useNotificationChannel } from './useNotificationChannel';
+export { default as useNotificationChannelDappSubscription } from './useNotificationChannelDappSubscription';
+export { default as useNotificationDapp } from './useNotificationDapp';
+export { default as useNotificationSubscriptions } from './useNotificationSubscriptions';
 export { default as useNotificationThread } from './useNotificationThread';
 export { default as useNotificationThreadMessages } from './useNotificationThreadMessages';
 export { default as useThread } from './useThread';
