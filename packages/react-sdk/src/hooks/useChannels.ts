@@ -3,24 +3,20 @@ import { useDialectContext } from '../context';
 import { getRequestHeaders } from './internal/api-v2-helpers';
 import { CACHE_KEY_CHANNELS } from './internal/swrCache';
 import { getAppId } from './internal/utils';
-import { SubscriberChannels } from './types';
+import { ExternalChannelType, SubscriberChannels } from './types';
 import useDialectSdk from './useDialectSdk';
-
-export interface UseChannelsValue {
-  channels: SubscriberChannels;
-  refresh: () => Promise<SubscriberChannels | void>;
-  isLoading: boolean;
-  error: Error | null;
-}
 
 export interface UseChannelsOptions {
   appId?: string | boolean;
+  type?: ExternalChannelType;
   refreshInterval?: number;
 }
 
 export default function useChannels(
-  { appId: argAppId = true, ...options }: UseChannelsOptions = { appId: true },
-): UseChannelsValue {
+  { appId: argAppId = true, type, ...options }: UseChannelsOptions = {
+    appId: true,
+  },
+) {
   const {
     clientKey,
     app: { id: globalAppId },
@@ -33,9 +29,10 @@ export default function useChannels(
     data: channels,
     error,
     isLoading,
+    isValidating,
     mutate,
   } = useSWR(
-    clientKey ? CACHE_KEY_CHANNELS(appId) : null,
+    clientKey ? CACHE_KEY_CHANNELS(appId, type) : null,
     async () => {
       if (!clientKey) {
         throw new Error('Client key not available');
@@ -46,6 +43,10 @@ export default function useChannels(
       );
       if (appId) {
         requestUrl.searchParams.set('appId', appId);
+      }
+
+      if (type) {
+        requestUrl.searchParams.set('type', type);
       }
 
       const response = await fetch(requestUrl, {
@@ -67,6 +68,7 @@ export default function useChannels(
   return {
     channels: channels || {},
     isLoading,
+    isValidating,
     error,
     refresh: mutate,
   };

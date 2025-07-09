@@ -1,17 +1,17 @@
 import useSWRMutation from 'swr/mutation';
 import { useDialectContext } from '../../context';
+import { SubscriberChannel } from '../types';
+import useDialectSdk from '../useDialectSdk';
 import { getRequestHeaders } from './api-v2-helpers';
-import { 
+import {
   CACHE_KEY_TELEGRAM_PREPARE_MUTATION,
   CACHE_KEY_TELEGRAM_UNLINK_MUTATION,
 } from './swrCache';
-import useDialectSdk from '../useDialectSdk';
-import { SubscriberChannel } from '../types';
 
 export type TelegramPrepareResponse = SubscriberChannel & {
   verification: {
     link: string;
-  }
+  };
 };
 
 export interface UseConnectTelegramValue {
@@ -30,9 +30,7 @@ export interface UseConnectTelegramValue {
  * Third-party developers should not use this hook directly.
  */
 export default function useConnectTelegram(): UseConnectTelegramValue {
-  const {
-    clientKey,
-  } = useDialectContext();
+  const { clientKey } = useDialectContext();
   const sdk = useDialectSdk();
 
   const {
@@ -74,7 +72,7 @@ export default function useConnectTelegram(): UseConnectTelegramValue {
       }
 
       const response = await fetch(
-        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/telegram/unlink`,
+        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/telegram/delete`,
         {
           method: 'POST',
           headers: await getRequestHeaders(sdk, clientKey),
@@ -97,4 +95,4 @@ export default function useConnectTelegram(): UseConnectTelegramValue {
     errorPreparing,
     errorUnlinking,
   };
-} 
+}

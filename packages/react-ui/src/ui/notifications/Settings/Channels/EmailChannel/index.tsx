@@ -29,7 +29,12 @@ export const EmailChannel = ({
   allowConnecting?: boolean;
   keyAction?: ReactNode; // component to render if the connection reached a terminal state (if either connected and verified, or allowedConnecting = false)
 }) => {
-  const { channels, refresh, isLoading: isChannelsLoading } = useChannels();
+  const {
+    channels,
+    refresh,
+    isLoading: isChannelsLoading,
+    isValidating: isChannelsUpdating,
+  } = useChannels({ type: 'EMAIL' });
   const channel = channels?.EMAIL;
 
   // State for email input and code input
@@ -55,15 +60,18 @@ export const EmailChannel = ({
     errorResending,
     resetResending,
   } = Internal.useConnectEmail();
+  const { subscribe, isLoading: isSubscribing } = useSubscribe({
+    channel: 'EMAIL',
+  });
 
   // Determine state
   const isEmailSaved = Boolean(channel?.value);
   const isVerified = Boolean(channel?.verified);
   const verificationNeeded = isEmailSaved && !isVerified;
 
-  const isHandlingPrepare = isChannelsLoading || isPreparing;
-  const isHandlingUnlink = isChannelsLoading || isUnlinking;
-  const isHandlingVerify = isChannelsLoading || isVerifying;
+  const isHandlingPrepare = isPreparing || isChannelsUpdating;
+  const isHandlingUnlink = isUnlinking;
+  const isHandlingVerify = isVerifying || isSubscribing;
   const isHandlingResend = isResending;
 
   const isAnyVerifyActionActive =
@@ -91,7 +99,19 @@ export const EmailChannel = ({
   const handleVerify = async () => {
     try {
       await verify({ code });
-      await refresh();
+      // subscribe on connect
+      await subscribe();
+      await refresh(
+        channel
+          ? {
+              EMAIL: {
+                ...channel,
+                verified: true,
+                subscribed: true,
+              },
+            }
+          : undefined,
+      );
       setCode('');
       setResendCodeTimeout(null);
     } catch (error) {
@@ -102,7 +122,7 @@ export const EmailChannel = ({
   const handleUnlink = async () => {
     try {
       await unlink();
-      await refresh();
+      await refresh({ EMAIL: undefined });
       setInputValue('');
       setCode('');
     } catch (error) {
@@ -157,17 +177,6 @@ export const EmailChannel = ({
     }
   }, [errorResending, resetResending]);
 
-  // Render
-  if (isEmailSaved && isVerified) {
-    // Connected & verified
-    return (
-      <div className="dt-flex dt-items-center dt-justify-between">
-        <EmailLabel email={channel?.value} />
-        {keyAction}
-      </div>
-    );
-  }
-
   if (!allowConnecting) {
     return (
       <div className="dt-flex dt-items-center dt-justify-between">
@@ -175,6 +184,17 @@ export const EmailChannel = ({
           email={channel?.value ?? 'No email linked to your alerts'}
           showUnverified={channel?.verified === false}
         />
+        {keyAction}
+      </div>
+    );
+  }
+
+  // Render
+  if (isEmailSaved && isVerified) {
+    // Connected & verified
+    return (
+      <div className="dt-flex dt-items-center dt-justify-between">
+        <EmailLabel email={channel?.value} />
         {keyAction}
       </div>
     );
@@ -298,7 +318,11 @@ export const EmailChannel = ({
 
 export const EmailKeyAction = {
   ToggleSubscribe: () => {
-    const { isLoading: isChannelsLoading, channels, refresh } = useChannels();
+    const {
+      isLoading: isChannelsLoading,
+      channels,
+      refresh,
+    } = useChannels({ type: 'EMAIL' });
     const { subscribe, isLoading: isSubscribing } = useSubscribe({
       channel: 'EMAIL',
     });
@@ -311,16 +335,30 @@ export const EmailKeyAction = {
     const handleSubscribe = async () => {
       try {
         await subscribe();
-        await refresh();
+
+        // optimistically refresh
+        await refresh({
+          EMAIL: {
+            ...channels.EMAIL!,
+            subscribed: true,
+          },
+        });
       } catch {
         // noop
       }
     };
 
-    const handleUnubscribe = async () => {
+    const handleUnsubscribe = async () => {
       try {
         await unsubscribe();
-        await refresh();
+
+        // optimistically refresh
+        await refresh({
+          EMAIL: {
+            ...channels.EMAIL!,
+            subscribed: false,
+          },
+        });
       } catch {
         // noop
       }
@@ -331,7 +369,7 @@ export const EmailKeyAction = {
     }
 
     return isEmailSubscribed ? (
-      <Button loading={isUnsubscribing} onClick={handleUnubscribe}>
+      <Button loading={isUnsubscribing} onClick={handleUnsubscribe}>
         Unsubscribe
       </Button>
     ) : (
@@ -341,7 +379,11 @@ export const EmailKeyAction = {
     );
   },
   Unlink: () => {
-    const { channels, isLoading: isChannelsLoading, refresh } = useChannels();
+    const {
+      channels,
+      isLoading: isChannelsLoading,
+      refresh,
+    } = useChannels({ type: 'EMAIL' });
     const { unlink, isUnlinking } = Internal.useConnectEmail();
 
     const isEmailPresent = channels?.EMAIL;
@@ -349,7 +391,7 @@ export const EmailKeyAction = {
     const handleUnlink = async () => {
       try {
         await unlink();
-        await refresh();
+        await refresh({ EMAIL: undefined });
       } catch {
         // noop
       }

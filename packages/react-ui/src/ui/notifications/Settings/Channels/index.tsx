@@ -6,7 +6,7 @@ import { ClassTokens, Icons } from '../../../theme';
 import { useExternalProps } from '../../internal/ExternalPropsProvider';
 import { TosAndPrivacy } from '../TosAndPrivacy';
 import { EmailChannel, EmailKeyAction } from './EmailChannel';
-import { TelegramChannel } from './TelegramChannel';
+import { TelegramChannel, TelegramKeyAction } from './TelegramChannel';
 
 type ChannelsView = 'subscriptions' | 'management';
 
@@ -34,6 +34,8 @@ const Channel = ({
   type: ExternalChannelType;
   activeView: ChannelsView;
 }) => {
+  const isSubscriptions = activeView === 'subscriptions';
+
   return (
     <div
       className={clsx(
@@ -44,16 +46,27 @@ const Channel = ({
       {type === 'EMAIL' && (
         <EmailChannel
           keyAction={
-            activeView === 'subscriptions' ? (
+            isSubscriptions ? (
               <EmailKeyAction.ToggleSubscribe />
             ) : (
               <EmailKeyAction.Unlink />
             )
           }
-          allowConnecting={activeView === 'subscriptions'}
+          allowConnecting={isSubscriptions}
         />
       )}
-      {type === 'TELEGRAM' && <TelegramChannel />}
+      {type === 'TELEGRAM' && (
+        <TelegramChannel
+          keyAction={
+            isSubscriptions ? (
+              <TelegramKeyAction.ToggleSubscribe />
+            ) : (
+              <TelegramKeyAction.Unlink />
+            )
+          }
+          allowConnecting={isSubscriptions}
+        />
+      )}
     </div>
   );
 };

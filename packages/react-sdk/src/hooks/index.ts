@@ -10,7 +10,7 @@ export { default as useNotificationDapp } from './useNotificationDapp';
 export { default as useNotificationSubscriptions } from './useNotificationSubscriptions';
 
 export { default as useChannels } from './useChannels';
-export type { UseChannelsOptions, UseChannelsValue } from './useChannels';
+export type { UseChannelsOptions } from './useChannels';
 export { default as useHistory } from './useHistory';
 export type {
   ActionElement,
@@ -25,11 +25,8 @@ export type { UnreadSummary } from './useUnreadSummary';
 export { default as useUnsubscribe } from './useUnsubscribe';
 
 export { default as useManageTopics } from './useManageTopics';
-export type {
-  ManageTopicRequest,
-  UseManageTopicsValue,
-} from './useManageTopics';
-export { default as useTopics } from './useTopics';
+export type { ManageTopicRequest } from './useManageTopics';
+export { optimisticTopicUpdateFn, default as useTopics } from './useTopics';
 export type { UseTopicsOptions, UseTopicsValue } from './useTopics';
 
 export type * from './types';

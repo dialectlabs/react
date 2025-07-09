@@ -10,6 +10,9 @@ export enum ButtonType {
 export interface ButtonProps {
   children?: React.ReactNode;
   onClick?: () => void;
+  href?: string;
+  target?: string;
+  rel?: string;
   disabled?: boolean;
   loading?: boolean;
   type?: ButtonType;
@@ -21,6 +24,9 @@ export const Button = ({
   type = ButtonType.Secondary,
   size = 'medium',
   stretch = false,
+  href,
+  target,
+  rel,
   ...props
 }: ButtonProps) => {
   const backgroundTokens = ClassTokens.Background.Button[type];
@@ -31,6 +37,35 @@ export const Button = ({
         ClassTokens.Radius.Medium
       : 'dt-px-2.5 dt-py-1.5 dt-text-subtext dt-font-semibold ' +
         ClassTokens.Radius.XSmall;
+  if (href) {
+    return (
+      <a
+        className={clsx(
+          'dt-flex dt-items-center dt-justify-center dt-gap-1.5',
+          { 'dt-w-full': stretch },
+          backgroundTokens.Default,
+          backgroundTokens.Hover,
+          backgroundTokens.Pressed,
+          backgroundTokens.Disabled,
+          textTokens.Default,
+          textTokens.Disabled,
+          styles,
+        )}
+        href={href}
+        target={target}
+        rel={rel}
+      >
+        {props.loading ? (
+          <>
+            Loading <Icons.Loader />
+          </>
+        ) : (
+          props.children
+        )}
+      </a>
+    );
+  }
+
   return (
     <button
       className={clsx(

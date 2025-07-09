@@ -31,10 +31,13 @@ export const CACHE_KEY_TELEGRAM_PREPARE_MUTATION = () => ['TELEGRAM_PREPARE'];
 
 export const CACHE_KEY_TELEGRAM_UNLINK_MUTATION = () => ['TELEGRAM_UNLINK'];
 
-export const CACHE_KEY_CHANNELS = (appId?: string | null) => [
+export const CACHE_KEY_CHANNELS = (appId?: string | null, type?: string) => [
   'CHANNELS',
   appId,
+  type,
 ];
+
+export const CACHE_KEY_TOPICS = () => ['TOPICS'];
 
 export const CACHE_KEY_READ_MUTATION = (appId: string) => [
   'READ_HISTORY',

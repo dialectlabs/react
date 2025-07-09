@@ -3,10 +3,9 @@ import { useDialectContext } from '../context';
 import { EMPTY_OBJ } from '../utils';
 import { getRequestHeaders } from './internal/api-v2-helpers';
 import { CACHE_KEY_HISTORY } from './internal/swrCache';
-import useDialectSdk from './useDialectSdk';
 import { HistoricalTopic } from './types';
+import useDialectSdk from './useDialectSdk';
 
-// todo: replace with sdk types
 export interface ActionElement {
   type: 'link';
   label: string;
@@ -42,7 +41,7 @@ export interface History {
   cursor?: string;
 }
 
-interface UseHistoryParams {
+export interface UseHistoryParams {
   refreshInterval?: number;
 }
 
@@ -60,6 +59,7 @@ export default function useHistory({
   const {
     data: history,
     isLoading,
+    isValidating,
     error,
     mutate,
   } = useSWR(
@@ -92,6 +92,7 @@ export default function useHistory({
     history,
     error,
     isLoading,
+    isValidating,
     refresh: mutate,
   };
 }

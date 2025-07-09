@@ -29,38 +29,40 @@ export default function useUnreadSummary({
   } = useDialectContext();
   const forAddress = sdk?.wallet.address;
 
-  const { data, isLoading, error, mutate } = useSWR<UnreadSummary>(
-    appId && forAddress ? CACHE_KEY_HISTORY_SUMMARY(forAddress, appId) : null,
-    async () => {
-      if (!appId || !forAddress || !sdk) {
-        return;
-      }
+  const { data, isLoading, isValidating, error, mutate } =
+    useSWR<UnreadSummary>(
+      appId && forAddress ? CACHE_KEY_HISTORY_SUMMARY(forAddress, appId) : null,
+      async () => {
+        if (!appId || !forAddress || !sdk) {
+          return;
+        }
 
-      const url = new URL(
-        `${sdk.config.dialectCloud.v2Url}/v2/internal/history/summary`,
-      );
-      url.searchParams.set('appId', appId);
-      url.searchParams.set('walletAddress', forAddress);
+        const url = new URL(
+          `${sdk.config.dialectCloud.v2Url}/v2/internal/history/summary`,
+        );
+        url.searchParams.set('appId', appId);
+        url.searchParams.set('walletAddress', forAddress);
 
-      const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      if (!response.ok) {
-        throw await response.json();
-      }
+        if (!response.ok) {
+          throw await response.json();
+        }
 
-      return response.json();
-    },
-    { refreshInterval, revalidateOnFocus, revalidateOnMount },
-  );
+        return response.json();
+      },
+      { refreshInterval, revalidateOnFocus, revalidateOnMount },
+    );
 
   return {
     summary: data,
     error,
     refresh: mutate,
     isLoading,
+    isValidating,
   };
 }

@@ -1,4 +1,9 @@
-import { useManageTopics, useTopics } from '@dialectlabs/react-sdk';
+import {
+  optimisticTopicUpdateFn,
+  useDialectContext,
+  useManageTopics,
+  useTopics,
+} from '@dialectlabs/react-sdk';
 import clsx from 'clsx';
 import { memo } from 'react';
 import { Checkbox } from '../../core';
@@ -51,40 +56,56 @@ export const NotificationTypes = memo(function NotificationTypes() {
     isLoading: isLoadingTopics,
     error: errorFetchingTopics,
   } = useTopics();
-
   const {
-    subscribe,
-    unsubscribe,
-    isSubscribing,
-    isUnsubscribing,
-    errorSubscribing,
-    errorUnsubscribing,
-  } = useManageTopics();
+    app: { id: appId },
+  } = useDialectContext();
 
-  const error = errorFetchingTopics || errorSubscribing || errorUnsubscribing;
+  const { subscribe, unsubscribe, isSubscribing, isUnsubscribing } =
+    useManageTopics();
+
   const isLoading = isLoadingTopics || isSubscribing || isUnsubscribing;
 
   return (
-    <div className="dt-flex dt-flex-col dt-gap-2">
-      {error && <p className={clsx(ClassTokens.Text.Error)}>{error.message}</p>}
+    <div className="dt-flex dt-h-full dt-flex-col dt-gap-2">
       <p className={clsx(ClassTokens.Text.Tertiary, 'dt-mb-4 dt-text-text')}>
         Pick your topics and choose what you want to keep track of:
       </p>
-      {topics.map((topic) => (
-        <NotificationType
-          key={topic.id}
-          title={topic.name}
-          description={topic.description}
-          enabled={topic.subscribed}
-          onChange={async (value) => {
-            if (isLoading) return;
+      {errorFetchingTopics && (
+        <p
+          className={clsx(
+            ClassTokens.Text.Secondary,
+            'dt-mb-4 dt-text-center dt-text-text',
+          )}
+        >
+          Failed to fetch alert topics. Please try again later.
+        </p>
+      )}
+      {!errorFetchingTopics &&
+        topics.map((topic) => (
+          <NotificationType
+            key={topic.id}
+            title={topic.name}
+            description={topic.description}
+            enabled={topic.subscribed}
+            onChange={async (value) => {
+              if (isLoading) return;
 
-            const changeAction = value ? subscribe : unsubscribe;
+              const changeAction = value ? subscribe : unsubscribe;
 
-            await changeAction({ topicId: topic.id });
-          }}
-        />
-      ))}
+              await changeAction(
+                { topicId: topic.id },
+                {
+                  rollbackOnError: true,
+                  optimisticData: optimisticTopicUpdateFn(
+                    topic.id,
+                    value,
+                    appId,
+                  ),
+                },
+              );
+            }}
+          />
+        ))}
     </div>
   );
 });
