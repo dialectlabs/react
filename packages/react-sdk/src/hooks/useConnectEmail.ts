@@ -1,14 +1,14 @@
 import useSWRMutation from 'swr/mutation';
-import { useDialectContext } from '../../context';
-import { SubscriberChannel } from '../types';
-import useDialectSdk from '../useDialectSdk';
-import { getRequestHeaders } from './api-v2-helpers';
+import { useDialectContext } from '../context';
+import { getRequestHeaders } from './internal/api-v2-helpers';
 import {
   CACHE_KEY_EMAIL_PREPARE_MUTATION,
   CACHE_KEY_EMAIL_RESEND_MUTATION,
   CACHE_KEY_EMAIL_UNLINK_MUTATION,
   CACHE_KEY_EMAIL_VERIFY_MUTATION,
-} from './swrCache';
+} from './internal/swrCache';
+import { SubscriberChannel } from './types';
+import useDialectSdk from './useDialectSdk';
 
 // Types for email connection
 export interface EmailPrepareRequest {
@@ -40,12 +40,6 @@ export interface UseConnectEmailValue {
   resetResending: () => void;
 }
 
-/**
- * @internal
- * This hook is intended for internal use within the Dialect React UI package.
- * It provides email connection functionality using non-public APIs.
- * Third-party developers should not use this hook directly.
- */
 export default function useConnectEmail(): UseConnectEmailValue {
   const { clientKey } = useDialectContext();
   const sdk = useDialectSdk();
@@ -63,7 +57,7 @@ export default function useConnectEmail(): UseConnectEmailValue {
       }
 
       const response = await fetch(
-        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/email/prepare`,
+        `${sdk.config.dialectCloud.v2Url}/v2/channel/email/prepare`,
         {
           method: 'POST',
           body: JSON.stringify(arg),
@@ -92,7 +86,7 @@ export default function useConnectEmail(): UseConnectEmailValue {
       }
 
       const response = await fetch(
-        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/email/verify`,
+        `${sdk.config.dialectCloud.v2Url}/v2/channel/email/verify`,
         {
           method: 'POST',
           body: JSON.stringify(arg),
@@ -121,7 +115,7 @@ export default function useConnectEmail(): UseConnectEmailValue {
       }
 
       const response = await fetch(
-        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/email/delete`,
+        `${sdk.config.dialectCloud.v2Url}/v2/channel/email/delete`,
         {
           method: 'POST',
           headers: await getRequestHeaders(sdk, clientKey),
@@ -149,7 +143,7 @@ export default function useConnectEmail(): UseConnectEmailValue {
       }
 
       const response = await fetch(
-        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/email/resend`,
+        `${sdk.config.dialectCloud.v2Url}/v2/channel/email/resend`,
         {
           method: 'POST',
           headers: await getRequestHeaders(sdk, clientKey),

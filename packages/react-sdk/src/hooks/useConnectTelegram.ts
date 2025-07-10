@@ -1,12 +1,12 @@
 import useSWRMutation from 'swr/mutation';
-import { useDialectContext } from '../../context';
-import { SubscriberChannel } from '../types';
-import useDialectSdk from '../useDialectSdk';
-import { getRequestHeaders } from './api-v2-helpers';
+import { useDialectContext } from '../context';
+import { getRequestHeaders } from './internal/api-v2-helpers';
 import {
   CACHE_KEY_TELEGRAM_PREPARE_MUTATION,
   CACHE_KEY_TELEGRAM_UNLINK_MUTATION,
-} from './swrCache';
+} from './internal/swrCache';
+import { SubscriberChannel } from './types';
+import useDialectSdk from './useDialectSdk';
 
 export type TelegramPrepareResponse = SubscriberChannel & {
   verification: {
@@ -23,12 +23,6 @@ export interface UseConnectTelegramValue {
   errorUnlinking: Error | null;
 }
 
-/**
- * @internal
- * This hook is intended for internal use within the Dialect React UI package.
- * It provides Telegram connection functionality using non-public APIs.
- * Third-party developers should not use this hook directly.
- */
 export default function useConnectTelegram(): UseConnectTelegramValue {
   const { clientKey } = useDialectContext();
   const sdk = useDialectSdk();
@@ -45,7 +39,7 @@ export default function useConnectTelegram(): UseConnectTelegramValue {
       }
 
       const response = await fetch(
-        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/telegram/prepare`,
+        `${sdk.config.dialectCloud.v2Url}/v2/channel/telegram/prepare`,
         {
           method: 'POST',
           headers: await getRequestHeaders(sdk, clientKey),
@@ -72,7 +66,7 @@ export default function useConnectTelegram(): UseConnectTelegramValue {
       }
 
       const response = await fetch(
-        `${sdk.config.dialectCloud.v2Url}/v2/internal/channel/telegram/delete`,
+        `${sdk.config.dialectCloud.v2Url}/v2/channel/telegram/delete`,
         {
           method: 'POST',
           headers: await getRequestHeaders(sdk, clientKey),

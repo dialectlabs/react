@@ -1,6 +1,7 @@
 import {
-  Internal,
+  TelegramPrepareResponse,
   useChannels,
+  useConnectTelegram,
   useSubscribe,
   useUnsubscribe,
 } from '@dialectlabs/react-sdk';
@@ -22,7 +23,7 @@ export const TelegramChannel = ({
   keyAction?: ReactNode; // component to render if the connection reached a terminal state (if either connected and verified, or allowedConnecting = false)
 }) => {
   const [prepareResponse, setPrepareResponse] =
-    useState<Internal.TelegramPrepareResponse | null>(null);
+    useState<TelegramPrepareResponse | null>(null);
 
   const { channels, refresh } = useChannels({
     type: 'TELEGRAM',
@@ -30,7 +31,7 @@ export const TelegramChannel = ({
   });
   const channel = channels?.TELEGRAM;
 
-  const { prepare, isPreparing } = Internal.useConnectTelegram();
+  const { prepare, isPreparing } = useConnectTelegram();
   const { subscribe } = useSubscribe({ channel: 'TELEGRAM' });
 
   const isTelegramConnected = !!channel?.value && channel?.verified;
@@ -199,7 +200,7 @@ export const TelegramKeyAction = {
       isLoading: isChannelsLoading,
       refresh,
     } = useChannels({ type: 'TELEGRAM' });
-    const { unlink, isUnlinking } = Internal.useConnectTelegram();
+    const { unlink, isUnlinking } = useConnectTelegram();
 
     const isTelegramPresent = channels?.TELEGRAM;
 

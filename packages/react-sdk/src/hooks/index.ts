@@ -18,14 +18,24 @@ export { default as useUnreadSummary } from './useUnreadSummary';
 export type { UnreadSummary } from './useUnreadSummary';
 export { default as useUnsubscribe } from './useUnsubscribe';
 
+export { default as useConnectEmail } from './useConnectEmail';
+export type {
+  EmailPrepareRequest,
+  EmailPrepareResponse,
+  EmailVerifyRequest,
+  UseConnectEmailValue,
+} from './useConnectEmail';
 export { default as useManageTopics } from './useManageTopics';
 export type { ManageTopicRequest } from './useManageTopics';
 export { optimisticTopicUpdateFn, default as useTopics } from './useTopics';
 export type { UseTopicsOptions, UseTopicsValue } from './useTopics';
 
-export type * from './types';
+export { default as useConnectTelegram } from './useConnectTelegram';
+export type {
+  TelegramPrepareResponse,
+  UseConnectTelegramValue,
+} from './useConnectTelegram';
 
-// Internal hooks for react-ui package
-export * as Internal from './internal';
+export type * from './types';
 
 export * from './deprecated';

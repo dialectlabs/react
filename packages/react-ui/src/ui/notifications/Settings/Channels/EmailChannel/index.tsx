@@ -1,6 +1,6 @@
 import {
-  Internal,
   useChannels,
+  useConnectEmail,
   useSubscribe,
   useUnsubscribe,
 } from '@dialectlabs/react-sdk';
@@ -56,7 +56,7 @@ export const EmailChannel = ({
     errorVerifying,
     errorResending,
     resetResending,
-  } = Internal.useConnectEmail();
+  } = useConnectEmail();
   const { subscribe, isLoading: isSubscribing } = useSubscribe({
     channel: 'EMAIL',
   });
@@ -389,7 +389,7 @@ export const EmailKeyAction = {
       isLoading: isChannelsLoading,
       refresh,
     } = useChannels({ type: 'EMAIL' });
-    const { unlink, isUnlinking } = Internal.useConnectEmail();
+    const { unlink, isUnlinking } = useConnectEmail();
 
     const isEmailPresent = channels?.EMAIL;
 
