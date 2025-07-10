@@ -20,7 +20,7 @@ export const TextButton = ({
       style={{ color }}
       className={clsx(
         'dt-flex dt-cursor-pointer dt-items-center dt-gap-1.5 dt-text-text dt-font-semibold',
-        { [ClassTokens.Text.Primary]: !color },
+        { [ClassTokens.Text.Accent]: !color },
         'hover:dt-opacity-80 disabled:dt-opacity-50',
       )}
       onClick={disabled ? undefined : onClick}
