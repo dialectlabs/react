@@ -186,7 +186,7 @@ export const EmailChannel = ({
     return (
       <div className="dt-flex dt-items-center dt-justify-between">
         <EmailLabel
-          email={channel?.value ?? 'No email linked to your alerts'}
+          email={channel?.value ?? 'No email linked to your wallet.'}
           showUnverified={channel?.verified === false}
         />
         {keyAction}

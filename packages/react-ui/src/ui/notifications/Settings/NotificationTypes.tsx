@@ -67,9 +67,14 @@ export const NotificationTypes = memo(function NotificationTypes() {
 
   return (
     <div className="dt-flex dt-h-full dt-flex-col dt-gap-2">
-      <p className={clsx(ClassTokens.Text.Tertiary, 'dt-mb-4 dt-text-text')}>
-        Pick your topics and choose what you want to keep track of:
-      </p>
+      <div>
+        <h2 className={clsx('dt-mb-2 dt-text-label', ClassTokens.Text.Primary)}>
+          Manage Topics
+        </h2>
+        <p className={clsx(ClassTokens.Text.Tertiary, 'dt-mb-4 dt-text-text')}>
+          Choose your topics and get notified about what matters most to you.
+        </p>
+      </div>
       {errorFetchingTopics && (
         <p
           className={clsx(

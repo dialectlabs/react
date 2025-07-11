@@ -86,7 +86,7 @@ export const TelegramChannel = ({
           telegram={
             channel?.value
               ? formatTelegramHandle(channel?.value)
-              : 'No Telegram handle linked to your alerts.'
+              : 'No Telegram handle linked to your wallet.'
           }
         />
         {keyAction}

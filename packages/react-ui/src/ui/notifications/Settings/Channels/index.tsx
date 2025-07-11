@@ -82,15 +82,15 @@ const ChannelSubscriptions = ({
 
   return (
     <div>
-      <div className="dt-flex dt-items-start dt-px-3">
+      <div className="dt-flex dt-items-start dt-justify-between dt-px-3">
         <div>
           <h2
             className={clsx('dt-mb-2 dt-text-label', ClassTokens.Text.Primary)}
           >
-            Receive alerts everywhere
+            Manage Your Channels
           </h2>
           <p className={clsx('dt-text-text', ClassTokens.Text.Tertiary)}>
-            Get alerts not just in the app, wherever it’s convenient for you:
+            Choose where you get alerts.
           </p>
         </div>
         <TextButton onClick={onManage}>
@@ -122,7 +122,7 @@ const ChannelManagement = ({ onDone }: { onDone: () => void }) => {
 
   return (
     <div>
-      <div className="dt-flex dt-items-start dt-px-3 dt-pb-4">
+      <div className="dt-flex dt-items-start dt-justify-between dt-px-3 dt-pb-4">
         <div>
           <h2
             className={clsx('dt-mb-2 dt-text-label', ClassTokens.Text.Primary)}
@@ -130,7 +130,7 @@ const ChannelManagement = ({ onDone }: { onDone: () => void }) => {
             Manage Channels
           </h2>
           <p className={clsx('dt-text-text', ClassTokens.Text.Tertiary)}>
-            Get alerts not just in the app, wherever it’s convenient for you:
+            Manage the channels associated with your wallet.
           </p>
         </div>
         <TextButton onClick={onDone}>Done</TextButton>
@@ -149,8 +149,8 @@ const ChannelManagement = ({ onDone }: { onDone: () => void }) => {
             <Icons.Warning />
           </div>
           <span className="dt-text-subtext">
-            Unlinking this channel will disable notifications from all connected
-            sites.
+            Warning: Your channels follow your wallet between apps that use
+            Dialect. Unlinking any channels here will unlink them everywhere.
           </span>
         </div>
       </div>
