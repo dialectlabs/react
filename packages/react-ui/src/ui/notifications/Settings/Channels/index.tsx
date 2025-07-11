@@ -127,7 +127,7 @@ const ChannelManagement = ({ onDone }: { onDone: () => void }) => {
           <h2
             className={clsx('dt-mb-2 dt-text-label', ClassTokens.Text.Primary)}
           >
-            Manage Channels
+            Manage Your Channels
           </h2>
           <p className={clsx('dt-text-text', ClassTokens.Text.Tertiary)}>
             Manage the channels associated with your wallet.

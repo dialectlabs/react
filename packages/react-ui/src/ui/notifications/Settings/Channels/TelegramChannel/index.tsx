@@ -202,7 +202,7 @@ export const TelegramKeyAction = {
     } = useChannels({ type: 'TELEGRAM' });
     const { unlink, isUnlinking } = useConnectTelegram();
 
-    const isTelegramPresent = channels?.TELEGRAM;
+    const isTelegramPresent = !!channels?.TELEGRAM?.verified; // subscription exists and not verified (assuming doesnt exist)
 
     const handleUnlink = async () => {
       try {
