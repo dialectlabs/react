@@ -12,7 +12,7 @@ const endpoint = clusterApiUrl('devnet');
 export const Providers: React.FC<React.PropsWithChildren> = (props) => {
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={[]}>
+      <WalletProvider wallets={[]} autoConnect>
         <WalletModalProvider>{props.children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>

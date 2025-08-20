@@ -10,7 +10,7 @@ import { GitHubIcon } from '@/icons/GitHubIcon';
 import { ThemeType } from '@dialectlabs/react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const DAPP_ADDRESS =
   process.env.NEXT_PUBLIC_DAPP_ADDRESS ??
@@ -20,12 +20,21 @@ export default function Home() {
   const [theme, setTheme] = useState<ThemeType>(getInitialTheme());
   const searchParams = useSearchParams();
   const { connected } = useWallet();
+  const [isWalletReady, setIsWalletReady] = useState(false);
 
   const dappAddress = searchParams.get('dappAddress');
   const currentDappAddress = dappAddress ?? DAPP_ADDRESS;
 
   const [inputDappAddress, setInputDappAddress] = useState(currentDappAddress);
   const hasChanged = inputDappAddress !== currentDappAddress;
+
+  useEffect(() => {
+    // Give the wallet adapter time to check for existing connections
+    const timer = setTimeout(() => {
+      setIsWalletReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleUpdate = () => {
     const url = new URL(window.location.href);
@@ -96,7 +105,11 @@ export default function Home() {
           <Card>
             <h3 className="font-medium mb-3" style={{ color: theme === 'dark' ? '#ffffff' : '#1b1b1c' }}>Step 1: Connect your wallet</h3>
             <p className="text-sm text-dark-20 dark:text-light-40 mb-4">First, connect your wallet to receive alerts from your application.</p>
-            {!connected ? (
+            {!isWalletReady ? (
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-dark-20 dark:text-light-40">Checking wallet connection...</span>
+              </div>
+            ) : !connected ? (
               <SolanaWalletButton />
             ) : (
               <div className="flex items-center gap-2 text-sm">
