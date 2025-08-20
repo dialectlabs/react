@@ -7,7 +7,10 @@ import { Providers } from './providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Dialect Solana Notifications Example',
+  title: 'Dialect Alerts Example',
+  icons: {
+    icon: '/favicon.svg', // or whatever your SVG file is named
+  },
 };
 
 export default function RootLayout({

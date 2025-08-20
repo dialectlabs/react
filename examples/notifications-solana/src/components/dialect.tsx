@@ -35,7 +35,7 @@ export const DialectSolanaNotificationsButton = (props: {
       dappAddress={props.dappAddress ?? DAPP_ADDRESS}
       config={{
         environment:
-          (process.env.NEXT_PUBLIC_ENVIRONMENT as Environment) ?? 'development',
+          (process.env.NEXT_PUBLIC_ENVIRONMENT as Environment) ?? 'production',
       }}
     >
       <NotificationsButton theme={props.theme} />
