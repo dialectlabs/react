@@ -112,9 +112,9 @@ export default function Home() {
             ) : !connected ? (
               <SolanaWalletButton />
             ) : (
-              <div className="flex items-center gap-2 text-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md text-sm">
                 <span className="text-green-600 dark:text-green-400">✓</span>
-                <span className="text-dark-20 dark:text-light-40">Wallet connected</span>
+                <span className="text-black dark:text-white font-medium">Wallet connected</span>
               </div>
             )}
           </Card>
