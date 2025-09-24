@@ -12,6 +12,7 @@ export type {
   HistoricalAlert,
   History,
 } from './useHistory';
+export { default as useClearHistory } from './useClearHistory';
 export { default as useReadHistory } from './useReadHistory';
 export { default as useSubscribe } from './useSubscribe';
 export { default as useUnreadSummary } from './useUnreadSummary';
