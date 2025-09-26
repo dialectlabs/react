@@ -44,6 +44,11 @@ export const CACHE_KEY_READ_MUTATION = (appId: string) => [
   appId,
 ];
 
+export const CACHE_KEY_CLEAR_MUTATION = (appId: string) => [
+  'CLEAR_HISTORY',
+  appId,
+];
+
 // v1 cache keys
 
 export const CACHE_KEY_THREADS = 'THREADS';

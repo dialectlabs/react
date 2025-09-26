@@ -1,7 +1,7 @@
 import useSWRMutation from 'swr/mutation';
 import { useDialectContext } from '../context';
 import { getRequestHeaders } from './internal/api-v2-helpers';
-import { CACHE_KEY_READ_MUTATION } from './internal/swrCache';
+import { CACHE_KEY_CLEAR_MUTATION } from './internal/swrCache';
 import useDialectSdk from './useDialectSdk';
 
 export default function useClearHistory() {
@@ -12,7 +12,7 @@ export default function useClearHistory() {
   const sdk = useDialectSdk();
 
   const { trigger, isMutating, error } = useSWRMutation(
-    appId && clientKey ? CACHE_KEY_READ_MUTATION(appId) : null,
+    appId && clientKey ? CACHE_KEY_CLEAR_MUTATION(appId) : null,
     async () => {
       if (!appId || !clientKey) {
         return;
