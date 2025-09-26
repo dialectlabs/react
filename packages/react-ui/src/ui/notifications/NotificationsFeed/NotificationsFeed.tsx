@@ -1,4 +1,5 @@
 import {
+  useClearHistory,
   useHistory,
   useReadHistory,
   useSubscribe,
@@ -45,6 +46,7 @@ NotificationsFeed.Container = function NotificationsFeeContainer() {
   const { isLoading: isSubscribeLoading, error: subscribeError } =
     useSubscribe();
   const { read } = useReadHistory();
+  const { error: clearError } = useClearHistory();
   const { refresh: refreshSummary } = useUnreadSummary({
     revalidateOnMount: false,
     revalidateOnFocus: false,
@@ -54,7 +56,7 @@ NotificationsFeed.Container = function NotificationsFeeContainer() {
   const notificationsCount = notifications.length;
 
   const isLoading = isHistoryLoading || isSubscribeLoading;
-  const hasError = !!subscribeError || !!historyError;
+  const hasError = !!subscribeError || !!historyError || !!clearError;
   const isEmpty = notificationsCount === 0;
 
   useEffect(() => {

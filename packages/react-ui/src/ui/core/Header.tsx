@@ -6,9 +6,11 @@ import { IconButton } from './primitives';
 interface HeaderProps {
   title: string;
   showBackButton: boolean;
+  showClearNotificationsButton?: boolean;
   showSettingsButton: boolean;
   showCloseButton: boolean;
   onBackClick?: () => void;
+  onClearNotificationsClick?: () => void;
   onSettingsClick?: () => void;
   onCloseClick?: () => void;
 }
@@ -20,6 +22,16 @@ const BackButton: React.FC<{ onBackClick: HeaderProps['onBackClick'] }> = ({
     className={ClassTokens.Icon.Secondary}
     onClick={onBackClick}
     icon={<Icons.ArrowLeft />}
+  />
+);
+
+const ClearNotificationsButton: React.FC<{ onClearNotificationsClick: HeaderProps['onClearNotificationsClick'] }> = ({
+  onClearNotificationsClick,
+}) => (
+  <IconButton
+    className={ClassTokens.Icon.Secondary}
+    onClick={onClearNotificationsClick}
+    icon={<Icons.Trash />}
   />
 );
 
@@ -48,9 +60,11 @@ export function Header({
   showCloseButton = true,
   showSettingsButton = true,
   showBackButton = true,
+  showClearNotificationsButton = false,
   onSettingsClick,
   onBackClick,
   onCloseClick,
+  onClearNotificationsClick,
 }: HeaderProps) {
   const leftButtons = (
     <>{showBackButton && <BackButton onBackClick={onBackClick} />}</>
@@ -58,6 +72,9 @@ export function Header({
 
   const rightButtons = (
     <div className="dt-flex dt-gap-3">
+      {showClearNotificationsButton && (
+        <ClearNotificationsButton onClearNotificationsClick={onClearNotificationsClick} />
+      )}
       {showSettingsButton && (
         <SettingsButton onSettingsClick={onSettingsClick} />
       )}
