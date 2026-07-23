@@ -1,5 +1,8 @@
 {
   "name": "@dialectlabs/example-notifications-solana",
+  "engines": {
+    "node": ">=22"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {
