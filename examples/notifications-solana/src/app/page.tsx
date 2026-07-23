@@ -12,43 +12,50 @@ import { useState } from 'react';
 export default function Home() {
   const [theme, setTheme] = useState<ThemeType>(getInitialTheme());
   return (
-    <div className="flex min-h-screen flex-col px-8 py-5">
-      <header className="flex items-center justify-between gap-3">
-        <NoSSR>
-          <div className="flex items-center gap-4 md:gap-6">
-            <a
-              className="text-button flex items-center justify-center gap-1.5 font-semibold hover:opacity-80"
-              href="https://docs.dialect.to/documentation/notifications-quick-start"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <BookIcon />
-              Read our Docs
-            </a>
-            <a
-              className="text-button flex items-center justify-center gap-1.5 font-semibold hover:opacity-80"
-              href="https://github.com/dialectlabs/react/tree/master/examples/notifications-solana"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GitHubIcon />
-              View the Code
-            </a>
+    <div className="flex min-h-screen flex-col">
+      <div className="bg-[#FEF9C2] px-8 py-3 text-center text-[15px] text-[#733E0A]">
+        ⚠️ Dialect is sunsetting its Alerts, Blockchain Links, Markets and
+        Positions products. If you are using these products you will need to
+        find alternative solutions.
+      </div>
+      <div className="flex flex-1 flex-col px-8 py-5">
+        <header className="flex items-center justify-between gap-3">
+          <NoSSR>
+            <div className="flex items-center gap-4 md:gap-6">
+              <a
+                className="text-button flex items-center justify-center gap-1.5 font-semibold hover:opacity-80"
+                href="https://docs.dialect.to/documentation/notifications-quick-start"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <BookIcon />
+                Read our Docs
+              </a>
+              <a
+                className="text-button flex items-center justify-center gap-1.5 font-semibold hover:opacity-80"
+                href="https://github.com/dialectlabs/react/tree/master/examples/notifications-solana"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <GitHubIcon />
+                View the Code
+              </a>
+            </div>
+            <div className="flex items-center gap-3">
+              <ThemeSwitch theme={theme} onThemeChange={setTheme} />
+              <DialectSolanaNotificationsButton theme={theme} />
+              <SolanaWalletButton />
+            </div>
+          </NoSSR>
+        </header>
+        <main className="flex flex-1 flex-col items-center justify-center gap-8">
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-[15px] text-[#888989]">@dialectlabs/react</p>
+            <p className="text-2xl font-bold">examples/notifications-solana</p>
           </div>
-          <div className="flex items-center gap-3">
-            <ThemeSwitch theme={theme} onThemeChange={setTheme} />
-            <DialectSolanaNotificationsButton theme={theme} />
-            <SolanaWalletButton />
-          </div>
-        </NoSSR>
-      </header>
-      <main className="flex flex-1 flex-col items-center justify-center gap-8">
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-[15px] text-[#888989]">@dialectlabs/react</p>
-          <p className="text-2xl font-bold">examples/notifications-solana</p>
-        </div>
-        <SolanaWalletButton />
-      </main>
+          <SolanaWalletButton />
+        </main>
+      </div>
     </div>
   );
 }

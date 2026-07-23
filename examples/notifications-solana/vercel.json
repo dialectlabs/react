@@ -1,0 +1,3 @@
+{
+  "buildCommand": "cd ../.. && yarn build:all && cd examples/notifications-solana && next build"
+}
