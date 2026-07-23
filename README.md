@@ -1,3 +1,6 @@
+> [!WARNING]
+> Dialect is sunsetting its Alerts, Blockchain Links, Markets and Positions products. If you are using these products you will need to find alternative solutions.
+
 # [Dialect](https://www.dialect.to/) React SDK & UI 💬 
 
 ![react-sdk](https://img.shields.io/npm/v/@dialectlabs/react-sdk?color=success&label=react-sdk) ![npm](https://img.shields.io/npm/v/@dialectlabs/react-ui?color=success&label=react-ui) ![npm](https://img.shields.io/npm/v/@dialectlabs/react-sdk-blockchain-solana?color=success&label=react-sdk-blockchain-solana) 
@@ -36,7 +39,7 @@ yarn add @dialectlabs/react-sdk-blockchain-solana
 
 - Git
 - yarn 1
-- Nodejs (>=18)
+- Nodejs (>=22)
 
 ### Get Started
 
