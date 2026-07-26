@@ -13,6 +13,11 @@ export default function Home() {
   const [theme, setTheme] = useState<ThemeType>(getInitialTheme());
   return (
     <div className="flex min-h-screen flex-col">
+      <div className="bg-[#FEF9C2] px-8 py-3 text-center text-[15px] text-[#733E0A]">
+        ⚠️ Dialect is sunsetting its Alerts, Blockchain Links, Markets and
+        Positions products. If you are using these products you will need to
+        find alternative solutions.
+      </div>
       <div className="flex flex-1 flex-col px-8 py-5">
         <header className="flex items-center justify-between gap-3">
           <NoSSR>
